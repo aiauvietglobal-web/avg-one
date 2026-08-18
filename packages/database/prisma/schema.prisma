@@ -1,0 +1,110 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+  GUEST
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum RequestType {
+  LEAVE
+  EXPENSE
+  EQUIPMENT
+  OTHER
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  name         String?
+  avatar       String?
+  role         Role        @default(STAFF)
+  status       UserStatus  @default(ACTIVE)
+  ssoProvider  String?
+  ssoId        String?     @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  submittedRequests Request[] @relation("ApplicantRequests")
+  approvedRequests  Request[] @relation("ApproverRequests")
+
+  assignedTasks     Task[]    @relation("AssigneeTasks")
+  createdTasks      Task[]    @relation("CreatorTasks")
+}
+
+model Request {
+  id           String        @id @default(uuid())
+  title        String
+  type         RequestType   @default(LEAVE)
+  description  String?
+  amount       Float?
+  status       RequestStatus @default(PENDING)
+  reason       String?
+  
+  applicantId  String
+  applicant    User          @relation("ApplicantRequests", fields: [applicantId], references: [id], onDelete: Cascade)
+
+  approverId   String?
+  approver     User?         @relation("ApproverRequests", fields: [approverId], references: [id], onDelete: SetNull)
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Task {
+  id            String        @id @default(uuid())
+  title         String
+  description   String?
+  orderCode     String?       // Mã đơn hàng (e.g. DH-2026-001)
+  orderStatus   String?       @default("THƯỜNG XUYÊN") // THƯỜNG XUYÊN, KHẨN CẤP, TRỌNG ĐIỂM, TỒN, TIỂU DỰ ÁN
+  department    String?       @default("3.1 - RDI")     // 3.1 - RDI, 3.2 - THIẾT KẾ, 6 - PHÁP LÝ
+  attachmentUrl String?       // Link Google Sheet / URL đính kèm
+
+  status        TaskStatus    @default(TODO)
+  priority      TaskPriority  @default(MEDIUM)
+  dueDate       DateTime?
+
+  assigneeId    String?
+  assignee      User?         @relation("AssigneeTasks", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  creatorId     String
+  creator       User          @relation("CreatorTasks", fields: [creatorId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
