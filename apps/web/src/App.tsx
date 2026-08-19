@@ -5,7 +5,7 @@ import {
   Bell, LogIn, MessageSquare, Newspaper, MapPin, Sun, Moon,
   PanelLeftOpen, Package, Calendar as CalendarIcon, Scale, Home, Share2, X,
   Building2, Compass, Navigation, Hash, Warehouse, Cpu, Palette, Box, Send, Pin, Target, PenTool, UserCheck, AlertTriangle, Hourglass, Play, Square, Phone, Video, Info, Paperclip, Smile, ThumbsUp, Heart, Maximize2, Minimize2, Image, Contact, Scissors, Type, Zap, CreditCard, MoreHorizontal, Bold, Italic, Underline, Strikethrough, List, ListOrdered, Undo, Redo, Eraser,
-  FileSpreadsheet, LayoutGrid, Table, Globe, ShieldCheck, Layers, Trash2
+  FileSpreadsheet, LayoutGrid, Table, Globe, ShieldCheck, Layers, Trash2, CheckCircle2, Mail, Copy, Briefcase, Filter, AlertCircle, ExternalLink, Eye
 } from 'lucide-react';
 import { WORKFLOW_13_STEPS, HUB_MAP, HubKey } from './services/workflow13';
 import { Workflow13Visualizer } from './components/Workflow13Visualizer';
@@ -34,6 +34,21 @@ interface DiscussionEvent {
   legalEntity?: string;
   status?: string;
   conclusionDocUrl?: string;
+}
+
+export interface ExecutiveSheetMessage {
+  id: string;
+  year: string;
+  month: string;
+  dayOfWeek: string;
+  date: string;
+  time: string;
+  senderHub: string;
+  targetHub: string;
+  category: 'TRỰC TIẾP' | 'GIÁN TIẾP' | 'CHƯA XÁC NHẬN';
+  content: string;
+  notes?: string;
+  attachmentUrl?: string;
 }
 
 // Helper to get current Date object in Vietnam Timezone (Asia/Ho_Chi_Minh - UTC+7)
@@ -97,6 +112,160 @@ export function playTingTingSound() {
     console.log('Audio playback error:', e);
   }
 }
+
+export interface HrStaff {
+  id: string;
+  name: string;
+  department: string;
+  initials: string;
+  avatarBg: string;
+  hubs: string[];
+  email: string;
+  phone: string;
+  dob: string;
+  workDuration: string;
+  bankName: string;
+  bankAccount: string;
+  status: string;
+}
+
+export const INITIAL_HR_STAFF: HrStaff[] = [
+  {
+    id: 'hr-1',
+    name: 'Lê Trần Thiện Tâm',
+    department: 'INTERWRITE',
+    initials: 'TT',
+    avatarBg: 'linear-gradient(135deg, #f59e0b, #d97706)',
+    hubs: ['5.1T', 'KIẾN'],
+    email: 'cambridgeorg.209@gmail.com',
+    phone: '0354126398',
+    dob: '20/09/2002',
+    workDuration: '1 Năm 10 Tháng 18 Ngày',
+    bankName: 'Vietinbank',
+    bankAccount: '106879222277',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-2',
+    name: 'Đinh Hoàng Ngọc Hân',
+    department: 'INTERWRITE',
+    initials: 'NH',
+    avatarBg: 'linear-gradient(135deg, #ec4899, #f43f5e)',
+    hubs: ['2.2', '5.1B'],
+    email: 'trolitct@gmail.com',
+    phone: '0869413365',
+    dob: '28/10/2002',
+    workDuration: '1 Năm 11 Tháng 18 Ngày',
+    bankName: 'VPBank',
+    bankAccount: '0869413365',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-3',
+    name: 'Nguyễn Văn Quản Lý',
+    department: 'AVG GLOBAL',
+    initials: 'QL',
+    avatarBg: 'linear-gradient(135deg, #0284c7, #2563eb)',
+    hubs: ['HUB_0', 'GIÁM ĐỐC'],
+    email: 'admin.ceo@avg.vn',
+    phone: '0901234567',
+    dob: '15/04/1988',
+    workDuration: '5 Năm 0 Tháng 10 Ngày',
+    bankName: 'Techcombank',
+    bankAccount: '1903456789012',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-4',
+    name: 'Trần Thị Trưởng Phòng',
+    department: 'AVG GLOBAL',
+    initials: 'TP',
+    avatarBg: 'linear-gradient(135deg, #10b981, #059669)',
+    hubs: ['HUB_1', 'HR_MGR'],
+    email: 'manager.hr@avg.vn',
+    phone: '0912345678',
+    dob: '22/08/1992',
+    workDuration: '3 Năm 4 Tháng 12 Ngày',
+    bankName: 'MBBank',
+    bankAccount: '9990123456789',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-5',
+    name: 'Lê Văn Nhân Viên',
+    department: 'AVG GLOBAL',
+    initials: 'NV',
+    avatarBg: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+    hubs: ['3.1', 'RDI'],
+    email: 'staff.dev@avg.vn',
+    phone: '0923456789',
+    dob: '10/11/1996',
+    workDuration: '2 Năm 1 Tháng 05 Ngày',
+    bankName: 'Vietcombank',
+    bankAccount: '0071001234567',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-6',
+    name: 'Phạm Minh Tuấn',
+    department: 'AVG GLOBAL',
+    initials: 'MT',
+    avatarBg: 'linear-gradient(135deg, #06b6d4, #0891b2)',
+    hubs: ['3.2', 'THIẾT KẾ'],
+    email: 'tuan.pm@avg.vn',
+    phone: '0934567890',
+    dob: '05/01/1995',
+    workDuration: '1 Năm 8 Tháng 20 Ngày',
+    bankName: 'BIDV',
+    bankAccount: '1231000456789',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-7',
+    name: 'Vũ Quốc Huy',
+    department: 'RDI CENTER',
+    initials: 'QH',
+    avatarBg: 'linear-gradient(135deg, #f97316, #ea580c)',
+    hubs: ['2.1', 'SẢN XUẤT'],
+    email: 'huy.vq@avg.vn',
+    phone: '0945678901',
+    dob: '18/06/1994',
+    workDuration: '2 Năm 5 Tháng 15 Ngày',
+    bankName: 'Agribank',
+    bankAccount: '1500205123456',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-8',
+    name: 'Bùi Hoàng Nam',
+    department: 'RDI CENTER',
+    initials: 'HN',
+    avatarBg: 'linear-gradient(135deg, #64748b, #475569)',
+    hubs: ['HUB_6', 'QC'],
+    email: 'nam.bh@avg.vn',
+    phone: '0956789012',
+    dob: '12/12/1997',
+    workDuration: '1 Năm 2 Tháng 10 Ngày',
+    bankName: 'TPBank',
+    bankAccount: '00001234567',
+    status: 'CHÍNH THỨC'
+  },
+  {
+    id: 'hr-9',
+    name: 'Đỗ Thùy Trang',
+    department: 'RDI CENTER',
+    initials: 'TT',
+    avatarBg: 'linear-gradient(135deg, #a855f7, #9333ea)',
+    hubs: ['HASH', 'TRỢ LÝ'],
+    email: 'trang.dt@avg.vn',
+    phone: '0967890123',
+    dob: '03/03/1999',
+    workDuration: '0 Năm 9 Tháng 14 Ngày',
+    bankName: 'ACB',
+    bankAccount: '246813579',
+    status: 'CHÍNH THỨC'
+  }
+];
 
 export function formatTimeWithoutSeconds(tStr?: string): string {
   if (!tStr) return '';
@@ -940,9 +1109,26 @@ export default function App() {
   const [lastSyncedTime, setLastSyncedTime] = useState<string>(new Date().toLocaleTimeString('vi-VN'));
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
 
+  // HR Personnel Management State
+  const [hrStaffList, setHrStaffList] = useState<HrStaff[]>(INITIAL_HR_STAFF);
+  const [hrSearchQuery, setHrSearchQuery] = useState<string>('');
+  const [selectedQrStaff, setSelectedQrStaff] = useState<HrStaff | null>(null);
+  const [isAddHrModalOpen, setIsAddHrModalOpen] = useState<boolean>(false);
+  const [isInviteHrModalOpen, setIsInviteHrModalOpen] = useState<boolean>(false);
+
+  // New Staff Form State
+  const [newHrName, setNewHrName] = useState<string>('');
+  const [newHrDept, setNewHrDept] = useState<string>('INTERWRITE');
+  const [newHrHubs, setNewHrHubs] = useState<string>('5.1T; KIẾN');
+  const [newHrEmail, setNewHrEmail] = useState<string>('');
+  const [newHrPhone, setNewHrPhone] = useState<string>('');
+  const [newHrDob, setNewHrDob] = useState<string>('');
+  const [newHrBankName, setNewHrBankName] = useState<string>('Vietinbank');
+  const [newHrBankAccount, setNewHrBankAccount] = useState<string>('');
+
   // Chart View Mode Controls State (Chế độ xem & Phạm vi hiển thị khi dữ liệu lớn)
-  const [chartViewMode, setChartViewMode] = useState<'detail' | 'day' | 'month'>('detail');
-  const [chartRangeLimit, setChartRangeLimit] = useState<number>(15);
+  const [chartViewMode, setChartViewMode] = useState<'detail' | 'day' | 'week' | 'month' | 'year'>('detail');
+  const [chartRangeLimit, setChartRangeLimit] = useState<number>(0);
   const [chartPageOffset, setChartPageOffset] = useState<number>(0);
 
   // Executive Directives & Messages 24/7 State
@@ -1001,6 +1187,118 @@ export default function App() {
   ]);
   const [directiveFilterCategory, setDirectiveFilterCategory] = useState<string>('ALL');
   const [directiveSearchQuery, setDirectiveSearchQuery] = useState<string>('');
+  const [directiveViewMode, setDirectiveViewMode] = useState<'table' | 'timeline' | 'crisis'>('table');
+  const [directiveFilterSender, setDirectiveFilterSender] = useState<string>('ALL');
+  const [selectedSheetMsg, setSelectedSheetMsg] = useState<ExecutiveSheetMessage | null>(null);
+  const [executiveSheetMessages, setExecutiveSheetMessages] = useState<ExecutiveSheetMessage[]>([
+    {
+      id: 'sheet-msg-1',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 4', date: '01/07/2026', time: '08:22',
+      senderHub: '1', targetHub: '5.1; @All', category: 'TRỰC TIẾP',
+      content: '1. Cập Nhật và lưu ý. Hiệu lực bắt đầu từ 01/07/2026;\n2. Phổ cập đến các đầu mối; mở rộng phổ cập đến người AV làm chuyên môn kế toán. Đảm bảo nhận thức cơ bản đúng; đồng bộ để phối hợp nghiệp vụ.',
+      attachmentUrl: 'https://drive.google.com/file/d/1KjaIzp98MOFfZ2yZmVM-XY9ssSj_b-0m/view?usp=sharing'
+    },
+    {
+      id: 'sheet-msg-2',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 4', date: '01/07/2026', time: '08:26',
+      senderHub: 'Kiến', targetHub: '5.1; 0; 8; 9; @All', category: 'GIÁN TIẾP',
+      content: '1. Coi đây là thông tin cần thiết tham khảo, định hình thành “nhóm thông tin tham khảo”, đưa vào kế hoạch truyền thông;\n2. Định hình (1) là một cấu phần kỹ thuật trong tiến trình số hoá, công nghệ hóa.',
+      notes: 'Kế hoạch truyền thông liên thông 8 đầu mối tác nghiệp.'
+    },
+    {
+      id: 'sheet-msg-3',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 4', date: '01/07/2026', time: '09:35',
+      senderHub: '2.2', targetHub: '@All', category: 'CHƯA XÁC NHẬN',
+      content: 'Đề nghị từ DH:\nXem xét nghiêm túc hoạt động truyền thông. Tại sao vẫn lặp lại sai lầm NƯỚC ĐẾN LỖ MŨI MỚI NHẢY?',
+      attachmentUrl: 'https://drive.google.com/file/d/1ykZOAuOK8uqIVl1wwE7Cw8nR7Vjc2AwU/view?usp=sharing',
+      notes: 'Yêu cầu 2.2 làm rõ nguyên nhân chậm trễ báo cáo truyền thông nội dung Âu Việt.'
+    },
+    {
+      id: 'sheet-msg-4',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 4', date: '01/07/2026', time: '17:56',
+      senderHub: '9', targetHub: 'Kiến; DH; @All', category: 'TRỰC TIẾP',
+      content: '9 cập Nhật tình hình:\nA. Dữ liệu AV: Tiếp tục tách dữ liệu đơn vị đo hợp phần trong tổ hợp phẩm đầu ra. Dữ liệu dòng hàng sức lao động: tập hợp dữ liệu theo kế hoạch; Xác thực dữ liệu hàng vật chất thông qua dòng tiền (Đã xử lý 17% tổng khối lượng);\nB. Pháp lý AV: Chưa có vấn đề phát sinh;\nC. Tình hình số hóa, công nghệ hóa;\nD. Lịch làm việc: Cập nhật qua bảng.',
+      attachmentUrl: 'https://drive.google.com/file/d/1WoNmmnv2SFvNQuO_sXI4Iqfbqvz7SNCa/view?usp=sharing'
+    },
+    {
+      id: 'sheet-msg-5',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 4', date: '01/07/2026', time: '23:37',
+      senderHub: 'Kiến', targetHub: '#K2; #K1; DH; @All', category: 'CHƯA XÁC NHẬN',
+      content: 'Kiến cập nhật khủng hoảng: về việc thông tin kỹ thuật trên nhãn NRC gạo của nhãn ECONOVA:\n- Lỗi từ phía nhà sản 3.2 trong quá trình sản xuất thứ cấp không chỉnh sửa TPKT;\n- Đề xuất 2 PA: PA1 đàm phán in tem sửa lỗi dán đè tại kho đối tác, PA2 thu hồi 600 chai NRC gạo về kho AV để in lại toàn bộ nhãn.',
+      notes: 'Khủng hoảng nhãn Econova 1.3kg gạo. Cần tháo gỡ gấp trong đêm.',
+      attachmentUrl: 'https://drive.google.com/drive/folders/1QOe3PSsDkhxQGGBLolBKLlvO0gZNyiee?usp=sharing'
+    },
+    {
+      id: 'sheet-msg-6',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 5', date: '02/07/2026', time: '10:47',
+      senderHub: '5.1', targetHub: 'Kiến; #K2; #K1; DH', category: 'CHƯA XÁC NHẬN',
+      content: '5.1 cập nhật tình hình Phía đối tác Âu Việt: Lúc 22h59 ngày 01/07 bà Bích thông tin lại 4.T ra thông điệp phụ trách rà soát lại công thức, thành phần lô sản xuất NRC Gạo Econova bị lỗi nhãn.',
+      notes: 'Bà Trang (4.T) làm việc trực tiếp với sếp Econova.'
+    },
+    {
+      id: 'sheet-msg-7',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 5', date: '02/07/2026', time: '12:04',
+      senderHub: '4.T', targetHub: '@Ngọc Hân; DH; Econova', category: 'CHƯA XÁC NHẬN',
+      content: '4.T xin phép gửi lại thông điệp tháo gỡ:\n1. Phương án 1: In decan TPKT đúng và thực hiện dán sửa lỗi gần nhất/ dễ quan sát nhất. Cần dựng 3D ngay để chủ nhãn xem xét thẩm mỹ;\n2. Phương án 2: In lại nhãn mới bóc nhãn cũ dán thay thế.',
+      notes: 'Dựng mockup 3D vị trí dán decal sửa lỗi.'
+    },
+    {
+      id: 'sheet-msg-8',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 5', date: '02/07/2026', time: '19:04',
+      senderHub: '9', targetHub: 'Kiến; DH; @All', category: 'TRỰC TIẾP',
+      content: '9 cập Nhật tình hình:\n1. Giải quyết vấn đề khủng hoảng Lỗi thành phần kỹ thuật nhãn NRC Gạo Econova: Đã có 2 giải pháp, đảm bảo chất lượng;\n2. Dữ liệu AV: Tập hợp đơn vị đo khối lượng;\n3. Pháp lý AV: Tồn kho vật tư ECO ~64tr/131tr tổng nợ.',
+      attachmentUrl: 'https://drive.google.com/file/d/1_BotrzOIumEq4LLrf1M9AdUS19J5TqJy/view?usp=sharing'
+    },
+    {
+      id: 'sheet-msg-9',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 5', date: '02/07/2026', time: '19:14',
+      senderHub: '5.1B', targetHub: 'Kiến; #K2; #K1; @All', category: 'CHƯA XÁC NHẬN',
+      content: '5.1B cập nhật phản hồi của Econova: Đặt hàng #K1 tư vấn chọn tên kỹ thuật cho Tem sửa lỗi in sai. Đề xuất cụm từ: 1. THÔNG TIN THÀNH PHẦN BỔ SUNG; 2. ĐÍNH CHÍNH THÔNG TIN BAO BÌ; 3. ĐIỀU CHỈNH, BỔ SUNG THÀNH PHẦN; 4. THÔNG TIN CẬP NHẬT.',
+      notes: 'Điều hành chỉ định chọn Phương án (2) ĐÍNH CHÍNH THÔNG TIN BAO BÌ.'
+    },
+    {
+      id: 'sheet-msg-10',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 6', date: '03/07/2026', time: '10:55',
+      senderHub: 'DH H&J', targetHub: 'CĐT H&J; Các CĐT; Nhân sự H&J; Nguyễn Mạnh Thành', category: 'TRỰC TIẾP',
+      content: 'DH H&J gửi thông báo:\n1. Quyết định sa thải ngay lập tức bà Lê Thị Nga;\n2. Ủy nhiệm cho ông Nguyễn Mạnh Thành làm chủ thể phối hợp thực hiện hồ sơ sa thải;\n3. Tất cả mọi hậu quả/thiệt hại, DH H&J hoàn toàn chịu trách nhiệm.',
+      notes: 'Nguyên nhân: Không đáp ứng tiêu chuẩn tối thiểu của người lao động.'
+    },
+    {
+      id: 'sheet-msg-11',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 6', date: '03/07/2026', time: '11:21',
+      senderHub: 'DH H&J', targetHub: 'Hân; Lưu; DH AVG', category: 'TRỰC TIẾP',
+      content: 'DH H&J thống nhất cùng DH AVG chỉ định:\n1. Bà Hân tiếp nhận nhiệm vụ chuyên môn của đầu mối 2.1 (tạm thời đến hết tháng 7/2026);\n2. Ông Lưu tiếp nhận nhiệm vụ chuyên môn của đầu mối 6 (tạm thời đến hết tháng 7/2026);\n3. Đảm bảo không đứt gãy công việc phục vụ hệ thống.',
+      notes: 'Bàn giao chuyển giao công việc liên thông.'
+    },
+    {
+      id: 'sheet-msg-12',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 6', date: '03/07/2026', time: '15:01',
+      senderHub: '1', targetHub: '@All', category: 'CHƯA XÁC NHẬN',
+      content: 'Theo ủy nhiệm từ điều hành, 1 xin gửi quyết định cho thôi việc Bà Lê Thị Nga.',
+      attachmentUrl: 'https://drive.google.com/file/d/1Jfn6rjf-b5azgqCmEN8ArBPsS1DwksdS/view?usp=sharing'
+    },
+    {
+      id: 'sheet-msg-13',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 6', date: '03/07/2026', time: '15:50',
+      senderHub: '0', targetHub: '0; 8; 9; @All', category: 'TRỰC TIẾP',
+      content: 'Với những việc thường xuyên có yêu cầu bảo mật thấp, phối hợp cùng các đầu mối để rà soát, lên kế hoạch, rõ lộ trình và thúc đẩy quyết liệt tiến trình số hoá; công nghệ hoá.',
+      attachmentUrl: 'https://drive.google.com/file/d/1rMHc4Yp6sUZp1DGnqHW2KZzjGd26aMV6/view?usp=sharing'
+    },
+    {
+      id: 'sheet-msg-14',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 7', date: '04/07/2026', time: '14:17',
+      senderHub: 'Kiến', targetHub: 'DH; 2.1; 6', category: 'GIÁN TIẾP',
+      content: 'Kiến cập nhật tình hình bàn giao 2.1 và 6:\n- Đầu việc 2.1: Bảng lương H&J, AV, giờ làm thêm bàn giao chiều 03/07;\n- Đầu việc 6: 7 bộ chứng thư pháp lý và xử lý tồn đọng BiboMart, Eco.',
+      notes: 'Bàn giao dữ liệu lên Datahub Pháp lý.'
+    },
+    {
+      id: 'sheet-msg-15',
+      year: '2026', month: '07', dayOfWeek: 'Thứ 7', date: '04/07/2026', time: '18:57',
+      senderHub: '2.1 tạm thời', targetHub: 'DH H&J; DH AVG; @All', category: 'GIÁN TIẾP',
+      content: '2.1 Tạm thời báo cáo: Toàn thể nhân sự H&J đồng thuận 100% với các thông điệp điều hành thanh lọc nhân sự qua 2 hàng rào kỹ thuật. Không có bất kỳ sự mất niềm tin nào và 0% nhân sự nghỉ việc.',
+      notes: 'Báo cáo cam kết nhân sự hệ thống H&J.'
+    }
+  ]);
   const [isAddDirectiveModalOpen, setIsAddDirectiveModalOpen] = useState<boolean>(false);
 
   // New Directive Form State
@@ -1950,6 +2248,22 @@ export default function App() {
 
             {isOrdersOpen && !isSidebarCollapsed && (
               <div style={{ marginLeft: 20, marginTop: 4, display: 'flex', flexDirection: 'column', gap: 4, borderLeft: '1px solid rgba(255, 87, 34, 0.4)', paddingLeft: 12 }}>
+                {/* 0. GIAO DIỆN TỔNG ĐƠN HÀNG */}
+                <button
+                  onClick={() => { setSelectedHub('ALL'); setActiveTab('orders'); showToast('🌐 Đã mở Giao diện Tổng Quản lý Đơn hàng'); }}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
+                    border: '1px solid transparent',
+                    backgroundColor: (selectedHub === 'ALL' && activeTab === 'orders') ? 'rgba(255, 87, 34, 0.18)' : 'rgba(255, 255, 255, 0.04)',
+                    color: (selectedHub === 'ALL' && activeTab === 'orders') ? '#ff7043' : '#ffffff',
+                    fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', transition: 'all 0.18s ease', marginBottom: 4
+                  }}
+                >
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Globe style={{ width: 14, height: 14, color: '#38bdf8' }} /> GIAO DIỆN TỔNG
+                  </span>
+                </button>
+
                 {/* 1. CỤM ĐẦU MỐI TĂNG CƯỜNG (LÊN TRÊN CÙNG) */}
                 <div>
                   <button
@@ -2224,9 +2538,44 @@ export default function App() {
               <Users style={{ width: 17, height: 17, color: activeTab === 'hr' ? '#ff7043' : 'inherit' }} />
               {!isSidebarCollapsed && <span style={{ fontWeight: 700, letterSpacing: '0.03em' }}>NHÂN SỰ</span>}
             </div>
-            {!isSidebarCollapsed && <span style={{ backgroundColor: activeTab === 'hr' ? 'rgba(255, 87, 34, 0.3)' : '#1e293b', color: activeTab === 'hr' ? '#ffccbc' : '#94a3b8', fontSize: '0.68rem', padding: '2px 7px', borderRadius: 10, fontFamily: 'monospace', fontWeight: 700 }}>0</span>}
+            {!isSidebarCollapsed && <span style={{ backgroundColor: activeTab === 'hr' ? 'rgba(255, 87, 34, 0.3)' : '#1e293b', color: activeTab === 'hr' ? '#ffccbc' : '#94a3b8', fontSize: '0.68rem', padding: '2px 7px', borderRadius: 10, fontFamily: 'monospace', fontWeight: 700 }}>{hrStaffList.length}</span>}
           </button>
         </nav>
+
+        {/* SIDEBAR FOOTER: COLLAPSE BUTTON AT THE BOTTOM */}
+        <div style={{
+          padding: '12px 14px',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#0d1017'
+        }}>
+          <button
+            type="button"
+            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            title={isSidebarCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar"}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '8px 12px',
+              borderRadius: 10,
+              backgroundColor: '#161b26',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              color: '#94a3b8',
+              cursor: 'pointer',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <PanelLeftOpen style={{ width: 16, height: 16, transform: isSidebarCollapsed ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
+            {!isSidebarCollapsed && <span>Thu gọn</span>}
+          </button>
+        </div>
       </aside>
 
       {/* MAIN CONTENT CONTAINER */}
@@ -2237,13 +2586,6 @@ export default function App() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 30
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              style={{ padding: 8, borderRadius: 10, backgroundColor: '#161b26', border: '1px solid rgba(255, 255, 255, 0.08)', color: '#94a3b8', cursor: 'pointer' }}
-            >
-              <PanelLeftOpen style={{ width: 16, height: 16 }} />
-            </button>
-
             {/* 1. TÌM KIẾM CÓ GỢI Ý (SEARCH AUTO-COMPLETE & SUGGESTIONS) */}
             <div style={{ position: 'relative' }}>
               <Search style={{ width: 15, height: 15, color: '#64748b', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
@@ -2438,17 +2780,322 @@ export default function App() {
 
         {/* WORKSPACE PAGE BODY */}
         <main style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1440, margin: '0 auto', width: '100%' }}>
-          {/* TAB 1: ĐƠN HÀNG WORKSPACE (TOÀN BỘ ĐẦU MỤC & ĐẦU MỤC NHỎ ĐỒNG BỘ 8 ĐẦU MỐI) */}
           {activeTab === 'orders' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              {/* TOP VISUALIZER BAR: 13 BƯỚC VIỆC LIÊN THÔNG */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 40 }}>
+              
+              {/* ========================================================================= */}
+              {/* CASE A: GIAO DIỆN TỔNG (SELECTED HUB === 'ALL') */}
+              {/* ========================================================================= */}
+              {selectedHub === 'ALL' ? (
+                <>
+                  {/* 1. EXECUTIVE BANNER CARD FOR OVERALL ORDERS MANAGEMENT (ĐỒNG BỘ THEME LỊCH) */}
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.7), rgba(14, 165, 233, 0.35), rgba(11, 15, 25, 0.95))',
+                    borderRadius: 24,
+                    padding: '28px 34px',
+                    border: '1px solid #38bdf8',
+                    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: 24
+                  }}>
+                    {/* LEFT MAIN CONTENT */}
+                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                      {/* BADGES ROW */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                        <span style={{
+                          backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)',
+                          color: '#38bdf8', fontSize: '0.72rem', fontWeight: 800, padding: '4px 14px', borderRadius: 20,
+                          display: 'flex', alignItems: 'center', gap: 6, letterSpacing: '0.04em'
+                        }}>
+                          🌐 GIAO DIỆN TỔNG QUẢN LÝ
+                        </span>
+                        <span style={{
+                          backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)',
+                          color: '#38bdf8', fontSize: '0.72rem', fontWeight: 800, padding: '4px 14px', borderRadius: 20,
+                          display: 'flex', alignItems: 'center', gap: 6
+                        }}>
+                          ⚡ TOÀN BỘ 8 ĐẦU MỐI VẬN HÀNH
+                        </span>
+                      </div>
+
+                      {/* TITLE & DESCRIPTION */}
+                      <div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
+                          AVG ONE GLOBAL DASHBOARD
+                        </div>
+                        <h1 style={{ fontSize: '2.3rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.02em', lineHeight: 1.15 }}>
+                          GIAO DIỆN TỔNG QUẢN LÝ ĐƠN HÀNG
+                        </h1>
+                      </div>
+                      
+                      {/* DESCRIPTION SUB-BOX (GIỐNG HỆT BOX NỘI DUNG MÔ TẢ CỦA LỊCH) */}
+                      <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 8,
+                        padding: '6px 14px', borderRadius: 10,
+                        backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                        backdropFilter: 'blur(6px)', width: 'fit-content'
+                      }}>
+                        <span style={{ fontSize: '0.84rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4 }}>
+                          Bảng điều hành tổng thể theo dõi, phân luồng và tổng hợp tiến độ xử lý đơn hàng liên thông 13 bước việc trên toàn bộ các Đầu mối.
+                        </span>
+                      </div>
+
+                      {/* 4 SUMMARY METRIC CARDS FOR GLOBAL VIEW */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 6, flexWrap: 'wrap' }}>
+                        {/* CARD 1: TỔNG ĐƠN HÀNG */}
+                        <div style={{
+                          backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                          backdropFilter: 'blur(10px)', borderRadius: 14, padding: '9px 16px', display: 'flex', alignItems: 'center', gap: 12
+                        }}>
+                          <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                            <Package style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>{orders.length}</div>
+                            <div style={{ fontSize: '0.64rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2 }}>TỔNG ĐƠN HÀNG</div>
+                          </div>
+                        </div>
+
+                        {/* CARD 2: KHẨN / TRỌNG ĐIỂM */}
+                        <div style={{
+                          backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                          backdropFilter: 'blur(10px)', borderRadius: 14, padding: '9px 16px', display: 'flex', alignItems: 'center', gap: 12
+                        }}>
+                          <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                            <Zap style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                              {orders.filter(o => o.orderStatus === 'TRỌNG ĐIỂM' || o.orderStatus === 'KHẨN CẤP').length}
+                            </div>
+                            <div style={{ fontSize: '0.64rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2 }}>TRỌNG ĐIỂM / KHẨN</div>
+                          </div>
+                        </div>
+
+                        {/* CARD 3: ĐANG XỬ LÝ */}
+                        <div style={{
+                          backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                          backdropFilter: 'blur(10px)', borderRadius: 14, padding: '9px 16px', display: 'flex', alignItems: 'center', gap: 12
+                        }}>
+                          <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                            <Clock style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                              {orders.filter(o => o.status === 'IN_PROGRESS' || o.status === 'REVIEW').length}
+                            </div>
+                            <div style={{ fontSize: '0.64rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2 }}>ĐANG THỰC HIỆN</div>
+                          </div>
+                        </div>
+
+                        {/* CARD 4: HOÀN THÀNH */}
+                        <div style={{
+                          backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(52, 211, 153, 0.35)',
+                          backdropFilter: 'blur(10px)', borderRadius: 14, padding: '9px 16px', display: 'flex', alignItems: 'center', gap: 12
+                        }}>
+                          <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(52, 211, 153, 0.2)' }}>
+                            <CheckCircle2 style={{ width: 18, height: 18, color: '#34d399' }} />
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                              {orders.filter(o => o.status === 'DONE').length}
+                            </div>
+                            <div style={{ fontSize: '0.64rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2 }}>ĐÃ HOÀN THÀNH</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* RIGHT GRAPHIC DECORATION */}
+                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{
+                        width: 130, height: 130, borderRadius: 26,
+                        background: 'linear-gradient(135deg, rgba(56,189,248,0.25) 0%, rgba(2,132,199,0.3) 100%)',
+                        border: '1px solid #38bdf8', backdropFilter: 'blur(12px)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
+                        boxShadow: '0 15px 35px rgba(0,0,0,0.5)'
+                      }}>
+                        <Globe style={{ width: 52, height: 52, color: '#38bdf8' }} />
+                        <div style={{ position: 'absolute', top: -10, right: -10, backgroundColor: '#0284c7', color: '#fff', padding: 8, borderRadius: 12, border: '2px solid #0f172a' }}>
+                          <Zap style={{ width: 16, height: 16 }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. QUICK HUB SELECTOR FILTER BAR FOR GLOBAL VIEW */}
+                  <div style={{
+                    backgroundColor: '#0f172a', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16,
+                    padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto'
+                  }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Filter style={{ width: 14, height: 14 }} /> Chuyển Sang Đầu Mối Độc Lập:
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                      {[
+                        { key: 'HUB_0', label: '👑 HUB 0 - Ban Giám Đốc' },
+                        { key: 'HUB_1', label: '💰 HUB 1 - Tài Chính' },
+                        { key: 'HUB_2.1', label: '👥 HUB 2.1 - Nhân Sự' },
+                        { key: 'HUB_2.2', label: '🖥️ HUB 2.2 - Hạ Tầng' },
+                        { key: '5.1B', label: '📥 5.1B - Đầu Vào' },
+                        { key: '5.1T', label: '📤 5.1T - Đầu Ra' },
+                        { key: 'HUB_8', label: '🎓 HUB 8 - Cố Vấn' },
+                        { key: 'HUB_9', label: '🏛️ HUB 9 - VP HĐQT' }
+                      ].map(hubItem => (
+                        <button
+                          key={hubItem.key}
+                          onClick={() => setSelectedHub(hubItem.key as any)}
+                          style={{
+                            padding: '7px 14px', borderRadius: 10, fontSize: '0.75rem', fontWeight: 800, whiteSpace: 'nowrap',
+                            backgroundColor: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8',
+                            border: '1px solid rgba(255, 255, 255, 0.08)', cursor: 'pointer', transition: 'all 0.18s ease'
+                          }}
+                        >
+                          {hubItem.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* ========================================================================= */
+                /* CASE B: GIAO DIỆN ĐỘC LẬP CHO TỪNG ĐẦU MỐI CỤ THỂ (SELECTED HUB !== 'ALL') */
+                /* ========================================================================= */
+                (() => {
+                  const hubMeta = HUB_MAP[selectedHub] || HUB_MAP.ALL;
+                  const currentHubOrders = orders.filter(o => o.department === selectedHub || o.department?.includes(selectedHub));
+                  return (
+                    <>
+                      {/* TOP ACTION NAV BAR WITH BACK BUTTON */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedHub('ALL'); showToast('🌐 Đã quay về Giao diện Tổng'); }}
+                          style={{
+                            padding: '10px 20px', borderRadius: 12,
+                            background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(14, 165, 233, 0.2) 100%)',
+                            color: '#38bdf8', border: '1px solid #38bdf8', fontSize: '0.82rem', fontWeight: 800,
+                            display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+                          }}
+                        >
+                          ⬅️ Quay Về Giao Diện Tổng
+                        </button>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 700 }}>Đang xem Giao diện độc lập:</span>
+                          <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '0.74rem', fontWeight: 800, padding: '4px 12px', borderRadius: 20 }}>
+                            {hubMeta.name}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* INDEPENDENT SUB-HUB BANNER (ĐỒNG BỘ THEME LỊCH) */}
+                      <div style={{
+                        background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.7), rgba(14, 165, 233, 0.35), rgba(11, 15, 25, 0.95))',
+                        borderRadius: 24, padding: '28px 34px', border: '1px solid #38bdf8',
+                        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)', position: 'relative', overflow: 'hidden',
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24
+                      }}>
+                        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '0.72rem', fontWeight: 800, padding: '4px 14px', borderRadius: 20 }}>
+                              🎯 GIAO DIỆN ĐẦU MỐI ĐỘC LẬP
+                            </span>
+                            <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8', fontSize: '0.72rem', fontWeight: 800, padding: '4px 14px', borderRadius: 20 }}>
+                              ⚡ {currentHubOrders.length} Đơn Hàng Tại Đầu Mối
+                            </span>
+                          </div>
+
+                          <div>
+                            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
+                              SUB-HUB DEDICATED WORKSPACE
+                            </div>
+                            <h1 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.02em' }}>
+                              {hubMeta.name.toUpperCase()}
+                            </h1>
+                          </div>
+                          
+                          {/* DESCRIPTION SUB-BOX */}
+                          <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 8,
+                            padding: '6px 14px', borderRadius: 10,
+                            backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                            backdropFilter: 'blur(6px)', width: 'fit-content'
+                          }}>
+                            <span style={{ fontSize: '0.84rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4 }}>
+                              {hubMeta.description || 'Giao diện tác nghiệp và quản lý đơn hàng chuyên sâu độc lập dành riêng cho đầu mối.'}
+                            </span>
+                          </div>
+
+                          {/* 4 DEDICATED SUB-HUB METRIC STAT CARDS */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 4, flexWrap: 'wrap' }}>
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <Package style={{ width: 16, height: 16, color: '#38bdf8' }} />
+                              <div>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{currentHubOrders.length}</div>
+                                <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', marginTop: 2 }}>ĐƠN TẠI ĐẦU MỐI</div>
+                              </div>
+                            </div>
+
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <Zap style={{ width: 16, height: 16, color: '#38bdf8' }} />
+                              <div>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
+                                  {currentHubOrders.filter(o => o.orderStatus === 'TRỌNG ĐIỂM' || o.orderStatus === 'KHẨN CẤP').length}
+                                </div>
+                                <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginTop: 2 }}>KHẨN / TRỌNG ĐIỂM</div>
+                              </div>
+                            </div>
+
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 12, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <Clock style={{ width: 16, height: 16, color: '#38bdf8' }} />
+                              <div>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
+                                  {currentHubOrders.filter(o => o.status === 'IN_PROGRESS' || o.status === 'REVIEW').length}
+                                </div>
+                                <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', marginTop: 2 }}>ĐANG THỰC HIỆN</div>
+                              </div>
+                            </div>
+
+                            <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(52, 211, 153, 0.35)', borderRadius: 12, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <CheckCircle2 style={{ width: 16, height: 16, color: '#34d399' }} />
+                              <div>
+                                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
+                                  {currentHubOrders.filter(o => o.status === 'DONE').length}
+                                </div>
+                                <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginTop: 2 }}>ĐÃ HOÀN THÀNH</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* RIGHT GRAPHIC ICON FOR SUB-HUB */}
+                        <div style={{
+                          width: 110, height: 110, borderRadius: 24,
+                          background: 'linear-gradient(135deg, rgba(56,189,248,0.25) 0%, rgba(2,132,199,0.3) 100%)',
+                          border: '1px solid #38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.8rem'
+                        }}>
+                          {hubMeta.icon}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()
+              )}
+
+              {/* 3. TOP VISUALIZER BAR: 13 BƯỚC VIỆC LIÊN THÔNG */}
               <Workflow13Visualizer
                 orders={orders}
                 selectedStep={selectedStepFilter}
                 onSelectStep={(stepNum) => setSelectedStepFilter(stepNum)}
               />
 
-              {/* DEDICATED HUB WORKSPACE COMPONENT (KANBAN & TABLE VIEW CHO ĐẦU MỐI) */}
+              {/* 4. DEDICATED HUB WORKSPACE COMPONENT (KANBAN & TABLE VIEW CHO ĐẦU MỐI) */}
               <HubWorkspaceComponent
                 hubKey={selectedHub}
                 orders={selectedStepFilter !== null ? orders.filter(o => ((o as any).currentStep || 1) === selectedStepFilter) : orders}
@@ -2463,6 +3110,7 @@ export default function App() {
                 onAdvanceStep={handleAdvanceStep}
                 onUpdateDocumentUrl={handleUpdateOrderDocUrl}
               />
+
             </div>
           )}
 
@@ -2829,7 +3477,7 @@ export default function App() {
                     {(() => {
                       const actualLineColor = totalInflationMinutes > 0 ? '#ef4444' : '#34d399';
 
-                      // Pre-process data based on chartViewMode: 'detail' | 'day' | 'month'
+                      // Pre-process data based on chartViewMode: 'detail' | 'day' | 'week' | 'month' | 'year'
                       let rawChartList: Array<{
                         date: string;
                         planned: number;
@@ -2882,12 +3530,38 @@ export default function App() {
                           isInflated: val.act > val.planned,
                           inflation: val.act - val.planned
                         }));
+                      } else if (chartViewMode === 'week') {
+                        // Aggregate total planned and actual minutes per week
+                        const weekMap = new Map<string, { planned: number; act: number }>();
+                        filteredAnalyticsEvents.forEach(ev => {
+                          const dp = parseDateParts(ev.date);
+                          const wKey = dp.month > 0 ? `Tuần ${dp.weekStr.replace('W', '')} (T${dp.month < 10 ? '0' + dp.month : dp.month})` : 'Khác';
+                          const planS = parseTimeStr(ev.plannedStartTime, 17, 0);
+                          const planE = parseTimeStr(ev.plannedEndTime, 18, 0);
+                          const planned = Math.max(0, (planE.h * 60 + planE.m) - (planS.h * 60 + planS.m));
+
+                          const actS = parseTimeStr((ev as any).actualStartTime || ev.plannedStartTime, planS.h, planS.m);
+                          const actE = parseTimeStr((ev as any).actualEndTime || ev.plannedEndTime, planE.h, planE.m);
+                          const actDiff = (actE.h * 60 + actE.m) - (actS.h * 60 + actS.m);
+                          const act = (!isNaN(actDiff) && actDiff >= 0) ? actDiff : planned;
+
+                          const cur = weekMap.get(wKey) || { planned: 0, act: 0 };
+                          weekMap.set(wKey, { planned: cur.planned + planned, act: cur.act + act });
+                        });
+
+                        rawChartList = Array.from(weekMap.entries()).map(([wKey, val]) => ({
+                          date: wKey,
+                          planned: val.planned,
+                          act: val.act,
+                          isInflated: val.act > val.planned,
+                          inflation: val.act - val.planned
+                        }));
                       } else if (chartViewMode === 'month') {
                         // Aggregate total planned and actual minutes per month
                         const monthMap = new Map<string, { planned: number; act: number }>();
                         filteredAnalyticsEvents.forEach(ev => {
-                          const parts = ev.date ? ev.date.split('/') : [];
-                          const mKey = parts.length === 3 ? `T${parts[1]}` : 'T08';
+                          const dp = parseDateParts(ev.date);
+                          const mKey = dp.month > 0 ? `Tháng ${dp.month < 10 ? '0' + dp.month : dp.month}` : 'Khác';
                           const planS = parseTimeStr(ev.plannedStartTime, 17, 0);
                           const planE = parseTimeStr(ev.plannedEndTime, 18, 0);
                           const planned = Math.max(0, (planE.h * 60 + planE.m) - (planS.h * 60 + planS.m));
@@ -2908,6 +3582,32 @@ export default function App() {
                           isInflated: val.act > val.planned,
                           inflation: val.act - val.planned
                         }));
+                      } else if (chartViewMode === 'year') {
+                        // Aggregate total planned and actual minutes per year
+                        const yearMap = new Map<string, { planned: number; act: number }>();
+                        filteredAnalyticsEvents.forEach(ev => {
+                          const dp = parseDateParts(ev.date);
+                          const yKey = dp.year > 0 ? `Năm ${dp.year}` : 'Năm 2026';
+                          const planS = parseTimeStr(ev.plannedStartTime, 17, 0);
+                          const planE = parseTimeStr(ev.plannedEndTime, 18, 0);
+                          const planned = Math.max(0, (planE.h * 60 + planE.m) - (planS.h * 60 + planS.m));
+
+                          const actS = parseTimeStr((ev as any).actualStartTime || ev.plannedStartTime, planS.h, planS.m);
+                          const actE = parseTimeStr((ev as any).actualEndTime || ev.plannedEndTime, planE.h, planE.m);
+                          const actDiff = (actE.h * 60 + actE.m) - (actS.h * 60 + actS.m);
+                          const act = (!isNaN(actDiff) && actDiff >= 0) ? actDiff : planned;
+
+                          const cur = yearMap.get(yKey) || { planned: 0, act: 0 };
+                          yearMap.set(yKey, { planned: cur.planned + planned, act: cur.act + act });
+                        });
+
+                        rawChartList = Array.from(yearMap.entries()).map(([yKey, val]) => ({
+                          date: yKey,
+                          planned: val.planned,
+                          act: val.act,
+                          isInflated: val.act > val.planned,
+                          inflation: val.act - val.planned
+                        }));
                       }
 
                       // Apply pagination and limits
@@ -2922,98 +3622,28 @@ export default function App() {
                           backgroundColor: '#090d16', borderRadius: 14, padding: '18px 20px',
                           border: '1px solid rgba(56, 189, 248, 0.25)', display: 'flex', flexDirection: 'column', gap: 16
                         }}>
-                          {/* CHART TOOLBAR HEADER: CHẾ ĐỘ XEM + HẠN MỨC HIỂN THỊ + ĐỒNG BỘ NÚT CHÚ THÍCH */}
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-                            
-                            {/* BỘ CHỌN CHẾ ĐỘ XEM (CHỈNH VIEW THEO TỪNG CUỘC / NGÀY / THÁNG) */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                📊 CHẾ ĐỘ XEM:
+                          {/* CHART TOOLBAR HEADER: CHÚ THÍCH NÚT BIỂU ĐỒ */}
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                            {/* CHÚ THÍCH ĐƯỜNG LINE */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.72rem', fontWeight: 700 }}>
+                              <span style={{ color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 5 }}>
+                                <span style={{ width: 12, height: 2, backgroundColor: '#38bdf8', borderRadius: 2 }} /> Dự Kiến
                               </span>
-                              <div style={{ display: 'inline-flex', backgroundColor: 'rgba(255, 255, 255, 0.06)', borderRadius: 8, padding: 3, gap: 4 }}>
-                                <button
-                                  type="button"
-                                  onClick={() => { setChartViewMode('detail'); setChartPageOffset(0); }}
-                                  style={{
-                                    padding: '4px 10px', borderRadius: 6, fontSize: '0.72rem', fontWeight: 800, border: 'none', cursor: 'pointer',
-                                    backgroundColor: chartViewMode === 'detail' ? '#0284c7' : 'transparent',
-                                    color: chartViewMode === 'detail' ? '#ffffff' : '#94a3b8',
-                                    transition: 'all 0.15s ease'
-                                  }}
-                                >
-                                  Từng Cuộc Trao Đổi
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => { setChartViewMode('day'); setChartPageOffset(0); }}
-                                  style={{
-                                    padding: '4px 10px', borderRadius: 6, fontSize: '0.72rem', fontWeight: 800, border: 'none', cursor: 'pointer',
-                                    backgroundColor: chartViewMode === 'day' ? '#0284c7' : 'transparent',
-                                    color: chartViewMode === 'day' ? '#ffffff' : '#94a3b8',
-                                    transition: 'all 0.15s ease'
-                                  }}
-                                >
-                                  Tổng Hợp Theo Ngày
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => { setChartViewMode('month'); setChartPageOffset(0); }}
-                                  style={{
-                                    padding: '4px 10px', borderRadius: 6, fontSize: '0.72rem', fontWeight: 800, border: 'none', cursor: 'pointer',
-                                    backgroundColor: chartViewMode === 'month' ? '#0284c7' : 'transparent',
-                                    color: chartViewMode === 'month' ? '#ffffff' : '#94a3b8',
-                                    transition: 'all 0.15s ease'
-                                  }}
-                                >
-                                  Tổng Hợp Theo Tháng
-                                </button>
-                              </div>
+                              <span style={{ color: '#34d399', display: 'flex', alignItems: 'center', gap: 5 }}>
+                                <span style={{ width: 12, height: 2, backgroundColor: '#34d399', borderRadius: 2 }} /> Đạt Kế Hoạch
+                              </span>
+                              <span style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: 5 }}>
+                                <span style={{ width: 12, height: 2, backgroundColor: '#ef4444', borderRadius: 2 }} /> Thực Tế (Lạm Phát)
+                              </span>
                             </div>
-
-                            {/* BỘ CHỌN SỐ LƯỢNG HIỂN THỊ TRÊN 1 MÀN HÌNH (10, 15, 30, 50, TẤT CẢ) & CHÚ THÍCH */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8' }}>Hiển thị:</span>
-                                <select
-                                  value={chartRangeLimit}
-                                  onChange={(e) => {
-                                    setChartRangeLimit(Number(e.target.value));
-                                    setChartPageOffset(0);
-                                  }}
-                                  style={{
-                                    backgroundColor: '#161b26', border: '1px solid rgba(56, 189, 248, 0.4)',
-                                    color: '#ffffff', padding: '3px 8px', borderRadius: 6, fontSize: '0.74rem', fontWeight: 800, cursor: 'pointer', outline: 'none'
-                                  }}
-                                >
-                                  <option value={10}>10 điểm</option>
-                                  <option value={15}>15 điểm</option>
-                                  <option value={30}>30 điểm</option>
-                                  <option value={50}>50 điểm</option>
-                                  <option value={0}>Tất cả (Cuộn ngang)</option>
-                                </select>
-                              </div>
-
-                              {/* CHÚ THÍCH ĐƯỜNG LINE */}
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: '0.72rem', fontWeight: 700 }}>
-                                <span style={{ color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 5 }}>
-                                  <span style={{ width: 12, height: 2, backgroundColor: '#38bdf8', borderRadius: 2 }} /> Dự Kiến
-                                </span>
-                                <span style={{ color: '#34d399', display: 'flex', alignItems: 'center', gap: 5 }}>
-                                  <span style={{ width: 12, height: 2, backgroundColor: '#34d399', borderRadius: 2 }} /> Đạt Kế Hoạch
-                                </span>
-                                <span style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: 5 }}>
-                                  <span style={{ width: 12, height: 2, backgroundColor: '#ef4444', borderRadius: 2 }} /> Thực Tế (Lạm Phát)
-                                </span>
-                              </div>
-                            </div>
-
                           </div>
 
                           {/* SVG LINE CHART VIEW VỚI HỖ TRỢ DỮ LIỆU LỚN & ĐIỀU HƯỚNG */}
                           {(() => {
                             const list = displayedChartList;
-                            const calculatedMax = Math.max(120, ...list.map(ev => Math.max(ev.planned, ev.act)));
-                            const maxVal = Math.ceil(calculatedMax / 15) * 15;
+                            const calculatedMax = Math.max(180, ...list.map(ev => Math.max(ev.planned, ev.act)));
+                            // Làm tròn maxVal lên mốc bội số của 30 (0, 30, 60, 90, 120, 150, 180...)
+                            const maxVal = Math.ceil(calculatedMax / 30) * 30;
 
                             const width = chartRangeLimit === 0 ? Math.max(1000, list.length * 55) : 1000;
                             const height = 300;
@@ -3025,7 +3655,8 @@ export default function App() {
                             const chartW = width - paddingLeft - paddingRight;
                             const chartH = height - paddingTop - paddingBottom;
 
-                            const tickStep = maxVal > 240 ? 60 : maxVal > 180 ? 30 : 15;
+                            // Đơn vị đo thời gian trục Y cố định theo nấc 30 phút: 0, 30, 60, 90, 120, 150, 180...
+                            const tickStep = 30;
                             const yTicks: number[] = [];
                             for (let v = 0; v <= maxVal; v += tickStep) {
                               yTicks.push(v);
@@ -4311,231 +4942,660 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 3.2: THÔNG ĐIỆP ĐIỀU HÀNH 24/7 */}
+          {/* TAB 3.2: THÔNG ĐIỆP ĐIỀU HÀNH 24/7 (ĐỒNG BỘ 100% THEO GOOGLE SHEET VÀ TONE MÀU LỊCH) */}
           {activeTab === 'system-executive-message' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-              {/* HEADER BANNER (ĐỒNG BỘ HOÀN TOÀN VỚI HỘP LỊCH TRAO ĐỔI HÀNG NGÀY) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 40 }}>
+              
+              {/* 1. HEADER BANNER (ĐỒNG BỘ HOÀN TOÀN VỚI TONE MÀU TAB LỊCH TRAO ĐỔI HÀNG NGÀY) */}
               <div style={{
                 background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.7), rgba(14, 165, 233, 0.35), rgba(11, 15, 25, 0.95))',
-                border: '1px solid #38bdf8', borderRadius: 24, padding: '24px 32px',
+                border: '1px solid #38bdf8', borderRadius: 24, padding: '28px 34px',
                 boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20,
-                backdropFilter: 'blur(16px)'
+                backdropFilter: 'blur(16px)', position: 'relative', overflow: 'hidden'
               }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ padding: 8, borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.4)' }}>
-                      <Zap style={{ width: 22, height: 22, color: '#38bdf8' }} />
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <h1 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.02em', lineHeight: 1.15 }}>
+                    THÔNG ĐIỆP & NGHỊ QUYẾT ĐIỀU HÀNH
+                  </h1>
+
+                  {/* DESCRIPTION SUB-BOX (GIỐNG HỆT BOX NỘI DUNG MÔ TẢ CỦA LỊCH) */}
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '6px 14px', borderRadius: 10,
+                    backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                    backdropFilter: 'blur(6px)', width: 'fit-content'
+                  }}>
+                    <span style={{ fontSize: '0.84rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4 }}>
+                      Kênh tổng hợp, giám sát và phân loại dữ liệu Thông Điệp Điều Hành 24/7 từ Google Sheet chính thức của tập đoàn AVG.
+                    </span>
+                  </div>
+                </div>
+
+                {/* TOP ACTION BUTTONS */}
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <a
+                    href="https://docs.google.com/spreadsheets/d/13cN2ert23B1W4wlySPXXVbCj-UgICEef5UQb7FI2vSA/edit?gid=269023045#gid=269023045"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      padding: '11px 20px', borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                      color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '0.82rem',
+                      fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.3)', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <Globe style={{ width: 16, height: 16 }} /> Xem Google Sheet Gốc
+                  </a>
+                </div>
+              </div>
+
+              {/* 2. 4 EXECUTIVE STATS KPI OVERVIEW CARDS (KHU VỰC THỐNG KÊ KHOA HỌC TỔNG SỐ 798) */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+                {/* CARD 1: TỔNG TĐĐH */}
+                <div style={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: 18, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 8,
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.4)', position: 'relative', overflow: 'hidden'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      TỔNG THÔNG ĐIỆP & THÔNG TIN
+                    </span>
+                    <div style={{ padding: 6, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                      <Zap style={{ width: 18, height: 18, color: '#38bdf8' }} />
                     </div>
-                    <h1 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em', margin: 0, textTransform: 'uppercase' }}>
-                      THÔNG ĐIỆP & QUYẾT ĐỊNH ĐIỀU HÀNH AVG ONE
-                    </h1>
                   </div>
-                  <p style={{ fontSize: '0.84rem', color: '#cbd5e1', margin: 0, maxWidth: 780, lineHeight: 1.5, fontWeight: 500 }}>
-                    Kênh thông điệp 24/7 trực tiếp từ Người Điều Hành / Ban Giám Đốc nhằm tháo gỡ tất cả vướng mắc vận hành, thực hành thực tiễn & định hướng chiến lược.
-                  </p>
+                  <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                    798 <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 700 }}>Thông điệp</span>
+                  </div>
+                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 600, marginTop: 2 }}>
+                    Tỷ lệ bao phủ: <strong style={{ color: '#38bdf8' }}>100%</strong> toàn bộ hệ thống
+                  </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <button
-                    onClick={() => handleSyncGoogleSheet(true)}
-                    style={{
-                      padding: '10px 18px', borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '0.78rem',
-                      fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                    }}
-                  >
-                    <RefreshCw style={{ width: 15, height: 15 }} /> Đồng Bộ Google Sheet 24/7
-                  </button>
+                {/* CARD 2: TĐĐH TRỰC TIẾP */}
+                <div style={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: 18, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 8,
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.4)'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      TĐĐH TRỰC TIẾP (CHỈ ĐẠO LÕI)
+                    </span>
+                    <div style={{ padding: 6, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                      <CheckCircle2 style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                    386 <span style={{ fontSize: '0.85rem', color: '#38bdf8', fontWeight: 700 }}>~ 48,37%</span>
+                  </div>
+                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 600, marginTop: 2 }}>
+                    Chỉ đạo trực tiếp có giá trị pháp lý & bắt buộc
+                  </div>
+                </div>
 
-                  <button
-                    onClick={() => setIsAddDirectiveModalOpen(true)}
-                    style={{
-                      padding: '10px 20px', borderRadius: 12, background: 'linear-gradient(135deg, #0284c7, #0068ff)',
-                      color: '#ffffff', border: 'none', fontSize: '0.78rem', fontWeight: 900,
-                      boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                    }}
-                  >
-                    <Plus style={{ width: 16, height: 16 }} /> Ban Hành Thông Điệp Mới
-                  </button>
+                {/* CARD 3: TĐĐH GIÁN TIẾP */}
+                <div style={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(192, 132, 252, 0.4)',
+                  borderRadius: 18, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 8,
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.4)'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      TĐĐH GIÁN TIẾP (THAM KHẢO)
+                    </span>
+                    <div style={{ padding: 6, borderRadius: 10, backgroundColor: 'rgba(192, 132, 252, 0.2)' }}>
+                      <Share2 style={{ width: 18, height: 18, color: '#c084fc' }} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                    129 <span style={{ fontSize: '0.85rem', color: '#c084fc', fontWeight: 700 }}>~ 16,17%</span>
+                  </div>
+                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 600, marginTop: 2 }}>
+                    Nhóm thông tin truyền thông & tham khảo kỹ thuật
+                  </div>
+                </div>
+
+                {/* CARD 4: TĐĐH CHƯA/KHÔNG XÁC NHẬN */}
+                <div style={{
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(245, 158, 11, 0.4)',
+                  borderRadius: 18, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 8,
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.4)'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      TĐĐH CHƯA / KHÔNG XÁC NHẬN
+                    </span>
+                    <div style={{ padding: 6, borderRadius: 10, backgroundColor: 'rgba(245, 158, 11, 0.2)' }}>
+                      <AlertCircle style={{ width: 18, height: 18, color: '#f59e0b' }} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                    283 <span style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 700 }}>~ 35,46%</span>
+                  </div>
+                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 600, marginTop: 2 }}>
+                    Điểm nóng khủng hoảng & đề xuất cần tháo gỡ
+                  </div>
                 </div>
               </div>
 
-              {/* 4 STATS OVERVIEW CARDS */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 16 }}>
-                <div style={{ backgroundColor: '#111624', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16, padding: '18px 20px' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: 6 }}>TỔNG THÔNG ĐIỆP ĐIỀU HÀNH</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{executiveDirectives.length} Quyết Định</div>
-                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: 4 }}>Cập nhật liên tục 24/7</div>
-                </div>
-                <div style={{ backgroundColor: '#111624', border: '1px solid rgba(239, 68, 68, 0.35)', borderRadius: 16, padding: '18px 20px' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ef4444', textTransform: 'uppercase', marginBottom: 6 }}>CẦN THÁO GỠ GẤP</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>
-                    {executiveDirectives.filter(d => d.priority === 'TỐI KHẨN' || d.status === 'ĐANG HIỆU LỰC').length} Chỉ Đạo
-                  </div>
-                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: 4 }}>Ưu tiên giải quyết hàng đầu</div>
-                </div>
-                <div style={{ backgroundColor: '#111624', border: '1px solid rgba(52, 211, 153, 0.35)', borderRadius: 16, padding: '18px 20px' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: 6 }}>ĐÃ THÁO GỠ XONG</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>
-                    {executiveDirectives.filter(d => d.status === 'ĐÃ HOÀN THÀNH').length} Vướng Mắc
-                  </div>
-                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: 4 }}>Nghiệm thu thành công</div>
-                </div>
-                <div style={{ backgroundColor: '#111624', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16, padding: '18px 20px' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: 6 }}>GOOGLE SHEET 24/7</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#10b981', boxShadow: '0 0 10px #10b981' }} />
-                    LIVE SYNC
-                  </div>
-                  <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: 4 }}>Đồng bộ thời gian thực</div>
-                </div>
-              </div>
-
-              {/* FILTER & SEARCH BAR */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, backgroundColor: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: 14 }}>
-                {/* Search Input */}
-                <div style={{ position: 'relative', flex: '1 1 300px' }}>
-                  <Search style={{ width: 16, height: 16, color: '#94a3b8', position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-                  <input
-                    type="text"
-                    placeholder="Tìm kiếm thông điệp, mã quyết định hoặc từ khóa tháo gỡ..."
-                    value={directiveSearchQuery}
-                    onChange={e => setDirectiveSearchQuery(e.target.value)}
-                    style={{
-                      width: '100%', backgroundColor: '#1a2234', border: '1px solid rgba(56, 189, 248, 0.3)',
-                      borderRadius: 10, padding: '9px 12px 9px 38px', fontSize: '0.82rem', color: '#fff', outline: 'none'
-                    }}
-                  />
-                </div>
-
-                {/* Category Filter Pills */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                  {['ALL', 'Tháo gỡ vận hành', 'Định hướng chiến lược', 'Kỹ thuật - Hệ thống', 'Nhân sự - Tổ chức'].map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setDirectiveFilterCategory(cat)}
+              {/* 3. MULTI-DIMENSIONAL TOOLBAR: SEARCH & CATEGORY FILTERS & SENDER HUBS */}
+              <div style={{
+                backgroundColor: '#0f172a', border: '1px solid rgba(56, 189, 248, 0.35)',
+                borderRadius: 18, padding: 18, display: 'flex', flexDirection: 'column', gap: 14,
+                boxShadow: '0 8px 25px rgba(0,0,0,0.4)'
+              }}>
+                {/* ROW 1: SEARCH & VIEW MODE SWITCHER */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14 }}>
+                  {/* Search Input */}
+                  <div style={{ position: 'relative', flex: '1 1 340px' }}>
+                    <Search style={{ width: 18, height: 18, color: '#64748b', position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)' }} />
+                    <input
+                      type="text"
+                      placeholder="Tìm kiếm thông điệp, nội dung chỉ đạo, đầu mối phát đi, ghi chú hoặc link..."
+                      value={directiveSearchQuery}
+                      onChange={e => setDirectiveSearchQuery(e.target.value)}
                       style={{
-                        padding: '6px 12px', borderRadius: 8, fontSize: '0.75rem', fontWeight: 800,
-                        backgroundColor: directiveFilterCategory === cat ? 'rgba(255, 87, 34, 0.2)' : 'rgba(255,255,255,0.05)',
-                        color: directiveFilterCategory === cat ? '#ff7043' : '#94a3b8',
-                        border: directiveFilterCategory === cat ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                        cursor: 'pointer'
+                        width: '100%', backgroundColor: '#0b0f19', border: '1px solid rgba(56, 189, 248, 0.35)',
+                        borderRadius: 12, padding: '11px 16px 11px 44px', fontSize: '0.84rem', color: '#ffffff', outline: 'none',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)'
+                      }}
+                    />
+                    {directiveSearchQuery && (
+                      <button
+                        onClick={() => setDirectiveSearchQuery('')}
+                        style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', backgroundColor: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                      >
+                        <X style={{ width: 16, height: 16 }} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* View Mode Toggle Buttons */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#0b0f19', padding: 4, borderRadius: 12, border: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                    {[
+                      { key: 'table', label: 'BẢNG DỮ LIỆU KHOA HỌC', icon: <Table style={{ width: 14, height: 14 }} /> },
+                      { key: 'timeline', label: 'DÒNG THỜI GIAN 24/7', icon: <Clock style={{ width: 14, height: 14 }} /> },
+                      { key: 'crisis', label: 'ĐIỂM NÓNG KHỦNG HOẢNG', icon: <AlertTriangle style={{ width: 14, height: 14 }} /> }
+                    ].map(mode => (
+                      <button
+                        key={mode.key}
+                        type="button"
+                        onClick={() => setDirectiveViewMode(mode.key as any)}
+                        style={{
+                          padding: '8px 14px', borderRadius: 9, fontSize: '0.75rem', fontWeight: 800,
+                          backgroundColor: directiveViewMode === mode.key ? '#0284c7' : 'transparent',
+                          color: directiveViewMode === mode.key ? '#ffffff' : '#94a3b8',
+                          border: directiveViewMode === mode.key ? '1px solid #38bdf8' : '1px solid transparent',
+                          cursor: 'pointer', transition: 'all 0.18s ease', display: 'flex', alignItems: 'center', gap: 6
+                        }}
+                      >
+                        {mode.icon}
+                        {mode.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ROW 2: CATEGORY PILLS & SENDER HUB SELECT */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, borderTop: '1px solid rgba(56, 189, 248, 0.15)', paddingTop: 12 }}>
+                  {/* Category Filter Pills */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Filter style={{ width: 14, height: 14 }} /> Phân Loại TĐĐH:
+                    </span>
+                    {[
+                      { key: 'ALL', label: 'Tất Cả (798)', icon: <Layers style={{ width: 13, height: 13 }} /> },
+                      { key: 'TRỰC TIẾP', label: 'Trực Tiếp (386)', icon: <Zap style={{ width: 13, height: 13 }} /> },
+                      { key: 'GIÁN TIẾP', label: 'Gián Tiếp (129)', icon: <Share2 style={{ width: 13, height: 13 }} /> },
+                      { key: 'CHƯA XÁC NHẬN', label: 'Chưa Xác Nhận (283)', icon: <AlertCircle style={{ width: 13, height: 13 }} /> }
+                    ].map(cat => (
+                      <button
+                        key={cat.key}
+                        type="button"
+                        onClick={() => setDirectiveFilterCategory(cat.key)}
+                        style={{
+                          padding: '6px 14px', borderRadius: 10, fontSize: '0.76rem', fontWeight: 800,
+                          backgroundColor: directiveFilterCategory === cat.key ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255,255,255,0.04)',
+                          color: directiveFilterCategory === cat.key ? '#38bdf8' : '#94a3b8',
+                          border: directiveFilterCategory === cat.key ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
+                          cursor: 'pointer', transition: 'all 0.18s ease', display: 'inline-flex', alignItems: 'center', gap: 6
+                        }}
+                      >
+                        {cat.icon}
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Sender Hub Select */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8' }}>Đầu Mối Phát Đi:</span>
+                    <select
+                      value={directiveFilterSender}
+                      onChange={e => setDirectiveFilterSender(e.target.value)}
+                      style={{
+                        backgroundColor: '#0b0f19', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)',
+                        borderRadius: 10, padding: '6px 12px', fontSize: '0.76rem', fontWeight: 800, outline: 'none', cursor: 'pointer'
                       }}
                     >
-                      {cat === 'ALL' ? 'Tất cả lĩnh vực' : cat}
-                    </button>
-                  ))}
+                      <option value="ALL">Tất cả Đầu mối Chủ thể</option>
+                      <option value="DH H&J">Điều Hành H&J</option>
+                      <option value="DH AVG">Điều Hành AVG</option>
+                      <option value="#K1">#K1 (Cố Vấn KTS)</option>
+                      <option value="Kiến">Đầu Mối Kiến</option>
+                      <option value="1">Đầu Mối 1 (Tài Chính)</option>
+                      <option value="2.1">Đầu Mối 2.1 (Nhân Sự)</option>
+                      <option value="2.2">Đầu Mối 2.2 (Hạ Tầng)</option>
+                      <option value="3.1">Đầu Mối 3.1 (R&D)</option>
+                      <option value="3.2">Đầu Mối 3.2 (Thiết Kế)</option>
+                      <option value="4.T">Đầu Mối 4.T (Truyền Thông)</option>
+                      <option value="5.1B">Đầu Mối 5.1B (Đầu Vào)</option>
+                      <option value="5.1T">Đầu Mối 5.1T (Đầu Ra)</option>
+                      <option value="#">Đầu Mối # (Sản Xuất)</option>
+                      <option value="0">Đầu Mối 0</option>
+                      <option value="8">Đầu Mối 8</option>
+                      <option value="9">Đầu Mối 9</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              {/* EXECUTIVE DIRECTIVE CARDS LIST */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {executiveDirectives
-                  .filter(d => {
-                    if (directiveFilterCategory !== 'ALL' && d.category !== directiveFilterCategory) return false;
-                    if (directiveSearchQuery) {
-                      const q = directiveSearchQuery.toLowerCase();
-                      return d.title.toLowerCase().includes(q) || d.code.toLowerCase().includes(q) || d.content.toLowerCase().includes(q) || d.scope.toLowerCase().includes(q);
-                    }
-                    return true;
-                  })
-                  .map(item => (
-                    <div
-                      key={item.id}
-                      style={{
-                        backgroundColor: '#111624', borderRadius: 18, border: '1px solid rgba(255, 87, 34, 0.35)',
-                        padding: 22, boxShadow: '0 12px 35px rgba(0, 0, 0, 0.5)', display: 'flex', flexDirection: 'column', gap: 14
-                      }}
-                    >
-                      {/* TOP BAR BADGES */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                          {/* CODE */}
-                          <span style={{ padding: '4px 10px', borderRadius: 8, backgroundColor: 'rgba(255, 87, 34, 0.2)', color: '#ff7043', fontSize: '0.78rem', fontWeight: 900, border: '1px solid rgba(255, 87, 34, 0.4)', fontFamily: 'monospace' }}>
-                            {item.code}
-                          </span>
+              {/* 4. MAIN DISPLAY AREA: TABLE VIEW / TIMELINE VIEW / CRISIS VIEW */}
+              {(() => {
+                // Filter messages
+                const filteredMsgs = executiveSheetMessages.filter(msg => {
+                  if (directiveFilterCategory !== 'ALL' && msg.category !== directiveFilterCategory) return false;
+                  if (directiveFilterSender !== 'ALL' && !msg.senderHub.includes(directiveFilterSender)) return false;
+                  if (directiveSearchQuery) {
+                    const q = directiveSearchQuery.toLowerCase();
+                    return msg.content.toLowerCase().includes(q) ||
+                           msg.senderHub.toLowerCase().includes(q) ||
+                           msg.targetHub.toLowerCase().includes(q) ||
+                           (msg.notes && msg.notes.toLowerCase().includes(q)) ||
+                           (msg.attachmentUrl && msg.attachmentUrl.toLowerCase().includes(q));
+                  }
+                  return true;
+                });
 
-                          {/* CATEGORY */}
-                          <span style={{ padding: '4px 10px', borderRadius: 8, backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontSize: '0.75rem', fontWeight: 800, border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                            {item.category}
-                          </span>
+                if (filteredMsgs.length === 0) {
+                  return (
+                    <div style={{ padding: 48, textAlign: 'center', backgroundColor: '#0f172a', borderRadius: 20, border: '1px solid rgba(56, 189, 248, 0.25)' }}>
+                      <Zap style={{ width: 44, height: 44, color: '#64748b', marginBottom: 12 }} />
+                      <div style={{ color: '#ffffff', fontWeight: 800, fontSize: '1.05rem' }}>Không tìm thấy thông điệp phù hợp</div>
+                      <div style={{ color: '#94a3b8', fontSize: '0.84rem', marginTop: 4 }}>Thử thay đổi từ khóa tìm kiếm hoặc chọn bộ lọc phân loại khác</div>
+                    </div>
+                  );
+                }
 
-                          {/* URGENCY */}
-                          <span style={{
-                            padding: '4px 10px', borderRadius: 8, fontSize: '0.75rem', fontWeight: 900,
-                            backgroundColor: item.priority === 'TỐI KHẨN' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-                            color: item.priority === 'TỐI KHẨN' ? '#ef4444' : '#f59e0b',
-                            border: item.priority === 'TỐI KHẨN' ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)'
-                          }}>
-                            🚨 {item.priority}
-                          </span>
-                        </div>
+                // VIEW MODE 1: BẢNG DỮ LIỆU KHOA HỌC (SCIENTIFIC TABLE VIEW)
+                if (directiveViewMode === 'table') {
+                  return (
+                    <div style={{ backgroundColor: '#0b0f19', borderRadius: 20, border: '1px solid rgba(56, 189, 248, 0.35)', overflow: 'hidden', boxShadow: '0 12px 35px rgba(0,0,0,0.6)' }}>
+                      <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', textAlign: 'left' }}>
+                          <thead>
+                            <tr style={{ backgroundColor: '#0f172a', borderBottom: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8', textTransform: 'uppercase', fontSize: '0.72rem', letterSpacing: '0.06em' }}>
+                              <th style={{ padding: '14px 16px', width: 140 }}>Thời gian</th>
+                              <th style={{ padding: '14px 16px', width: 130 }}>Chủ thể phát</th>
+                              <th style={{ padding: '14px 16px', width: 160 }}>Đầu mối phối hợp</th>
+                              <th style={{ padding: '14px 16px', width: 150 }}>Phân loại TĐĐH</th>
+                              <th style={{ padding: '14px 16px' }}>Nội dung thông điệp chỉ đạo</th>
+                              <th style={{ padding: '14px 16px', width: 180 }}>Ghi chú / Chuyển tiếp</th>
+                              <th style={{ padding: '14px 16px', width: 120, textAlign: 'center' }}>Đính kèm</th>
+                              <th style={{ padding: '14px 16px', width: 90, textAlign: 'center' }}>Chi tiết</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredMsgs.map((msg, idx) => {
+                              const isDirect = msg.category === 'TRỰC TIẾP';
+                              const isIndirect = msg.category === 'GIÁN TIẾP';
+                              const isPending = msg.category === 'CHƯA XÁC NHẬN';
 
-                        {/* DATE & AUTHOR */}
-                        <div style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ color: '#ff7043', fontWeight: 800 }}>👑 {item.author}</span>
-                          <span>•</span>
-                          <span>{item.date}</span>
-                        </div>
+                              const categoryBadgeBg = isDirect ? 'rgba(56, 189, 248, 0.15)' : isIndirect ? 'rgba(192, 132, 252, 0.15)' : 'rgba(245, 158, 11, 0.15)';
+                              const categoryBadgeColor = isDirect ? '#38bdf8' : isIndirect ? '#c084fc' : '#f59e0b';
+                              const categoryBorder = isDirect ? 'rgba(56, 189, 248, 0.4)' : isIndirect ? 'rgba(192, 132, 252, 0.4)' : 'rgba(245, 158, 11, 0.4)';
+
+                              return (
+                                <tr
+                                  key={msg.id}
+                                  style={{
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                                    backgroundColor: idx % 2 === 0 ? 'rgba(15, 23, 42, 0.4)' : 'transparent',
+                                    transition: 'background-color 0.18s ease'
+                                  }}
+                                >
+                                  {/* THỜI GIAN */}
+                                  <td style={{ padding: '14px 16px', whiteSpace: 'nowrap' }}>
+                                    <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.84rem' }}>{msg.date}</div>
+                                    <div style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 700, marginTop: 2 }}>{msg.dayOfWeek} • {msg.time}</div>
+                                  </td>
+
+                                  {/* CHỦ THỂ PHÁT */}
+                                  <td style={{ padding: '14px 16px' }}>
+                                    <span style={{
+                                      backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                                      color: '#38bdf8', fontSize: '0.74rem', fontWeight: 900, padding: '3px 10px', borderRadius: 8,
+                                      display: 'inline-block'
+                                    }}>
+                                      {msg.senderHub}
+                                    </span>
+                                  </td>
+
+                                  {/* ĐẦU MỐI PHỐI HỢP */}
+                                  <td style={{ padding: '14px 16px' }}>
+                                    <span style={{ color: '#cbd5e1', fontSize: '0.76rem', fontWeight: 600 }}>
+                                      {msg.targetHub || '—'}
+                                    </span>
+                                  </td>
+
+                                  {/* PHÂN LOẠI TĐĐH */}
+                                  <td style={{ padding: '14px 16px' }}>
+                                    <span style={{
+                                      backgroundColor: categoryBadgeBg, border: `1px solid ${categoryBorder}`,
+                                      color: categoryBadgeColor, fontSize: '0.7rem', fontWeight: 900, padding: '4px 10px', borderRadius: 12,
+                                      whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 5
+                                    }}>
+                                      {isDirect && <Zap style={{ width: 12, height: 12 }} />}
+                                      {isIndirect && <Share2 style={{ width: 12, height: 12 }} />}
+                                      {isPending && <AlertCircle style={{ width: 12, height: 12 }} />}
+                                      {msg.category}
+                                    </span>
+                                  </td>
+
+                                  {/* NỘI DUNG CHÍNH */}
+                                  <td style={{ padding: '14px 16px', color: '#e2e8f0', lineHeight: 1.5, fontWeight: 500 }}>
+                                    <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                      {msg.content}
+                                    </div>
+                                  </td>
+
+                                  {/* GHI CHÚ / CHUYỂN TIẾP */}
+                                  <td style={{ padding: '14px 16px', color: '#94a3b8', fontSize: '0.76rem', lineHeight: 1.4 }}>
+                                    {msg.notes ? (
+                                      <div style={{ fontStyle: 'italic', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                        <MessageSquare style={{ width: 12, height: 12, display: 'inline', verticalAlign: 'middle', marginRight: 4, color: '#38bdf8' }} /> {msg.notes}
+                                      </div>
+                                    ) : (
+                                      <span style={{ color: '#475569' }}>—</span>
+                                    )}
+                                  </td>
+
+                                  {/* ĐÍNH KÈM */}
+                                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                    {msg.attachmentUrl ? (
+                                      <a
+                                        href={msg.attachmentUrl.startsWith('http') ? msg.attachmentUrl : `https://drive.google.com/drive/my-drive`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        style={{
+                                          padding: '5px 10px', borderRadius: 8, backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                                          color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.35)', fontSize: '0.72rem',
+                                          fontWeight: 800, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4
+                                        }}
+                                      >
+                                        <Paperclip style={{ width: 12, height: 12 }} /> File
+                                      </a>
+                                    ) : (
+                                      <span style={{ color: '#475569', fontSize: '0.72rem' }}>Không có</span>
+                                    )}
+                                  </td>
+
+                                  {/* CHI TIẾT */}
+                                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                    <button
+                                      type="button"
+                                      onClick={() => setSelectedSheetMsg(msg)}
+                                      style={{
+                                        padding: '5px 12px', borderRadius: 8, backgroundColor: '#0284c7',
+                                        color: '#ffffff', border: 'none', fontSize: '0.72rem', fontWeight: 800,
+                                        cursor: 'pointer', boxShadow: '0 2px 8px rgba(2, 132, 199, 0.4)',
+                                        display: 'inline-flex', alignItems: 'center', gap: 4
+                                      }}
+                                    >
+                                      <Eye style={{ width: 12, height: 12 }} /> Xem
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
                       </div>
+                    </div>
+                  );
+                }
 
-                      {/* TITLE */}
-                      <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: 0, lineHeight: 1.45 }}>
-                        {item.title}
-                      </h3>
+                // VIEW MODE 2: DÒNG THỜI GIAN 24/7 (CHRONOLOGICAL TIMELINE)
+                if (directiveViewMode === 'timeline') {
+                  return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'relative', paddingLeft: 20, borderLeft: '2px dashed rgba(56, 189, 248, 0.4)' }}>
+                      {filteredMsgs.map((msg) => (
+                        <div
+                          key={msg.id}
+                          style={{
+                            backgroundColor: '#0f172a', border: '1px solid rgba(56, 189, 248, 0.3)',
+                            borderRadius: 18, padding: 20, boxShadow: '0 8px 25px rgba(0,0,0,0.4)',
+                            position: 'relative', display: 'flex', flexDirection: 'column', gap: 12
+                          }}
+                        >
+                          {/* TIMELINE NODE DOT */}
+                          <div style={{
+                            position: 'absolute', left: -29, top: 22, width: 16, height: 16, borderRadius: '50%',
+                            backgroundColor: '#0284c7', border: '3px solid #0b0f19', boxShadow: '0 0 10px #38bdf8'
+                          }} />
 
-                      {/* CONTENT GUIDANCE */}
-                      <div style={{ backgroundColor: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '14px 16px', fontSize: '0.84rem', color: '#e2e8f0', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
-                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#ff7043', textTransform: 'uppercase', marginBottom: 6 }}>💬 NỘI DUNG CHỈ ĐẠO & GIẢI PHÁP THÁO GỠ:</div>
-                        {item.content}
-                      </div>
+                          {/* HEADER */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <span style={{ fontSize: '0.86rem', fontWeight: 900, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <Clock style={{ width: 14, height: 14 }} /> {msg.date} • {msg.time}
+                              </span>
+                              <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', padding: '3px 10px', borderRadius: 8, fontSize: '0.72rem', fontWeight: 900, border: '1px solid rgba(56, 189, 248, 0.35)' }}>
+                                {msg.senderHub}
+                              </span>
+                              <span style={{ fontSize: '0.76rem', color: '#94a3b8' }}>➔ {msg.targetHub}</span>
+                            </div>
 
-                      {/* SCOPE & ACTIONS */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, paddingTop: 6 }}>
-                        {/* SCOPE */}
-                        <div style={{ fontSize: '0.78rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <MapPin style={{ width: 14, height: 14, color: '#38bdf8' }} />
-                          <span style={{ fontWeight: 800, color: '#38bdf8' }}>Phạm vi áp dụng:</span>
-                          <span style={{ fontWeight: 600 }}>{item.scope}</span>
-                        </div>
+                            <span style={{
+                              padding: '3px 10px', borderRadius: 12, fontSize: '0.7rem', fontWeight: 900,
+                              backgroundColor: msg.category === 'TRỰC TIẾP' ? 'rgba(56, 189, 248, 0.15)' : msg.category === 'GIÁN TIẾP' ? 'rgba(192, 132, 252, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                              color: msg.category === 'TRỰC TIẾP' ? '#38bdf8' : msg.category === 'GIÁN TIẾP' ? '#c084fc' : '#f59e0b',
+                              border: `1px solid ${msg.category === 'TRỰC TIẾP' ? '#38bdf8' : msg.category === 'GIÁN TIẾP' ? '#c084fc' : '#f59e0b'}`,
+                              display: 'inline-flex', alignItems: 'center', gap: 4
+                            }}>
+                              {msg.category === 'TRỰC TIẾP' && <Zap style={{ width: 12, height: 12 }} />}
+                              {msg.category === 'GIÁN TIẾP' && <Share2 style={{ width: 12, height: 12 }} />}
+                              {msg.category === 'CHƯA XÁC NHẬN' && <AlertCircle style={{ width: 12, height: 12 }} />}
+                              {msg.category}
+                            </span>
+                          </div>
 
-                        {/* ACTION BUTTONS */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          {item.solutionDocUrl && (
-                            <a
-                              href={item.solutionDocUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                padding: '6px 14px', borderRadius: 8, fontSize: '0.75rem', fontWeight: 700,
-                                backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.35)',
-                                textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6
-                              }}
-                            >
-                              📄 Văn Bản Kết Luận (Google Sheet 24/7)
-                            </a>
+                          {/* BODY CONTENT */}
+                          <div style={{ backgroundColor: '#0b0f19', borderRadius: 12, padding: 14, border: '1px solid rgba(255,255,255,0.06)', color: '#e2e8f0', fontSize: '0.86rem', lineHeight: 1.5, whiteSpace: 'pre-line' }}>
+                            {msg.content}
+                          </div>
+
+                          {/* FOOTER NOTES & ATTACHMENT */}
+                          {(msg.notes || msg.attachmentUrl) && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, fontSize: '0.76rem', color: '#94a3b8' }}>
+                              {msg.notes && <div>💬 Ghi chú: <span style={{ color: '#cbd5e1', fontStyle: 'italic' }}>{msg.notes}</span></div>}
+                              {msg.attachmentUrl && (
+                                <a href={msg.attachmentUrl} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'underline', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                  <Paperclip style={{ width: 12, height: 12 }} /> Xem tài liệu đính kèm
+                                </a>
+                              )}
+                            </div>
                           )}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }
+
+                // VIEW MODE 3: ĐIỂM NÓNG KHỦNG HOẢNG (CRISIS TRACKER)
+                const crisisMsgs = filteredMsgs.filter(m => m.category === 'CHƯA XÁC NHẬN' || m.content.toLowerCase().includes('khủng hoảng') || m.content.toLowerCase().includes('lỗi') || m.content.toLowerCase().includes('sa thải'));
+
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div style={{ backgroundColor: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.4)', borderRadius: 16, padding: '14px 20px', color: '#f59e0b', fontSize: '0.84rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <AlertTriangle style={{ width: 20, height: 20, color: '#f59e0b' }} />
+                      <span>Danh sách các Điểm nóng Khủng hoảng, Đề xuất cần tháo gỡ cấp thiết và Thông điệp Chưa/Không xác nhận ({crisisMsgs.length} điểm nóng)</span>
+                    </div>
+
+                    {crisisMsgs.map(msg => (
+                      <div
+                        key={msg.id}
+                        style={{
+                          backgroundColor: '#0f172a', border: '1px solid rgba(245, 158, 11, 0.4)',
+                          borderRadius: 18, padding: 22, boxShadow: '0 8px 30px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: 14
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <span style={{ backgroundColor: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.4)', padding: '4px 12px', borderRadius: 8, fontSize: '0.76rem', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <AlertCircle style={{ width: 14, height: 14 }} /> ĐIỂM NÓNG CẦN THÁO GỠ
+                            </span>
+                            <span style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.85rem' }}>{msg.date} • {msg.time}</span>
+                          </div>
+                          <span style={{ color: '#38bdf8', fontWeight: 800, fontSize: '0.78rem' }}>Phát đi từ: {msg.senderHub} ➔ {msg.targetHub}</span>
+                        </div>
+
+                        <div style={{ backgroundColor: '#0b0f19', borderRadius: 12, padding: 16, border: '1px solid rgba(245, 158, 11, 0.2)', color: '#ffffff', fontSize: '0.86rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+                          {msg.content}
+                        </div>
+
+                        {msg.notes && (
+                          <div style={{ backgroundColor: 'rgba(255,255,255,0.04)', padding: '10px 14px', borderRadius: 10, fontSize: '0.78rem', color: '#cbd5e1' }}>
+                            <strong style={{ color: '#f59e0b' }}>Ghi chú xử lý:</strong> {msg.notes}
+                          </div>
+                        )}
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, paddingTop: 6 }}>
+                          {msg.attachmentUrl ? (
+                            <a href={msg.attachmentUrl} target="_blank" rel="noreferrer" style={{ padding: '6px 14px', borderRadius: 8, backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.35)', fontSize: '0.76rem', fontWeight: 800, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <Paperclip style={{ width: 14, height: 14 }} /> Văn bản / Hình ảnh minh chứng
+                            </a>
+                          ) : <div />}
+
                           <button
+                            type="button"
                             onClick={() => {
-                              setExecutiveDirectives(prev => prev.map(d => d.id === item.id ? { ...d, status: 'ĐÃ HOÀN THÀNH' } : d));
-                              showToast(`✅ Đã cập nhật trạng thái tháo gỡ cho quyết định ${item.code}!`);
+                              showToast(`✅ Đã ghi nhận tháo gỡ điểm nóng phát đi từ ${msg.senderHub}!`);
                             }}
-                            style={{
-                              padding: '6px 14px', borderRadius: 8, fontSize: '0.75rem', fontWeight: 800,
-                              backgroundColor: item.status === 'ĐÃ HOÀN THÀNH' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 87, 34, 0.2)',
-                              color: item.status === 'ĐÃ HOÀN THÀNH' ? '#34d399' : '#ff7043',
-                              border: item.status === 'ĐÃ HOÀN THÀNH' ? '1px solid rgba(52, 211, 153, 0.4)' : '1px solid rgba(255, 87, 34, 0.4)',
-                              cursor: 'pointer'
-                            }}
+                            style={{ padding: '8px 18px', borderRadius: 10, background: 'linear-gradient(135deg, #0284c7, #38bdf8)', color: '#ffffff', border: 'none', fontSize: '0.78rem', fontWeight: 900, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
                           >
-                            {item.status === 'ĐÃ HOÀN THÀNH' ? '✅ Đã Tháo Gỡ Hoàn Thành' : '⚡ Xác Nhận Đã Tháo Gỡ'}
+                            <Zap style={{ width: 14, height: 14 }} /> Tiếp Nhận & Tháo Gỡ Ngay
                           </button>
                         </div>
                       </div>
+                    ))}
+                  </div>
+                );
+              })()}
+
+              {/* 5. INSPECTOR MODAL / DRAWER (CHI TIẾT THÔNG ĐIỆP ĐIỀU HÀNH) */}
+              {selectedSheetMsg && (
+                <div style={{
+                  position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                  backgroundColor: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(8px)',
+                  zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20
+                }}>
+                  <div style={{
+                    backgroundColor: '#0f172a', border: '1px solid #38bdf8', borderRadius: 24,
+                    width: '100%', maxWidth: 760, maxHeight: '90vh', overflowY: 'auto', padding: 28,
+                    boxShadow: '0 25px 70px rgba(0,0,0,0.95)', display: 'flex', flexDirection: 'column', gap: 20
+                  }}>
+                    {/* MODAL HEADER */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(56, 189, 248, 0.25)', paddingBottom: 16 }}>
+                      <div>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+                          EXECUTIVE MESSAGE INSPECTOR
+                        </div>
+                        <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
+                          CHI TIẾT THÔNG ĐIỆP ĐIỀU HÀNH
+                        </h2>
+                      </div>
+                      <button
+                        onClick={() => setSelectedSheetMsg(null)}
+                        style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)', color: '#ffffff', borderRadius: 10, width: 32, height: 32, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <X style={{ width: 18, height: 18 }} />
+                      </button>
                     </div>
-                  ))}
-              </div>
+
+                    {/* METADATA GRID */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                      <div style={{ backgroundColor: '#0b0f19', padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ fontSize: '0.64rem', color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase' }}>THỜI GIAN</div>
+                        <div style={{ fontSize: '0.86rem', fontWeight: 900, color: '#ffffff', marginTop: 2 }}>{selectedSheetMsg.date} ({selectedSheetMsg.time})</div>
+                      </div>
+
+                      <div style={{ backgroundColor: '#0b0f19', padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ fontSize: '0.64rem', color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase' }}>ĐẦU MỐI CHỦ THỂ</div>
+                        <div style={{ fontSize: '0.86rem', fontWeight: 900, color: '#38bdf8', marginTop: 2 }}>{selectedSheetMsg.senderHub}</div>
+                      </div>
+
+                      <div style={{ backgroundColor: '#0b0f19', padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ fontSize: '0.64rem', color: '#94a3b8', fontWeight: 800, textTransform: 'uppercase' }}>PHÂN LOẠI</div>
+                        <div style={{ fontSize: '0.86rem', fontWeight: 900, color: selectedSheetMsg.category === 'TRỰC TIẾP' ? '#38bdf8' : selectedSheetMsg.category === 'GIÁN TIẾP' ? '#c084fc' : '#f59e0b', marginTop: 2 }}>
+                          {selectedSheetMsg.category}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* FULL CONTENT */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase' }}>NỘI DUNG NGHỊ QUYẾT / THÔNG ĐIỆP CHÍNH THỨC:</div>
+                      <div style={{ backgroundColor: '#0b0f19', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: 14, padding: 18, color: '#ffffff', fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+                        {selectedSheetMsg.content}
+                      </div>
+                    </div>
+
+                    {/* NOTES */}
+                    {selectedSheetMsg.notes && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase' }}>GHI CHÚ CHUYỂN TIẾP & BÁN GIAO:</div>
+                        <div style={{ backgroundColor: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: 12, padding: 14, color: '#e2e8f0', fontSize: '0.82rem', lineHeight: 1.5 }}>
+                          {selectedSheetMsg.notes}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* FOOTER ACTIONS */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                      {selectedSheetMsg.attachmentUrl ? (
+                        <a
+                          href={selectedSheetMsg.attachmentUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            padding: '9px 18px', borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                            color: '#38bdf8', border: '1px solid #38bdf8', fontSize: '0.78rem', fontWeight: 800,
+                            textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6
+                          }}
+                        >
+                          <ExternalLink style={{ width: 14, height: 14 }} /> Mở File Google Drive Đính Kèm
+                        </a>
+                      ) : <div />}
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(selectedSheetMsg.content);
+                          showToast('📋 Đã sao chép nội dung thông điệp điều hành');
+                        }}
+                        style={{ padding: '9px 18px', borderRadius: 10, backgroundColor: '#0284c7', color: '#ffffff', border: 'none', fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer' }}
+                      >
+                        📋 Sao Chép Nội Dung
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
             </div>
           )}
 
@@ -4854,6 +5914,367 @@ export default function App() {
             </div>
           )}
 
+          {/* TAB: QUẢN LÝ NHÂN SỰ (MÀU ĐỒNG BỘ 100% VỚI TAB LỊCH) */}
+          {activeTab === 'hr' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 40 }}>
+              
+              {/* 1. TOP HEADER BANNER CARD (ĐỒNG BỘ THEME LỊCH) */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.7), rgba(14, 165, 233, 0.35), rgba(11, 15, 25, 0.95))',
+                borderRadius: 24,
+                padding: '32px 36px',
+                border: '1px solid #38bdf8',
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 24
+              }}>
+                {/* LEFT CONTENT */}
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {/* BADGES ROW */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <span style={{
+                      backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)',
+                      color: '#38bdf8', fontSize: '0.72rem', fontWeight: 800, padding: '4px 14px', borderRadius: 20,
+                      display: 'flex', alignItems: 'center', gap: 6, letterSpacing: '0.04em'
+                    }}>
+                      ✨ HUMAN RESOURCES
+                    </span>
+                    <span style={{
+                      backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.4)',
+                      color: '#38bdf8', fontSize: '0.72rem', fontWeight: 800, padding: '4px 14px', borderRadius: 20,
+                      display: 'flex', alignItems: 'center', gap: 6
+                    }}>
+                      ⚡ {hrStaffList.length} nhân sự
+                    </span>
+                  </div>
+
+                  {/* TITLE & DESCRIPTION */}
+                  <div>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
+                      HR MANAGEMENT SYSTEM
+                    </div>
+                    <h1 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.02em', lineHeight: 1.15 }}>
+                      QUẢN LÝ NHÂN SỰ
+                    </h1>
+                  </div>
+
+                  {/* DESCRIPTION SUB-BOX (GIỐNG HỆT BOX NỘI DUNG MÔ TẢ CỦA LỊCH) */}
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '6px 14px', borderRadius: 10,
+                    backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                    backdropFilter: 'blur(6px)', width: 'fit-content'
+                  }}>
+                    <span style={{ fontSize: '0.84rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4 }}>
+                      Quản lý hồ sơ, thông tin nhân viên và phân quyền hệ thống. Tích hợp gửi email mời và tạo tài khoản tự động.
+                    </span>
+                  </div>
+
+                  {/* SUMMARY STATS BOXES */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 6, flexWrap: 'wrap' }}>
+                    <div style={{
+                      backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                      backdropFilter: 'blur(10px)', borderRadius: 16, padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 12
+                    }}>
+                      <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                        <Users style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>{hrStaffList.length}</div>
+                        <div style={{ fontSize: '0.66rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2 }}>TỔNG NHÂN SỰ</div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                      backdropFilter: 'blur(10px)', borderRadius: 16, padding: '10px 18px', display: 'flex', alignItems: 'center', gap: 12
+                    }}>
+                      <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)' }}>
+                        <CheckCircle2 style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>{hrStaffList.filter(s => s.status === 'CHÍNH THỨC').length}</div>
+                        <div style={{ fontSize: '0.66rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em', marginTop: 2 }}>CHÍNH THỨC</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* RIGHT GRAPHIC DECORATION CARD */}
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{
+                    width: 140, height: 140, borderRadius: 28,
+                    background: 'linear-gradient(135deg, rgba(56,189,248,0.25) 0%, rgba(2,132,199,0.3) 100%)',
+                    border: '1px solid #38bdf8', backdropFilter: 'blur(12px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.5)'
+                  }}>
+                    <Briefcase style={{ width: 54, height: 54, color: '#38bdf8' }} />
+                    <div style={{ position: 'absolute', top: -10, right: -10, backgroundColor: '#0284c7', color: '#fff', padding: 8, borderRadius: 12, border: '2px solid #0f172a' }}>
+                      <Zap style={{ width: 16, height: 16 }} />
+                    </div>
+                    <div style={{ position: 'absolute', bottom: -10, left: -10, backgroundColor: '#0284c7', color: '#fff', padding: 8, borderRadius: 12, border: '2px solid #0f172a' }}>
+                      <Users style={{ width: 16, height: 16 }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. SEARCH & ACTION TOOLBAR */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                {/* SEARCH INPUT */}
+                <div style={{ position: 'relative', flex: 1, minWidth: 280 }}>
+                  <Search style={{ width: 18, height: 18, color: '#64748b', position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)' }} />
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm nhân sự theo tên, email..."
+                    value={hrSearchQuery}
+                    onChange={(e) => setHrSearchQuery(e.target.value)}
+                    style={{
+                      width: '100%', backgroundColor: '#0f172a', border: '1px solid rgba(56, 189, 248, 0.35)',
+                      borderRadius: 14, padding: '12px 16px 12px 46px', fontSize: '0.86rem', color: '#ffffff', outline: 'none',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.3)', transition: 'all 0.2s ease'
+                    }}
+                  />
+                  {hrSearchQuery && (
+                    <button
+                      onClick={() => setHrSearchQuery('')}
+                      style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', backgroundColor: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                    >
+                      <X style={{ width: 16, height: 16 }} />
+                    </button>
+                  )}
+                </div>
+
+                {/* ACTION BUTTONS */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsInviteHrModalOpen(true)}
+                    style={{
+                      padding: '11px 20px', borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                      color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '0.84rem', fontWeight: 800,
+                      display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <Mail style={{ width: 16, height: 16, color: '#38bdf8' }} /> Gửi mời
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsAddHrModalOpen(true)}
+                    style={{
+                      padding: '11px 22px', borderRadius: 12, background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
+                      color: '#ffffff', border: 'none', fontSize: '0.84rem', fontWeight: 800,
+                      display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer',
+                      boxShadow: '0 4px 20px rgba(56, 189, 248, 0.35)', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <Plus style={{ width: 17, height: 17 }} /> Thêm Nhân Sự
+                  </button>
+                </div>
+              </div>
+
+              {/* 3. DEPARTMENT GROUPS & CARDS GRID */}
+              {(() => {
+                const filteredStaff = hrStaffList.filter(s =>
+                  s.name.toLowerCase().includes(hrSearchQuery.toLowerCase()) ||
+                  s.email.toLowerCase().includes(hrSearchQuery.toLowerCase()) ||
+                  s.phone.includes(hrSearchQuery) ||
+                  s.department.toLowerCase().includes(hrSearchQuery.toLowerCase())
+                );
+
+                // Group by department
+                const deptMap = new Map<string, HrStaff[]>();
+                filteredStaff.forEach(s => {
+                  const list = deptMap.get(s.department) || [];
+                  list.push(s);
+                  deptMap.set(s.department, list);
+                });
+
+                if (filteredStaff.length === 0) {
+                  return (
+                    <div style={{ padding: 40, textAlign: 'center', backgroundColor: '#0f172a', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }}>
+                      <Users style={{ width: 40, height: 40, color: '#64748b', marginBottom: 12 }} />
+                      <div style={{ color: '#ffffff', fontWeight: 700, fontSize: '1rem' }}>Không tìm thấy nhân sự phù hợp</div>
+                      <div style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: 4 }}>Thử gõ từ khóa tìm kiếm khác hoặc thêm nhân sự mới</div>
+                    </div>
+                  );
+                }
+
+                return Array.from(deptMap.entries()).map(([deptName, staffMembers]) => (
+                  <div key={deptName} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {/* DEPARTMENT HEADER BAR */}
+                    <div style={{
+                      backgroundColor: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                      borderRadius: 14, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 12
+                    }}>
+                      <div style={{ width: 8, height: 18, backgroundColor: '#38bdf8', borderRadius: 4 }} />
+                      <h2 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.04em' }}>
+                        {deptName}
+                      </h2>
+                      <span style={{
+                        backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8',
+                        fontSize: '0.7rem', fontWeight: 800, padding: '3px 10px', borderRadius: 20
+                      }}>
+                        {staffMembers.length} MEMBERS
+                      </span>
+                    </div>
+
+                    {/* STAFF CARDS GRID */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(460px, 1fr))', gap: 20 }}>
+                      {staffMembers.map(staff => (
+                        <div
+                          key={staff.id}
+                          style={{
+                            backgroundColor: '#0d1322', border: '1px solid rgba(56, 189, 248, 0.25)',
+                            borderRadius: 20, padding: 20, display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+                            boxShadow: '0 8px 30px rgba(0,0,0,0.4)', position: 'relative', overflow: 'hidden'
+                          }}
+                        >
+                          {/* CARD TOP MAIN INFO */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14 }}>
+                            {/* AVATAR + NAME + CONTACT */}
+                            <div style={{ display: 'flex', gap: 14, flex: 1, minWidth: 0 }}>
+                              {/* INITIALS AVATAR CIRCLE */}
+                              <div style={{
+                                width: 58, height: 58, borderRadius: '50%', background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                color: '#ffffff', fontSize: '1.25rem', fontWeight: 900, flexShrink: 0,
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.4)', border: '2px solid rgba(255,255,255,0.2)'
+                              }}>
+                                {staff.initials}
+                              </div>
+
+                              {/* NAME & CONTACT DETAILS */}
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+                                <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                  {staff.name}
+                                </div>
+
+                                {/* HUBS / ROLES BADGES */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                                  <span style={{
+                                    backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                                    color: '#38bdf8', fontSize: '0.68rem', fontWeight: 800, padding: '2px 8px', borderRadius: 8
+                                  }}>
+                                    {staff.hubs.join('; ')}
+                                  </span>
+                                </div>
+
+                                {/* CONTACT EMAIL & PHONE */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 4, fontSize: '0.75rem', color: '#94a3b8' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <Mail style={{ width: 13, height: 13, color: '#38bdf8' }} />
+                                    <span style={{ color: '#cbd5e1', fontWeight: 600 }}>{staff.email}</span>
+                                  </div>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <Phone style={{ width: 13, height: 13, color: '#38bdf8' }} />
+                                    <span style={{ color: '#cbd5e1', fontWeight: 600 }}>{staff.phone}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* RIGHT VIETQR CARD */}
+                            <div style={{
+                              backgroundColor: '#ffffff', borderRadius: 14, padding: 8, width: 84,
+                              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0,
+                              boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+                            }}>
+                              <img
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=STK:${staff.bankAccount}-NH:${staff.bankName}`}
+                                alt="VietQR Code"
+                                style={{ width: 68, height: 68, objectFit: 'contain' }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setSelectedQrStaff(staff)}
+                                style={{
+                                  backgroundColor: 'transparent', border: 'none', color: '#0284c7',
+                                  fontSize: '0.62rem', fontWeight: 900, cursor: 'pointer', padding: 0, textTransform: 'uppercase'
+                                }}
+                              >
+                                PHÓNG TO
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* CARD BOTTOM 3 INFO BOXES */}
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginTop: 16 }}>
+                            {/* BOX 1: BIRTHDAY */}
+                            <div style={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                              borderRadius: 12, padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 2
+                            }}>
+                              <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#ec4899', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                🎂 NGÀY SINH
+                              </div>
+                              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#ffffff' }}>
+                                {staff.dob}
+                              </div>
+                            </div>
+
+                            {/* BOX 2: WORK DURATION */}
+                            <div style={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                              borderRadius: 12, padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 2
+                            }}>
+                              <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                🧰 THỜI GIAN LÀM VIỆC
+                              </div>
+                              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {staff.workDuration}
+                              </div>
+                            </div>
+
+                            {/* BOX 3: BANK ACCOUNT */}
+                            <div style={{
+                              backgroundColor: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                              borderRadius: 12, padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 2
+                            }}>
+                              <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                💳 TÀI KHOẢN
+                              </div>
+                              <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#ffffff' }}>
+                                {staff.bankName}
+                              </div>
+                              <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', fontFamily: 'monospace' }}>
+                                {staff.bankAccount}
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ));
+              })()}
+
+              {/* FLOATING ACTION BUTTON: TRỢ LÝ PHÁP LUẬT */}
+              <button
+                type="button"
+                onClick={() => showToast('⚖️ Đã kết nối với Trợ Lý Pháp Luật & Quy Định HR')}
+                style={{
+                  position: 'fixed', bottom: 28, right: 28, zIndex: 90,
+                  background: 'linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)',
+                  color: '#ffffff', padding: '12px 22px', borderRadius: 30,
+                  display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.85rem', fontWeight: 800,
+                  boxShadow: '0 10px 30px rgba(2, 132, 199, 0.5), 0 0 0 1px rgba(255,255,255,0.2)',
+                  border: 'none', cursor: 'pointer', transition: 'all 0.2s ease'
+                }}
+              >
+                <Scale style={{ width: 18, height: 18 }} /> Trợ lý Pháp luật
+              </button>
+
+            </div>
+          )}
+
           {/* TAB 4: TRANG CHỦ / BẢNG TIN KHÁC */}
           {(activeTab === 'home' || activeTab === 'news') && (
             <div style={{ padding: 40, textAlign: 'center', backgroundColor: '#111827', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -4876,6 +6297,193 @@ export default function App() {
       </div>
 
 
+
+      {/* MODAL: PHÓNG TO VIETQR */}
+      {selectedQrStaff && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 120, backgroundColor: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
+        }}>
+          <div style={{ width: '100%', maxWidth: 420, padding: 24, border: '1px solid #38bdf8', borderRadius: 24, backgroundColor: '#0f172a', textAlign: 'center', boxShadow: '0 20px 50px rgba(0,0,0,0.8)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>Mã QR Chuyển Khoản</div>
+              <button onClick={() => setSelectedQrStaff(null)} style={{ padding: 6, borderRadius: 8, backgroundColor: '#1e293b', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                <X style={{ width: 16, height: 16 }} />
+              </button>
+            </div>
+
+            <div style={{ backgroundColor: '#ffffff', borderRadius: 20, padding: 16, display: 'inline-block', marginBottom: 16 }}>
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=STK:${selectedQrStaff.bankAccount}-NH:${selectedQrStaff.bankName}`}
+                alt="VietQR Large"
+                style={{ width: 220, height: 220, objectFit: 'contain' }}
+              />
+            </div>
+
+            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff', marginBottom: 4 }}>{selectedQrStaff.name}</div>
+            <div style={{ fontSize: '0.85rem', color: '#38bdf8', fontWeight: 800 }}>Ngân hàng {selectedQrStaff.bankName}</div>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace', margin: '6px 0 16px 0' }}>{selectedQrStaff.bankAccount}</div>
+
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(selectedQrStaff.bankAccount);
+                showToast(`Đã sao chép số tài khoản ${selectedQrStaff.bankAccount}`);
+              }}
+              style={{
+                width: '100%', padding: '12px 0', borderRadius: 12, backgroundColor: '#0284c7', color: '#fff',
+                fontWeight: 800, fontSize: '0.88rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+              }}
+            >
+              <Copy style={{ width: 16, height: 16 }} /> Sao Chép Số Tài Khoản
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: THÊM NHÂN SỰ MỚI */}
+      {isAddHrModalOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 120, backgroundColor: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
+        }}>
+          <div style={{ width: '100%', maxWidth: 520, padding: 24, border: '1px solid #38bdf8', borderRadius: 24, backgroundColor: '#0f172a', boxShadow: '0 20px 50px rgba(0,0,0,0.8)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Users style={{ width: 22, height: 22, color: '#38bdf8' }} />
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>Thêm Nhân Sự Mới</h3>
+              </div>
+              <button onClick={() => setIsAddHrModalOpen(false)} style={{ padding: 6, borderRadius: 8, backgroundColor: '#1e293b', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                <X style={{ width: 16, height: 16 }} />
+              </button>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (!newHrName.trim()) return;
+              const initials = newHrName.split(' ').map(p => p[0]).join('').slice(-2).toUpperCase() || 'NV';
+              const colors = ['linear-gradient(135deg, #f59e0b, #d97706)', 'linear-gradient(135deg, #0284c7, #2563eb)', 'linear-gradient(135deg, #10b981, #059669)', 'linear-gradient(135deg, #ec4899, #f43f5e)'];
+              const avatarBg = colors[Math.floor(Math.random() * colors.length)];
+              const newStaff: HrStaff = {
+                id: `hr-${Date.now()}`,
+                name: newHrName,
+                department: newHrDept,
+                initials,
+                avatarBg,
+                hubs: newHrHubs.split(';').map(h => h.trim()).filter(Boolean),
+                email: newHrEmail || 'nhansu@avg.vn',
+                phone: newHrPhone || '0900000000',
+                dob: newHrDob || '01/01/2000',
+                workDuration: 'Mới nhận việc',
+                bankName: newHrBankName,
+                bankAccount: newHrBankAccount || '123456789',
+                status: 'CHÍNH THỨC'
+              };
+              setHrStaffList(prev => [newStaff, ...prev]);
+              setIsAddHrModalOpen(false);
+              setNewHrName(''); setNewHrEmail(''); setNewHrPhone(''); setNewHrBankAccount('');
+              showToast(`Đã thêm nhân sự thành công: ${newStaff.name}`);
+            }} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Họ và Tên Nhân Viên (*):</label>
+                <input type="text" required placeholder="Nhập họ và tên đầy đủ..." value={newHrName} onChange={e => setNewHrName(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }} />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Phòng Ban / Đơn Vị:</label>
+                  <select value={newHrDept} onChange={e => setNewHrDept(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }}>
+                    <option value="INTERWRITE">INTERWRITE</option>
+                    <option value="AVG GLOBAL">AVG GLOBAL</option>
+                    <option value="RDI CENTER">RDI CENTER</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Đầu Mối / Vai Trò:</label>
+                  <input type="text" placeholder="Ví dụ: 5.1T; KIẾN" value={newHrHubs} onChange={e => setNewHrHubs(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Email liên hệ:</label>
+                  <input type="email" placeholder="example@gmail.com" value={newHrEmail} onChange={e => setNewHrEmail(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Số điện thoại:</label>
+                  <input type="text" placeholder="09xxxxxxxx" value={newHrPhone} onChange={e => setNewHrPhone(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Ngân hàng:</label>
+                  <select value={newHrBankName} onChange={e => setNewHrBankName(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }}>
+                    <option value="Vietinbank">Vietinbank</option>
+                    <option value="VPBank">VPBank</option>
+                    <option value="Techcombank">Techcombank</option>
+                    <option value="MBBank">MBBank</option>
+                    <option value="Vietcombank">Vietcombank</option>
+                    <option value="BIDV">BIDV</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Số tài khoản:</label>
+                  <input type="text" placeholder="Số tài khoản nhận lương..." value={newHrBankAccount} onChange={e => setNewHrBankAccount(e.target.value)} style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 12 }}>
+                <button type="button" onClick={() => setIsAddHrModalOpen(false)} style={{ padding: '10px 18px', borderRadius: 10, backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#94a3b8', fontWeight: 700, cursor: 'pointer' }}>Hủy Bỏ</button>
+                <button type="submit" style={{ padding: '10px 22px', borderRadius: 10, backgroundColor: '#0284c7', border: 'none', color: '#fff', fontWeight: 800, cursor: 'pointer' }}>Lưu Nhân Sự Mới</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: GỬI THƯ MỜI KHỚP TÀI KHOẢN */}
+      {isInviteHrModalOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 120, backgroundColor: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
+        }}>
+          <div style={{ width: '100%', maxWidth: 480, padding: 24, border: '1px solid #38bdf8', borderRadius: 24, backgroundColor: '#0f172a', boxShadow: '0 20px 50px rgba(0,0,0,0.8)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Mail style={{ width: 20, height: 20, color: '#38bdf8' }} />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>Gửi Thư Mời Gia Nhập</h3>
+              </div>
+              <button onClick={() => setIsInviteHrModalOpen(false)} style={{ padding: 6, borderRadius: 8, backgroundColor: '#1e293b', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                <X style={{ width: 16, height: 16 }} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: 16 }}>
+              Tự động khởi tạo mã kích hoạt tài khoản và gửi email hướng dẫn tạo tài khoản AVG One tới nhân sự mới.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div>
+                <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1', display: 'block', marginBottom: 4 }}>Nhập Email Nhân Sự:</label>
+                <input type="email" placeholder="nhansu.moi@gmail.com..." style={{ width: '100%', backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 10, padding: '10px 14px', fontSize: '0.84rem', color: '#fff', outline: 'none' }} />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsInviteHrModalOpen(false);
+                  showToast('✉️ Đã gửi email thư mời kích hoạt tài khoản thành công!');
+                }}
+                style={{
+                  marginTop: 10, padding: '12px 0', borderRadius: 12, backgroundColor: '#0284c7', color: '#fff',
+                  fontWeight: 800, fontSize: '0.88rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                }}
+              >
+                <Send style={{ width: 16, height: 16 }} /> Gửi Email Thư Mời Tuần Tự
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL: CẬP NHẬT VĂN BẢN KẾT LUẬN (VBKL) CUỘC TRAO ĐỔI */}
       {isVbklModalOpen && selectedVbklEvent && (
