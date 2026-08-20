@@ -4608,24 +4608,24 @@ export default function App() {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '60%',
-                                height: 32,
-                                margin: '-6px auto',
+                                height: 36,
+                                margin: '-10px auto',
                                 position: 'relative',
                                 zIndex: 5
                               }}
                             >
                               {/* LINE 1 BÊN TRÁI */}
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                                <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
                                 <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '1px 0' }} />
-                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                                <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
                               </div>
 
                               {/* LINE 2 BÊN PHẢI */}
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                                <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
                                 <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '1px 0' }} />
-                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                                <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
                               </div>
                             </div>
                           )}
@@ -5096,24 +5096,24 @@ export default function App() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '60%',
-                        height: 40,
-                        margin: '-12px auto',
+                        height: 44,
+                        margin: '-14px auto',
                         position: 'relative',
                         zIndex: 5
                       }}
                     >
                       {/* LINE 1 BÊN TRÁI */}
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
-                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '2px 0' }} />
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                        <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
+                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '1px 0' }} />
+                        <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
                       </div>
 
                       {/* LINE 2 BÊN PHẢI */}
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
-                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '2px 0' }} />
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                        <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
+                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '1px 0' }} />
+                        <div style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 10px #38bdf8', flexShrink: 0 }} />
                       </div>
                     </div>
                   )}

@@ -686,8 +686,8 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 60% !important;
-    height: 40px !important;
-    margin: -12px auto !important;
+    height: 44px !important;
+    margin: -14px auto !important;
     position: relative !important;
     z-index: 5 !important;
   }
@@ -698,8 +698,8 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 60% !important;
-    height: 32px !important;
-    margin: -6px auto !important;
+    height: 36px !important;
+    margin: -10px auto !important;
     position: relative !important;
     z-index: 5 !important;
   }
@@ -1016,8 +1016,8 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 60% !important;
-  height: 40px !important;
-  margin: -12px auto !important;
+  height: 44px !important;
+  margin: -14px auto !important;
   position: relative !important;
   z-index: 5 !important;
 }
@@ -1028,8 +1028,8 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 60% !important;
-  height: 32px !important;
-  margin: -6px auto !important;
+  height: 36px !important;
+  margin: -10px auto !important;
   position: relative !important;
   z-index: 5 !important;
 }
