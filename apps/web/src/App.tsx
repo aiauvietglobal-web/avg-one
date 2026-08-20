@@ -3231,7 +3231,7 @@ export default function App() {
                 };
 
                 return (
-                  <div style={{
+                  <div className="calendar-banner-header" style={{
                     background: neonGrad.bg,
                     border: neonGrad.border, borderRadius: 24, padding: 24,
                     boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
@@ -3241,7 +3241,7 @@ export default function App() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                         <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em', margin: 0, textTransform: 'uppercase' }}>
-                          LỊCH TRAO ĐỔI HÀNG NGÀY
+                          LỊCH TRAO ĐỔI
                         </h1>
                       </div>
 
@@ -3276,16 +3276,16 @@ export default function App() {
                       }).length;
 
                       return (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                        <div className="calendar-kpi-row" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{ongoingCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#34d399', letterSpacing: '0.04em' }}>● ĐANG DIỄN RA</span>
                           </div>
-                          <div style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{upcomingCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#fbbf24', letterSpacing: '0.04em' }}>● SẮP TỚI</span>
                           </div>
-                          <div style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{completedCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#ff3344', letterSpacing: '0.04em' }}>● ĐÃ DIỄN RA</span>
                           </div>
@@ -4422,26 +4422,26 @@ export default function App() {
                       }
 
                       return (
-                        <div key={item.id} style={{ display: 'flex', alignItems: 'stretch', gap: 0, position: 'relative' }}>
+                        <div key={item.id} className="discussion-event-item" style={{ display: 'flex', alignItems: 'stretch', gap: 0, position: 'relative' }}>
                           {/* ĐƯỜNG LINE NỐI DỌC LIÊN KẾT CÁC LỊCH TRONG CÙNG 1 NGÀY */}
                           {hasPrevSameDate && (
-                            <div style={{
+                            <div className="connector-vertical-line" style={{
                               position: 'absolute', left: 104, top: -20, height: 'calc(50% + 20px)', width: 2,
                               backgroundColor: '#38bdf8', boxShadow: '0 0 10px #38bdf8', zIndex: 1, opacity: 0.95
                             }} />
                           )}
                           {hasNextSameDate && (
-                            <div style={{
+                            <div className="connector-vertical-line" style={{
                               position: 'absolute', left: 104, top: '50%', height: 'calc(50% + 20px)', width: 2,
                               backgroundColor: '#38bdf8', boxShadow: '0 0 10px #38bdf8', zIndex: 1, opacity: 0.95
                             }} />
                           )}
 
                           {/* NODE BÊN TRÁI: HỘP THỨ NGÀY THÁNG CÓ ĐƯỜNG LINE LIÊN KẾT NỐI TRỰC TIẾP SANG HỘP NỘI DUNG */}
-                          <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, position: 'relative' }}>
+                          <div className="date-node-container" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, position: 'relative' }}>
                             {/* 1. KHUNG HỘP THỨ NGÀY THÁNG (ĐỔI NỀN HỘP NGOÀI ĐỒNG BỘ THEO MÀU TRẠNG THÁI) */}
                             {!hasPrevSameDate ? (
-                              <div style={{
+                              <div className="date-box-inner" style={{
                                 width: 84, padding: '10px 0', borderRadius: 16,
                                 background: statusOuterBoxBg,
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 6,
@@ -4473,27 +4473,27 @@ export default function App() {
                               </div>
                             ) : (
                                 /* KHOẢNG TRỐNG THAY THẾ CHO CÁC LỊCH CÙNG NGÀY TIẾP THEO */
-                                <div style={{ width: 84, flexShrink: 0 }} />
+                                <div className="date-box-spacer" style={{ width: 84, flexShrink: 0 }} />
                               )}
 
                             {/* 2. ĐƯỜNG LINE NỐI TỪ HỘP ĐẾN CHẤM TRÒN */}
-                            <div style={{ width: 14, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: !hasPrevSameDate ? 0.9 : 0 }} />
+                            <div className="connector-line" style={{ width: 14, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: !hasPrevSameDate ? 0.9 : 0 }} />
 
                             {/* 3. CHẤM TRÒN NỐI TRỤC PHÁT SÁNG */}
-                            <div style={{ width: 12, height: 12, borderRadius: '50%', border: '2px solid #38bdf8', backgroundColor: '#ffffff', boxShadow: '0 0 10px #38bdf8', flexShrink: 0, zIndex: 2 }} />
+                            <div className="connector-dot" style={{ width: 12, height: 12, borderRadius: '50%', border: '2px solid #38bdf8', backgroundColor: '#ffffff', boxShadow: '0 0 10px #38bdf8', flexShrink: 0, zIndex: 2 }} />
 
                             {/* 4. ĐƯỜNG LINE LIÊN KẾT NỐI TỪ CHẤM TRÒN SANG TRỰC TIẾP ME THẺ NỘI DUNG BÊN CẠNH */}
-                            <div style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
+                            <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
                     {/* KHUNG BỔ SUNG: CHIA THÀNH 2 HỘP NỘI DUNG */}
-                    <div style={{
+                    <div className="discussion-card-inner" style={{
                       flex: 1, backgroundColor: '#161922', border: '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: 18, padding: 14, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                       display: 'flex', gap: 14, alignItems: 'stretch'
                     }}>
                       {/* 1. HỘP BÊN TRÁI RỘNG HƠN (HOẶC TOÀN BỘ CHIỀU RỘNG NẾU CHƯA ĐÃ DIỄN RA) */}
-                      <div style={{
+                      <div className="discussion-card-box" style={{
                         flex: isFinished ? '7 1 0%' : '1 1 100%', backgroundColor: 'rgba(11, 14, 20, 0.65)', border: '1px solid rgba(56, 189, 248, 0.25)',
                         borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 12
                       }}>
@@ -4740,7 +4740,7 @@ export default function App() {
                               : '1px solid rgba(52, 211, 153, 0.35)';
 
                             return (
-                              <div style={{
+                              <div className="discussion-card-box" style={{
                                 flex: '3.2 1 0%', backgroundColor: boxBg, border: boxBorder,
                                 borderRadius: 14, padding: 14, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 10
                               }}>

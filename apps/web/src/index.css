@@ -389,30 +389,15 @@ button:active {
   transform: translateX(0) !important;
 }
 
-.force-mobile-mode .mobile-bottom-nav {
-  display: flex !important;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 440px;
-  margin: 0 auto;
-  height: 64px;
-  background-color: #0d1017;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 90;
-  padding: 4px 8px;
-  justify-content: space-around;
-  align-items: center;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
 .force-mobile-mode .main-content-area {
-  padding-bottom: 80px !important;
+  padding-bottom: 30px !important;
 }
 
-@media (max-width: 768px) {
+/* ============================================================ */
+/* MOBILE RESPONSIVE LAYOUT ALIGNMENTS (CALENDAR & CARDS)       */
+/* ============================================================ */
+
+@media (max-width: 768px), .force-mobile-mode {
   .mobile-only {
     display: flex !important;
   }
@@ -475,59 +460,103 @@ button:active {
     animation: fadeIn 0.2s ease-out;
   }
 
-  /* Mobile Bottom Navigation Bar */
-  .mobile-bottom-nav {
-    display: flex !important;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 64px;
-    background-color: #0d1017;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 90;
-    padding: 4px 8px;
-    justify-content: space-around;
-    align-items: center;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  [data-theme="light"] .mobile-bottom-nav {
-    background-color: #ffffff !important;
-    border-top: 1px solid #e5e7eb !important;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
-  }
-
-  .mobile-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    font-size: 0.68rem;
-    font-weight: 700;
-    flex: 1;
-    padding: 6px 0;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-  }
-
-  .mobile-nav-item.active {
-    color: #ff7043 !important;
-  }
-
-  .mobile-nav-item.active svg {
-    color: #ff7043 !important;
-    transform: translateY(-1px);
-  }
-
-  /* Main Content Area Spacing for Bottom Bar */
   .main-content-area {
-    padding-bottom: 80px !important;
+    padding-bottom: 30px !important;
+  }
+
+  /* Calendar Banner Header Responsiveness */
+  .calendar-banner-header {
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+    gap: 14px !important;
+  }
+
+  .calendar-banner-header h1 {
+    font-size: 1.35rem !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  /* KPI Stat Boxes Row on Mobile */
+  .calendar-kpi-row {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 6px !important;
+    align-items: stretch !important;
+  }
+
+  .calendar-kpi-box {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    width: auto !important;
+    padding: 10px 4px !important;
+    border-radius: 12px !important;
+  }
+
+  .calendar-kpi-box span:first-child {
+    font-size: 1.3rem !important;
+  }
+
+  .calendar-kpi-box span:last-child {
+    font-size: 0.58rem !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Filter Select Bar Grid on Mobile */
+  .calendar-filter-card {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+
+  .calendar-filter-card .divider-line {
+    display: none !important;
+  }
+
+  /* Discussion Event Cards Responsive Layout (Prevent Overflow) */
+  .discussion-event-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .date-node-container {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+
+  .date-node-container .date-box-inner {
+    width: 100% !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    border-radius: 12px !important;
+  }
+
+  .date-node-container .date-box-spacer {
+    display: none !important;
+  }
+
+  .date-node-container .connector-line,
+  .date-node-container .connector-dot,
+  .connector-vertical-line {
+    display: none !important;
+  }
+
+  .discussion-card-inner {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 12px !important;
+  }
+
+  .discussion-card-box {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    padding: 12px !important;
   }
 
   /* Force Single Column on Mobile Grids */
