@@ -686,8 +686,11 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 75% !important;
-    height: 46px !important;
-    margin: -15px auto !important;
+    height: 20px !important;
+    margin-top: -21px !important;
+    margin-bottom: -21px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     position: relative !important;
     z-index: 10 !important;
   }
@@ -698,8 +701,11 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 75% !important;
-    height: 34px !important;
-    margin: -9px auto !important;
+    height: 20px !important;
+    margin-top: -15px !important;
+    margin-bottom: -15px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     position: relative !important;
     z-index: 10 !important;
   }
@@ -1016,8 +1022,11 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 75% !important;
-  height: 46px !important;
-  margin: -15px auto !important;
+  height: 20px !important;
+  margin-top: -21px !important;
+  margin-bottom: -21px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   position: relative !important;
   z-index: 10 !important;
 }
@@ -1028,8 +1037,11 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 75% !important;
-  height: 34px !important;
-  margin: -9px auto !important;
+  height: 20px !important;
+  margin-top: -15px !important;
+  margin-bottom: -15px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   position: relative !important;
   z-index: 10 !important;
 }

@@ -4598,7 +4598,7 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (ĐƯỜNG VIỀN HỘP ĐI QUA TÂM ĐIỂM TRÒN CHUẨN XÁC) */}
+                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (VIỀN HỘP ĐI QUA CHÍNH TÂM ĐIỂM TRÒN) */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
@@ -4608,8 +4608,11 @@ export default function App() {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '75%',
-                                height: 34,
-                                margin: '-9px auto',
+                                height: 20,
+                                marginTop: -15,
+                                marginBottom: -15,
+                                marginLeft: 'auto',
+                                marginRight: 'auto',
                                 position: 'relative',
                                 zIndex: 10
                               }}
@@ -4617,14 +4620,14 @@ export default function App() {
                               {/* LINE 1 BÊN TRÁI */}
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                                 <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '0' }} />
+                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: 0 }} />
                                 <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
                               </div>
 
                               {/* LINE 2 BÊN PHẢI */}
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                                 <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '0' }} />
+                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: 0 }} />
                                 <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
                               </div>
                             </div>
@@ -5086,7 +5089,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN NẰM ĐẾ VIỀN HỘP ĐI QUA TÂM ĐIỂM TRÒN CHUẨN XÁC TRÊN MOBILE */}
+                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN - VIỀN HỘP ĐI QUA CHÍNH TÂM ĐIỂM TRÒN */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
@@ -5096,8 +5099,11 @@ export default function App() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '75%',
-                        height: 46,
-                        margin: '-15px auto',
+                        height: 20,
+                        marginTop: -21,
+                        marginBottom: -21,
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
                         position: 'relative',
                         zIndex: 10
                       }}
@@ -5105,14 +5111,14 @@ export default function App() {
                       {/* LINE 1 BÊN TRÁI */}
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                         <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '0' }} />
+                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: 0 }} />
                         <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
                       </div>
 
                       {/* LINE 2 BÊN PHẢI */}
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
                         <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '0' }} />
+                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: 0 }} />
                         <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
                       </div>
                     </div>
