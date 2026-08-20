@@ -680,39 +680,16 @@ button:active {
     display: none !important;
   }
 
-  .discussion-event-item {
-    position: relative !important;
-    padding-left: 12px !important;
-  }
-
-  .discussion-event-item::before {
-    content: '' !important;
-    position: absolute !important;
-    left: 2px !important;
-    top: 0 !important;
-    bottom: -16px !important;
+  .mobile-gap-connector-line {
+    display: block !important;
     width: 2px !important;
-    background: #38bdf8 !important;
-    box-shadow: 0 0 8px #38bdf8 !important;
-    z-index: 1 !important;
-  }
-
-  .discussion-event-item:last-child::before {
-    bottom: 50% !important;
-  }
-
-  .discussion-event-item::after {
-    content: '' !important;
-    position: absolute !important;
-    left: -2px !important;
-    top: 24px !important;
-    width: 10px !important;
-    height: 10px !important;
-    border-radius: 50% !important;
-    background-color: #ffffff !important;
-    border: 2px solid #38bdf8 !important;
-    box-shadow: 0 0 8px #38bdf8 !important;
-    z-index: 2 !important;
+    height: 18px !important;
+    background-color: #38bdf8 !important;
+    box-shadow: 0 0 10px #38bdf8 !important;
+    margin: -4px auto !important;
+    border-radius: 2px !important;
+    position: relative !important;
+    z-index: 5 !important;
   }
 
   .discussion-card-inner {
@@ -1021,39 +998,16 @@ button:active {
   display: none !important;
 }
 
-.force-mobile-mode .discussion-event-item {
-  position: relative !important;
-  padding-left: 12px !important;
-}
-
-.force-mobile-mode .discussion-event-item::before {
-  content: '' !important;
-  position: absolute !important;
-  left: 2px !important;
-  top: 0 !important;
-  bottom: -16px !important;
+.force-mobile-mode .mobile-gap-connector-line {
+  display: block !important;
   width: 2px !important;
-  background: #38bdf8 !important;
-  box-shadow: 0 0 8px #38bdf8 !important;
-  z-index: 1 !important;
-}
-
-.force-mobile-mode .discussion-event-item:last-child::before {
-  bottom: 50% !important;
-}
-
-.force-mobile-mode .discussion-event-item::after {
-  content: '' !important;
-  position: absolute !important;
-  left: -2px !important;
-  top: 24px !important;
-  width: 10px !important;
-  height: 10px !important;
-  border-radius: 50% !important;
-  background-color: #ffffff !important;
-  border: 2px solid #38bdf8 !important;
-  box-shadow: 0 0 8px #38bdf8 !important;
-  z-index: 2 !important;
+  height: 18px !important;
+  background-color: #38bdf8 !important;
+  box-shadow: 0 0 10px #38bdf8 !important;
+  margin: -4px auto !important;
+  border-radius: 2px !important;
+  position: relative !important;
+  z-index: 5 !important;
 }
 
 .force-mobile-mode .discussion-card-inner {

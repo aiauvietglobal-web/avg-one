@@ -4466,7 +4466,8 @@ export default function App() {
                       }
 
                       return (
-                        <div key={item.id} className="discussion-event-item" style={{ display: 'flex', alignItems: 'stretch', gap: 0, position: 'relative' }}>
+                        <React.Fragment key={item.id}>
+                          <div className="discussion-event-item" style={{ display: 'flex', alignItems: 'stretch', gap: 0, position: 'relative' }}>
                           {/* ĐƯỜNG LINE NỐI DỌC PHÁT SÁNG CÁN TOÀN BỘ DANH SÁCH CÁC HỘP CUỘC TRAO ĐỔI */}
                           {index > 0 && (
                             <div className="connector-vertical-line" style={{
@@ -5052,8 +5053,27 @@ export default function App() {
                           })()}
                         </div>
                   </div>
-                );
-              })}
+
+                  {/* ĐƯỜNG LINE PHÁT SÁNG NẰM NẰM TRONG KHOẢNG TRỐNG GIỮA CÁC HỘP CUỘC TRAO ĐỔI TRÊN MOBILE */}
+                  {index < displayedEvents.length - 1 && (
+                    <div
+                      className="mobile-gap-connector-line"
+                      style={{
+                        display: 'none',
+                        width: 2,
+                        height: 20,
+                        backgroundColor: '#38bdf8',
+                        boxShadow: '0 0 12px #38bdf8',
+                        margin: '-4px auto',
+                        borderRadius: 2,
+                        position: 'relative',
+                        zIndex: 5
+                      }}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
               </div>
             );
           })()}
