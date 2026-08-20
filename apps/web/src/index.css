@@ -479,6 +479,47 @@ button:active {
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
   }
 
+  .mobile-bottom-nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    color: #94a3b8 !important;
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    flex: 1 !important;
+    padding: 6px 0 !important;
+    border-radius: 12px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+  }
+
+  .mobile-bottom-nav-item span {
+    color: inherit !important;
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+  }
+
+  .mobile-bottom-nav-item svg {
+    color: inherit !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .mobile-bottom-nav-item.active {
+    color: #38bdf8 !important;
+    background: rgba(56, 189, 248, 0.14) !important;
+  }
+
+  .mobile-bottom-nav-item.active svg {
+    transform: translateY(-1px) scale(1.08) !important;
+  }
+
   .calendar-banner-header {
     padding: 16px 14px !important;
     border-radius: 18px !important;
@@ -669,6 +710,47 @@ button:active {
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
   max-width: 440px !important;
   margin: 0 auto !important;
+}
+
+.force-mobile-mode .mobile-bottom-nav-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: #94a3b8 !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  flex: 1 !important;
+  padding: 6px 0 !important;
+  border-radius: 12px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+.force-mobile-mode .mobile-bottom-nav-item span {
+  color: inherit !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.force-mobile-mode .mobile-bottom-nav-item svg {
+  color: inherit !important;
+  transition: all 0.2s ease !important;
+}
+
+.force-mobile-mode .mobile-bottom-nav-item.active {
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.14) !important;
+}
+
+.force-mobile-mode .mobile-bottom-nav-item.active svg {
+  transform: translateY(-1px) scale(1.08) !important;
 }
 
 .force-mobile-mode .calendar-banner-header {
