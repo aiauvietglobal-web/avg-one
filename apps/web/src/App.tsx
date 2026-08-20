@@ -4582,6 +4582,9 @@ export default function App() {
                                 >
                                   ▼
                                 </button>
+                                {/* 2 ĐIỂM TRÒN GẮN TRỰC TIẾP TRÊN VIỀN ĐÁY HỘP NGÀY (TÂM NẰM TRÊN VIỀN 100%) */}
+                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
                               </div>
                             ) : (
                                 /* KHOẢNG TRỐNG THAY THẾ CHO CÁC LỊCH CÙNG NGÀY TIẾP THEO */
@@ -4598,7 +4601,7 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (TÂM ĐIỂM TRÒN TRÙNG KHỚP 100% VIỀN HỘP) */}
+                          {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA HỘP NGÀY VÀ HỘP LỊCH 1 */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
@@ -4608,28 +4611,17 @@ export default function App() {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '82%',
-                                height: 34,
-                                marginTop: -6,
-                                marginBottom: -16,
+                                height: 18,
+                                marginTop: -9,
+                                marginBottom: -9,
                                 marginLeft: 'auto',
                                 marginRight: 'auto',
                                 position: 'relative',
-                                zIndex: 10
+                                zIndex: 5
                               }}
                             >
-                              {/* LINE 1 BÊN TRÁI */}
-                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                                <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '2px 0' }} />
-                                <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                              </div>
-
-                              {/* LINE 2 BÊN PHẢI */}
-                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                                <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '2px 0' }} />
-                                <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                              </div>
+                              <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                              <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                             </div>
                           )}
 
@@ -4637,8 +4629,19 @@ export default function App() {
                     <div className="discussion-card-inner" style={{
                       flex: 1, backgroundColor: '#161922', border: '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: 18, padding: 14, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
-                      display: 'flex', gap: 14, alignItems: 'stretch'
+                      display: 'flex', gap: 14, alignItems: 'stretch', position: 'relative'
                     }}>
+                      {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐỈNH HỘP LỊCH (TÂM NẰM TRÊN VIỀN 100%) */}
+                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '9%', top: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '9%', top: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+
+                      {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐÁY HỘP LỊCH (TÂM NẰM TRÊN VIỀN 100%, NẾU CHƯA PHẢI HỘP CUỐI CÙNG) */}
+                      {index < displayedEvents.length - 1 && (
+                        <>
+                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                        </>
+                      )}
                       {/* 1. HỘP BÊN TRÁI RỘNG HƠN (HOẶC TOÀN BỘ CHIỀU RỘNG NẾU CHƯA ĐÃ DIỄN RA HOẶC CHƯA MỞ SỔ THỜI GIAN THỰC TẾ) */}
                       <div className="discussion-card-box" style={{
                         flex: (isFinished && isRealTimeExpanded) ? '7 1 0%' : '1 1 100%', backgroundColor: 'rgba(11, 14, 20, 0.65)', border: '1px solid rgba(56, 189, 248, 0.25)',
@@ -5089,7 +5092,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN - TÂM ĐIỂM TRÒN TRÙNG KHỚP 100% VIỀN HỘP */}
+                  {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA ĐIỂM TRÒN CỦA 2 HỘP LỊCH */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
@@ -5099,28 +5102,17 @@ export default function App() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '82%',
-                        height: 42,
-                        marginTop: -16,
-                        marginBottom: -22,
+                        height: 26,
+                        marginTop: -13,
+                        marginBottom: -13,
                         marginLeft: 'auto',
                         marginRight: 'auto',
                         position: 'relative',
-                        zIndex: 10
+                        zIndex: 5
                       }}
                     >
-                      {/* LINE 1 BÊN TRÁI */}
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '2px 0' }} />
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                      </div>
-
-                      {/* LINE 2 BÊN PHẢI */}
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 8px #38bdf8', margin: '2px 0' }} />
-                        <div style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', flexShrink: 0 }} />
-                      </div>
+                      <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                      <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                     </div>
                   )}
                 </React.Fragment>

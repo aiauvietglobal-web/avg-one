@@ -680,19 +680,23 @@ button:active {
     display: none !important;
   }
 
+  .mobile-node-dot {
+    display: block !important;
+  }
+
   .mobile-gap-connector-line {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
     width: 82% !important;
-    height: 42px !important;
-    margin-top: -16px !important;
-    margin-bottom: -22px !important;
+    height: 26px !important;
+    margin-top: -13px !important;
+    margin-bottom: -13px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     position: relative !important;
-    z-index: 10 !important;
+    z-index: 5 !important;
   }
 
   .mobile-date-card-connector-line {
@@ -701,13 +705,13 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 82% !important;
-    height: 34px !important;
-    margin-top: -6px !important;
-    margin-bottom: -16px !important;
+    height: 18px !important;
+    margin-top: -9px !important;
+    margin-bottom: -9px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     position: relative !important;
-    z-index: 10 !important;
+    z-index: 5 !important;
   }
 
   .discussion-card-inner {
@@ -1016,19 +1020,23 @@ button:active {
   display: none !important;
 }
 
+.force-mobile-mode .mobile-node-dot {
+  display: block !important;
+}
+
 .force-mobile-mode .mobile-gap-connector-line {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 82% !important;
-  height: 42px !important;
-  margin-top: -16px !important;
-  margin-bottom: -22px !important;
+  height: 26px !important;
+  margin-top: -13px !important;
+  margin-bottom: -13px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   position: relative !important;
-  z-index: 10 !important;
+  z-index: 5 !important;
 }
 
 .force-mobile-mode .mobile-date-card-connector-line {
@@ -1037,13 +1045,13 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 82% !important;
-  height: 34px !important;
-  margin-top: -6px !important;
-  margin-bottom: -16px !important;
+  height: 18px !important;
+  margin-top: -9px !important;
+  margin-bottom: -9px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   position: relative !important;
-  z-index: 10 !important;
+  z-index: 5 !important;
 }
 
 .force-mobile-mode .discussion-card-inner {
