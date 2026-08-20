@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   FileText, Plus, RefreshCw, Clock, Users, ChevronDown, Search, BarChart3,
   Bell, LogIn, MessageSquare, Newspaper, MapPin, Sun, Moon,
-  PanelLeftOpen, Package, Calendar as CalendarIcon, Scale, Home, Share2, X, Menu,
+  PanelLeftOpen, Package, Calendar as CalendarIcon, Scale, Home, Share2, X, Menu, Monitor,
   Building2, Compass, Navigation, Hash, Warehouse, Cpu, Palette, Box, Send, Pin, Target, PenTool, UserCheck, AlertTriangle, Hourglass, Play, Square, Phone, Video, Info, Paperclip, Smile, ThumbsUp, Heart, Maximize2, Minimize2, Image, Contact, Scissors, Type, Zap, CreditCard, MoreHorizontal, Bold, Italic, Underline, Strikethrough, List, ListOrdered, Undo, Redo, Eraser,
   FileSpreadsheet, LayoutGrid, Table, Globe, ShieldCheck, Layers, Trash2, CheckCircle2, Mail, Copy, Briefcase, Filter, AlertCircle, ExternalLink, Eye
 } from 'lucide-react';
@@ -2069,6 +2069,28 @@ export default function App() {
 
         {/* MENU ITEMS */}
         <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', fontSize: '0.8rem', fontWeight: 700 }}>
+          {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (CHO MÁY TÍNH) */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMode(false);
+              setIsMobileMenuOpen(false);
+              showToast('💻 Đã quay lại Giao diện Máy tính (Desktop)');
+            }}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 12,
+              backgroundColor: 'rgba(56, 189, 248, 0.18)',
+              color: '#38bdf8',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              cursor: 'pointer', textAlign: 'left', fontWeight: 800, fontSize: '0.8rem',
+              marginBottom: 8, transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+            title="Quay lại Giao diện Máy tính"
+          >
+            <Monitor style={{ width: 17, height: 17, color: '#38bdf8' }} />
+            {!isSidebarCollapsed && <span style={{ fontWeight: 800, letterSpacing: '0.03em' }}>💻 VỀ GIAO DIỆN MÁY TÍNH</span>}
+          </button>
+
           {/* 1. TRANG CHỦ */}
           <button
             onClick={() => setActiveTab('home')}
@@ -2639,6 +2661,26 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH */}
+            <button
+              onClick={() => {
+                setIsMobileMode(false);
+                setIsMobileMenuOpen(false);
+                showToast('💻 Đã quay lại Giao diện Máy tính (Desktop)');
+              }}
+              style={{
+                padding: '6px 12px', borderRadius: 8,
+                backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)',
+                fontSize: '0.74rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', gap: 6,
+                cursor: 'pointer'
+              }}
+              title="Quay lại Giao diện Máy tính"
+            >
+              <Monitor style={{ width: 14, height: 14, color: '#38bdf8' }} />
+              <span>Máy tính</span>
+            </button>
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               style={{
