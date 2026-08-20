@@ -4021,11 +4021,11 @@ export default function App() {
                         {/* HỘP 1: NĂM */}
                         <div className="calendar-filter-box" style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                          backgroundColor: '#0284c7', padding: '8px 14px', borderRadius: 12,
-                          border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)',
+                          backgroundColor: '#161b26', padding: '8px 14px', borderRadius: 12,
+                          border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
                           minWidth: 0
                         }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff', flexShrink: 0 }} />
+                          <CalendarIcon style={{ width: 15, height: 15, color: '#38bdf8', flexShrink: 0 }} />
                           <select
                             value={selectedFilterYear}
                             onChange={(e) => {
@@ -4034,7 +4034,7 @@ export default function App() {
                               setSelectedSpecificDayDate('');
                               showToast(val === 0 ? 'Đang xem tất cả các Năm' : `Đã lọc theo Năm ${val}`);
                             }}
-                            style={{ padding: '4px 2px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none', textAlign: 'center' }}
+                            style={{ padding: '4px 2px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#38bdf8', outline: 'none', textAlign: 'center' }}
                           >
                             <option value={2026} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Năm 2026</option>
                             <option value={2025} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Năm 2025</option>
@@ -4045,11 +4045,11 @@ export default function App() {
                         {/* HỘP 2: THÁNG */}
                         <div className="calendar-filter-box" style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                          backgroundColor: '#0284c7', padding: '8px 14px', borderRadius: 12,
-                          border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)',
+                          backgroundColor: '#161b26', padding: '8px 14px', borderRadius: 12,
+                          border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
                           minWidth: 0
                         }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff', flexShrink: 0 }} />
+                          <CalendarIcon style={{ width: 15, height: 15, color: '#38bdf8', flexShrink: 0 }} />
                           <select
                             value={selectedFilterMonth}
                             onChange={(e) => {
@@ -4063,7 +4063,7 @@ export default function App() {
                               setSelectedSpecificDayDate('');
                               showToast(mNum === 0 ? 'Đang xem tất cả các Tháng' : `Đã lọc xem Tháng ${String(mNum).padStart(2, '0')}/${selectedFilterYear || 2026}`);
                             }}
-                            style={{ padding: '4px 2px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none', textAlign: 'center' }}
+                            style={{ padding: '4px 2px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#38bdf8', outline: 'none', textAlign: 'center' }}
                           >
                             <option value={0} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tất cả các Tháng</option>
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(m => (
@@ -4190,13 +4190,13 @@ export default function App() {
                       onClick={() => setIsAddTalkModalOpen(true)}
                       title="Thêm Lịch Trao Đổi Mới"
                       style={{
-                        padding: '10px 12px', borderRadius: 12, background: 'linear-gradient(135deg, #0284c7, #38bdf8)',
-                        color: '#ffffff', border: 'none', boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)',
+                        padding: '10px 12px', borderRadius: 12, backgroundColor: '#161b26',
+                        border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
                         cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                         transition: 'all 0.15s ease'
                       }}
                     >
-                      <Plus style={{ width: 18, height: 18, color: '#ffffff' }} />
+                      <Plus style={{ width: 18, height: 18, color: '#38bdf8' }} />
                     </button>
                   </div>
                 </div>
