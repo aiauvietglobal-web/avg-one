@@ -4653,11 +4653,11 @@ export default function App() {
 
                             return (
                               <div style={{
-                                display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap',
+                                display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap',
                                 gap: 10, padding: '10px 14px', background: headerBg,
                                 borderRadius: 14, border: headerBorder,
                                 boxShadow: headerShadow,
-                                marginBottom: 12
+                                marginBottom: 12, textAlign: 'center'
                               }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
                                   {/* THỜI GIAN DỰ KIẾN (KÍCH THƯỚC LỚN HƠN) */}
