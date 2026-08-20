@@ -4598,7 +4598,7 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (ĐƯỜNG VIỀN HỘP ĐI QUA TÂM ĐIỂM TRÒN) */}
+                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (ĐƯỜNG VIỀN HỘP ĐI QUA TÂM ĐIỂM TRÒN CHUẨN XÁC) */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
@@ -4608,8 +4608,8 @@ export default function App() {
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 width: '75%',
-                                height: 22,
-                                margin: '-5px auto',
+                                height: 34,
+                                margin: '-9px auto',
                                 position: 'relative',
                                 zIndex: 10
                               }}
@@ -5086,7 +5086,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN NẰM ĐẾ VIỀN HỘP ĐI QUA TÂM ĐIỂM TRÒN TRÊN MOBILE */}
+                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN NẰM ĐẾ VIỀN HỘP ĐI QUA TÂM ĐIỂM TRÒN CHUẨN XÁC TRÊN MOBILE */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
@@ -5096,8 +5096,8 @@ export default function App() {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         width: '75%',
-                        height: 26,
-                        margin: '-5px auto',
+                        height: 46,
+                        margin: '-15px auto',
                         position: 'relative',
                         zIndex: 10
                       }}
