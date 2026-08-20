@@ -2078,7 +2078,7 @@ export default function App() {
             onClick={() => {
               setIsMobileMode(false);
               setIsMobileMenuOpen(false);
-              showToast('💻 Đã quay lại Giao diện Máy tính (Desktop)');
+              showToast('💻 Đã trở về Giao diện Máy tính (Desktop)');
             }}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 12,
@@ -2671,7 +2671,7 @@ export default function App() {
               onClick={() => {
                 setIsMobileMode(false);
                 setIsMobileMenuOpen(false);
-                showToast('💻 Đã quay lại Giao diện Máy tính (Desktop)');
+                showToast('💻 Đã trở về Giao diện Máy tính (Desktop)');
               }}
               style={{
                 padding: '6px 12px', borderRadius: 8,
@@ -3126,7 +3126,7 @@ export default function App() {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
                         <button
                           type="button"
-                          onClick={() => { setSelectedHub('ALL'); showToast('🌐 Đã quay về Giao diện Tổng'); }}
+                          onClick={() => { setSelectedHub('ALL'); showToast('🌐 Đã trở về Giao diện Tổng'); }}
                           style={{
                             padding: '10px 20px', borderRadius: 12,
                             background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(14, 165, 233, 0.2) 100%)',
@@ -4083,7 +4083,7 @@ export default function App() {
                         setSelectedSpecificWeek(curWeek);
                         setSelectedSpecificDayDate(curDayStr);
                         setCalendarViewMode('day');
-                        showToast(`🗓️ Đã quay về đúng ngày hiện tại (múi giờ Việt Nam): ${curDayStr}`);
+                        showToast(`🗓️ Đã trở về ngày hiện tại (múi giờ Việt Nam): ${curDayStr}`);
                       }}
                       title="Về ngày hiện tại (Múi giờ Việt Nam)"
                       style={{
