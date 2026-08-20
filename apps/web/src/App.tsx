@@ -3310,8 +3310,8 @@ export default function App() {
                 const neonGrad = {
                   bg: 'linear-gradient(135deg, rgba(2, 132, 199, 0.7), rgba(14, 165, 233, 0.35), rgba(11, 15, 25, 0.95))',
                   border: '1px solid #38bdf8',
-                  subBoxBg: 'linear-gradient(135deg, #0f172a, #0b0f19)',
-                  subBoxBorder: '1px solid rgba(56, 189, 248, 0.35)'
+                  subBoxBg: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                  subBoxBorder: '1px solid #38bdf8'
                 };
 
                 return (
@@ -3342,7 +3342,7 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* 3 STAT KPI BOXES (NỀN TỐI TẬP TRUNG LÀM NỔI BẬT MÀU CHỮ & CHỈ SỐ) */}
+                    {/* 3 STAT KPI BOXES (ĐỒNG BỘ MÀU XANH HỆ THỐNG GIỐNG HỘP LỚN) */}
                     {(() => {
                       const monthEvents = discussionEvents.filter(e => {
                         if (selectedFilterMonth === 0) return true;
@@ -3361,15 +3361,15 @@ export default function App() {
 
                       return (
                         <div className="calendar-kpi-row" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(2, 132, 199, 0.45)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{ongoingCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#34d399', letterSpacing: '0.04em' }}>● ĐANG DIỄN RA</span>
                           </div>
-                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(2, 132, 199, 0.45)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{upcomingCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#fbbf24', letterSpacing: '0.04em' }}>● SẮP TỚI</span>
                           </div>
-                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(2, 132, 199, 0.45)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{completedCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#ff3344', letterSpacing: '0.04em' }}>● ĐÃ DIỄN RA</span>
                           </div>
@@ -3380,30 +3380,30 @@ export default function App() {
                 );
               })()}
 
-              {/* ACCORDION BAR: THỐNG KÊ DỮ LIỆU TRAO ĐỔI (LẤY Ý TƯỞNG TỪ BIỂU ĐỒ CHỨNG KHOÁN) */}
+              {/* ACCORDION BAR: THỐNG KÊ DỮ LIỆU TRAO ĐỔI (ĐỒNG BỘ MÀU XANH HỆ THỐNG) */}
               <div
                 onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
                 style={{
                   padding: '14px 20px', borderRadius: isAnalyticsExpanded ? '16px 16px 0 0' : 16,
-                  backgroundColor: 'rgba(16, 27, 42, 0.9)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                  background: 'linear-gradient(135deg, #0284c7, #0369a1)', border: '1px solid #38bdf8',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
-                  transition: 'all 0.2s ease', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+                  transition: 'all 0.2s ease', boxShadow: '0 4px 18px rgba(2, 132, 199, 0.45)'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                    <BarChart3 style={{ width: 20, height: 20, color: '#38bdf8' }} />
+                  <div style={{ padding: 8, borderRadius: 10, backgroundColor: 'rgba(255, 255, 255, 0.2)', border: '1px solid rgba(255, 255, 255, 0.35)' }}>
+                    <BarChart3 style={{ width: 20, height: 20, color: '#ffffff' }} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: 8, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+                    <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: 8, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
                       THỐNG KÊ DỮ LIỆU TRAO ĐỔI
                     </div>
-                    <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: 2 }}>Phân tích xu hướng biến động thời gian & đối sánh Kế hoạch vs Thực tế 24/7</div>
+                    <div style={{ fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.85)', marginTop: 2 }}>Phân tích xu hướng biến động thời gian & đối sánh Kế hoạch vs Thực tế 24/7</div>
                   </div>
                 </div>
 
                 {/* Mũi tên ẩn hiện chi tiết */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#38bdf8', fontSize: '0.85rem', fontWeight: 900 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#ffffff', fontSize: '0.85rem', fontWeight: 900 }}>
                   <span>{isAnalyticsExpanded ? '▲' : '▼'}</span>
                 </div>
               </div>
@@ -4076,15 +4076,16 @@ export default function App() {
                     );
                   })()}
 
-                  {/* HỘP BÊN TRÁI: THẺ VÀ LƯỚI NGANG HÀNG VỚI CÁC NÚT THAO TÁC */}
-                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#161b26', padding: 4, borderRadius: 10, border: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '0.78rem', fontWeight: 700 }}>
+                  {/* HỘP BÊN TRÁI: THẺ VÀ LƯỚI NGANG HÀNG VỚI CÁC NÚT THAO TÁC (ĐỒNG BỘ MÀU XANH HỆ THỐNG) */}
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(135deg, #0284c7, #0369a1)', padding: 4, borderRadius: 12, border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)', fontSize: '0.78rem', fontWeight: 700 }}>
                     <button
                       onClick={() => setTalkViewMode('card')}
                       style={{
                         padding: '5px 12px', borderRadius: 8,
-                        backgroundColor: talkViewMode === 'card' ? '#0284c7' : 'transparent',
-                        color: talkViewMode === 'card' ? '#ffffff' : '#94a3b8',
-                        border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                        backgroundColor: talkViewMode === 'card' ? 'rgba(0, 0, 0, 0.35)' : 'transparent',
+                        color: '#ffffff',
+                        border: talkViewMode === 'card' ? '1px solid rgba(255, 255, 255, 0.35)' : 'none',
+                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
                       }}
                     >
                       <LayoutGrid style={{ width: 14, height: 14 }} /> Thẻ
@@ -4093,9 +4094,10 @@ export default function App() {
                       onClick={() => setTalkViewMode('grid')}
                       style={{
                         padding: '5px 12px', borderRadius: 8,
-                        backgroundColor: talkViewMode === 'grid' ? '#0284c7' : 'transparent',
-                        color: talkViewMode === 'grid' ? '#ffffff' : '#94a3b8',
-                        border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                        backgroundColor: talkViewMode === 'grid' ? 'rgba(0, 0, 0, 0.35)' : 'transparent',
+                        color: '#ffffff',
+                        border: talkViewMode === 'grid' ? '1px solid rgba(255, 255, 255, 0.35)' : 'none',
+                        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
                       }}
                     >
                       <Table style={{ width: 14, height: 14 }} /> Lưới
@@ -4124,13 +4126,13 @@ export default function App() {
                       }}
                       title="Về ngày hiện tại (Múi giờ Việt Nam)"
                       style={{
-                        padding: '10px 12px', borderRadius: 12, backgroundColor: '#161b26',
-                        border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
+                        padding: '10px 12px', borderRadius: 12, background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                        border: '1px solid #38bdf8', color: '#ffffff', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         cursor: 'pointer', transition: 'all 0.15s ease'
                       }}
                     >
-                      <CalendarIcon style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                      <CalendarIcon style={{ width: 18, height: 18, color: '#ffffff' }} />
                     </button>
                     <button
                       onClick={() => window.open('https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/edit?gid=1382803197#gid=1382803197', '_blank')}
