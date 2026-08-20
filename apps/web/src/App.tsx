@@ -4467,14 +4467,14 @@ export default function App() {
 
                       return (
                         <div key={item.id} className="discussion-event-item" style={{ display: 'flex', alignItems: 'stretch', gap: 0, position: 'relative' }}>
-                          {/* ĐƯỜNG LINE NỐI DỌC LIÊN KẾT CÁC LỊCH TRONG CÙNG 1 NGÀY */}
-                          {hasPrevSameDate && (
+                          {/* ĐƯỜNG LINE NỐI DỌC PHÁT SÁNG CÁN TOÀN BỘ DANH SÁCH CÁC HỘP CUỘC TRAO ĐỔI */}
+                          {index > 0 && (
                             <div className="connector-vertical-line" style={{
                               position: 'absolute', left: 104, top: -20, height: 'calc(50% + 20px)', width: 2,
                               backgroundColor: '#38bdf8', boxShadow: '0 0 10px #38bdf8', zIndex: 1, opacity: 0.95
                             }} />
                           )}
-                          {hasNextSameDate && (
+                          {index < displayedEvents.length - 1 && (
                             <div className="connector-vertical-line" style={{
                               position: 'absolute', left: 104, top: '50%', height: 'calc(50% + 20px)', width: 2,
                               backgroundColor: '#38bdf8', boxShadow: '0 0 10px #38bdf8', zIndex: 1, opacity: 0.95
