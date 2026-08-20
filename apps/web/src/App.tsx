@@ -4544,12 +4544,12 @@ export default function App() {
                                 </button>
 
                                 {/* THỨ TRONG TUẦN (CHỮ TRẮNG TO ĐẬM) */}
-                                <span style={{ fontSize: '0.88rem', fontWeight: 900, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#ffffff' }}>
+                                <span className="date-day-name" style={{ fontSize: '0.88rem', fontWeight: 900, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#ffffff' }}>
                                   {safeDayOfWeek}
                                 </span>
 
-                                {/* HỘP NHỎ SỐ NGÀY */}
-                                <div style={{
+                                {/* HỘP NHỎ SỐ NGÀY (CĂN GIỮA TUYỆT ĐỐI) */}
+                                <div className="date-number-box" style={{
                                   padding: '4px 14px', borderRadius: 10,
                                   background: 'rgba(0, 0, 0, 0.35)',
                                   border: '1px solid rgba(255, 255, 255, 0.35)',
@@ -4562,7 +4562,7 @@ export default function App() {
                                 </div>
 
                                 {/* THÁNG (CHỮ TRẮNG TO ĐẬM IN HOA) */}
-                                <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+                                <span className="date-month-name" style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em', textTransform: 'uppercase' }}>
                                   THÁNG {item.date ? item.date.split('/')[1] : '08'}
                                 </span>
 
