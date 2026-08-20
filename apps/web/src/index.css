@@ -555,7 +555,10 @@ button:active {
     justify-content: space-between !important;
     align-items: center !important;
     padding: 8px 16px !important;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+    border: 1px solid #38bdf8 !important;
+    box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45) !important;
   }
 
   .date-node-container .date-box-spacer {
@@ -743,7 +746,10 @@ button:active {
   justify-content: space-between !important;
   align-items: center !important;
   padding: 8px 16px !important;
-  border-radius: 12px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+  border: 1px solid #38bdf8 !important;
+  box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45) !important;
 }
 
 .force-mobile-mode .date-node-container .date-box-spacer {

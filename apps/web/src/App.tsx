@@ -4331,41 +4331,27 @@ export default function App() {
                       let statusToneBg = 'rgba(249, 115, 22, 0.15)';
                       let statusToneBorder = '1px solid rgba(249, 115, 22, 0.35)';
                       let statusBoxBg = 'linear-gradient(180deg, #c2410c, #7c2d12)'; // Cam đậm
-                      let statusOuterBoxBg = 'linear-gradient(180deg, #ea580c, #c2410c)'; // Hộp ngày ngoài màu cam
-                      let statusOuterBorder = '1px solid #f97316';
-                      let statusOuterShadow = '0 6px 20px rgba(249, 115, 22, 0.45)';
+
+                      // Hộp ngày luôn sử dụng tone màu xanh Cyan hệ thống (#0284c7 / #38bdf8)
+                      const statusOuterBoxBg = 'linear-gradient(135deg, #0284c7, #0369a1)';
+                      const statusOuterBorder = '1px solid #38bdf8';
+                      const statusOuterShadow = '0 6px 20px rgba(2, 132, 199, 0.45)';
 
                       if (st === 'Đang diễn ra') {
                         statusToneColor = '#34d399'; // Màu Xanh lá
                         statusToneBg = 'rgba(16, 185, 129, 0.15)';
                         statusToneBorder = '1px solid rgba(52, 211, 153, 0.35)';
                         statusBoxBg = 'linear-gradient(180deg, #047857, #064e3b)'; // Xanh lá đậm
-                        statusOuterBoxBg = 'linear-gradient(180deg, #059669, #047857)'; // Hộp ngày ngoài màu xanh lá
-                        statusOuterBorder = '1px solid #34d399';
-                        statusOuterShadow = '0 6px 20px rgba(52, 211, 153, 0.45)';
                       } else if (isFinished) {
                         statusToneColor = '#ff3344'; // Màu Đỏ (Đã diễn ra)
                         statusToneBg = 'rgba(239, 68, 68, 0.15)';
                         statusToneBorder = '1px solid rgba(239, 68, 68, 0.35)';
                         statusBoxBg = 'linear-gradient(180deg, #991b1b, #7f1d1d)'; // Đỏ đậm
-                        statusOuterBoxBg = 'linear-gradient(180deg, #dc2626, #991b1b)'; // Hộp ngày ngoài màu đỏ
-                        statusOuterBorder = '1px solid #ef4444';
-                        statusOuterShadow = '0 6px 20px rgba(239, 68, 68, 0.45)';
                       } else if (st === 'Đã dời' || st === 'Đã hủy' || st === 'Huỷ lịch') {
                         statusToneColor = '#c084fc'; // Màu Tím (Đã dời/hủy)
                         statusToneBg = 'rgba(168, 85, 247, 0.15)';
                         statusToneBorder = '1px solid rgba(192, 132, 252, 0.35)';
                         statusBoxBg = 'linear-gradient(180deg, #7e22ce, #581c87)'; // Tím đậm
-                        statusOuterBoxBg = 'linear-gradient(180deg, #9333ea, #7e22ce)'; // Hộp ngày ngoài màu tím
-                        statusOuterBorder = '1px solid #c084fc';
-                        statusOuterShadow = '0 6px 20px rgba(192, 132, 252, 0.45)';
-                      }
-
-                      // Duy trì tone màu xanh hệ thống cho Hộp Ngày trong 24 giờ của ngày hiện tại (isToday)
-                      if (isToday) {
-                        statusOuterBoxBg = 'linear-gradient(180deg, #059669, #047857)';
-                        statusOuterBorder = '1px solid #34d399';
-                        statusOuterShadow = '0 6px 22px rgba(52, 211, 153, 0.55)';
                       }
 
                       return (
@@ -4386,7 +4372,7 @@ export default function App() {
 
                           {/* NODE BÊN TRÁI: HỘP THỨ NGÀY THÁNG CÓ ĐƯỜNG LINE LIÊN KẾT NỐI TRỰC TIẾP SANG HỘP NỘI DUNG */}
                           <div className="date-node-container" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, position: 'relative' }}>
-                            {/* 1. KHUNG HỘP THỨ NGÀY THÁNG (ĐỔI NỀN HỘP NGOÀI ĐỒNG BỘ THEO MÀU TRẠNG THÁI) */}
+                            {/* 1. KHUNG HỘP THỨ NGÀY THÁNG (LUÔN ĐỂ MÀU XANH CYAN HỆ THỐNG) */}
                             {!hasPrevSameDate ? (
                               <div className="date-box-inner" style={{
                                 width: 84, padding: '10px 0', borderRadius: 16,
@@ -4445,7 +4431,7 @@ export default function App() {
                         borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 12
                       }}>
                         <div>
-                          {/* TOP BAR: THỜI GIAN DỰ KIẾN (TỰ ĐỘNG ĐỔI MÀU THEO TRẠNG THÁI): SẮP TỚI (CAM), ĐANG DIỄN RA (XANH LÁ), ĐÃ DIỄN RA (ĐỎ) */}
+                          {/* TOP BAR: THỜI GIAN DỰ KIẾN (KÍCH THƯỚC NHỎ GỌN TINH TẾ) */}
                           {(() => {
                             let headerBg = 'linear-gradient(135deg, rgba(234, 88, 12, 0.68), rgba(249, 115, 22, 0.45))';
                             let headerBorder = '1px solid rgba(251, 146, 60, 0.6)';
@@ -4490,41 +4476,41 @@ export default function App() {
                             return (
                               <div style={{
                                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                padding: '14px 20px', background: headerBg,
-                                borderRadius: 14, border: headerBorder,
+                                padding: '8px 14px', background: headerBg,
+                                borderRadius: 12, border: headerBorder,
                                 boxShadow: headerShadow,
-                                marginBottom: 16
+                                marginBottom: 10
                               }}>
-                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                                  {/* THỜI GIAN DỰ KIẾN */}
+                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                                  {/* THỜI GIAN DỰ KIẾN (CHỮ NHỎ TẠO CẢM GIÁC GỌN GÀNG) */}
                                   <span style={{
-                                    fontSize: '0.96rem', fontWeight: 900, color: '#ffffff',
-                                    display: 'inline-flex', alignItems: 'center', gap: 8
+                                    fontSize: '0.78rem', fontWeight: 800, color: '#ffffff',
+                                    display: 'inline-flex', alignItems: 'center', gap: 6
                                   }}>
-                                    <Clock style={{ width: 18, height: 18, color: '#ffffff' }} />
+                                    <Clock style={{ width: 14, height: 14, color: '#ffffff' }} />
                                     DỰ KIẾN: {pStart} – {pEnd}
                                   </span>
 
                                   {/* LINE NGĂN CÁCH MỎNG */}
-                                  <div style={{ height: 16, width: 1, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 6px' }} />
+                                  <div style={{ height: 12, width: 1, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
 
                                   {/* THỜI LƯỢNG PHÚT */}
                                   <span style={{
-                                    fontSize: '0.96rem', fontWeight: 900, color: '#ffffff',
-                                    display: 'inline-flex', alignItems: 'center', gap: 8
+                                    fontSize: '0.76rem', fontWeight: 800, color: '#ffffff',
+                                    display: 'inline-flex', alignItems: 'center', gap: 6
                                   }}>
-                                    <Hourglass style={{ width: 17, height: 17, color: '#ffffff' }} />
+                                    <Hourglass style={{ width: 13, height: 13, color: '#ffffff' }} />
                                     {plannedMins} phút
                                   </span>
                                 </div>
 
                                 {/* HỘP TRẠNG THÁI */}
                                 <div style={{
-                                  display: 'flex', alignItems: 'center', gap: 8, padding: '5px 14px', borderRadius: 20,
+                                  display: 'flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 16,
                                   backgroundColor: '#161b26', border: badgeBorder,
-                                  fontSize: '0.82rem', fontWeight: 900, color, flexShrink: 0
+                                  fontSize: '0.72rem', fontWeight: 800, color, flexShrink: 0
                                 }}>
-                                  <span style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: dotBg }} />
+                                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: dotBg }} />
                                   <span>{st}</span>
                                 </div>
                               </div>
