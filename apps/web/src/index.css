@@ -686,10 +686,10 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 60% !important;
-    height: 44px !important;
-    margin: -14px auto !important;
+    height: 58px !important;
+    margin: -21px auto !important;
     position: relative !important;
-    z-index: 5 !important;
+    z-index: 10 !important;
   }
 
   .mobile-date-card-connector-line {
@@ -698,10 +698,10 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 60% !important;
-    height: 36px !important;
-    margin: -10px auto !important;
+    height: 48px !important;
+    margin: -16px auto !important;
     position: relative !important;
-    z-index: 5 !important;
+    z-index: 10 !important;
   }
 
   .discussion-card-inner {
@@ -1016,10 +1016,10 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 60% !important;
-  height: 44px !important;
-  margin: -14px auto !important;
+  height: 58px !important;
+  margin: -21px auto !important;
   position: relative !important;
-  z-index: 5 !important;
+  z-index: 10 !important;
 }
 
 .force-mobile-mode .mobile-date-card-connector-line {
@@ -1028,10 +1028,10 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 60% !important;
-  height: 36px !important;
-  margin: -10px auto !important;
+  height: 48px !important;
+  margin: -16px auto !important;
   position: relative !important;
-  z-index: 5 !important;
+  z-index: 10 !important;
 }
 
 .force-mobile-mode .discussion-card-inner {
