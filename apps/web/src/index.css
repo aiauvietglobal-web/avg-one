@@ -617,6 +617,11 @@ button:active {
     box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45) !important;
   }
 
+  .date-node-container .date-box-inner > span {
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+  }
+
   .date-node-container .date-box-spacer {
     display: none !important;
   }
@@ -863,6 +868,11 @@ button:active {
   background: linear-gradient(135deg, #0284c7, #0369a1) !important;
   border: 1px solid #38bdf8 !important;
   box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45) !important;
+}
+
+.force-mobile-mode .date-node-container .date-box-inner > span {
+  font-size: 0.92rem !important;
+  font-weight: 900 !important;
 }
 
 .force-mobile-mode .date-node-container .date-box-spacer {

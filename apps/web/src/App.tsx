@@ -1858,6 +1858,7 @@ export default function App() {
   const handleSelectHubFromSidebar = (hubKey: HubKey) => {
     setSelectedHub(hubKey);
     setActiveTab('orders');
+    setIsMobileMenuOpen(false);
     showToast(`🏢 Đã chuyển sang Đầu Mối: ${HUB_MAP[hubKey].name}`);
   };
 
@@ -2094,7 +2095,7 @@ export default function App() {
 
           {/* 1. TRANG CHỦ */}
           <button
-            onClick={() => setActiveTab('home')}
+            onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 12,
               backgroundColor: activeTab === 'home' ? 'rgba(255, 87, 34, 0.14)' : 'transparent',
@@ -2109,7 +2110,7 @@ export default function App() {
 
           {/* 2. BẢNG TIN NỘI BỘ */}
           <button
-            onClick={() => setActiveTab('news')}
+            onClick={() => { setActiveTab('news'); setIsMobileMenuOpen(false); }}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 12,
               backgroundColor: activeTab === 'news' ? 'rgba(255, 87, 34, 0.14)' : 'transparent',
@@ -2160,7 +2161,7 @@ export default function App() {
               <div style={{ marginLeft: 20, marginTop: 4, display: 'flex', flexDirection: 'column', gap: 4, borderLeft: '1px solid rgba(255, 87, 34, 0.4)', paddingLeft: 12 }}>
                 {/* 1. CẤU TRÚC (VỊ TRÍ ĐẦU TIÊN) */}
                 <button
-                  onClick={() => setActiveTab('system')}
+                  onClick={() => { setActiveTab('system'); setIsMobileMenuOpen(false); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
                     border: '1px solid transparent',
@@ -2177,7 +2178,7 @@ export default function App() {
 
                 {/* 2. KẾ HOẠCH NĂM */}
                 <button
-                  onClick={() => setActiveTab('system-annual-plan')}
+                  onClick={() => { setActiveTab('system-annual-plan'); setIsMobileMenuOpen(false); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
                     border: '1px solid transparent',
@@ -2194,7 +2195,7 @@ export default function App() {
 
                 {/* 3. THÔNG ĐIỆP ĐIỀU HÀNH */}
                 <button
-                  onClick={() => setActiveTab('system-executive-message')}
+                  onClick={() => { setActiveTab('system-executive-message'); setIsMobileMenuOpen(false); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
                     border: '1px solid transparent',
@@ -2255,7 +2256,7 @@ export default function App() {
             {isCalendarOpen && !isSidebarCollapsed && (
               <div style={{ marginLeft: 20, marginTop: 4, display: 'flex', flexDirection: 'column', gap: 4, borderLeft: '1px solid rgba(255, 87, 34, 0.4)', paddingLeft: 12 }}>
                 <button
-                  onClick={() => setActiveTab('calendar-talk')}
+                  onClick={() => { setActiveTab('calendar-talk'); setIsMobileMenuOpen(false); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
                     border: '1px solid transparent',
@@ -2308,7 +2309,7 @@ export default function App() {
               <div style={{ marginLeft: 20, marginTop: 4, display: 'flex', flexDirection: 'column', gap: 4, borderLeft: '1px solid rgba(255, 87, 34, 0.4)', paddingLeft: 12 }}>
                 {/* 0. GIAO DIỆN TỔNG ĐƠN HÀNG */}
                 <button
-                  onClick={() => { setSelectedHub('ALL'); setActiveTab('orders'); showToast('🌐 Đã mở Giao diện Tổng Quản lý Đơn hàng'); }}
+                  onClick={() => { setSelectedHub('ALL'); setActiveTab('orders'); setIsMobileMenuOpen(false); showToast('🌐 Đã mở Giao diện Tổng Quản lý Đơn hàng'); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
                     border: '1px solid transparent',
@@ -2566,7 +2567,7 @@ export default function App() {
           </div>
 
           <button
-            onClick={() => setActiveTab('documents')}
+            onClick={() => { setActiveTab('documents'); setIsMobileMenuOpen(false); }}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 12,
               backgroundColor: activeTab === 'documents' ? 'rgba(255, 87, 34, 0.14)' : 'transparent',
@@ -2583,7 +2584,7 @@ export default function App() {
           </button>
 
           <button
-            onClick={() => setActiveTab('hr')}
+            onClick={() => { setActiveTab('hr'); setIsMobileMenuOpen(false); }}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 12,
               backgroundColor: activeTab === 'hr' ? 'rgba(255, 87, 34, 0.14)' : 'transparent',
@@ -4037,109 +4038,129 @@ export default function App() {
                     );
                   })()}
 
-                  <button
-                    onClick={() => {
-                      const now = getVietnamNow();
-                      const curDay = now.getDate();
-                      const curMonth = now.getMonth() + 1;
-                      const curYear = now.getFullYear();
-                      const curQuarter = Math.ceil(curMonth / 3);
-                      const curWeek = curDay <= 7 ? 'W1' : curDay <= 14 ? 'W2' : curDay <= 21 ? 'W3' : 'W4';
-                      const curDayStr = `${String(curDay).padStart(2, '0')}/${String(curMonth).padStart(2, '0')}/${curYear}`;
+                  {/* HỘP BÊN TRÁI: THẺ VÀ LƯỚI NGANG HÀNG VỚI CÁC NÚT THAO TÁC */}
+                  <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#161b26', padding: 4, borderRadius: 10, border: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '0.78rem', fontWeight: 700 }}>
+                    <button
+                      onClick={() => setTalkViewMode('card')}
+                      style={{
+                        padding: '5px 12px', borderRadius: 8,
+                        backgroundColor: talkViewMode === 'card' ? '#0284c7' : 'transparent',
+                        color: talkViewMode === 'card' ? '#ffffff' : '#94a3b8',
+                        border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                      }}
+                    >
+                      <LayoutGrid style={{ width: 14, height: 14 }} /> Thẻ
+                    </button>
+                    <button
+                      onClick={() => setTalkViewMode('grid')}
+                      style={{
+                        padding: '5px 12px', borderRadius: 8,
+                        backgroundColor: talkViewMode === 'grid' ? '#0284c7' : 'transparent',
+                        color: talkViewMode === 'grid' ? '#ffffff' : '#94a3b8',
+                        border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6
+                      }}
+                    >
+                      <Table style={{ width: 14, height: 14 }} /> Lưới
+                    </button>
+                  </div>
 
-                      setSelectedFilterYear(curYear);
-                      setSelectedFilterQuarter(curQuarter);
-                      setSelectedFilterMonth(curMonth);
-                      setSelectedSpecificWeek(curWeek);
-                      setSelectedSpecificDayDate(curDayStr);
-                      setCalendarViewMode('day');
-                      showToast(`🗓️ Đã quay về đúng ngày hiện tại (múi giờ Việt Nam): ${curDayStr}`);
-                    }}
-                    title="Về ngày hiện tại (Múi giờ Việt Nam)"
-                    style={{
-                      padding: '10px 12px', borderRadius: 12, backgroundColor: '#161b26',
-                      border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      cursor: 'pointer', transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <CalendarIcon style={{ width: 18, height: 18, color: '#38bdf8' }} />
-                  </button>
-                  <button
-                    onClick={() => window.open('https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/edit?gid=1382803197#gid=1382803197', '_blank')}
-                    title="Mở Google Sheet Trực Tiếp"
-                    style={{
-                      padding: '10px 12px', borderRadius: 12, backgroundColor: 'rgba(16, 185, 129, 0.12)',
-                      border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      cursor: 'pointer', transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <FileSpreadsheet style={{ width: 18, height: 18, color: '#34d399' }} />
-                  </button>
-                  <button
-                    className="hide-on-mobile"
-                    onClick={() => {
-                      setWebhookUrlInput(getGoogleSheetWebhookUrl());
-                      setIsWebhookModalOpen(true);
-                    }}
-                    title="Cấu hình Đồng bộ 2-Chiều với Google Sheet"
-                    style={{
-                      padding: '10px 12px', borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                      border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      cursor: 'pointer', transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <RefreshCw style={{ width: 18, height: 18, color: '#38bdf8' }} />
-                  </button>
-                  {/* NÚT THÙNG RÁC TẠM LƯU TRỮ (ẨN Ở CHẾ ĐỘ MOBILE) */}
-                  <button
-                    className="hide-on-mobile"
-                    onClick={() => {
-                      setTrashEvents(getDeletedDiscussionEvents());
-                      setIsTrashModalOpen(true);
-                    }}
-                    title="Thùng Rác Tạm Lưu Trữ Các Lịch Đã Xóa"
-                    style={{
-                      padding: '10px 14px', borderRadius: 12, backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                      border: '1px solid rgba(239, 68, 68, 0.4)', color: '#f87171',
-                      display: 'flex', alignItems: 'center', gap: 6,
-                      cursor: 'pointer', transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <Trash2 style={{ width: 18, height: 18, color: '#f87171' }} />
-                    <span style={{ fontSize: '0.78rem', fontWeight: 900 }}>Thùng Rác</span>
-                    {trashEvents.length > 0 && (
-                      <span style={{
-                        padding: '1px 6px', borderRadius: 10, backgroundColor: '#ef4444',
-                        color: '#ffffff', fontSize: '0.7rem', fontWeight: 900, marginLeft: 2
-                      }}>
-                        {trashEvents.length}
-                      </span>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setIsAddTalkModalOpen(true)}
-                    title="Thêm Lịch Trao Đổi Mới"
-                    style={{
-                      padding: '10px 12px', borderRadius: 12, background: 'linear-gradient(135deg, #0284c7, #38bdf8)',
-                      color: '#ffffff', border: 'none', boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)',
-                      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <Plus style={{ width: 18, height: 18, color: '#ffffff' }} />
-                  </button>
-                </div>
+                  {/* NÚT THAO TÁC BÊN PHẢI */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <button
+                      onClick={() => {
+                        const now = getVietnamNow();
+                        const curDay = now.getDate();
+                        const curMonth = now.getMonth() + 1;
+                        const curYear = now.getFullYear();
+                        const curQuarter = Math.ceil(curMonth / 3);
+                        const curWeek = curDay <= 7 ? 'W1' : curDay <= 14 ? 'W2' : curDay <= 21 ? 'W3' : 'W4';
+                        const curDayStr = `${String(curDay).padStart(2, '0')}/${String(curMonth).padStart(2, '0')}/${curYear}`;
 
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#161b26', padding: 4, borderRadius: 10, border: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '0.78rem', fontWeight: 700 }}>
-                  <button style={{ padding: '5px 12px', borderRadius: 8, backgroundColor: '#0284c7', color: '#ffffff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <LayoutGrid style={{ width: 14, height: 14 }} /> Thẻ
-                  </button>
-                  <button style={{ padding: '5px 12px', borderRadius: 8, backgroundColor: 'transparent', color: '#94a3b8', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Table style={{ width: 14, height: 14 }} /> Lưới
-                  </button>
+                        setSelectedFilterYear(curYear);
+                        setSelectedFilterQuarter(curQuarter);
+                        setSelectedFilterMonth(curMonth);
+                        setSelectedSpecificWeek(curWeek);
+                        setSelectedSpecificDayDate(curDayStr);
+                        setCalendarViewMode('day');
+                        showToast(`🗓️ Đã quay về đúng ngày hiện tại (múi giờ Việt Nam): ${curDayStr}`);
+                      }}
+                      title="Về ngày hiện tại (Múi giờ Việt Nam)"
+                      style={{
+                        padding: '10px 12px', borderRadius: 12, backgroundColor: '#161b26',
+                        border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <CalendarIcon style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                    </button>
+                    <button
+                      onClick={() => window.open('https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/edit?gid=1382803197#gid=1382803197', '_blank')}
+                      title="Mở Google Sheet Trực Tiếp"
+                      style={{
+                        padding: '10px 12px', borderRadius: 12, backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                        border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34d399',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <FileSpreadsheet style={{ width: 18, height: 18, color: '#34d399' }} />
+                    </button>
+                    <button
+                      className="hide-on-mobile"
+                      onClick={() => {
+                        setWebhookUrlInput(getGoogleSheetWebhookUrl());
+                        setIsWebhookModalOpen(true);
+                      }}
+                      title="Cấu hình Đồng bộ 2-Chiều với Google Sheet"
+                      style={{
+                        padding: '10px 12px', borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                        border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <RefreshCw style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                    </button>
+                    {/* NÚT THÙNG RÁC TẠM LƯU TRỮ (ẨN Ở CHẾ ĐỘ MOBILE) */}
+                    <button
+                      className="hide-on-mobile"
+                      onClick={() => {
+                        setTrashEvents(getDeletedDiscussionEvents());
+                        setIsTrashModalOpen(true);
+                      }}
+                      title="Thùng Rác Tạm Lưu Trữ Các Lịch Đã Xóa"
+                      style={{
+                        padding: '10px 14px', borderRadius: 12, backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.4)', color: '#f87171',
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        cursor: 'pointer', transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <Trash2 style={{ width: 18, height: 18, color: '#f87171' }} />
+                      <span style={{ fontSize: '0.78rem', fontWeight: 900 }}>Thùng Rác</span>
+                      {trashEvents.length > 0 && (
+                        <span style={{
+                          padding: '1px 6px', borderRadius: 10, backgroundColor: '#ef4444',
+                          color: '#ffffff', fontSize: '0.7rem', fontWeight: 900, marginLeft: 2
+                        }}>
+                          {trashEvents.length}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setIsAddTalkModalOpen(true)}
+                      title="Thêm Lịch Trao Đổi Mới"
+                      style={{
+                        padding: '10px 12px', borderRadius: 12, background: 'linear-gradient(135deg, #0284c7, #38bdf8)',
+                        color: '#ffffff', border: 'none', boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)',
+                        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <Plus style={{ width: 18, height: 18, color: '#ffffff' }} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -4386,8 +4407,8 @@ export default function App() {
                                 boxShadow: statusOuterShadow, border: statusOuterBorder,
                                 backdropFilter: 'blur(8px)', zIndex: 2
                               }}>
-                                {/* THỨ TRONG TUẦN (CHỮ TRẮNG) */}
-                                <span style={{ fontSize: '0.62rem', fontWeight: 900, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#ffffff' }}>
+                                {/* THỨ TRONG TUẦN (CHỮ TRẮNG TO ĐẬM) */}
+                                <span style={{ fontSize: '0.88rem', fontWeight: 900, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#ffffff' }}>
                                   {safeDayOfWeek}
                                 </span>
 
@@ -4399,13 +4420,13 @@ export default function App() {
                                   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center'
                                 }}>
-                                  <span style={{ fontSize: '1.55rem', fontWeight: 900, lineHeight: 1, color: '#ffffff' }}>
+                                  <span style={{ fontSize: '1.6rem', fontWeight: 900, lineHeight: 1, color: '#ffffff' }}>
                                     {item.date ? item.date.split('/')[0] : '18'}
                                   </span>
                                 </div>
 
-                                {/* THÁNG (CHỮ TRẮNG) */}
-                                <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#ffffff' }}>
+                                {/* THÁNG (CHỮ TRẮNG TO ĐẬM) */}
+                                <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em' }}>
                                   Tháng {item.date ? item.date.split('/')[1] : '08'}
                                 </span>
                               </div>
