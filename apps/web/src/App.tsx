@@ -3277,24 +3277,24 @@ export default function App() {
                     background: neonGrad.bg,
                     border: neonGrad.border, borderRadius: 24, padding: 24,
                     boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20,
-                    backdropFilter: 'blur(16px)', transition: 'all 0.3s ease'
+                    display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16,
+                    textAlign: 'center', backdropFilter: 'blur(16px)', transition: 'all 0.3s ease'
                   }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em', margin: 0, textTransform: 'uppercase' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, width: '100%' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap', width: '100%' }}>
+                        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em', margin: 0, textTransform: 'uppercase', textAlign: 'center' }}>
                           LỊCH TRAO ĐỔI
                         </h1>
                       </div>
 
                       {/* 1. HỘP NHỎ CHO NỘI DUNG MÔ TẢ */}
                       <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 8,
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                         padding: '6px 14px', borderRadius: 10,
                         backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.3)',
-                        backdropFilter: 'blur(6px)', width: 'fit-content'
+                        backdropFilter: 'blur(6px)', width: 'fit-content', textAlign: 'center'
                       }}>
-                        <span style={{ fontSize: '0.78rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4 }}>
+                        <span style={{ fontSize: '0.78rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4, textAlign: 'center' }}>
                           Quản lý và theo dõi các cuộc trao đổi công việc một cách hiệu quả theo thời gian thực.
                         </span>
                       </div>

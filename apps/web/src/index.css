@@ -469,11 +469,15 @@ button:active {
     padding: 16px 14px !important;
     border-radius: 18px !important;
     gap: 14px !important;
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .calendar-banner-header h1 {
     font-size: 1.35rem !important;
     letter-spacing: -0.01em !important;
+    text-align: center !important;
   }
 
   /* KPI Stat Boxes Row on Mobile */
