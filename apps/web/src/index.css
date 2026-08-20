@@ -523,13 +523,17 @@ button:active {
   .calendar-filter-card {
     display: flex !important;
     flex-direction: row !important;
+    align-items: center !important;
     justify-content: space-between !important;
-    gap: 8px !important;
-    padding: 6px 12px !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    padding: 6px 8px !important;
+    width: 100% !important;
   }
 
   .calendar-filter-card .divider-line {
     display: block !important;
+    flex-shrink: 0 !important;
   }
 
   .discussion-event-item {
@@ -705,13 +709,17 @@ button:active {
 .force-mobile-mode .calendar-filter-card {
   display: flex !important;
   flex-direction: row !important;
+  align-items: center !important;
   justify-content: space-between !important;
-  gap: 8px !important;
-  padding: 6px 12px !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  padding: 6px 8px !important;
+  width: 100% !important;
 }
 
 .force-mobile-mode .calendar-filter-card .divider-line {
   display: block !important;
+  flex-shrink: 0 !important;
 }
 
 .force-mobile-mode .discussion-event-item {

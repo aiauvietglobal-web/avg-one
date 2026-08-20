@@ -3974,11 +3974,11 @@ export default function App() {
                       });
 
                     return (
-                      <div className="calendar-filter-card" style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#0284c7', padding: '6px 12px', borderRadius: 12, border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)', flexWrap: 'wrap' }}>
+                      <div className="calendar-filter-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#0284c7', padding: '6px 12px', borderRadius: 12, border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)', flexWrap: 'nowrap', width: '100%' }}>
 
                         {/* 1. NĂM */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff' }} />
+                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '0 6px', minWidth: 0 }}>
+                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff', flexShrink: 0 }} />
                           <select
                             value={selectedFilterYear}
                             onChange={(e) => {
@@ -3987,7 +3987,7 @@ export default function App() {
                               setSelectedSpecificDayDate('');
                               showToast(val === 0 ? 'Đang xem tất cả các Năm' : `Đã lọc theo Năm ${val}`);
                             }}
-                            style={{ padding: '6px 6px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none' }}
+                            style={{ padding: '6px 4px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none', width: '100%', textAlign: 'center' }}
                           >
                             <option value={2026} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Năm 2026</option>
                             <option value={2025} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Năm 2025</option>
@@ -3995,11 +3995,11 @@ export default function App() {
                           </select>
                         </div>
 
-                        <div className="divider-line" style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
+                        <div className="divider-line" style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px', flexShrink: 0 }} />
 
                         {/* 2. THÁNG */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff' }} />
+                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '0 6px', minWidth: 0 }}>
+                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff', flexShrink: 0 }} />
                           <select
                             value={selectedFilterMonth}
                             onChange={(e) => {
@@ -4013,7 +4013,7 @@ export default function App() {
                               setSelectedSpecificDayDate('');
                               showToast(mNum === 0 ? 'Đang xem tất cả các Tháng' : `Đã lọc xem Tháng ${String(mNum).padStart(2, '0')}/${selectedFilterYear || 2026}`);
                             }}
-                            style={{ padding: '6px 6px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none' }}
+                            style={{ padding: '6px 4px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none', width: '100%', textAlign: 'center' }}
                           >
                             <option value={0} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tất cả các Tháng</option>
                             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(m => (
