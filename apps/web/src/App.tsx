@@ -3391,15 +3391,15 @@ export default function App() {
 
                       return (
                         <div className="calendar-kpi-row" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 'none', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{ongoingCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#34d399', letterSpacing: '0.04em' }}>● ĐANG DIỄN RA</span>
                           </div>
-                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 'none', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{upcomingCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#fbbf24', letterSpacing: '0.04em' }}>● SẮP TỚI</span>
                           </div>
-                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0 6px 16px rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
+                          <div className="calendar-kpi-box" style={{ width: 110, padding: '12px 0', background: neonGrad.subBoxBg, border: neonGrad.subBoxBorder, borderRadius: 16, display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: 'none', backdropFilter: 'blur(8px)', transition: 'all 0.3s ease' }}>
                             <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>{completedCount}</span>
                             <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#ff3344', letterSpacing: '0.04em' }}>● ĐÃ DIỄN RA</span>
                           </div>
@@ -4429,7 +4429,7 @@ export default function App() {
                       // Hộp ngày luôn sử dụng tone màu xanh Cyan hệ thống (#0284c7 / #38bdf8)
                       const statusOuterBoxBg = 'linear-gradient(135deg, #0284c7, #0369a1)';
                       const statusOuterBorder = '1px solid #38bdf8';
-                      const statusOuterShadow = '0 6px 20px rgba(2, 132, 199, 0.45)';
+                      const statusOuterShadow = 'none';
 
                       if (st === 'Đang diễn ra') {
                         statusToneColor = '#34d399'; // Màu Xanh lá
@@ -4506,7 +4506,7 @@ export default function App() {
                                   width: 84, padding: '6px 0', borderRadius: 16,
                                   background: statusOuterBoxBg,
                                   display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 4,
-                                  boxShadow: statusOuterShadow, border: statusOuterBorder,
+                                  boxShadow: 'none', border: statusOuterBorder,
                                   backdropFilter: 'blur(8px)', zIndex: 2, cursor: 'ns-resize', userSelect: 'none'
                                 }}
                               >
@@ -4520,7 +4520,7 @@ export default function App() {
                                     background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.35)', color: '#ffffff',
                                     borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', padding: 0,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem',
-                                    fontWeight: 900, transition: 'all 0.15s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
+                                    fontWeight: 900, transition: 'all 0.15s ease', boxShadow: 'none'
                                   }}
                                 >
                                   ▲
@@ -4536,7 +4536,7 @@ export default function App() {
                                   padding: '4px 14px', borderRadius: 10,
                                   background: 'rgba(0, 0, 0, 0.35)',
                                   border: '1px solid rgba(255, 255, 255, 0.35)',
-                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+                                  boxShadow: 'none',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center'
                                 }}>
                                   <span style={{ fontSize: '1.6rem', fontWeight: 900, lineHeight: 1, color: '#ffffff' }}>
@@ -4559,7 +4559,7 @@ export default function App() {
                                     background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.35)', color: '#ffffff',
                                     borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', padding: 0,
                                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem',
-                                    fontWeight: 900, transition: 'all 0.15s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
+                                    fontWeight: 900, transition: 'all 0.15s ease', boxShadow: 'none'
                                   }}
                                 >
                                   ▼
