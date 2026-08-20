@@ -649,6 +649,31 @@ button:active {
     grid-template-columns: 1fr !important;
   }
 
+  /* MOBILE CHAT REDESIGN */
+  .zalo-chat-modal-overlay {
+    padding: 0 !important;
+  }
+  .zalo-chat-modal-container {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+  .zalo-chat-left-col {
+    display: none !important;
+  }
+  .zalo-chat-col-list.mobile-hidden,
+  .zalo-chat-col-room.mobile-hidden {
+    display: none !important;
+  }
+  .zalo-chat-col-list,
+  .zalo-chat-col-room {
+    width: 100% !important;
+    flex: 1 !important;
+  }
+
   .responsive-modal {
     width: 95% !important;
     max-width: 95% !important;
@@ -908,6 +933,30 @@ button:active {
   margin: 10px !important;
   max-height: 90vh !important;
   overflow-y: auto !important;
+}
+
+.force-mobile-mode .zalo-chat-modal-overlay {
+  padding: 0 !important;
+}
+.force-mobile-mode .zalo-chat-modal-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  border-radius: 0 !important;
+  border: none !important;
+}
+.force-mobile-mode .zalo-chat-left-col {
+  display: none !important;
+}
+.force-mobile-mode .zalo-chat-col-list.mobile-hidden,
+.force-mobile-mode .zalo-chat-col-room.mobile-hidden {
+  display: none !important;
+}
+.force-mobile-mode .zalo-chat-col-list,
+.force-mobile-mode .zalo-chat-col-room {
+  width: 100% !important;
+  flex: 1 !important;
 }
 
 @keyframes fadeIn {

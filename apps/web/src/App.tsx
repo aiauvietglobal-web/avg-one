@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  FileText, Plus, RefreshCw, Clock, Users, ChevronDown, Search, BarChart3,
+  FileText, Plus, RefreshCw, Clock, Users, ChevronDown, Search, BarChart3, ArrowLeft,
   Bell, LogIn, MessageSquare, Newspaper, MapPin, Sun, Moon,
   PanelLeftOpen, Package, Calendar as CalendarIcon, Scale, Home, Share2, X, Menu, Monitor,
   Building2, Compass, Navigation, Hash, Warehouse, Cpu, Palette, Box, Send, Pin, Target, PenTool, UserCheck, AlertTriangle, Hourglass, Play, Square, Phone, Video, Info, Paperclip, Smile, ThumbsUp, Heart, Maximize2, Minimize2, Image, Contact, Scissors, Type, Zap, CreditCard, MoreHorizontal, Bold, Italic, Underline, Strikethrough, List, ListOrdered, Undo, Redo, Eraser,
@@ -1346,6 +1346,7 @@ export default function App() {
   const [zaloNavTab, setZaloNavTab] = useState<'messages' | 'contacts' | 'cloud' | 'tasks'>('messages');
   const [isZaloInfoOpen, setIsZaloInfoOpen] = useState<boolean>(false);
   const [isChatExpanded, setIsChatExpanded] = useState<boolean>(false);
+  const [mobileChatScreen, setMobileChatScreen] = useState<'list' | 'room'>('list');
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const [isRichTextOpen, setIsRichTextOpen] = useState<boolean>(false);
   const [bannerGradientStyle, setBannerGradientStyle] = useState<'aurora' | 'ocean' | 'neon'>('aurora');
@@ -7372,22 +7373,22 @@ export default function App() {
         </div>
       )}
 
-      {/* 3. AUTHENTIC ZALO PC DESKOP FULL FEATURE CHAT SYSTEM */}
+      {/* 3. AUTHENTIC ZALO PC DESKTOP & MOBILE FULL FEATURE CHAT SYSTEM */}
       {isChatOpen && (
-        <div style={{
+        <div className="zalo-chat-modal-overlay" style={{
           position: 'fixed', inset: 0, zIndex: 1000,
           backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16
         }}>
-          <div style={{
+          <div className="zalo-chat-modal-container" style={{
             width: '100%', maxWidth: isChatExpanded ? '96vw' : (isZaloInfoOpen ? 1100 : 960), height: isChatExpanded ? '92vh' : 680, backgroundColor: '#090d16',
             border: '1px solid rgba(56, 189, 248, 0.45)', borderRadius: 20,
             boxShadow: '0 30px 90px rgba(0, 0, 0, 0.95)', display: 'flex', overflow: 'hidden',
             fontFamily: 'var(--font-primary)', transition: 'all 0.25s ease'
           }}>
 
-            {/* COLUMN 0: ZALO PC LEFT NAV BAR (WIDTH: 64px - ĐỘC QUYỀN CHUẨN ZALO PC DESKTOP) */}
-            <div style={{
+            {/* COLUMN 0: ZALO PC LEFT NAV BAR (WIDTH: 64px) */}
+            <div className="zalo-chat-left-col desktop-only" style={{
               width: 64, backgroundColor: '#090d16', borderRight: '1px solid rgba(255, 255, 255, 0.08)',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between',
               padding: '16px 0', flexShrink: 0
@@ -7599,7 +7600,7 @@ export default function App() {
             {zaloNavTab === 'messages' && (
               <>
                 {/* COLUMN 1: CONVERSATIONS LIST & SEARCH (WIDTH: 310px) */}
-                <div style={{
+                <div className={`zalo-chat-col-list ${mobileChatScreen === 'room' ? 'mobile-hidden' : ''}`} style={{
                   width: 310, backgroundColor: '#0f1422', borderRight: '1px solid rgba(255, 255, 255, 0.08)',
                   display: 'flex', flexDirection: 'column', flexShrink: 0
                 }}>
@@ -7608,6 +7609,14 @@ export default function App() {
                     <div style={{ fontSize: '1rem', fontWeight: 900, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
                       <MessageSquare style={{ width: 18, height: 18 }} /> AVG ONE CHAT
                     </div>
+                    <button
+                      className="mobile-only"
+                      onClick={() => setIsChatOpen(false)}
+                      style={{ padding: 6, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.08)', color: '#94a3b8', border: 'none', cursor: 'pointer' }}
+                      title="Đóng Chat"
+                    >
+                      <X style={{ width: 18, height: 18 }} />
+                    </button>
                   </div>
 
                   {/* Search Bar */}
@@ -7664,6 +7673,7 @@ export default function App() {
                           key={conv.id}
                           onClick={() => {
                             setActiveConvId(conv.id);
+                            setMobileChatScreen('room');
                             setZaloConversations(prev => prev.map(c => c.id === conv.id ? { ...c, unreadCount: 0 } : c));
                           }}
                           style={{
@@ -7718,6 +7728,41 @@ export default function App() {
                         </div>
                       ))}
                   </div>
+
+                  {/* MOBILE CHAT BOTTOM NAVIGATION BAR */}
+                  <div className="mobile-chat-bottom-nav mobile-only" style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-around',
+                    padding: '8px 0', borderTop: '1px solid rgba(255, 255, 255, 0.08)', backgroundColor: '#090d16'
+                  }}>
+                    <button
+                      onClick={() => setZaloNavTab('messages')}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', color: zaloNavTab === 'messages' ? '#38bdf8' : '#64748b', cursor: 'pointer' }}
+                    >
+                      <MessageSquare style={{ width: 18, height: 18 }} />
+                      <span style={{ fontSize: '0.65rem', fontWeight: 800 }}>Tin nhắn</span>
+                    </button>
+                    <button
+                      onClick={() => setZaloNavTab('contacts')}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', color: zaloNavTab === 'contacts' ? '#38bdf8' : '#64748b', cursor: 'pointer' }}
+                    >
+                      <Users style={{ width: 18, height: 18 }} />
+                      <span style={{ fontSize: '0.65rem', fontWeight: 800 }}>Danh bạ</span>
+                    </button>
+                    <button
+                      onClick={() => setZaloNavTab('tasks')}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', color: zaloNavTab === 'tasks' ? '#38bdf8' : '#64748b', cursor: 'pointer' }}
+                    >
+                      <Target style={{ width: 18, height: 18 }} />
+                      <span style={{ fontSize: '0.65rem', fontWeight: 800 }}>Giao việc</span>
+                    </button>
+                    <button
+                      onClick={() => setZaloNavTab('cloud')}
+                      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'none', border: 'none', color: zaloNavTab === 'cloud' ? '#38bdf8' : '#64748b', cursor: 'pointer' }}
+                    >
+                      <Package style={{ width: 18, height: 18 }} />
+                      <span style={{ fontSize: '0.65rem', fontWeight: 800 }}>Cloud</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* COLUMN 2: MAIN ZALO CHAT STREAM & TOOLBAR (FLEX: 1) */}
@@ -7737,13 +7782,28 @@ export default function App() {
                   };
 
                   return (
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#090d16' }}>
+                    <div className={`zalo-chat-col-room ${mobileChatScreen === 'list' ? 'mobile-hidden' : ''}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#090d16' }}>
                       {/* Active Zalo Header Bar */}
                       <div style={{
                         padding: '12px 18px', backgroundColor: '#0f1422', borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                         display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                       }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          {/* NÚT QUAY LẠI DANH SÁCH CHÁT TRÊN MOBILE */}
+                          <button
+                            className="mobile-only"
+                            onClick={() => setMobileChatScreen('list')}
+                            style={{
+                              padding: '6px 10px', borderRadius: 8, backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                              color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.35)', cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', gap: 5, fontWeight: 800, fontSize: '0.74rem'
+                            }}
+                            title="Quay lại danh sách hội thoại"
+                          >
+                            <ArrowLeft style={{ width: 15, height: 15 }} />
+                            <span>Quay lại</span>
+                          </button>
+
                           <div style={{ width: 38, height: 38, borderRadius: '50%', backgroundColor: '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
                             {activeConv.avatar}
                           </div>
