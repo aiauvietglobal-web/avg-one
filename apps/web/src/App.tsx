@@ -3974,7 +3974,7 @@ export default function App() {
                       });
 
                     return (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#0284c7', padding: '6px 12px', borderRadius: 12, border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)', flexWrap: 'wrap' }}>
+                      <div className="calendar-filter-card" style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: '#0284c7', padding: '6px 12px', borderRadius: 12, border: '1px solid #38bdf8', boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)', flexWrap: 'wrap' }}>
 
                         {/* 1. NĂM */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
@@ -3995,43 +3995,9 @@ export default function App() {
                           </select>
                         </div>
 
-                        <div style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
+                        <div className="divider-line" style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
 
-                        {/* 2. QUÝ */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff' }} />
-                          <select
-                            value={selectedFilterQuarter}
-                            onChange={(e) => {
-                              const q = Number(e.target.value);
-                              setSelectedFilterQuarter(q);
-                              if (q === 0) {
-                                setSelectedFilterMonth(0);
-                                setSelectedSpecificWeek('ALL');
-                                setSelectedSpecificDayDate('');
-                                showToast('Đang xem tất cả các Quý');
-                              } else {
-                                const qMonths = q === 1 ? [1, 2, 3] : q === 2 ? [4, 5, 6] : q === 3 ? [7, 8, 9] : [10, 11, 12];
-                                if (!qMonths.includes(selectedFilterMonth)) {
-                                  setSelectedFilterMonth(0);
-                                }
-                                setSelectedSpecificDayDate('');
-                                showToast(`Đã lọc theo Quý ${q} (Tháng ${qMonths[0]} - Tháng ${qMonths[2]})`);
-                              }
-                            }}
-                            style={{ padding: '6px 6px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none' }}
-                          >
-                            <option value={0} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tất cả các Quý</option>
-                            <option value={1} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Quý 1</option>
-                            <option value={2} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Quý 2</option>
-                            <option value={3} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Quý 3</option>
-                            <option value={4} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Quý 4</option>
-                          </select>
-                        </div>
-
-                        <div style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
-
-                        {/* 3. THÁNG */}
+                        {/* 2. THÁNG */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
                           <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff' }} />
                           <select
@@ -4050,77 +4016,8 @@ export default function App() {
                             style={{ padding: '6px 6px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none' }}
                           >
                             <option value={0} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tất cả các Tháng</option>
-                            {(selectedFilterQuarter === 0
-                              ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                              : selectedFilterQuarter === 1 ? [1, 2, 3]
-                              : selectedFilterQuarter === 2 ? [4, 5, 6]
-                              : selectedFilterQuarter === 3 ? [7, 8, 9] : [10, 11, 12]
-                            ).map(m => (
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(m => (
                               <option key={m} value={m} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tháng {String(m).padStart(2, '0')}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
-
-                        {/* 4. TUẦN */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff' }} />
-                          <select
-                            value={selectedSpecificWeek}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setSelectedSpecificWeek(val);
-                              setCalendarViewMode('week');
-                              if (selectedSpecificDayDate) {
-                                const { weekStr } = parseDateParts(selectedSpecificDayDate);
-                                if (val !== 'ALL' && weekStr !== val) {
-                                  setSelectedSpecificDayDate('');
-                                }
-                              }
-                              showToast(val === 'ALL' ? 'Đang xem tất cả các Tuần' : `Đã chọn xem Tuần ${val.replace('W', '')}`);
-                            }}
-                            style={{ padding: '6px 6px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none' }}
-                          >
-                            <option value="ALL" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tất cả các Tuần</option>
-                            <option value="W1" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tuần 1 (Ngày 01-07)</option>
-                            <option value="W2" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tuần 2 (Ngày 08-14)</option>
-                            <option value="W3" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tuần 3 (Ngày 15-21)</option>
-                            <option value="W4" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tuần 4 (Ngày 22-28)</option>
-                            <option value="W5" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tuần 5 (Ngày 29-31)</option>
-                          </select>
-                        </div>
-
-                        <div style={{ width: 1, height: 20, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
-
-                        {/* 5. NGÀY */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 8px', borderRadius: 8, backgroundColor: 'transparent', color: '#ffffff', transition: 'all 0.15s ease' }}>
-                          <CalendarIcon style={{ width: 15, height: 15, color: '#ffffff' }} />
-                          <select
-                            value={selectedSpecificDayDate || 'AUTO'}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setCalendarViewMode('day');
-                              if (val === 'AUTO') {
-                                setSelectedSpecificDayDate('');
-                                showToast('Chế độ xem Tất cả các ngày');
-                              } else {
-                                setSelectedSpecificDayDate(val);
-                                const { day, month, year, quarter, weekStr } = parseDateParts(val);
-                                if (year > 0) setSelectedFilterYear(year);
-                                if (month > 0) {
-                                  setSelectedFilterMonth(month);
-                                  setSelectedFilterQuarter(quarter);
-                                }
-                                setSelectedSpecificWeek(weekStr);
-                                showToast(`Đã liên kết chọn Ngày ${val} (Tuần ${weekStr.replace('W', '')} - Tháng ${String(month).padStart(2, '0')} - Quý ${quarter} - ${year})`);
-                              }
-                            }}
-                            style={{ padding: '6px 6px', borderRadius: 8, fontSize: '0.85rem', fontWeight: 800, border: 'none', cursor: 'pointer', backgroundColor: 'transparent', color: '#ffffff', outline: 'none' }}
-                          >
-                            <option value="AUTO" style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Tất cả các ngày</option>
-                            {availableDayDates.map(d => (
-                              <option key={d} value={d} style={{ backgroundColor: '#161b26', color: '#ffffff' }}>Ngày {d}</option>
                             ))}
                           </select>
                         </div>
