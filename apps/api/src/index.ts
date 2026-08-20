@@ -12,9 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 const MOCK_USERS = [
-  { id: 'usr-1', email: 'admin.ceo@avg.vn', name: 'Nguyễn Văn Quản Lý', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', role: 'ADMIN', status: 'ACTIVE', ssoProvider: 'google', ssoId: 'google-sso-admin-001', createdAt: new Date().toISOString(), _count: { submittedRequests: 2, approvedRequests: 5, assignedTasks: 3 } },
-  { id: 'usr-2', email: 'manager.hr@avg.vn', name: 'Trần Thị Trưởng Phòng', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150', role: 'MANAGER', status: 'ACTIVE', ssoProvider: 'azure', ssoId: 'azure-sso-mgr-002', createdAt: new Date().toISOString(), _count: { submittedRequests: 1, approvedRequests: 3, assignedTasks: 4 } },
-  { id: 'usr-3', email: 'staff.dev@avg.vn', name: 'Lê Văn Nhân Viên', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', role: 'STAFF', status: 'ACTIVE', ssoProvider: 'supabase', ssoId: 'supabase-sso-stf-003', createdAt: new Date().toISOString(), _count: { submittedRequests: 4, approvedRequests: 0, assignedTasks: 6 } }
+  { id: 'usr-1', email: 'admin.ceo@auvietglobal.com', name: 'Nguyễn Văn Quản Lý', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', role: 'ADMIN', status: 'ACTIVE', ssoProvider: 'google', ssoId: 'google-sso-admin-001', createdAt: new Date().toISOString(), _count: { submittedRequests: 2, approvedRequests: 5, assignedTasks: 3 } },
+  { id: 'usr-2', email: 'manager.hr@auvietglobal.com', name: 'Trần Thị Trưởng Phòng', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150', role: 'MANAGER', status: 'ACTIVE', ssoProvider: 'azure', ssoId: 'azure-sso-mgr-002', createdAt: new Date().toISOString(), _count: { submittedRequests: 1, approvedRequests: 3, assignedTasks: 4 } },
+  { id: 'usr-3', email: 'staff.dev@auvietglobal.com', name: 'Lê Văn Nhân Viên', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', role: 'STAFF', status: 'ACTIVE', ssoProvider: 'supabase', ssoId: 'supabase-sso-stf-003', createdAt: new Date().toISOString(), _count: { submittedRequests: 4, approvedRequests: 0, assignedTasks: 6 } }
 ];
 
 const MOCK_TASKS = [
@@ -296,7 +296,7 @@ app.post('/api/seed', async (req, res) => {
     if (!admin) {
       admin = await prisma.user.create({
         data: {
-          email: 'admin.ceo@avg.vn',
+          email: 'admin.ceo@auvietglobal.com',
           name: 'Nguyễn Văn Quản Lý',
           avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
           role: 'ADMIN',
@@ -311,7 +311,7 @@ app.post('/api/seed', async (req, res) => {
     if (!manager) {
       manager = await prisma.user.create({
         data: {
-          email: 'manager.hr@avg.vn',
+          email: 'manager.hr@auvietglobal.com',
           name: 'Trần Thị Trưởng Phòng',
           avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150',
           role: 'MANAGER',
@@ -326,7 +326,7 @@ app.post('/api/seed', async (req, res) => {
     if (!staff) {
       staff = await prisma.user.create({
         data: {
-          email: 'staff.dev@avg.vn',
+          email: 'staff.dev@auvietglobal.com',
           name: 'Lê Văn Nhân Viên',
           avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
           role: 'STAFF',

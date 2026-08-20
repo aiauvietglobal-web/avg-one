@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   FileText, Plus, RefreshCw, Clock, Users, ChevronDown, Search, BarChart3,
   Bell, LogIn, MessageSquare, Newspaper, MapPin, Sun, Moon,
-  PanelLeftOpen, Package, Calendar as CalendarIcon, Scale, Home, Share2, X,
+  PanelLeftOpen, Package, Calendar as CalendarIcon, Scale, Home, Share2, X, Menu,
   Building2, Compass, Navigation, Hash, Warehouse, Cpu, Palette, Box, Send, Pin, Target, PenTool, UserCheck, AlertTriangle, Hourglass, Play, Square, Phone, Video, Info, Paperclip, Smile, ThumbsUp, Heart, Maximize2, Minimize2, Image, Contact, Scissors, Type, Zap, CreditCard, MoreHorizontal, Bold, Italic, Underline, Strikethrough, List, ListOrdered, Undo, Redo, Eraser,
   FileSpreadsheet, LayoutGrid, Table, Globe, ShieldCheck, Layers, Trash2, CheckCircle2, Mail, Copy, Briefcase, Filter, AlertCircle, ExternalLink, Eye
 } from 'lucide-react';
@@ -167,7 +167,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'QL',
     avatarBg: 'linear-gradient(135deg, #0284c7, #2563eb)',
     hubs: ['HUB_0', 'GIÁM ĐỐC'],
-    email: 'admin.ceo@avg.vn',
+    email: 'admin.ceo@auvietglobal.com',
     phone: '0901234567',
     dob: '15/04/1988',
     workDuration: '5 Năm 0 Tháng 10 Ngày',
@@ -182,7 +182,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'TP',
     avatarBg: 'linear-gradient(135deg, #10b981, #059669)',
     hubs: ['HUB_1', 'HR_MGR'],
-    email: 'manager.hr@avg.vn',
+    email: 'manager.hr@auvietglobal.com',
     phone: '0912345678',
     dob: '22/08/1992',
     workDuration: '3 Năm 4 Tháng 12 Ngày',
@@ -197,7 +197,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'NV',
     avatarBg: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
     hubs: ['3.1', 'RDI'],
-    email: 'staff.dev@avg.vn',
+    email: 'staff.dev@auvietglobal.com',
     phone: '0923456789',
     dob: '10/11/1996',
     workDuration: '2 Năm 1 Tháng 05 Ngày',
@@ -212,7 +212,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'MT',
     avatarBg: 'linear-gradient(135deg, #06b6d4, #0891b2)',
     hubs: ['3.2', 'THIẾT KẾ'],
-    email: 'tuan.pm@avg.vn',
+    email: 'tuan.pm@auvietglobal.com',
     phone: '0934567890',
     dob: '05/01/1995',
     workDuration: '1 Năm 8 Tháng 20 Ngày',
@@ -227,7 +227,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'QH',
     avatarBg: 'linear-gradient(135deg, #f97316, #ea580c)',
     hubs: ['2.1', 'SẢN XUẤT'],
-    email: 'huy.vq@avg.vn',
+    email: 'huy.vq@auvietglobal.com',
     phone: '0945678901',
     dob: '18/06/1994',
     workDuration: '2 Năm 5 Tháng 15 Ngày',
@@ -242,7 +242,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'HN',
     avatarBg: 'linear-gradient(135deg, #64748b, #475569)',
     hubs: ['HUB_6', 'QC'],
-    email: 'nam.bh@avg.vn',
+    email: 'nam.bh@auvietglobal.com',
     phone: '0956789012',
     dob: '12/12/1997',
     workDuration: '1 Năm 2 Tháng 10 Ngày',
@@ -257,7 +257,7 @@ export const INITIAL_HR_STAFF: HrStaff[] = [
     initials: 'TT',
     avatarBg: 'linear-gradient(135deg, #a855f7, #9333ea)',
     hubs: ['HASH', 'TRỢ LÝ'],
-    email: 'trang.dt@avg.vn',
+    email: 'trang.dt@auvietglobal.com',
     phone: '0967890123',
     dob: '03/03/1999',
     workDuration: '0 Năm 9 Tháng 14 Ngày',
@@ -706,7 +706,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u2',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-2',
@@ -723,7 +723,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u2',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Trần Thị Trưởng Phòng', email: 'manager@avg.vn', avatar: null, role: 'MANAGER', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Trần Thị Trưởng Phòng', email: 'manager@auvietglobal.com', avatar: null, role: 'MANAGER', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-3',
@@ -740,7 +740,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u1',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-4',
@@ -757,7 +757,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u3',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u2', name: 'Trần Thị Trưởng Phòng', email: 'manager@avg.vn', avatar: null, role: 'MANAGER', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u2', name: 'Trần Thị Trưởng Phòng', email: 'manager@auvietglobal.com', avatar: null, role: 'MANAGER', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-5',
@@ -774,7 +774,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u3',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-6',
@@ -791,7 +791,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u2',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-7',
@@ -808,7 +808,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u1',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-8',
@@ -825,7 +825,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u2',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-9',
@@ -842,7 +842,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u3',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any,
   {
     id: 'ord-22',
@@ -859,7 +859,7 @@ const INITIAL_DEMO_ORDERS: TaskItem[] = [
     assigneeId: 'u1',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@avg.vn', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
+    creator: { id: 'u1', name: 'Nguyễn Văn Quản Lý', email: 'admin@auvietglobal.com', avatar: null, role: 'ADMIN', status: 'ACTIVE', ssoProvider: null, ssoId: null, createdAt: '' }
   } as any
 ];
 
@@ -1103,6 +1103,18 @@ export default function App() {
   const [isDauMoiTangCuongOpen, setIsDauMoiTangCuongOpen] = useState<boolean>(true);
   const [isSystemOpen, setIsSystemOpen] = useState<boolean>(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isMobileMode, setIsMobileMode] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const [selectedHub, setSelectedHub] = useState<HubKey>('ALL');
   const [selectedStepFilter, setSelectedStepFilter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -1467,7 +1479,7 @@ export default function App() {
   const handleInviteNewGuest = () => {
     const guestName = window.prompt('✉️ Nhập tên hoặc Email khách mời mới (Quản lý Thuế, Đối Tác...):');
     if (guestName && guestName.trim()) {
-      const inviteLink = `https://avg.vn/chat/invite?token=GUEST-${Date.now()}`;
+      const inviteLink = `https://one.auvietglobal.com/chat/invite?token=GUEST-${Date.now()}`;
       const newConv: ZaloConversation = {
         id: `conv-guest-${Date.now()}`,
         name: guestName.trim(),
@@ -1985,6 +1997,7 @@ export default function App() {
   return (
     <div
       suppressHydrationWarning
+      className={`app-main-layout ${isMobileMode ? 'force-mobile-mode' : ''}`}
       style={{
         display: 'flex',
         minHeight: '100vh',
@@ -1993,6 +2006,14 @@ export default function App() {
         fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif"
       }}
     >
+      {/* MOBILE BACKDROP OVERLAY */}
+      {isMobileMenuOpen && (
+        <div
+          className="mobile-drawer-backdrop"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {toastMessage && (
         <div style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 100,
@@ -2004,21 +2025,24 @@ export default function App() {
       )}
 
       {/* SIDEBAR NAVIGATION */}
-      <aside style={{
-        width: isSidebarCollapsed ? 76 : 260,
-        backgroundColor: '#0d1017',
-        borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'sticky',
-        top: 0,
-        height: '100vh',
-        zIndex: 40,
-        flexShrink: 0,
-        transition: 'width 0.2s'
-      }}>
+      <aside
+        className={`sidebar-drawer ${isMobileMenuOpen ? 'is-open' : ''}`}
+        style={{
+          width: isSidebarCollapsed ? 76 : 260,
+          backgroundColor: '#0d1017',
+          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          zIndex: 40,
+          flexShrink: 0,
+          transition: 'width 0.2s'
+        }}
+      >
         {/* LOGO BRAND */}
-        <div style={{ height: 96, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+        <div style={{ height: 96, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
           <img
             src="/logo.png"
             alt="AVG ONE Logo"
@@ -2027,9 +2051,20 @@ export default function App() {
               maxWidth: '100%',
               objectFit: 'contain',
               objectPosition: 'center',
-              margin: '0 auto'
+              margin: isSidebarCollapsed ? '0 auto' : '0'
             }}
           />
+          <button
+            className="mobile-only"
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+              padding: 6, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.08)',
+              color: '#94a3b8', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+            aria-label="Close mobile menu"
+          >
+            <X style={{ width: 18, height: 18 }} />
+          </button>
         </div>
 
         {/* MENU ITEMS */}
@@ -2579,9 +2614,57 @@ export default function App() {
       </aside>
 
       {/* MAIN CONTENT CONTAINER */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, backgroundColor: '#0b0e14' }}>
-        {/* HEADER BAR */}
-        <header style={{
+      <div className="main-content-area" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, backgroundColor: '#0b0e14' }}>
+        {/* MOBILE HEADER BAR */}
+        <div className="mobile-header-bar mobile-only">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              style={{
+                padding: 8,
+                borderRadius: 8,
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? <X style={{ width: 20, height: 20 }} /> : <Menu style={{ width: 20, height: 20 }} />}
+            </button>
+            <img src="/logo.png" alt="AVG ONE Logo" style={{ height: 26, objectFit: 'contain' }} />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              style={{
+                padding: 8, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.08)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+              }}
+              title="Đổi Giao Diện Sáng / Tối"
+            >
+              {theme === 'dark' ? <Sun style={{ width: 18, height: 18, color: '#f59e0b' }} /> : <Moon style={{ width: 18, height: 18, color: '#38bdf8' }} />}
+            </button>
+            <button
+              onClick={() => showToast('🔔 Bạn không có thông báo mới')}
+              style={{
+                padding: 8, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.08)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', cursor: 'pointer'
+              }}
+              title="Thông Báo"
+            >
+              <Bell style={{ width: 18, height: 18, color: '#38bdf8' }} />
+              <span style={{ position: 'absolute', top: 4, right: 4, width: 7, height: 7, borderRadius: '50%', backgroundColor: '#ff5722' }} />
+            </button>
+          </div>
+        </div>
+
+        {/* DESKTOP HEADER BAR */}
+        <header className="desktop-only" style={{
           height: 64, padding: '0 24px', backgroundColor: '#0d1017', borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 30
         }}>
@@ -2679,6 +2762,27 @@ export default function App() {
               }}
             >
               <MessageSquare style={{ width: 15, height: 15 }} /> Chat
+            </button>
+
+            {/* 3.5. NÚT CHUYỂN ĐỔI CHẾ ĐỘ XEM MOBILE (PREVIEW DIRECTLY ON DESKTOP) */}
+            <button
+              onClick={() => {
+                const nextMode = !isMobileMode;
+                setIsMobileMode(nextMode);
+                showToast(nextMode ? '📱 Đã kích hoạt Giao diện Mobile Di động' : '💻 Đã về Giao diện Desktop');
+              }}
+              title="Chuyển đổi trực tiếp giữa Giao diện Mobile và Desktop"
+              style={{
+                padding: '7px 14px', borderRadius: 10,
+                backgroundColor: isMobileMode ? 'rgba(255, 87, 34, 0.25)' : 'rgba(56, 189, 248, 0.15)',
+                color: isMobileMode ? '#ff7043' : '#38bdf8',
+                border: isMobileMode ? '1px solid #ff7043' : '1px solid rgba(56, 189, 248, 0.4)',
+                fontSize: '0.78rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+              }}
+            >
+              <Phone style={{ width: 15, height: 15 }} />
+              <span>{isMobileMode ? '💻 GIỜ LÀ DESKTOP' : '📱 GIAO DIỆN MOBILE'}</span>
             </button>
 
             {/* 4. THÔNG BÁO LỊCH TRAO ĐỔI & HỆ THỐNG (ĐỒNG BỘ MÀU VỚI HỘP CHAT) */}
@@ -8163,6 +8267,45 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* MOBILE BOTTOM NAVIGATION BAR */}
+      <nav className="mobile-bottom-nav">
+        <button
+          className={`mobile-nav-item ${activeTab === 'home' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}
+        >
+          <Home style={{ width: 20, height: 20 }} />
+          <span>Trang chủ</span>
+        </button>
+        <button
+          className={`mobile-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('orders'); setIsMobileMenuOpen(false); }}
+        >
+          <Package style={{ width: 20, height: 20 }} />
+          <span>Đơn hàng</span>
+        </button>
+        <button
+          className={`mobile-nav-item ${activeTab === 'calendar-talk' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('calendar-talk'); setIsMobileMenuOpen(false); }}
+        >
+          <MessageSquare style={{ width: 20, height: 20 }} />
+          <span>Lịch họp</span>
+        </button>
+        <button
+          className={`mobile-nav-item ${activeTab === 'hr-management' ? 'active' : ''}`}
+          onClick={() => { setActiveTab('hr-management'); setIsMobileMenuOpen(false); }}
+        >
+          <Users style={{ width: 20, height: 20 }} />
+          <span>Nhân sự</span>
+        </button>
+        <button
+          className={`mobile-nav-item ${isMobileMenuOpen ? 'active' : ''}`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <Menu style={{ width: 20, height: 20 }} />
+          <span>Menu</span>
+        </button>
+      </nav>
     </div>
   );
 }
