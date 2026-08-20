@@ -4583,8 +4583,8 @@ export default function App() {
                                   ▼
                                 </button>
                                 {/* 2 ĐIỂM TRÒN GẮN TRỰC TIẾP TRÊN VIỀN ĐÁY HỘP NGÀY (TÂM NẰM TRÊN VIỀN 100%) */}
-                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
-                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', bottom: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', bottom: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
                               </div>
                             ) : (
                                 /* KHOẢNG TRỐNG THAY THẾ CHO CÁC LỊCH CÙNG NGÀY TIẾP THEO */
@@ -4607,21 +4607,16 @@ export default function App() {
                               className="mobile-date-card-connector-line"
                               style={{
                                 display: 'none',
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                width: '82%',
-                                height: 18,
-                                marginTop: -9,
-                                marginBottom: -9,
-                                marginLeft: 'auto',
-                                marginRight: 'auto',
+                                width: '100%',
+                                height: 10,
+                                marginTop: -10,
+                                marginBottom: 0,
                                 position: 'relative',
                                 zIndex: 5
                               }}
                             >
-                              <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
-                              <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                              <div style={{ position: 'absolute', left: '10%', transform: 'translateX(-50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                              <div style={{ position: 'absolute', right: '10%', transform: 'translateX(50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                             </div>
                           )}
 
@@ -4632,14 +4627,14 @@ export default function App() {
                       display: 'flex', gap: 14, alignItems: 'stretch', position: 'relative'
                     }}>
                       {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐỈNH HỘP LỊCH (TÂM NẰM TRÊN VIỀN 100%) */}
-                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '9%', top: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
-                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '9%', top: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', top: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', top: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
 
                       {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐÁY HỘP LỊCH (TÂM NẰM TRÊN VIỀN 100%, NẾU CHƯA PHẢI HỘP CUỐI CÙNG) */}
                       {index < displayedEvents.length - 1 && (
                         <>
-                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
-                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '9%', bottom: -5, width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', bottom: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', bottom: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
                         </>
                       )}
                       {/* 1. HỘP BÊN TRÁI RỘNG HƠN (HOẶC TOÀN BỘ CHIỀU RỘNG NẾU CHƯA ĐÃ DIỄN RA HOẶC CHƯA MỞ SỔ THỜI GIAN THỰC TẾ) */}
@@ -5098,21 +5093,16 @@ export default function App() {
                       className="mobile-gap-connector-line"
                       style={{
                         display: 'none',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '82%',
-                        height: 26,
-                        marginTop: -13,
-                        marginBottom: -13,
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
+                        width: '100%',
+                        height: 16,
+                        marginTop: -16,
+                        marginBottom: 0,
                         position: 'relative',
                         zIndex: 5
                       }}
                     >
-                      <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
-                      <div style={{ width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                      <div style={{ position: 'absolute', left: '10%', transform: 'translateX(-50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
+                      <div style={{ position: 'absolute', right: '10%', transform: 'translateX(50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
                     </div>
                   )}
                 </React.Fragment>

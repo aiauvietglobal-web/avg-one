@@ -685,31 +685,21 @@ button:active {
   }
 
   .mobile-gap-connector-line {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 82% !important;
-    height: 26px !important;
-    margin-top: -13px !important;
-    margin-bottom: -13px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: 16px !important;
+    margin-top: -16px !important;
+    margin-bottom: 0 !important;
     position: relative !important;
     z-index: 5 !important;
   }
 
   .mobile-date-card-connector-line {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 82% !important;
-    height: 18px !important;
-    margin-top: -9px !important;
-    margin-bottom: -9px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: 10px !important;
+    margin-top: -10px !important;
+    margin-bottom: 0 !important;
     position: relative !important;
     z-index: 5 !important;
   }
@@ -1025,31 +1015,21 @@ button:active {
 }
 
 .force-mobile-mode .mobile-gap-connector-line {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 82% !important;
-  height: 26px !important;
-  margin-top: -13px !important;
-  margin-bottom: -13px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  display: block !important;
+  width: 100% !important;
+  height: 16px !important;
+  margin-top: -16px !important;
+  margin-bottom: 0 !important;
   position: relative !important;
   z-index: 5 !important;
 }
 
 .force-mobile-mode .mobile-date-card-connector-line {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 82% !important;
-  height: 18px !important;
-  margin-top: -9px !important;
-  margin-bottom: -9px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  display: block !important;
+  width: 100% !important;
+  height: 10px !important;
+  margin-top: -10px !important;
+  margin-bottom: 0 !important;
   position: relative !important;
   z-index: 5 !important;
 }
