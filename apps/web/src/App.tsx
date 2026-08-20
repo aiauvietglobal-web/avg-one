@@ -4601,31 +4601,16 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI CHÍNH XÁC GIỮA HỘP NGÀY VÀ HỘP LỊCH 1 (100% NỐI TỪ TÂM TRÊN ĐẾN TÂM DƯỚI) */}
-                          {!hasPrevSameDate && (
-                            <div
-                              className="mobile-date-card-connector-line"
-                              style={{
-                                display: 'none',
-                                width: '100%',
-                                height: 16,
-                                marginTop: -16,
-                                marginBottom: -16,
-                                position: 'relative',
-                                zIndex: 5
-                              }}
-                            >
-                              <div style={{ position: 'absolute', left: '10%', transform: 'translateX(-50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
-                              <div style={{ position: 'absolute', right: '10%', transform: 'translateX(50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
-                            </div>
-                          )}
-
                     {/* KHUNG BỔ SUNG: CHIA THÀNH 2 HỘP NỘI DUNG */}
                     <div className="discussion-card-inner" style={{
                       flex: 1, backgroundColor: '#161922', border: '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: 18, padding: 14, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                       display: 'flex', gap: 14, alignItems: 'stretch', position: 'relative'
                     }}>
+                      {/* 2 LINE NÉT LIỀN SOLID NỐI NỐI THẲNG TỪ ĐỈNH HỘP NÀY LÊN TÂM ĐIỂM TRÒN HỘP TRÊN */}
+                      <div className="mobile-solid-connect-line" style={{ display: 'none', position: 'absolute', left: '10%', top: -16, transform: 'translateX(-50%)', width: 2, height: 16, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', zIndex: 5 }} />
+                      <div className="mobile-solid-connect-line" style={{ display: 'none', position: 'absolute', right: '10%', top: -16, transform: 'translateX(50%)', width: 2, height: 16, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', zIndex: 5 }} />
+
                       {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐỈNH HỘP LỊCH (HIỂN THỊ TRÊN CÙNG zIndex: 30) */}
                       <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', top: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
                       <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', top: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
@@ -5087,25 +5072,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI CHÍNH XÁC GIỮA ĐIỂM TRÒN CỦA 2 HỘP LỊCH (100% NỐI TỪ TÂM TRÊN ĐẾN TÂM DƯỚI) */}
-                  {index < displayedEvents.length - 1 && (
-                    <div
-                      className="mobile-gap-connector-line"
-                      style={{
-                        display: 'none',
-                        width: '100%',
-                        height: 16,
-                        marginTop: -16,
-                        marginBottom: -16,
-                        position: 'relative',
-                        zIndex: 5
-                      }}
-                    >
-                      <div style={{ position: 'absolute', left: '10%', transform: 'translateX(-50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
-                      <div style={{ position: 'absolute', right: '10%', transform: 'translateX(50%)', top: 0, width: 2, height: '100%', backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' }} />
-                    </div>
-                  )}
-                </React.Fragment>
+                 </React.Fragment>
               );
             })}
               </div>

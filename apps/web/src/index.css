@@ -680,29 +680,9 @@ button:active {
     display: none !important;
   }
 
-  .mobile-node-dot {
+  .mobile-node-dot,
+  .mobile-solid-connect-line {
     display: block !important;
-    z-index: 30 !important;
-  }
-
-  .mobile-gap-connector-line {
-    display: block !important;
-    width: 100% !important;
-    height: 16px !important;
-    margin-top: -16px !important;
-    margin-bottom: -16px !important;
-    position: relative !important;
-    z-index: 5 !important;
-  }
-
-  .mobile-date-card-connector-line {
-    display: block !important;
-    width: 100% !important;
-    height: 16px !important;
-    margin-top: -16px !important;
-    margin-bottom: -16px !important;
-    position: relative !important;
-    z-index: 5 !important;
   }
 
   .discussion-card-inner {
@@ -1011,29 +991,9 @@ button:active {
   display: none !important;
 }
 
-.force-mobile-mode .mobile-node-dot {
+.force-mobile-mode .mobile-node-dot,
+.force-mobile-mode .mobile-solid-connect-line {
   display: block !important;
-  z-index: 30 !important;
-}
-
-.force-mobile-mode .mobile-gap-connector-line {
-  display: block !important;
-  width: 100% !important;
-  height: 16px !important;
-  margin-top: -16px !important;
-  margin-bottom: -16px !important;
-  position: relative !important;
-  z-index: 5 !important;
-}
-
-.force-mobile-mode .mobile-date-card-connector-line {
-  display: block !important;
-  width: 100% !important;
-  height: 16px !important;
-  margin-top: -16px !important;
-  margin-bottom: -16px !important;
-  position: relative !important;
-  z-index: 5 !important;
 }
 
 .force-mobile-mode .discussion-card-inner {
