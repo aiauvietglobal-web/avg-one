@@ -4582,9 +4582,9 @@ export default function App() {
                                 >
                                   ▼
                                 </button>
-                                {/* 2 ĐIỂM TRÒN GẮN TRỰC TIẾP TRÊN VIỀN ĐÁY HỘP NGÀY (TÂM NẰM TRÊN VIỀN 100%) */}
-                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', bottom: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
-                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', bottom: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                                {/* 2 ĐIỂM TRÒN GẮN TRỰC TIẾP TRÊN VIỀN ĐÁY HỘP NGÀY (TÂM NẰM TRÊN VIỀN 100%, HIỂN THỊ TRÊN CÙNG) */}
+                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', bottom: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
+                                <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', bottom: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
                               </div>
                             ) : (
                                 /* KHOẢNG TRỐNG THAY THẾ CHO CÁC LỊCH CÙNG NGÀY TIẾP THEO */
@@ -4601,16 +4601,16 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA HỘP NGÀY VÀ HỘP LỊCH 1 */}
+                          {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA HỘP NGÀY VÀ HỘP LỊCH 1 (NẰM DƯỚI ĐIỂM TRÒN) */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
                               style={{
                                 display: 'none',
                                 width: '100%',
-                                height: 10,
-                                marginTop: -10,
-                                marginBottom: 0,
+                                height: 20,
+                                marginTop: -15,
+                                marginBottom: -5,
                                 position: 'relative',
                                 zIndex: 5
                               }}
@@ -4626,15 +4626,15 @@ export default function App() {
                       borderRadius: 18, padding: 14, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                       display: 'flex', gap: 14, alignItems: 'stretch', position: 'relative'
                     }}>
-                      {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐỈNH HỘP LỊCH (TÂM NẰM TRÊN VIỀN 100%) */}
-                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', top: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
-                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', top: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                      {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐỈNH HỘP LỊCH (HIỂN THỊ TRÊN CÙNG zIndex: 30) */}
+                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', top: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
+                      <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', top: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
 
-                      {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐÁY HỘP LỊCH (TÂM NẰM TRÊN VIỀN 100%, NẾU CHƯA PHẢI HỘP CUỐI CÙNG) */}
+                      {/* 2 ĐIỂM TRÒN GẮN TRÊN ĐƯỜNG VIỀN ĐÁY HỘP LỊCH (HIỂN THỊ TRÊN CÙNG zIndex: 30, NẾU CHƯA PHẢI HỘP CUỐI CÙNG) */}
                       {index < displayedEvents.length - 1 && (
                         <>
-                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', bottom: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
-                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', bottom: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 10 }} />
+                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', left: '10%', bottom: -5, transform: 'translateX(-50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
+                          <div className="mobile-node-dot" style={{ display: 'none', position: 'absolute', right: '10%', bottom: -5, transform: 'translateX(50%)', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffffff', border: '2px solid #38bdf8', boxShadow: '0 0 12px #38bdf8', zIndex: 30 }} />
                         </>
                       )}
                       {/* 1. HỘP BÊN TRÁI RỘNG HƠN (HOẶC TOÀN BỘ CHIỀU RỘNG NẾU CHƯA ĐÃ DIỄN RA HOẶC CHƯA MỞ SỔ THỜI GIAN THỰC TẾ) */}
@@ -5087,16 +5087,16 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA ĐIỂM TRÒN CỦA 2 HỘP LỊCH */}
+                  {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA ĐIỂM TRÒN CỦA 2 HỘP LỊCH (NẰM DƯỚI ĐIỂM TRÒN) */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
                       style={{
                         display: 'none',
                         width: '100%',
-                        height: 16,
-                        marginTop: -16,
-                        marginBottom: 0,
+                        height: 26,
+                        marginTop: -21,
+                        marginBottom: -5,
                         position: 'relative',
                         zIndex: 5
                       }}
