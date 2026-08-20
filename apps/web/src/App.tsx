@@ -1087,6 +1087,7 @@ export default function App() {
   const [calendarViewMode, setCalendarViewMode] = useState<'day' | 'week' | 'month'>('day'); // Mặc định Chế độ Xem Theo Ngày
   const [selectedSpecificDayDate, setSelectedSpecificDayDate] = useState<string>('18/08/2026'); // Mặc định Ngày 18 (18/08/2026)
   const [selectedSpecificWeek, setSelectedSpecificWeek] = useState<string>('W3'); // Mặc định Tuần 3 (17/08 - 23/08)
+  const [talkViewMode, setTalkViewMode] = useState<'card' | 'grid'>('card'); // Chế độ xem Thẻ / Lưới
 
   // Realtime Vietnam Timezone (Asia/Ho_Chi_Minh UTC+7) Clock State
   const [vnNow, setVnNow] = useState<Date>(getVietnamNow());
