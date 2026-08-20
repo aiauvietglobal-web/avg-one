@@ -682,11 +682,24 @@ button:active {
 
   .mobile-gap-connector-line {
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
+    width: 60% !important;
     height: 40px !important;
     margin: -12px auto !important;
+    position: relative !important;
+    z-index: 5 !important;
+  }
+
+  .mobile-date-card-connector-line {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 60% !important;
+    height: 32px !important;
+    margin: -6px auto !important;
     position: relative !important;
     z-index: 5 !important;
   }
@@ -999,11 +1012,24 @@ button:active {
 
 .force-mobile-mode .mobile-gap-connector-line {
   display: flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
+  width: 60% !important;
   height: 40px !important;
   margin: -12px auto !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.force-mobile-mode .mobile-date-card-connector-line {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 60% !important;
+  height: 32px !important;
+  margin: -6px auto !important;
   position: relative !important;
   z-index: 5 !important;
 }

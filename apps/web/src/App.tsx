@@ -4598,6 +4598,38 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
+                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (2 LINE 2 BÊN TRÊN MOBILE) */}
+                          {!hasPrevSameDate && (
+                            <div
+                              className="mobile-date-card-connector-line"
+                              style={{
+                                display: 'none',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                width: '60%',
+                                height: 32,
+                                margin: '-6px auto',
+                                position: 'relative',
+                                zIndex: 5
+                              }}
+                            >
+                              {/* LINE 1 BÊN TRÁI */}
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '1px 0' }} />
+                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                              </div>
+
+                              {/* LINE 2 BÊN PHẢI */}
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                                <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '1px 0' }} />
+                                <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 6px #38bdf8', flexShrink: 0 }} />
+                              </div>
+                            </div>
+                          )}
+
                     {/* KHUNG BỔ SUNG: CHIA THÀNH 2 HỘP NỘI DUNG */}
                     <div className="discussion-card-inner" style={{
                       flex: 1, backgroundColor: '#161922', border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -5054,29 +5086,35 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 ĐIỂM TRÒN 2 ĐẦU NẰM TRONG KHOẢNG TRỐNG GIỮA CÁC HỘP TRAO ĐỔI TRÊN MOBILE */}
+                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN NẰM TRONG KHOẢNG TRỐNG GIỮA CÁC HỘP TRAO ĐỔI TRÊN MOBILE */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
                       style={{
                         display: 'none',
-                        flexDirection: 'column',
-                        alignItems: 'center',
+                        flexDirection: 'row',
                         justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '60%',
                         height: 40,
                         margin: '-12px auto',
                         position: 'relative',
                         zIndex: 5
                       }}
                     >
-                      {/* ĐIỂM TRÒN ĐẦU TRÊN */}
-                      <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                      {/* LINE 1 BÊN TRÁI */}
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '2px 0' }} />
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                      </div>
 
-                      {/* LINE DỌC NÉT ĐỨT PHÁT SÁNG */}
-                      <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '2px 0' }} />
-
-                      {/* ĐIỂM TRÒN ĐẦU DƯỚI */}
-                      <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                      {/* LINE 2 BÊN PHẢI */}
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                        <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '2px 0' }} />
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                      </div>
                     </div>
                   )}
                 </React.Fragment>
