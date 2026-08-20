@@ -686,8 +686,8 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 75% !important;
-    height: 28px !important;
-    margin: -6px auto !important;
+    height: 26px !important;
+    margin: -5px auto !important;
     position: relative !important;
     z-index: 10 !important;
   }
@@ -698,7 +698,7 @@ button:active {
     align-items: center !important;
     justify-content: space-between !important;
     width: 75% !important;
-    height: 26px !important;
+    height: 22px !important;
     margin: -5px auto !important;
     position: relative !important;
     z-index: 10 !important;
@@ -1016,8 +1016,8 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 75% !important;
-  height: 28px !important;
-  margin: -6px auto !important;
+  height: 26px !important;
+  margin: -5px auto !important;
   position: relative !important;
   z-index: 10 !important;
 }
@@ -1028,7 +1028,7 @@ button:active {
   align-items: center !important;
   justify-content: space-between !important;
   width: 75% !important;
-  height: 26px !important;
+  height: 22px !important;
   margin: -5px auto !important;
   position: relative !important;
   z-index: 10 !important;
