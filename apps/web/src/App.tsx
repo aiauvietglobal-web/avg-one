@@ -4083,7 +4083,7 @@ export default function App() {
                         setSelectedSpecificWeek(curWeek);
                         setSelectedSpecificDayDate(curDayStr);
                         setCalendarViewMode('day');
-                        showToast(`🗓️ Đã trở về ngày hiện tại (múi giờ Việt Nam): ${curDayStr}`);
+                        showToast(`Đã trở về ${curDayStr}`);
                       }}
                       title="Về ngày hiện tại (Múi giờ Việt Nam)"
                       style={{
