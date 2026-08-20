@@ -563,9 +563,6 @@ button:active {
     width: auto !important;
     padding: 10px 4px !important;
     border-radius: 12px !important;
-    background: linear-gradient(135deg, #0284c7, #0369a1) !important;
-    border: 1px solid #38bdf8 !important;
-    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45) !important;
   }
 
   .calendar-kpi-box span:first-child {
@@ -844,9 +841,6 @@ button:active {
   width: auto !important;
   padding: 10px 4px !important;
   border-radius: 12px !important;
-  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
-  border: 1px solid #38bdf8 !important;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.45) !important;
 }
 
 .force-mobile-mode .calendar-kpi-box span:first-child {
