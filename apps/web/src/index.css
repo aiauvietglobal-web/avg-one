@@ -552,8 +552,9 @@ button:active {
   .date-node-container .date-box-inner {
     width: 100% !important;
     flex-direction: row !important;
-    justify-content: space-between !important;
+    justify-content: center !important;
     align-items: center !important;
+    gap: 16px !important;
     padding: 8px 16px !important;
     border-radius: 14px !important;
     background: linear-gradient(135deg, #0284c7, #0369a1) !important;
@@ -743,8 +744,9 @@ button:active {
 .force-mobile-mode .date-node-container .date-box-inner {
   width: 100% !important;
   flex-direction: row !important;
-  justify-content: space-between !important;
+  justify-content: center !important;
   align-items: center !important;
+  gap: 16px !important;
   padding: 8px 16px !important;
   border-radius: 14px !important;
   background: linear-gradient(135deg, #0284c7, #0369a1) !important;
