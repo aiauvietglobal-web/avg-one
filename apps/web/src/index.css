@@ -397,7 +397,8 @@ button:active {
 /* MOBILE RESPONSIVE LAYOUT ALIGNMENTS (CALENDAR & CARDS)       */
 /* ============================================================ */
 
-@media (max-width: 768px), .force-mobile-mode {
+/* 1. Real Mobile Devices (Viewport <= 768px) */
+@media (max-width: 768px) {
   .mobile-only {
     display: flex !important;
   }
@@ -406,13 +407,11 @@ button:active {
     display: none !important;
   }
 
-  /* Main Layout Stacking on Mobile */
   .app-main-layout {
     flex-direction: column !important;
     min-height: 100vh;
   }
 
-  /* Mobile Top Header Bar */
   .mobile-header-bar {
     display: flex !important;
     align-items: center;
@@ -431,7 +430,6 @@ button:active {
     border-bottom: 1px solid #e5e7eb !important;
   }
 
-  /* Mobile Sidebar Drawer Override */
   .sidebar-drawer {
     position: fixed !important;
     top: 0 !important;
@@ -449,7 +447,6 @@ button:active {
     transform: translateX(0) !important;
   }
 
-  /* Mobile Backdrop Overlay */
   .mobile-drawer-backdrop {
     position: fixed;
     inset: 0;
@@ -464,7 +461,6 @@ button:active {
     padding-bottom: 84px !important;
   }
 
-  /* Mobile Bottom Header Bar */
   .mobile-bottom-header-bar {
     display: flex !important;
     position: fixed !important;
@@ -483,46 +479,6 @@ button:active {
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
   }
 
-  .force-mobile-mode .mobile-bottom-header-bar {
-    max-width: 440px !important;
-    margin: 0 auto !important;
-  }
-
-  [data-theme="light"] .mobile-bottom-header-bar {
-    background: rgba(255, 255, 255, 0.94) !important;
-    border-top: 1px solid #e5e7eb !important;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
-  }
-
-  .mobile-bottom-nav-item {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 4px !important;
-    background: transparent !important;
-    border: none !important;
-    color: #94a3b8 !important;
-    font-size: 0.7rem !important;
-    font-weight: 700 !important;
-    flex: 1 !important;
-    padding: 6px 0 !important;
-    border-radius: 12px !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    cursor: pointer !important;
-  }
-
-  .mobile-bottom-nav-item.active {
-    color: #38bdf8 !important;
-    background: rgba(56, 189, 248, 0.14) !important;
-  }
-
-  .mobile-bottom-nav-item.active svg {
-    color: #38bdf8 !important;
-    transform: translateY(-1px) scale(1.08) !important;
-  }
-
-  /* Calendar Banner Header Responsiveness */
   .calendar-banner-header {
     padding: 16px 14px !important;
     border-radius: 18px !important;
@@ -538,7 +494,6 @@ button:active {
     text-align: center !important;
   }
 
-  /* KPI Stat Boxes Row on Mobile */
   .calendar-kpi-row {
     width: 100% !important;
     display: flex !important;
@@ -565,19 +520,18 @@ button:active {
     white-space: nowrap !important;
   }
 
-  /* Filter Select Bar Grid on Mobile */
   .calendar-filter-card {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
     gap: 8px !important;
-    padding: 10px !important;
+    padding: 6px 12px !important;
   }
 
   .calendar-filter-card .divider-line {
-    display: none !important;
+    display: block !important;
   }
 
-  /* Discussion Event Cards Responsive Layout (Prevent Overflow) */
   .discussion-event-item {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -621,12 +575,10 @@ button:active {
     padding: 12px !important;
   }
 
-  /* Force Single Column on Mobile Grids */
   .responsive-grid-1col {
     grid-template-columns: 1fr !important;
   }
 
-  /* Mobile Modal Scaling */
   .responsive-modal {
     width: 95% !important;
     max-width: 95% !important;
@@ -634,6 +586,187 @@ button:active {
     max-height: 90vh !important;
     overflow-y: auto !important;
   }
+}
+
+/* 2. Desktop Preview Mode (.force-mobile-mode Overrides - 100% Synchronized) */
+.force-mobile-mode .mobile-only {
+  display: flex !important;
+}
+
+.force-mobile-mode .desktop-only {
+  display: none !important;
+}
+
+.force-mobile-mode .mobile-header-bar {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #0d1017;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  width: 100%;
+}
+
+.force-mobile-mode .sidebar-drawer {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  height: 100vh !important;
+  z-index: 100 !important;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8) !important;
+  width: 280px !important;
+}
+
+.force-mobile-mode .sidebar-drawer.is-open {
+  transform: translateX(0) !important;
+}
+
+.force-mobile-mode .mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 95;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.force-mobile-mode .main-content-area {
+  padding-bottom: 84px !important;
+}
+
+.force-mobile-mode .mobile-bottom-header-bar {
+  display: flex !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 68px !important;
+  background: rgba(13, 16, 23, 0.92) !important;
+  border-top: 1px solid rgba(56, 189, 248, 0.3) !important;
+  z-index: 90 !important;
+  padding: 4px 10px !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
+  max-width: 440px !important;
+  margin: 0 auto !important;
+}
+
+.force-mobile-mode .calendar-banner-header {
+  padding: 16px 14px !important;
+  border-radius: 18px !important;
+  gap: 14px !important;
+  text-align: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.force-mobile-mode .calendar-banner-header h1 {
+  font-size: 1.35rem !important;
+  letter-spacing: -0.01em !important;
+  text-align: center !important;
+}
+
+.force-mobile-mode .calendar-kpi-row {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+}
+
+.force-mobile-mode .calendar-kpi-box {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  width: auto !important;
+  padding: 10px 4px !important;
+  border-radius: 12px !important;
+}
+
+.force-mobile-mode .calendar-kpi-box span:first-child {
+  font-size: 1.3rem !important;
+}
+
+.force-mobile-mode .calendar-kpi-box span:last-child {
+  font-size: 0.58rem !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+
+.force-mobile-mode .calendar-filter-card {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 6px 12px !important;
+}
+
+.force-mobile-mode .calendar-filter-card .divider-line {
+  display: block !important;
+}
+
+.force-mobile-mode .discussion-event-item {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+}
+
+.force-mobile-mode .date-node-container {
+  width: 100% !important;
+  justify-content: flex-start !important;
+}
+
+.force-mobile-mode .date-node-container .date-box-inner {
+  width: 100% !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 16px !important;
+  border-radius: 12px !important;
+}
+
+.force-mobile-mode .date-node-container .date-box-spacer {
+  display: none !important;
+}
+
+.force-mobile-mode .date-node-container .connector-line,
+.force-mobile-mode .date-node-container .connector-dot,
+.force-mobile-mode .connector-vertical-line {
+  display: none !important;
+}
+
+.force-mobile-mode .discussion-card-inner {
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  padding: 12px !important;
+}
+
+.force-mobile-mode .discussion-card-box {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  padding: 12px !important;
+}
+
+.force-mobile-mode .responsive-grid-1col {
+  grid-template-columns: 1fr !important;
+}
+
+.force-mobile-mode .responsive-modal {
+  width: 95% !important;
+  max-width: 95% !important;
+  margin: 10px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
 }
 
 @keyframes fadeIn {
