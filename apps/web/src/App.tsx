@@ -4544,9 +4544,9 @@ export default function App() {
                                   </span>
                                 </div>
 
-                                {/* THÁNG (CHỮ TRẮNG TO ĐẬM) */}
-                                <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em' }}>
-                                  Tháng {item.date ? item.date.split('/')[1] : '08'}
+                                {/* THÁNG (CHỮ TRẮNG TO ĐẬM IN HOA) */}
+                                <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+                                  THÁNG {item.date ? item.date.split('/')[1] : '08'}
                                 </span>
 
                                 {/* NÚT XUỐNG / NGÀY SAU (CỐ ĐỊNH PHÍA PHẢI / DƯỚI, KÍCH THƯỚC LỚN) */}
