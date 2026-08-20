@@ -1090,6 +1090,15 @@ export default function App() {
   const [talkViewMode, setTalkViewMode] = useState<'card' | 'grid'>('card'); // Chế độ xem Thẻ / Lưới
   const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
 
+  // Quản lý trạng thái Ẩn / Sổ mở rộng Thời gian thực tế của các thẻ Lịch
+  const [expandedRealTimeMap, setExpandedRealTimeMap] = useState<Record<string, boolean>>({});
+  const toggleRealTimeExpand = (id: string) => {
+    setExpandedRealTimeMap(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   // Shift Selected Date (+1 or -1 day) for Mouse Wheel & Swipe Up/Down on Date Node Box
   const handleShiftDate = (offsetDays: number, baseDateStr?: string) => {
     let dateObj = getVietnamNow();
@@ -4413,6 +4422,7 @@ export default function App() {
                       // Tính toán màu sắc đồng bộ hoàn toàn theo Trạng Thái Cuộc Trao Đổi
                       const st = getLiveDiscussionStatus(item, vnNow);
                       const isFinished = st === 'Đã diễn ra' || st === 'Đã xong' || st === 'Hoàn thành';
+                      const isRealTimeExpanded = !!expandedRealTimeMap[item.id];
 
                       const isToday = (() => {
                         if (!item.date) return false;
@@ -4586,9 +4596,9 @@ export default function App() {
                       borderRadius: 18, padding: 14, boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
                       display: 'flex', gap: 14, alignItems: 'stretch'
                     }}>
-                      {/* 1. HỘP BÊN TRÁI RỘNG HƠN (HOẶC TOÀN BỘ CHIỀU RỘNG NẾU CHƯA ĐÃ DIỄN RA) */}
+                      {/* 1. HỘP BÊN TRÁI RỘNG HƠN (HOẶC TOÀN BỘ CHIỀU RỘNG NẾU CHƯA ĐÃ DIỄN RA HOẶC CHƯA MỞ SỔ THỜI GIAN THỰC TẾ) */}
                       <div className="discussion-card-box" style={{
-                        flex: isFinished ? '7 1 0%' : '1 1 100%', backgroundColor: 'rgba(11, 14, 20, 0.65)', border: '1px solid rgba(56, 189, 248, 0.25)',
+                        flex: (isFinished && isRealTimeExpanded) ? '7 1 0%' : '1 1 100%', backgroundColor: 'rgba(11, 14, 20, 0.65)', border: '1px solid rgba(56, 189, 248, 0.25)',
                         borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 12
                       }}>
                         <div>
@@ -4719,87 +4729,106 @@ export default function App() {
                           </div>
                         </div>
 
-                            {/* ROW DƯỚI CÙNG: GHI CHÚ BÊN TRÁI + CHỮ VBKL NGHIÊNG MỎNG BÊN PHẢI */}
-                            <div style={{ paddingTop: 8, borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-                              {/* 1. Nhãn Ghi chú để màu xanh Cyan (#38bdf8) */}
-                              <div style={{ fontSize: '0.74rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontWeight: 800, color: '#38bdf8' }}>💬 Ghi chú:</span>
-                                <span style={{ color: '#cbd5e1', fontStyle: 'italic' }}>{item.notes || 'B5.1; bà Bích; 5.1T; 2.1; #K2T online'}</span>
-                              </div>
-
-                              {/* 2. CHỮ VBKL CUỘC TRAO ĐỔI ĐỂ NGHIÊNG VÀ CHO ĐỊNH DẠNG CHỮ MỎNG HƠN (fontStyle: italic, fontWeight: 500) */}
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                {item.conclusionDocUrl ? (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <a
-                                      href={item.conclusionDocUrl}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      title="Nhấp để mở Văn Bản Kết Luận cuộc trao đổi"
-                                      style={{
-                                        padding: '4px 12px', borderRadius: 8, fontSize: '0.74rem', fontWeight: 500, fontStyle: 'italic',
-                                        backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.35)',
-                                        textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.2s'
-                                      }}
-                                    >
-                                      <Plus style={{ width: 14, height: 14, color: '#38bdf8' }} /> VBKL cuộc trao đổi
-                                    </a>
-                                    <button
-                                      onClick={() => {
-                                        setSelectedVbklEvent(item);
-                                        setVbklUrl(item.conclusionDocUrl || '');
-                                        setIsVbklModalOpen(true);
-                                      }}
-                                      title="Tải tệp mới hoặc đổi link VBKL"
-                                      style={{
-                                        padding: '4px 8px', borderRadius: 8, fontSize: '0.7rem', fontWeight: 700,
-                                        backgroundColor: '#1e293b', color: '#94a3b8', border: '1px solid rgba(255, 255, 255, 0.1)',
-                                        cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4
-                                      }}
-                                    >
-                                      <PenTool style={{ width: 11, height: 11 }} /> Sửa
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    onClick={() => {
-                                      setSelectedVbklEvent(item);
-                                      setVbklUrl('');
-                                      setVbklFileName('');
-                                      setIsVbklModalOpen(true);
-                                    }}
-                                    title="Nhấp để tải Tệp hoặc dán Link Văn Bản Kết Luận sau cuộc trao đổi"
-                                    style={{
-                                      padding: '4px 12px', borderRadius: 8, fontSize: '0.74rem', fontWeight: 500, fontStyle: 'italic',
-                                      backgroundColor: 'rgba(56, 189, 248, 0.12)', color: '#38bdf8', border: '1px dashed rgba(56, 189, 248, 0.5)',
-                                      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.2s'
-                                    }}
-                                  >
-                                    <Plus style={{ width: 14, height: 14, color: '#38bdf8' }} /> VBKL cuộc trao đổi
-                                  </button>
-                                )}
-                                {/* NÚT ICON THÙNG RÁC XÓA LỊCH */}
-                                <button
-                                  type="button"
-                                  onClick={() => handleDeleteDiscussionEvent(item.id, item.title)}
-                                  title="Xóa lịch trao đổi này khỏi hệ thống & bộ nhớ"
-                                  style={{
-                                    padding: '5px 8px', borderRadius: 8,
-                                    backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                                    border: '1px solid rgba(239, 68, 68, 0.4)',
-                                    color: '#f87171', cursor: 'pointer',
-                                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                    transition: 'all 0.15s ease'
-                                  }}
-                                >
-                                  <Trash2 style={{ width: 14, height: 14, color: '#f87171' }} />
-                                </button>
-                              </div>
-                            </div>
+                        {/* ROW DƯỚI CÙNG: GHI CHÚ BÊN TRÁI + CHỮ VBKL & THỜI GIAN THỰC TẾ BẤM SỔ BÊN PHẢI */}
+                        <div style={{ paddingTop: 8, borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+                          {/* 1. Nhãn Ghi chú để màu xanh Cyan (#38bdf8) */}
+                          <div style={{ fontSize: '0.74rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{ fontWeight: 800, color: '#38bdf8' }}>💬 Ghi chú:</span>
+                            <span style={{ color: '#cbd5e1', fontStyle: 'italic' }}>{item.notes || 'B5.1; bà Bích; 5.1T; 2.1; #K2T online'}</span>
                           </div>
 
-                          {/* 2. HỘP BÊN PHẢI (THỜI GIAN THỰC TẾ - CHỈ HIỂN THỊ KHI CUỘC TRAO ĐỔI ĐÃ DIỄN RA) */}
-                          {isFinished && (() => {
+                          {/* 2. CỤM NÚT BÊN PHẢI: VBKL + NÚT SỔ/ẨN THỜI GIAN THỰC TẾ + THÙNG RÁC */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                            {item.conclusionDocUrl ? (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <a
+                                  href={item.conclusionDocUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  title="Nhấp để mở Văn Bản Kết Luận cuộc trao đổi"
+                                  style={{
+                                    padding: '4px 12px', borderRadius: 8, fontSize: '0.74rem', fontWeight: 500, fontStyle: 'italic',
+                                    backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.35)',
+                                    textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.2s'
+                                  }}
+                                >
+                                  <Plus style={{ width: 14, height: 14, color: '#38bdf8' }} /> VBKL cuộc trao đổi
+                                </a>
+                                <button
+                                  onClick={() => {
+                                    setSelectedVbklEvent(item);
+                                    setVbklUrl(item.conclusionDocUrl || '');
+                                    setIsVbklModalOpen(true);
+                                  }}
+                                  title="Tải tệp mới hoặc đổi link VBKL"
+                                  style={{
+                                    padding: '4px 8px', borderRadius: 8, fontSize: '0.7rem', fontWeight: 700,
+                                    backgroundColor: '#1e293b', color: '#94a3b8', border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4
+                                  }}
+                                >
+                                  <PenTool style={{ width: 11, height: 11 }} /> Sửa
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setSelectedVbklEvent(item);
+                                  setVbklUrl('');
+                                  setVbklFileName('');
+                                  setIsVbklModalOpen(true);
+                                }}
+                                title="Nhấp để tải Tệp hoặc dán Link Văn Bản Kết Luận sau cuộc trao đổi"
+                                style={{
+                                  padding: '4px 12px', borderRadius: 8, fontSize: '0.74rem', fontWeight: 500, fontStyle: 'italic',
+                                  backgroundColor: 'rgba(56, 189, 248, 0.12)', color: '#38bdf8', border: '1px dashed rgba(56, 189, 248, 0.5)',
+                                  cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.2s'
+                                }}
+                              >
+                                <Plus style={{ width: 14, height: 14, color: '#38bdf8' }} /> VBKL cuộc trao đổi
+                              </button>
+                            )}
+
+                            {/* NÚT SỔ / ẨN THỜI GIAN THỰC TẾ (CỐ ĐỊNH Ở VỊ TRÍ BÊN PHẢI, DƯỚI CÙNG HỘP) */}
+                            {isFinished && (
+                              <button
+                                type="button"
+                                onClick={() => toggleRealTimeExpand(item.id)}
+                                title="Nhấp để xem/sổ chi tiết Thời gian thực tế"
+                                style={{
+                                  padding: '5px 10px', borderRadius: 8, fontSize: '0.74rem', fontWeight: 700,
+                                  backgroundColor: isRealTimeExpanded ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.12)',
+                                  color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.35)',
+                                  cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, transition: 'all 0.15s ease'
+                                }}
+                              >
+                                <Clock style={{ width: 13, height: 13, color: '#34d399' }} />
+                                <span>{isRealTimeExpanded ? 'Thu gọn Thực tế ▲' : 'Thời gian Thực tế ▼'}</span>
+                              </button>
+                            )}
+
+                            {/* NÚT ICON THÙNG RÁC XÓA LỊCH */}
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteDiscussionEvent(item.id, item.title)}
+                              title="Xóa lịch trao đổi này khỏi hệ thống & bộ nhớ"
+                              style={{
+                                padding: '5px 8px', borderRadius: 8,
+                                backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                                border: '1px solid rgba(239, 68, 68, 0.4)',
+                                color: '#f87171', cursor: 'pointer',
+                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                transition: 'all 0.15s ease'
+                              }}
+                            >
+                              <Trash2 style={{ width: 14, height: 14, color: '#f87171' }} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                          {/* 2. HỘP BÊN PHẢI (THỜI GIAN THỰC TẾ - CHỈ HIỂN THỊ KHI ĐƯỢC BẤM SỔ MỞ RA) */}
+                          {isFinished && isRealTimeExpanded && (() => {
                             const actS = formatTimeWithoutSeconds((item as any).actualStartTime || item.plannedStartTime || '17:00');
                             const actE = formatTimeWithoutSeconds((item as any).actualEndTime || item.plannedEndTime || '18:00');
                             const pStart = formatTimeWithoutSeconds(item.plannedStartTime || '17:00');
