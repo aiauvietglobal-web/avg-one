@@ -4598,7 +4598,7 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (2 LINE 2 BÊN NẰM ĐÈ NỔI LÊN CÁC HỘP TRÊN MOBILE) */}
+                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (2 LINE 2 BÊN NẰM ĐÈ HẮN VÀO TRONG HỘP TRÊN MOBILE) */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
@@ -4607,9 +4607,9 @@ export default function App() {
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                width: '60%',
-                                height: 48,
-                                margin: '-16px auto',
+                                width: '75%',
+                                height: 60,
+                                margin: '-22px auto',
                                 position: 'relative',
                                 zIndex: 10
                               }}
@@ -5086,7 +5086,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN NẰM ĐÈ NỔI LÊN TRÊN CÁC HỘP TRAO ĐỔI TRÊN MOBILE */}
+                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN NẰM ĐÈ HẮN VÀO TRONG BỀ MẶT CÁC HỘP TRAO ĐỔI TRÊN MOBILE */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
@@ -5095,9 +5095,9 @@ export default function App() {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        width: '60%',
-                        height: 58,
-                        margin: '-21px auto',
+                        width: '75%',
+                        height: 72,
+                        margin: '-28px auto',
                         position: 'relative',
                         zIndex: 10
                       }}

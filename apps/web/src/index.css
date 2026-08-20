@@ -685,9 +685,9 @@ button:active {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    width: 60% !important;
-    height: 58px !important;
-    margin: -21px auto !important;
+    width: 75% !important;
+    height: 72px !important;
+    margin: -28px auto !important;
     position: relative !important;
     z-index: 10 !important;
   }
@@ -697,9 +697,9 @@ button:active {
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    width: 60% !important;
-    height: 48px !important;
-    margin: -16px auto !important;
+    width: 75% !important;
+    height: 60px !important;
+    margin: -22px auto !important;
     position: relative !important;
     z-index: 10 !important;
   }
@@ -1015,9 +1015,9 @@ button:active {
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
-  width: 60% !important;
-  height: 58px !important;
-  margin: -21px auto !important;
+  width: 75% !important;
+  height: 72px !important;
+  margin: -28px auto !important;
   position: relative !important;
   z-index: 10 !important;
 }
@@ -1027,9 +1027,9 @@ button:active {
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
-  width: 60% !important;
-  height: 48px !important;
-  margin: -16px auto !important;
+  width: 75% !important;
+  height: 60px !important;
+  margin: -22px auto !important;
   position: relative !important;
   z-index: 10 !important;
 }
