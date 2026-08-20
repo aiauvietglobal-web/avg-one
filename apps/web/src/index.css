@@ -676,7 +676,8 @@ button:active {
 
   .date-node-container .connector-line,
   .date-node-container .connector-dot,
-  .connector-vertical-line {
+  .connector-vertical-line,
+  .date-node-spacer-container {
     display: none !important;
   }
 
@@ -1012,7 +1013,8 @@ button:active {
 
 .force-mobile-mode .date-node-container .connector-line,
 .force-mobile-mode .date-node-container .connector-dot,
-.force-mobile-mode .connector-vertical-line {
+.force-mobile-mode .connector-vertical-line,
+.force-mobile-mode .date-node-spacer-container {
   display: none !important;
 }
 

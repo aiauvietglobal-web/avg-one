@@ -4483,7 +4483,7 @@ export default function App() {
                           )}
 
                           {/* NODE BÊN TRÁI: HỘP THỨ NGÀY THÁNG CÓ ĐƯỜNG LINE LIÊN KẾT NỐI TRỰC TIẾP SANG HỘP NỘI DUNG */}
-                          <div className="date-node-container" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, position: 'relative' }}>
+                          <div className={`date-node-container ${hasPrevSameDate ? 'date-node-spacer-container' : ''}`} style={{ display: 'flex', alignItems: 'center', flexShrink: 0, position: 'relative' }}>
                             {/* 1. KHUNG HỘP THỨ NGÀY THÁNG (LUÔN ĐỂ MÀU XANH CYAN HỆ THỐNG) */}
                             {!hasPrevSameDate ? (
                               <div
