@@ -1088,6 +1088,36 @@ export default function App() {
   const [selectedSpecificDayDate, setSelectedSpecificDayDate] = useState<string>('18/08/2026'); // Mặc định Ngày 18 (18/08/2026)
   const [selectedSpecificWeek, setSelectedSpecificWeek] = useState<string>('W3'); // Mặc định Tuần 3 (17/08 - 23/08)
   const [talkViewMode, setTalkViewMode] = useState<'card' | 'grid'>('card'); // Chế độ xem Thẻ / Lưới
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Shift Selected Date (+1 or -1 day) for Mouse Wheel & Swipe Up/Down on Date Node Box
+  const handleShiftDate = (offsetDays: number, baseDateStr?: string) => {
+    let dateObj = getVietnamNow();
+    const targetStr = baseDateStr || selectedSpecificDayDate;
+    if (targetStr && targetStr.includes('/')) {
+      const parts = targetStr.split('/').map(p => parseInt(p.trim(), 10));
+      if (parts.length === 3 && !isNaN(parts[0]) && !isNaN(parts[1]) && !isNaN(parts[2])) {
+        dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+      }
+    }
+
+    dateObj.setDate(dateObj.getDate() + offsetDays);
+
+    const newDay = dateObj.getDate();
+    const newMonth = dateObj.getMonth() + 1;
+    const newYear = dateObj.getFullYear();
+    const newQuarter = Math.ceil(newMonth / 3);
+    const newWeek = newDay <= 7 ? 'W1' : newDay <= 14 ? 'W2' : newDay <= 21 ? 'W3' : 'W4';
+    const newDayStr = `${String(newDay).padStart(2, '0')}/${String(newMonth).padStart(2, '0')}/${newYear}`;
+
+    setSelectedFilterYear(newYear);
+    setSelectedFilterQuarter(newQuarter);
+    setSelectedFilterMonth(newMonth);
+    setSelectedSpecificWeek(newWeek);
+    setSelectedSpecificDayDate(newDayStr);
+    setCalendarViewMode('day');
+    showToast(`Đã trở về ${newDayStr}`);
+  };
 
   // Realtime Vietnam Timezone (Asia/Ho_Chi_Minh UTC+7) Clock State
   const [vnNow, setVnNow] = useState<Date>(getVietnamNow());
@@ -4438,13 +4468,63 @@ export default function App() {
                           <div className="date-node-container" style={{ display: 'flex', alignItems: 'center', flexShrink: 0, position: 'relative' }}>
                             {/* 1. KHUNG HỘP THỨ NGÀY THÁNG (LUÔN ĐỂ MÀU XANH CYAN HỆ THỐNG) */}
                             {!hasPrevSameDate ? (
-                              <div className="date-box-inner" style={{
-                                width: 84, padding: '10px 0', borderRadius: 16,
-                                background: statusOuterBoxBg,
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 6,
-                                boxShadow: statusOuterShadow, border: statusOuterBorder,
-                                backdropFilter: 'blur(8px)', zIndex: 2
-                              }}>
+                              <div
+                                className="date-box-inner"
+                                title="Cuộn chuột hoặc lướt lên/xuống để đổi ngày"
+                                onWheel={(e) => {
+                                  e.stopPropagation();
+                                  if (e.deltaY < 0) {
+                                    handleShiftDate(-1, item.date);
+                                  } else if (e.deltaY > 0) {
+                                    handleShiftDate(1, item.date);
+                                  }
+                                }}
+                                onTouchStart={(e) => {
+                                  touchStartPosRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                                }}
+                                onTouchEnd={(e) => {
+                                  if (!touchStartPosRef.current) return;
+                                  const deltaY = e.changedTouches[0].clientY - touchStartPosRef.current.y;
+                                  const deltaX = e.changedTouches[0].clientX - touchStartPosRef.current.x;
+
+                                  if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 15) {
+                                    if (deltaY < 0) {
+                                      handleShiftDate(1, item.date);
+                                    } else {
+                                      handleShiftDate(-1, item.date);
+                                    }
+                                  } else if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 15) {
+                                    if (deltaX < 0) {
+                                      handleShiftDate(1, item.date);
+                                    } else {
+                                      handleShiftDate(-1, item.date);
+                                    }
+                                  }
+                                  touchStartPosRef.current = null;
+                                }}
+                                style={{
+                                  width: 84, padding: '6px 0', borderRadius: 16,
+                                  background: statusOuterBoxBg,
+                                  display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 4,
+                                  boxShadow: statusOuterShadow, border: statusOuterBorder,
+                                  backdropFilter: 'blur(8px)', zIndex: 2, cursor: 'ns-resize', userSelect: 'none'
+                                }}
+                              >
+                                {/* NÚT LÊN / NGÀY TRƯỚC */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); handleShiftDate(-1, item.date); }}
+                                  title="Ngày trước (-1 ngày)"
+                                  style={{
+                                    background: 'rgba(0, 0, 0, 0.25)', border: 'none', color: '#ffffff',
+                                    borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', padding: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem',
+                                    fontWeight: 900, transition: 'all 0.15s ease'
+                                  }}
+                                >
+                                  ▲
+                                </button>
+
                                 {/* THỨ TRONG TUẦN (CHỮ TRẮNG TO ĐẬM) */}
                                 <span style={{ fontSize: '0.88rem', fontWeight: 900, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#ffffff' }}>
                                   {safeDayOfWeek}
@@ -4467,6 +4547,21 @@ export default function App() {
                                 <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em' }}>
                                   Tháng {item.date ? item.date.split('/')[1] : '08'}
                                 </span>
+
+                                {/* NÚT XUỐNG / NGÀY SAU */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); handleShiftDate(1, item.date); }}
+                                  title="Ngày sau (+1 ngày)"
+                                  style={{
+                                    background: 'rgba(0, 0, 0, 0.25)', border: 'none', color: '#ffffff',
+                                    borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', padding: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem',
+                                    fontWeight: 900, transition: 'all 0.15s ease'
+                                  }}
+                                >
+                                  ▼
+                                </button>
                               </div>
                             ) : (
                                 /* KHOẢNG TRỐNG THAY THẾ CHO CÁC LỊCH CÙNG NGÀY TIẾP THEO */
