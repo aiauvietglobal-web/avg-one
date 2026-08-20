@@ -5063,8 +5063,8 @@ export default function App() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        height: 26,
-                        margin: '-4px auto',
+                        height: 40,
+                        margin: '-12px auto',
                         position: 'relative',
                         zIndex: 5
                       }}
