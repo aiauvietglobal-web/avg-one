@@ -4653,40 +4653,40 @@ export default function App() {
 
                             return (
                               <div style={{
-                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                padding: '8px 14px', background: headerBg,
-                                borderRadius: 12, border: headerBorder,
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap',
+                                gap: 10, padding: '10px 14px', background: headerBg,
+                                borderRadius: 14, border: headerBorder,
                                 boxShadow: headerShadow,
-                                marginBottom: 10
+                                marginBottom: 12
                               }}>
-                                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                                  {/* THỜI GIAN DỰ KIẾN (CHỮ NHỎ TẠO CẢM GIÁC GỌN GÀNG) */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+                                  {/* THỜI GIAN DỰ KIẾN (KÍCH THƯỚC LỚN HƠN) */}
                                   <span style={{
-                                    fontSize: '0.78rem', fontWeight: 800, color: '#ffffff',
+                                    fontSize: '0.95rem', fontWeight: 900, color: '#ffffff',
                                     display: 'inline-flex', alignItems: 'center', gap: 6
                                   }}>
-                                    <Clock style={{ width: 14, height: 14, color: '#ffffff' }} />
+                                    <Clock style={{ width: 16, height: 16, color: '#ffffff' }} />
                                     DỰ KIẾN: {pStart} – {pEnd}
                                   </span>
 
                                   {/* LINE NGĂN CÁCH MỎNG */}
-                                  <div style={{ height: 12, width: 1, backgroundColor: 'rgba(255, 255, 255, 0.35)', margin: '0 4px' }} />
+                                  <div style={{ height: 14, width: 1, backgroundColor: 'rgba(255, 255, 255, 0.4)', margin: '0 2px' }} />
 
                                   {/* THỜI LƯỢNG PHÚT */}
                                   <span style={{
-                                    fontSize: '0.76rem', fontWeight: 800, color: '#ffffff',
+                                    fontSize: '0.88rem', fontWeight: 900, color: '#ffffff',
                                     display: 'inline-flex', alignItems: 'center', gap: 6
                                   }}>
-                                    <Hourglass style={{ width: 13, height: 13, color: '#ffffff' }} />
+                                    <Hourglass style={{ width: 14, height: 14, color: '#ffffff' }} />
                                     {plannedMins} phút
                                   </span>
                                 </div>
 
-                                {/* HỘP TRẠNG THÁI */}
+                                {/* HỘP TRẠNG THÁI (CĂN GIỮA & CÓ THỂ XUỐNG DÒNG RÕ RÀNG) */}
                                 <div style={{
-                                  display: 'flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 16,
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '4px 12px', borderRadius: 16,
                                   backgroundColor: '#161b26', border: badgeBorder,
-                                  fontSize: '0.72rem', fontWeight: 800, color, flexShrink: 0
+                                  fontSize: '0.78rem', fontWeight: 900, color, flexShrink: 0
                                 }}>
                                   <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: dotBg }} />
                                   <span>{st}</span>
