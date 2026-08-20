@@ -3361,9 +3361,9 @@ export default function App() {
                     display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 16,
                     textAlign: 'center', backdropFilter: 'blur(16px)', transition: 'all 0.3s ease'
                   }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, width: '100%' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12, width: '100%' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap', width: '100%' }}>
-                        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em', margin: 0, textTransform: 'uppercase', textAlign: 'center' }}>
+                        <h1 style={{ fontSize: '2.3rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.02em', margin: 0, textTransform: 'uppercase', textAlign: 'center' }}>
                           LỊCH TRAO ĐỔI
                         </h1>
                       </div>
@@ -3371,15 +3371,22 @@ export default function App() {
                       {/* 1. HỘP NHỎ CHO NỘI DUNG MÔ TẢ */}
                       <div style={{
                         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                        padding: '6px 14px', borderRadius: 10,
-                        backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.3)',
+                        padding: '8px 16px', borderRadius: 12,
+                        backgroundColor: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(56, 189, 248, 0.35)',
                         backdropFilter: 'blur(6px)', width: 'fit-content', textAlign: 'center'
                       }}>
-                        <span style={{ fontSize: '0.78rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4, textAlign: 'center' }}>
+                        <span style={{ fontSize: '0.82rem', color: '#e2e8f0', fontWeight: 600, lineHeight: 1.4, textAlign: 'center' }}>
                           Quản lý và theo dõi các cuộc trao đổi công việc một cách hiệu quả theo thời gian thực.
                         </span>
                       </div>
                     </div>
+
+                    {/* ĐƯỜNG LINE NGANG PHÁT SÁNG NGĂN CÁCH TRONG HỘP TO BANNER */}
+                    <div style={{
+                      width: '100%', height: 1,
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.35) 20%, rgba(56, 189, 248, 0.85) 50%, rgba(56, 189, 248, 0.35) 80%, transparent 100%)',
+                      margin: '2px 0'
+                    }} />
 
                     {/* 3 STAT KPI BOXES (NỀN TỐI TẬP TRUNG LÀM NỔI BẬT MÀU CHỮ & CHỈ SỐ) */}
                     {(() => {
