@@ -4601,16 +4601,16 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA HỘP NGÀY VÀ HỘP LỊCH 1 (DỪNG CHÍNH XÁC TẠI TÂM ĐIỂM TRÒN) */}
+                          {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI CHÍNH XÁC GIỮA HỘP NGÀY VÀ HỘP LỊCH 1 (100% NỐI TỪ TÂM TRÊN ĐẾN TÂM DƯỚI) */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
                               style={{
                                 display: 'none',
                                 width: '100%',
-                                height: 12,
-                                marginTop: -12,
-                                marginBottom: 0,
+                                height: 16,
+                                marginTop: -16,
+                                marginBottom: -16,
                                 position: 'relative',
                                 zIndex: 5
                               }}
@@ -5087,7 +5087,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI GIỮA ĐIỂM TRÒN CỦA 2 HỘP LỊCH (DỪNG CHÍNH XÁC TẠI TÂM ĐIỂM TRÒN) */}
+                  {/* ĐƯỜNG LINE NÉT LIỀN SOLID NỐI CHÍNH XÁC GIỮA ĐIỂM TRÒN CỦA 2 HỘP LỊCH (100% NỐI TỪ TÂM TRÊN ĐẾN TÂM DƯỚI) */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
@@ -5096,7 +5096,7 @@ export default function App() {
                         width: '100%',
                         height: 16,
                         marginTop: -16,
-                        marginBottom: 0,
+                        marginBottom: -16,
                         position: 'relative',
                         zIndex: 5
                       }}
