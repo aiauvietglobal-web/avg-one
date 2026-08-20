@@ -610,11 +610,33 @@ button:active {
     justify-content: center !important;
     align-items: center !important;
     gap: 16px !important;
-    padding: 8px 16px !important;
+    padding: 8px 48px !important;
     border-radius: 14px !important;
     background: linear-gradient(135deg, #0284c7, #0369a1) !important;
     border: 1px solid #38bdf8 !important;
     box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45) !important;
+    position: relative !important;
+  }
+
+  .date-arrow-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.95rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .date-arrow-left {
+    position: absolute !important;
+    left: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .date-arrow-right {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
   }
 
   .date-node-container .date-box-inner > span {
@@ -888,11 +910,12 @@ button:active {
   justify-content: center !important;
   align-items: center !important;
   gap: 16px !important;
-  padding: 8px 16px !important;
+  padding: 8px 48px !important;
   border-radius: 14px !important;
   background: linear-gradient(135deg, #0284c7, #0369a1) !important;
   border: 1px solid #38bdf8 !important;
   box-shadow: 0 4px 18px rgba(2, 132, 199, 0.45) !important;
+  position: relative !important;
 }
 
 .force-mobile-mode .date-node-container .date-box-inner > span {

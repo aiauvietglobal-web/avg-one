@@ -4510,16 +4510,17 @@ export default function App() {
                                   backdropFilter: 'blur(8px)', zIndex: 2, cursor: 'ns-resize', userSelect: 'none'
                                 }}
                               >
-                                {/* NÚT LÊN / NGÀY TRƯỚC */}
+                                {/* NÚT LÊN / NGÀY TRƯỚC (CỐ ĐỊNH PHÍA TRÁI / TRÊN, KÍCH THƯỚC LỚN) */}
                                 <button
                                   type="button"
+                                  className="date-arrow-btn date-arrow-left"
                                   onClick={(e) => { e.stopPropagation(); handleShiftDate(-1, item.date); }}
                                   title="Ngày trước (-1 ngày)"
                                   style={{
-                                    background: 'rgba(0, 0, 0, 0.25)', border: 'none', color: '#ffffff',
-                                    borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', padding: 0,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem',
-                                    fontWeight: 900, transition: 'all 0.15s ease'
+                                    background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.35)', color: '#ffffff',
+                                    borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', padding: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem',
+                                    fontWeight: 900, transition: 'all 0.15s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
                                   }}
                                 >
                                   ▲
@@ -4548,16 +4549,17 @@ export default function App() {
                                   Tháng {item.date ? item.date.split('/')[1] : '08'}
                                 </span>
 
-                                {/* NÚT XUỐNG / NGÀY SAU */}
+                                {/* NÚT XUỐNG / NGÀY SAU (CỐ ĐỊNH PHÍA PHẢI / DƯỚI, KÍCH THƯỚC LỚN) */}
                                 <button
                                   type="button"
+                                  className="date-arrow-btn date-arrow-right"
                                   onClick={(e) => { e.stopPropagation(); handleShiftDate(1, item.date); }}
                                   title="Ngày sau (+1 ngày)"
                                   style={{
-                                    background: 'rgba(0, 0, 0, 0.25)', border: 'none', color: '#ffffff',
-                                    borderRadius: '50%', width: 20, height: 20, cursor: 'pointer', padding: 0,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem',
-                                    fontWeight: 900, transition: 'all 0.15s ease'
+                                    background: 'rgba(0, 0, 0, 0.35)', border: '1px solid rgba(255, 255, 255, 0.35)', color: '#ffffff',
+                                    borderRadius: '50%', width: 28, height: 28, cursor: 'pointer', padding: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem',
+                                    fontWeight: 900, transition: 'all 0.15s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.4)'
                                   }}
                                 >
                                   ▼
