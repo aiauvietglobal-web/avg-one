@@ -8207,7 +8207,6 @@ export default function App() {
           type="button"
           className={`mobile-bottom-nav-item ${activeTab === 'home' ? 'active' : ''}`}
           onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}
-          style={{ background: activeTab === 'home' ? 'rgba(56, 189, 248, 0.14)' : 'transparent', border: 'none', color: activeTab === 'home' ? '#38bdf8' : '#94a3b8' }}
         >
           <Home style={{ width: 20, height: 20 }} />
           <span>Trang chủ</span>
@@ -8216,7 +8215,6 @@ export default function App() {
           type="button"
           className={`mobile-bottom-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
           onClick={() => { setActiveTab('orders'); setIsMobileMenuOpen(false); }}
-          style={{ background: activeTab === 'orders' ? 'rgba(56, 189, 248, 0.14)' : 'transparent', border: 'none', color: activeTab === 'orders' ? '#38bdf8' : '#94a3b8' }}
         >
           <Package style={{ width: 20, height: 20 }} />
           <span>Đơn hàng</span>
@@ -8225,7 +8223,6 @@ export default function App() {
           type="button"
           className={`mobile-bottom-nav-item ${(activeTab === 'calendar-talk' || activeTab === 'calendar-ot') ? 'active' : ''}`}
           onClick={() => { setActiveTab('calendar-talk'); setIsMobileMenuOpen(false); }}
-          style={{ background: (activeTab === 'calendar-talk' || activeTab === 'calendar-ot') ? 'rgba(56, 189, 248, 0.14)' : 'transparent', border: 'none', color: (activeTab === 'calendar-talk' || activeTab === 'calendar-ot') ? '#38bdf8' : '#94a3b8' }}
         >
           <CalendarIcon style={{ width: 20, height: 20 }} />
           <span>Lịch trao đổi</span>
@@ -8234,7 +8231,6 @@ export default function App() {
           type="button"
           className={`mobile-bottom-nav-item ${activeTab === 'hr-management' ? 'active' : ''}`}
           onClick={() => { setActiveTab('hr-management'); setIsMobileMenuOpen(false); }}
-          style={{ background: activeTab === 'hr-management' ? 'rgba(56, 189, 248, 0.14)' : 'transparent', border: 'none', color: activeTab === 'hr-management' ? '#38bdf8' : '#94a3b8' }}
         >
           <Users style={{ width: 20, height: 20 }} />
           <span>Nhân sự</span>
@@ -8243,7 +8239,6 @@ export default function App() {
           type="button"
           className={`mobile-bottom-nav-item ${isMobileMenuOpen ? 'active' : ''}`}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          style={{ background: isMobileMenuOpen ? 'rgba(56, 189, 248, 0.14)' : 'transparent', border: 'none', color: isMobileMenuOpen ? '#38bdf8' : '#94a3b8' }}
         >
           <Menu style={{ width: 20, height: 20 }} />
           <span>Menu</span>

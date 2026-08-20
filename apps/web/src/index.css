@@ -467,16 +467,16 @@ button:active {
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    height: 68px !important;
-    background: rgba(13, 16, 23, 0.92) !important;
-    border-top: 1px solid rgba(56, 189, 248, 0.3) !important;
+    height: 66px !important;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(11, 15, 25, 0.98)) !important;
+    border-top: 1px solid rgba(56, 189, 248, 0.35) !important;
     z-index: 90 !important;
-    padding: 4px 10px !important;
+    padding: 6px 12px !important;
     justify-content: space-around !important;
     align-items: center !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    box-shadow: 0 -10px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   }
 
   .mobile-bottom-nav-item {
@@ -484,40 +484,50 @@ button:active {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 3px !important;
+    gap: 4px !important;
     background: transparent !important;
-    border: none !important;
+    border: 1px solid transparent !important;
     outline: none !important;
-    color: #94a3b8 !important;
-    font-size: 0.68rem !important;
+    color: #64748b !important;
+    font-size: 0.66rem !important;
     font-weight: 700 !important;
     flex: 1 !important;
-    padding: 6px 0 !important;
-    border-radius: 12px !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 6px 4px !important;
+    border-radius: 14px !important;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
     cursor: pointer !important;
     box-shadow: none !important;
   }
 
   .mobile-bottom-nav-item span {
     color: inherit !important;
-    font-size: 0.68rem !important;
+    font-size: 0.66rem !important;
     font-weight: 700 !important;
     line-height: 1 !important;
+    letter-spacing: 0.01em !important;
   }
 
   .mobile-bottom-nav-item svg {
     color: inherit !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.22s ease !important;
   }
 
   .mobile-bottom-nav-item.active {
     color: #38bdf8 !important;
-    background: rgba(56, 189, 248, 0.14) !important;
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.28), rgba(56, 189, 248, 0.12)) !important;
+    border: 1px solid rgba(56, 189, 248, 0.45) !important;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .mobile-bottom-nav-item.active span {
+    color: #38bdf8 !important;
+    font-weight: 800 !important;
   }
 
   .mobile-bottom-nav-item.active svg {
-    transform: translateY(-1px) scale(1.08) !important;
+    color: #38bdf8 !important;
+    transform: translateY(-2px) scale(1.1) !important;
+    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.6)) !important;
   }
 
   .calendar-banner-header {
@@ -698,16 +708,16 @@ button:active {
   bottom: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  height: 68px !important;
-  background: rgba(13, 16, 23, 0.92) !important;
-  border-top: 1px solid rgba(56, 189, 248, 0.3) !important;
+  height: 66px !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(11, 15, 25, 0.98)) !important;
+  border-top: 1px solid rgba(56, 189, 248, 0.35) !important;
   z-index: 90 !important;
-  padding: 4px 10px !important;
+  padding: 6px 12px !important;
   justify-content: space-around !important;
   align-items: center !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 -10px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   max-width: 440px !important;
   margin: 0 auto !important;
 }
@@ -717,40 +727,51 @@ button:active {
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 3px !important;
+  gap: 4px !important;
   background: transparent !important;
-  border: none !important;
+  border: 1px solid transparent !important;
   outline: none !important;
-  color: #94a3b8 !important;
-  font-size: 0.68rem !important;
+  color: #64748b !important;
+  font-size: 0.66rem !important;
   font-weight: 700 !important;
   flex: 1 !important;
-  padding: 6px 0 !important;
-  border-radius: 12px !important;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  padding: 6px 4px !important;
+  border-radius: 14px !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
   cursor: pointer !important;
   box-shadow: none !important;
+  position: relative !important;
 }
 
 .force-mobile-mode .mobile-bottom-nav-item span {
   color: inherit !important;
-  font-size: 0.68rem !important;
+  font-size: 0.66rem !important;
   font-weight: 700 !important;
   line-height: 1 !important;
+  letter-spacing: 0.01em !important;
 }
 
 .force-mobile-mode .mobile-bottom-nav-item svg {
   color: inherit !important;
-  transition: all 0.2s ease !important;
+  transition: all 0.22s ease !important;
 }
 
 .force-mobile-mode .mobile-bottom-nav-item.active {
   color: #38bdf8 !important;
-  background: rgba(56, 189, 248, 0.14) !important;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.28), rgba(56, 189, 248, 0.12)) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+.force-mobile-mode .mobile-bottom-nav-item.active span {
+  color: #38bdf8 !important;
+  font-weight: 800 !important;
 }
 
 .force-mobile-mode .mobile-bottom-nav-item.active svg {
-  transform: translateY(-1px) scale(1.08) !important;
+  color: #38bdf8 !important;
+  transform: translateY(-2px) scale(1.1) !important;
+  filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.6)) !important;
 }
 
 .force-mobile-mode .calendar-banner-header {
