@@ -461,6 +461,10 @@ button:active {
     padding-bottom: 84px !important;
   }
 
+  .hide-on-mobile {
+    display: none !important;
+  }
+
   .mobile-bottom-header-bar {
     display: flex !important;
     position: fixed !important;
@@ -700,6 +704,10 @@ button:active {
 
 .force-mobile-mode .main-content-area {
   padding-bottom: 84px !important;
+}
+
+.force-mobile-mode .hide-on-mobile {
+  display: none !important;
 }
 
 .force-mobile-mode .mobile-bottom-header-bar {

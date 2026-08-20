@@ -2069,9 +2069,10 @@ export default function App() {
 
         {/* MENU ITEMS */}
         <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', fontSize: '0.8rem', fontWeight: 700 }}>
-          {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (CHO MÁY TÍNH) */}
+          {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (ẨN Ở CHẾ ĐỘ MOBILE) */}
           <button
             type="button"
+            className="hide-on-mobile"
             onClick={() => {
               setIsMobileMode(false);
               setIsMobileMenuOpen(false);
@@ -2641,6 +2642,7 @@ export default function App() {
         <div className="mobile-header-bar mobile-only">
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button
+              className="mobile-menu-toggle-btn hide-on-mobile"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               style={{
                 padding: 8,
@@ -2661,8 +2663,9 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH */}
+            {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (ẨN Ở CHẾ ĐỘ MOBILE) */}
             <button
+              className="hide-on-mobile"
               onClick={() => {
                 setIsMobileMode(false);
                 setIsMobileMenuOpen(false);
@@ -4075,6 +4078,7 @@ export default function App() {
                     <FileSpreadsheet style={{ width: 18, height: 18, color: '#34d399' }} />
                   </button>
                   <button
+                    className="hide-on-mobile"
                     onClick={() => {
                       setWebhookUrlInput(getGoogleSheetWebhookUrl());
                       setIsWebhookModalOpen(true);
@@ -4089,8 +4093,9 @@ export default function App() {
                   >
                     <RefreshCw style={{ width: 18, height: 18, color: '#38bdf8' }} />
                   </button>
-                  {/* NÚT THÙNG RÁC TẠM LƯU TRỮ */}
+                  {/* NÚT THÙNG RÁC TẠM LƯU TRỮ (ẨN Ở CHẾ ĐỘ MOBILE) */}
                   <button
+                    className="hide-on-mobile"
                     onClick={() => {
                       setTrashEvents(getDeletedDiscussionEvents());
                       setIsTrashModalOpen(true);
