@@ -4598,7 +4598,7 @@ export default function App() {
                             <div className="connector-line" style={{ width: 18, height: 2, backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8', opacity: 0.9 }} />
                           </div>
 
-                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (TÂM ĐIỂM TRÒN ĐÈ VIỀN HỘP & CÓ LINE DỌC NỐI) */}
+                          {/* ĐƯỜNG LINE KẾT NỐI GIỮA HỘP THỨ NGÀY THÁNG VÀ HỘP NỘI DUNG TRAO ĐỔI ĐẦU TIÊN (TÂM ĐIỂM TRÒN TRÙNG KHỚP 100% VIỀN HỘP) */}
                           {!hasPrevSameDate && (
                             <div
                               className="mobile-date-card-connector-line"
@@ -4607,10 +4607,10 @@ export default function App() {
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                width: '75%',
+                                width: '82%',
                                 height: 34,
-                                marginTop: -12,
-                                marginBottom: -12,
+                                marginTop: -6,
+                                marginBottom: -16,
                                 marginLeft: 'auto',
                                 marginRight: 'auto',
                                 position: 'relative',
@@ -5089,7 +5089,7 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN - TÂM ĐIỂM TRÒN ĐÈ VIỀN HỘP & CÓ LINE DỌC NỐI */}
+                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 LINE 2 BÊN - TÂM ĐIỂM TRÒN TRÙNG KHỚP 100% VIỀN HỘP */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
@@ -5098,10 +5098,10 @@ export default function App() {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        width: '75%',
-                        height: 46,
-                        marginTop: -21,
-                        marginBottom: -21,
+                        width: '82%',
+                        height: 42,
+                        marginTop: -16,
+                        marginBottom: -22,
                         marginLeft: 'auto',
                         marginRight: 'auto',
                         position: 'relative',
