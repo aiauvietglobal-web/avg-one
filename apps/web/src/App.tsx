@@ -2661,7 +2661,7 @@ export default function App() {
             >
               {isMobileMenuOpen ? <X style={{ width: 20, height: 20 }} /> : <Menu style={{ width: 20, height: 20 }} />}
             </button>
-            <img src="/logo.png" alt="AVG ONE Logo" style={{ height: 26, objectFit: 'contain' }} />
+            <img src="/logo.png" alt="AVG ONE Logo" style={{ height: 26, objectFit: 'contain', marginLeft: 10 }} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -2686,6 +2686,42 @@ export default function App() {
               <Monitor style={{ width: 14, height: 14, color: '#38bdf8' }} />
               <span>Máy tính</span>
             </button>
+
+            {/* NÚT RESET / ĐỒNG BỘ HỆ THỐNG TRÊN MOBILE */}
+            <button
+              onClick={handleResetSystem}
+              disabled={isResetting}
+              title="Reset hệ thống & Cập nhật bản Build mới nhất"
+              style={{
+                padding: 7, borderRadius: 8, backgroundColor: '#161b26',
+                border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.18s'
+              }}
+            >
+              <RefreshCw style={{ width: 15, height: 15, opacity: isResetting ? 0.5 : 1, transform: isResetting ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s' }} />
+            </button>
+
+            {/* NÚT CHAT TRÊN MOBILE */}
+            <button
+              onClick={() => {
+                if ((!activeConvId || !zaloConversations.some(c => c.id === activeConvId)) && zaloConversations.length > 0) {
+                  setActiveConvId(zaloConversations[0].id);
+                }
+                setIsChatOpen(!isChatOpen);
+              }}
+              title="Mở cửa sổ Chat AVG One"
+              style={{
+                padding: '6px 12px', borderRadius: 8,
+                backgroundColor: isChatOpen ? '#0284c7' : 'rgba(56, 189, 248, 0.15)',
+                color: isChatOpen ? '#ffffff' : '#38bdf8',
+                border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '0.74rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+              }}
+            >
+              <MessageSquare style={{ width: 14, height: 14 }} /> Chat
+            </button>
+
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               style={{
