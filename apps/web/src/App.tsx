@@ -5054,22 +5054,30 @@ export default function App() {
                         </div>
                   </div>
 
-                  {/* ĐƯỜNG LINE PHÁT SÁNG NẰM NẰM TRONG KHOẢNG TRỐNG GIỮA CÁC HỘP CUỘC TRAO ĐỔI TRÊN MOBILE */}
+                  {/* ĐƯỜNG LINE NÉT ĐỨT PHÁT SÁNG CÓ 2 ĐIỂM TRÒN 2 ĐẦU NẰM TRONG KHOẢNG TRỐNG GIỮA CÁC HỘP TRAO ĐỔI TRÊN MOBILE */}
                   {index < displayedEvents.length - 1 && (
                     <div
                       className="mobile-gap-connector-line"
                       style={{
                         display: 'none',
-                        width: 2,
-                        height: 20,
-                        backgroundColor: '#38bdf8',
-                        boxShadow: '0 0 12px #38bdf8',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        height: 26,
                         margin: '-4px auto',
-                        borderRadius: 2,
                         position: 'relative',
                         zIndex: 5
                       }}
-                    />
+                    >
+                      {/* ĐIỂM TRÒN ĐẦU TRÊN */}
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+
+                      {/* LINE DỌC NÉT ĐỨT PHÁT SÁNG */}
+                      <div style={{ flex: 1, width: 0, borderLeft: '2px dashed #38bdf8', boxShadow: '0 0 6px #38bdf8', margin: '2px 0' }} />
+
+                      {/* ĐIỂM TRÒN ĐẦU DƯỚI */}
+                      <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ffffff', border: '1.5px solid #38bdf8', boxShadow: '0 0 8px #38bdf8', flexShrink: 0 }} />
+                    </div>
                   )}
                 </React.Fragment>
               );
