@@ -8207,38 +8207,38 @@ export default function App() {
         </div>
       )}
 
-      {/* MOBILE BOTTOM NAVIGATION BAR */}
-      <nav className="mobile-bottom-nav">
+      {/* MOBILE BOTTOM HEADER BAR */}
+      <nav className="mobile-bottom-header-bar mobile-only">
         <button
-          className={`mobile-nav-item ${activeTab === 'home' ? 'active' : ''}`}
+          className={`mobile-bottom-nav-item ${activeTab === 'home' ? 'active' : ''}`}
           onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}
         >
           <Home style={{ width: 20, height: 20 }} />
           <span>Trang chủ</span>
         </button>
         <button
-          className={`mobile-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
+          className={`mobile-bottom-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
           onClick={() => { setActiveTab('orders'); setIsMobileMenuOpen(false); }}
         >
           <Package style={{ width: 20, height: 20 }} />
           <span>Đơn hàng</span>
         </button>
         <button
-          className={`mobile-nav-item ${activeTab === 'calendar-talk' ? 'active' : ''}`}
+          className={`mobile-bottom-nav-item ${(activeTab === 'calendar-talk' || activeTab === 'calendar-ot') ? 'active' : ''}`}
           onClick={() => { setActiveTab('calendar-talk'); setIsMobileMenuOpen(false); }}
         >
-          <MessageSquare style={{ width: 20, height: 20 }} />
-          <span>Lịch họp</span>
+          <CalendarIcon style={{ width: 20, height: 20 }} />
+          <span>Lịch trao đổi</span>
         </button>
         <button
-          className={`mobile-nav-item ${activeTab === 'hr-management' ? 'active' : ''}`}
+          className={`mobile-bottom-nav-item ${activeTab === 'hr-management' ? 'active' : ''}`}
           onClick={() => { setActiveTab('hr-management'); setIsMobileMenuOpen(false); }}
         >
           <Users style={{ width: 20, height: 20 }} />
           <span>Nhân sự</span>
         </button>
         <button
-          className={`mobile-nav-item ${isMobileMenuOpen ? 'active' : ''}`}
+          className={`mobile-bottom-nav-item ${isMobileMenuOpen ? 'active' : ''}`}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           <Menu style={{ width: 20, height: 20 }} />

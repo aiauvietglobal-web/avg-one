@@ -390,7 +390,7 @@ button:active {
 }
 
 .force-mobile-mode .main-content-area {
-  padding-bottom: 30px !important;
+  padding-bottom: 84px !important;
 }
 
 /* ============================================================ */
@@ -461,7 +461,65 @@ button:active {
   }
 
   .main-content-area {
-    padding-bottom: 30px !important;
+    padding-bottom: 84px !important;
+  }
+
+  /* Mobile Bottom Header Bar */
+  .mobile-bottom-header-bar {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 68px !important;
+    background: rgba(13, 16, 23, 0.92) !important;
+    border-top: 1px solid rgba(56, 189, 248, 0.3) !important;
+    z-index: 90 !important;
+    padding: 4px 10px !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .force-mobile-mode .mobile-bottom-header-bar {
+    max-width: 440px !important;
+    margin: 0 auto !important;
+  }
+
+  [data-theme="light"] .mobile-bottom-header-bar {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border-top: 1px solid #e5e7eb !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .mobile-bottom-nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    background: transparent !important;
+    border: none !important;
+    color: #94a3b8 !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    flex: 1 !important;
+    padding: 6px 0 !important;
+    border-radius: 12px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+  }
+
+  .mobile-bottom-nav-item.active {
+    color: #38bdf8 !important;
+    background: rgba(56, 189, 248, 0.14) !important;
+  }
+
+  .mobile-bottom-nav-item.active svg {
+    color: #38bdf8 !important;
+    transform: translateY(-1px) scale(1.08) !important;
   }
 
   /* Calendar Banner Header Responsiveness */
