@@ -684,7 +684,7 @@ button:active {
     flex-direction: column !important;
     gap: 24px !important;
     position: relative !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 0 !important;
   }
 
   .mobile-node-dot {
@@ -1020,7 +1020,7 @@ button:active {
   flex-direction: column !important;
   gap: 24px !important;
   position: relative !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 0 !important;
 }
 
 .force-mobile-mode .mobile-node-dot {
