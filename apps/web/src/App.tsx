@@ -6536,22 +6536,22 @@ export default function App() {
           {activeTab === 'home' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 840, margin: '0 auto', width: '100%' }}>
 
-              {/* HỘP 1: LỜI CHÀO NĂNG LƯỢNG & HIỆU QUẢ */}
+              {/* HỘP 1: LỜI CHÀO NĂNG LƯỢNG & HIỆU QUẢ (ĐỒNG BỘ MÀU HOÀN HẢO VỚI HỘP 2 LỊCH TRAO ĐỔI) */}
               <div style={{
-                background: 'radial-gradient(circle at 90% 10%, rgba(56, 189, 248, 0.25) 0%, transparent 60%), linear-gradient(135deg, rgba(2, 132, 199, 0.35), rgba(15, 23, 42, 0.95))',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: 22,
-                padding: '22px 24px',
-                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                padding: '20px',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4)',
                 position: 'relative',
                 overflow: 'hidden'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ fontSize: '1.5rem' }}>👋</span>
+                    <span style={{ fontSize: '1.4rem' }}>👋</span>
                     <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>AVG ONE SYSTEM</span>
                   </div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', background: 'rgba(255, 255, 255, 0.08)', padding: '5px 12px', borderRadius: 20, border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.12)', padding: '5px 12px', borderRadius: 20, border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                     {(() => {
                       const now = getVietnamNow();
                       const daysMap = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
