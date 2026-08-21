@@ -1092,6 +1092,8 @@ export default function App() {
 
   // Quản lý trạng thái Ẩn / Sổ mở rộng Thời gian thực tế của các thẻ Lịch
   const [expandedRealTimeMap, setExpandedRealTimeMap] = useState<Record<string, boolean>>({});
+  // Quản lý trạng thái Mở rộng / Thu gọn danh sách Lịch hôm nay trên Trang chủ Mobile
+  const [isTodayListExpanded, setIsTodayListExpanded] = useState<boolean>(false);
   const toggleRealTimeExpand = (id: string) => {
     setExpandedRealTimeMap(prev => ({
       ...prev,
@@ -6566,13 +6568,17 @@ export default function App() {
                 </p>
               </div>
 
-              {/* HỘP 2: BẠN CÓ LỊCH TRAO ĐỔI HÔM NAY ĐÓ + HỘP NỘI DUNG TRAO ĐỔI */}
+              {/* HỘP 2: BẠN CÓ LỊCH TRAO ĐỔI HÔM NAY ĐÓ + HỘP NỘI DUNG TRAO ĐỔI (MẶC ĐỊNH HIỆN 1 LỊCH + NÚT MŨI TÊN ẨN/HIỆN) */}
               {(() => {
                 const now = getVietnamNow();
                 const curDayStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
                 const todayEvents = discussionEvents.filter(item => item.date && item.date.trim() === curDayStr);
-                const displayEvents = todayEvents.length > 0 ? todayEvents : discussionEvents.slice(0, 2);
+                const targetList = todayEvents.length > 0 ? todayEvents : discussionEvents;
                 const isTodayList = todayEvents.length > 0;
+                
+                // Mặc định hiện 1 lịch, khi bấm nút mũi tên mới hiện các lịch còn lại
+                const displayEvents = isTodayListExpanded ? targetList : targetList.slice(0, 1);
+                const remainingCount = targetList.length - 1;
 
                 return (
                   <div style={{
@@ -6666,6 +6672,42 @@ export default function App() {
                         );
                       })}
                     </div>
+
+                    {/* NÚT MŨI TÊN MỞ RỘNG / THU GỌN CÁC LỊCH CÒN LẠI TRONG NGÀY */}
+                    {targetList.length > 1 && (
+                      <button
+                        onClick={() => setIsTodayListExpanded(!isTodayListExpanded)}
+                        style={{
+                          marginTop: 14,
+                          width: '100%',
+                          padding: '11px 16px',
+                          borderRadius: 14,
+                          background: isTodayListExpanded
+                            ? 'rgba(255, 255, 255, 0.06)'
+                            : 'linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(2, 132, 199, 0.18))',
+                          border: isTodayListExpanded
+                            ? '1px solid rgba(255, 255, 255, 0.15)'
+                            : '1px solid rgba(56, 189, 248, 0.45)',
+                          color: '#38bdf8',
+                          fontWeight: 800,
+                          fontSize: '0.85rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: 8,
+                          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <span style={{ fontSize: '0.9rem' }}>{isTodayListExpanded ? '▲' : '▼'}</span>
+                        <span>
+                          {isTodayListExpanded
+                            ? 'Thu gọn bớt lịch'
+                            : `Xem thêm ${remainingCount} lịch trao đổi còn lại trong ngày`}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 );
               })()}
