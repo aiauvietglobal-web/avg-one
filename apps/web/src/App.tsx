@@ -3010,7 +3010,7 @@ export default function App() {
         {/* WORKSPACE PAGE BODY */}
         <main style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1440, margin: '0 auto', width: '100%' }}>
           {activeTab === 'orders' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 40 }}>
+            <div className="orders-main-container" style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 40 }}>
               
               {/* ========================================================================= */}
               {/* CASE A: GIAO DIỆN TỔNG (SELECTED HUB === 'ALL') */}
@@ -3018,7 +3018,7 @@ export default function App() {
               {selectedHub === 'ALL' ? (
                 <>
                   {/* 1. EXECUTIVE BANNER CARD FOR OVERALL ORDERS MANAGEMENT (ĐỒNG BỘ THEME LỊCH) */}
-                  <div style={{
+                  <div className="orders-executive-banner" style={{
                     background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.7), rgba(14, 165, 233, 0.35), rgba(11, 15, 25, 0.95))',
                     borderRadius: 24,
                     padding: '28px 34px',
@@ -3032,7 +3032,7 @@ export default function App() {
                     gap: 24
                   }}>
                     {/* LEFT MAIN CONTENT */}
-                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
                       {/* BADGES ROW */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                         <span style={{
@@ -3056,7 +3056,7 @@ export default function App() {
                         <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
                           AVG ONE GLOBAL DASHBOARD
                         </div>
-                        <h1 style={{ fontSize: '2.3rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.02em', lineHeight: 1.15 }}>
+                        <h1 className="orders-banner-title" style={{ fontSize: '2.3rem', fontWeight: 900, color: '#ffffff', margin: 0, letterSpacing: '0.02em', lineHeight: 1.15 }}>
                           GIAO DIỆN TỔNG QUẢN LÝ ĐƠN HÀNG
                         </h1>
                       </div>
@@ -3074,7 +3074,7 @@ export default function App() {
                       </div>
 
                       {/* 4 SUMMARY METRIC CARDS FOR GLOBAL VIEW */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 6, flexWrap: 'wrap' }}>
+                      <div className="orders-metrics-grid" style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 6, flexWrap: 'wrap' }}>
                         {/* CARD 1: TỔNG ĐƠN HÀNG */}
                         <div style={{
                           backgroundColor: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(56, 189, 248, 0.35)',
@@ -3140,7 +3140,7 @@ export default function App() {
                     </div>
 
                     {/* RIGHT GRAPHIC DECORATION */}
-                    <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="orders-graphic-decor" style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <div style={{
                         width: 130, height: 130, borderRadius: 26,
                         background: 'linear-gradient(135deg, rgba(56,189,248,0.25) 0%, rgba(2,132,199,0.3) 100%)',
@@ -3157,7 +3157,7 @@ export default function App() {
                   </div>
 
                   {/* 2. QUICK HUB SELECTOR FILTER BAR FOR GLOBAL VIEW */}
-                  <div style={{
+                  <div className="orders-hub-selector" style={{
                     backgroundColor: '#0f172a', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16,
                     padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto'
                   }}>
