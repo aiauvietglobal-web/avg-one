@@ -6805,6 +6805,213 @@ export default function App() {
               <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Theo dõi các thông tin thông báo, sự kiện và tài liệu hướng dẫn mới nhất của AVG.</p>
             </div>
           )}
+
+          {/* TAB 5: QUẢN LÝ NHÂN SỰ MOBILE (HR MANAGEMENT) */}
+          {activeTab === 'hr-management' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 840, margin: '0 auto', width: '100%', paddingBottom: 40 }}>
+
+              {/* 1. EXECUTIVE HR BANNER CARD */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 22,
+                padding: '20px',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: 'rgba(56, 189, 248, 0.2)', border: '1px solid rgba(56, 189, 248, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Users style={{ width: 18, height: 18, color: '#38bdf8' }} />
+                    </div>
+                    <div>
+                      <span style={{ fontSize: '0.74rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>ĐẦU MỐI 2.1 • QUẢN LÝ NHÂN SỰ</span>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.12)', padding: '4px 10px', borderRadius: 16, border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                    {hrStaffList.length} Nhân Sự
+                  </span>
+                </div>
+
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: 6, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
+                  GIAO DIỆN QUẢN LÝ NHÂN SỰ
+                </h2>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500, lineHeight: 1.4, margin: '0 0 16px 0' }}>
+                  Danh mục cán bộ chủ trì, nhân sự điều hành các Đầu mối và mã VietQR chuyển khoản nhanh.
+                </p>
+
+                {/* 4 STAT METRICS GRID 2x2 */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+                  <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: 14, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: 'rgba(56, 189, 248, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Users style={{ width: 16, height: 16, color: '#38bdf8' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>{hrStaffList.length}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', marginTop: 2 }}>TỔNG NHÂN SỰ</div>
+                    </div>
+                  </div>
+
+                  <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(251, 146, 60, 0.25)', borderRadius: 14, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: 'rgba(251, 146, 60, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <UserCheck style={{ width: 16, height: 16, color: '#fb923c' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>8</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#fb923c', textTransform: 'uppercase', marginTop: 2 }}>CHỦ TRÌ ĐẦU MỐI</div>
+                    </div>
+                  </div>
+
+                  <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(52, 211, 153, 0.25)', borderRadius: 14, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: 'rgba(52, 211, 153, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CheckCircle2 style={{ width: 16, height: 16, color: '#34d399' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>
+                        {hrStaffList.filter(s => s.status === 'Đang làm việc').length}
+                      </div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginTop: 2 }}>ĐANG LÀM VIỆC</div>
+                    </div>
+                  </div>
+
+                  <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.75)', border: '1px solid rgba(168, 85, 247, 0.25)', borderRadius: 14, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: 'rgba(168, 85, 247, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CreditCard style={{ width: 16, height: 16, color: '#c084fc' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', lineHeight: 1 }}>{hrStaffList.filter(s => s.bankAccount).length}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', marginTop: 2 }}>ĐÃ CÓ VIETQR</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. QUICK ACTION BAR */}
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setIsAddHrModalOpen(true)}
+                  style={{
+                    flex: 1, minWidth: 160, padding: '12px 16px', borderRadius: 14,
+                    background: 'linear-gradient(135deg, #ff5722, #ea580c)', color: '#ffffff',
+                    border: 'none', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    boxShadow: '0 4px 14px rgba(255, 87, 34, 0.4)'
+                  }}
+                >
+                  <Plus style={{ width: 18, height: 18 }} /> + Thêm Nhân Sự Mới
+                </button>
+
+                <button
+                  onClick={() => showToast('📊 Đã xuất báo cáo danh sách nhân sự toàn hệ thống')}
+                  style={{
+                    padding: '12px 16px', borderRadius: 14,
+                    backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8',
+                    border: '1px solid rgba(56, 189, 248, 0.35)', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                  }}
+                >
+                  <FileText style={{ width: 16, height: 16 }} /> Xuất Báo Cáo
+                </button>
+              </div>
+
+              {/* 3. STAFF LIST CARDS STREAM */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 22,
+                padding: '20px',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#ffffff' }}>Danh Sách Cán Bộ & Nhân Sự</div>
+                  <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 700 }}>{hrStaffList.length} Cán bộ</span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {hrStaffList.map((staff) => (
+                    <div key={staff.id} style={{
+                      backgroundColor: '#161922', border: '1px solid rgba(56, 189, 248, 0.2)',
+                      borderRadius: 16, padding: 14, boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                      display: 'flex', flexDirection: 'column', gap: 10
+                    }}>
+                      {/* TOP ROW: AVATAR + NAME + STATUS */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{
+                            width: 42, height: 42, borderRadius: '50%',
+                            background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(2, 132, 199, 0.4))',
+                            border: '1.5px solid #38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '1rem', fontWeight: 900, color: '#ffffff', flexShrink: 0
+                          }}>
+                            {staff.name ? staff.name.charAt(0).toUpperCase() : 'N'}
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.25 }}>
+                              {staff.name}
+                            </div>
+                            <div style={{ fontSize: '0.74rem', color: '#38bdf8', fontWeight: 700, marginTop: 2 }}>
+                              {staff.role} • {staff.department}
+                            </div>
+                          </div>
+                        </div>
+
+                        <span style={{
+                          fontSize: '0.68rem', fontWeight: 900, padding: '3px 8px', borderRadius: 10,
+                          backgroundColor: staff.status === 'Đang làm việc' ? 'rgba(52, 211, 153, 0.18)' : 'rgba(245, 158, 11, 0.18)',
+                          color: staff.status === 'Đang làm việc' ? '#34d399' : '#f59e0b',
+                          border: staff.status === 'Đang làm việc' ? '1px solid rgba(52, 211, 153, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)'
+                        }}>
+                          ● {staff.status || 'Hoạt động'}
+                        </span>
+                      </div>
+
+                      {/* INFO DETAILS ROW */}
+                      <div style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 12, padding: '10px 12px',
+                        display: 'flex', flexDirection: 'column', gap: 6, border: '1px solid rgba(255, 255, 255, 0.05)'
+                      }}>
+                        <div style={{ fontSize: '0.78rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Mail style={{ width: 13, height: 13, color: '#38bdf8' }} />
+                          <a href={`mailto:${staff.email}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>{staff.email}</a>
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Phone style={{ width: 13, height: 13, color: '#34d399' }} />
+                          <a href={`tel:${staff.phone}`} style={{ color: '#cbd5e1', textDecoration: 'none' }}>{staff.phone}</a>
+                        </div>
+                        {staff.bankAccount && (
+                          <div style={{ fontSize: '0.78rem', color: '#fb923c', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <CreditCard style={{ width: 13, height: 13, color: '#fb923c' }} />
+                            <span>{staff.bankName}: </span>
+                            <span style={{ fontFamily: 'monospace', fontWeight: 800 }}>{staff.bankAccount}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* ACTION BUTTONS ROW */}
+                      {staff.bankAccount && (
+                        <button
+                          onClick={() => setSelectedQrStaff(staff)}
+                          style={{
+                            width: '100%', padding: '9px 12px', borderRadius: 10,
+                            backgroundColor: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.35)',
+                            color: '#38bdf8', fontWeight: 800, fontSize: '0.78rem', cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <CreditCard style={{ width: 14, height: 14 }} /> Xem Mã VietQR Chuyển Khoản Nhanh
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          )}
         </main>
       </div>
 
