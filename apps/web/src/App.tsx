@@ -6531,21 +6531,236 @@ export default function App() {
           )}
 
           {/* TAB 4: TRANG CHỦ / BẢNG TIN KHÁC */}
-          {(activeTab === 'home' || activeTab === 'news') && (
+          {activeTab === 'home' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 840, margin: '0 auto', width: '100%' }}>
+
+              {/* HỘP 1: LỜI CHÀO NĂNG LƯỢNG & HIỆU QUẢ */}
+              <div style={{
+                background: 'radial-gradient(circle at 90% 10%, rgba(56, 189, 248, 0.25) 0%, transparent 60%), linear-gradient(135deg, rgba(2, 132, 199, 0.35), rgba(15, 23, 42, 0.95))',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: 22,
+                padding: '22px 24px',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: '1.5rem' }}>👋</span>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>AVG ONE SYSTEM</span>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', background: 'rgba(255, 255, 255, 0.08)', padding: '5px 12px', borderRadius: 20, border: '1px solid rgba(255, 255, 255, 0.12)' }}>
+                    {(() => {
+                      const now = getVietnamNow();
+                      const daysMap = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+                      return `${daysMap[now.getDay()]}, ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+                    })()}
+                  </div>
+                </div>
+
+                <h2 style={{ fontSize: '1.45rem', fontWeight: 900, color: '#ffffff', marginBottom: 6, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
+                  AVG One xin chào,
+                </h2>
+                <p style={{ color: '#e2e8f0', fontSize: '0.98rem', fontWeight: 600, lineHeight: 1.5, margin: 0 }}>
+                  Chúc bạn có một ngày làm việc thật năng lượng và hiệu quả! 🚀✨
+                </p>
+              </div>
+
+              {/* HỘP 2: BẠN CÓ LỊCH TRAO ĐỔI HÔM NAY ĐÓ + HỘP NỘI DUNG TRAO ĐỔI */}
+              {(() => {
+                const now = getVietnamNow();
+                const curDayStr = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+                const todayEvents = discussionEvents.filter(item => item.date && item.date.trim() === curDayStr);
+                const displayEvents = todayEvents.length > 0 ? todayEvents : discussionEvents.slice(0, 2);
+                const isTodayList = todayEvents.length > 0;
+
+                return (
+                  <div style={{
+                    background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 22,
+                    padding: '20px',
+                    boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4)'
+                  }}>
+                    {/* THÔNG BÁO TẮT NHẮC LỊCH */}
+                    <div style={{
+                      backgroundColor: isTodayList ? 'rgba(234, 88, 12, 0.18)' : 'rgba(56, 189, 248, 0.12)',
+                      border: isTodayList ? '1px solid rgba(249, 115, 22, 0.45)' : '1px solid rgba(56, 189, 248, 0.35)',
+                      borderRadius: 16,
+                      padding: '14px 16px',
+                      marginBottom: 16,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12
+                    }}>
+                      <div style={{ width: 38, height: 38, borderRadius: '50%', backgroundColor: isTodayList ? 'rgba(249, 115, 22, 0.3)' : 'rgba(56, 189, 248, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <CalendarIcon style={{ width: 20, height: 20, color: isTodayList ? '#f97316' : '#38bdf8' }} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '0.92rem', fontWeight: 900, color: isTodayList ? '#ffedd5' : '#e0f2fe', lineHeight: 1.4 }}>
+                          {isTodayList
+                            ? 'Bạn có lịch trao đổi hôm nay đó, nhớ sắp xếp tham gia đúng giờ nha! ⏰'
+                            : 'Hôm nay bạn không có lịch trao đổi nào, dưới đây là các cuộc trao đổi tiếp theo 📋'}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* DANH SÁCH HỘP NỘI DUNG TRAO ĐỔI */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                      {displayEvents.map((item) => {
+                        const st = getLiveDiscussionStatus(item, vnNow);
+                        const isFinished = st === 'Đã diễn ra' || st === 'Đã xong' || st === 'Hoàn thành';
+
+                        return (
+                          <div key={item.id} className="discussion-card-inner" style={{
+                            backgroundColor: '#161922', border: '1px solid rgba(56, 189, 248, 0.25)',
+                            borderRadius: 18, padding: 16, boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+                            display: 'flex', flexDirection: 'column', gap: 12
+                          }}>
+                            {/* HEADER TIME & STATUS BADGE */}
+                            <div style={{
+                              background: st === 'Đang diễn ra' ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.65), rgba(52, 211, 153, 0.45))' : isFinished ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.65), rgba(239, 68, 68, 0.45))' : 'linear-gradient(135deg, rgba(234, 88, 12, 0.68), rgba(249, 115, 22, 0.45))',
+                              border: st === 'Đang diễn ra' ? '1px solid rgba(52, 211, 153, 0.6)' : isFinished ? '1px solid rgba(239, 68, 68, 0.6)' : '1px solid rgba(251, 146, 60, 0.6)',
+                              borderRadius: 12, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#ffffff', fontWeight: 800, fontSize: '0.85rem' }}>
+                                <Clock style={{ width: 14, height: 14 }} />
+                                <span>DỰ KIẾN: {item.plannedStartTime || '08:30'} – {item.plannedEndTime || '10:30'}</span>
+                                <span style={{ opacity: 0.6 }}>|</span>
+                                <span>⌛ 90 phút</span>
+                              </div>
+                              <div style={{
+                                padding: '3px 10px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 900,
+                                backgroundColor: 'rgba(0,0,0,0.3)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.2)'
+                              }}>
+                                ● {st}
+                              </div>
+                            </div>
+
+                            {/* TITLE */}
+                            <div>
+                              <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: 2 }}>NỘI DUNG/ CHỦ ĐỀ</div>
+                              <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.35 }}>{item.title}</div>
+                            </div>
+
+                            {/* PARTICIPANTS */}
+                            {item.attendees && (
+                              <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)', borderRadius: 10, padding: 10, border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: 4 }}>THÀNH PHẦN PARTICIPANTS</div>
+                                <div style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, lineHeight: 1.4 }}>{item.attendees}</div>
+                              </div>
+                            )}
+
+                            {/* ACTION BUTTON */}
+                            <button
+                              onClick={() => setActiveTab('calendar-talk')}
+                              style={{
+                                width: '100%', padding: '10px 14px', borderRadius: 12, backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                                border: '1px solid rgba(56, 189, 248, 0.35)', color: '#38bdf8', fontWeight: 800, fontSize: '0.82rem',
+                                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.15s ease'
+                              }}
+                            >
+                              <CalendarIcon style={{ width: 15, height: 15 }} /> Xem Chi Tiết Trên Sơ Đồ Lịch
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* HỘP 3: CÁC THÔNG TIN MỚI CẬP NHẬT MỚI... */}
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 22,
+                padding: '20px',
+                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4)'
+              }}>
+                {/* SECTION HEADER */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: 'rgba(245, 158, 11, 0.2)', border: '1px solid rgba(245, 158, 11, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Bell style={{ width: 18, height: 18, color: '#f59e0b' }} />
+                    </div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>Các Thông Tin Mới Cập Nhật</div>
+                  </div>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 900, color: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.15)', padding: '4px 10px', borderRadius: 14, border: '1px solid rgba(245, 158, 11, 0.35)' }}>
+                    Mới nhất
+                  </span>
+                </div>
+
+                {/* LIST OF NEWS / UPDATES */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {/* UPDATE ITEM 1 */}
+                  <div style={{
+                    backgroundColor: 'rgba(15, 23, 42, 0.65)', border: '1px solid rgba(56, 189, 248, 0.25)',
+                    borderRadius: 14, padding: 14, transition: 'all 0.2s ease'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 900, color: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.15)', padding: '2px 8px', borderRadius: 10 }}>
+                        HỆ THỐNG AVG ONE 2.0
+                      </span>
+                      <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>Hôm nay</span>
+                    </div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#f8fafc', marginBottom: 4, lineHeight: 1.35 }}>
+                      🚀 Cập nhật giao diện Sơ đồ Lịch & Quản lý Đơn hàng liên thông trên Mobile
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.4 }}>
+                      Tối ưu hóa hiển thị trục thời gian, các điểm tròn docking phát sáng và tính năng xem Thời gian thực tế cực kỳ mượt mà.
+                    </div>
+                  </div>
+
+                  {/* UPDATE ITEM 2 */}
+                  <div style={{
+                    backgroundColor: 'rgba(15, 23, 42, 0.65)', border: '1px solid rgba(251, 146, 60, 0.25)',
+                    borderRadius: 14, padding: 14, transition: 'all 0.2s ease'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 900, color: '#fb923c', backgroundColor: 'rgba(251, 146, 60, 0.15)', padding: '2px 8px', borderRadius: 10 }}>
+                        ĐIỀU HÀNH REALTIME
+                      </span>
+                      <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>Hôm qua</span>
+                    </div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#f8fafc', marginBottom: 4, lineHeight: 1.35 }}>
+                      ⚡ Đồng bộ dữ liệu Thời gian thực tế giữa các Hub điều hành (Hub 0, Hub 8, Hub 9)
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.4 }}>
+                      Tự động ghi chép nhật ký, tính toán thời lượng diễn ra thực tế và lưu trữ hình ảnh biên bản họp liên thông.
+                    </div>
+                  </div>
+
+                  {/* UPDATE ITEM 3 */}
+                  <div style={{
+                    backgroundColor: 'rgba(15, 23, 42, 0.65)', border: '1px solid rgba(52, 211, 153, 0.25)',
+                    borderRadius: 14, padding: 14, transition: 'all 0.2s ease'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 900, color: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.15)', padding: '2px 8px', borderRadius: 10 }}>
+                        THÔNG BÁO NỘI BỘ
+                      </span>
+                      <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600 }}>19/08/2026</span>
+                    </div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#f8fafc', marginBottom: 4, lineHeight: 1.35 }}>
+                      🎯 Khẩu hiệu hành động năm 2026: Tăng tốc phát triển - Tối ưu hiệu quả - Kết nối liên thông
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.4 }}>
+                      Toàn thể CBNV AVG sẵn sàng cho các chiến dịch cao điểm quý III và quý IV năm 2026.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          )}
+
+          {activeTab === 'news' && (
             <div style={{ padding: 40, textAlign: 'center', backgroundColor: '#111827', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff', marginBottom: 12 }}>
-                {activeTab === 'home' ? '🏠 Trang Chủ Tổng Quan AVG One' : '📰 Bảng Tin Nội Bộ AVG'}
+                📰 Bảng Tin Nội Bộ AVG
               </h2>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Vui lòng chuyển sang tab HỆ THỐNG hoặc ĐƠN HÀNG ở Sidebar để xem sơ đồ điều hành liên thông.</p>
-              <button
-                onClick={() => setActiveTab('orders')}
-                style={{
-                  marginTop: 20, padding: '10px 24px', borderRadius: 10, fontWeight: 800, fontSize: '0.88rem',
-                  backgroundColor: '#38bdf8', color: '#000', border: 'none', cursor: 'pointer'
-                }}
-              >
-                Chuyển đến Quản Lý Đơn Hàng & Các Đầu Mối
-              </button>
+              <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Theo dõi các thông tin thông báo, sự kiện và tài liệu hướng dẫn mới nhất của AVG.</p>
             </div>
           )}
         </main>
