@@ -2316,7 +2316,7 @@ export default function App() {
                 >
                   <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <UserCheck style={{ width: 14, height: 14, color: '#38bdf8' }} />
-                    1. Quản lý nhân sự
+                    Quản lý nhân sự
                   </span>
                 </button>
 
@@ -2340,7 +2340,7 @@ export default function App() {
                   >
                     <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <Clock style={{ width: 14, height: 14, color: '#38bdf8' }} />
-                      2. Thời gian làm việc
+                      Thời gian làm việc
                     </span>
                     <ChevronDown style={{ width: 13, height: 13, transform: isWorkTimeMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
                   </button>
@@ -2358,7 +2358,10 @@ export default function App() {
                           fontSize: '0.74rem', fontWeight: (activeTab === 'hr-management' && hrSubTab === 'work-time' && workTimeType === 'admin') ? 800 : 400, cursor: 'pointer'
                         }}
                       >
-                        • Hành chính
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Building2 style={{ width: 13, height: 13, color: '#38bdf8' }} />
+                          Hành chính
+                        </span>
                       </button>
                       <button
                         onClick={() => { setActiveTab('hr-management'); setHrSubTab('work-time'); setWorkTimeType('ot'); setIsMobileMenuOpen(false); }}
@@ -2370,7 +2373,10 @@ export default function App() {
                           fontSize: '0.74rem', fontWeight: (activeTab === 'hr-management' && hrSubTab === 'work-time' && workTimeType === 'ot') ? 800 : 400, cursor: 'pointer'
                         }}
                       >
-                        • Ngoài giờ
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Moon style={{ width: 13, height: 13, color: '#fb923c' }} />
+                          Ngoài giờ
+                        </span>
                       </button>
                     </div>
                   )}
@@ -6931,7 +6937,7 @@ export default function App() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s'
                   }}
                 >
-                  <UserCheck style={{ width: 16, height: 16 }} /> 1. Quản Lý Nhân Sự
+                  <UserCheck style={{ width: 16, height: 16 }} /> Quản Lý Nhân Sự
                 </button>
                 <button
                   onClick={() => setHrSubTab('work-time')}
@@ -6944,7 +6950,7 @@ export default function App() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s'
                   }}
                 >
-                  <Clock style={{ width: 16, height: 16 }} /> 2. Thời Gian Làm Việc
+                  <Clock style={{ width: 16, height: 16 }} /> Thời Gian Làm Việc
                 </button>
               </div>
 
@@ -6967,7 +6973,7 @@ export default function App() {
                           <Users style={{ width: 18, height: 18, color: '#38bdf8' }} />
                         </div>
                         <div>
-                          <span style={{ fontSize: '0.74rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>MỤC 1 • QUẢN LÝ NHÂN SỰ</span>
+                          <span style={{ fontSize: '0.74rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>QUẢN LÝ NHÂN SỰ</span>
                         </div>
                       </div>
                       <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.12)', padding: '4px 10px', borderRadius: 16, border: '1px solid rgba(56, 189, 248, 0.3)' }}>
@@ -7171,7 +7177,7 @@ export default function App() {
                           <Clock style={{ width: 18, height: 18, color: '#38bdf8' }} />
                         </div>
                         <span style={{ fontSize: '0.74rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                          MỤC 2 • THỜI GIAN LÀM VIỆC
+                          THỜI GIAN LÀM VIỆC
                         </span>
                       </div>
                     </div>
@@ -7195,7 +7201,7 @@ export default function App() {
                           fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
                         }}
                       >
-                        🏢 Hành Chính (08:00 - 17:30)
+                        <Building2 style={{ width: 15, height: 15 }} /> Hành Chính (08:00 - 17:30)
                       </button>
                       <button
                         onClick={() => setWorkTimeType('ot')}
@@ -7207,7 +7213,7 @@ export default function App() {
                           fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6
                         }}
                       >
-                        🌙 Ngoài Giờ (Tăng Ca / OT)
+                        <Moon style={{ width: 15, height: 15 }} /> Ngoài Giờ (Tăng Ca / OT)
                       </button>
                     </div>
                   </div>
