@@ -2322,6 +2322,7 @@ export default function App() {
             <button
               onClick={() => {
                 setIsOrdersOpen(!isOrdersOpen);
+                setSelectedHub('ALL');
                 setActiveTab('orders');
               }}
               style={{
@@ -8955,7 +8956,7 @@ export default function App() {
         <button
           type="button"
           className={`mobile-bottom-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('orders'); setIsMobileMenuOpen(false); }}
+          onClick={() => { setSelectedHub('ALL'); setActiveTab('orders'); setIsMobileMenuOpen(false); }}
         >
           <Package style={{ width: 20, height: 20 }} />
           <span>Đơn hàng</span>
