@@ -6982,7 +6982,7 @@ export default function App() {
                     </div>
 
                     <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: 6, letterSpacing: '-0.3px', lineHeight: 1.3 }}>
-                      DANH MỤC CÁN BỘ & NHÂN SỰ
+                      THÔNG TIN NHÂN SỰ
                     </h2>
                     <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500, lineHeight: 1.4, margin: '0 0 16px 0' }}>
                       Danh mục cán bộ chủ trì, nhân sự điều hành các Đầu mối và mã VietQR chuyển khoản nhanh.
@@ -7074,7 +7074,7 @@ export default function App() {
                     gap: 14
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#ffffff' }}>Danh Sách Cán Bộ & Nhân Sự</div>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#ffffff' }}>Thông Tin Nhân Sự</div>
                       <span style={{ fontSize: '0.74rem', color: '#94a3b8', fontWeight: 700 }}>{hrStaffList.length} Cán bộ</span>
                     </div>
 
