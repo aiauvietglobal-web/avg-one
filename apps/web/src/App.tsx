@@ -6985,7 +6985,7 @@ export default function App() {
                       THÔNG TIN NHÂN SỰ
                     </h2>
                     <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500, lineHeight: 1.4, margin: '0 0 16px 0' }}>
-                      Danh mục cán bộ chủ trì, nhân sự điều hành các Đầu mối và mã VietQR chuyển khoản nhanh.
+                      Tổng hợp và theo dõi thông tin chi tiết về từng nhân sự trong hệ thống AVG One.
                     </p>
 
                     {/* 4 STAT METRICS GRID 2x2 */}
