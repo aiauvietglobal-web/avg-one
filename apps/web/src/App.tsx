@@ -2351,22 +2351,6 @@ export default function App() {
 
             {isOrdersOpen && !isSidebarCollapsed && (
               <div style={{ marginLeft: 20, marginTop: 4, display: 'flex', flexDirection: 'column', gap: 4, borderLeft: '1px solid rgba(255, 87, 34, 0.4)', paddingLeft: 12 }}>
-                {/* 0. GIAO DIỆN TỔNG ĐƠN HÀNG */}
-                <button
-                  onClick={() => { setSelectedHub('ALL'); setActiveTab('orders'); setIsMobileMenuOpen(false); showToast('🌐 Đã mở Giao diện Tổng Quản lý Đơn hàng'); }}
-                  style={{
-                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', padding: '7px 10px', borderRadius: 8,
-                    border: '1px solid transparent',
-                    backgroundColor: (selectedHub === 'ALL' && activeTab === 'orders') ? 'rgba(255, 87, 34, 0.18)' : 'rgba(255, 255, 255, 0.04)',
-                    color: (selectedHub === 'ALL' && activeTab === 'orders') ? '#ff7043' : '#ffffff',
-                    fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer', transition: 'all 0.18s ease', marginBottom: 4
-                  }}
-                >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <Globe style={{ width: 14, height: 14, color: '#38bdf8' }} /> GIAO DIỆN TỔNG
-                  </span>
-                </button>
-
                 {/* 1. CỤM ĐẦU MỐI TĂNG CƯỜNG (LÊN TRÊN CÙNG) */}
                 <div>
                   <button
