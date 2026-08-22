@@ -363,14 +363,17 @@ button:active {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 0 16px !important;
+  height: 56px !important;
   background-color: #0b0f19 !important;
   backdrop-filter: blur(12px) !important;
   border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
-  position: sticky !important;
+  position: fixed !important;
   top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   z-index: 9999 !important;
-  width: 100%;
+  width: 100% !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
 }
 
@@ -418,14 +421,17 @@ button:active {
     display: flex !important;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 0 16px !important;
+    height: 56px !important;
     background-color: #0b0f19 !important;
     backdrop-filter: blur(12px) !important;
     border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
-    position: sticky !important;
+    position: fixed !important;
     top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     z-index: 9999 !important;
-    width: 100%;
+    width: 100% !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
   }
 
@@ -462,6 +468,7 @@ button:active {
   }
 
   .main-content-area {
+    padding-top: 56px !important;
     padding-bottom: 84px !important;
   }
 
@@ -820,14 +827,17 @@ button:active {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 0 16px !important;
+  height: 56px !important;
   background-color: #0b0f19 !important;
   backdrop-filter: blur(12px) !important;
   border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
-  position: sticky !important;
+  position: fixed !important;
   top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   z-index: 9999 !important;
-  width: 100%;
+  width: 100% !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
 }
 
@@ -859,6 +869,7 @@ button:active {
 }
 
 .force-mobile-mode .main-content-area {
+  padding-top: 56px !important;
   padding-bottom: 84px !important;
 }
 

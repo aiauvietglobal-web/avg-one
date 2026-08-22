@@ -2785,8 +2785,8 @@ export default function App() {
 
       {/* MAIN CONTENT CONTAINER */}
       <div className="main-content-area" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, backgroundColor: '#0b0e14' }}>
-        {/* MOBILE HEADER BAR (LAYER TRÊN CÙNG Z-INDEX 9999 ĐỂ CÁC ĐIỂM TRÒN & HỌA TIẾT CUỘN CHÌM DƯỚI) */}
-        <div className="mobile-header-bar mobile-only" style={{ position: 'sticky', top: 0, zIndex: 9999, backgroundColor: '#0b0f19', backdropFilter: 'blur(12px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)' }}>
+        {/* MOBILE HEADER BAR (CỐ ĐỊNH FIXED TOP 0 Z-INDEX 9999 ĐỂ CÁC ĐIỂM TRÒN & HỌA TIẾT CUỘN CHÌM DƯỚI) */}
+        <div className="mobile-header-bar mobile-only" style={{ position: 'fixed', top: 0, left: 0, right: 0, width: '100%', height: 56, zIndex: 9999, backgroundColor: '#0b0f19', backdropFilter: 'blur(12px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button
               className="mobile-menu-toggle-btn hide-on-mobile"
