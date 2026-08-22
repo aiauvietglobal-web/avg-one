@@ -2891,10 +2891,11 @@ export default function App() {
           </div>
         </div>
 
-        {/* DESKTOP HEADER BAR */}
+        {/* DESKTOP HEADER BAR (CỐ ĐỊNH PINNED FIXED TOP 0 Z-INDEX 9999) */}
         <header className="desktop-only" style={{
-          height: 64, padding: '0 24px', backgroundColor: '#0d1017', borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 30
+          height: 64, padding: '0 24px', backgroundColor: '#0b0f19', borderBottom: '1px solid rgba(56, 189, 248, 0.25)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 9999,
+          backdropFilter: 'blur(12px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {/* 1. TÌM KIẾM CÓ GỢI Ý (SEARCH AUTO-COMPLETE & SUGGESTIONS) */}
@@ -3259,10 +3260,11 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* 2. QUICK HUB SELECTOR FILTER BAR FOR GLOBAL VIEW */}
+                  {/* 2. QUICK HUB SELECTOR FILTER BAR FOR GLOBAL VIEW (STICKY PINNED TOP 64 Z-INDEX 999) */}
                   <div className="orders-hub-selector" style={{
-                    backgroundColor: '#0f172a', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16,
-                    padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto'
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 16,
+                    padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10, overflowX: 'auto',
+                    position: 'sticky', top: 64, zIndex: 999, backdropFilter: 'blur(12px)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
                   }}>
                     <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }}>
                       <Filter style={{ width: 14, height: 14 }} /> Chuyển Sang Đầu Mối Độc Lập:
@@ -6913,8 +6915,11 @@ export default function App() {
           {activeTab === 'hr-management' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 840, margin: '0 auto', width: '100%', paddingBottom: 40 }}>
 
-              {/* 0. HEADER SUB-NAV SWITCHER BAR: 1. Quản lý nhân sự vs 2. Thời gian làm việc */}
-              <div style={{ display: 'flex', gap: 8, padding: 4, backgroundColor: 'rgba(15, 23, 42, 0.9)', borderRadius: 16, border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              {/* 0. HEADER SUB-NAV SWITCHER BAR (STICKY PINNED TOP 64 Z-INDEX 999) */}
+              <div style={{
+                display: 'flex', gap: 8, padding: 4, backgroundColor: 'rgba(15, 23, 42, 0.95)', borderRadius: 16, border: '1px solid rgba(255, 255, 255, 0.15)',
+                position: 'sticky', top: 64, zIndex: 999, backdropFilter: 'blur(12px)', boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+              }}>
                 <button
                   onClick={() => setHrSubTab('staff-list')}
                   style={{
