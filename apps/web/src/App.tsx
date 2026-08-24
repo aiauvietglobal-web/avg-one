@@ -2789,7 +2789,14 @@ export default function App() {
       {/* MAIN CONTENT CONTAINER */}
       <div className="main-content-area" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, backgroundColor: theme === 'light' ? '#f8fafc' : '#0b0e14' }}>
         {/* MOBILE HEADER BAR (CỐ ĐỊNH IMMOVABLE STICKY TOP 0 Z-INDEX 99999) */}
-        <div className="mobile-header-bar mobile-only" style={{ position: 'sticky', top: 0, zIndex: 99999, backgroundColor: '#0b0f19', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(56, 189, 248, 0.3)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.8)' }}>
+        <div className="mobile-header-bar mobile-only" style={{
+          position: 'sticky', top: 0, zIndex: 99999,
+          backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+          backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+          boxShadow: theme === 'light' ? '0 2px 10px rgba(0, 0, 0, 0.05)' : '0 4px 20px rgba(0, 0, 0, 0.8)',
+          padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button
               className="mobile-menu-toggle-btn"
@@ -2797,9 +2804,9 @@ export default function App() {
               style={{
                 padding: 8,
                 borderRadius: 8,
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255, 255, 255, 0.08)',
+                color: theme === 'light' ? '#0f172a' : '#ffffff',
+                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -2831,14 +2838,15 @@ export default function App() {
               }}
               style={{
                 padding: 8, borderRadius: 8,
-                backgroundColor: 'rgba(56, 189, 248, 0.2)',
-                color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)',
+                backgroundColor: theme === 'light' ? 'rgba(255, 87, 34, 0.12)' : 'rgba(56, 189, 248, 0.2)',
+                color: theme === 'light' ? '#ff5722' : '#38bdf8',
+                border: theme === 'light' ? '1px solid rgba(255, 87, 34, 0.3)' : '1px solid rgba(56, 189, 248, 0.4)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer'
               }}
               title="Quay về Giao diện Máy tính"
             >
-              <Monitor style={{ width: 16, height: 16, color: '#38bdf8' }} />
+              <Monitor style={{ width: 16, height: 16 }} />
             </button>
 
             {/* NÚT RESET / ĐỒNG BỘ HỆ THỐNG TRÊN MOBILE */}
@@ -2847,15 +2855,16 @@ export default function App() {
               disabled={isResetting}
               title="Reset hệ thống & Cập nhật bản Build mới nhất"
               style={{
-                padding: 7, borderRadius: 8, backgroundColor: '#161b26',
-                border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8',
+                padding: 7, borderRadius: 8,
+                backgroundColor: theme === 'light' ? '#f1f5f9' : '#161b26',
+                color: theme === 'light' ? '#0f172a' : '#38bdf8',
+                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.4)',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.18s'
               }}
             >
               <RefreshCw style={{ width: 15, height: 15, opacity: isResetting ? 0.5 : 1, transform: isResetting ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s' }} />
             </button>
-
 
             <button
               onClick={() => {
@@ -2877,12 +2886,15 @@ export default function App() {
             <button
               onClick={() => showToast('🔔 Bạn không có thông báo mới')}
               style={{
-                padding: 8, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.08)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.15)',
+                padding: 8, borderRadius: 8,
+                backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.08)',
+                color: theme === 'light' ? '#0f172a' : '#ffffff',
+                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.15)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', cursor: 'pointer'
               }}
               title="Thông Báo"
             >
-              <Bell style={{ width: 18, height: 18, color: '#38bdf8' }} />
+              <Bell style={{ width: 18, height: 18, color: theme === 'light' ? '#0f172a' : '#38bdf8' }} />
               <span style={{ position: 'absolute', top: 4, right: 4, width: 7, height: 7, borderRadius: '50%', backgroundColor: '#ff5722' }} />
             </button>
           </div>
