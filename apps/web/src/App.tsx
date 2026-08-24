@@ -1406,6 +1406,11 @@ export default function App() {
   const [isRichTextOpen, setIsRichTextOpen] = useState<boolean>(false);
   const [bannerGradientStyle, setBannerGradientStyle] = useState<'aurora' | 'ocean' | 'neon'>('aurora');
 
+  // Header Dropdown Menus state
+  const [isHeaderSystemOpen, setIsHeaderSystemOpen] = useState<boolean>(false);
+  const [isHeaderHROpen, setIsHeaderHROpen] = useState<boolean>(false);
+  const [isHeaderOrdersOpen, setIsHeaderOrdersOpen] = useState<boolean>(false);
+
   // Toggle or Revoke per-message reactions (Thả cảm xúc / Thu hồi cảm xúc)
   const handleToggleReaction = (msgId: string, emoji: string) => {
     setZaloConversations(prev => prev.map(conv => {
@@ -2083,21 +2088,20 @@ export default function App() {
         </div>
       )}
 
-      {/* SIDEBAR NAVIGATION */}
+      {/* SIDEBAR NAVIGATION (MOBILE DRAWER ONLY) */}
       <aside
         className={`sidebar-drawer ${isMobileMenuOpen ? 'is-open' : ''}`}
         style={{
-          width: isSidebarCollapsed ? 76 : 260,
-          backgroundColor: '#0d1017',
-          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-          display: 'flex',
+          width: 260,
+          backgroundColor: theme === 'light' ? '#ffffff' : '#0d1017',
+          borderRight: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.08)',
+          display: isMobileMenuOpen ? 'flex' : 'none',
           flexDirection: 'column',
-          position: 'sticky',
-          top: 0,
+          position: 'fixed',
+          top: 0, left: 0,
           height: '100vh',
-          zIndex: 40,
-          flexShrink: 0,
-          transition: 'width 0.2s'
+          zIndex: 9999,
+          flexShrink: 0
         }}
       >
         {/* LOGO BRAND */}
@@ -2896,66 +2900,25 @@ export default function App() {
           backdropFilter: 'blur(12px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {/* 1. TÌM KIẾM CÓ GỢI Ý (SEARCH AUTO-COMPLETE & SUGGESTIONS) */}
-            <div style={{ position: 'relative' }}>
-              <Search style={{ width: 15, height: 15, color: '#64748b', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
-              <input
-                type="text"
-                placeholder="Tìm kiếm đơn hàng, mã đơn, đầu mối..."
-                value={searchQuery}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: 280, backgroundColor: 'rgba(22, 27, 38, 0.9)', border: '1px solid rgba(56, 189, 248, 0.3)',
-                  borderRadius: 10, padding: '7px 12px 7px 36px', fontSize: '0.78rem', color: '#fff', outline: 'none'
+            {/* BRAND LOGO ON HEADER */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => setActiveTab('home')}>
+              <img
+                src={theme === 'light' ? logoDarkImg : logoLightImg}
+                alt="AVG ONE Logo"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  target.src = logoLightImg;
+                  if (theme === 'light') {
+                    target.style.filter = 'invert(0.85) hue-rotate(180deg)';
+                  }
                 }}
+                style={{ height: 32, objectFit: 'contain' }}
               />
-
-              {/* POP-OVER GỢI Ý TÌM KIẾM */}
-              {isSearchFocused && searchQuery.trim().length > 0 && (
-                <div style={{
-                  position: 'absolute', top: 44, left: 0, width: 340, backgroundColor: '#111827',
-                  border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 14, padding: 12,
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', flexDirection: 'column', gap: 8
-                }}>
-                  <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    🔍 Gợi ý tìm kiếm phù hợp:
-                  </div>
-
-                  {orders.filter(o => o.title.toLowerCase().includes(searchQuery.toLowerCase()) || o.orderCode.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 3).map(o => (
-                    <div
-                      key={o.id}
-                      onMouseDown={() => {
-                        setActiveTab('orders');
-                        setSearchQuery(o.orderCode);
-                      }}
-                      style={{ padding: '6px 10px', borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.04)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    >
-                      <span style={{ fontSize: '0.76rem', color: '#fff', fontWeight: 700 }}>📦 {o.orderCode} - {o.title.slice(0, 22)}...</span>
-                      <span style={{ fontSize: '0.64rem', color: '#38bdf8', fontWeight: 800 }}>{o.department}</span>
-                    </div>
-                  ))}
-
-                  {discussionEvents.filter(d => d.title.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 3).map(d => (
-                    <div
-                      key={d.id}
-                      onMouseDown={() => {
-                        setActiveTab('calendar-talk');
-                        setSearchQuery('');
-                      }}
-                      style={{ padding: '6px 10px', borderRadius: 8, backgroundColor: 'rgba(56, 189, 248, 0.08)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    >
-                      <span style={{ fontSize: '0.76rem', color: '#fff', fontWeight: 700 }}>🗓️ {d.title.slice(0, 24)}...</span>
-                      <span style={{ fontSize: '0.64rem', color: '#34d399', fontWeight: 800 }}>{d.date}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
-            {/* TOP HEADER NAVIGATION TASKBAR */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 12 }}>
+            {/* TOP HEADER NAVIGATION TASKBAR WITH SUB-FEATURE DROPDOWNS */}
+            <nav style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 8 }}>
+              {/* 1. TRANG CHỦ */}
               <button
                 onClick={() => setActiveTab('home')}
                 style={{
@@ -2969,6 +2932,7 @@ export default function App() {
                 <Home style={{ width: 14, height: 14 }} /> Trang chủ
               </button>
 
+              {/* 2. BẢNG TIN */}
               <button
                 onClick={() => setActiveTab('news')}
                 style={{
@@ -2982,6 +2946,7 @@ export default function App() {
                 <Newspaper style={{ width: 14, height: 14 }} /> Bảng tin
               </button>
 
+              {/* 3. LỊCH TRAO ĐỔI */}
               <button
                 onClick={() => setActiveTab('calendar-talk')}
                 style={{
@@ -2995,48 +2960,271 @@ export default function App() {
                 <CalendarIcon style={{ width: 14, height: 14 }} /> Lịch trao đổi
               </button>
 
-              <button
-                onClick={() => setActiveTab('orders')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                  backgroundColor: activeTab === 'orders' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                  color: activeTab === 'orders' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                  border: activeTab === 'orders' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <Package style={{ width: 14, height: 14 }} /> Đơn hàng
-              </button>
+              {/* 4. HỆ THỐNG DROPDOWN */}
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => {
+                    setIsHeaderSystemOpen(!isHeaderSystemOpen);
+                    setIsHeaderHROpen(false);
+                    setIsHeaderOrdersOpen(false);
+                  }}
+                  style={{
+                    padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                    backgroundColor: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                    color: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                    border: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  <BarChart3 style={{ width: 14, height: 14 }} /> Hệ thống <ChevronDown style={{ width: 13, height: 13, transform: isHeaderSystemOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                </button>
 
-              <button
-                onClick={() => setActiveTab('hr-management')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                  backgroundColor: activeTab === 'hr-management' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                  color: activeTab === 'hr-management' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                  border: activeTab === 'hr-management' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <Users style={{ width: 14, height: 14 }} /> Nhân sự
-              </button>
+                {isHeaderSystemOpen && (
+                  <div style={{
+                    position: 'absolute', top: 38, left: 0, width: 220,
+                    backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
+                    display: 'flex', flexDirection: 'column', gap: 3
+                  }}>
+                    <button
+                      onClick={() => { setActiveTab('system'); setIsHeaderSystemOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'system' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'system' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <Share2 style={{ width: 14, height: 14, color: '#38bdf8' }} /> 🌐 Cấu trúc hệ thống
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('system-annual-plan'); setIsHeaderSystemOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'system-annual-plan' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'system-annual-plan' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <Target style={{ width: 14, height: 14, color: '#38bdf8' }} /> 🎯 Kế hoạch năm
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('system-executive-message'); setIsHeaderSystemOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'system-executive-message' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'system-executive-message' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <Zap style={{ width: 14, height: 14, color: '#f59e0b' }} /> ⚡ Thông điệp điều hành
+                    </button>
+                  </div>
+                )}
+              </div>
 
-              <button
-                onClick={() => setActiveTab('system')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                  backgroundColor: activeTab === 'system' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                  color: activeTab === 'system' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                  border: activeTab === 'system' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <Building2 style={{ width: 14, height: 14 }} /> Hệ thống
-              </button>
+              {/* 5. NHÂN SỰ DROPDOWN */}
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => {
+                    setIsHeaderHROpen(!isHeaderHROpen);
+                    setIsHeaderSystemOpen(false);
+                    setIsHeaderOrdersOpen(false);
+                  }}
+                  style={{
+                    padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                    backgroundColor: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                    color: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                    border: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  <Users style={{ width: 14, height: 14 }} /> Nhân sự <ChevronDown style={{ width: 13, height: 13, transform: isHeaderHROpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                </button>
+
+                {isHeaderHROpen && (
+                  <div style={{
+                    position: 'absolute', top: 38, left: 0, width: 220,
+                    backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
+                    display: 'flex', flexDirection: 'column', gap: 3
+                  }}>
+                    <button
+                      onClick={() => { setActiveTab('hr-management'); setIsHeaderHROpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'hr-management' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'hr-management' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <UserCheck style={{ width: 14, height: 14, color: '#38bdf8' }} /> 👤 Quản lý nhân sự
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('hr-working-hours'); setIsHeaderHROpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'hr-working-hours' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'hr-working-hours' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <Clock style={{ width: 14, height: 14, color: '#10b981' }} /> ⏱️ Hành chính
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('hr-working-hours-overtime'); setIsHeaderHROpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'hr-working-hours-overtime' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'hr-working-hours-overtime' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <Hourglass style={{ width: 14, height: 14, color: '#f59e0b' }} /> ⌛ Ngoài giờ
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* 6. ĐƠN HÀNG DROPDOWN */}
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => {
+                    setIsHeaderOrdersOpen(!isHeaderOrdersOpen);
+                    setIsHeaderSystemOpen(false);
+                    setIsHeaderHROpen(false);
+                  }}
+                  style={{
+                    padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                    backgroundColor: (activeTab === 'orders' || activeTab.startsWith('orders-')) ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                    color: (activeTab === 'orders' || activeTab.startsWith('orders-')) ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                    border: (activeTab === 'orders' || activeTab.startsWith('orders-')) ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  <Package style={{ width: 14, height: 14 }} /> Đơn hàng <ChevronDown style={{ width: 13, height: 13, transform: isHeaderOrdersOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                </button>
+
+                {isHeaderOrdersOpen && (
+                  <div style={{
+                    position: 'absolute', top: 38, left: 0, width: 220,
+                    backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                    borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
+                    display: 'flex', flexDirection: 'column', gap: 3
+                  }}>
+                    <button
+                      onClick={() => { setActiveTab('orders'); setIsHeaderOrdersOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'orders' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'orders' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <Package style={{ width: 14, height: 14, color: '#38bdf8' }} /> 📦 Tất cả đơn hàng
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('orders-hub-0'); setIsHeaderOrdersOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'orders-hub-0' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'orders-hub-0' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <MapPin style={{ width: 14, height: 14, color: '#10b981' }} /> 📌 Đầu mối 0
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('orders-hub-8'); setIsHeaderOrdersOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'orders-hub-8' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'orders-hub-8' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <MapPin style={{ width: 14, height: 14, color: '#f59e0b' }} /> 📌 Đầu mối 8
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('orders-hub-9'); setIsHeaderOrdersOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'orders-hub-9' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'orders-hub-9' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <MapPin style={{ width: 14, height: 14, color: '#ef4444' }} /> 📌 Đầu mối 9
+                    </button>
+                    <button
+                      onClick={() => { setActiveTab('orders-hub-2.2'); setIsHeaderOrdersOpen(false); }}
+                      style={{
+                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                        backgroundColor: activeTab === 'orders-hub-2.2' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                        color: activeTab === 'orders-hub-2.2' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                      }}
+                    >
+                      <MapPin style={{ width: 14, height: 14, color: '#a855f7' }} /> 📌 Đầu mối 2.2
+                    </button>
+                  </div>
+                )}
+              </div>
             </nav>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            {/* 1. TÌM KIẾM CÓ GỢI Ý (SEARCH AUTO-COMPLETE) */}
+            <div style={{ position: 'relative' }}>
+              <Search style={{ width: 15, height: 15, color: '#64748b', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+              <input
+                type="text"
+                placeholder="Tìm kiếm đơn hàng, mã đơn..."
+                value={searchQuery}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: 220, backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(22, 27, 38, 0.9)',
+                  border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                  borderRadius: 10, padding: '6px 12px 6px 34px', fontSize: '0.76rem',
+                  color: theme === 'light' ? '#0f172a' : '#fff', outline: 'none'
+                }}
+              />
+
+              {/* POP-OVER GỢI Ý TÌM KIẾM */}
+              {isSearchFocused && searchQuery.trim().length > 0 && (
+                <div style={{
+                  position: 'absolute', top: 44, right: 0, width: 320,
+                  backgroundColor: theme === 'light' ? '#ffffff' : '#111827',
+                  border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.35)',
+                  borderRadius: 14, padding: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.2)', zIndex: 100,
+                  display: 'flex', flexDirection: 'column', gap: 8
+                }}>
+                  <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    🔍 Gợi ý tìm kiếm:
+                  </div>
+
+                  {orders.filter(o => o.title.toLowerCase().includes(searchQuery.toLowerCase()) || o.orderCode.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 3).map(o => (
+                    <div
+                      key={o.id}
+                      onMouseDown={() => {
+                        setActiveTab('orders');
+                        setSearchQuery(o.orderCode);
+                      }}
+                      style={{ padding: '6px 10px', borderRadius: 8, backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.04)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                    >
+                      <span style={{ fontSize: '0.76rem', color: theme === 'light' ? '#0f172a' : '#fff', fontWeight: 700 }}>📦 {o.orderCode} - {o.title.slice(0, 20)}...</span>
+                      <span style={{ fontSize: '0.64rem', color: '#38bdf8', fontWeight: 800 }}>{o.department}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* 2. NÚT RESET HỆ THỐNG (CHỈ ĐỂ ICON) */}
             <button
               onClick={handleResetSystem}
