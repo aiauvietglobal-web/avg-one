@@ -996,7 +996,15 @@ const INITIAL_ZALO_CONVERSATIONS: ZaloConversation[] = [
 ];
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('avg_theme') as 'dark' | 'light') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('avg_theme', theme);
+  }, [theme]);
+
   const [activeTab, setActiveTab] = useState<string>('calendar-talk');
 
   const [discussionEvents, setDiscussionEvents] = useState<DiscussionEvent[]>([
@@ -2045,12 +2053,13 @@ export default function App() {
   return (
     <div
       suppressHydrationWarning
+      data-theme={theme}
       className={`app-main-layout ${isMobileMode ? 'force-mobile-mode' : ''}`}
       style={{
         display: 'flex',
         minHeight: '100vh',
-        backgroundColor: '#0b0e14',
-        color: '#f8fafc',
+        backgroundColor: theme === 'light' ? '#f8fafc' : '#0b0e14',
+        color: theme === 'light' ? '#0f172a' : '#f8fafc',
         fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif"
       }}
     >
@@ -2117,27 +2126,30 @@ export default function App() {
 
         {/* MENU ITEMS */}
         <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', fontSize: '0.8rem', fontWeight: 700 }}>
-          {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (ẨN Ở CHẾ ĐỘ MOBILE) */}
+          {/* NÚT ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN SIDEBAR */}
           <button
             type="button"
-            className="hide-on-mobile"
             onClick={() => {
-              setIsMobileMode(false);
-              setIsMobileMenuOpen(false);
-              showToast('💻 Đã trở về Giao diện Máy tính (Desktop)');
+              const nextTheme = theme === 'dark' ? 'light' : 'dark';
+              setTheme(nextTheme);
+              showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
             }}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 12,
-              backgroundColor: 'rgba(56, 189, 248, 0.18)',
-              color: '#38bdf8',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
+              backgroundColor: theme === 'light' ? 'rgba(255, 87, 34, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+              color: theme === 'light' ? '#ff5722' : '#f59e0b',
+              border: theme === 'light' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)',
               cursor: 'pointer', textAlign: 'left', fontWeight: 800, fontSize: '0.8rem',
-              marginBottom: 8, transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+              marginBottom: 10, transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
-            title="Quay lại Giao diện Máy tính"
+            title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
           >
-            <Monitor style={{ width: 17, height: 17, color: '#38bdf8' }} />
-            {!isSidebarCollapsed && <span style={{ fontWeight: 800, letterSpacing: '0.03em' }}>💻 VỀ GIAO DIỆN MÁY TÍNH</span>}
+            {theme === 'dark' ? <Sun style={{ width: 17, height: 17, color: '#f59e0b' }} /> : <Moon style={{ width: 17, height: 17, color: '#0284c7' }} />}
+            {!isSidebarCollapsed && (
+              <span style={{ fontWeight: 800, letterSpacing: '0.03em' }}>
+                {theme === 'dark' ? '☀️ GIAO DIỆN SÁNG' : '🌙 GIAO DIỆN TỐI'}
+              </span>
+            )}
           </button>
 
           {/* 1. TRANG CHỦ */}
@@ -2790,12 +2802,12 @@ export default function App() {
       </aside>
 
       {/* MAIN CONTENT CONTAINER */}
-      <div className="main-content-area" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, backgroundColor: '#0b0e14' }}>
+      <div className="main-content-area" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, backgroundColor: theme === 'light' ? '#f8fafc' : '#0b0e14' }}>
         {/* MOBILE HEADER BAR (CỐ ĐỊNH IMMOVABLE STICKY TOP 0 Z-INDEX 99999) */}
         <div className="mobile-header-bar mobile-only" style={{ position: 'sticky', top: 0, zIndex: 99999, backgroundColor: '#0b0f19', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(56, 189, 248, 0.3)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.8)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button
-              className="mobile-menu-toggle-btn hide-on-mobile"
+              className="mobile-menu-toggle-btn"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               style={{
                 padding: 8,
@@ -2816,26 +2828,24 @@ export default function App() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (ẨN Ở CHẾ ĐỘ MOBILE) */}
+            {/* NÚT QUAY LẠI GIAO DIỆN MÁY TÍNH (CHỈ ICON) */}
             <button
-              className="hide-on-mobile"
+              className="desktop-mode-return-btn"
               onClick={() => {
                 setIsMobileMode(false);
                 setIsMobileMenuOpen(false);
                 showToast('💻 Đã trở về Giao diện Máy tính (Desktop)');
               }}
               style={{
-                padding: '6px 12px', borderRadius: 8,
+                padding: 8, borderRadius: 8,
                 backgroundColor: 'rgba(56, 189, 248, 0.2)',
                 color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)',
-                fontSize: '0.74rem', fontWeight: 800,
-                display: 'flex', alignItems: 'center', gap: 6,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer'
               }}
-              title="Quay lại Giao diện Máy tính"
+              title="Quay về Giao diện Máy tính"
             >
-              <Monitor style={{ width: 14, height: 14, color: '#38bdf8' }} />
-              <span>Máy tính</span>
+              <Monitor style={{ width: 16, height: 16, color: '#38bdf8' }} />
             </button>
 
             {/* NÚT RESET / ĐỒNG BỘ HỆ THỐNG TRÊN MOBILE */}
@@ -2874,14 +2884,22 @@ export default function App() {
             </button>
 
             <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={() => {
+                const nextTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(nextTheme);
+                showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
+              }}
               style={{
-                padding: 8, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.08)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+                padding: '6px 10px', borderRadius: 8,
+                backgroundColor: theme === 'light' ? '#ffffff' : 'rgba(255,255,255,0.1)',
+                color: theme === 'light' ? '#ff5722' : '#ffffff',
+                border: theme === 'light' ? '1px solid #ff5722' : '1px solid rgba(255,255,255,0.2)',
+                display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.74rem', fontWeight: 800
               }}
               title="Đổi Giao Diện Sáng / Tối"
             >
-              {theme === 'dark' ? <Sun style={{ width: 18, height: 18, color: '#f59e0b' }} /> : <Moon style={{ width: 18, height: 18, color: '#38bdf8' }} />}
+              {theme === 'dark' ? <Sun style={{ width: 15, height: 15, color: '#f59e0b' }} /> : <Moon style={{ width: 15, height: 15, color: '#0284c7' }} />}
+              <span>{theme === 'dark' ? 'Sáng' : 'Tối'}</span>
             </button>
             <button
               onClick={() => showToast('🔔 Bạn không có thông báo mới')}
@@ -2999,25 +3017,45 @@ export default function App() {
               <MessageSquare style={{ width: 15, height: 15 }} /> Chat
             </button>
 
-            {/* 3.5. NÚT CHUYỂN ĐỔI CHẾ ĐỘ XEM MOBILE (PREVIEW DIRECTLY ON DESKTOP) */}
+            {/* 3.2. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN DESKTOP */}
+            <button
+              onClick={() => {
+                const nextTheme = theme === 'dark' ? 'light' : 'dark';
+                setTheme(nextTheme);
+                showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
+              }}
+              style={{
+                padding: '7px 14px', borderRadius: 10,
+                backgroundColor: theme === 'light' ? '#ffffff' : 'rgba(255, 87, 34, 0.2)',
+                color: theme === 'light' ? '#ff5722' : '#ff7043',
+                border: theme === 'light' ? '1px solid #ff5722' : '1px solid rgba(255, 87, 34, 0.45)',
+                fontSize: '0.78rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer',
+                transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+              }}
+              title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
+            >
+              {theme === 'dark' ? <Sun style={{ width: 16, height: 16, color: '#f59e0b' }} /> : <Moon style={{ width: 16, height: 16, color: '#0284c7' }} />}
+              <span>{theme === 'dark' ? '☀️ GIAO DIỆN SÁNG' : '🌙 GIAO DIỆN TỐI'}</span>
+            </button>
+
+            {/* 3.5. NÚT CHUYỂN ĐỔI CHẾ ĐỘ XEM MOBILE / DESKTOP (CHỈ ICON) */}
             <button
               onClick={() => {
                 const nextMode = !isMobileMode;
                 setIsMobileMode(nextMode);
                 showToast(nextMode ? '📱 Đã kích hoạt Giao diện Mobile Di động' : '💻 Đã về Giao diện Desktop');
               }}
-              title="Chuyển đổi trực tiếp giữa Giao diện Mobile và Desktop"
+              title={isMobileMode ? 'Quay về Giao diện Máy tính (Desktop)' : 'Chuyển sang Giao diện Mobile (Di động)'}
               style={{
-                padding: '7px 14px', borderRadius: 10,
+                padding: 8, borderRadius: 10,
                 backgroundColor: isMobileMode ? 'rgba(255, 87, 34, 0.25)' : 'rgba(56, 189, 248, 0.15)',
                 color: isMobileMode ? '#ff7043' : '#38bdf8',
                 border: isMobileMode ? '1px solid #ff7043' : '1px solid rgba(56, 189, 248, 0.4)',
-                fontSize: '0.78rem', fontWeight: 800,
-                display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s'
               }}
             >
-              <Phone style={{ width: 15, height: 15 }} />
-              <span>{isMobileMode ? '💻 GIỜ LÀ DESKTOP' : '📱 GIAO DIỆN MOBILE'}</span>
+              {isMobileMode ? <Monitor style={{ width: 16, height: 16 }} /> : <Phone style={{ width: 16, height: 16 }} />}
             </button>
 
             {/* 4. THÔNG BÁO LỊCH TRAO ĐỔI & HỆ THỐNG (ĐỒNG BỘ MÀU VỚI HỘP CHAT) */}
