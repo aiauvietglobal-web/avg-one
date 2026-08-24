@@ -2105,6 +2105,13 @@ export default function App() {
           <img
             src={theme === 'light' ? logoDarkImg : logoLightImg}
             alt="AVG ONE Logo"
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.src = logoLightImg;
+              if (theme === 'light') {
+                target.style.filter = 'invert(0.85) hue-rotate(180deg)';
+              }
+            }}
             style={{
               height: isSidebarCollapsed ? 28 : 36,
               maxWidth: '100%',
@@ -2800,7 +2807,18 @@ export default function App() {
             >
               {isMobileMenuOpen ? <X style={{ width: 20, height: 20 }} /> : <Menu style={{ width: 20, height: 20 }} />}
             </button>
-            <img src={theme === 'light' ? logoDarkImg : logoLightImg} alt="AVG ONE Logo" style={{ height: 26, objectFit: 'contain', marginLeft: 10 }} />
+            <img
+              src={theme === 'light' ? logoDarkImg : logoLightImg}
+              alt="AVG ONE Logo"
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.src = logoLightImg;
+                if (theme === 'light') {
+                  target.style.filter = 'invert(0.85) hue-rotate(180deg)';
+                }
+              }}
+              style={{ height: 26, objectFit: 'contain', marginLeft: 10 }}
+            />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
