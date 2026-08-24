@@ -2916,8 +2916,8 @@ export default function App() {
               />
             </div>
 
-            {/* TOP HEADER NAVIGATION TASKBAR WITH SUB-FEATURE DROPDOWNS */}
-            <nav style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 8 }}>
+            {/* TOP HEADER NAVIGATION TASKBAR WITH SUB-FEATURE DROPDOWNS (CĂN GIỮA) */}
+            <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, flex: 1, margin: '0 24px' }}>
               {/* 1. TRANG CHỦ */}
               <button
                 onClick={() => setActiveTab('home')}
@@ -3376,8 +3376,8 @@ export default function App() {
           </div>
         </header>
 
-        {/* WORKSPACE PAGE BODY */}
-        <main style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1440, margin: '0 auto', width: '100%' }}>
+        {/* WORKSPACE PAGE BODY (THU HẸP BỐ CỤC 2 BÊN) */}
+        <main style={{ flex: 1, padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1280, margin: '0 auto', width: '100%' }}>
           {activeTab === 'orders' && (
             <div className="orders-main-container" style={{ display: 'flex', flexDirection: 'column', gap: 24, paddingBottom: 40 }}>
               
