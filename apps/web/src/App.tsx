@@ -2857,25 +2857,6 @@ export default function App() {
               <RefreshCw style={{ width: 15, height: 15, opacity: isResetting ? 0.5 : 1, transform: isResetting ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s' }} />
             </button>
 
-            {/* NÚT CHAT TRÊN MOBILE */}
-            <button
-              onClick={() => {
-                if ((!activeConvId || !zaloConversations.some(c => c.id === activeConvId)) && zaloConversations.length > 0) {
-                  setActiveConvId(zaloConversations[0].id);
-                }
-                setIsChatOpen(!isChatOpen);
-              }}
-              title="Mở cửa sổ Chat AVG One"
-              style={{
-                padding: '6px 12px', borderRadius: 8,
-                backgroundColor: isChatOpen ? '#0284c7' : 'rgba(56, 189, 248, 0.15)',
-                color: isChatOpen ? '#ffffff' : '#38bdf8',
-                border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '0.74rem', fontWeight: 800,
-                display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
-              }}
-            >
-              <MessageSquare style={{ width: 14, height: 14 }} /> Chat
-            </button>
 
             <button
               onClick={() => {
@@ -2972,6 +2953,87 @@ export default function App() {
                 </div>
               )}
             </div>
+
+            {/* TOP HEADER NAVIGATION TASKBAR */}
+            <nav style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 12 }}>
+              <button
+                onClick={() => setActiveTab('home')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                  backgroundColor: activeTab === 'home' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                  color: activeTab === 'home' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                  border: activeTab === 'home' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <Home style={{ width: 14, height: 14 }} /> Trang chủ
+              </button>
+
+              <button
+                onClick={() => setActiveTab('news')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                  backgroundColor: activeTab === 'news' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                  color: activeTab === 'news' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                  border: activeTab === 'news' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <Newspaper style={{ width: 14, height: 14 }} /> Bảng tin
+              </button>
+
+              <button
+                onClick={() => setActiveTab('calendar-talk')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                  backgroundColor: activeTab === 'calendar-talk' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                  color: activeTab === 'calendar-talk' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                  border: activeTab === 'calendar-talk' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <CalendarIcon style={{ width: 14, height: 14 }} /> Lịch trao đổi
+              </button>
+
+              <button
+                onClick={() => setActiveTab('orders')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                  backgroundColor: activeTab === 'orders' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                  color: activeTab === 'orders' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                  border: activeTab === 'orders' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <Package style={{ width: 14, height: 14 }} /> Đơn hàng
+              </button>
+
+              <button
+                onClick={() => setActiveTab('hr-management')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                  backgroundColor: activeTab === 'hr-management' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                  color: activeTab === 'hr-management' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                  border: activeTab === 'hr-management' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <Users style={{ width: 14, height: 14 }} /> Nhân sự
+              </button>
+
+              <button
+                onClick={() => setActiveTab('system')}
+                style={{
+                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                  backgroundColor: activeTab === 'system' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                  color: activeTab === 'system' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                  border: activeTab === 'system' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <Building2 style={{ width: 14, height: 14 }} /> Hệ thống
+              </button>
+            </nav>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -2988,26 +3050,6 @@ export default function App() {
               }}
             >
               <RefreshCw style={{ width: 16, height: 16, opacity: isResetting ? 0.5 : 1, transform: isResetting ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s' }} />
-            </button>
-
-            {/* 3. TÍNH NĂNG CHAT */}
-            <button
-              onClick={() => {
-                if ((!activeConvId || !zaloConversations.some(c => c.id === activeConvId)) && zaloConversations.length > 0) {
-                  setActiveConvId(zaloConversations[0].id);
-                }
-                setIsChatOpen(!isChatOpen);
-              }}
-              title="Mở cửa sổ Chat AVG One"
-              style={{
-                padding: '7px 14px', borderRadius: 10,
-                backgroundColor: isChatOpen ? '#0284c7' : 'rgba(56, 189, 248, 0.15)',
-                color: isChatOpen ? '#ffffff' : '#38bdf8',
-                border: '1px solid rgba(56, 189, 248, 0.4)', fontSize: '0.78rem', fontWeight: 800,
-                display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-              }}
-            >
-              <MessageSquare style={{ width: 15, height: 15 }} /> Chat
             </button>
 
             {/* 3.2. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN DESKTOP (CHỈ ICON) */}
@@ -9338,6 +9380,63 @@ export default function App() {
           <span>Menu</span>
         </button>
       </nav>
+
+      {/* FLOATING CHAT BUBBLE WIDGET (BOTTOM-RIGHT) */}
+      <div
+        className="floating-chat-bubble-container"
+        style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          zIndex: 99999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            if ((!activeConvId || !zaloConversations.some(c => c.id === activeConvId)) && zaloConversations.length > 0) {
+              setActiveConvId(zaloConversations[0].id);
+            }
+            setIsChatOpen(!isChatOpen);
+          }}
+          title={isChatOpen ? "Đóng cửa sổ Chat AVG One" : "Mở cửa sổ Chat AVG One"}
+          style={{
+            width: 58,
+            height: 58,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #ff5722, #ea580c)',
+            color: '#ffffff',
+            border: '2px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: '0 8px 30px rgba(255, 87, 34, 0.5), 0 4px 14px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            position: 'relative',
+            transition: 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}
+        >
+          {isChatOpen ? <X style={{ width: 26, height: 26 }} /> : <MessageSquare style={{ width: 26, height: 26 }} />}
+          {!isChatOpen && (
+            <span
+              style={{
+                position: 'absolute',
+                top: 2,
+                right: 2,
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                backgroundColor: '#10b981',
+                border: '2px solid #ffffff',
+                boxShadow: '0 0 8px #10b981'
+              }}
+            />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
