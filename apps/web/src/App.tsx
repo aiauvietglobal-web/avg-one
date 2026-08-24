@@ -1577,16 +1577,28 @@ export default function App() {
   const handleResetSystem = async () => {
     try {
       setIsResetting(true);
-      showToast('🔄 Đang Reset hệ thống và cập nhật bản Build mới nhất...');
+      showToast('🔄 Đang Reset hệ thống và tải bản Build mới nhất...');
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+      }
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        for (const key of keys) {
+          await caches.delete(key);
+        }
+      }
       await handleSyncGoogleSheet(false);
       setTimeout(() => {
-        showToast('✅ Đã Reset hệ thống và cập nhật thành công bản Build v1.0.4!');
+        showToast('✅ Đã Reset hệ thống và cập nhật bản Build v1.0.5!');
         setIsResetting(false);
         window.location.reload();
-      }, 1000);
+      }, 800);
     } catch (err) {
       setIsResetting(false);
-      showToast('⚠️ Reset hoàn tất!');
+      window.location.reload();
     }
   };
 
