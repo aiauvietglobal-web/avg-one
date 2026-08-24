@@ -474,7 +474,7 @@ button:active {
 
 .force-mobile-mode .main-content-area {
   overflow: visible !important;
-  padding-top: 56px !important;
+  padding-top: 0 !important;
   padding-bottom: 84px !important;
 }
 
@@ -954,13 +954,14 @@ button:active {
 
 .force-mobile-mode .main-content-area {
   overflow: visible !important;
-  padding-top: 56px !important;
+  padding-top: 0 !important;
   padding-bottom: 84px !important;
 }
 
-.force-mobile-mode [style*="position: sticky"],
-.force-mobile-mode [style*="position:sticky"] {
-  top: 56px !important;
+.force-mobile-mode .mobile-header-bar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 99999 !important;
 }
 
 .force-mobile-mode .main-content-area main {
