@@ -404,6 +404,12 @@ button:active {
   display: flex !important;
 }
 
+header.desktop-only {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
 /* Force Mobile Mode Class (Triggered via toggle button or viewport) */
 .force-mobile-mode .mobile-only {
   display: flex !important;

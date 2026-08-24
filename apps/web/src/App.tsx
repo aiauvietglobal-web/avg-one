@@ -2912,9 +2912,10 @@ export default function App() {
           </div>
         </div>
 
-        {/* DESKTOP DUAL-HEADER BAR (CẤU TRÚC 2 TẦNG: TẦNG TRÊN LOGO & CÔNG CỤ + TẦNG DƯỚI ĐẦU MỤC CĂN GIỮA) */}
+        {/* DESKTOP DUAL-HEADER BAR (CẤU TRÚC 2 TẦNG XẮP XẾP THEO CHIỀU DỌC: TẦNG TRÊN LOGO & CÔNG CỤ + TẦNG DƯỚI ĐẦU MỤC CĂN GIỮA) */}
         <header className="desktop-only" style={{
           position: 'sticky', top: 0, zIndex: 9999,
+          display: 'flex', flexDirection: 'column', width: '100%',
           backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
           borderBottom: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.25)',
           backdropFilter: 'blur(16px)', boxShadow: theme === 'light' ? '0 2px 12px rgba(0,0,0,0.06)' : '0 4px 24px rgba(0, 0, 0, 0.7)'
