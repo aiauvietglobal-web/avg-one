@@ -2912,12 +2912,17 @@ export default function App() {
           </div>
         </div>
 
-        {/* DESKTOP HEADER BAR (CỐ ĐỊNH PINNED FIXED TOP 0 Z-INDEX 9999) */}
+        {/* DESKTOP HEADER BAR (THU HẸP BỐ CỤC THEO NỘI DUNG CHÍNH) */}
         <header className="desktop-only" style={{
-          height: 64, padding: '0 24px', backgroundColor: '#0b0f19', borderBottom: '1px solid rgba(56, 189, 248, 0.25)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 9999,
-          backdropFilter: 'blur(12px)', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)'
+          height: 64, backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+          borderBottom: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.25)',
+          position: 'sticky', top: 0, zIndex: 9999,
+          backdropFilter: 'blur(12px)', boxShadow: theme === 'light' ? '0 2px 10px rgba(0,0,0,0.05)' : '0 4px 20px rgba(0, 0, 0, 0.6)'
         }}>
+          <div style={{
+            maxWidth: 1280, margin: '0 auto', width: '100%', height: '100%',
+            padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+          }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {/* BRAND LOGO ON HEADER */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => setActiveTab('home')}>
@@ -3390,7 +3395,8 @@ export default function App() {
               <LogIn style={{ width: 15, height: 15 }} /> Đăng Nhập SSO
             </button>
           </div>
-        </header>
+        </div>
+      </header>
 
         {/* WORKSPACE PAGE BODY (THU HẸP BỐ CỤC 2 BÊN) */}
         <main style={{ flex: 1, padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1280, margin: '0 auto', width: '100%' }}>
