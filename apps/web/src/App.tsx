@@ -2912,491 +2912,508 @@ export default function App() {
           </div>
         </div>
 
-        {/* DESKTOP HEADER BAR (THU HẸP BỐ CỤC THEO NỘI DUNG CHÍNH) */}
+        {/* DESKTOP DUAL-HEADER BAR (CẤU TRÚC 2 TẦNG: TẦNG TRÊN LOGO & CÔNG CỤ + TẦNG DƯỚI ĐẦU MỤC CĂN GIỮA) */}
         <header className="desktop-only" style={{
-          height: 64, backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
-          borderBottom: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.25)',
           position: 'sticky', top: 0, zIndex: 9999,
-          backdropFilter: 'blur(12px)', boxShadow: theme === 'light' ? '0 2px 10px rgba(0,0,0,0.05)' : '0 4px 20px rgba(0, 0, 0, 0.6)'
+          backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+          borderBottom: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.25)',
+          backdropFilter: 'blur(16px)', boxShadow: theme === 'light' ? '0 2px 12px rgba(0,0,0,0.06)' : '0 4px 24px rgba(0, 0, 0, 0.7)'
         }}>
+          {/* TẦNG 1: LOGO THƯƠNG HIỆU VÀ THANH TÌM KIẾM, NÚT CÔNG CỤ (UPPER TIER - HEIGHT 50PX) */}
           <div style={{
-            maxWidth: 1280, margin: '0 auto', width: '100%', height: '100%',
-            padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+            borderBottom: theme === 'light' ? '1px solid #f1f5f9' : '1px solid rgba(255, 255, 255, 0.08)'
           }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {/* BRAND LOGO ON HEADER */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => setActiveTab('home')}>
-              <img
-                src={theme === 'light' ? logoDarkImg : logoLightImg}
-                alt="AVG ONE Logo"
-                onError={(e) => {
-                  e.currentTarget.src = logoLightImg;
-                  e.currentTarget.style.filter = 'none';
-                }}
-                style={{ height: 32, objectFit: 'contain', filter: 'none' }}
-              />
-            </div>
-
-            {/* TOP HEADER NAVIGATION TASKBAR WITH SUB-FEATURE DROPDOWNS (CĂN GIỮA) */}
-            <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, flex: 1, margin: '0 24px' }}>
-              {/* 1. TRANG CHỦ */}
-              <button
-                onClick={() => setActiveTab('home')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                  backgroundColor: activeTab === 'home' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                  color: activeTab === 'home' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                  border: activeTab === 'home' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <Home style={{ width: 14, height: 14 }} /> Trang chủ
-              </button>
-
-              {/* 2. BẢNG TIN */}
-              <button
-                onClick={() => setActiveTab('news')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                  backgroundColor: activeTab === 'news' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                  color: activeTab === 'news' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                  border: activeTab === 'news' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <Newspaper style={{ width: 14, height: 14 }} /> Bảng tin
-              </button>
-
-              {/* 3. LỊCH TRAO ĐỔI */}
-              <button
-                onClick={() => setActiveTab('calendar-talk')}
-                style={{
-                  padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                  backgroundColor: activeTab === 'calendar-talk' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                  color: activeTab === 'calendar-talk' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                  border: activeTab === 'calendar-talk' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <CalendarIcon style={{ width: 14, height: 14 }} /> Lịch trao đổi
-              </button>
-
-              {/* 4. HỆ THỐNG DROPDOWN */}
-              <div style={{ position: 'relative' }}>
-                <button
-                  onClick={() => {
-                    setIsHeaderSystemOpen(!isHeaderSystemOpen);
-                    setIsHeaderHROpen(false);
-                    setIsHeaderOrdersOpen(false);
-                  }}
-                  style={{
-                    padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                    backgroundColor: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                    color: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                    border: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                    display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
-                  }}
-                >
-                  <BarChart3 style={{ width: 14, height: 14 }} /> Hệ thống <ChevronDown style={{ width: 13, height: 13, transform: isHeaderSystemOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                </button>
-
-                {isHeaderSystemOpen && (
-                  <div style={{
-                    position: 'absolute', top: 38, left: 0, width: 220,
-                    backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
-                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
-                    borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
-                    display: 'flex', flexDirection: 'column', gap: 3
-                  }}>
-                    <button
-                      onClick={() => { setActiveTab('system'); setIsHeaderSystemOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'system' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'system' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Share2 style={{ width: 14, height: 14, color: '#38bdf8' }} /> 🌐 Cấu trúc hệ thống
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('system-annual-plan'); setIsHeaderSystemOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'system-annual-plan' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'system-annual-plan' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Target style={{ width: 14, height: 14, color: '#38bdf8' }} /> 🎯 Kế hoạch năm
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('system-executive-message'); setIsHeaderSystemOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'system-executive-message' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'system-executive-message' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Zap style={{ width: 14, height: 14, color: '#f59e0b' }} /> ⚡ Thông điệp điều hành
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* 5. NHÂN SỰ DROPDOWN */}
-              <div style={{ position: 'relative' }}>
-                <button
-                  onClick={() => {
-                    setIsHeaderHROpen(!isHeaderHROpen);
-                    setIsHeaderSystemOpen(false);
-                    setIsHeaderOrdersOpen(false);
-                  }}
-                  style={{
-                    padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                    backgroundColor: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                    color: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                    border: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                    display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
-                  }}
-                >
-                  <Users style={{ width: 14, height: 14 }} /> Nhân sự <ChevronDown style={{ width: 13, height: 13, transform: isHeaderHROpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                </button>
-
-                {isHeaderHROpen && (
-                  <div style={{
-                    position: 'absolute', top: 38, left: 0, width: 220,
-                    backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
-                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
-                    borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
-                    display: 'flex', flexDirection: 'column', gap: 3
-                  }}>
-                    <button
-                      onClick={() => { setActiveTab('hr-management'); setIsHeaderHROpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'hr-management' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'hr-management' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <UserCheck style={{ width: 14, height: 14, color: '#38bdf8' }} /> 👤 Quản lý nhân sự
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('hr-working-hours'); setIsHeaderHROpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'hr-working-hours' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'hr-working-hours' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Clock style={{ width: 14, height: 14, color: '#10b981' }} /> ⏱️ Hành chính
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('hr-working-hours-overtime'); setIsHeaderHROpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'hr-working-hours-overtime' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'hr-working-hours-overtime' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Hourglass style={{ width: 14, height: 14, color: '#f59e0b' }} /> ⌛ Ngoài giờ
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* 6. ĐƠN HÀNG DROPDOWN */}
-              <div style={{ position: 'relative' }}>
-                <button
-                  onClick={() => {
-                    setIsHeaderOrdersOpen(!isHeaderOrdersOpen);
-                    setIsHeaderSystemOpen(false);
-                    setIsHeaderHROpen(false);
-                  }}
-                  style={{
-                    padding: '6px 12px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
-                    backgroundColor: (activeTab === 'orders' || activeTab.startsWith('orders-')) ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                    color: (activeTab === 'orders' || activeTab.startsWith('orders-')) ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
-                    border: (activeTab === 'orders' || activeTab.startsWith('orders-')) ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
-                    display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
-                  }}
-                >
-                  <Package style={{ width: 14, height: 14 }} /> Đơn hàng <ChevronDown style={{ width: 13, height: 13, transform: isHeaderOrdersOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                </button>
-
-                {isHeaderOrdersOpen && (
-                  <div style={{
-                    position: 'absolute', top: 38, left: 0, width: 220,
-                    backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
-                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
-                    borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
-                    display: 'flex', flexDirection: 'column', gap: 3
-                  }}>
-                    <button
-                      onClick={() => { setActiveTab('orders'); setIsHeaderOrdersOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'orders' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'orders' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <Package style={{ width: 14, height: 14, color: '#38bdf8' }} /> 📦 Tất cả đơn hàng
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('orders-hub-0'); setIsHeaderOrdersOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'orders-hub-0' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'orders-hub-0' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <MapPin style={{ width: 14, height: 14, color: '#10b981' }} /> 📌 Đầu mối 0
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('orders-hub-8'); setIsHeaderOrdersOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'orders-hub-8' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'orders-hub-8' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <MapPin style={{ width: 14, height: 14, color: '#f59e0b' }} /> 📌 Đầu mối 8
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('orders-hub-9'); setIsHeaderOrdersOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'orders-hub-9' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'orders-hub-9' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <MapPin style={{ width: 14, height: 14, color: '#ef4444' }} /> 📌 Đầu mối 9
-                    </button>
-                    <button
-                      onClick={() => { setActiveTab('orders-hub-2.2'); setIsHeaderOrdersOpen(false); }}
-                      style={{
-                        padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
-                        backgroundColor: activeTab === 'orders-hub-2.2' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
-                        color: activeTab === 'orders-hub-2.2' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
-                        fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
-                      }}
-                    >
-                      <MapPin style={{ width: 14, height: 14, color: '#a855f7' }} /> 📌 Đầu mối 2.2
-                    </button>
-                  </div>
-                )}
-              </div>
-            </nav>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {/* 1. TÌM KIẾM CÓ GỢI Ý (SEARCH AUTO-COMPLETE) */}
-            <div style={{ position: 'relative' }}>
-              <Search style={{ width: 15, height: 15, color: '#64748b', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
-              <input
-                type="text"
-                placeholder="Tìm kiếm đơn hàng, mã đơn..."
-                value={searchQuery}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: 220, backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(22, 27, 38, 0.9)',
-                  border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
-                  borderRadius: 10, padding: '6px 12px 6px 34px', fontSize: '0.76rem',
-                  color: theme === 'light' ? '#0f172a' : '#fff', outline: 'none'
-                }}
-              />
-
-              {/* POP-OVER GỢI Ý TÌM KIẾM */}
-              {isSearchFocused && searchQuery.trim().length > 0 && (
-                <div style={{
-                  position: 'absolute', top: 44, right: 0, width: 320,
-                  backgroundColor: theme === 'light' ? '#ffffff' : '#111827',
-                  border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.35)',
-                  borderRadius: 14, padding: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.2)', zIndex: 100,
-                  display: 'flex', flexDirection: 'column', gap: 8
-                }}>
-                  <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    🔍 Gợi ý tìm kiếm:
-                  </div>
-
-                  {orders.filter(o => o.title.toLowerCase().includes(searchQuery.toLowerCase()) || o.orderCode.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 3).map(o => (
-                    <div
-                      key={o.id}
-                      onMouseDown={() => {
-                        setActiveTab('orders');
-                        setSearchQuery(o.orderCode);
-                      }}
-                      style={{ padding: '6px 10px', borderRadius: 8, backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.04)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    >
-                      <span style={{ fontSize: '0.76rem', color: theme === 'light' ? '#0f172a' : '#fff', fontWeight: 700 }}>📦 {o.orderCode} - {o.title.slice(0, 20)}...</span>
-                      <span style={{ fontSize: '0.64rem', color: '#38bdf8', fontWeight: 800 }}>{o.department}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 2. NÚT RESET HỆ THỐNG (CHỈ ĐỂ ICON) */}
-            <button
-              onClick={handleResetSystem}
-              disabled={isResetting}
-              title="Reset hệ thống & Cập nhật bản Build mới nhất"
-              style={{
-                padding: 8, borderRadius: 10, backgroundColor: '#161b26',
-                border: '1px solid rgba(56, 189, 248, 0.4)', color: '#38bdf8',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.18s'
-              }}
-            >
-              <RefreshCw style={{ width: 16, height: 16, opacity: isResetting ? 0.5 : 1, transform: isResetting ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s' }} />
-            </button>
-
-            {/* 3.2. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN DESKTOP (CHỈ ICON) */}
-            <button
-              onClick={() => {
-                const nextTheme = theme === 'dark' ? 'light' : 'dark';
-                setTheme(nextTheme);
-                showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
-              }}
-              style={{
-                padding: 8, borderRadius: 10,
-                backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255, 255, 255, 0.08)',
-                color: theme === 'light' ? '#0f172a' : '#ffffff',
-                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
-            >
-              {theme === 'dark' ? <Sun style={{ width: 18, height: 18, color: '#f59e0b' }} /> : <Moon style={{ width: 18, height: 18, color: '#38bdf8' }} />}
-            </button>
-
-            {/* 3.5. NÚT CHUYỂN ĐỔI CHẾ ĐỘ XEM MOBILE / DESKTOP (CHỈ ICON) */}
-            <button
-              onClick={() => {
-                const nextMode = !isMobileMode;
-                setIsMobileMode(nextMode);
-                showToast(nextMode ? '📱 Đã kích hoạt Giao diện Mobile Di động' : '💻 Đã về Giao diện Desktop');
-              }}
-              title={isMobileMode ? 'Quay về Giao diện Máy tính (Desktop)' : 'Chuyển sang Giao diện Mobile (Di động)'}
-              style={{
-                padding: 8, borderRadius: 10,
-                backgroundColor: isMobileMode ? 'rgba(255, 87, 34, 0.25)' : 'rgba(56, 189, 248, 0.15)',
-                color: isMobileMode ? '#ff7043' : '#38bdf8',
-                border: isMobileMode ? '1px solid #ff7043' : '1px solid rgba(56, 189, 248, 0.4)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s'
-              }}
-            >
-              {isMobileMode ? <Monitor style={{ width: 16, height: 16 }} /> : <Phone style={{ width: 16, height: 16 }} />}
-            </button>
-
-            {/* 4. THÔNG BÁO LỊCH TRAO ĐỔI & HỆ THỐNG (ĐỒNG BỘ MÀU VỚI HỘP CHAT) */}
-            <div style={{ position: 'relative' }}>
-              <button
-                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                title="Xem danh sách thông báo"
-                style={{
-                  padding: 8, borderRadius: 10,
-                  backgroundColor: isNotificationOpen ? '#0284c7' : 'rgba(56, 189, 248, 0.15)',
-                  color: isNotificationOpen ? '#ffffff' : '#38bdf8',
-                  border: '1px solid rgba(56, 189, 248, 0.4)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  position: 'relative', cursor: 'pointer', transition: 'all 0.2s'
-                }}
-              >
-                <Bell style={{ width: 16, height: 16 }} />
-                {unreadNotificationsCount > 0 && (
-                  <span style={{
-                    padding: '1px 5px', borderRadius: 10, backgroundColor: '#ef4444', color: '#fff',
-                    fontSize: '0.6rem', fontWeight: 900, position: 'absolute', top: -4, right: -4
-                  }}>
-                    {unreadNotificationsCount}
-                  </span>
-                )}
-              </button>
-
-              {/* DROPDOWN POP-OVER THÔNG BÁO (ĐỒNG BỘ MÀU VỚI KHUNG CHAT) */}
-              {isNotificationOpen && (
-                <div style={{
-                  position: 'absolute', top: 44, right: 0, width: 360, backgroundColor: '#0b0f19',
-                  border: '1px solid rgba(56, 189, 248, 0.4)', borderRadius: 16, padding: 14,
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.85), 0 0 20px rgba(56, 189, 248, 0.15)', zIndex: 100, display: 'flex', flexDirection: 'column', gap: 12
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(56, 189, 248, 0.2)', paddingBottom: 10 }}>
-                    <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <Bell style={{ width: 15, height: 15 }} /> THÔNG BÁO
-                    </span>
-                    <button
-                      onClick={() => {
-                        const allRead: Record<string, boolean> = {};
-                        calculatedNotifications.forEach(n => allRead[n.id] = true);
-                        setReadNotificationIds(allRead);
-                        showToast('✅ Đã đánh dấu đọc tất cả thông báo');
-                      }}
-                      style={{ fontSize: '0.68rem', color: '#38bdf8', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontWeight: 700 }}
-                    >
-                      Đọc tất cả
-                    </button>
-                  </div>
-
-                  <div style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {calculatedNotifications.length === 0 ? (
-                      <div style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', padding: '16px 0' }}>
-                        🎉 Không có thông báo họp mới trong vòng 24 giờ tới.
-                      </div>
-                    ) : (
-                      calculatedNotifications.map(n => (
-                        <div
-                          key={n.id}
-                          onClick={() => setReadNotificationIds(prev => ({ ...prev, [n.id]: true }))}
-                          style={{
-                            padding: '10px 12px', borderRadius: 10, backgroundColor: n.bgStyle,
-                            border: `1px solid ${n.badgeColor}40`, opacity: readNotificationIds[n.id] ? 0.6 : 1,
-                            cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 4
-                          }}
-                        >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.64rem', fontWeight: 900, color: n.badgeColor, backgroundColor: 'rgba(0,0,0,0.4)', padding: '2px 8px', borderRadius: 6 }}>
-                              {n.badgeLabel}
-                            </span>
-                            <span style={{ fontSize: '0.66rem', color: '#cbd5e1', fontWeight: 700 }}>
-                              {n.dateStr} lúc {n.timeStr}
-                            </span>
-                          </div>
-                          <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ffffff' }}>
-                            {n.title}
-                          </div>
-                          <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>
-                            {n.timeRemainingText}
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <button style={{
-              padding: '7px 16px', borderRadius: 10, background: 'linear-gradient(135deg, #ea580c, #f97316)', color: '#ffffff',
-              fontSize: '0.78rem', fontWeight: 800, border: 'none', boxShadow: '0 4px 14px rgba(249, 115, 22, 0.35)',
-              display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer'
+            <div style={{
+              maxWidth: 1280, margin: '0 auto', width: '100%', height: 50,
+              padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
-              <LogIn style={{ width: 15, height: 15 }} /> Đăng Nhập SSO
-            </button>
+              {/* BRAND LOGO ON LEFT */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }} onClick={() => setActiveTab('home')}>
+                <img
+                  src={theme === 'light' ? logoDarkImg : logoLightImg}
+                  alt="AVG ONE Logo"
+                  onError={(e) => {
+                    e.currentTarget.src = logoLightImg;
+                    e.currentTarget.style.filter = 'none';
+                  }}
+                  style={{ height: 30, objectFit: 'contain', filter: 'none' }}
+                />
+              </div>
+
+              {/* RIGHT CONTROLS: SEARCH + UTILITY BUTTONS + SSO LOGIN */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {/* 1. TÌM KIẾM CÓ GỢI Ý (SEARCH AUTO-COMPLETE) */}
+                <div style={{ position: 'relative' }}>
+                  <Search style={{ width: 14, height: 14, color: '#64748b', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm đơn hàng, mã đơn..."
+                    value={searchQuery}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{
+                      width: 210, backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(22, 27, 38, 0.9)',
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                      borderRadius: 10, padding: '5px 12px 5px 32px', fontSize: '0.76rem',
+                      color: theme === 'light' ? '#0f172a' : '#fff', outline: 'none'
+                    }}
+                  />
+
+                  {/* POP-OVER GỢI Ý TÌM KIẾM */}
+                  {isSearchFocused && searchQuery.trim().length > 0 && (
+                    <div style={{
+                      position: 'absolute', top: 40, right: 0, width: 320,
+                      backgroundColor: theme === 'light' ? '#ffffff' : '#111827',
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.35)',
+                      borderRadius: 14, padding: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.2)', zIndex: 100,
+                      display: 'flex', flexDirection: 'column', gap: 8
+                    }}>
+                      <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        🔍 Gợi ý tìm kiếm:
+                      </div>
+
+                      {orders.filter(o => o.title.toLowerCase().includes(searchQuery.toLowerCase()) || o.orderCode.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 3).map(o => (
+                        <div
+                          key={o.id}
+                          onMouseDown={() => {
+                            setActiveTab('orders');
+                            setSearchQuery(o.orderCode);
+                          }}
+                          style={{ padding: '6px 10px', borderRadius: 8, backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.04)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        >
+                          <span style={{ fontSize: '0.76rem', color: theme === 'light' ? '#0f172a' : '#fff', fontWeight: 700 }}>📦 {o.orderCode} - {o.title.slice(0, 20)}...</span>
+                          <span style={{ fontSize: '0.64rem', color: '#38bdf8', fontWeight: 800 }}>{o.department}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. NÚT RESET HỆ THỐNG */}
+                <button
+                  onClick={handleResetSystem}
+                  disabled={isResetting}
+                  title="Reset hệ thống & Cập nhật bản Build mới nhất"
+                  style={{
+                    padding: 7, borderRadius: 8,
+                    backgroundColor: theme === 'light' ? '#f1f5f9' : '#161b26',
+                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.4)',
+                    color: theme === 'light' ? '#0f172a' : '#38bdf8',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.18s'
+                  }}
+                >
+                  <RefreshCw style={{ width: 15, height: 15, opacity: isResetting ? 0.5 : 1, transform: isResetting ? 'rotate(180deg)' : 'none', transition: 'transform 0.5s' }} />
+                </button>
+
+                {/* 3. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI */}
+                <button
+                  onClick={() => {
+                    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+                    setTheme(nextTheme);
+                    showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
+                  }}
+                  style={{
+                    padding: 7, borderRadius: 8,
+                    backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255, 255, 255, 0.08)',
+                    color: theme === 'light' ? '#0f172a' : '#ffffff',
+                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.15)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
+                >
+                  {theme === 'dark' ? <Sun style={{ width: 16, height: 16, color: '#f59e0b' }} /> : <Moon style={{ width: 16, height: 16, color: '#38bdf8' }} />}
+                </button>
+
+                {/* 4. NÚT CHUYỂN ĐỔI CHẾ ĐỘ MOBILE PREVIEW */}
+                <button
+                  onClick={() => {
+                    const nextMode = !isMobileMode;
+                    setIsMobileMode(nextMode);
+                    showToast(nextMode ? '📱 Đã kích hoạt Giao diện Mobile Di động' : '💻 Đã về Giao diện Desktop');
+                  }}
+                  title={isMobileMode ? 'Quay về Giao diện Máy tính (Desktop)' : 'Chuyển sang Giao diện Mobile (Di động)'}
+                  style={{
+                    padding: 7, borderRadius: 8,
+                    backgroundColor: isMobileMode ? 'rgba(255, 87, 34, 0.25)' : (theme === 'light' ? '#f1f5f9' : 'rgba(56, 189, 248, 0.15)'),
+                    color: isMobileMode ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#38bdf8'),
+                    border: isMobileMode ? '1px solid #ff7043' : (theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.4)'),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  {isMobileMode ? <Monitor style={{ width: 15, height: 15 }} /> : <Phone style={{ width: 15, height: 15 }} />}
+                </button>
+
+                {/* 5. THÔNG BÁO BELL */}
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                    title="Xem danh sách thông báo"
+                    style={{
+                      padding: 7, borderRadius: 8,
+                      backgroundColor: isNotificationOpen ? '#0284c7' : (theme === 'light' ? '#f1f5f9' : 'rgba(56, 189, 248, 0.15)'),
+                      color: isNotificationOpen ? '#ffffff' : (theme === 'light' ? '#0f172a' : '#38bdf8'),
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.4)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      position: 'relative', cursor: 'pointer', transition: 'all 0.2s'
+                    }}
+                  >
+                    <Bell style={{ width: 15, height: 15 }} />
+                    {unreadNotificationsCount > 0 && (
+                      <span style={{
+                        padding: '1px 5px', borderRadius: 10, backgroundColor: '#ef4444', color: '#fff',
+                        fontSize: '0.6rem', fontWeight: 900, position: 'absolute', top: -4, right: -4
+                      }}>
+                        {unreadNotificationsCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* DROPDOWN POP-OVER THÔNG BÁO */}
+                  {isNotificationOpen && (
+                    <div style={{
+                      position: 'absolute', top: 40, right: 0, width: 360, backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.4)', borderRadius: 16, padding: 14,
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.25)', zIndex: 100, display: 'flex', flexDirection: 'column', gap: 12
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(56, 189, 248, 0.2)', paddingBottom: 10 }}>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Bell style={{ width: 15, height: 15 }} /> THÔNG BÁO
+                        </span>
+                        <button
+                          onClick={() => {
+                            const allRead: Record<string, boolean> = {};
+                            calculatedNotifications.forEach(n => allRead[n.id] = true);
+                            setReadNotificationIds(allRead);
+                            showToast('✅ Đã đánh dấu đọc tất cả thông báo');
+                          }}
+                          style={{ fontSize: '0.68rem', color: '#38bdf8', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontWeight: 700 }}
+                        >
+                          Đọc tất cả
+                        </button>
+                      </div>
+
+                      <div style={{ maxHeight: 320, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {calculatedNotifications.length === 0 ? (
+                          <div style={{ fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center', padding: '16px 0' }}>
+                            🎉 Không có thông báo họp mới trong vòng 24 giờ tới.
+                          </div>
+                        ) : (
+                          calculatedNotifications.map(n => (
+                            <div
+                              key={n.id}
+                              onClick={() => setReadNotificationIds(prev => ({ ...prev, [n.id]: true }))}
+                              style={{
+                                padding: '10px 12px', borderRadius: 10, backgroundColor: n.bgStyle,
+                                border: `1px solid ${n.badgeColor}40`, opacity: readNotificationIds[n.id] ? 0.6 : 1,
+                                cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 4
+                              }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontSize: '0.64rem', fontWeight: 900, color: n.badgeColor, backgroundColor: 'rgba(0,0,0,0.4)', padding: '2px 8px', borderRadius: 6 }}>
+                                  {n.badgeLabel}
+                                </span>
+                                <span style={{ fontSize: '0.66rem', color: '#cbd5e1', fontWeight: 700 }}>
+                                  {n.dateStr} lúc {n.timeStr}
+                                </span>
+                              </div>
+                              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#ffffff' }}>
+                                {n.title}
+                              </div>
+                              <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>
+                                {n.timeRemainingText}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 6. NÚT ĐĂNG NHẬP SSO */}
+                <button style={{
+                  padding: '6px 14px', borderRadius: 8, background: 'linear-gradient(135deg, #ea580c, #f97316)', color: '#ffffff',
+                  fontSize: '0.76rem', fontWeight: 800, border: 'none', boxShadow: '0 4px 14px rgba(249, 115, 22, 0.35)',
+                  display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer'
+                }}>
+                  <LogIn style={{ width: 14, height: 14 }} /> Đăng Nhập SSO
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </header>
+
+          {/* TẦNG 2: THANH NỘI DUNG CÁC ĐẦU MỤC CĂN GIỮA (LOWER TIER - HEIGHT 42PX) */}
+          <div style={{
+            backgroundColor: theme === 'light' ? '#f8fafc' : 'rgba(15, 23, 42, 0.4)'
+          }}>
+            <div style={{
+              maxWidth: 1280, margin: '0 auto', width: '100%', height: 42,
+              padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}>
+              {/* TOP HEADER NAVIGATION TASKBAR WITH SUB-FEATURE DROPDOWNS (CĂN GIỮA) */}
+              <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                {/* 1. TRANG CHỦ */}
+                <button
+                  onClick={() => setActiveTab('home')}
+                  style={{
+                    padding: '5px 14px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                    backgroundColor: activeTab === 'home' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                    color: activeTab === 'home' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                    border: activeTab === 'home' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  <Home style={{ width: 14, height: 14 }} /> Trang chủ
+                </button>
+
+                {/* 2. BẢNG TIN */}
+                <button
+                  onClick={() => setActiveTab('news')}
+                  style={{
+                    padding: '5px 14px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                    backgroundColor: activeTab === 'news' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                    color: activeTab === 'news' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                    border: activeTab === 'news' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  <Newspaper style={{ width: 14, height: 14 }} /> Bảng tin
+                </button>
+
+                {/* 3. LỊCH TRAO ĐỔI */}
+                <button
+                  onClick={() => setActiveTab('calendar-talk')}
+                  style={{
+                    padding: '5px 14px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                    backgroundColor: activeTab === 'calendar-talk' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                    color: activeTab === 'calendar-talk' ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                    border: activeTab === 'calendar-talk' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', transition: 'all 0.2s'
+                  }}
+                >
+                  <CalendarIcon style={{ width: 14, height: 14 }} /> Lịch trao đổi
+                </button>
+
+                {/* 4. HỆ THỐNG DROPDOWN */}
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => {
+                      setIsHeaderSystemOpen(!isHeaderSystemOpen);
+                      setIsHeaderHROpen(false);
+                      setIsHeaderOrdersOpen(false);
+                    }}
+                    style={{
+                      padding: '5px 14px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                      backgroundColor: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                      color: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                      border: (activeTab === 'system' || activeTab === 'system-annual-plan' || activeTab === 'system-executive-message') ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                      display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+                    }}
+                  >
+                    <BarChart3 style={{ width: 14, height: 14 }} /> Hệ thống <ChevronDown style={{ width: 13, height: 13, transform: isHeaderSystemOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+
+                  {isHeaderSystemOpen && (
+                    <div style={{
+                      position: 'absolute', top: 36, left: 0, width: 220,
+                      backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                      borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
+                      display: 'flex', flexDirection: 'column', gap: 3
+                    }}>
+                      <button
+                        onClick={() => { setActiveTab('system'); setIsHeaderSystemOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'system' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'system' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <Share2 style={{ width: 14, height: 14, color: '#38bdf8' }} /> 🌐 Cấu trúc hệ thống
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('system-annual-plan'); setIsHeaderSystemOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'system-annual-plan' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'system-annual-plan' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <Target style={{ width: 14, height: 14, color: '#38bdf8' }} /> 🎯 Kế hoạch năm
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('system-executive-message'); setIsHeaderSystemOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'system-executive-message' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'system-executive-message' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <Zap style={{ width: 14, height: 14, color: '#f59e0b' }} /> ⚡ Thông điệp điều hành
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* 5. NHÂN SỰ DROPDOWN */}
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => {
+                      setIsHeaderHROpen(!isHeaderHROpen);
+                      setIsHeaderSystemOpen(false);
+                      setIsHeaderOrdersOpen(false);
+                    }}
+                    style={{
+                      padding: '5px 14px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                      backgroundColor: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                      color: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                      border: (activeTab === 'hr-management' || activeTab === 'hr-working-hours' || activeTab === 'hr-working-hours-overtime') ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                      display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+                    }}
+                  >
+                    <Users style={{ width: 14, height: 14 }} /> Nhân sự <ChevronDown style={{ width: 13, height: 13, transform: isHeaderHROpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+
+                  {isHeaderHROpen && (
+                    <div style={{
+                      position: 'absolute', top: 36, left: 0, width: 220,
+                      backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                      borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
+                      display: 'flex', flexDirection: 'column', gap: 3
+                    }}>
+                      <button
+                        onClick={() => { setActiveTab('hr-management'); setIsHeaderHROpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'hr-management' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'hr-management' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <UserCheck style={{ width: 14, height: 14, color: '#38bdf8' }} /> 👤 Quản lý nhân sự
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('hr-working-hours'); setIsHeaderHROpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'hr-working-hours' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'hr-working-hours' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <Clock style={{ width: 14, height: 14, color: '#10b981' }} /> ⏱️ Hành chính
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('hr-working-hours-overtime'); setIsHeaderHROpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'hr-working-hours-overtime' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'hr-working-hours-overtime' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <Clock style={{ width: 14, height: 14, color: '#f59e0b' }} /> ⌛ Ngoài giờ
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* 6. ĐƠN HÀNG DROPDOWN */}
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => {
+                      setIsHeaderOrdersOpen(!isHeaderOrdersOpen);
+                      setIsHeaderSystemOpen(false);
+                      setIsHeaderHROpen(false);
+                    }}
+                    style={{
+                      padding: '5px 14px', borderRadius: 8, fontSize: '0.78rem', fontWeight: 800,
+                      backgroundColor: (activeTab === 'orders' || activeTab.startsWith('orders-hub')) ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                      color: (activeTab === 'orders' || activeTab.startsWith('orders-hub')) ? '#ff7043' : (theme === 'light' ? '#334155' : '#cbd5e1'),
+                      border: (activeTab === 'orders' || activeTab.startsWith('orders-hub')) ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid transparent',
+                      display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', transition: 'all 0.2s'
+                    }}
+                  >
+                    <Package style={{ width: 14, height: 14 }} /> Đơn hàng <ChevronDown style={{ width: 13, height: 13, transform: isHeaderOrdersOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  </button>
+
+                  {isHeaderOrdersOpen && (
+                    <div style={{
+                      position: 'absolute', top: 36, left: 0, width: 220,
+                      backgroundColor: theme === 'light' ? '#ffffff' : '#0b0f19',
+                      border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(56, 189, 248, 0.3)',
+                      borderRadius: 12, padding: 6, boxShadow: '0 10px 30px rgba(0,0,0,0.25)', zIndex: 1000,
+                      display: 'flex', flexDirection: 'column', gap: 3
+                    }}>
+                      <button
+                        onClick={() => { setSelectedHub('ALL'); setActiveTab('orders'); setIsHeaderOrdersOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'orders' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'orders' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <Package style={{ width: 14, height: 14, color: '#38bdf8' }} /> 📦 Tất cả đơn hàng
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('orders-hub-0'); setIsHeaderOrdersOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'orders-hub-0' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'orders-hub-0' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <MapPin style={{ width: 14, height: 14, color: '#38bdf8' }} /> 📌 Đầu mối 0
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('orders-hub-8'); setIsHeaderOrdersOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'orders-hub-8' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'orders-hub-8' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <MapPin style={{ width: 14, height: 14, color: '#f59e0b' }} /> 📌 Đầu mối 8
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('orders-hub-9'); setIsHeaderOrdersOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'orders-hub-9' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'orders-hub-9' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <MapPin style={{ width: 14, height: 14, color: '#ef4444' }} /> 📌 Đầu mối 9
+                      </button>
+                      <button
+                        onClick={() => { setActiveTab('orders-hub-2.2'); setIsHeaderOrdersOpen(false); }}
+                        style={{
+                          padding: '8px 12px', borderRadius: 8, border: 'none', textAlign: 'left',
+                          backgroundColor: activeTab === 'orders-hub-2.2' ? 'rgba(255, 87, 34, 0.15)' : 'transparent',
+                          color: activeTab === 'orders-hub-2.2' ? '#ff7043' : (theme === 'light' ? '#0f172a' : '#ffffff'),
+                          fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8
+                        }}
+                      >
+                        <MapPin style={{ width: 14, height: 14, color: '#a855f7' }} /> 📌 Đầu mối 2.2
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </nav>
+            </div>
+          </div>
+        </header>
 
         {/* WORKSPACE PAGE BODY (THU HẸP BỐ CỤC 2 BÊN) */}
         <main style={{ flex: 1, padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 20, maxWidth: 1280, margin: '0 auto', width: '100%' }}>
