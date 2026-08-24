@@ -2110,18 +2110,16 @@ export default function App() {
             src={theme === 'light' ? logoDarkImg : logoLightImg}
             alt="AVG ONE Logo"
             onError={(e) => {
-              const target = e.currentTarget;
-              target.src = logoLightImg;
-              if (theme === 'light') {
-                target.style.filter = 'invert(0.85) hue-rotate(180deg)';
-              }
+              e.currentTarget.src = logoLightImg;
+              e.currentTarget.style.filter = 'none';
             }}
             style={{
               height: isSidebarCollapsed ? 28 : 36,
               maxWidth: '100%',
               objectFit: 'contain',
               objectPosition: 'center',
-              margin: isSidebarCollapsed ? '0 auto' : '0'
+              margin: isSidebarCollapsed ? '0 auto' : '0',
+              filter: 'none'
             }}
           />
           <button
@@ -2815,13 +2813,10 @@ export default function App() {
               src={theme === 'light' ? logoDarkImg : logoLightImg}
               alt="AVG ONE Logo"
               onError={(e) => {
-                const target = e.currentTarget;
-                target.src = logoLightImg;
-                if (theme === 'light') {
-                  target.style.filter = 'invert(0.85) hue-rotate(180deg)';
-                }
+                e.currentTarget.src = logoLightImg;
+                e.currentTarget.style.filter = 'none';
               }}
-              style={{ height: 26, objectFit: 'contain', marginLeft: 10 }}
+              style={{ height: 26, objectFit: 'contain', marginLeft: 10, filter: 'none' }}
             />
           </div>
 
@@ -2906,13 +2901,10 @@ export default function App() {
                 src={theme === 'light' ? logoDarkImg : logoLightImg}
                 alt="AVG ONE Logo"
                 onError={(e) => {
-                  const target = e.currentTarget;
-                  target.src = logoLightImg;
-                  if (theme === 'light') {
-                    target.style.filter = 'invert(0.85) hue-rotate(180deg)';
-                  }
+                  e.currentTarget.src = logoLightImg;
+                  e.currentTarget.style.filter = 'none';
                 }}
-                style={{ height: 32, objectFit: 'contain' }}
+                style={{ height: 32, objectFit: 'contain', filter: 'none' }}
               />
             </div>
 
