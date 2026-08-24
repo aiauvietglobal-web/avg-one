@@ -2126,32 +2126,6 @@ export default function App() {
 
         {/* MENU ITEMS */}
         <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', fontSize: '0.8rem', fontWeight: 700 }}>
-          {/* NÚT ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN SIDEBAR */}
-          <button
-            type="button"
-            onClick={() => {
-              const nextTheme = theme === 'dark' ? 'light' : 'dark';
-              setTheme(nextTheme);
-              showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
-            }}
-            style={{
-              width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 12,
-              backgroundColor: theme === 'light' ? 'rgba(255, 87, 34, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-              color: theme === 'light' ? '#ff5722' : '#f59e0b',
-              border: theme === 'light' ? '1px solid rgba(255, 87, 34, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)',
-              cursor: 'pointer', textAlign: 'left', fontWeight: 800, fontSize: '0.8rem',
-              marginBottom: 10, transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-            title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
-          >
-            {theme === 'dark' ? <Sun style={{ width: 17, height: 17, color: '#f59e0b' }} /> : <Moon style={{ width: 17, height: 17, color: '#0284c7' }} />}
-            {!isSidebarCollapsed && (
-              <span style={{ fontWeight: 800, letterSpacing: '0.03em' }}>
-                {theme === 'dark' ? '☀️ GIAO DIỆN SÁNG' : '🌙 GIAO DIỆN TỐI'}
-              </span>
-            )}
-          </button>
-
           {/* 1. TRANG CHỦ */}
           <button
             onClick={() => { setActiveTab('home'); setIsMobileMenuOpen(false); }}
@@ -2890,16 +2864,15 @@ export default function App() {
                 showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
               }}
               style={{
-                padding: '6px 10px', borderRadius: 8,
-                backgroundColor: theme === 'light' ? '#ffffff' : 'rgba(255,255,255,0.1)',
-                color: theme === 'light' ? '#ff5722' : '#ffffff',
-                border: theme === 'light' ? '1px solid #ff5722' : '1px solid rgba(255,255,255,0.2)',
-                display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.74rem', fontWeight: 800
+                padding: 8, borderRadius: 8,
+                backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.08)',
+                color: theme === 'light' ? '#0f172a' : '#ffffff',
+                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
               }}
-              title="Đổi Giao Diện Sáng / Tối"
+              title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
             >
-              {theme === 'dark' ? <Sun style={{ width: 15, height: 15, color: '#f59e0b' }} /> : <Moon style={{ width: 15, height: 15, color: '#0284c7' }} />}
-              <span>{theme === 'dark' ? 'Sáng' : 'Tối'}</span>
+              {theme === 'dark' ? <Sun style={{ width: 18, height: 18, color: '#f59e0b' }} /> : <Moon style={{ width: 18, height: 18, color: '#38bdf8' }} />}
             </button>
             <button
               onClick={() => showToast('🔔 Bạn không có thông báo mới')}
@@ -3017,7 +2990,7 @@ export default function App() {
               <MessageSquare style={{ width: 15, height: 15 }} /> Chat
             </button>
 
-            {/* 3.2. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN DESKTOP */}
+            {/* 3.2. NÚT CHUYỂN ĐỔI GIAO DIỆN SÁNG / TỐI TRÊN DESKTOP (CHỈ ICON) */}
             <button
               onClick={() => {
                 const nextTheme = theme === 'dark' ? 'light' : 'dark';
@@ -3025,18 +2998,16 @@ export default function App() {
                 showToast(nextTheme === 'light' ? '☀️ Đã chuyển sang Giao diện Sáng' : '🌙 Đã chuyển sang Giao diện Tối');
               }}
               style={{
-                padding: '7px 14px', borderRadius: 10,
-                backgroundColor: theme === 'light' ? '#ffffff' : 'rgba(255, 87, 34, 0.2)',
-                color: theme === 'light' ? '#ff5722' : '#ff7043',
-                border: theme === 'light' ? '1px solid #ff5722' : '1px solid rgba(255, 87, 34, 0.45)',
-                fontSize: '0.78rem', fontWeight: 800,
-                display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer',
-                transition: 'all 0.2s', boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                padding: 8, borderRadius: 10,
+                backgroundColor: theme === 'light' ? '#f1f5f9' : 'rgba(255, 255, 255, 0.08)',
+                color: theme === 'light' ? '#0f172a' : '#ffffff',
+                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.15)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                transition: 'all 0.2s'
               }}
               title={theme === 'dark' ? 'Chuyển sang Giao diện Sáng' : 'Chuyển sang Giao diện Tối'}
             >
-              {theme === 'dark' ? <Sun style={{ width: 16, height: 16, color: '#f59e0b' }} /> : <Moon style={{ width: 16, height: 16, color: '#0284c7' }} />}
-              <span>{theme === 'dark' ? '☀️ GIAO DIỆN SÁNG' : '🌙 GIAO DIỆN TỐI'}</span>
+              {theme === 'dark' ? <Sun style={{ width: 18, height: 18, color: '#f59e0b' }} /> : <Moon style={{ width: 18, height: 18, color: '#38bdf8' }} />}
             </button>
 
             {/* 3.5. NÚT CHUYỂN ĐỔI CHẾ ĐỘ XEM MOBILE / DESKTOP (CHỈ ICON) */}
