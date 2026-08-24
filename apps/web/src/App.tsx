@@ -2101,7 +2101,7 @@ export default function App() {
         {/* LOGO BRAND */}
         <div style={{ height: 96, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
           <img
-            src="/logo.png"
+            src={theme === 'light' ? "/avg-logo-dark.png" : "/logo.png"}
             alt="AVG ONE Logo"
             style={{
               height: isSidebarCollapsed ? 28 : 36,
@@ -2798,7 +2798,7 @@ export default function App() {
             >
               {isMobileMenuOpen ? <X style={{ width: 20, height: 20 }} /> : <Menu style={{ width: 20, height: 20 }} />}
             </button>
-            <img src="/logo.png" alt="AVG ONE Logo" style={{ height: 26, objectFit: 'contain', marginLeft: 10 }} />
+            <img src={theme === 'light' ? "/avg-logo-dark.png" : "/logo.png"} alt="AVG ONE Logo" style={{ height: 26, objectFit: 'contain', marginLeft: 10 }} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
