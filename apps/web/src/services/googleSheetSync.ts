@@ -1,4 +1,12 @@
-// Google Sheet 24/7 Live Synchronization Service for Discussion Events
+export interface EventAttachment {
+  id: string;
+  name: string;
+  type: 'image' | 'file' | 'url';
+  url: string;
+  size?: string;
+  uploadedAt?: string;
+}
+
 export interface DiscussionEvent {
   id: string;
   stt?: number;
@@ -16,10 +24,11 @@ export interface DiscussionEvent {
   legalEntity?: string;
   status?: string;
   conclusionDocUrl?: string;
+  attachments?: EventAttachment[];
 }
 
-export const GOOGLE_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/edit?gid=1382803197#gid=1382803197';
-export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/gviz/tq?tqx=out:csv&gid=1382803197';
+export const GOOGLE_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/edit?gid=1763358123#gid=1763358123';
+export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/gviz/tq?tqx=out:csv&gid=1763358123';
 
 const LOCAL_DISCUSSION_EVENTS_KEY = 'avg_local_discussion_events_v2';
 const WEBHOOK_URL_KEY = 'avg_google_sheet_webhook_url';
@@ -49,7 +58,31 @@ function doPost(e) {
   return handleSync(e);
 }
 
-// Bulletproof duplicate row cleaner for Google Sheet
+function getTargetSheet(ss, dateStr) {
+  if (dateStr && dateStr.indexOf('/') !== -1) {
+    var parts = dateStr.split('/');
+    if (parts.length >= 2) {
+      var m = parseInt(parts[1], 10);
+      if (!isNaN(m)) {
+        var mPad = m < 10 ? '0' + m : '' + m;
+        var names = ['Tháng ' + mPad, 'Tháng ' + m, 'T' + mPad, 'T' + m];
+        for (var i = 0; i < names.length; i++) {
+          var s = ss.getSheetByName(names[i]);
+          if (s) return s;
+        }
+      }
+    }
+  }
+  var sheets = ss.getSheets();
+  for (var k = 0; k < sheets.length; k++) {
+    if (sheets[k].getSheetId() == 1763358123) {
+      return sheets[k];
+    }
+  }
+  return ss.getSheetByName("LỊCH LÀM VIỆC 2026") || sheets[0];
+}
+
+// Bulletproof duplicate row cleaner for Google Sheet across monthly tabs
 function removeDuplicateRows() {
   var ss;
   try {
@@ -58,46 +91,38 @@ function removeDuplicateRows() {
     ss = SpreadsheetApp.getActiveSpreadsheet();
   }
   
-  var sheet = ss.getSheetByName("LỊCH LÀM VIỆC 2026");
-  if (!sheet) {
-    var sheets = ss.getSheets();
-    for (var k = 0; k < sheets.length; k++) {
-      if (sheets[k].getSheetId() == 1382803197) {
-        sheet = sheets[k];
-        break;
+  var sheets = ss.getSheets();
+  for (var sIdx = 0; sIdx < sheets.length; sIdx++) {
+    var sheet = sheets[sIdx];
+    var lastRow = sheet.getLastRow();
+    if (lastRow < 3) continue;
+    
+    var displayValues = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getDisplayValues();
+    var seenKeys = {};
+    var rowsToDelete = [];
+    
+    for (var i = 0; i < displayValues.length; i++) {
+      var row = displayValues[i];
+      var titleStr = (row[9] || row[10] || '').toString().trim().toLowerCase();
+      var dateStr = (row[2] || '').toString().trim();
+      var timeStr = (row[4] || '').toString().trim();
+      
+      var fullRowKey = row.join('||').trim().toLowerCase();
+      var compactKey = titleStr + '_' + dateStr + '_' + timeStr;
+      
+      var isDup = (fullRowKey.length > 10 && seenKeys[fullRowKey]) || (compactKey.length > 5 && titleStr.length > 0 && seenKeys[compactKey]);
+      
+      if (isDup) {
+        rowsToDelete.push(i + 2);
+      } else {
+        if (fullRowKey.length > 10) seenKeys[fullRowKey] = true;
+        if (compactKey.length > 5 && titleStr.length > 0) seenKeys[compactKey] = true;
       }
     }
-    if (!sheet) sheet = ss.getSheets()[0];
-  }
-  
-  var lastRow = sheet.getLastRow();
-  if (lastRow < 3) return;
-  
-  var displayValues = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getDisplayValues();
-  var seenKeys = {};
-  var rowsToDelete = [];
-  
-  for (var i = 0; i < displayValues.length; i++) {
-    var row = displayValues[i];
-    var titleStr = (row[9] || row[10] || '').toString().trim().toLowerCase();
-    var dateStr = (row[2] || '').toString().trim();
-    var timeStr = (row[4] || '').toString().trim();
     
-    var fullRowKey = row.join('||').trim().toLowerCase();
-    var compactKey = titleStr + '_' + dateStr + '_' + timeStr;
-    
-    var isDup = (fullRowKey.length > 10 && seenKeys[fullRowKey]) || (compactKey.length > 5 && titleStr.length > 0 && seenKeys[compactKey]);
-    
-    if (isDup) {
-      rowsToDelete.push(i + 2);
-    } else {
-      if (fullRowKey.length > 10) seenKeys[fullRowKey] = true;
-      if (compactKey.length > 5 && titleStr.length > 0) seenKeys[compactKey] = true;
+    for (var j = rowsToDelete.length - 1; j >= 0; j--) {
+      sheet.deleteRow(rowsToDelete[j]);
     }
-  }
-  
-  for (var j = rowsToDelete.length - 1; j >= 0; j--) {
-    sheet.deleteRow(rowsToDelete[j]);
   }
 }
 
@@ -108,14 +133,17 @@ function sortSheetChronologically() {
   } catch(err) {
     ss = SpreadsheetApp.getActiveSpreadsheet();
   }
-  var sheet = ss.getSheetByName("LỊCH LÀM VIỆC 2026") || ss.getSheets()[0];
-  var lastRow = sheet.getLastRow();
-  if (lastRow >= 3) {
-    var dataRange = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn());
-    dataRange.sort([
-      { column: 3, ascending: true },
-      { column: 5, ascending: true }
-    ]);
+  var sheets = ss.getSheets();
+  for (var i = 0; i < sheets.length; i++) {
+    var sheet = sheets[i];
+    var lastRow = sheet.getLastRow();
+    if (lastRow >= 3) {
+      var dataRange = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn());
+      dataRange.sort([
+        { column: 3, ascending: true },
+        { column: 5, ascending: true }
+      ]);
+    }
   }
 }
 
@@ -126,18 +154,6 @@ function handleSync(e) {
       ss = SpreadsheetApp.openById("11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M");
     } catch(err) {
       ss = SpreadsheetApp.getActiveSpreadsheet();
-    }
-    
-    var sheet = ss.getSheetByName("LỊCH LÀM VIỆC 2026");
-    if (!sheet) {
-      var sheets = ss.getSheets();
-      for (var i = 0; i < sheets.length; i++) {
-        if (sheets[i].getSheetId() == 1382803197) {
-          sheet = sheets[i];
-          break;
-        }
-      }
-      if (!sheet) sheet = ss.getSheets()[0];
     }
     
     var p = (e && e.parameter) ? e.parameter : {};
@@ -154,6 +170,8 @@ function handleSync(e) {
     if (!title && !dateStr) {
       return ContentService.createTextOutput("Empty payload");
     }
+    
+    var sheet = getTargetSheet(ss, dateStr);
     
     var pStart = p.plannedStartTime || jsonEvt.plannedStartTime || '18:00';
     var pEnd = p.plannedEndTime || jsonEvt.plannedEndTime || '19:00';
@@ -243,6 +261,25 @@ export function saveLocalDiscussionEvent(event: DiscussionEvent): DiscussionEven
     return updated;
   } catch (e) {
     console.error('Error saving local discussion event:', e);
+    return [];
+  }
+}
+
+export function updateLocalDiscussionEvent(event: DiscussionEvent): DiscussionEvent[] {
+  try {
+    const existing = getLocalDiscussionEvents();
+    const index = existing.findIndex(e => e.id === event.id || (e.title.trim().toLowerCase() === event.title.trim().toLowerCase() && e.date === event.date));
+    let updated: DiscussionEvent[];
+    if (index !== -1) {
+      updated = [...existing];
+      updated[index] = { ...updated[index], ...event };
+    } else {
+      updated = [event, ...existing];
+    }
+    localStorage.setItem(LOCAL_DISCUSSION_EVENTS_KEY, JSON.stringify(updated));
+    return updated;
+  } catch (e) {
+    console.error('Error updating local discussion event:', e);
     return [];
   }
 }
@@ -389,9 +426,13 @@ export function submitToGoogleSheetViaHiddenForm(webhookUrl: string, event: Disc
 }
 
 // Function to send/sync new event back to Google Sheet Webhook / Apps Script
-export async function syncDiscussionEventToGoogleSheet(event: DiscussionEvent): Promise<{ success: boolean; message: string }> {
+export async function syncDiscussionEventToGoogleSheet(event: DiscussionEvent, action: 'add' | 'update' = 'add'): Promise<{ success: boolean; message: string }> {
   // 1. Always store in LocalStorage first for instant offline/24h reliability
-  saveLocalDiscussionEvent(event);
+  if (action === 'update') {
+    updateLocalDiscussionEvent(event);
+  } else {
+    saveLocalDiscussionEvent(event);
+  }
 
   // 2. Read configured Webhook URL
   const webhookUrl = getGoogleSheetWebhookUrl();
@@ -404,7 +445,7 @@ export async function syncDiscussionEventToGoogleSheet(event: DiscussionEvent): 
     // Send EXACTLY 1 single request via hidden iframe form submission to guarantee 1 single row on Google Sheet
     submitToGoogleSheetViaHiddenForm(webhookUrl, event);
 
-    return { success: true, message: '🚀 Đã gửi dòng mới về Google Sheet thành công!' };
+    return { success: true, message: action === 'update' ? '🚀 Đã cập nhật dòng về Google Sheet thành công!' : '🚀 Đã gửi dòng mới về Google Sheet thành công!' };
   } catch (err) {
     console.log('Google Sheet webhook fetch error:', err);
     return { success: true, message: '💾 Đã lưu dữ liệu trực tiếp trong hệ thống AVG One 24/7!' };
@@ -485,37 +526,40 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
       return localEvents;
     }
 
-    // Dynamic column index detection from header row
+    // Dynamic column index detection from header row for gid=175899563
     const headerRow = rows[0] ? rows[0].map(c => c.trim().toLowerCase()) : [];
 
     const findIdx = (keywords: string[], defaultIdx: number) => {
-      const idx = headerRow.findIndex(cell => keywords.some(kw => cell.includes(kw)));
+      const idx = headerRow.findIndex(cell => keywords.some(kw => cell.includes(kw.toLowerCase())));
       return idx !== -1 ? idx : defaultIdx;
     };
 
-    const scopeIdx = findIdx(['phạm vi'], 0);
-    const dayIdx = findIdx(['thứ'], 1);
-    const dateIdx = findIdx(['ngày'], 2);
-    const pStartIdx = findIdx(['bắt đầu dự kiến', 'thời điểm bắt đầu'], 4);
-    const pEndIdx = findIdx(['kết thúc dự kiến', 'thời điểm kết thúc'], 5);
-    const aStartIdx = findIdx(['thực bắt đầu'], 6);
-    const aEndIdx = findIdx(['thực kết thúc'], 7);
-    const titleIdx = findIdx(['nội dung', 'chủ đề'], 9);
-    const legalIdx = findIdx(['pháp nhân'], 10);
-    const attendeesIdx = findIdx(['thành phần'], 11);
-    const secretaryIdx = findIdx(['thư ký'], 12);
-    const statusIdx = findIdx(['trạng thái'], 13);
-    const notesIdx = findIdx(['ghi chú'], 14);
+    const sttIdx = findIdx(['stt'], 0);
+    const scopeIdx = findIdx(['phạm vi'], 1);
+    const dayIdx = findIdx(['thứ'], 2);
+    const dateIdx = findIdx(['ngày'], 3);
+    const pStartIdx = findIdx(['giờ bắt đầu'], 4);
+    const pEndIdx = findIdx(['giờ kết thúc'], 5);
+    const aStartIdx = findIdx(['bắt đầu thực tế', 'thực bắt đầu'], 7);
+    const aEndIdx = findIdx(['kết thúc thực tế', 'thực kết thúc'], 8);
+    const titleIdx = findIdx(['nội dung', 'chủ đề'], 12);
+    const legalIdx = findIdx(['pháp nhân'], 13);
+    const attendeesIdx = findIdx(['thành phần'], 14);
+    const secretaryIdx = findIdx(['thư ký'], 15);
+    const statusIdx = findIdx(['trạng thái'], 16);
+    const notesIdx = findIdx(['ghi chú'], 17);
+    const linkIdx = findIdx(['link vbkl', 'vbkl'], 18);
 
     const events: DiscussionEvent[] = [];
 
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
-      const title = row[titleIdx] || row[9] || row[10] || row[0] || '';
+      const title = row[titleIdx] || '';
+      const eventDate = row[dateIdx] || '';
       
-      const eventDate = row[dateIdx] || row[2] || row[3] || '';
-      if (!title && !eventDate) continue;
+      if (!title || title.trim() === 'STT' || title.trim() === '77') continue;
 
+      const eventStt = parseInt(row[sttIdx] || '0', 10) || i;
       const eventScope = row[scopeIdx] || 'P1';
       const eventDay = row[dayIdx] || 'THỨ NĂM';
       const pStart = formatTimeWithoutSeconds(row[pStartIdx]) || '17:00';
@@ -530,7 +574,7 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
 
       events.push({
         id: `gsheet-${i}`,
-        stt: i,
+        stt: eventStt,
         scope: eventScope,
         dayOfWeek: eventDay.toUpperCase(),
         date: eventDate || '18/08/2026',
@@ -540,11 +584,11 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
         actualEndTime: aEnd,
         title: title,
         legalEntity: row[legalIdx] || 'DH',
-        attendees: row[attendeesIdx] || 'AV; AVG',
-        secretary: row[secretaryIdx] || '2.1',
+        attendees: row[attendeesIdx] || '',
+        secretary: row[secretaryIdx] || '',
         status: status,
         notes: row[notesIdx] || '',
-        conclusionDocUrl: row[notesIdx + 1] || ''
+        conclusionDocUrl: row[linkIdx] || ''
       });
     }
 
@@ -568,5 +612,147 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
   } catch (error) {
     console.error('Error fetching Google Sheet discussion events:', error);
     return getLocalDiscussionEvents();
+  }
+}
+
+// Google Sheet Live Sync for Executive Directives (Thông điệp điều hành)
+export const EXECUTIVE_DIRECTIVE_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/13cN2ert23B1W4wlySPXXVbCj-UgICEef5UQb7FI2vSA/edit?gid=269023045#gid=269023045';
+export const EXECUTIVE_DIRECTIVE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/13cN2ert23B1W4wlySPXXVbCj-UgICEef5UQb7FI2vSA/gviz/tq?tqx=out:csv&gid=269023045';
+
+export interface ExecutiveDirectiveItem {
+  id: string;
+  code?: string;
+  type: 'TRỰC TIẾP' | 'GIÁN TIẾP' | 'CHƯA XÁC NHẬN';
+  year?: string;
+  month?: string;
+  dayOfWeek?: string;
+  dateStr: string;
+  timeStr?: string;
+  issuer: string; // Col J: Đầu mối chủ thể
+  recipients?: string; // Col K: Đầu mối phối hợp/liên quan
+  title: string;
+  content: string;
+  notes?: string;
+  linkUrl?: string;
+  priority: 'URGENT' | 'HIGH' | 'NORMAL';
+}
+
+export async function fetchExecutiveDirectivesFromGoogleSheet(): Promise<ExecutiveDirectiveItem[]> {
+  try {
+    const response = await fetch(EXECUTIVE_DIRECTIVE_SHEET_CSV_URL, {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const csvText = await response.text();
+    const rows = parseCSVRows(csvText);
+
+    if (rows.length <= 2) {
+      return [];
+    }
+
+    const directives: ExecutiveDirectiveItem[] = [];
+
+    // Parse starting from data rows (skipping header rows 0-1)
+    let currentYear = '2026';
+    let currentMonth = '07';
+    let currentDayOfWeek = 'Thứ 4';
+    let currentDate = '01/07/2026';
+
+    for (let i = 2; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row || row.length < 10) continue;
+
+      // Extract date fields if present in row
+      if (row[4] && row[4].trim()) currentYear = row[4].trim();
+      if (row[5] && row[5].trim()) currentMonth = row[5].trim();
+      if (row[6] && row[6].trim()) currentDayOfWeek = row[6].trim();
+      if (row[7] && row[7].trim()) currentDate = row[7].trim();
+
+      const timeStr = row[8] ? formatTimeWithoutSeconds(row[8].trim()) : '';
+      const issuer = row[9] ? row[9].trim() : '';
+      const recipients = row[10] ? row[10].trim() : '';
+
+      // Direct message content in Col L (index 11)
+      const directContent = row[11] ? row[11].trim() : '';
+      const directNotes = row[12] ? row[12].trim() : '';
+
+      // Indirect message content in Col O (index 14) or Col N (index 13)
+      const indirectLink = row[13] ? row[13].trim() : '';
+      const indirectContent = row[14] ? row[14].trim() : '';
+      const indirectNotes = row[15] ? row[15].trim() : '';
+
+      // Unconfirmed message content in Col R (index 17) or Col S (index 18)
+      const unconfirmedContent = row[17] ? row[17].trim() : '';
+      const unconfirmedNotes = row[18] ? row[18].trim() : '';
+
+      // Determine main content & type
+      let mainContent = '';
+      let msgType: 'TRỰC TIẾP' | 'GIÁN TIẾP' | 'CHƯA XÁC NHẬN' = 'TRỰC TIẾP';
+      let linkUrl = '';
+      let notes = '';
+
+      if (directContent) {
+        mainContent = directContent;
+        msgType = 'TRỰC TIẾP';
+        notes = directNotes;
+        linkUrl = indirectLink || (directNotes.startsWith('http') ? directNotes : '');
+      } else if (indirectContent || indirectLink) {
+        mainContent = indirectContent || indirectLink;
+        msgType = 'GIÁN TIẾP';
+        notes = indirectNotes;
+        linkUrl = indirectLink.startsWith('http') ? indirectLink : (indirectNotes.startsWith('http') ? indirectNotes : '');
+      } else if (unconfirmedContent) {
+        mainContent = unconfirmedContent;
+        msgType = 'CHƯA XÁC NHẬN';
+        notes = unconfirmedNotes;
+        linkUrl = unconfirmedNotes.startsWith('http') ? unconfirmedNotes : '';
+      }
+
+      if (!mainContent && !issuer && !recipients) continue;
+
+      // Calculate title from main content (first non-empty line or truncated summary)
+      let title = mainContent.split('\n').map(s => s.trim()).filter(Boolean)[0] || 'Thông điệp điều hành';
+      if (title.length > 90) {
+        title = title.substring(0, 87) + '...';
+      }
+
+      // Assign priority based on content keywords
+      const lowerContent = (title + ' ' + mainContent).toLowerCase();
+      let priority: 'URGENT' | 'HIGH' | 'NORMAL' = 'NORMAL';
+      if (lowerContent.includes('khủng hoảng') || lowerContent.includes('sa thải') || lowerContent.includes('khẩn') || lowerContent.includes('lỗi')) {
+        priority = 'URGENT';
+      } else if (lowerContent.includes('chỉ đạo') || lowerContent.includes('đề nghị') || lowerContent.includes('yêu cầu') || lowerContent.includes('quyết định')) {
+        priority = 'HIGH';
+      }
+
+      const code = `TĐ-${currentDate.replace(/\//g, '')}-${directives.length + 1}`;
+
+      directives.push({
+        id: `tddh-${i}`,
+        code,
+        type: msgType,
+        year: currentYear,
+        month: currentMonth,
+        dayOfWeek: currentDayOfWeek,
+        dateStr: currentDate,
+        timeStr: timeStr || '08:00',
+        issuer: issuer || 'DH',
+        recipients: recipients || '@All',
+        title: title,
+        content: mainContent || notes,
+        notes: notes,
+        linkUrl: linkUrl,
+        priority: priority
+      });
+    }
+
+    return directives;
+  } catch (error) {
+    console.error('Error fetching Google Sheet executive directives:', error);
+    return [];
   }
 }

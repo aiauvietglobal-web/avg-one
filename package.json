@@ -6,6 +6,13 @@
     "apps/*",
     "packages/*"
   ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "dev:all": "npm run dev --workspaces --if-present",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "build": "npm run build --workspaces --if-present"
+  },
   "engines": {
     "node": "20.x"
   }

@@ -48,6 +48,24 @@ enum TaskPriority {
   URGENT
 }
 
+enum GoalStatus {
+  ON_TRACK
+  AT_RISK
+  BEHIND
+  COMPLETED
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  code        String   @unique // e.g. "3.1 - RDI", "3.2 - THIẾT KẾ", "6 - PHÁP LÝ"
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+}
+
 model User {
   id           String      @id @default(uuid())
   email        String      @unique
@@ -60,11 +78,19 @@ model User {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
   submittedRequests Request[] @relation("ApplicantRequests")
   approvedRequests  Request[] @relation("ApproverRequests")
 
   assignedTasks     Task[]    @relation("AssigneeTasks")
   createdTasks      Task[]    @relation("CreatorTasks")
+
+  posts             Post[]
+  comments          Comment[]
+  goals             Goal[]
+  notifications     Notification[]
 }
 
 model Request {
@@ -107,4 +133,79 @@ model Task {
 
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  category    String   @default("THÔNG BÁO") // THÔNG BÁO, CHỈ ĐẠO, VĂN HÓA, TIN TỨC
+  isPinned    Boolean  @default(false)
+  likesCount  Int      @default(0)
+  
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  comments    Comment[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model Goal {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  period      String     @default("Q3-2026") // Q1-2026, Q2-2026, Year 2026...
+  progress    Float      @default(0.0)      // 0 to 100%
+  status      GoalStatus @default(ON_TRACK)
+  type        String     @default("COMPANY") // COMPANY, DEPARTMENT, INDIVIDUAL
+
+  ownerId     String
+  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  keyResults  KeyResult[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model KeyResult {
+  id           String   @id @default(uuid())
+  title        String
+  targetValue  Float
+  currentValue Float    @default(0.0)
+  unit         String   @default("%")
+
+  goalId       String
+  goal         Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO, REQUEST, TASK, ANNOUNCEMENT
+  isRead    Boolean  @default(false)
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

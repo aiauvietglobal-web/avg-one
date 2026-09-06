@@ -1,7 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,600;0,700;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-architects {
+  font-family: 'Architects Daughter', 'Comic Sans MS', cursive !important;
+}
+
+.font-sacramento {
+  font-family: 'Sacramento', 'Brush Script MT', cursive !important;
+}
+
+.font-gochi {
+  font-family: 'Gochi Hand', 'Comic Sans MS', cursive !important;
+}
+
+.font-alexbrush {
+  font-family: 'Alex Brush', 'Brush Script MT', cursive !important;
+}
+
+.font-handlee {
+  font-family: 'Handlee', 'Comic Sans MS', cursive !important;
+}
 
 :root {
   --font-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -70,15 +95,15 @@
 [data-theme="light"] #root,
 [data-theme="light"] .app-main-layout,
 [data-theme="light"] .main-content-area {
-  background-color: #f8fafc !important;
+  background-color: #ffffff !important;
   color: #0f172a !important;
 }
 
 [data-theme="light"] header,
 [data-theme="light"] .mobile-header-bar {
   background-color: #ffffff !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
   color: #0f172a !important;
 }
 
@@ -94,76 +119,164 @@
   border-bottom-color: #e2e8f0 !important;
 }
 
-/* TẤT CẢ KHUNG CÓ NỀN TỐI SẼ CHUYỂN SANG NỀN TRẮNG SÁNG TRONG GIAO DIỆN SÁNG */
+/* ALL CONTAINERS & PANELS IN LIGHT MODE ONLY */
+[data-theme="light"] body,
+[data-theme="light"] #root,
+[data-theme="light"] .app-main-layout,
 [data-theme="light"] .glass-panel,
-[data-theme="light"] .home-intro-card,
-[data-theme="light"] .discussion-event-item,
-[data-theme="light"] .calendar-banner-header,
 [data-theme="light"] .calendar-kpi-box,
 [data-theme="light"] .calendar-filter-box,
-[data-theme="light"] .date-box-inner,
-[data-theme="light"] [style*="backgroundColor: '#0"],
-[data-theme="light"] [style*="backgroundColor: '#1"],
-[data-theme="light"] [style*="backgroundColor: '#3"],
-[data-theme="light"] [style*="backgroundColor: '#4"],
-[data-theme="light"] [style*="backgroundColor: '#7"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(15,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(13,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(11,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(14,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(19,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(22,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(25,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(30,"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(0, 0, 0"],
-[data-theme="light"] [style*="backgroundColor: 'rgba(0,0,0"],
-[data-theme="light"] [style*="background: '#0"],
-[data-theme="light"] [style*="background: '#1"],
-[data-theme="light"] [style*="background: 'linear-gradient(135deg, #0"],
-[data-theme="light"] [style*="background: 'linear-gradient(135deg, #1"],
-[data-theme="light"] [style*="background: 'linear-gradient(180deg, #0"],
-[data-theme="light"] [style*="background: 'linear-gradient(180deg, #1"],
-[data-theme="light"] [style*="background: 'linear-gradient(135deg, rgba(15,"],
-[data-theme="light"] [style*="background: 'linear-gradient(135deg, rgba(13,"],
-[data-theme="light"] [style*="background: 'linear-gradient(135deg, rgba(11,"],
-[data-theme="light"] [style*="background: 'linear-gradient(135deg, rgba(19,"] {
-  background-color: #ffffff !important;
-  background: #ffffff !important;
-  border-color: #e2e8f0 !important;
-  color: #0f172a !important;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05) !important;
+[data-theme="light"] .date-box-inner {
+  border-color: #e2e8f0;
+  color: #0f172a;
 }
 
-/* Đảm bảo Tiêu đề (h1..h6) dùng tông màu đen Jet Black sẫm của chữ ONE trong Logo */
-[data-theme="light"] h1,
-[data-theme="light"] h2,
-[data-theme="light"] h3,
-[data-theme="light"] h4,
-[data-theme="light"] h5,
-[data-theme="light"] h6 {
+/* ============================================================ */
+/* HOME LANDING PAGE FULL-WIDTH BACKGROUND BANDS (TECHCOMBANK STYLE) */
+/* ============================================================ */
+.home-section-band-1 {
+  width: 100% !important;
+  background-color: #e6f4f8 !important;
+  background: #e6f4f8 !important;
+  border-bottom: 1px solid #cce5f0 !important;
+}
+
+[data-theme="dark"] .home-section-band-1 {
+  background-color: #0b1329 !important;
+  background: #0b1329 !important;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
+}
+
+.home-section-band-2 {
+  width: 100% !important;
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="dark"] .home-section-band-2 {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.home-section-band-3 {
+  width: 100% !important;
+  background-color: #f1f5f9 !important;
+  background: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .home-section-band-3 {
+  background-color: #0b0f19 !important;
+  background: #0b0f19 !important;
+}
+
+.home-hero-card-box {
+  border-radius: 24px !important;
+  padding: 32px 36px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%) !important;
+  border: 1px solid #bae6fd !important;
+  box-shadow: 0 10px 30px rgba(2, 132, 199, 0.12) !important;
+}
+
+[data-theme="dark"] .home-hero-card-box {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.home-card-item {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="dark"] .home-card-item {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  border: 1px solid rgba(56, 189, 248, 0.2) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ============================================================ */
+/* UNIFIED CORPORATE DESIGN SYSTEM FOR ALL TAB HEADERS & CARDS   */
+/* ============================================================ */
+[data-theme="light"] .calendar-banner-header,
+[data-theme="light"] .orders-executive-banner,
+[data-theme="light"] .home-intro-card,
+[data-theme="light"] .system-banner-header {
+  background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%) !important;
+  border: 1px solid #bae6fd !important;
+  box-shadow: 0 10px 30px rgba(2, 132, 199, 0.12) !important;
   color: #0f172a !important;
+}
+
+[data-theme="light"] .calendar-banner-header h1,
+[data-theme="light"] .orders-executive-banner h1,
+[data-theme="light"] .home-intro-card h1,
+[data-theme="light"] .system-banner-header h1,
+[data-theme="light"] .orders-banner-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .calendar-banner-header p,
+[data-theme="light"] .orders-executive-banner p,
+[data-theme="light"] .home-intro-card p,
+[data-theme="light"] .system-banner-header p {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .calendar-banner-header span,
+[data-theme="light"] .orders-executive-banner span {
+  color: #0284c7 !important;
+}
+
+/* Stat Cards & KPI Containers in Light Mode */
+[data-theme="light"] .calendar-kpi-box,
+[data-theme="light"] .discussion-card-inner,
+[data-theme="light"] .orders-hub-selector,
+[data-theme="light"] .orders-stat-card {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .calendar-kpi-box span:first-child {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .calendar-filter-box {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .calendar-filter-box select {
+  color: #0284c7 !important;
+  background-color: transparent !important;
+}
+
+[data-theme="light"] .calendar-filter-box select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Đảm bảo Tiêu đề (h1..h6) ngoài calendar module dùng tông màu đen Jet Black khi ở giao diện sáng */
+[data-theme="light"] body:not(.calendar-module-container) h1,
+[data-theme="light"] body:not(.calendar-module-container) h2,
+[data-theme="light"] body:not(.calendar-module-container) h3,
+[data-theme="light"] body:not(.calendar-module-container) h4,
+[data-theme="light"] body:not(.calendar-module-container) h5,
+[data-theme="light"] body:not(.calendar-module-container) h6 {
+  color: #0f172a;
 }
 
 [data-theme="light"] p,
 [data-theme="light"] strong {
-  color: #1e293b !important;
-}
-
-/* CHUYỂN TẤT CẢ CHỮ TRẮNG & NHẠT SANG MÀU ĐEN SẪM KHI BẬT GIAO DIỆN SÁNG */
-[data-theme="light"] [style*="color: '#fff"],
-[data-theme="light"] [style*="color: '#ffffff"],
-[data-theme="light"] [style*="color: #fff"],
-[data-theme="light"] [style*="color: #ffffff"],
-[data-theme="light"] [style*="color: '#f"],
-[data-theme="light"] [style*="color: #f9fafb"],
-[data-theme="light"] [style*="color: #f8fafc"],
-[data-theme="light"] [style*="color: #f3f4f6"],
-[data-theme="light"] [style*="color: #e5e7eb"],
-[data-theme="light"] [style*="color: #cbd5e1"],
-[data-theme="light"] [style*="color: #d1d5db"],
-[data-theme="light"] [style*="color: '#cbd5e1'"],
-[data-theme="light"] [style*="color: '#d1d5db'"] {
-  color: #0f172a !important;
+  color: #1e293b;
 }
 
 [data-theme="light"] [style*="color: '#94a3b8'"],
@@ -274,11 +387,20 @@
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
 }
 
+html,
+body,
+#root {
+  height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-main);
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -638,19 +760,35 @@ header.desktop-only {
   }
 
   .calendar-banner-header {
-    padding: 14px 8px !important;
+    padding: 16px 12px !important;
     border-radius: 16px !important;
     gap: 12px !important;
+    flex-direction: column !important;
     text-align: center !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
-  .calendar-banner-header h1 {
+  .calendar-banner-left {
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .calendar-banner-left h1 {
     font-size: 1.7rem !important;
     font-weight: 900 !important;
     letter-spacing: 0.02em !important;
     text-align: center !important;
+  }
+
+  .calendar-banner-desc {
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  .calendar-banner-divider {
+    display: block !important;
   }
 
   .calendar-kpi-row {
@@ -709,15 +847,15 @@ header.desktop-only {
   }
 
   .date-node-container .date-box-inner {
-    width: 100% !important;
-    flex-direction: row !important;
+    width: 88px !important;
+    flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    gap: 16px !important;
-    padding: 8px 48px !important;
-    border-radius: 14px !important;
-    background: linear-gradient(135deg, #0284c7, #0369a1) !important;
-    border: 1px solid #38bdf8 !important;
+    gap: 8px !important;
+    padding: 10px 6px !important;
+    border-radius: 16px !important;
+    background: linear-gradient(180deg, #005B85, #004B70, #002F4A) !important;
+    border: 1px solid #00E5FF !important;
     box-shadow: none !important;
     position: relative !important;
   }
@@ -725,6 +863,7 @@ header.desktop-only {
   .date-arrow-btn {
     width: 32px !important;
     height: 32px !important;
+    border-radius: 50% !important;
     font-size: 0.95rem !important;
     box-shadow: none !important;
   }
@@ -749,13 +888,26 @@ header.desktop-only {
     display: flex !important;
     justify-content: flex-end !important;
     align-items: center !important;
+    font-size: 0.86rem !important;
+    line-height: 1 !important;
   }
 
   .date-month-name {
     flex: 1 1 0% !important;
     text-align: left !important;
     display: flex !important;
+    flex-direction: row !important;
+    gap: 4px !important;
     justify-content: flex-start !important;
+    align-items: center !important;
+  }
+
+  .date-month-name .month-label,
+  .date-month-name .month-value {
+    font-size: 0.86rem !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
     align-items: center !important;
   }
 
@@ -900,6 +1052,72 @@ header.desktop-only {
     max-height: 90vh !important;
     overflow-y: auto !important;
   }
+}
+
+/* ============================================================ */
+/* FORCED PURE LIGHT MODE COMPONENT OVERRIDES (STRICTLY LIGHT)  */
+/* ============================================================ */
+[data-theme="light"] .discussion-card-inner,
+[data-theme="light"] .discussion-card-box {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .discussion-card-box h3,
+[data-theme="light"] .discussion-card-box h4 {
+  color: #0f172a !important;
+}
+
+/* Sub-boxes inside Event Card (Attendees, Notes, Badges) */
+[data-theme="light"] .discussion-card-box div[style*="backgroundColor: 'rgba(0, 0, 0, 0.4)'"],
+[data-theme="light"] .discussion-card-box div[style*="backgroundColor: 'rgba(0,0,0,0.4)'"],
+[data-theme="light"] .discussion-card-box div[style*="backgroundColor: '#161b26'"],
+[data-theme="light"] .discussion-card-box div[style*="backgroundColor: '#0b0f19'"] {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+/* Accordion Header Bar ("THỐNG KÊ DỮ LIỆU TRAO ĐỔI") */
+[data-theme="light"] div[style*="backgroundColor: 'rgba(16, 27, 42, 0.9)'"],
+[data-theme="light"] div[style*="backgroundColor: '#161b26'"],
+[data-theme="light"] div[style*="backgroundColor: '#101b2a'"] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] div[style*="backgroundColor: 'rgba(16, 27, 42, 0.9)'"] div,
+[data-theme="light"] div[style*="backgroundColor: 'rgba(16, 27, 42, 0.9)'"] span {
+  color: #0f172a !important;
+}
+
+/* Description Sub-Box inside Banner ("Quản lý và theo dõi các cuộc trao đổi...") */
+[data-theme="light"] div[style*="backgroundColor: 'rgba(0, 0, 0, 0.35)'"],
+[data-theme="light"] div[style*="backgroundColor: 'rgba(0,0,0,0.35)'"] {
+  background-color: rgba(2, 132, 199, 0.1) !important;
+  background: rgba(2, 132, 199, 0.1) !important;
+  border-color: rgba(2, 132, 199, 0.3) !important;
+}
+
+[data-theme="light"] div[style*="backgroundColor: 'rgba(0, 0, 0, 0.35)'"] span,
+[data-theme="light"] div[style*="backgroundColor: 'rgba(0,0,0,0.35)'"] span {
+  color: #0284c7 !important;
+}
+
+/* Action Buttons (+ Button, Thùng Rác, Refresh, Calendar Views) */
+[data-theme="light"] button[style*="backgroundColor: '#161b26'"],
+[data-theme="light"] button[style*="backgroundColor: '#1e293b'"] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0284c7 !important;
 }
 
 /* 2. Desktop Preview Mode (.force-mobile-mode Overrides - 100% Synchronized) */
@@ -1054,15 +1272,31 @@ header.desktop-only {
   padding: 16px 14px !important;
   border-radius: 18px !important;
   gap: 14px !important;
+  flex-direction: column !important;
   text-align: center !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-.force-mobile-mode .calendar-banner-header h1 {
+.force-mobile-mode .calendar-banner-left {
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.force-mobile-mode .calendar-banner-left h1 {
   font-size: 1.35rem !important;
   letter-spacing: -0.01em !important;
   text-align: center !important;
+}
+
+.force-mobile-mode .calendar-banner-desc {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.force-mobile-mode .calendar-banner-divider {
+  display: block !important;
 }
 
 .force-mobile-mode .calendar-kpi-row {
@@ -1121,15 +1355,15 @@ header.desktop-only {
 }
 
 .force-mobile-mode .date-node-container .date-box-inner {
-  width: 100% !important;
-  flex-direction: row !important;
+  width: 88px !important;
+  flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 16px !important;
-  padding: 8px 48px !important;
-  border-radius: 14px !important;
-  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
-  border: 1px solid #38bdf8 !important;
+  gap: 8px !important;
+  padding: 10px 6px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(180deg, #005B85, #004B70, #002F4A) !important;
+  border: 1px solid #00E5FF !important;
   box-shadow: none !important;
   position: relative !important;
 }
@@ -1145,13 +1379,26 @@ header.desktop-only {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
+  font-size: 0.86rem !important;
+  line-height: 1 !important;
 }
 
 .force-mobile-mode .date-month-name {
   flex: 1 1 0% !important;
   text-align: left !important;
   display: flex !important;
+  flex-direction: row !important;
+  gap: 4px !important;
   justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+.force-mobile-mode .date-month-name .month-label,
+.force-mobile-mode .date-month-name .month-value {
+  font-size: 0.86rem !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  display: inline-flex !important;
   align-items: center !important;
 }
 
@@ -1292,3 +1539,778 @@ header.desktop-only {
   to { opacity: 1; }
 }
 
+/* ============================================================ */
+/* CRISP COMPACT BORDER RADIUS SYSTEM OVERRIDE (GIẢM ĐỘ BO GÓC)  */
+/* ============================================================ */
+
+/* 1. Hero Cards, Main Executive Banners, High-Level Cards */
+.home-hero-card-box,
+.orders-executive-banner,
+.calendar-banner-header,
+.home-intro-card,
+.system-banner-header,
+.orders-graphic-decor {
+  border-radius: 10px !important;
+}
+
+/* 2. Containers, Cards, Panels, Modals, Popovers, Dropdowns */
+.glass-panel,
+.orders-hub-selector,
+.orders-stat-card,
+.calendar-kpi-box,
+.discussion-card-inner,
+.calendar-filter-box,
+.home-card-item,
+.discussion-event-item,
+div[style*="borderRadius: 28"],
+div[style*="borderRadius: 26"],
+div[style*="borderRadius: 24"],
+div[style*="borderRadius: 22"],
+div[style*="borderRadius: 20"],
+div[style*="borderRadius: 18"],
+div[style*="borderRadius: 16"],
+div[style*="borderRadius: 14"],
+div[style*="borderRadius: 12"] {
+  border-radius: 8px !important;
+}
+
+/* 3. Small Sub-boxes, Action Buttons, Input & Select Controls */
+button,
+input,
+select,
+textarea,
+button[style*="borderRadius"],
+input[style*="borderRadius"],
+select[style*="borderRadius"],
+div[style*="borderRadius: 10"],
+div[style*="borderRadius: 8"] {
+  border-radius: 6px !important;
+}
+
+/* 4. Badges, Tags, Pills */
+span[style*="borderRadius"] {
+  border-radius: 6px !important;
+}
+
+/* Preserve Circular Avatars, Buttons & Indicators */
+.rounded-full,
+button.rounded-full,
+button[style*="borderRadius: 50%"],
+button[style*="borderRadius: '50%'"],
+button[style*="50%"],
+div[style*="borderRadius: '50%'"],
+div[style*="borderRadius: 50%"],
+div[style*="borderRadius: '100%'"],
+div[style*="borderRadius: 100%"],
+span[style*="borderRadius: '50%'"],
+span[style*="borderRadius: 50%"] {
+  border-radius: 50% !important;
+}
+
+/* ============================================================ */
+/* DEEP HARMONY BACKGROUND: WATER BLUE & FIRE ORANGE (AVG ONE)   */
+/* ============================================================ */
+
+/* Main layout position & dark abyss base setup */
+.app-main-layout {
+  position: relative;
+  min-height: 100vh;
+  background-color: #04060d !important;
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+[data-theme="light"] .app-main-layout {
+  background-color: #f0f4f9 !important;
+  color: #0f172a;
+}
+
+/* Fixed Background Canvas Container */
+.tech-bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, rgba(8, 15, 30, 0.7) 0%, #03050b 100%);
+}
+
+[data-theme="light"] .tech-bg-canvas {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #edf3fa 100%);
+}
+
+/* Layer 1: Fine Refined Cyber Grid Mesh (Tối hơn, Nét mỏng tinh tế) */
+.tech-bg-grid-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.14) 0%, transparent 60%),
+    linear-gradient(to right, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 36px 36px, 36px 36px;
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 40%, #000 35%, transparent 92%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 40%, #000 35%, transparent 92%);
+  opacity: 0.85;
+}
+
+[data-theme="light"] .tech-bg-grid-mesh {
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(2, 132, 199, 0.08) 0%, transparent 60%),
+    linear-gradient(to right, rgba(2, 132, 199, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2, 132, 199, 0.04) 1px, transparent 1px);
+  opacity: 0.75;
+}
+
+/* Layer 2: Deep Ambient Water & Fire Glowing Orbs (Chuyển động Nước & Lửa tinh tế) */
+.tech-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform, opacity;
+}
+
+/* 💧 Xanh Nước Biển Sâu (Deep Oceanic Water Glow - Top Right & Mid) */
+.water-orb-1 {
+  top: -15%;
+  right: -5%;
+  width: 780px;
+  height: 780px;
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.26) 0%, rgba(3, 105, 161, 0.12) 45%, rgba(12, 74, 110, 0.04) 70%, transparent 85%);
+  animation: fluidWaterMotion1 26s ease-in-out infinite alternate;
+}
+
+.water-orb-2 {
+  top: 35%;
+  right: 15%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 80%);
+  animation: fluidWaterMotion2 20s ease-in-out infinite alternate;
+}
+
+/* 🔥 Cam Lửa Rực Rỡ Tinh Tế (Fire Orange Flame Glow - Bottom Left & Mid Left) */
+.fire-orb-1 {
+  bottom: -20%;
+  left: -8%;
+  width: 820px;
+  height: 820px;
+  background: radial-gradient(circle, rgba(255, 87, 34, 0.22) 0%, rgba(234, 88, 12, 0.1) 45%, rgba(154, 52, 18, 0.03) 72%, transparent 85%);
+  animation: fireFlamePulse1 28s ease-in-out infinite alternate;
+}
+
+.fire-orb-2 {
+  top: 15%;
+  left: -6%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.18) 0%, rgba(245, 158, 11, 0.06) 50%, transparent 75%);
+  animation: fireFlamePulse2 22s ease-in-out infinite alternate;
+}
+
+/* Light Theme Adjustments */
+[data-theme="light"] .water-orb-1 {
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.14) 0%, rgba(56, 189, 248, 0.05) 50%, transparent 75%);
+  filter: blur(80px);
+}
+
+[data-theme="light"] .water-orb-2 {
+  background: radial-gradient(circle, rgba(186, 230, 253, 0.4) 0%, transparent 75%);
+  filter: blur(70px);
+}
+
+[data-theme="light"] .fire-orb-1 {
+  background: radial-gradient(circle, rgba(255, 87, 34, 0.11) 0%, rgba(245, 158, 11, 0.04) 50%, transparent 78%);
+  filter: blur(80px);
+}
+
+[data-theme="light"] .fire-orb-2 {
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, transparent 70%);
+  filter: blur(70px);
+}
+
+/* Fluid Keyframe Animations (Dòng chảy mượt êm ái) */
+@keyframes fluidWaterMotion1 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(-70px, 50px) scale(1.12) rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(45px, 90px) scale(0.95) rotate(-5deg);
+    opacity: 0.75;
+  }
+}
+
+@keyframes fluidWaterMotion2 {
+  0% {
+    transform: translate(0, 0) scale(0.95);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate(-45px, -35px) scale(1.15);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(50px, 40px) scale(1);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fireFlamePulse1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(80px, -55px) scale(1.1);
+    opacity: 0.98;
+  }
+  100% {
+    transform: translate(-35px, -100px) scale(0.92);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fireFlamePulse2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(55px, 35px) scale(1.08);
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate(-45px, 65px) scale(0.94);
+    opacity: 0.65;
+  }
+}
+
+/* Layer 3: Subtle Fire Embers & Water Drop Particles (Hạt tàn lửa & Nước nổi 3D) */
+.tech-particle-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 16px rgba(56, 189, 248, 0.6);
+  animation: particleFloatSubtle 18s linear infinite;
+  opacity: 0.65;
+}
+
+.tech-particle-dot-orange {
+  background: #ff5722;
+  box-shadow: 0 0 8px #ff5722, 0 0 16px rgba(255, 87, 34, 0.6);
+}
+
+.tech-particle-p1 { top: 85%; left: 14%; width: 4px; height: 4px; animation-delay: 0s; }
+.tech-particle-p2 { top: 92%; left: 38%; width: 4px; height: 4px; animation-delay: -4.5s; }
+.tech-particle-p3 { top: 88%; left: 68%; width: 3px; height: 3px; animation-delay: -9s; }
+.tech-particle-p4 { top: 80%; left: 86%; width: 4px; height: 4px; animation-delay: -13.5s; }
+
+@keyframes particleFloatSubtle {
+  overflow-x: hidden;
+}
+
+[data-theme="light"] .app-main-layout {
+  background-color: #f0f4f9 !important;
+  color: #0f172a;
+}
+
+/* Fixed Background Canvas Container */
+.tech-bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, rgba(8, 15, 30, 0.7) 0%, #03050b 100%);
+}
+
+[data-theme="light"] .tech-bg-canvas {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #edf3fa 100%);
+}
+
+/* Layer 1: Fine Refined Cyber Grid Mesh (Tối hơn, Nét mỏng tinh tế) */
+.tech-bg-grid-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.14) 0%, transparent 60%),
+    linear-gradient(to right, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 36px 36px, 36px 36px;
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 40%, #000 35%, transparent 92%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 40%, #000 35%, transparent 92%);
+  opacity: 0.85;
+}
+
+[data-theme="light"] .tech-bg-grid-mesh {
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(2, 132, 199, 0.08) 0%, transparent 60%),
+    linear-gradient(to right, rgba(2, 132, 199, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2, 132, 199, 0.04) 1px, transparent 1px);
+  opacity: 0.75;
+}
+
+/* Layer 2: Deep Ambient Water & Fire Glowing Orbs (Chuyển động Nước & Lửa tinh tế) */
+.tech-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform, opacity;
+}
+
+/* 💧 Xanh Nước Biển Sâu (Deep Oceanic Water Glow - Top Right & Mid) */
+.water-orb-1 {
+  top: -15%;
+  right: -5%;
+  width: 780px;
+  height: 780px;
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.26) 0%, rgba(3, 105, 161, 0.12) 45%, rgba(12, 74, 110, 0.04) 70%, transparent 85%);
+  animation: fluidWaterMotion1 26s ease-in-out infinite alternate;
+}
+
+.water-orb-2 {
+  top: 35%;
+  right: 15%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 80%);
+  animation: fluidWaterMotion2 20s ease-in-out infinite alternate;
+}
+
+/* 🔥 Cam Lửa Rực Rỡ Tinh Tế (Fire Orange Flame Glow - Bottom Left & Mid Left) */
+.fire-orb-1 {
+  bottom: -20%;
+  left: -8%;
+  width: 820px;
+  height: 820px;
+  background: radial-gradient(circle, rgba(255, 87, 34, 0.22) 0%, rgba(234, 88, 12, 0.1) 45%, rgba(154, 52, 18, 0.03) 72%, transparent 85%);
+  animation: fireFlamePulse1 28s ease-in-out infinite alternate;
+}
+
+.fire-orb-2 {
+  top: 15%;
+  left: -6%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.18) 0%, rgba(245, 158, 11, 0.06) 50%, transparent 75%);
+  animation: fireFlamePulse2 22s ease-in-out infinite alternate;
+}
+
+/* Light Theme Adjustments */
+[data-theme="light"] .water-orb-1 {
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.14) 0%, rgba(56, 189, 248, 0.05) 50%, transparent 75%);
+  filter: blur(80px);
+}
+
+[data-theme="light"] .water-orb-2 {
+  background: radial-gradient(circle, rgba(186, 230, 253, 0.4) 0%, transparent 75%);
+  filter: blur(70px);
+}
+
+[data-theme="light"] .fire-orb-1 {
+  background: radial-gradient(circle, rgba(255, 87, 34, 0.11) 0%, rgba(245, 158, 11, 0.04) 50%, transparent 78%);
+  filter: blur(80px);
+}
+
+[data-theme="light"] .fire-orb-2 {
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.12) 0%, transparent 70%);
+  filter: blur(70px);
+}
+
+/* Fluid Keyframe Animations (Dòng chảy mượt êm ái) */
+@keyframes fluidWaterMotion1 {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(-70px, 50px) scale(1.12) rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(45px, 90px) scale(0.95) rotate(-5deg);
+    opacity: 0.75;
+  }
+}
+
+@keyframes fluidWaterMotion2 {
+  0% {
+    transform: translate(0, 0) scale(0.95);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate(-45px, -35px) scale(1.15);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(50px, 40px) scale(1);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fireFlamePulse1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(80px, -55px) scale(1.1);
+    opacity: 0.98;
+  }
+  100% {
+    transform: translate(-35px, -100px) scale(0.92);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fireFlamePulse2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(55px, 35px) scale(1.08);
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate(-45px, 65px) scale(0.94);
+    opacity: 0.65;
+  }
+}
+
+/* Layer 3: Subtle Fire Embers & Water Drop Particles (Hạt tàn lửa & Nước nổi 3D) */
+.tech-particle-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8, 0 0 16px rgba(56, 189, 248, 0.6);
+  animation: particleFloatSubtle 18s linear infinite;
+  opacity: 0.65;
+}
+
+.tech-particle-dot-orange {
+  background: #ff5722;
+  box-shadow: 0 0 8px #ff5722, 0 0 16px rgba(255, 87, 34, 0.6);
+}
+
+.tech-particle-p1 { top: 85%; left: 14%; width: 4px; height: 4px; animation-delay: 0s; }
+.tech-particle-p2 { top: 92%; left: 38%; width: 4px; height: 4px; animation-delay: -4.5s; }
+.tech-particle-p3 { top: 88%; left: 68%; width: 3px; height: 3px; animation-delay: -9s; }
+.tech-particle-p4 { top: 80%; left: 86%; width: 4px; height: 4px; animation-delay: -13.5s; }
+
+@keyframes particleFloatSubtle {
+  0% { transform: translateY(0) scale(1); opacity: 0.15; }
+  50% { opacity: 0.85; transform: translateY(-300px) scale(1.25); }
+  100% { transform: translateY(-600px) scale(0.8); opacity: 0; }
+}
+
+/* Ensure content layer stays above fixed background canvas */
+.sidebar-drawer,
+.main-content-area {
+  position: relative;
+  z-index: 2;
+}
+
+.main-content-area {
+  background-color: transparent !important;
+}
+
+/* ========================================================================= */
+/* ⚡ ULTIMATE STYLING & ACCENT COLOR OVERRIDES FOR CALENDAR MODULE */
+/* ========================================================================= */
+
+/* Force 100% Pure White (#ffffff) for all meeting detail card text */
+.discussion-event-item h3,
+.discussion-event-item strong,
+.discussion-event-item p,
+.discussion-event-item .attendees-box,
+[data-theme="light"] .discussion-event-item h3,
+[data-theme="light"] .discussion-event-item strong,
+[data-theme="light"] .discussion-event-item p,
+[data-theme="light"] .discussion-event-item .attendees-box {
+  color: #ffffff !important;
+}
+
+/* Specific colored accents (Only for sub-heading labels) */
+.calendar-module-container .\text-\[\#00A8E8\],
+[data-theme="light"] .calendar-module-container .\text-\[\#00A8E8\] {
+  color: #00A8E8 !important;
+}
+
+.calendar-module-container .text-rose-400,
+[data-theme="light"] .calendar-module-container .text-rose-400 {
+  color: #f87171 !important;
+}
+
+.calendar-module-container .text-emerald-400,
+[data-theme="light"] .calendar-module-container .text-emerald-400 {
+  color: #34d399 !important;
+}
+
+.calendar-module-container .text-amber-400,
+.calendar-module-container .text-amber-300,
+[data-theme="light"] .calendar-module-container .text-amber-400,
+[data-theme="light"] .calendar-module-container .text-amber-300 {
+  color: #fcd34d !important;
+}
+
+.calendar-module-container .\text-\[\#F15A24\],
+[data-theme="light"] .calendar-module-container .\text-\[\#F15A24\] {
+  color: #F15A24 !important;
+}
+
+@keyframes slideLeftRight {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-4px); }
+}
+
+.animate-slide-left {
+  animation: slideLeftRight 1s ease-in-out infinite;
+}
+
+/* ========================================================================= */
+/* ⚡ ULTIMATE CYAN BLUE SCROLLBAR SYSTEM (THANH CUỘN MÀU XANH QUY ƯỚC)     */
+/* ========================================================================= */
+
+/* 1. Global Webkit Custom Scrollbar (Chrome, Safari, Edge, Opera) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.45);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #bae6fd;
+  border: 1px solid #ffffff;
+  box-shadow: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #7dd3fc;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #0284c7;
+}
+
+/* 2. Firefox Standard Scrollbar Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.45) transparent;
+}
+
+[data-theme="light"] * {
+  scrollbar-color: #bae6fd transparent;
+}
+
+/* 3. Utility Custom Scrollbar Classes */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #bae6fd;
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* 4. Horizontal Scrollbars */
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: #bae6fd;
+}
+
+/* Master 8.0s Rhythm Timeline (Refined with 1.0s Snappy Line Drawing & Dynamic Opacity Breathing Border):
+   - 0.0s -> 1.0s (0% -> 12.5%): Line 1 draws out fast (1.0s)
+   - 1.0s -> 2.0s (12.5% -> 25.0%): Line 2 draws out fast (1.0s)
+   - 2.0s -> 3.0s (25.0% -> 37.5%): Line 3 draws out fast (1.0s)
+   - 3.0s -> 5.5s (37.5% -> 68.75%): Box Border traces clockwise with dynamic opacity wave right as Line 3 finishes at 3.0s
+   - 5.5s -> 7.2s (68.75% -> 90.0%): All elements hold visible with subtle breathing glow
+   - 7.2s -> 8.0s (90.0% -> 100%): All elements fade out together in unison
+*/
+
+/* Line 1 */
+@keyframes beat-line-1 {
+  0% {
+    stroke-dashoffset: 210;
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.5;
+  }
+  12.5% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  87.5% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  93.75% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 210;
+    opacity: 0;
+  }
+}
+
+/* Line 2 */
+@keyframes beat-line-2 {
+  0%, 12.49% {
+    stroke-dashoffset: 210;
+    opacity: 0;
+  }
+  12.5% {
+    opacity: 0.3;
+  }
+  25% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  87.5% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  93.75% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 210;
+    opacity: 0;
+  }
+}
+
+/* Line 3 */
+@keyframes beat-line-3 {
+  0%, 24.99% {
+    stroke-dashoffset: 210;
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  37.5% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  87.5% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  93.75% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 210;
+    opacity: 0;
+  }
+}
+
+/* Box Border (Starts AT 37.5% [3.0s] right as Line 3 finishes. Traces clockwise with dynamic opacity wave, completes at 68.75% [5.5s], holds, then fades out smoothly at 87.5%->100%) */
+@keyframes beat-box-border {
+  0%, 37.49% {
+    stroke-dashoffset: 1200;
+    opacity: 0;
+  }
+  37.5% {
+    opacity: 0.2;
+    stroke-dashoffset: 1200;
+  }
+  45% {
+    opacity: 0.85;
+  }
+  52.5% {
+    opacity: 0.55;
+  }
+  60% {
+    opacity: 1;
+  }
+  68.75% {
+    stroke-dashoffset: 0;
+    opacity: 0.8;
+  }
+  78% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  87.5% {
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+  }
+  93.75% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 1200;
+    opacity: 0;
+  }
+}
+
+.animate-draw-line-1 {
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  animation: beat-line-1 8s linear infinite;
+}
+
+.animate-draw-line-2 {
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  animation: beat-line-2 8s linear infinite;
+}
+
+.animate-draw-line-3 {
+  stroke-dasharray: 210;
+  stroke-dashoffset: 210;
+  animation: beat-line-3 8s linear infinite;
+}
+
+.animate-slogan-box-border {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: beat-box-border 8s linear infinite;
+}
