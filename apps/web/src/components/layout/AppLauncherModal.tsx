@@ -142,7 +142,17 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-2.5 sm:gap-5">
           {APP_MODULES.map((mod) => {
             const Icon = mod.icon;
-            const isActive = activeModule === mod.id;
+            const isModuleActive = (modId: AppModuleId) => {
+              if (activeModule === modId) return true;
+              if (modId === 'system' && activeModule === 'admin') return true;
+              if (modId === 'orders' && (activeModule === 'wework' || activeModule === 'dashboard')) return true;
+              if (modId === 'hr' && activeModule === 'goal') return true;
+              if (modId === 'finance' && activeModule === 'request') return true;
+              if (modId === 'rd' && activeModule === 'workflow') return true;
+              return false;
+            };
+            const isActive = isModuleActive(mod.id);
+
             return (
               <button
                 key={mod.id}
@@ -150,10 +160,10 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                   onSelectModule(mod.id);
                   onClose();
                 }}
-                className={`flex flex-col items-center justify-center p-3 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all text-center group cursor-pointer ${
+                className={`flex flex-col items-center justify-center p-3 sm:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all text-center group cursor-pointer ${
                   isActive
-                    ? 'border-[#F15A24] bg-orange-50/40 dark:bg-orange-950/40 shadow-xs'
-                    : 'border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#F15A24]/60 hover:-translate-y-1 hover:shadow-md'
+                    ? 'border-[#F15A24] bg-orange-50/60 dark:bg-orange-950/40 shadow-xs'
+                    : 'border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#F15A24] hover:bg-orange-50/20 hover:-translate-y-1 hover:shadow-md'
                 }`}
               >
                 <div className={`w-11 h-11 sm:w-18 sm:h-18 rounded-xl sm:rounded-2xl ${mod.bgColor} border flex items-center justify-center mb-1.5 sm:mb-3 group-hover:scale-110 transition-transform shadow-xs`}>
