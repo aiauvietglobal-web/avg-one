@@ -1663,16 +1663,16 @@ export const SpeechToTextModule: React.FC = () => {
             {/* CARD 3: MULTI-SPEAKER DIARIZATION & QUẢN LÝ PHÁT NGÔN */}
             <div className="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                <span className="flex items-center gap-1.5 text-xs font-extrabold text-sky-600 dark:text-sky-400">
-                  <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#F15A24] dark:text-orange-400">
+                  <Users className="w-4 h-4 text-[#F15A24] dark:text-orange-400" />
                   <span>Người Nói ({speakers.length})</span>
                 </span>
               </h3>
 
               {/* Live Pitch Frequency Status */}
               {autoDiarization && (
-                <div className="px-2 py-1 rounded-lg text-[10px] font-bold bg-sky-50 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300 border border-sky-200 dark:border-sky-800 flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-sky-500 animate-pulse shrink-0" />
+                <div className="px-2 py-1 rounded-lg text-[10px] font-bold bg-orange-50 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-300 border border-orange-200 dark:border-orange-800 flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-[#F15A24] animate-pulse shrink-0" />
                   <span className="truncate">{detectedVoiceLabel}</span>
                 </div>
               )}
@@ -1691,15 +1691,15 @@ export const SpeechToTextModule: React.FC = () => {
                           activeSpeakerRef.current = spk.id;
                           showToast(`🎙️ Đã chọn phát ngôn: ${spk.name}`);
                         }}
-                        className={`px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
+                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
                           isSelected
-                            ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-500 dark:border-sky-400 border text-sky-600 dark:text-sky-400 font-black shadow-2xs'
-                            : 'bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700'
+                            ? 'bg-orange-50/80 dark:bg-orange-950/40 border-[#F15A24] dark:border-orange-500 border text-[#F15A24] dark:text-orange-400 font-extrabold shadow-xs'
+                            : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#F15A24]/60 hover:bg-orange-50/30'
                         }`}
                         title={spk.name}
                       >
                         <span className="truncate">{spk.name}</span>
-                        {isSelected && <Check className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400 shrink-0 stroke-[3]" />}
+                        {isSelected && <Check className="w-3.5 h-3.5 text-[#F15A24] dark:text-orange-400 shrink-0 stroke-[3]" />}
                       </button>
                     );
                   })}
@@ -1727,7 +1727,7 @@ export const SpeechToTextModule: React.FC = () => {
                 </button>
                 <button
                   onClick={handleAddSpeaker}
-                  className={`px-1.5 py-1 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-[10px] font-black flex items-center justify-center gap-1 shadow-2xs transition-all ${
+                  className={`px-1.5 py-1 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-lg text-[10px] font-black flex items-center justify-center gap-1 shadow-2xs transition-all ${
                     !autoDiarization ? 'col-span-1' : ''
                   }`}
                 >
@@ -1837,7 +1837,7 @@ export const SpeechToTextModule: React.FC = () => {
                       onClick={() => setFilterSpeakerId('all')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                         filterSpeakerId === 'all'
-                          ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                          ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                       }`}
                     >
@@ -1852,7 +1852,7 @@ export const SpeechToTextModule: React.FC = () => {
                           onClick={() => setFilterSpeakerId(s.id)}
                           className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                             filterSpeakerId === s.id
-                              ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                              ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
                               : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                           }`}
                         >
@@ -1864,11 +1864,11 @@ export const SpeechToTextModule: React.FC = () => {
                       onClick={() => setFilterSpeakerId('spk-deaf')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                         filterSpeakerId === 'spk-deaf'
-                          ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                          ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                       }`}
                     >
-                      <span>Bạn ({messages.filter(m => m.sender === 'DEAF').length})</span>
+                      <span>{DEAF_SPEAKER.name} ({messages.filter(m => m.sender === 'DEAF').length})</span>
                     </button>
                   </div>
                 )}
@@ -2751,9 +2751,9 @@ export const SpeechToTextModule: React.FC = () => {
                   <div className="flex items-center gap-1 overflow-x-auto">
                     <button
                       onClick={() => setFilterSpeakerId('all')}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                         filterSpeakerId === 'all'
-                          ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                          ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                       }`}
                     >
@@ -2765,9 +2765,9 @@ export const SpeechToTextModule: React.FC = () => {
                         <button
                           key={s.id}
                           onClick={() => setFilterSpeakerId(s.id)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                             filterSpeakerId === s.id
-                              ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                              ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
                               : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                           }`}
                         >
@@ -2775,6 +2775,16 @@ export const SpeechToTextModule: React.FC = () => {
                         </button>
                       );
                     })}
+                    <button
+                      onClick={() => setFilterSpeakerId('spk-deaf')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
+                        filterSpeakerId === 'spk-deaf'
+                          ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
+                          : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      <span>{DEAF_SPEAKER.name} ({messages.filter(m => m.sender === 'DEAF').length})</span>
+                    </button>
                   </div>
                 )}
 
