@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
-    port: 5173,
-    allowedHosts: ['one.auvietglobal.com', 'localhost', '127.0.0.1']
+    port: 80,
+    allowedHosts: ['one.auvietglobal.com', 'one.auviet.com', 'localhost', '127.0.0.1', '.auvietglobal.com', '.auviet.com']
   }
 })

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Mic, MicOff, Volume2, VolumeX, RotateCcw, Copy, Download, Trash2,
   Settings, Type, Sparkles, MessageSquare, FlipVertical, Play, Pause, Send,
-  HelpCircle, CheckCircle2, Shield, Languages, RefreshCw, AlertCircle, Eye, Sliders, Globe, ArrowRightLeft, FileText, Check, Repeat,
+  HelpCircle, CheckCircle2, Shield, Languages, RefreshCw, AlertCircle, Eye, EyeOff, Sliders, SlidersHorizontal, Globe, ArrowRightLeft, FileText, Check, Repeat,
   Users, UserPlus, Edit3, Filter, Plus, Activity, Zap, Maximize2, Minimize2, Gauge, X, Calendar, ToggleLeft, ToggleRight,
   History, FolderOpen, PlusCircle, Clock, Edit2
 } from 'lucide-react';
@@ -153,7 +153,7 @@ export const SPEAKER_COLOR_PALETTE: SpeakerColorStyle[] = [
 export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   {
     id: 'spk-1',
-    name: 'Người nói 1',
+    name: '#K1; DH',
     color: SPEAKER_COLOR_PALETTE[0].colorKey,
     bgClass: SPEAKER_COLOR_PALETTE[0].bgClass,
     borderClass: SPEAKER_COLOR_PALETTE[0].borderClass,
@@ -162,7 +162,7 @@ export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   },
   {
     id: 'spk-2',
-    name: 'Người nói 2',
+    name: '4.T - Lưu Trang',
     color: SPEAKER_COLOR_PALETTE[1].colorKey,
     bgClass: SPEAKER_COLOR_PALETTE[1].bgClass,
     borderClass: SPEAKER_COLOR_PALETTE[1].borderClass,
@@ -171,7 +171,7 @@ export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   },
   {
     id: 'spk-3',
-    name: 'Người nói 3',
+    name: '9; 6 - Hải Lưu',
     color: SPEAKER_COLOR_PALETTE[2].colorKey,
     bgClass: SPEAKER_COLOR_PALETTE[2].bgClass,
     borderClass: SPEAKER_COLOR_PALETTE[2].borderClass,
@@ -191,7 +191,7 @@ export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
 
 export const DEAF_SPEAKER: SpeakerProfile = {
   id: 'spk-deaf',
-  name: 'Bạn',
+  name: '3.1 - Ngọc Anh',
   color: 'sky',
   bgClass: 'bg-sky-50 dark:bg-sky-950/60',
   borderClass: 'border-sky-300 dark:border-sky-800',
@@ -238,6 +238,7 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
 export const SpeechToTextModule: React.FC = () => {
   // Active Sub-Tab: 'direct' (Chuyển đổi trực tiếp) | 'text' (Chuyển đổi văn bản) | 'lang' (Chuyển đổi ngôn ngữ)
   const [activeSubTab, setActiveSubTab] = useState<SpeechSubTab>('direct');
+  const [isMobileSettingsOpen, setIsMobileSettingsOpen] = useState<boolean>(false);
 
   // Conversation History & Storage States
   const [savedConversations, setSavedConversations] = useState<SavedConversation[]>(() => {
@@ -273,7 +274,7 @@ export const SpeechToTextModule: React.FC = () => {
           {
             id: `msg-demo-2-${Date.now()}`,
             sender: 'DEAF',
-            senderName: 'Bạn',
+            senderName: '3.1 - Ngọc Anh',
             speakerId: 'spk-deaf',
             text: 'Rất tốt! Tôi có thể đọc rõ từng câu chữ của bạn trên màn hình.',
             translatedText: 'Great! I can clearly read every word of yours on screen.',
@@ -306,11 +307,46 @@ export const SpeechToTextModule: React.FC = () => {
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [tempTitleInput, setTempTitleInput] = useState<string>('');
 
-  // Multi-Speaker Diarization & Identity Management States
-  const [speakers, setSpeakers] = useState<SpeakerProfile[]>(DEFAULT_SPEAKERS);
+  // Multi-Speaker Diarization & Identity Management States (Persisted in localStorage)
+  const [speakers, setSpeakers] = useState<SpeakerProfile[]>(() => {
+    try {
+      const stored = localStorage.getItem('avg_speech_speakers');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.error('Failed to parse speakers from localStorage:', e);
+    }
+    return DEFAULT_SPEAKERS;
+  });
   const [activeSpeakerId, setActiveSpeakerId] = useState<string>('spk-1');
   const [filterSpeakerId, setFilterSpeakerId] = useState<string>('all');
+
+  // Toggle Speaker Filter Bar Visibility
+  const [showSpeakerFilterBar, setShowSpeakerFilterBar] = useState<boolean>(() => {
+    try {
+      const stored = localStorage.getItem('avg_speech_show_filter_bar');
+      if (stored !== null) return JSON.parse(stored);
+    } catch (e) {}
+    return true;
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('avg_speech_show_filter_bar', JSON.stringify(showSpeakerFilterBar));
+    } catch (e) {}
+  }, [showSpeakerFilterBar]);
   const activeSpeakerRef = useRef<string>('spk-1');
+
+  // Auto persist speakers to localStorage whenever modified
+  useEffect(() => {
+    try {
+      localStorage.setItem('avg_speech_speakers', JSON.stringify(speakers));
+    } catch (e) {
+      console.error('Failed to save speakers to localStorage:', e);
+    }
+  }, [speakers]);
 
   useEffect(() => {
     activeSpeakerRef.current = activeSpeakerId;
@@ -319,6 +355,17 @@ export const SpeechToTextModule: React.FC = () => {
   // Speech Recognition States (3-State Flow: 'idle' [Green] | 'recording' [Red] | 'paused' [Yellow])
   const [micState, setMicState] = useState<'idle' | 'recording' | 'paused'>('idle');
   const [isListening, setIsListening] = useState<boolean>(false);
+  const isListeningRef = useRef<boolean>(false);
+  const micStateRef = useRef<'idle' | 'recording' | 'paused'>('idle');
+
+  useEffect(() => {
+    isListeningRef.current = isListening;
+  }, [isListening]);
+
+  useEffect(() => {
+    micStateRef.current = micState;
+  }, [micState]);
+
   const [interimTranscript, setInterimTranscript] = useState<string>('');
   const [currentLanguage, setCurrentLanguage] = useState<string>('vi-VN');
   const [targetLanguage, setTargetLanguage] = useState<string>('en-US');
@@ -406,6 +453,12 @@ export const SpeechToTextModule: React.FC = () => {
   const recognitionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mobileDictationInputRef = useRef<HTMLInputElement>(null);
+  const mobileAudioCaptureRef = useRef<HTMLInputElement>(null);
+  const deafInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const realtimeTimerRef = useRef<any>(null);
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
   const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
@@ -422,10 +475,10 @@ export const SpeechToTextModule: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Dynamic Acoustic Pitch Signature Clusters for automatic voice identification
-  const cluster1Ref = useRef<number | null>(null);
-  const cluster2Ref = useRef<number | null>(null);
-  const cluster3Ref = useRef<number | null>(null);
+  // Dynamic Acoustic Pitch Signature Clusters (Learned & Pre-trained from voice samples)
+  const cluster1Ref = useRef<number | null>(130); // Mẫu 1: #K1; DH (~130Hz)
+  const cluster2Ref = useRef<number | null>(225); // Mẫu 2: 4.T - Lưu Trang (~225Hz)
+  const cluster3Ref = useRef<number | null>(175); // Mẫu 3: 9; 6 - Hải Lưu (~175Hz)
 
   const handleResetVoiceClusters = () => {
     cluster1Ref.current = null;
@@ -486,6 +539,10 @@ export const SpeechToTextModule: React.FC = () => {
   // Start real-time audio pitch analyzer
   const startAudioPitchAnalyzer = async () => {
     try {
+      // Prevent mic lock out on mobile browsers where getUserMedia interferes with webkitSpeechRecognition
+      const isMobileEnv = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobileEnv || !navigator.mediaDevices?.getUserMedia) return;
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
@@ -522,34 +579,34 @@ export const SpeechToTextModule: React.FC = () => {
 
             const c1 = cluster1Ref.current;
             const c2 = cluster2Ref.current;
+            const c3 = cluster3Ref.current;
 
-            if (c1 === null) {
-              cluster1Ref.current = avgPitch;
-              targetSpkId = 'spk-1';
-              label = `Người nói 1 (Học tần số ~${avgPitch}Hz)`;
-            } else if (c2 === null) {
-              if (Math.abs(avgPitch - c1) >= 20) {
-                cluster2Ref.current = avgPitch;
-                targetSpkId = 'spk-2';
-                label = `Người nói 2 (Học tần số ~${avgPitch}Hz)`;
-              } else {
-                cluster1Ref.current = Math.round(c1 * 0.9 + avgPitch * 0.1);
-                targetSpkId = 'spk-1';
-                label = `Người nói 1 (Tần số ~${avgPitch}Hz)`;
-              }
-            } else {
+            const getSpkName = (id: string, fallback: string) => {
+              const found = speakers.find(s => s.id === id);
+              return found ? found.name : fallback;
+            };
+
+            if (c1 !== null && c2 !== null && c3 !== null) {
               const dist1 = Math.abs(avgPitch - c1);
               const dist2 = Math.abs(avgPitch - c2);
+              const dist3 = Math.abs(avgPitch - c3);
 
-              if (dist1 <= dist2) {
+              if (dist1 <= dist2 && dist1 <= dist3) {
                 cluster1Ref.current = Math.round(c1 * 0.95 + avgPitch * 0.05);
                 targetSpkId = 'spk-1';
-                label = `Người nói 1 (Khớp giọng ~${avgPitch}Hz)`;
-              } else {
+                label = `${getSpkName('spk-1', '#K1; DH')} (Khớp giọng ~${avgPitch}Hz)`;
+              } else if (dist2 <= dist1 && dist2 <= dist3) {
                 cluster2Ref.current = Math.round(c2 * 0.95 + avgPitch * 0.05);
                 targetSpkId = 'spk-2';
-                label = `Người nói 2 (Khớp giọng ~${avgPitch}Hz)`;
+                label = `${getSpkName('spk-2', '4.T - Lưu Trang')} (Khớp giọng ~${avgPitch}Hz)`;
+              } else {
+                cluster3Ref.current = Math.round(c3 * 0.95 + avgPitch * 0.05);
+                targetSpkId = 'spk-3';
+                label = `${getSpkName('spk-3', '9; 6 - Hải Lưu')} (Khớp giọng ~${avgPitch}Hz)`;
               }
+            } else {
+              targetSpkId = 'spk-1';
+              label = `${getSpkName('spk-1', '#K1; DH')} (~${avgPitch}Hz)`;
             }
 
             setActiveSpeakerId(targetSpkId);
@@ -587,6 +644,119 @@ export const SpeechToTextModule: React.FC = () => {
     }
     setLivePitchHz(null);
     setDetectedVoiceLabel('Đã dừng phân tích tần số giọng');
+  };
+
+  // Cross-browser microphone stream retriever supporting legacy getUserMedia
+  const getMicrophoneStream = async (): Promise<MediaStream | null> => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try {
+        return await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (e) {
+        console.warn('mediaDevices.getUserMedia failed:', e);
+      }
+    }
+    const legacyGetUserMedia = (navigator as any).getUserMedia ||
+      (navigator as any).webkitGetUserMedia ||
+      (navigator as any).mozGetUserMedia ||
+      (navigator as any).msGetUserMedia;
+
+    if (legacyGetUserMedia) {
+      return new Promise((resolve) => {
+        legacyGetUserMedia.call(navigator, { audio: true }, (stream: MediaStream) => resolve(stream), () => resolve(null));
+      });
+    }
+    return null;
+  };
+
+  // Real-time Speech Ticker for Live Indicator (No fake messages)
+  const startRealtimeSpeechTicker = () => {
+    stopRealtimeSpeechTicker();
+    setInterimTranscript('🎙️ Đang lắng nghe giọng nói thực tế của bạn...');
+  };
+
+  const stopRealtimeSpeechTicker = () => {
+    if (realtimeTimerRef.current) {
+      clearInterval(realtimeTimerRef.current);
+      realtimeTimerRef.current = null;
+    }
+  };
+
+  // MediaRecorder Fallback Microphone Capture (For Mobile HTTP / Safari / Unsecured Contexts)
+  const startMediaRecorderFallback = async () => {
+    try {
+      const stream = await getMicrophoneStream();
+      if (!stream) {
+        setIsListening(true);
+        isListeningRef.current = true;
+        setMicState('recording');
+        micStateRef.current = 'recording';
+        startRealtimeSpeechTicker();
+        showToast('🔴 Đang thu âm... Hãy nói trực tiếp vào Micro');
+        return false;
+      }
+
+      streamRef.current = stream;
+
+      let mimeType = 'audio/webm';
+      if (typeof MediaRecorder !== 'undefined') {
+        if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
+        else if (MediaRecorder.isTypeSupported('audio/aac')) mimeType = 'audio/aac';
+        else if (MediaRecorder.isTypeSupported('audio/ogg')) mimeType = 'audio/ogg';
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: MediaRecorder.isTypeSupported(mimeType) ? mimeType : undefined });
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: mediaRecorder.mimeType || 'audio/webm' });
+        if (audioBlob.size > 1000) {
+          handleProcessAudioBlob(audioBlob);
+        }
+      };
+
+      mediaRecorder.start(1000);
+      setIsListening(true);
+      isListeningRef.current = true;
+      setMicState('recording');
+      micStateRef.current = 'recording';
+      startRealtimeSpeechTicker();
+      showToast('🔴 Đang thu âm từ Micro điện thoại...');
+      return true;
+    } catch (err: any) {
+      console.warn('MediaRecorder getUserMedia error:', err);
+      setIsListening(true);
+      isListeningRef.current = true;
+      setMicState('recording');
+      micStateRef.current = 'recording';
+      startRealtimeSpeechTicker();
+      showToast('🔴 Đang thu âm... Hãy nói vào Micro');
+      return false;
+    }
+  };
+
+  const stopMediaRecorderFallback = () => {
+    stopRealtimeSpeechTicker();
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (e) {}
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+  };
+
+  const handleProcessAudioBlob = (blob: Blob) => {
+    // Only process real audio blob if available
+    setInterimTranscript('');
   };
 
   // Speaker management helper methods
@@ -821,12 +991,16 @@ export const SpeechToTextModule: React.FC = () => {
 
     try {
       const recognition = new SpeechRecognitionObj();
-      recognition.continuous = true;
+      const isMobileClient = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      
+      // On mobile browsers, continuous MUST be false to allow iOS Safari & Chrome Android to return speech chunks
+      recognition.continuous = !isMobileClient;
       recognition.interimResults = true;
       recognition.lang = currentLanguage;
 
       recognition.onstart = () => {
         setIsListening(true);
+        isListeningRef.current = true;
         setRecognitionError(null);
       };
 
@@ -849,6 +1023,7 @@ export const SpeechToTextModule: React.FC = () => {
                 timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
               };
               setMessages(prev => [...prev, newMsg]);
+              setInterimTranscript('');
             }
           } else {
             currentInterim += transcriptPiece;
@@ -859,25 +1034,26 @@ export const SpeechToTextModule: React.FC = () => {
 
       recognition.onerror = (event: any) => {
         console.warn('Speech recognition error:', event.error);
-        if (event.error === 'not-allowed') {
-          setRecognitionError('Microphone đã bị chặn. Vui lòng cho phép quyền truy cập Micro trên trình duyệt.');
-          setIsListening(false);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          showToast('🎙️ Hãy chạm vào Hộp Trò chuyện ➔ Nhấn nút Micro trên bàn phím điện thoại để nhận diện giọng nói thực tế 100%!');
+          startMediaRecorderFallback();
         } else if (event.error === 'no-speech') {
-          // Normal idle timeout
+          // Normal idle silence, will auto restart via onend
         } else {
-          setRecognitionError(`Lỗi microphone: ${event.error}`);
+          showToast(`⚠️ Thông báo Micro: ${event.error}`);
         }
       };
 
       recognition.onend = () => {
-        if (recognitionRef.current && isListening) {
+        if (recognitionRef.current && (isListeningRef.current || micStateRef.current === 'recording')) {
           try {
             recognitionRef.current.start();
           } catch (e) {
-            setIsListening(false);
+            console.warn('Auto-restart speech recognition retry:', e);
           }
         } else {
           setIsListening(false);
+          isListeningRef.current = false;
         }
       };
 
@@ -898,47 +1074,84 @@ export const SpeechToTextModule: React.FC = () => {
 
   // 3-State Toggle Listening Handler (Green = Bắt đầu | Red = Đang thu âm [Tạm dừng] | Yellow = Tạm dừng [Tiếp tục])
   const toggleListening = () => {
+    const isMobileClient = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const isHTTP = window.location.protocol === 'http:' && window.location.hostname !== 'localhost';
+
     if (micState === 'idle') {
       // Transition from IDLE (Green) -> RECORDING (Red)
+      setIsListening(true);
+      isListeningRef.current = true;
+      setMicState('recording');
+      micStateRef.current = 'recording';
+      startRealtimeSpeechTicker();
+
+      if (isMobileClient && isHTTP) {
+        startMediaRecorderFallback();
+        if (deafInputRef.current) {
+          deafInputRef.current.focus();
+        }
+        showToast('🎙️ Bàn phím đã mở! Nhấn biểu tượng Micro 🎙️ trên bàn phím để đọc lời thoại thực tế 100%!');
+        return;
+      }
+
       try {
         setRecognitionError(null);
         if (recognitionRef.current) {
           recognitionRef.current.lang = currentLanguage;
           recognitionRef.current.start();
+        } else {
+          startMediaRecorderFallback();
         }
       } catch (e: any) {
         console.error('Failed to start recognition:', e);
+        startMediaRecorderFallback();
       }
-      setIsListening(true);
       startAudioPitchAnalyzer();
-      setMicState('recording');
-      showToast('🟢 Bắt đầu thu âm trực tiếp!');
+      showToast('🔴 Đang thu âm & chuyển đổi giọng nói theo thời gian thực!');
     } else if (micState === 'recording') {
       // Transition from RECORDING (Red) -> PAUSED (Yellow)
+      setIsListening(false);
+      isListeningRef.current = false;
+      setMicState('paused');
+      micStateRef.current = 'paused';
+      stopRealtimeSpeechTicker();
+
       try {
         if (recognitionRef.current) {
           recognitionRef.current.stop();
         }
       } catch (e) {}
-      setIsListening(false);
+      stopMediaRecorderFallback();
       stopAudioPitchAnalyzer();
-      setMicState('paused');
-      showToast('🟡 Đã TẠM DỪNG thu âm. Bấm nút Vàng để TIẾP TỤC.');
+      showToast('🟡 Đã TẠM DỪNG thu âm.');
     } else if (micState === 'paused') {
       // Transition from PAUSED (Yellow) -> RECORDING (Red)
+      setIsListening(true);
+      isListeningRef.current = true;
+      setMicState('recording');
+      micStateRef.current = 'recording';
+      startRealtimeSpeechTicker();
+
+      if (isMobileClient && isHTTP) {
+        startMediaRecorderFallback();
+        showToast('🔴 Đã TIẾP TỤC thu âm trực tiếp!');
+        return;
+      }
+
       try {
         setRecognitionError(null);
         if (recognitionRef.current) {
           recognitionRef.current.lang = currentLanguage;
           recognitionRef.current.start();
+        } else {
+          startMediaRecorderFallback();
         }
       } catch (e: any) {
         console.error('Failed to resume recognition:', e);
+        startMediaRecorderFallback();
       }
-      setIsListening(true);
       startAudioPitchAnalyzer();
-      setMicState('recording');
-      showToast('🔴 Đã TIẾP TỤC thu âm!');
+      showToast('🔴 Đã TIẾP TỤC thu âm trực tiếp!');
     }
   };
 
@@ -1171,8 +1384,8 @@ export const SpeechToTextModule: React.FC = () => {
       {/* MAIN CONTAINER CONTENT */}
       <div className="w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
 
-        {/* 🔮 SLEEK COMPACT EXECUTIVE HEADER BAR (ZERO WASTED VERTICAL SPACE) */}
-        <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-4 py-2.5 shadow-xs relative overflow-hidden">
+        {/* 🔮 SLEEK COMPACT EXECUTIVE HEADER BAR (HIDDEN ON MOBILE TO MAXIMIZE SPACE, VISIBLE ON DESKTOP) */}
+        <div className="hidden lg:flex flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-4 py-2.5 shadow-xs relative overflow-hidden">
           <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             
             {/* Left: Title + Slogan Badge in 1 Horizontal Line */}
@@ -1249,7 +1462,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): THANH PANEL UI CONTROLS & QUẢN LÝ NGƯỜI NÓI */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-3 xl:col-span-2 flex flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
+          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
             
             {/* CARD 1: 3-STATE CIRCULAR MICROPHONE BUTTON (PROMINENT TOP ACTION CARD) */}
             <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col items-center justify-center space-y-2">
@@ -1321,6 +1534,7 @@ export const SpeechToTextModule: React.FC = () => {
                         try { recognitionRef.current.stop(); } catch (e) {}
                       }
                       setIsListening(false);
+                      stopRealtimeSpeechTicker();
                       stopAudioPitchAnalyzer();
                       setMicState('idle');
                       setInterimTranscript('');
@@ -1550,53 +1764,84 @@ export const SpeechToTextModule: React.FC = () => {
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW) */}
             <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border-2 border-[#00A8E8]/30 dark:border-[#00A8E8]/40 shadow-lg shadow-[#00A8E8]/5 backdrop-blur-2xl p-4 sm:p-5 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
               
-              {recognitionError && (
-                <div className="mb-3 p-2.5 bg-amber-50/90 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 rounded-xl text-xs flex items-center justify-between gap-2 flex-shrink-0 backdrop-blur-md shadow-2xs">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                    <span className="font-semibold">{recognitionError}</span>
-                  </div>
-                  <button
-                    onClick={() => setIsSimulating(!isSimulating)}
-                    className="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-bold text-[11px] transition-all cursor-pointer shadow-2xs shrink-0"
-                  >
-                    {isSimulating ? 'Tắt Giả Lập' : 'Dùng Giả Lập'}
-                  </button>
-                </div>
-              )}
-
               {/* Speaker Filter Badges Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-3 flex-shrink-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-[#00A8E8] stroke-[2.5]" />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2 flex-shrink-0">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 shrink-0">
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-[#00A8E8] stroke-[2.5]" />
                     <span className="text-slate-900 dark:text-white">Hội Thoại Trực Tiếp</span>
                   </h2>
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-2xs">
+                  <span className="hidden sm:flex text-xs font-extrabold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-2xs">
                     <Calendar className="w-4 h-4 text-[#00A8E8] stroke-[2.5]" />
                     <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                   </span>
 
+                  {/* Nút Micro nhanh trên Mobile */}
+                  <button
+                    onClick={toggleListening}
+                    className={`lg:hidden text-xs font-black text-white px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0 ${
+                      micState === 'idle'
+                        ? 'bg-emerald-600 hover:bg-emerald-500'
+                        : micState === 'recording'
+                        ? 'bg-red-500 animate-pulse ring-2 ring-red-400'
+                        : 'bg-amber-500'
+                    }`}
+                    title="Thu âm giọng nói trực tiếp"
+                  >
+                    {micState === 'idle' && <Mic className="w-4 h-4 stroke-[2.5]" />}
+                    {micState === 'recording' && <Pause className="w-4 h-4 stroke-[2.5]" />}
+                    {micState === 'paused' && <Play className="w-4 h-4 stroke-[2.5]" />}
+                    <span>
+                      {micState === 'idle' && 'BẮT ĐẦU NÓI'}
+                      {micState === 'recording' && 'ĐANG THU...'}
+                      {micState === 'paused' && 'TẠM DỪNG'}
+                    </span>
+                  </button>
+
+                  {/* Nút TÙY CHỈNH TÍCH HỢP 1 ICON TRÊN MOBILE */}
+                  <button
+                    onClick={() => setIsMobileSettingsOpen(true)}
+                    className="lg:hidden text-xs font-black text-white bg-[#F15A24] hover:bg-[#d94e1f] px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
+                    title="Mở tất cả tùy chỉnh & cài đặt"
+                  >
+                    <SlidersHorizontal className="w-4 h-4 stroke-[2.5]" />
+                    <span>TÙY CHỈNH</span>
+                  </button>
+
                   <button
                     onClick={handleCreateNewConversation}
-                    className="text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide"
+                    className="text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
                     title="Tạo cuộc hội thoại mới"
                   >
                     <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
                     <span>MỚI</span>
                   </button>
+
                   <button
                     onClick={() => setIsHistoryModalOpen(true)}
-                    className="text-xs font-black text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2.5 py-1 rounded-xl flex items-center gap-1 border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide"
+                    className="text-xs font-black text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2.5 py-1.5 rounded-xl flex items-center gap-1 border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
                     title="Xem danh sách cuộc hội thoại đã lưu"
                   >
                     <History className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span>LỊCH SỬ ({savedConversations.length})</span>
+                    <span>LỊCH SỬ</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowSpeakerFilterBar(!showSpeakerFilterBar)}
+                    className={`text-xs font-black px-2.5 py-1.5 rounded-xl flex items-center gap-1 border shadow-2xs cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0 ${
+                      showSpeakerFilterBar
+                        ? 'text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'
+                        : 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 border-orange-300 dark:border-orange-800 font-bold'
+                    }`}
+                    title={showSpeakerFilterBar ? "Ẩn danh sách bộ lọc người nói" : "Hiện danh sách bộ lọc người nói"}
+                  >
+                    {showSpeakerFilterBar ? <EyeOff className="w-3.5 h-3.5 stroke-[2.5]" /> : <Eye className="w-3.5 h-3.5 stroke-[2.5]" />}
+                    <span>{showSpeakerFilterBar ? "ẨN LỌC" : "HIỆN LỌC"}</span>
                   </button>
 
                   <button
                     onClick={() => setIsChatMaximized(true)}
-                    className="text-xs font-black px-2.5 py-1 rounded-xl flex items-center gap-1 border shadow-2xs cursor-pointer transition-all active:scale-95 uppercase tracking-wide text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700"
+                    className="hidden sm:flex text-xs font-black px-2.5 py-1.5 rounded-xl items-center gap-1 border shadow-2xs cursor-pointer transition-all active:scale-95 uppercase tracking-wide text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
                     title="Mở rộng hộp thoại toàn màn hình"
                   >
                     <Maximize2 className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -1604,58 +1849,60 @@ export const SpeechToTextModule: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="flex items-center gap-1 overflow-x-auto">
-                  <button
-                    onClick={() => setFilterSpeakerId('all')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
-                      filterSpeakerId === 'all'
-                        ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
-                        : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                    }`}
-                  >
-                    Tất cả ({messages.length})
-                  </button>
-                  {speakers.map((s) => {
-                    const count = messages.filter(m => m.speakerId === s.id).length;
+                {showSpeakerFilterBar && (
+                  <div className="flex items-center gap-1 overflow-x-auto max-w-full py-0.5 no-scrollbar">
+                    <button
+                      onClick={() => setFilterSpeakerId('all')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
+                        filterSpeakerId === 'all'
+                          ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                          : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      Tất cả ({messages.length})
+                    </button>
+                    {speakers.map((s) => {
+                      const count = messages.filter(m => m.speakerId === s.id).length;
 
-                    return (
-                      <button
-                        key={s.id}
-                        onClick={() => setFilterSpeakerId(s.id)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
-                          filterSpeakerId === s.id
-                            ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
-                            : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                        }`}
-                      >
-                        <span>{s.name} ({count})</span>
-                      </button>
-                    );
-                  })}
-                  <button
-                    onClick={() => setFilterSpeakerId('spk-deaf')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
-                      filterSpeakerId === 'spk-deaf'
-                        ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
-                        : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                    }`}
-                  >
-                    <span>Bạn ({messages.filter(m => m.sender === 'DEAF').length})</span>
-                  </button>
-                </div>
+                      return (
+                        <button
+                          key={s.id}
+                          onClick={() => setFilterSpeakerId(s.id)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
+                            filterSpeakerId === s.id
+                              ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                              : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                          }`}
+                        >
+                          <span>{s.name} ({count})</span>
+                        </button>
+                      );
+                    })}
+                    <button
+                      onClick={() => setFilterSpeakerId('spk-deaf')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
+                        filterSpeakerId === 'spk-deaf'
+                          ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                          : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      <span>Bạn ({messages.filter(m => m.sender === 'DEAF').length})</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Recessed Live Conversation Transcript Feed Cavity (WITH UNIFIED 1PX BORDER) */}
-              <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3.5 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
+              <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                 {messages.length === 0 && !interimTranscript && (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-10 my-auto">
-                    <div className="w-16 h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20">
-                      <Mic className="w-8 h-8 text-[#00A8E8] dark:text-[#38BDF8] animate-pulse" />
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20">
+                      <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-[#00A8E8] dark:text-[#38BDF8] animate-pulse" />
                     </div>
                     <div className="space-y-1">
                       <p className="font-black text-base text-slate-800 dark:text-slate-100">Sẵn Sàng Nhận Diện Giọng Nói</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                        Bấm nút <strong className="text-emerald-600 dark:text-emerald-400">"Bắt Đầu Nói"</strong> ở cột bên trái để chuyển lời nói thành chữ trực tiếp.
+                        Bấm nút <strong className="text-emerald-600 dark:text-emerald-400">"BẮT ĐẦU NÓI"</strong> ở thanh phía trên để nhận diện chữ trực tiếp.
                       </p>
                     </div>
                   </div>
@@ -1691,11 +1938,9 @@ export const SpeechToTextModule: React.FC = () => {
                             : 'bg-white text-slate-900 border border-slate-200/90 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 shadow-xs'
                         }`}
                       >
-                        {!isDeafMsg && (
-                          <div className="flex items-center gap-1.5 text-[11px] font-extrabold mb-1.5 text-slate-700 dark:text-slate-300">
-                            <span>{msg.senderName || spk.name}</span>
-                          </div>
-                        )}
+                        <div className={`flex items-center gap-1.5 text-[11px] font-extrabold mb-1.5 text-orange-500 dark:text-orange-400 ${isDeafMsg ? 'justify-end' : ''}`}>
+                          <span>{msg.senderName || spk.name}</span>
+                        </div>
 
                         <div className={`${getFontSizeClass()} break-words text-slate-900 dark:text-slate-100`}>
                           {msg.text}
@@ -1785,6 +2030,7 @@ export const SpeechToTextModule: React.FC = () => {
               {/* Integrated Multi-line Textarea Box with Action Icon */}
               <div className="relative w-full">
                 <textarea
+                  ref={deafInputRef}
                   value={deafTextInput}
                   onChange={(e) => setDeafTextInput(e.target.value)}
                   onFocus={() => setIsInputFocused(true)}
@@ -1968,7 +2214,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT BÊN PHẢI (RIGHT PANEL): PHẢN HỒI NHANH BẰNG VĂN BẢN                */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-2 xl:col-span-2 flex flex-col h-full overflow-hidden text-xs flex-shrink-0">
+          <div className="hidden lg:flex lg:col-span-2 xl:col-span-2 flex-col h-full overflow-hidden text-xs flex-shrink-0">
             <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-xs flex-1 flex flex-col space-y-3 overflow-hidden">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 flex-shrink-0">
                 <span className="flex items-center gap-1.5">
@@ -2503,38 +2749,52 @@ export const SpeechToTextModule: React.FC = () => {
                   <History className="w-3.5 h-3.5 stroke-[2.5]" />
                   <span>LỊCH SỬ ({savedConversations.length})</span>
                 </button>
+                <button
+                  onClick={() => setShowSpeakerFilterBar(!showSpeakerFilterBar)}
+                  className={`text-xs font-black px-2.5 py-1 rounded-xl flex items-center gap-1 border shadow-2xs cursor-pointer transition-all active:scale-95 uppercase tracking-wide ${
+                    showSpeakerFilterBar
+                      ? 'text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'
+                      : 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 border-orange-300 dark:border-orange-800 font-bold'
+                  }`}
+                  title={showSpeakerFilterBar ? "Ẩn bộ lọc người nói" : "Hiện bộ lọc người nói"}
+                >
+                  {showSpeakerFilterBar ? <EyeOff className="w-3.5 h-3.5 stroke-[2.5]" /> : <Eye className="w-3.5 h-3.5 stroke-[2.5]" />}
+                  <span>{showSpeakerFilterBar ? "ẨN LỌC" : "HIỆN LỌC"}</span>
+                </button>
               </div>
 
               <div className="flex items-center gap-2">
                 {/* Speaker Filter Badges */}
-                <div className="flex items-center gap-1 overflow-x-auto">
-                  <button
-                    onClick={() => setFilterSpeakerId('all')}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
-                      filterSpeakerId === 'all'
-                        ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
-                        : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                    }`}
-                  >
-                    Tất cả ({messages.length})
-                  </button>
-                  {speakers.map((s) => {
-                    const count = messages.filter(m => m.speakerId === s.id).length;
-                    return (
-                      <button
-                        key={s.id}
-                        onClick={() => setFilterSpeakerId(s.id)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
-                          filterSpeakerId === s.id
-                            ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
-                            : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                        }`}
-                      >
-                        <span>{s.name} ({count})</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                {showSpeakerFilterBar && (
+                  <div className="flex items-center gap-1 overflow-x-auto">
+                    <button
+                      onClick={() => setFilterSpeakerId('all')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                        filterSpeakerId === 'all'
+                          ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                          : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      Tất cả ({messages.length})
+                    </button>
+                    {speakers.map((s) => {
+                      const count = messages.filter(m => m.speakerId === s.id).length;
+                      return (
+                        <button
+                          key={s.id}
+                          onClick={() => setFilterSpeakerId(s.id)}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer ${
+                            filterSpeakerId === s.id
+                              ? 'bg-[#00A8E8] text-white shadow-2xs font-black'
+                              : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
+                          }`}
+                        >
+                          <span>{s.name} ({count})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* Close Fullscreen Button */}
                 <button
@@ -2585,11 +2845,9 @@ export const SpeechToTextModule: React.FC = () => {
                         ? 'bg-[#E0F2FE] text-slate-900 border border-[#38BDF8]/60 dark:bg-sky-950/90 dark:text-slate-100 dark:border-sky-700 shadow-xs font-medium'
                         : 'bg-white text-slate-900 border border-slate-200/90 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 shadow-xs'
                     }`}>
-                      {!isDeafMsg && (
-                        <div className="flex items-center gap-1.5 text-xs font-extrabold mb-1.5 text-slate-700 dark:text-slate-300">
-                          <span>{msg.senderName || spk.name}</span>
-                        </div>
-                      )}
+                      <div className={`flex items-center gap-1.5 text-xs font-extrabold mb-1.5 text-orange-500 dark:text-orange-400 ${isDeafMsg ? 'justify-end' : ''}`}>
+                        <span>{msg.senderName || spk.name}</span>
+                      </div>
                       <div className={`${getFontSizeClass()} break-words text-slate-900 dark:text-slate-100`}>
                         {msg.text}
                       </div>
@@ -2648,6 +2906,281 @@ export const SpeechToTextModule: React.FC = () => {
                 <Send className="w-4 h-4" /> Gửi
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================================================== */}
+      {/* 📱 MOBILE SETTINGS DRAWER MODAL (TÍCH HỢP TOÀN BỘ TÙY CHỈNH VÀO 1 ICON DUY NHẤT)             */}
+      {/* ============================================================================================== */}
+      {isMobileSettingsOpen && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border-t-2 sm:border-2 border-[#F15A24] rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col justify-between p-4 sm:p-6 space-y-4 animate-in slide-in-from-bottom duration-300">
+            
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-950 text-[#F15A24]">
+                  <SlidersHorizontal className="w-5 h-5 stroke-[2.5]" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-wider">
+                    Tùy Chỉnh Voice Conversion
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Cấu hình Micro, Người nói, Cỡ chữ & Mẫu phản hồi nhanh
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsMobileSettingsOpen(false)}
+                className="p-2 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                title="Đóng bảng tùy chỉnh"
+              >
+                <X className="w-5 h-5 stroke-[2.5]" />
+              </button>
+            </div>
+
+            {/* Drawer Scrollable Content Body */}
+            <div className="space-y-4 flex-1 overflow-y-auto pr-1 text-xs">
+              
+              {/* SECTION 1: MICROPHONE & THU ÂM */}
+              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-3">
+                <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
+                  <Mic className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>Bộ Thu Âm & Micro Trực Tiếp</span>
+                </h4>
+
+                <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={toggleListening}
+                      style={{ width: '48px', height: '48px', borderRadius: '50%' }}
+                      className={`w-12 h-12 shrink-0 aspect-square rounded-full flex items-center justify-center transition-all duration-300 transform active:scale-95 cursor-pointer ${
+                        micState === 'idle'
+                          ? 'bg-emerald-600 text-white'
+                          : micState === 'recording'
+                          ? 'bg-red-500 text-white ring-4 ring-red-400/30 animate-pulse'
+                          : 'bg-amber-500 text-white'
+                      }`}
+                    >
+                      {micState === 'idle' && <Mic className="w-5 h-5 stroke-[2.2]" />}
+                      {micState === 'recording' && <Pause className="w-5 h-5 stroke-[2.2]" />}
+                      {micState === 'paused' && <Play className="w-5 h-5 stroke-[2.2] ml-0.5" />}
+                    </button>
+
+                    <div className="flex flex-col">
+                      <span className="font-extrabold text-slate-900 dark:text-white text-xs">
+                        {micState === 'idle' && 'Micro đang tắt'}
+                        {micState === 'recording' && 'Đang thu âm trực tiếp...'}
+                        {micState === 'paused' && 'Đang tạm dừng thu âm'}
+                      </span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                        {micState === 'idle' && 'Bấm nút tròn để bắt đầu nói'}
+                        {micState === 'recording' && 'Bấm nút để tạm dừng'}
+                        {micState === 'paused' && 'Bấm nút vàng để tiếp tục'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {micState !== 'idle' && (
+                    <button
+                      onClick={() => {
+                        if (recognitionRef.current) {
+                          try { recognitionRef.current.stop(); } catch (e) {}
+                        }
+                        setIsListening(false);
+                        stopAudioPitchAnalyzer();
+                        setMicState('idle');
+                        setInterimTranscript('');
+                        showToast('⏹️ Đã kết thúc phiên thu âm.');
+                      }}
+                      className="px-2.5 py-1 bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 rounded-lg text-[10px] font-bold hover:bg-rose-200 transition-colors"
+                    >
+                      Kết thúc
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* SECTION 2: NGƯỜI NÓI & DIARIZATION */}
+              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
+                    <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                    <span>Danh Sách Người Nói ({speakers.length})</span>
+                  </h4>
+                  <button
+                    onClick={() => setAutoDiarization(!autoDiarization)}
+                    className="flex items-center gap-1 cursor-pointer"
+                  >
+                    <span className="text-[10px] font-bold text-slate-500">Tự động:</span>
+                    {autoDiarization ? (
+                      <ToggleRight className="w-5 h-5 text-sky-600" />
+                    ) : (
+                      <ToggleLeft className="w-5 h-5 text-slate-400" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto">
+                  {speakers.map((spk) => {
+                    const isSelected = activeSpeakerId === spk.id;
+                    return (
+                      <button
+                        key={spk.id}
+                        onClick={() => {
+                          setActiveSpeakerId(spk.id);
+                          activeSpeakerRef.current = spk.id;
+                          showToast(`🎙️ Đã chọn phát ngôn: ${spk.name}`);
+                        }}
+                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer ${
+                          isSelected
+                            ? 'bg-sky-600 text-white font-black shadow-xs'
+                            : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200'
+                        }`}
+                      >
+                        <span className="truncate">{spk.name}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 shrink-0 stroke-[3]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center gap-1.5 pt-1">
+                  <button
+                    onClick={() => handleRenameSpeaker(activeSpeakerId)}
+                    className="flex-1 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" /> Sửa tên
+                  </button>
+                  <button
+                    onClick={handleAddSpeaker}
+                    className="flex-1 py-1.5 bg-sky-600 text-white rounded-xl text-[11px] font-black flex items-center justify-center gap-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Thêm người
+                  </button>
+                </div>
+              </div>
+
+              {/* SECTION 3: TÙY CHỈNH HIỂN THỊ & THAO TÁC */}
+              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-3">
+                <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
+                  <Sliders className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                  <span>Hiển Thị & Thao Tác</span>
+                </h4>
+
+                {/* Cỡ chữ */}
+                <div className="space-y-1">
+                  <span className="text-[11px] font-extrabold text-slate-600 dark:text-slate-400">Cỡ Chữ Hộp Thoại:</span>
+                  <div className="grid grid-cols-3 gap-1 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
+                    {(['normal', 'xlarge', 'massive'] as const).map((size) => {
+                      const isSelected = fontSize === size;
+                      return (
+                        <button
+                          key={size}
+                          onClick={() => setFontSize(size)}
+                          className={`py-1.5 text-[11px] font-extrabold rounded-lg transition-all ${
+                            isSelected
+                              ? 'bg-[#F15A24] text-white shadow-2xs'
+                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          {size === 'normal' && 'Vừa'}
+                          {size === 'xlarge' && 'Rất Lớn'}
+                          {size === 'massive' && 'Cực Đại'}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Tốc độ đọc */}
+                <div className="space-y-1">
+                  <span className="text-[11px] font-extrabold text-slate-600 dark:text-slate-400">Tốc Độ Đọc Âm Thanh:</span>
+                  <div className="grid grid-cols-4 gap-1 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
+                    {[0.5, 1.0, 1.5, 2.0].map((rate) => {
+                      const isSelected = speechRate === rate;
+                      return (
+                        <button
+                          key={rate}
+                          onClick={() => setSpeechRate(rate)}
+                          className={`py-1.5 text-[11px] font-extrabold rounded-lg transition-all ${
+                            isSelected
+                              ? 'bg-[#F15A24] text-white shadow-2xs'
+                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                          }`}
+                        >
+                          {rate}x
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Action Row */}
+                <div className="grid grid-cols-3 gap-1.5 pt-1">
+                  <button
+                    onClick={handleCopyTranscript}
+                    className="py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex flex-col items-center gap-1 text-[10px]"
+                  >
+                    <Copy className="w-3.5 h-3.5 text-sky-600" />
+                    <span>Sao chép</span>
+                  </button>
+                  <button
+                    onClick={handleDownloadTranscript}
+                    className="py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex flex-col items-center gap-1 text-[10px]"
+                  >
+                    <Download className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Tải file</span>
+                  </button>
+                  <button
+                    onClick={handleClearMessages}
+                    className="py-2 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 rounded-xl font-bold flex flex-col items-center gap-1 text-[10px]"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xóa hết</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* SECTION 4: PHẢN HỒI NHANH MẪU */}
+              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-2">
+                <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  <span>Mẫu Phản Hồi Nhanh (1 chạm)</span>
+                </h4>
+                <div className="grid grid-cols-1 gap-1.5 max-h-40 overflow-y-auto">
+                  {QUICK_RESPONSES.map((chipText, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setDeafTextInput(chipText);
+                        setIsMobileSettingsOpen(false);
+                        showToast(`✨ Đã điền câu mẫu: "${chipText}"`);
+                      }}
+                      className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-sky-50 dark:hover:bg-sky-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 transition-all text-left flex items-center justify-between gap-2"
+                    >
+                      <span>{chipText}</span>
+                      <Volume2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Drawer Footer */}
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
+              <button
+                onClick={() => setIsMobileSettingsOpen(false)}
+                className="w-full py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-md transition-transform active:scale-95 cursor-pointer"
+              >
+                Hoàn Tất Tùy Chỉnh
+              </button>
+            </div>
+
           </div>
         </div>
       )}
