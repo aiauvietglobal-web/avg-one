@@ -222,52 +222,91 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
  * - Converts spoken line break keywords ("xuống dòng", "xuống hàng", "dòng mới", "ngắt câu", etc.)
  * - Cleans speech fillers (ừm, ừ, à, uhm, um, ơ, eh, dạ à, thì à, là ừ)
  * - Converts spoken dictation keywords ("dấu chấm", "dấu phẩy", "dấu hỏi", "phần trăm", etc.)
- * - Auto-breaks sentences onto new lines after ending punctuation (. ? !) for clear layout
- * - Normalizes spacing around punctuation
+ * - Auto-detects greetings, transition words & question markers to automatically insert sentence breaks & line breaks (\n)
+ * - Intelligently segments long continuous speech into readable sentences with punctuation
  * - Auto-capitalizes sentence & line beginnings
  * - Appends ellipses (...) for low-confidence or faint speech
  */
-export const enhanceVietnameseTranscript = (rawText: string, isLowConfidence: boolean = false): string => {
+export const enhanceVietnameseTranscript = (
+  rawText: string,
+  isLowConfidence: boolean = false,
+  isFinal: boolean = true
+): string => {
   if (!rawText) return '';
   let text = rawText.trim();
 
-  // 1. Spoken voice dictation keywords for new lines & sentence breaks
+  // 1. Spoken voice dictation keywords for new lines & explicit sentence breaks
   text = text.replace(/\b(xuống dòng|xuống hàng|dòng mới|ngắt dòng|ngắt câu|sang dòng)\b/gi, '\n');
 
   // 2. Spoken voice dictation keywords to punctuation symbols
-  text = text.replace(/\b(dấu chấm|chấm câu)\b/gi, '.');
-  text = text.replace(/\b(dấu phẩy)\b/gi, ',');
-  text = text.replace(/\b(dấu hỏi|hỏi chấm)\b/gi, '?');
-  text = text.replace(/\b(dấu cảm|dấu cảm thán|chấm cảm)\b/gi, '!');
-  text = text.replace(/\b(dấu hai chấm|hai chấm)\b/gi, ':');
-  text = text.replace(/\b(dấu chấm phẩy)\b/gi, ';');
+  text = text.replace(/\b(dấu chấm|chấm câu)\b/gi, '. ');
+  text = text.replace(/\b(dấu phẩy)\b/gi, ', ');
+  text = text.replace(/\b(dấu hỏi|hỏi chấm)\b/gi, '? ');
+  text = text.replace(/\b(dấu cảm|dấu cảm thán|chấm cảm)\b/gi, '! ');
+  text = text.replace(/\b(dấu hai chấm|hai chấm)\b/gi, ': ');
+  text = text.replace(/\b(dấu chấm phẩy)\b/gi, '; ');
   text = text.replace(/\b(phần trăm)\b/gi, '%');
   text = text.replace(/\b(đô la)\b/gi, '$');
 
-  // 3. Thorough double-pass removal of vocal hesitation & speech filler words (à, ừ, ừm, uhm, um, ơ, eh, dạ à, ...)
-  text = text.replace(/(^|\s+)(ừm|ừ|à|uhm|um|ơ|eh|hả|à\s+ừm|dạ\s+à|thì\s+à|ừ\s+thì|là\s+ừ|này\s+à)(\s+|$)/gi, ' ');
+  // 3. Multi-pass removal of vocal hesitations & speech fillers (à, ừ, ừm, uhm, um, ơ, eh, dạ à, ...)
+  text = text.replace(/(^|\s+)(ừm|ừ|à|uhm|um|ơ|eh|hả|à\s+ừm|dạ\s+à|thì\s+à|ừ\s+thì|là\s+ừ|này\s+à|dạ\s+ừ|thì\s+ừ)(\s+|$)/gi, ' ');
   text = text.replace(/(^|\s+)(ừm|ừ|à|uhm|um|ơ|eh)(\s+|$)/gi, ' ');
 
-  // 4. Fix whitespace around punctuation marks
+  // 4. Auto-detect greetings & common conversational boundary phrases (Add period & line break)
+  text = text.replace(/\b(xin chào|chào bạn|chào anh|chào chị|cảm ơn bạn|cảm ơn nhiều|tạm biệt|vâng ạ|dạ vâng)\b/gi, '$1.\n');
+
+  // 5. Auto-detect major transition connectives to break sentences onto NEW LINES with periods
+  const transitionRegex = /(?<=[\wÀ-ỹ])\s+(tuy nhiên|bởi vì|do đó|cho nên|ngoài ra|hơn nữa|tóm lại|sau đó|tiếp theo|bên cạnh đó|thứ nhất|thứ hai|thứ ba|cuối cùng|nói chung|mặt khác|vì vậy|như vậy|hy vọng rằng|vấn đề là)\b/gi;
+  text = text.replace(transitionRegex, '.\n$1');
+
+  // 6. Auto-detect question-ending patterns (Add '?' and '\n' if no punctuation follows)
+  text = text.replace(/\b(đúng không|phải không|chưa|như thế nào|làm sao|ở đâu|khi nào|bao giờ|được không|có đúng không|phải không ạ)\b(\s+|$)/gi, '$1?\n');
+
+  // 7. Auto Clause-Segmentation for long continuous unpunctuated phrases (> 8 words)
+  const lines = text.split('\n');
+  const segmentedLines: string[] = [];
+
+  for (let l of lines) {
+    l = l.trim();
+    if (!l) continue;
+
+    const words = l.split(/\s+/);
+    if (words.length > 8 && !/[.?!:;]/.test(l)) {
+      // Intelligently insert sentence breaks / line breaks at clauses
+      l = l.replace(/(?<=[\wÀ-ỹ])\s+(nhưng|cho nên|bởi vì|nên là|mà lại|để mà|khi mà|sau khi)\b/gi, ',\n$1');
+    }
+    segmentedLines.push(l);
+  }
+  text = segmentedLines.join('\n');
+
+  // 8. Fix whitespace around punctuation marks
   text = text.replace(/\s+([.,?!:;])/g, '$1');
   text = text.replace(/([.,?!:;])([^\s0-9.,?!:;\n])/g, '$1 $2');
   text = text.replace(/[ \t]+/g, ' ');
 
-  // 5. Auto sentence-break: Insert newlines after sentence-ending punctuation (. ? !)
+  // 9. Insert newlines after sentence-ending punctuation (. ? !)
   text = text.replace(/([.?!])\s+([A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÈÉẺẼẸÊẾỀỂỄỆÌÍỈĨỊÒÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÙÚỦŨỤƯỨỪỬỮỰỲÝỶỸỴĐa-zàáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđ])/g, '$1\n$2');
 
-  // 6. Capitalize first letter of every line & clean up empty lines
-  text = text
+  // 10. Clean lines, capitalize start of every line, and append period if missing on completed final sentence
+  const finalLines = text
     .split('\n')
     .map(line => {
       let l = line.trim();
       if (!l) return '';
-      return l.charAt(0).toUpperCase() + l.slice(1);
-    })
-    .filter(Boolean)
-    .join('\n');
+      // Capitalize first character
+      l = l.charAt(0).toUpperCase() + l.slice(1);
 
-  // 7. Append ellipses (...) for faint or low-confidence speech fragments
+      // Ensure every completed line/sentence ends with proper punctuation (. ? ! … :)
+      if (isFinal && !isLowConfidence && !/[.?!…:;,]$/.test(l)) {
+        l += '.';
+      }
+      return l;
+    })
+    .filter(Boolean);
+
+  text = finalLines.join('\n');
+
+  // 11. Append ellipses (...) for faint or low-confidence speech fragments
   if (isLowConfidence && text.length > 0 && !/[.?!…:]$/.test(text)) {
     text += '...';
   }
@@ -602,9 +641,9 @@ export const SpeechToTextModule: React.FC = () => {
       highpassFilter.type = 'highpass';
       highpassFilter.frequency.setValueAtTime(80, ctx.currentTime);
 
-      // DSP 2: Pre-Amplifier Gain Boost Node (2.0x / +6dB) for High Sensitivity to Quiet & Faint Speech
+      // DSP 2: Pre-Amplifier Gain Boost Node (3.5x / +11dB) for High Sensitivity to Quiet & Faint Speech
       const gainNode = ctx.createGain();
-      gainNode.gain.setValueAtTime(2.0, ctx.currentTime);
+      gainNode.gain.setValueAtTime(3.5, ctx.currentTime);
 
       // DSP 3: Dynamic Range Compressor to smooth vocal level dynamics
       const compressor = ctx.createDynamicsCompressor();
@@ -1096,7 +1135,7 @@ export const SpeechToTextModule: React.FC = () => {
           }
         }
         if (currentInterim.trim()) {
-          setInterimTranscript(enhanceVietnameseTranscript(currentInterim));
+          setInterimTranscript(enhanceVietnameseTranscript(currentInterim, false, false));
         } else {
           setInterimTranscript('');
         }
