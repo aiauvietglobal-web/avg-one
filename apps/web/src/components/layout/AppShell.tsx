@@ -273,7 +273,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </div>
                 </div>
 
-                {/* Right: Reset Build Button + Mobile View Toggle + Fullscreen Toggle + SSO Profile Button */}
+                {/* Right: Reset Build Button + Fullscreen Toggle + SSO Profile Button */}
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => {
@@ -283,14 +283,6 @@ export const AppShell: React.FC<AppShellProps> = ({
                     title="Tải lại / Cập nhật bản build mới nhất (Reset)"
                   >
                     <RotateCw className="w-4 h-4 text-[#F15A24] hover:rotate-180 transition-transform duration-300" />
-                  </button>
-
-                  <button
-                    onClick={toggleMobileMode}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
-                    title="Chuyển sang Giao diện Mobile (Điện thoại)"
-                  >
-                    <Smartphone className="w-4 h-4 text-[#F15A24]" />
                   </button>
 
                   <button
@@ -406,14 +398,6 @@ export const AppShell: React.FC<AppShellProps> = ({
                     title="Tải lại / Cập nhật bản build mới nhất (Reset)"
                   >
                     <RotateCw className="w-4 h-4 text-[#F15A24] hover:rotate-180 transition-transform duration-300" />
-                  </button>
-
-                  <button
-                    onClick={toggleMobileMode}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
-                    title="Chuyển sang Giao diện Mobile"
-                  >
-                    <Smartphone className="w-4 h-4 text-[#F15A24]" />
                   </button>
 
                   <button

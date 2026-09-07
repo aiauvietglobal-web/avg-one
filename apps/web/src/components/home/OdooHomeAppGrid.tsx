@@ -2,85 +2,11 @@ import React from 'react';
 import {
   Boxes, Users, Calendar, FolderKanban, ShieldCheck, Newspaper, BarChart3, Clock, Scale, Sparkles, CheckCircle2, Wallet, Lightbulb, LayoutGrid
 } from 'lucide-react';
-import { AppModuleId } from '../layout/AppLauncherModal';
+import { AppModuleId, APP_MODULES } from '../layout/AppLauncherModal';
 
 interface OdooHomeAppGridProps {
   onSelectModule: (moduleId: AppModuleId) => void;
 }
-
-interface AppCardItem {
-  id: AppModuleId;
-  title: string;
-  icon: React.ElementType;
-  iconColor: string;
-  bgColor: string;
-}
-
-const OdooAppList: AppCardItem[] = [
-  {
-    id: 'apps',
-    title: 'Ứng Dụng',
-    icon: LayoutGrid,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'system',
-    title: 'Hệ Thống',
-    icon: BarChart3,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'inside',
-    title: 'Bảng Tin Nội Bộ',
-    icon: Newspaper,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'calendar',
-    title: 'Lịch',
-    icon: Calendar,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'orders',
-    title: 'Đơn Hàng',
-    icon: FolderKanban,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'hr',
-    title: 'Nhân Sự',
-    icon: Users,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'legal',
-    title: 'Pháp Lý',
-    icon: Scale,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'finance',
-    title: 'Tài Chính',
-    icon: Wallet,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  },
-  {
-    id: 'rd',
-    title: 'Nghiên Cứu & Phát Triển',
-    icon: Lightbulb,
-    iconColor: 'text-[#F15A24]',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200 dark:border-orange-800'
-  }
-];
 
 export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule }) => {
   return (
@@ -109,7 +35,15 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một nền tảng</span>
                 <span className="relative inline-block px-1">
-                  <span className="relative z-10 font-black text-[#0284C7] dark:text-sky-400">
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 50%, #48CAE4 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      display: 'inline-block'
+                    }}
+                    className="relative z-10 font-black"
+                  >
                     Vững chắc!
                   </span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -122,7 +56,26 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một định hướng</span>
                 <span className="relative inline-block px-1">
-                  <span className="relative z-10 font-black text-[#1E293B] dark:text-slate-100">
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      display: 'inline-block'
+                    }}
+                    className="relative z-10 font-black dark:hidden"
+                  >
+                    Rõ ràng!
+                  </span>
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      display: 'inline-block'
+                    }}
+                    className="relative z-10 font-black hidden dark:inline-block"
+                  >
                     Rõ ràng!
                   </span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -135,7 +88,15 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một đích đến</span>
                 <span className="relative inline-block px-1">
-                  <span className="relative z-10 font-black text-[#F15A24] dark:text-orange-400">
+                  <span
+                    style={{
+                      background: 'linear-gradient(135deg, #E63946 0%, #F15A24 45%, #FF9F1C 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      display: 'inline-block'
+                    }}
+                    className="relative z-10 font-black"
+                  >
                     Tươi sáng!
                   </span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -190,7 +151,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
         {/* Centered Odoo App Grid (Kiểu dáng hộp bo tròn 28px y hệt bản Desktop) */}
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3.5 w-full shrink-0 mt-3 sm:mt-6">
-          {OdooAppList.map((app) => {
+          {APP_MODULES.map((app) => {
             const Icon = app.icon;
             return (
               <div
@@ -209,7 +170,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 
                 {/* App Title */}
                 <h3 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24] transition-colors whitespace-normal leading-tight w-full px-0.5">
-                  {app.title}
+                  {app.name}
                 </h3>
               </div>
             );

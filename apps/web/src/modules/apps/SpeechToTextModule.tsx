@@ -152,40 +152,22 @@ export const SPEAKER_COLOR_PALETTE: SpeakerColorStyle[] = [
 
 export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   {
-    id: 'spk-1',
-    name: '#K1; DH',
-    color: SPEAKER_COLOR_PALETTE[0].colorKey,
-    bgClass: SPEAKER_COLOR_PALETTE[0].bgClass,
-    borderClass: SPEAKER_COLOR_PALETTE[0].borderClass,
-    badgeTextClass: SPEAKER_COLOR_PALETTE[0].badgeTextClass,
-    dotClass: SPEAKER_COLOR_PALETTE[0].dotClass
+    id: 'spk-male',
+    name: 'Giọng Nam',
+    color: SPEAKER_COLOR_PALETTE[4].colorKey,
+    bgClass: SPEAKER_COLOR_PALETTE[4].bgClass,
+    borderClass: SPEAKER_COLOR_PALETTE[4].borderClass,
+    badgeTextClass: SPEAKER_COLOR_PALETTE[4].badgeTextClass,
+    dotClass: SPEAKER_COLOR_PALETTE[4].dotClass
   },
   {
-    id: 'spk-2',
-    name: '4.T - Lưu Trang',
-    color: SPEAKER_COLOR_PALETTE[1].colorKey,
-    bgClass: SPEAKER_COLOR_PALETTE[1].bgClass,
-    borderClass: SPEAKER_COLOR_PALETTE[1].borderClass,
-    badgeTextClass: SPEAKER_COLOR_PALETTE[1].badgeTextClass,
-    dotClass: SPEAKER_COLOR_PALETTE[1].dotClass
-  },
-  {
-    id: 'spk-3',
-    name: '9; 6 - Hải Lưu',
-    color: SPEAKER_COLOR_PALETTE[2].colorKey,
-    bgClass: SPEAKER_COLOR_PALETTE[2].bgClass,
-    borderClass: SPEAKER_COLOR_PALETTE[2].borderClass,
-    badgeTextClass: SPEAKER_COLOR_PALETTE[2].badgeTextClass,
-    dotClass: SPEAKER_COLOR_PALETTE[2].dotClass
-  },
-  {
-    id: 'spk-4',
-    name: 'Người nói 4',
-    color: SPEAKER_COLOR_PALETTE[3].colorKey,
-    bgClass: SPEAKER_COLOR_PALETTE[3].bgClass,
-    borderClass: SPEAKER_COLOR_PALETTE[3].borderClass,
-    badgeTextClass: SPEAKER_COLOR_PALETTE[3].badgeTextClass,
-    dotClass: SPEAKER_COLOR_PALETTE[3].dotClass
+    id: 'spk-female',
+    name: 'Giọng Nữ',
+    color: SPEAKER_COLOR_PALETTE[9].colorKey,
+    bgClass: SPEAKER_COLOR_PALETTE[9].bgClass,
+    borderClass: SPEAKER_COLOR_PALETTE[9].borderClass,
+    badgeTextClass: SPEAKER_COLOR_PALETTE[9].badgeTextClass,
+    dotClass: SPEAKER_COLOR_PALETTE[9].dotClass
   }
 ];
 
@@ -235,6 +217,65 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
   "tôi đồng ý": { "en-US": "I completely agree with this proposal.", "ko-KR": "이 제안에 적극 동의합니다.", "ja-JP": "この 提案に完全に同意します。" }
 };
 
+/**
+ * Smart Vietnamese Speech-to-Text Post-Processing Helper
+ * - Converts spoken line break keywords ("xuống dòng", "xuống hàng", "dòng mới", "ngắt câu", etc.)
+ * - Cleans speech fillers (ừm, ừ, à, uhm, um, ơ, eh, dạ à, thì à, là ừ)
+ * - Converts spoken dictation keywords ("dấu chấm", "dấu phẩy", "dấu hỏi", "phần trăm", etc.)
+ * - Auto-breaks sentences onto new lines after ending punctuation (. ? !) for clear layout
+ * - Normalizes spacing around punctuation
+ * - Auto-capitalizes sentence & line beginnings
+ * - Appends ellipses (...) for low-confidence or faint speech
+ */
+export const enhanceVietnameseTranscript = (rawText: string, isLowConfidence: boolean = false): string => {
+  if (!rawText) return '';
+  let text = rawText.trim();
+
+  // 1. Spoken voice dictation keywords for new lines & sentence breaks
+  text = text.replace(/\b(xuống dòng|xuống hàng|dòng mới|ngắt dòng|ngắt câu|sang dòng)\b/gi, '\n');
+
+  // 2. Spoken voice dictation keywords to punctuation symbols
+  text = text.replace(/\b(dấu chấm|chấm câu)\b/gi, '.');
+  text = text.replace(/\b(dấu phẩy)\b/gi, ',');
+  text = text.replace(/\b(dấu hỏi|hỏi chấm)\b/gi, '?');
+  text = text.replace(/\b(dấu cảm|dấu cảm thán|chấm cảm)\b/gi, '!');
+  text = text.replace(/\b(dấu hai chấm|hai chấm)\b/gi, ':');
+  text = text.replace(/\b(dấu chấm phẩy)\b/gi, ';');
+  text = text.replace(/\b(phần trăm)\b/gi, '%');
+  text = text.replace(/\b(đô la)\b/gi, '$');
+
+  // 3. Thorough double-pass removal of vocal hesitation & speech filler words (à, ừ, ừm, uhm, um, ơ, eh, dạ à, ...)
+  text = text.replace(/(^|\s+)(ừm|ừ|à|uhm|um|ơ|eh|hả|à\s+ừm|dạ\s+à|thì\s+à|ừ\s+thì|là\s+ừ|này\s+à)(\s+|$)/gi, ' ');
+  text = text.replace(/(^|\s+)(ừm|ừ|à|uhm|um|ơ|eh)(\s+|$)/gi, ' ');
+
+  // 4. Fix whitespace around punctuation marks
+  text = text.replace(/\s+([.,?!:;])/g, '$1');
+  text = text.replace(/([.,?!:;])([^\s0-9.,?!:;\n])/g, '$1 $2');
+  text = text.replace(/[ \t]+/g, ' ');
+
+  // 5. Auto sentence-break: Insert newlines after sentence-ending punctuation (. ? !)
+  text = text.replace(/([.?!])\s+([A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÈÉẺẼẸÊẾỀỂỄỆÌÍỈĨỊÒÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÙÚỦŨỤƯỨỪỬỮỰỲÝỶỸỴĐa-zàáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđ])/g, '$1\n$2');
+
+  // 6. Capitalize first letter of every line & clean up empty lines
+  text = text
+    .split('\n')
+    .map(line => {
+      let l = line.trim();
+      if (!l) return '';
+      return l.charAt(0).toUpperCase() + l.slice(1);
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  // 7. Append ellipses (...) for faint or low-confidence speech fragments
+  if (isLowConfidence && text.length > 0 && !/[.?!…:]$/.test(text)) {
+    text += '...';
+  }
+
+  return text.trim();
+};
+
+
 export const SpeechToTextModule: React.FC = () => {
   // Active Sub-Tab: 'direct' (Chuyển đổi trực tiếp) | 'text' (Chuyển đổi văn bản) | 'lang' (Chuyển đổi ngôn ngữ)
   const [activeSubTab, setActiveSubTab] = useState<SpeechSubTab>('direct');
@@ -265,8 +306,8 @@ export const SpeechToTextModule: React.FC = () => {
           {
             id: `msg-demo-1-${Date.now()}`,
             sender: 'HEARING',
-            senderName: 'Người nói 1',
-            speakerId: 'spk-1',
+            senderName: 'Giọng Nam',
+            speakerId: 'spk-male',
             text: 'Xin chào! Tôi sử dụng tính năng chuyển giọng nói thành văn bản để giao tiếp với bạn.',
             translatedText: 'Hello! I use the voice-to-text feature to communicate with you.',
             timestamp: timeShort
@@ -307,20 +348,14 @@ export const SpeechToTextModule: React.FC = () => {
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [tempTitleInput, setTempTitleInput] = useState<string>('');
 
-  // Multi-Speaker Diarization & Identity Management States (Persisted in localStorage)
-  const [speakers, setSpeakers] = useState<SpeakerProfile[]>(() => {
+  // Strict Male / Female Speaker Profile State
+  const [speakers] = useState<SpeakerProfile[]>(() => {
     try {
-      const stored = localStorage.getItem('avg_speech_speakers');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.error('Failed to parse speakers from localStorage:', e);
-    }
+      localStorage.removeItem('avg_speech_speakers');
+    } catch (e) {}
     return DEFAULT_SPEAKERS;
   });
-  const [activeSpeakerId, setActiveSpeakerId] = useState<string>('spk-1');
+  const [activeSpeakerId, setActiveSpeakerId] = useState<string>('spk-male');
   const [filterSpeakerId, setFilterSpeakerId] = useState<string>('all');
 
   // Toggle Speaker Filter Bar Visibility
@@ -337,7 +372,7 @@ export const SpeechToTextModule: React.FC = () => {
       localStorage.setItem('avg_speech_show_filter_bar', JSON.stringify(showSpeakerFilterBar));
     } catch (e) {}
   }, [showSpeakerFilterBar]);
-  const activeSpeakerRef = useRef<string>('spk-1');
+  const activeSpeakerRef = useRef<string>('spk-male');
 
   // Auto persist speakers to localStorage whenever modified
   useEffect(() => {
@@ -433,6 +468,7 @@ export const SpeechToTextModule: React.FC = () => {
   const [contrastTheme, setContrastTheme] = useState<'standard' | 'high-contrast-dark' | 'yellow-on-black' | 'soft-blue'>('standard');
   const [isDualFaceToFace, setIsDualFaceToFace] = useState<boolean>(false);
   const [autoTts, setAutoTts] = useState<boolean>(true);
+  const [audioVolumeLevel, setAudioVolumeLevel] = useState<number>(0);
   const [simulatedInputText, setSimulatedInputText] = useState<string>('');
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -481,10 +517,9 @@ export const SpeechToTextModule: React.FC = () => {
   const cluster3Ref = useRef<number | null>(175); // Mẫu 3: 9; 6 - Hải Lưu (~175Hz)
 
   const handleResetVoiceClusters = () => {
-    cluster1Ref.current = null;
-    cluster2Ref.current = null;
-    cluster3Ref.current = null;
-    showToast('🧹 Đã làm mới học âm điệu giọng nói, sẵn sàng phân biệt giọng mới!');
+    setActiveSpeakerId('spk-male');
+    activeSpeakerRef.current = 'spk-male';
+    showToast('🧹 Đã đặt lại chế độ phân biệt Giọng Nam & Giọng Nữ!');
   };
 
   // Pitch calculation function using Autocorrelation
@@ -536,14 +571,22 @@ export const SpeechToTextModule: React.FC = () => {
     return null;
   };
 
-  // Start real-time audio pitch analyzer
+  // Start real-time audio pitch & signal analyzer with Web Audio DSP noise reduction
   const startAudioPitchAnalyzer = async () => {
     try {
       // Prevent mic lock out on mobile browsers where getUserMedia interferes with webkitSpeechRecognition
       const isMobileEnv = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
       if (isMobileEnv || !navigator.mediaDevices?.getUserMedia) return;
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const audioConstraints = {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        channelCount: 1,
+        sampleRate: 48000
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
       streamRef.current = stream;
 
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -553,9 +596,31 @@ export const SpeechToTextModule: React.FC = () => {
       audioCtxRef.current = ctx;
 
       const source = ctx.createMediaStreamSource(stream);
+
+      // DSP 1: High-pass filter at 80Hz to eliminate background wind & low-frequency AC rumble
+      const highpassFilter = ctx.createBiquadFilter();
+      highpassFilter.type = 'highpass';
+      highpassFilter.frequency.setValueAtTime(80, ctx.currentTime);
+
+      // DSP 2: Pre-Amplifier Gain Boost Node (2.0x / +6dB) for High Sensitivity to Quiet & Faint Speech
+      const gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(2.0, ctx.currentTime);
+
+      // DSP 3: Dynamic Range Compressor to smooth vocal level dynamics
+      const compressor = ctx.createDynamicsCompressor();
+      compressor.threshold.setValueAtTime(-28, ctx.currentTime);
+      compressor.knee.setValueAtTime(30, ctx.currentTime);
+      compressor.ratio.setValueAtTime(12, ctx.currentTime);
+      compressor.attack.setValueAtTime(0.003, ctx.currentTime);
+      compressor.release.setValueAtTime(0.25, ctx.currentTime);
+
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 2048;
-      source.connect(analyser);
+
+      source.connect(highpassFilter);
+      highpassFilter.connect(gainNode);
+      gainNode.connect(compressor);
+      compressor.connect(analyser);
       analyserRef.current = analyser;
 
       const buffer = new Float32Array(analyser.fftSize);
@@ -564,6 +629,16 @@ export const SpeechToTextModule: React.FC = () => {
       const analyzeFrame = () => {
         if (!analyserRef.current || !audioCtxRef.current) return;
         analyserRef.current.getFloatTimeDomainData(buffer);
+
+        // Compute RMS volume for signal strength meter
+        let sumSq = 0;
+        for (let i = 0; i < buffer.length; i++) {
+          sumSq += buffer[i] * buffer[i];
+        }
+        const rms = Math.sqrt(sumSq / buffer.length);
+        const volPct = Math.min(100, Math.round(rms * 350));
+        setAudioVolumeLevel(volPct);
+
         const pitch = getPitchFromAudioBuffer(buffer, audioCtxRef.current.sampleRate);
 
         if (pitch !== null) {
@@ -574,39 +649,18 @@ export const SpeechToTextModule: React.FC = () => {
           const avgPitch = Math.round(pitchSamples.reduce((a, b) => a + b, 0) / pitchSamples.length);
 
           if (autoDiarizationRef.current) {
-            let targetSpkId = 'spk-1';
+            let targetSpkId = 'spk-male';
             let label = '';
 
-            const c1 = cluster1Ref.current;
-            const c2 = cluster2Ref.current;
-            const c3 = cluster3Ref.current;
-
-            const getSpkName = (id: string, fallback: string) => {
-              const found = speakers.find(s => s.id === id);
-              return found ? found.name : fallback;
-            };
-
-            if (c1 !== null && c2 !== null && c3 !== null) {
-              const dist1 = Math.abs(avgPitch - c1);
-              const dist2 = Math.abs(avgPitch - c2);
-              const dist3 = Math.abs(avgPitch - c3);
-
-              if (dist1 <= dist2 && dist1 <= dist3) {
-                cluster1Ref.current = Math.round(c1 * 0.95 + avgPitch * 0.05);
-                targetSpkId = 'spk-1';
-                label = `${getSpkName('spk-1', '#K1; DH')} (Khớp giọng ~${avgPitch}Hz)`;
-              } else if (dist2 <= dist1 && dist2 <= dist3) {
-                cluster2Ref.current = Math.round(c2 * 0.95 + avgPitch * 0.05);
-                targetSpkId = 'spk-2';
-                label = `${getSpkName('spk-2', '4.T - Lưu Trang')} (Khớp giọng ~${avgPitch}Hz)`;
-              } else {
-                cluster3Ref.current = Math.round(c3 * 0.95 + avgPitch * 0.05);
-                targetSpkId = 'spk-3';
-                label = `${getSpkName('spk-3', '9; 6 - Hải Lưu')} (Khớp giọng ~${avgPitch}Hz)`;
-              }
+            // Male fundamental pitch F0 is typically < 165Hz, Female F0 is >= 165Hz
+            if (avgPitch < 165) {
+              targetSpkId = 'spk-male';
+              const maleSpk = speakers.find(s => s.id === 'spk-male') || DEFAULT_SPEAKERS[0];
+              label = `👨 ${maleSpk.name} (~${avgPitch}Hz)`;
             } else {
-              targetSpkId = 'spk-1';
-              label = `${getSpkName('spk-1', '#K1; DH')} (~${avgPitch}Hz)`;
+              targetSpkId = 'spk-female';
+              const femaleSpk = speakers.find(s => s.id === 'spk-female') || DEFAULT_SPEAKERS[1];
+              label = `👩 ${femaleSpk.name} (~${avgPitch}Hz)`;
             }
 
             setActiveSpeakerId(targetSpkId);
@@ -643,14 +697,22 @@ export const SpeechToTextModule: React.FC = () => {
       audioCtxRef.current = null;
     }
     setLivePitchHz(null);
+    setAudioVolumeLevel(0);
     setDetectedVoiceLabel('Đã dừng phân tích tần số giọng');
   };
 
   // Cross-browser microphone stream retriever supporting legacy getUserMedia
   const getMicrophoneStream = async (): Promise<MediaStream | null> => {
+    const audioConstraints = {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+      channelCount: 1,
+      sampleRate: 48000
+    };
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       try {
-        return await navigator.mediaDevices.getUserMedia({ audio: true });
+        return await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
       } catch (e) {
         console.warn('mediaDevices.getUserMedia failed:', e);
       }
@@ -668,10 +730,10 @@ export const SpeechToTextModule: React.FC = () => {
     return null;
   };
 
-  // Real-time Speech Ticker for Live Indicator (No fake messages)
+  // Real-time Speech Ticker for Live Indicator
   const startRealtimeSpeechTicker = () => {
     stopRealtimeSpeechTicker();
-    setInterimTranscript('🎙️ Đang lắng nghe giọng nói thực tế của bạn...');
+    setInterimTranscript('');
   };
 
   const stopRealtimeSpeechTicker = () => {
@@ -727,7 +789,7 @@ export const SpeechToTextModule: React.FC = () => {
       setMicState('recording');
       micStateRef.current = 'recording';
       startRealtimeSpeechTicker();
-      showToast('🔴 Đang thu âm từ Micro điện thoại...');
+      showToast('🔴 Đang thu âm... Hãy nói trực tiếp vào Micro của bạn!');
       return true;
     } catch (err: any) {
       console.warn('MediaRecorder getUserMedia error:', err);
@@ -852,10 +914,9 @@ export const SpeechToTextModule: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, interimTranscript]);
 
-  // Toast Helper
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+  // Toast Helper (Completely Disabled as requested)
+  const showToast = (_msg: string) => {
+    // Toast notification box has been removed
   };
 
   // Helper mock translation function
@@ -1007,18 +1068,23 @@ export const SpeechToTextModule: React.FC = () => {
       recognition.onresult = (event: any) => {
         let currentInterim = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcriptPiece = event.results[i][0].transcript;
+          const speechResult = event.results[i][0];
+          const transcriptPiece = speechResult ? speechResult.transcript : '';
+          const confidence = speechResult ? speechResult.confidence : 1.0;
+          const isLowConfidence = confidence > 0 && confidence < 0.68;
+
           if (event.results[i].isFinal) {
             if (transcriptPiece.trim()) {
               const rawText = transcriptPiece.trim();
-              const translated = translateText(rawText, targetLanguage);
+              const enhancedText = enhanceVietnameseTranscript(rawText, isLowConfidence);
+              const translated = translateText(enhancedText, targetLanguage);
               const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
               const newMsg: MessageItem = {
                 id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
                 sender: 'HEARING',
                 senderName: currentSpk.name,
                 speakerId: currentSpk.id,
-                text: rawText,
+                text: enhancedText,
                 translatedText: translated,
                 timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
               };
@@ -1029,31 +1095,48 @@ export const SpeechToTextModule: React.FC = () => {
             currentInterim += transcriptPiece;
           }
         }
-        setInterimTranscript(currentInterim);
+        if (currentInterim.trim()) {
+          setInterimTranscript(enhanceVietnameseTranscript(currentInterim));
+        } else {
+          setInterimTranscript('');
+        }
       };
 
       recognition.onerror = (event: any) => {
         console.warn('Speech recognition error:', event.error);
-        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-          showToast('🎙️ Hãy chạm vào Hộp Trò chuyện ➔ Nhấn nút Micro trên bàn phím điện thoại để nhận diện giọng nói thực tế 100%!');
-          startMediaRecorderFallback();
+
+        // Stop listening & recording state immediately to break infinite onerror-onend restart loop
+        setIsListening(false);
+        isListeningRef.current = false;
+        setMicState('idle');
+        micStateRef.current = 'idle';
+        stopRealtimeSpeechTicker();
+
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed' || event.error === 'audio-capture') {
+          showToast('⚠️ Vui lòng bật/cho phép quyền sử dụng Micro trong cài đặt trình duyệt của bạn!');
         } else if (event.error === 'no-speech') {
-          // Normal idle silence, will auto restart via onend
+          setInterimTranscript('');
         } else {
           showToast(`⚠️ Thông báo Micro: ${event.error}`);
         }
       };
 
       recognition.onend = () => {
-        if (recognitionRef.current && (isListeningRef.current || micStateRef.current === 'recording')) {
+        if (recognitionRef.current && isListeningRef.current && micStateRef.current === 'recording') {
           try {
             recognitionRef.current.start();
           } catch (e) {
             console.warn('Auto-restart speech recognition retry:', e);
+            setIsListening(false);
+            isListeningRef.current = false;
+            setMicState('idle');
+            micStateRef.current = 'idle';
           }
         } else {
           setIsListening(false);
           isListeningRef.current = false;
+          setMicState('idle');
+          micStateRef.current = 'idle';
         }
       };
 
@@ -1090,7 +1173,7 @@ export const SpeechToTextModule: React.FC = () => {
         if (deafInputRef.current) {
           deafInputRef.current.focus();
         }
-        showToast('🎙️ Bàn phím đã mở! Nhấn biểu tượng Micro 🎙️ trên bàn phím để đọc lời thoại thực tế 100%!');
+        showToast('🔴 Đang thu âm... Hãy nói trực tiếp vào Micro của bạn!');
         return;
       }
 
@@ -1160,20 +1243,21 @@ export const SpeechToTextModule: React.FC = () => {
     const finalMsg = textToSend !== undefined ? textToSend : deafTextInput;
     if (!finalMsg.trim()) return;
 
-    const translated = translateText(finalMsg.trim(), targetLanguage);
+    const enhancedText = enhanceVietnameseTranscript(finalMsg.trim());
+    const translated = translateText(enhancedText, targetLanguage);
     const newMsg: MessageItem = {
       id: `msg-deaf-${Date.now()}`,
       sender: 'DEAF',
       senderName: DEAF_SPEAKER.name,
       speakerId: 'spk-deaf',
-      text: finalMsg.trim(),
+      text: enhancedText,
       translatedText: translated,
       timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
     };
 
     setMessages(prev => [...prev, newMsg]);
     if (autoTts) {
-      speakText(finalMsg.trim());
+      speakText(enhancedText);
     }
     if (textToSend === undefined) {
       setDeafTextInput('');
@@ -1187,13 +1271,14 @@ export const SpeechToTextModule: React.FC = () => {
     if (!simulatedInputText.trim()) return;
 
     const currentSpk = speakers.find(s => s.id === activeSpeakerId) || DEFAULT_SPEAKERS[0];
-    const translated = translateText(simulatedInputText.trim(), targetLanguage);
+    const enhancedText = enhanceVietnameseTranscript(simulatedInputText.trim());
+    const translated = translateText(enhancedText, targetLanguage);
     const newMsg: MessageItem = {
       id: `msg-sim-${Date.now()}`,
       sender: 'HEARING',
       senderName: currentSpk.name,
       speakerId: currentSpk.id,
-      text: simulatedInputText.trim(),
+      text: enhancedText,
       translatedText: translated,
       timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
     };
@@ -1373,14 +1458,6 @@ export const SpeechToTextModule: React.FC = () => {
       <button id="btn-speech-subtab-text" className="hidden" onClick={() => setActiveSubTab('text')} />
       <button id="btn-speech-subtab-lang" className="hidden" onClick={() => setActiveSubTab('lang')} />
 
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-3.5 py-2 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2 text-xs font-medium animate-bounce">
-          <Sparkles className="w-4 h-4 text-amber-400" />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
       {/* MAIN CONTAINER CONTENT */}
       <div className="w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
 
@@ -1467,16 +1544,6 @@ export const SpeechToTextModule: React.FC = () => {
             {/* CARD 1: 3-STATE CIRCULAR MICROPHONE BUTTON (PROMINENT TOP ACTION CARD) */}
             <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col items-center justify-center space-y-2">
               <div className="relative flex items-center justify-center">
-                {/* Soft Ambient Breathing Ring when RECORDING */}
-                {micState === 'recording' && (
-                  <span className="absolute w-20 h-20 rounded-full bg-red-500/20 animate-ping opacity-40" style={{ borderRadius: '50%' }} />
-                )}
-
-                {/* Soft Pulse Ring when PAUSED */}
-                {micState === 'paused' && (
-                  <span className="absolute w-18 h-18 rounded-full bg-amber-400/25 animate-pulse" style={{ borderRadius: '50%' }} />
-                )}
-
                 <button
                   onClick={toggleListening}
                   style={{ width: '60px', height: '60px', borderRadius: '50%' }}
@@ -1484,7 +1551,7 @@ export const SpeechToTextModule: React.FC = () => {
                     micState === 'idle'
                       ? 'bg-emerald-600 hover:bg-emerald-500 text-white hover:ring-4 hover:ring-emerald-400/20 shadow-md'
                       : micState === 'recording'
-                      ? 'bg-red-500 text-white ring-4 ring-red-400/30 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 animate-pulse shadow-md'
+                      ? 'bg-red-500 text-white ring-4 ring-red-400/30 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 shadow-md'
                       : 'bg-amber-500 hover:bg-amber-400 text-white ring-4 ring-amber-300/40 ring-offset-2 ring-offset-white dark:ring-offset-slate-900 shadow-md'
                   }`}
                   title={
@@ -1515,7 +1582,7 @@ export const SpeechToTextModule: React.FC = () => {
                       micState === 'idle'
                         ? 'bg-emerald-500'
                         : micState === 'recording'
-                        ? 'bg-red-500 animate-pulse opacity-80'
+                        ? 'bg-red-500 opacity-90'
                         : 'bg-amber-500'
                     }`}
                     style={{ borderRadius: '50%' }}
@@ -1660,79 +1727,49 @@ export const SpeechToTextModule: React.FC = () => {
               </div>
             </div>
 
-            {/* CARD 3: MULTI-SPEAKER DIARIZATION & QUẢN LÝ PHÁT NGÔN */}
+            {/* CARD 3: SPEAKER DIARIZATION (MALE & FEMALE ONLY) */}
             <div className="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                 <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#F15A24] dark:text-orange-400">
                   <Users className="w-4 h-4 text-[#F15A24] dark:text-orange-400" />
-                  <span>Người Nói ({speakers.length})</span>
+                  <span>Phân Biệt Giọng Nói</span>
                 </span>
               </h3>
 
               {/* Live Pitch Frequency Status */}
               {autoDiarization && (
                 <div className="px-2 py-1 rounded-lg text-[10px] font-bold bg-orange-50 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-300 border border-orange-200 dark:border-orange-800 flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-[#F15A24] animate-pulse shrink-0" />
+                  <Activity className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
                   <span className="truncate">{detectedVoiceLabel}</span>
                 </div>
               )}
 
-              {/* Speaker Profile Grid (2 columns, compact badges) */}
-              <div className="space-y-1">
-                <div className="max-h-52 overflow-y-auto pr-0.5 grid grid-cols-2 gap-1.5">
-                  {speakers.map((spk) => {
-                    const isSelected = activeSpeakerId === spk.id;
+              {/* Speaker Profile Grid (2 columns: Male & Female) */}
+              <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+                {DEFAULT_SPEAKERS.map((spk) => {
+                  const isSelected = activeSpeakerId === spk.id;
 
-                    return (
-                      <button
-                        key={spk.id}
-                        onClick={() => {
-                          setActiveSpeakerId(spk.id);
-                          activeSpeakerRef.current = spk.id;
-                          showToast(`🎙️ Đã chọn phát ngôn: ${spk.name}`);
-                        }}
-                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
-                          isSelected
-                            ? 'bg-orange-50/80 dark:bg-orange-950/40 border-[#F15A24] dark:border-orange-500 border text-[#F15A24] dark:text-orange-400 font-extrabold shadow-xs'
-                            : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#F15A24]/60 hover:bg-orange-50/30'
-                        }`}
-                        title={spk.name}
-                      >
-                        <span className="truncate">{spk.name}</span>
-                        {isSelected && <Check className="w-3.5 h-3.5 text-[#F15A24] dark:text-orange-400 shrink-0 stroke-[3]" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Quick Actions for Speakers */}
-              <div className="grid grid-cols-3 gap-1 pt-1.5 border-t border-slate-100 dark:border-slate-800">
-                {autoDiarization && (
-                  <button
-                    onClick={handleResetVoiceClusters}
-                    className="px-1.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-[10px] font-bold border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1 transition-colors"
-                    title="Xóa thông số tần số cũ để nhận diện lại từ đầu"
-                  >
-                    <RotateCcw className="w-3 h-3" /> Reset
-                  </button>
-                )}
-                <button
-                  onClick={() => handleRenameSpeaker(activeSpeakerId)}
-                  className={`px-1.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-[10px] font-bold border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1 transition-colors ${
-                    !autoDiarization ? 'col-span-1' : ''
-                  }`}
-                >
-                  <Edit3 className="w-3 h-3" /> Sửa tên
-                </button>
-                <button
-                  onClick={handleAddSpeaker}
-                  className={`px-1.5 py-1 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-lg text-[10px] font-black flex items-center justify-center gap-1 shadow-2xs transition-all ${
-                    !autoDiarization ? 'col-span-1' : ''
-                  }`}
-                >
-                  <Plus className="w-3 h-3" /> Thêm người
-                </button>
+                  return (
+                    <button
+                      key={spk.id}
+                      onClick={() => {
+                        setActiveSpeakerId(spk.id);
+                        activeSpeakerRef.current = spk.id;
+                      }}
+                      className={`px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
+                        isSelected
+                          ? 'bg-orange-50/80 dark:bg-orange-950/40 border-[#F15A24] dark:border-orange-500 border-2 text-[#F15A24] dark:text-orange-400 font-extrabold shadow-xs'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#F15A24]/60'
+                      }`}
+                      title={spk.name}
+                    >
+                      <span className="truncate flex items-center gap-1">
+                        {spk.id === 'spk-male' ? '👨' : '👩'} {spk.name}
+                      </span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#F15A24] dark:text-orange-400 shrink-0 stroke-[3]" />}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -1823,11 +1860,10 @@ export const SpeechToTextModule: React.FC = () => {
 
                   <button
                     onClick={() => setIsChatMaximized(true)}
-                    className="hidden sm:flex text-xs font-black px-2.5 py-1.5 rounded-xl items-center gap-1 border shadow-2xs cursor-pointer transition-all active:scale-95 uppercase tracking-wide text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
+                    className="hidden sm:flex p-1.5 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
                     title="Mở rộng hộp thoại toàn màn hình"
                   >
-                    <Maximize2 className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span>MỞ RỘNG</span>
+                    <Maximize2 className="w-4 h-4 stroke-[2.5]" />
                   </button>
                 </div>
 
@@ -1879,7 +1915,7 @@ export const SpeechToTextModule: React.FC = () => {
                 {messages.length === 0 && !interimTranscript && (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-10 my-auto">
                     <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20">
-                      <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-[#00A8E8] dark:text-[#38BDF8] animate-pulse" />
+                      <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-[#00A8E8] dark:text-[#38BDF8]" />
                     </div>
                     <div className="space-y-1">
                       <p className="font-black text-base text-slate-800 dark:text-slate-100">Sẵn Sàng Nhận Diện Giọng Nói</p>
@@ -1924,7 +1960,7 @@ export const SpeechToTextModule: React.FC = () => {
                           <span>{msg.senderName || spk.name}</span>
                         </div>
 
-                        <div className={`${getFontSizeClass()} break-words text-slate-900 dark:text-slate-100`}>
+                        <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100`}>
                           {msg.text}
                         </div>
 
@@ -1949,12 +1985,12 @@ export const SpeechToTextModule: React.FC = () => {
 
                 {interimTranscript && (
                   <div className="flex flex-col items-start w-full">
-                    <div className="p-3.5 rounded-xl bg-white dark:bg-[#01253E]/80 border border-[#00A8E8] text-slate-900 dark:text-white animate-pulse w-fit max-w-[88%] shadow-xs">
+                    <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50 dark:bg-slate-900 border-2 border-[#00A8E8] text-slate-900 dark:text-white w-fit max-w-[88%] shadow-md">
                       <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[#00A8E8] dark:text-[#38BDF8] mb-1">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8] animate-ping" />
-                        Đang nói trực tiếp... (Thời gian thực)
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8]" />
+                        Đang nói trực tiếp...
                       </div>
-                      <div className={getFontSizeClass()}>
+                      <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>
                         {interimTranscript} ...
                       </div>
                     </div>
@@ -1964,16 +2000,30 @@ export const SpeechToTextModule: React.FC = () => {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Live Audio Waveform when recording */}
+              {/* Live Audio Waveform & Real-Time DSP VU Signal Quality Indicator when recording */}
               {isListening && (
-                <div className="py-1.5 px-3 flex items-center justify-center gap-1 bg-[#003D61]/90 rounded-lg border border-cyan-300/60 my-1.5 flex-shrink-0">
-                  <span className="text-[11px] font-bold text-white mr-2 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" /> Đang thu âm giọng nói trực tiếp:
-                  </span>
-                  <div className="flex items-center gap-1 h-4">
-                    <div className="w-1 bg-white rounded-full animate-bounce [animation-delay:0.1s]" style={{ height: '60%' }} />
-                    <div className="w-1 bg-white rounded-full animate-bounce [animation-delay:0.2s]" style={{ height: '100%' }} />
-                    <div className="w-1 bg-white rounded-full animate-bounce [animation-delay:0.3s]" style={{ height: '40%' }} />
+                <div className="py-2 px-3.5 flex flex-wrap items-center justify-between gap-2 bg-slate-900/90 dark:bg-slate-950/90 rounded-xl border border-[#00A8E8]/40 my-1.5 flex-shrink-0 shadow-md">
+                  <div className="flex items-center gap-2 text-xs font-extrabold text-white">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                    <span>Đang Thu Âm Trực Tiếp</span>
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold">
+                      ⚡ DSP Lọc Ồn: BẬT
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-extrabold text-slate-300">Tín Hiệu Micro:</span>
+                    <div className="w-24 h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700 flex p-0.5">
+                      <div 
+                        className={`h-full rounded-full transition-all duration-100 ${
+                          audioVolumeLevel > 60 ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : audioVolumeLevel > 20 ? 'bg-sky-400' : 'bg-amber-400'
+                        }`} 
+                        style={{ width: `${Math.max(8, audioVolumeLevel)}%` }} 
+                      />
+                    </div>
+                    <span className="text-[11px] font-extrabold text-emerald-400 min-w-[36px]">
+                      {audioVolumeLevel > 40 ? 'Tốt 🟢' : audioVolumeLevel > 10 ? 'Vừa 🟡' : 'Yếu 🟠'}
+                    </span>
                   </div>
                 </div>
               )}
@@ -2791,11 +2841,10 @@ export const SpeechToTextModule: React.FC = () => {
                 {/* Close Fullscreen Button */}
                 <button
                   onClick={() => setIsChatMaximized(false)}
-                  className="p-1.5 px-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-black flex items-center gap-1 shadow-md transition cursor-pointer"
+                  className="p-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-xl shadow-md transition cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
                   title="Thu gọn màn hình (Phím Esc)"
                 >
                   <Minimize2 className="w-4 h-4 stroke-[2.5]" />
-                  <span>THU GỌN</span>
                 </button>
               </div>
             </div>
@@ -2805,7 +2854,7 @@ export const SpeechToTextModule: React.FC = () => {
               {messages.length === 0 && !interimTranscript && (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-10 my-auto">
                   <div className="w-16 h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20">
-                    <Mic className="w-8 h-8 text-[#00A8E8] dark:text-[#38BDF8] animate-pulse" />
+                    <Mic className="w-8 h-8 text-[#00A8E8] dark:text-[#38BDF8]" />
                   </div>
                   <div className="space-y-1">
                     <p className="font-black text-base text-slate-800 dark:text-slate-100">Sẵn Sàng Nhận Diện Giọng Nói (Toàn Màn Hình)</p>
@@ -2840,7 +2889,7 @@ export const SpeechToTextModule: React.FC = () => {
                       <div className={`flex items-center gap-1.5 text-xs font-extrabold mb-1.5 text-orange-500 dark:text-orange-400 ${isDeafMsg ? 'justify-end' : ''}`}>
                         <span>{msg.senderName || spk.name}</span>
                       </div>
-                      <div className={`${getFontSizeClass()} break-words text-slate-900 dark:text-slate-100`}>
+                      <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100`}>
                         {msg.text}
                       </div>
                       <div className="mt-1.5 flex items-center justify-between gap-4 text-xs pt-0.5">
@@ -2864,12 +2913,12 @@ export const SpeechToTextModule: React.FC = () => {
 
               {interimTranscript && (
                 <div className="flex flex-col items-start w-full">
-                  <div className="p-4 rounded-xl bg-white dark:bg-[#01253E]/80 border border-[#00A8E8] text-slate-900 dark:text-white animate-pulse w-fit max-w-[85%] shadow-xs">
+                  <div className="p-4 rounded-xl bg-sky-50 dark:bg-slate-900 border-2 border-[#00A8E8] text-slate-900 dark:text-white w-fit max-w-[85%] shadow-md">
                     <div className="flex items-center gap-1.5 text-xs font-extrabold text-[#00A8E8] dark:text-[#38BDF8] mb-1">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8] animate-ping" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8]" />
                       Đang nói trực tiếp...
                     </div>
-                    <div className={getFontSizeClass()}>{interimTranscript} ...</div>
+                    <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>{interimTranscript} ...</div>
                   </div>
                 </div>
               )}
@@ -2996,12 +3045,12 @@ export const SpeechToTextModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* SECTION 2: NGƯỜI NÓI & DIARIZATION */}
+              {/* SECTION 2: PHÂN BIỆT GIỌNG NÓI (NAM & NỮ) */}
               <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
                     <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
-                    <span>Danh Sách Người Nói ({speakers.length})</span>
+                    <span>Phân Biệt Giọng Nói</span>
                   </h4>
                   <button
                     onClick={() => setAutoDiarization(!autoDiarization)}
@@ -3016,8 +3065,8 @@ export const SpeechToTextModule: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-1.5 max-h-36 overflow-y-auto">
-                  {speakers.map((spk) => {
+                <div className="grid grid-cols-2 gap-1.5">
+                  {DEFAULT_SPEAKERS.map((spk) => {
                     const isSelected = activeSpeakerId === spk.id;
                     return (
                       <button
@@ -3025,34 +3074,20 @@ export const SpeechToTextModule: React.FC = () => {
                         onClick={() => {
                           setActiveSpeakerId(spk.id);
                           activeSpeakerRef.current = spk.id;
-                          showToast(`🎙️ Đã chọn phát ngôn: ${spk.name}`);
                         }}
-                        className={`px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer ${
+                        className={`px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer ${
                           isSelected
                             ? 'bg-sky-600 text-white font-black shadow-xs'
                             : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200'
                         }`}
                       >
-                        <span className="truncate">{spk.name}</span>
+                        <span className="truncate flex items-center gap-1">
+                          {spk.id === 'spk-male' ? '👨' : '👩'} {spk.name}
+                        </span>
                         {isSelected && <Check className="w-3.5 h-3.5 shrink-0 stroke-[3]" />}
                       </button>
                     );
                   })}
-                </div>
-
-                <div className="flex items-center gap-1.5 pt-1">
-                  <button
-                    onClick={() => handleRenameSpeaker(activeSpeakerId)}
-                    className="flex-1 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1"
-                  >
-                    <Edit3 className="w-3.5 h-3.5" /> Sửa tên
-                  </button>
-                  <button
-                    onClick={handleAddSpeaker}
-                    className="flex-1 py-1.5 bg-sky-600 text-white rounded-xl text-[11px] font-black flex items-center justify-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" /> Thêm người
-                  </button>
                 </div>
               </div>
 
