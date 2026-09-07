@@ -159,7 +159,9 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                 <div className={`w-11 h-11 sm:w-18 sm:h-18 rounded-xl sm:rounded-2xl ${mod.bgColor} border flex items-center justify-center mb-1.5 sm:mb-3 group-hover:scale-110 transition-transform shadow-xs`}>
                   <Icon className={`w-5 h-5 sm:w-9 sm:h-9 ${mod.iconColor}`} />
                 </div>
-                <h3 className="font-extrabold text-xs sm:text-base text-slate-900 dark:text-slate-100 group-hover:text-[#F15A24] transition-colors leading-tight">
+                <h3 className={`font-extrabold text-xs sm:text-base leading-tight transition-colors ${
+                  isActive ? 'text-[#F15A24] dark:text-orange-400 font-black' : 'text-slate-900 dark:text-slate-100 group-hover:text-[#F15A24]'
+                }`}>
                   {mod.name}
                 </h3>
               </button>
