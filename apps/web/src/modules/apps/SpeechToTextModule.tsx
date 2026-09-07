@@ -1667,24 +1667,6 @@ export const SpeechToTextModule: React.FC = () => {
                   <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
                   <span>Người Nói ({speakers.length})</span>
                 </span>
-
-                {/* Auto Diarization Toggle Switch Icon */}
-                <button
-                  onClick={() => {
-                    const nextState = !autoDiarization;
-                    setAutoDiarization(nextState);
-                    showToast(nextState ? '⚡ Đã BẬT Tự động phân biệt giọng nói (Pitch Diarization)' : '⏸️ Đã TẮT phân biệt tự động.');
-                  }}
-                  className="flex items-center gap-1.5 cursor-pointer group"
-                  title="Bật/Tắt tự động phân biệt phát ngôn viên theo tần số giọng nói"
-                >
-                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 group-hover:text-sky-600 transition-colors">Tự động:</span>
-                  {autoDiarization ? (
-                    <ToggleRight className="w-6 h-6 text-sky-600 dark:text-sky-400 transition-transform group-active:scale-90" />
-                  ) : (
-                    <ToggleLeft className="w-6 h-6 text-slate-400 dark:text-slate-500 transition-transform group-active:scale-90" />
-                  )}
-                </button>
               </h3>
 
               {/* Live Pitch Frequency Status */}
