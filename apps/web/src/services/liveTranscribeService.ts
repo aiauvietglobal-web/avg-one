@@ -56,6 +56,67 @@ export function normalizeAvgText(text: string): string {
   return normalized;
 }
 
+/**
+ * Chia nhỏ văn bản thành các phân đoạn/câu ngắn gọn (10-14 từ)
+ * giúp người dùng dễ theo dõi trực tiếp và nắm bắt ý nhanh chóng.
+ */
+export function splitIntoCleanSegments(text: string, maxWordsPerSegment: number = 14): string[] {
+  if (!text || !text.trim()) return [];
+  const clean = text.trim().replace(/\s+/g, ' ');
+
+  // 1. Tách theo dấu ngắt câu chuẩn (. ? ! ; hoặc xuống dòng)
+  const rawSentences = clean
+    .split(/(?<=[.?!;\n])\s+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  const finalSegments: string[] = [];
+
+  for (const sentence of rawSentences) {
+    const words = sentence.split(' ').filter(Boolean);
+    if (words.length <= maxWordsPerSegment) {
+      finalSegments.push(formatSegment(sentence));
+      continue;
+    }
+
+    // 2. Chia nhỏ câu quá dài tại điểm ngắt nghỉ tự nhiên
+    let currentChunk: string[] = [];
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
+      currentChunk.push(w);
+
+      const hasComma = w.endsWith(',');
+      const isConjunction = /^(và|nhưng|tuy\s*nhiên|đồng\s*thời|do\s*đó|vì\s*vậy|ngoài\s*ra|tiếp\s*theo|để|thì|sau\s*đó)$/i.test(w);
+
+      if (
+        (currentChunk.length >= 8 && (hasComma || isConjunction)) ||
+        currentChunk.length >= maxWordsPerSegment
+      ) {
+        let chunkStr = currentChunk.join(' ').trim().replace(/,\s*$/, '');
+        if (chunkStr) {
+          finalSegments.push(formatSegment(chunkStr));
+        }
+        currentChunk = [];
+      }
+    }
+
+    if (currentChunk.length > 0) {
+      const rem = currentChunk.join(' ').trim();
+      if (rem) {
+        finalSegments.push(formatSegment(rem));
+      }
+    }
+  }
+
+  return finalSegments.length > 0 ? finalSegments : [formatSegment(clean)];
+}
+
+function formatSegment(s: string): string {
+  if (!s) return '';
+  const trimmed = s.trim();
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+}
+
 export class LiveTranscribeController {
   private recognition: any = null;
   private ws: WebSocket | null = null;
@@ -112,17 +173,22 @@ export class LiveTranscribeController {
 
         if (finalTranscript.trim()) {
           const normalizedFinal = normalizeAvgText(finalTranscript);
-          const entry: TranscriptItem = {
-            id: `tr-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-            speaker: this.currentSpeaker,
-            speakerRole: this.currentRole,
-            text: normalizedFinal.trim(),
-            isFinal: true,
-            timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
-          };
+          const segments = splitIntoCleanSegments(normalizedFinal);
 
-          this.onFinal(entry);
-          this.sendWsFinal(entry);
+          segments.forEach((seg, idx) => {
+            const entry: TranscriptItem = {
+              id: `tr-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+              speaker: this.currentSpeaker,
+              speakerRole: this.currentRole,
+              text: seg,
+              isFinal: true,
+              timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
+            };
+
+            this.onFinal(entry);
+            this.sendWsFinal(entry);
+          });
+
           this.onInterim(''); // Clear interim
         }
       };

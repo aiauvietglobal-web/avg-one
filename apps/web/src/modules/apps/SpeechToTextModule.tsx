@@ -1084,6 +1084,54 @@ export const SpeechToTextModule: React.FC = () => {
     return common / Math.max(words1.length, words2.length);
   };
 
+  // Helper to split long spoken text into clean, easily readable segments (10-14 words per segment)
+  const splitTextIntoDisplaySegments = (text: string, maxWords: number = 14): string[] => {
+    if (!text || !text.trim()) return [];
+    const clean = text.trim().replace(/\s+/g, ' ');
+
+    // 1. Tách theo dấu kết thúc câu có sẵn (. ? ! ; hoặc xuống dòng)
+    const rawSentences = clean
+      .split(/(?<=[.?!;\n])\s+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const segments: string[] = [];
+
+    for (const sentence of rawSentences) {
+      const words = sentence.split(' ').filter(Boolean);
+      if (words.length <= maxWords) {
+        segments.push(sentence.charAt(0).toUpperCase() + sentence.slice(1));
+        continue;
+      }
+
+      // 2. Chia nhỏ câu dài tại các điểm ngắt nghỉ tự nhiên
+      let currentChunk: string[] = [];
+      for (let i = 0; i < words.length; i++) {
+        const w = words[i];
+        currentChunk.push(w);
+        const hasComma = w.endsWith(',');
+        const isConjunction = /^(và|nhưng|tuy\s*nhiên|đồng\s*thời|do\s*đó|vì\s*vậy|ngoài\s*ra|tiếp\s*theo|để|thì|sau\s*đó)$/i.test(w);
+
+        if ((currentChunk.length >= 8 && (hasComma || isConjunction)) || currentChunk.length >= maxWords) {
+          let chunkStr = currentChunk.join(' ').trim().replace(/,\s*$/, '');
+          if (chunkStr) {
+            segments.push(chunkStr.charAt(0).toUpperCase() + chunkStr.slice(1));
+          }
+          currentChunk = [];
+        }
+      }
+
+      if (currentChunk.length > 0) {
+        const rem = currentChunk.join(' ').trim();
+        if (rem) {
+          segments.push(rem.charAt(0).toUpperCase() + rem.slice(1));
+        }
+      }
+    }
+
+    return segments.length > 0 ? segments : [clean.charAt(0).toUpperCase() + clean.slice(1)];
+  };
+
   // Helper to commit verbatim transcript text directly to conversation timeline without altering meaning
   const commitTranscriptToMessage = (rawText: string, isFinalUtterance: boolean = true) => {
     if (!rawText || !rawText.trim()) return;
@@ -1091,42 +1139,48 @@ export const SpeechToTextModule: React.FC = () => {
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
+    const segments = splitTextIntoDisplaySegments(enhancedText);
     const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
     const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    const translated = translateText(enhancedText, targetLanguage);
 
     setMessages(prev => {
-      if (prev.length > 0) {
-        const lastMsg = prev[prev.length - 1];
-        if (lastMsg && lastMsg.sender === 'HEARING') {
-          // If exact match (case-insensitive), skip duplicate
-          if (lastMsg.text.trim().toLowerCase() === enhancedText.trim().toLowerCase()) {
-            return prev;
-          }
-          // If incoming text extends the last message prefix, update it in-place seamlessly
-          if (enhancedText.toLowerCase().startsWith(lastMsg.text.toLowerCase())) {
-            const updated = [...prev];
-            updated[updated.length - 1] = {
-              ...lastMsg,
-              text: enhancedText,
-              translatedText: translated,
-              timestamp: timestampStr
-            };
-            return updated;
+      let currentList = [...prev];
+
+      segments.forEach((seg, idx) => {
+        if (!seg.trim()) return;
+
+        // Check if last message can be extended or is duplicate
+        if (currentList.length > 0 && idx === 0) {
+          const lastMsg = currentList[currentList.length - 1];
+          if (lastMsg && lastMsg.sender === 'HEARING') {
+            if (lastMsg.text.trim().toLowerCase() === seg.trim().toLowerCase()) {
+              return;
+            }
+            if (seg.toLowerCase().startsWith(lastMsg.text.toLowerCase())) {
+              currentList[currentList.length - 1] = {
+                ...lastMsg,
+                text: seg,
+                translatedText: translateText(seg, targetLanguage),
+                timestamp: timestampStr
+              };
+              return;
+            }
           }
         }
-      }
 
-      const newMsg: MessageItem = {
-        id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-        sender: 'HEARING',
-        senderName: currentSpk.name,
-        speakerId: currentSpk.id,
-        text: enhancedText,
-        translatedText: translated,
-        timestamp: timestampStr
-      };
-      return [...prev, newMsg];
+        // Add new concise segment bubble
+        currentList.push({
+          id: `msg-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 4)}`,
+          sender: 'HEARING',
+          senderName: currentSpk.name,
+          speakerId: currentSpk.id,
+          text: seg,
+          translatedText: translateText(seg, targetLanguage),
+          timestamp: timestampStr
+        });
+      });
+
+      return currentList;
     });
 
     setInterimTranscript('');
