@@ -2,7 +2,73 @@ import React from 'react';
 import {
   Boxes, Users, Calendar, FolderKanban, ShieldCheck, Newspaper, BarChart3, Clock, Scale, Sparkles, CheckCircle2, Wallet, Lightbulb, LayoutGrid
 } from 'lucide-react';
-import { AppModuleId, APP_MODULES } from '../layout/AppLauncherModal';
+import { AppModuleId } from '../layout/AppLauncherModal';
+
+export const HOME_APP_MODULES = [
+  {
+    id: 'apps' as AppModuleId,
+    name: 'Ứng Dụng',
+    icon: LayoutGrid,
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+  },
+  {
+    id: 'system' as AppModuleId,
+    name: 'Hệ Thống',
+    icon: BarChart3,
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/60 border-sky-200/80 dark:border-sky-800/80'
+  },
+  {
+    id: 'inside' as AppModuleId,
+    name: 'Bảng Tin Nội Bộ',
+    icon: Newspaper,
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200/80 dark:border-emerald-800/80'
+  },
+  {
+    id: 'calendar' as AppModuleId,
+    name: 'Lịch',
+    icon: Calendar,
+    iconColor: 'text-indigo-600 dark:text-indigo-400',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200/80 dark:border-indigo-800/80'
+  },
+  {
+    id: 'orders' as AppModuleId,
+    name: 'Đơn Hàng',
+    icon: FolderKanban,
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/60 border-amber-200/80 dark:border-amber-800/80'
+  },
+  {
+    id: 'hr' as AppModuleId,
+    name: 'Nhân Sự',
+    icon: Users,
+    iconColor: 'text-rose-600 dark:text-rose-400',
+    bgColor: 'bg-rose-50 dark:bg-rose-950/60 border-rose-200/80 dark:border-rose-800/80'
+  },
+  {
+    id: 'legal' as AppModuleId,
+    name: 'Pháp Lý',
+    icon: Scale,
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    bgColor: 'bg-purple-50 dark:bg-purple-950/60 border-purple-200/80 dark:border-purple-800/80'
+  },
+  {
+    id: 'finance' as AppModuleId,
+    name: 'Tài Chính',
+    icon: Wallet,
+    iconColor: 'text-teal-600 dark:text-teal-400',
+    bgColor: 'bg-teal-50 dark:bg-teal-950/60 border-teal-200/80 dark:border-teal-800/80'
+  },
+  {
+    id: 'rd' as AppModuleId,
+    name: 'Nghiên Cứu & Phát Triển',
+    icon: Lightbulb,
+    iconColor: 'text-yellow-600 dark:text-yellow-400',
+    bgColor: 'bg-yellow-50 dark:bg-yellow-950/60 border-yellow-200/80 dark:border-yellow-800/80'
+  }
+];
 
 interface OdooHomeAppGridProps {
   onSelectModule: (moduleId: AppModuleId) => void;
@@ -148,7 +214,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
         {/* Centered Odoo App Grid (Kiểu dáng hộp bo tròn 28px y hệt bản Desktop) */}
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3.5 w-full shrink-0 mt-3 sm:mt-6">
-          {APP_MODULES.map((app) => {
+          {HOME_APP_MODULES.map((app) => {
             const Icon = app.icon;
             return (
               <div
