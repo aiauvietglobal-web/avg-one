@@ -60,10 +60,9 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     style={{
                       background: 'linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%)',
                       WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block'
+                      WebkitTextFillColor: 'transparent'
                     }}
-                    className="relative z-10 font-black dark:hidden"
+                    className="relative z-10 font-black inline-block dark:hidden"
                   >
                     Rõ ràng!
                   </span>
@@ -71,8 +70,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     style={{
                       background: 'linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%)',
                       WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block'
+                      WebkitTextFillColor: 'transparent'
                     }}
                     className="relative z-10 font-black hidden dark:inline-block"
                   >
