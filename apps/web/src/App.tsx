@@ -1023,9 +1023,7 @@ const INITIAL_ZALO_CONVERSATIONS: ZaloConversation[] = [
 ];
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    return (localStorage.getItem('avg_theme') as 'dark' | 'light') || 'light';
-  });
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
 
   useEffect(() => {
     if (theme === 'dark') {
