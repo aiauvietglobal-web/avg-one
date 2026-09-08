@@ -1028,6 +1028,11 @@ export default function App() {
   });
 
   useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('avg_theme', theme);
   }, [theme]);

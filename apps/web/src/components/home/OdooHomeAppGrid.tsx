@@ -79,15 +79,15 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
     <div className="w-full h-full flex-1 min-h-0 bg-white dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-y-auto md:overflow-hidden flex flex-col items-center justify-start md:justify-center p-2 sm:p-3 select-none">
       
       {/* 🌐 ARCHITECTURAL GRID LINES PATTERN LAYER */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-75 dark:opacity-40 pointer-events-none -z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-75 dark:opacity-40 pointer-events-none z-0" />
 
       {/* 🎨 IMPRESSIVE BOTTOM BRAND WAVE GRADIENT LAYER (Dải nền ấn tượng ở layer dưới cùng) */}
-      <div className="absolute bottom-0 inset-x-0 h-48 sm:h-64 bg-gradient-to-t from-[#F15A24]/6 via-[#00A8E8]/4 to-transparent dark:from-[#F15A24]/12 dark:via-[#0284C7]/8 dark:to-transparent pointer-events-none -z-0" />
+      <div className="absolute bottom-0 inset-x-0 h-48 sm:h-64 bg-gradient-to-t from-[#F15A24]/6 via-[#00A8E8]/4 to-transparent dark:from-[#F15A24]/12 dark:via-[#0284C7]/8 dark:to-transparent pointer-events-none z-0" />
 
       {/* 🔮 ELEGANT AMBIENT BRAND ORB GLOWS */}
-      <div className="absolute -top-24 -left-20 w-[500px] h-[500px] bg-[#0284C7]/10 dark:bg-[#0284C7]/20 rounded-full blur-[120px] pointer-events-none -z-0" />
-      <div className="absolute -top-24 -right-20 w-[500px] h-[500px] bg-[#F15A24]/10 dark:bg-[#F15A24]/20 rounded-full blur-[120px] pointer-events-none -z-0" />
-      <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-[#00A8E8]/8 via-amber-400/8 to-[#F15A24]/12 dark:from-[#0284C7]/15 dark:to-[#F15A24]/18 rounded-full blur-[130px] pointer-events-none -z-0" />
+      <div className="absolute -top-24 -left-20 w-[500px] h-[500px] bg-[#0284C7]/10 dark:bg-[#0284C7]/20 rounded-full blur-[120px] pointer-events-none z-0" />
+      <div className="absolute -top-24 -right-20 w-[500px] h-[500px] bg-[#F15A24]/10 dark:bg-[#F15A24]/20 rounded-full blur-[120px] pointer-events-none z-0" />
+      <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-[#00A8E8]/8 via-amber-400/8 to-[#F15A24]/12 dark:from-[#0284C7]/15 dark:to-[#F15A24]/18 rounded-full blur-[130px] pointer-events-none z-0" />
 
       {/* Synchronized container matching Header alignment (max-w-7xl px-4 sm:px-6) */}
       <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2.5 sm:gap-4 relative z-10 py-2 sm:py-2">
@@ -115,7 +115,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   >
                     Vững chắc!
                   </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,0 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-1" />
                   </svg>
                 </span>
@@ -145,7 +145,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   >
                     Rõ ràng!
                   </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,18 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-2" />
                   </svg>
                 </span>
@@ -166,7 +166,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   >
                     Tươi sáng!
                   </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
                   </svg>
                 </span>
@@ -190,8 +190,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   <rect
                     x="1"
                     y="1"
-                    width="calc(100% - 2px)"
-                    height="calc(100% - 2px)"
+                    style={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }}
                     rx="20"
                     ry="20"
                     fill="none"
