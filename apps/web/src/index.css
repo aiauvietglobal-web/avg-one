@@ -35,24 +35,24 @@
   --accent-orange: #ff5722;
   --accent-orange-hover: #ea580c;
   --accent-orange-light: #ff7043;
-  --accent-orange-soft: rgba(255, 87, 34, 0.08);
-  --accent-orange-border: rgba(255, 87, 34, 0.25);
+  --accent-orange-soft: rgba(255, 87, 34, 0.12);
+  --accent-orange-border: rgba(255, 87, 34, 0.3);
 
-  /* Trắng (Clean Pure White & Soft Surface Background) */
-  --bg-primary: #ffffff;
-  --bg-surface: #ffffff;
-  --bg-surface-hover: #f1f5f9;
-  --bg-card: #ffffff;
+  /* Xám Xanh (Slate Blue Surface & Background) */
+  --bg-primary: #0b0f19;
+  --bg-surface: #131b2a;
+  --bg-surface-hover: #1e293b;
+  --bg-card: rgba(19, 27, 42, 0.85);
 
-  --border-color: #e2e8f0;
-  --border-color-hover: #cbd5e1;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color-hover: rgba(255, 255, 255, 0.18);
 
-  /* Trắng & Chữ Jet Black sẫm */
-  --text-main: #0f172a;
-  --text-muted: #374151;
+  /* Trắng (Clean Pure White & Soft Text) */
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
   --text-dim: #64748b;
 
-  --glow-orange: rgba(255, 87, 34, 0.15);
+  --glow-orange: rgba(255, 87, 34, 0.2);
 }
 
 /* ============================================================ */

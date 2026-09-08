@@ -1023,14 +1023,11 @@ const INITIAL_ZALO_CONVERSATIONS: ZaloConversation[] = [
 ];
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    return (localStorage.getItem('avg_theme') as 'dark' | 'light') || 'light';
+  });
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('avg_theme', theme);
   }, [theme]);

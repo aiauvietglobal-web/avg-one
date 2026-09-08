@@ -151,7 +151,7 @@ export const AppsModule: React.FC = () => {
               </h2>
             </div>
 
-            {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP ỨNG DỤNG CON (ĐỒNG BỘ NÉT ĐỨT CAM & GREY BO GÓC 32PX) */}
+            {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP ỨNG DỤNG CON (ĐỒNG BỘ VIỀN NÉT LIỀN CAM & GREY BO GÓC 32PX) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 w-full pb-2">
               {SUB_APPS_GRID.map((app) => {
                 const Icon = app.icon;
@@ -164,7 +164,7 @@ export const AppsModule: React.FC = () => {
                       onClick={() => setActiveApp(app.id)}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveApp(app.id); }}
                       style={{ borderRadius: '32px' }}
-                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-dashed border-[#F15A24]/40 dark:border-[#F15A24]/30 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
                     >
                       {/* Badge Trạng thái */}
                       {app.badge && (
