@@ -4,7 +4,8 @@ import {
   MessageSquare, ChevronUp, ChevronDown, Trash2, Plus, Calendar as CalendarIcon,
   Search, RefreshCw, BarChart3, CheckCircle2, AlertCircle, XCircle, LayoutGrid, Table, FileSpreadsheet, Home,
   Upload, Paperclip, Image as ImageIcon, File, Download, Eye, ExternalLink,
-  Sparkles, Flame, Compass, ArrowRight, ArrowLeft, ShieldCheck, CheckSquare, Building2, Car, Plane, AlertTriangle
+  Sparkles, Flame, Compass, ArrowRight, ArrowLeft, ShieldCheck, CheckSquare, Building2, Car, Plane, AlertTriangle,
+  Mic
 } from 'lucide-react';
 import {
   DiscussionEvent, EventAttachment, GOOGLE_SHEET_EDIT_URL, fetchDiscussionEventsFromGoogleSheet,
@@ -13,6 +14,7 @@ import {
   restoreDiscussionEventFromTrash, purgeDiscussionEventPermanently, emptyTrashDiscussionEvents,
   DeletedDiscussionEvent
 } from '../../services/googleSheetSync';
+import { LiveTranscribeModal } from '../../components/transcribe/LiveTranscribeModal';
 
 const getRealTimeDateDefaults = () => {
   const now = new Date();
@@ -492,6 +494,28 @@ export const CalendarModule: React.FC = () => {
   const [deletedEvents, setDeletedEvents] = useState<DeletedDiscussionEvent[]>([]);
   const [showWebhookModal, setShowWebhookModal] = useState<boolean>(false);
   const [webhookUrlInput, setWebhookUrlInput] = useState<string>('');
+
+  // 🎙️ Live Speech-to-Text Transcribe Modal States
+  const [isTranscribeModalOpen, setIsTranscribeModalOpen] = useState<boolean>(false);
+  const [selectedTranscribeEvent, setSelectedTranscribeEvent] = useState<DiscussionEvent | null>(null);
+
+  const handleOpenTranscribe = (evt: DiscussionEvent) => {
+    setSelectedTranscribeEvent(evt);
+    setIsTranscribeModalOpen(true);
+  };
+
+  const handleSaveConclusionFromTranscribe = (conclusionText: string) => {
+    if (!selectedTranscribeEvent) return;
+    const updatedEvent: DiscussionEvent = {
+      ...selectedTranscribeEvent,
+      notes: (selectedTranscribeEvent.notes ? selectedTranscribeEvent.notes + '\n\n' : '') + `[VBKL Trích Xuất]:\n${conclusionText}`
+    };
+    const updatedEvents = events.map(e => e.id === updatedEvent.id ? updatedEvent : e);
+    setEvents(updatedEvents);
+    updateLocalDiscussionEvent(updatedEvent);
+    setToastMessage('✅ Đã lưu kết luận VBKL vào hồ sơ cuộc họp thành công!');
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   // Form states for new event
   const [newTitle, setNewTitle] = useState('');
@@ -1844,6 +1868,16 @@ export const CalendarModule: React.FC = () => {
 
                                        <button
                                          type="button"
+                                         onClick={() => handleOpenTranscribe(evt)}
+                                         className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg border border-orange-200 dark:border-orange-800/80 bg-orange-50/90 dark:bg-orange-950/40 text-[#F15A24] dark:text-orange-300 hover:bg-[#F15A24] hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs group/mic"
+                                         title="Bật Thư ký Trực tiếp chuyển giọng nói thành văn bản & trích xuất VBKL"
+                                       >
+                                         <Mic className="w-3.5 h-3.5 group-hover/mic:animate-bounce" />
+                                         <span>Thư ký Trực tiếp</span>
+                                       </button>
+
+                                       <button
+                                         type="button"
                                          onClick={() => handleMoveToTrash(evt)}
                                          className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-rose-600 hover:border-rose-300 transition cursor-pointer shadow-2xs"
                                          title="Xóa cuộc họp"
@@ -2148,6 +2182,16 @@ export const CalendarModule: React.FC = () => {
 
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => {
+                    handleOpenTranscribe(selectedEventDetail);
+                    setSelectedEventDetail(null);
+                  }}
+                  className="px-3 py-1.5 bg-orange-50 dark:bg-orange-950/50 text-[#F15A24] dark:text-orange-300 hover:bg-[#F15A24] hover:text-white border border-orange-200 dark:border-orange-800 font-bold text-xs rounded-lg flex items-center gap-1.5 transition cursor-pointer"
+                >
+                  <Mic className="w-3.5 h-3.5" />
+                  <span>Thư ký Trực tiếp</span>
+                </button>
                 <button
                   onClick={() => {
                     setEditingEvent({ ...selectedEventDetail });
@@ -2869,6 +2913,25 @@ export const CalendarModule: React.FC = () => {
             />
           </div>
         </div>
+      )}
+
+      {/* MODAL: THƯ KÝ SỐ CHUYỂN ĐỔI GIỌNG NÓI TRỰC TIẾP (PHASE 1 POC) */}
+      {isTranscribeModalOpen && selectedTranscribeEvent && (
+        <LiveTranscribeModal
+          isOpen={isTranscribeModalOpen}
+          onClose={() => {
+            setIsTranscribeModalOpen(false);
+            setSelectedTranscribeEvent(null);
+          }}
+          meetingId={selectedTranscribeEvent.id}
+          meetingTitle={selectedTranscribeEvent.title}
+          meetingDate={selectedTranscribeEvent.date}
+          scope={selectedTranscribeEvent.scope}
+          chairperson={selectedTranscribeEvent.chairperson}
+          secretary={selectedTranscribeEvent.secretary}
+          attendees={selectedTranscribeEvent.attendees}
+          onSaveConclusion={handleSaveConclusionFromTranscribe}
+        />
       )}
 
     </div>

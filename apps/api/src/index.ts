@@ -1,7 +1,9 @@
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { prisma } from '@avg-one/database';
+import { initTranscriptionGateway, getGatewayStats, getMeetingTranscript } from './services/transcriptionGateway';
 
 dotenv.config();
 
@@ -342,6 +344,31 @@ app.post('/api/seed', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+// 8. Real-time ASR Transcription Gateway Endpoints
+app.get('/api/transcribe/stats', (req, res) => {
+  res.status(200).json({
+    status: 'online',
+    protocol: 'WebSocket /api/ws/transcribe',
+    ...getGatewayStats()
+  });
+});
+
+app.get('/api/transcribe/meetings/:meetingId', (req, res) => {
+  const { meetingId } = req.params;
+  const transcript = getMeetingTranscript(meetingId);
+  res.status(200).json({
+    meetingId,
+    count: transcript.length,
+    transcript
+  });
+});
+
+const server = http.createServer(app);
+
+// Initialize Real-time WebSocket Streaming ASR Gateway
+initTranscriptionGateway(server);
+
+server.listen(PORT, () => {
   console.log(`Platform AVG One API Server running on port ${PORT} (Mode 20 Users Ready)`);
+  console.log(`🎙️ Real-time Speech-to-Text Streaming Gateway active on ws://localhost:${PORT}/api/ws/transcribe`);
 });
