@@ -28,85 +28,79 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
           <div className="w-fit mx-auto space-y-3 sm:space-y-4 py-1 flex flex-col items-center">
             
-            {/* Main Headline (Gióng lề trái phẳng 3 dòng: Một nền tảng / Một định hướng / Một đích đến) */}
-            <div className="space-y-2 sm:space-y-2.5 w-fit flex flex-col items-start justify-start text-left">
+            {/* Main Headline (Gióng lề trái phẳng 2 cột bằng CSS Grid) */}
+            <div className="grid grid-cols-[auto_auto] items-baseline gap-x-3 sm:gap-x-5 gap-y-2 sm:gap-y-2.5 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight justify-start text-left w-fit">
               
               {/* Hàng 1: Một nền tảng Vững chắc! */}
-              <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
-                <span>Một nền tảng</span>
-                <span className="relative inline-block px-1">
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 50%, #48CAE4 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block'
-                    }}
-                    className="relative z-10 font-black"
-                  >
-                    Vững chắc!
-                  </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,0 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-1" />
-                  </svg>
+              <span className="whitespace-nowrap text-left">Một nền tảng</span>
+              <span className="relative inline-block px-1 whitespace-nowrap text-left">
+                <span
+                  style={{
+                    background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 50%, #48CAE4 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    display: 'inline-block'
+                  }}
+                  className="relative z-10 font-black"
+                >
+                  Vững chắc!
                 </span>
-              </div>
+                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <path d="M 0,10 Q 100,0 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-1" />
+                </svg>
+              </span>
 
               {/* Hàng 2: Một định hướng Rõ ràng! */}
-              <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
-                <span>Một định hướng</span>
-                <span className="relative inline-block px-1">
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                    className="relative z-10 font-black inline-block dark:hidden"
-                  >
-                    Rõ ràng!
-                  </span>
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                    className="relative z-10 font-black hidden dark:inline-block"
-                  >
-                    Rõ ràng!
-                  </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,18 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-2" />
-                  </svg>
+              <span className="whitespace-nowrap text-left">Một định hướng</span>
+              <span className="relative inline-block px-1 whitespace-nowrap text-left">
+                <span
+                  style={{
+                    background: 'linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                  className="relative z-10 font-black inline-block dark:hidden"
+                >
+                  Rõ ràng!
                 </span>
-              </div>
+                <span
+                  style={{
+                    background: 'linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                  className="relative z-10 font-black hidden dark:inline-block"
+                >
+                  Rõ ràng!
+                </span>
+                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <path d="M 0,10 Q 100,18 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-2" />
+                </svg>
+              </span>
 
               {/* Hàng 3: Một đích đến Tươi sáng! */}
-              <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
-                <span>Một đích đến</span>
-                <span className="relative inline-block px-1">
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #E63946 0%, #F15A24 45%, #FF9F1C 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block'
-                    }}
-                    className="relative z-10 font-black"
-                  >
-                    Tươi sáng!
-                  </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                  </svg>
+              <span className="whitespace-nowrap text-left">Một đích đến</span>
+              <span className="relative inline-block px-1 whitespace-nowrap text-left">
+                <span
+                  style={{
+                    background: 'linear-gradient(135deg, #E63946 0%, #F15A24 45%, #FF9F1C 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    display: 'inline-block'
+                  }}
+                  className="relative z-10 font-black"
+                >
+                  Tươi sáng!
                 </span>
-              </div>
+                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                </svg>
+              </span>
 
             </div>
 
-            {/* Slogan Badge (Căn giữa bên dưới cụm chữ) */}
-            <div className="pt-3 sm:pt-4 text-center w-full flex justify-center max-w-full">
+            {/* Slogan Badge (Căn lề trái theo cụm tiêu đề) */}
+            <div className="pt-3 sm:pt-4 w-full flex justify-start max-w-full">
               <div className="relative inline-block p-0.5 rounded-3xl transition-all duration-300 max-w-full">
                 {/* SVG Clockwise Border Tracing Effect */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-3xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
