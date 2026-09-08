@@ -1206,7 +1206,7 @@ export const WorkflowModule: React.FC = () => {
             onClick={() => setSelectedSubModule('design')}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedSubModule('design'); }}
             style={{ borderRadius: '32px' }}
-            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
           >
             <span className="absolute top-3.5 right-3.5 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 tracking-wider">
               ĐÃ SẴN SÀNG
@@ -1226,7 +1226,7 @@ export const WorkflowModule: React.FC = () => {
             onClick={() => setSelectedSubModule('research')}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedSubModule('research'); }}
             style={{ borderRadius: '32px' }}
-            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
           >
             <span className="absolute top-3.5 right-3.5 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 tracking-wider">
               ĐÃ SẴN SÀNG

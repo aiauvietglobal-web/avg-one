@@ -1057,7 +1057,7 @@ export const CalendarModule: React.FC = () => {
                     onClick={() => setActiveSubApp(app.id)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveSubApp(app.id); }}
                     style={{ borderRadius: '32px' }}
-                    className="group flex flex-col items-center justify-center py-5 sm:py-6 px-4 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+                    className="group flex flex-col items-center justify-center py-5 sm:py-6 px-4 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
                   >
                     {/* Icon Hộp Vuông Bo Tròn Chuẩn Màu Cam AVG */}
                     <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] dark:text-orange-400 mb-3 group-hover:scale-105 transition-transform shrink-0">

@@ -164,7 +164,7 @@ export const AppsModule: React.FC = () => {
                       onClick={() => setActiveApp(app.id)}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveApp(app.id); }}
                       style={{ borderRadius: '32px' }}
-                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
                     >
                       {/* Badge Trạng thái */}
                       {app.badge && (
