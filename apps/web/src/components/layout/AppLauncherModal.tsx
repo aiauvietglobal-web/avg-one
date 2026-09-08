@@ -36,63 +36,63 @@ export const APP_MODULES = [
     name: 'Ứng Dụng',
     icon: LayoutGrid,
     iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-gradient-to-br from-orange-100 via-orange-50 to-amber-100 dark:from-orange-950/80 dark:to-amber-950/60 border-orange-200/80 dark:border-orange-800'
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'system' as AppModuleId,
     name: 'Hệ Thống',
     icon: BarChart3,
-    iconColor: 'text-[#0284C7] dark:text-sky-400',
-    bgColor: 'bg-gradient-to-br from-sky-100 via-sky-50 to-blue-100 dark:from-sky-950/80 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'inside' as AppModuleId,
     name: 'Bảng Tin Nội Bộ',
     icon: Newspaper,
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-gradient-to-br from-emerald-100 via-emerald-50 to-teal-100 dark:from-emerald-950/80 dark:to-teal-950/60 border-emerald-200/80 dark:border-emerald-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'calendar' as AppModuleId,
     name: 'Lịch',
     icon: Calendar,
-    iconColor: 'text-indigo-600 dark:text-indigo-400',
-    bgColor: 'bg-gradient-to-br from-indigo-100 via-indigo-50 to-purple-100 dark:from-indigo-950/80 dark:to-purple-950/60 border-indigo-200/80 dark:border-indigo-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'orders' as AppModuleId,
     name: 'Đơn Hàng',
     icon: FolderKanban,
-    iconColor: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 dark:from-amber-950/80 dark:to-orange-950/60 border-amber-200/80 dark:border-amber-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'hr' as AppModuleId,
     name: 'Nhân Sự',
     icon: Users,
-    iconColor: 'text-rose-600 dark:text-rose-400',
-    bgColor: 'bg-gradient-to-br from-rose-100 via-rose-50 to-pink-100 dark:from-rose-950/80 dark:to-pink-950/60 border-rose-200/80 dark:border-rose-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'legal' as AppModuleId,
     name: 'Pháp Lý',
     icon: Scale,
-    iconColor: 'text-violet-600 dark:text-violet-400',
-    bgColor: 'bg-gradient-to-br from-violet-100 via-violet-50 to-purple-100 dark:from-violet-950/80 dark:to-purple-950/60 border-violet-200/80 dark:border-violet-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'finance' as AppModuleId,
     name: 'Tài Chính',
     icon: Wallet,
-    iconColor: 'text-teal-600 dark:text-teal-400',
-    bgColor: 'bg-gradient-to-br from-teal-100 via-teal-50 to-cyan-100 dark:from-teal-950/80 dark:to-cyan-950/60 border-teal-200/80 dark:border-teal-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
     id: 'rd' as AppModuleId,
     name: 'Nghiên Cứu & Phát Triển',
     icon: Lightbulb,
-    iconColor: 'text-amber-500 dark:text-amber-400',
-    bgColor: 'bg-gradient-to-br from-yellow-100 via-amber-50 to-orange-100 dark:from-yellow-950/80 dark:to-amber-950/60 border-yellow-200/80 dark:border-yellow-800'
+    iconColor: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   }
 ];
 
