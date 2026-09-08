@@ -42,57 +42,57 @@ export const APP_MODULES = [
     id: 'system' as AppModuleId,
     name: 'Hệ Thống',
     icon: BarChart3,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'inside' as AppModuleId,
     name: 'Bảng Tin Nội Bộ',
     icon: Newspaper,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200/80 dark:border-emerald-800/80'
   },
   {
     id: 'calendar' as AppModuleId,
     name: 'Lịch',
     icon: Calendar,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-indigo-600 dark:text-indigo-400',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200/80 dark:border-indigo-800/80'
   },
   {
     id: 'orders' as AppModuleId,
     name: 'Đơn Hàng',
     icon: FolderKanban,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/60 border-amber-200/80 dark:border-amber-800/80'
   },
   {
     id: 'hr' as AppModuleId,
     name: 'Nhân Sự',
     icon: Users,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-rose-600 dark:text-rose-400',
+    bgColor: 'bg-rose-50 dark:bg-rose-950/60 border-rose-200/80 dark:border-rose-800/80'
   },
   {
     id: 'legal' as AppModuleId,
     name: 'Pháp Lý',
     icon: Scale,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    bgColor: 'bg-purple-50 dark:bg-purple-950/60 border-purple-200/80 dark:border-purple-800/80'
   },
   {
     id: 'finance' as AppModuleId,
     name: 'Tài Chính',
     icon: Wallet,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-teal-600 dark:text-teal-400',
+    bgColor: 'bg-teal-50 dark:bg-teal-950/60 border-teal-200/80 dark:border-teal-800/80'
   },
   {
     id: 'rd' as AppModuleId,
     name: 'Nghiên Cứu & Phát Triển',
     icon: Lightbulb,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-yellow-600 dark:text-yellow-400',
+    bgColor: 'bg-yellow-50 dark:bg-yellow-950/60 border-yellow-200/80 dark:border-yellow-800/80'
   }
 ];
 
@@ -113,26 +113,7 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 sm:pb-4">
           <div>
-            <h2
-              style={{
-                background: 'linear-gradient(135deg, #0F172A 0%, #0284C7 50%, #F15A24 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                display: 'inline-block'
-              }}
-              className="text-base sm:text-xl font-black tracking-tight dark:hidden"
-            >
-              QUẢN LÝ PHÂN HỆ AVG One
-            </h2>
-            <h2
-              style={{
-                background: 'linear-gradient(135deg, #FFFFFF 0%, #38BDF8 50%, #FF7043 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                display: 'inline-block'
-              }}
-              className="text-base sm:text-xl font-black tracking-tight hidden dark:inline-block"
-            >
+            <h2 className="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-slate-900 via-[#0284C7] to-[#F15A24] dark:from-white dark:via-[#38BDF8] dark:to-[#FF7043] bg-clip-text text-transparent">
               QUẢN LÝ PHÂN HỆ AVG One
             </h2>
           </div>
@@ -183,10 +164,10 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                   onClose();
                 }}
                 style={{ borderRadius: '28px' }}
-                className={`flex flex-col items-center justify-center py-3.5 sm:py-5 px-2.5 sm:px-3 min-h-[102px] sm:min-h-[125px] border-2 border-dashed transition-all duration-200 text-center group cursor-pointer relative overflow-hidden select-none ${
+                className={`flex flex-col items-center justify-center py-3.5 sm:py-5 px-2.5 sm:px-3 min-h-[102px] sm:min-h-[125px] border-2 transition-all duration-200 text-center group cursor-pointer relative overflow-hidden select-none ${
                   isActive
                     ? 'border-[#F15A24] bg-gradient-to-br from-orange-50/90 via-amber-50/60 to-orange-100/70 dark:from-orange-950/70 dark:to-amber-950/50 shadow-md ring-2 ring-[#F15A24]/20'
-                    : 'border-slate-300/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#F15A24] hover:bg-gradient-to-br hover:from-white hover:via-orange-50/30 hover:to-amber-50/20 dark:hover:from-slate-900 dark:hover:to-orange-950/30 hover:-translate-y-0.5 hover:shadow-md'
+                    : 'border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#F15A24] hover:bg-gradient-to-br hover:from-white hover:via-orange-50/30 hover:to-amber-50/20 dark:hover:from-slate-900 dark:hover:to-orange-950/30 hover:-translate-y-0.5 hover:shadow-md'
                 }`}
               >
                 <div className={`w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl ${mod.bgColor} border flex items-center justify-center mb-1.5 sm:mb-2 group-hover:scale-110 transition-transform shrink-0 shadow-2xs`}>
