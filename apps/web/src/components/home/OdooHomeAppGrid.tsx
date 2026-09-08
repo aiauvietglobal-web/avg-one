@@ -26,14 +26,16 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
         {/* Modern Minimalist Hero Section (Căn lề trái gióng thẳng hàng 3 dòng theo media_1788692283298.png) */}
         <div className="flex flex-col items-center max-w-3xl mx-auto shrink-0 mb-4 sm:mb-6 w-full">
           
-          <div className="w-fit mx-auto space-y-3 sm:space-y-4 py-1 flex flex-col items-center">
+          <div className="w-fit mx-auto space-y-3 sm:space-y-4 py-1 flex flex-col items-start">
             
-            {/* Main Headline (Gióng lề trái phẳng 2 cột bằng CSS Grid) */}
-            <div className="grid grid-cols-[auto_auto] items-baseline gap-x-3 sm:gap-x-5 gap-y-2 sm:gap-y-2.5 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight justify-start text-left w-fit">
+            {/* Main Headline (2-column CSS Grid: Gióng lề trái phẳng 3 dòng và 3 cụm chữ bên phải) */}
+            <div className="grid grid-cols-[auto_1fr] gap-x-4 sm:gap-x-7 gap-y-2 sm:gap-y-2.5 items-baseline w-fit text-left">
               
-              {/* Hàng 1: Một nền tảng Vững chắc! */}
-              <span className="whitespace-nowrap text-left">Một nền tảng</span>
-              <span className="relative inline-block px-1 whitespace-nowrap text-left">
+              {/* Hàng 1: Một nền tảng | Vững chắc! */}
+              <span className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight whitespace-nowrap">
+                Một nền tảng
+              </span>
+              <span className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold tracking-tight leading-tight whitespace-nowrap relative inline-block px-1">
                 <span
                   style={{
                     background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 50%, #48CAE4 100%)',
@@ -50,9 +52,11 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 </svg>
               </span>
 
-              {/* Hàng 2: Một định hướng Rõ ràng! */}
-              <span className="whitespace-nowrap text-left">Một định hướng</span>
-              <span className="relative inline-block px-1 whitespace-nowrap text-left">
+              {/* Hàng 2: Một định hướng | Rõ ràng! */}
+              <span className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight whitespace-nowrap">
+                Một định hướng
+              </span>
+              <span className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold tracking-tight leading-tight whitespace-nowrap relative inline-block px-1">
                 <span
                   style={{
                     background: 'linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%)',
@@ -78,9 +82,11 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 </svg>
               </span>
 
-              {/* Hàng 3: Một đích đến Tươi sáng! */}
-              <span className="whitespace-nowrap text-left">Một đích đến</span>
-              <span className="relative inline-block px-1 whitespace-nowrap text-left">
+              {/* Hàng 3: Một đích đến | Tươi sáng! */}
+              <span className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight whitespace-nowrap">
+                Một đích đến
+              </span>
+              <span className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold tracking-tight leading-tight whitespace-nowrap relative inline-block px-1">
                 <span
                   style={{
                     background: 'linear-gradient(135deg, #E63946 0%, #F15A24 45%, #FF9F1C 100%)',
@@ -99,8 +105,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
             </div>
 
-            {/* Slogan Badge (Căn lề trái theo cụm tiêu đề) */}
-            <div className="pt-3 sm:pt-4 w-full flex justify-start max-w-full">
+            {/* Slogan Badge (Căn lề trái thẳng lề với cụm chữ bên trên) */}
+            <div className="pt-2 sm:pt-3 text-left w-full flex justify-start">
               <div className="relative inline-block p-0.5 rounded-3xl transition-all duration-300 max-w-full">
                 {/* SVG Clockwise Border Tracing Effect */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-3xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
