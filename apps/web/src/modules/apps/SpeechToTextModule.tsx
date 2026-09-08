@@ -444,6 +444,7 @@ export const SpeechToTextModule: React.FC = () => {
   const [isListening, setIsListening] = useState<boolean>(false);
   const isListeningRef = useRef<boolean>(false);
   const micStateRef = useRef<'idle' | 'recording' | 'paused'>('idle');
+  const processedFinalIndexRef = useRef<number>(0);
 
   useEffect(() => {
     isListeningRef.current = isListening;
@@ -1168,7 +1169,7 @@ export const SpeechToTextModule: React.FC = () => {
     return common / Math.max(words1.length, words2.length);
   };
 
-  // Helper to commit transcript text with intelligent deduplication & live message in-place replacement
+  // Helper to commit transcript text with intelligent multi-message deduplication & live in-place replacement
   const commitTranscriptToMessage = (rawText: string, isFinalUtterance: boolean = true) => {
     if (!rawText || !rawText.trim()) return;
     const textToCommit = rawText.trim();
@@ -1196,23 +1197,24 @@ export const SpeechToTextModule: React.FC = () => {
         return [newMsg];
       }
 
-      const lastMsg = prev[prev.length - 1];
-      // Only merge/replace with messages from same speaker / 'HEARING'
-      if (lastMsg && lastMsg.sender === 'HEARING') {
-        const lastClean = normalizeForComparison(lastMsg.text);
+      // Search backwards through the last 4 messages for duplicates or prefix/context expansion
+      for (let i = prev.length - 1; i >= Math.max(0, prev.length - 4); i--) {
+        const target = prev[i];
+        if (target.sender !== 'HEARING') continue;
+
+        const targetClean = normalizeForComparison(target.text);
 
         // 1. EXACT DUPLICATE -> Ignore completely
-        if (lastClean === newClean) {
+        if (targetClean === newClean) {
           return prev;
         }
 
         // 2. PREFIX OR SUBSTRING EXTENSION:
-        // E.g. last was "Gấp đôi" and new is "Gấp đôi thành viên ban kiểm soát..."
-        if (newClean.startsWith(lastClean) || (lastClean.length >= 6 && newClean.includes(lastClean))) {
-          // UPDATE lastMsg with the expanded text in place! DO NOT duplicate!
+        // E.g. target was "Gấp đôi" and new is "Gấp đôi thành viên ban kiểm soát..."
+        if (newClean.startsWith(targetClean) || (targetClean.length >= 6 && newClean.includes(targetClean))) {
           const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...lastMsg,
+          updated[i] = {
+            ...target,
             text: enhancedText,
             translatedText: translated,
             timestamp: timestampStr
@@ -1221,22 +1223,21 @@ export const SpeechToTextModule: React.FC = () => {
         }
 
         // 3. RETRACTION / SUBSUMED (Existing message is already longer / more complete)
-        if (lastClean.startsWith(newClean) || (newClean.length >= 6 && lastClean.includes(newClean))) {
-          return prev; // keep existing more complete message
+        if (targetClean.startsWith(newClean) || (newClean.length >= 6 && targetClean.includes(newClean))) {
+          return prev;
         }
 
         // 4. ASR REVISION / HIGH WORD OVERLAP (e.g. "...Cổ Đại hội đồng..." -> "...của Đại hội đồng...")
-        const overlap = getWordOverlapRatio(lastClean, newClean);
-        const lastWords = lastClean.split(' ');
+        const overlap = getWordOverlapRatio(targetClean, newClean);
+        const targetWords = targetClean.split(' ');
         const newWords = newClean.split(' ');
-        const prefixWordsMatch = lastWords.length >= 2 && newWords.length >= 2 &&
-          lastWords.slice(0, 2).join(' ') === newWords.slice(0, 2).join(' ');
+        const prefixWordsMatch = targetWords.length >= 2 && newWords.length >= 2 &&
+          targetWords.slice(0, 2).join(' ') === newWords.slice(0, 2).join(' ');
 
-        if (overlap >= 0.60 || (prefixWordsMatch && overlap >= 0.45)) {
-          // UPDATE lastMsg in place with the refined text!
+        if (overlap >= 0.50 || (prefixWordsMatch && overlap >= 0.40)) {
           const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...lastMsg,
+          updated[i] = {
+            ...target,
             text: enhancedText,
             translatedText: translated,
             timestamp: timestampStr
@@ -1245,7 +1246,7 @@ export const SpeechToTextModule: React.FC = () => {
         }
       }
 
-      // If none of the above, this is truly a new, distinct sentence
+      // If none of the recent messages match, append as a distinct new utterance
       const newMsg: MessageItem = {
         id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
         sender: 'HEARING',
@@ -1260,10 +1261,6 @@ export const SpeechToTextModule: React.FC = () => {
 
     setInterimTranscript('');
     lastInterimRef.current = '';
-    if (silenceCommitTimerRef.current) {
-      clearTimeout(silenceCommitTimerRef.current);
-      silenceCommitTimerRef.current = null;
-    }
   };
 
   // Backwards-compatible alias for any remaining references
@@ -1277,6 +1274,7 @@ export const SpeechToTextModule: React.FC = () => {
     const attemptStart = (retriesLeft: number, delayMs: number) => {
       if (micStateRef.current !== 'recording') return;
       try {
+        processedFinalIndexRef.current = 0;
         recognitionRef.current.start();
         setIsListening(true);
         isListeningRef.current = true;
@@ -1335,62 +1333,46 @@ export const SpeechToTextModule: React.FC = () => {
       recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
+        processedFinalIndexRef.current = 0;
         setIsListening(true);
         isListeningRef.current = true;
         setRecognitionError(null);
       };
 
       recognition.onresult = (event: any) => {
-        let finalPieces = '';
         let currentInterim = '';
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const speechResult = event.results[i][0];
-          const transcriptPiece = speechResult ? speechResult.transcript : '';
+        for (let i = 0; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (!result || !result[0]) continue;
+          const piece = result[0].transcript || '';
 
-          if (event.results[i].isFinal) {
-            finalPieces += ' ' + transcriptPiece;
-          } else {
-            currentInterim += ' ' + transcriptPiece;
-          }
-        }
-
-        finalPieces = finalPieces.trim();
-        currentInterim = currentInterim.trim();
-
-        // 1. Commit final phrase pieces immediately when engine finalizes
-        if (finalPieces) {
-          commitTranscriptToMessage(finalPieces, true);
-        }
-
-        // 2. Real-time interim preview streaming (0ms latency, zero duplication)
-        if (currentInterim) {
-          const formattedInterim = enhanceVietnameseTranscript(currentInterim, false, false);
-          setInterimTranscript(formattedInterim);
-          lastInterimRef.current = currentInterim;
-
-          // Clear existing timer
-          if (silenceCommitTimerRef.current) {
-            clearTimeout(silenceCommitTimerRef.current);
-          }
-          // Set relaxed 2500ms safety timer ONLY if browser hangs indefinitely on an interim without isFinal
-          silenceCommitTimerRef.current = setTimeout(() => {
-            if (lastInterimRef.current.trim() && micStateRef.current === 'recording') {
-              commitTranscriptToMessage(lastInterimRef.current.trim(), true);
+          if (result.isFinal) {
+            // Strictly track processed index to prevent re-reading earlier finalized chunks
+            if (i >= processedFinalIndexRef.current) {
+              processedFinalIndexRef.current = i + 1;
+              const text = piece.trim();
+              if (text) {
+                commitTranscriptToMessage(text, true);
+              }
             }
-          }, 2500);
-        } else if (finalPieces) {
-          setInterimTranscript('');
-          lastInterimRef.current = '';
+          } else {
+            currentInterim += piece;
+          }
         }
-      };
 
+        // Live real-time preview (0ms latency without premature permanent commits)
+        const formattedInterim = currentInterim.trim()
+          ? enhanceVietnameseTranscript(currentInterim.trim(), false, false)
+          : '';
+        setInterimTranscript(formattedInterim);
+        lastInterimRef.current = currentInterim.trim();
+      };
 
       recognition.onerror = (event: any) => {
         console.warn('Speech recognition event notice:', event.error);
 
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed' || event.error === 'audio-capture') {
-          // ONLY unrecoverable permission/device error stops recording session
           setIsListening(false);
           isListeningRef.current = false;
           setMicState('idle');
@@ -1400,21 +1382,8 @@ export const SpeechToTextModule: React.FC = () => {
           setRecognitionError('Trình duyệt chưa cho phép truy cập Micro (not-allowed). Vui lòng nhấn "Cấp Quyền Micro" để mở lại.');
           setMicPermissionStatus('denied');
           setIsMicPermissionModalOpen(true);
-        } else if (event.error === 'no-speech') {
-          // Recoverable silence event -> auto-commit interim transcript, auto-restart speech engine immediately
-          if (lastInterimRef.current.trim()) {
-            commitInterimToMessage(lastInterimRef.current);
-          } else {
-            setInterimTranscript('');
-          }
-          if (micStateRef.current === 'recording') {
-            restartSpeechEngine();
-          }
         } else {
-          // All other temporary browser events (aborted, network, etc.) -> auto-restart engine, NEVER reset micState to idle
-          if (lastInterimRef.current.trim()) {
-            commitInterimToMessage(lastInterimRef.current);
-          }
+          // Recoverable temporary browser events -> auto-restart engine if recording
           if (micStateRef.current === 'recording') {
             restartSpeechEngine();
           }
@@ -1422,12 +1391,13 @@ export const SpeechToTextModule: React.FC = () => {
       };
 
       recognition.onend = () => {
-        // Auto-commit lingering interim text when speech engine resets
+        // Auto-commit lingering interim text if browser disconnected unexpectedly
         if (lastInterimRef.current.trim()) {
-          commitInterimToMessage(lastInterimRef.current);
+          commitTranscriptToMessage(lastInterimRef.current.trim(), true);
+          lastInterimRef.current = '';
+          setInterimTranscript('');
         }
 
-        // UNSTOPPABLE CONTINUOUS RECORDING: If user has recording active, restart speech engine immediately!
         if (micStateRef.current === 'recording') {
           restartSpeechEngine();
         } else {
@@ -1436,7 +1406,8 @@ export const SpeechToTextModule: React.FC = () => {
         }
       };
 
-      recognitionRef.current = recognition;
+
+            recognitionRef.current = recognition;
     } catch (err) {
       console.error('Error initializing Speech Recognition:', err);
       setSpeechSupported(false);
