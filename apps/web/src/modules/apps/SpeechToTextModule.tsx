@@ -227,104 +227,19 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
  */
 export const enhanceVietnameseTranscript = (
   rawText: string,
-  isLowConfidence: boolean = false,
-  isFinal: boolean = true
+  _isLowConfidence: boolean = false,
+  _isFinal: boolean = true
 ): string => {
   if (!rawText) return '';
-  let text = rawText.trim();
+  let text = rawText.trim().replace(/\s+/g, ' ');
+  if (!text) return '';
 
-  // Instant 0ms streaming for interim live speech (fast path)
-  if (!isFinal) {
-    return text.charAt(0).toUpperCase() + text.slice(1);
-  }
+  // Standard typographical spacing around punctuation (preserves exact words without guessing or alteration)
+  text = text.replace(/\s+([,.?!:;])/g, '$1');
+  text = text.replace(/([,.?!:;])(?=[^\s\d])/g, '$1 ');
 
-  // 1. Fix common Vietnamese speech ASR acoustic / phonetic misrecognitions
-  text = text.replace(/\b(cổ đại hội đồng)\b/gi, 'của Đại hội đồng');
-  text = text.replace(/\b(đại hội đồng cổ đông)\b/gi, 'Đại hội đồng Cổ đông');
-  text = text.replace(/\b(ban kiểm soát)\b/gi, 'Ban Kiểm soát');
-  text = text.replace(/\b(hội đồng quản trị)\b/gi, 'Hội đồng Quản trị');
-  text = text.replace(/\b(tổng giám đốc)\b/gi, 'Tổng Giám đốc');
-  text = text.replace(/\b(phó tổng giám đốc)\b/gi, 'Phó Tổng Giám đốc');
-  text = text.replace(/\b(giám đốc điều hành)\b/gi, 'Giám đốc Điều hành');
-  text = text.replace(/\b(báo cáo tài chính)\b/gi, 'Báo cáo Tài chính');
-  text = text.replace(/\b(nghị quyết)\b/gi, 'Nghị quyết');
-  text = text.replace(/\b(điều lệ công ty)\b/gi, 'Điều lệ Công ty');
-  text = text.replace(/\b(thù lao)\b/gi, 'thù lao');
-
-  // 2. Convert explicit voice dictation commands
-  text = text.replace(/\b(xuống dòng|xuống hàng|dòng mới)\b/gi, '\n');
-  text = text.replace(/\b(gạch đầu dòng)\b/gi, '\n- ');
-  text = text.replace(/\b(dấu chấm|chấm câu)\b/gi, '. ');
-  text = text.replace(/\b(dấu phẩy)\b/gi, ', ');
-  text = text.replace(/\b(dấu hỏi|hỏi chấm)\b/gi, '? ');
-  text = text.replace(/\b(dấu cảm|chấm cảm)\b/gi, '! ');
-  text = text.replace(/\b(dấu hai chấm)\b/gi, ': ');
-  text = text.replace(/\b(mở ngoặc)\b/gi, ' (');
-  text = text.replace(/\b(đóng ngoặc)\b/gi, ') ');
-  text = text.replace(/\b(phần trăm)\b/gi, '%');
-
-  // 3. Remove speech fillers (ừm, ơ, à, uhm, um, dạ à, thì là...)
-  text = text.replace(/\b(ừm|uhm|um|dạ à|thì là|là ừ|kiểu như là)\b\s*/gi, '');
-
-  // 4. Smart paragraph line breaks on discourse transition markers
-  const transitionMarkers = [
-    'thứ nhất', 'thứ hai', 'thứ ba', 'thứ tư',
-    'bên cạnh đó', 'ngoài ra', 'hơn nữa', 'mặt khác',
-    'tóm lại', 'kết luận là', 'cuối cùng'
-  ];
-
-  transitionMarkers.forEach(marker => {
-    const regex = new RegExp(`(?<=[^\\n])\\s+\\b(${marker})\\b`, 'gi');
-    text = text.replace(regex, '.\n$1');
-  });
-
-  // 5. Smart commas before clause conjunctions (avoid duplicate commas)
-  text = text.replace(/(?<![,.?!:;])\s+\b(nhưng|tuy nhiên|bởi vì|cho nên|đồng thời|do đó|vì vậy)\b/gi, ', $1');
-
-  // 6. Smart Question Mark auto-detection
-  const questionWordsRegex = /\b(phải không|chưa|hả|sao|thế nào|ở đâu|khi nào|tại sao|như thế nào|là gì|ai|bao nhiêu)\b/i;
-
-  // Split into lines/sentences and apply punctuation & capitalization
-  const lines = text
-    .split('\n')
-    .map(line => {
-      let l = line.trim().replace(/\s+/g, ' ');
-      if (!l) return '';
-
-      // Auto-insert question mark if sentence contains question words and no end punctuation
-      if (questionWordsRegex.test(l) && !/[.?!…:]$/.test(l)) {
-        l += '?';
-      } else if (!/[.?!…:]$/.test(l)) {
-        // Auto-insert period if line ends cleanly without punctuation
-        l += '.';
-      }
-
-      // Eliminate duplicate punctuation like ",," or ".. "
-      l = l.replace(/([,.?!:;])\s*([,.?!:;])+/g, '$1');
-
-      // Fix spacing around punctuation: ", " ". " "? "
-      l = l.replace(/\s+([,.?!:])/g, '$1');
-      l = l.replace(/([,.?!:])(?=[^\s\d\)])/g, '$1 ');
-
-      // Capitalize first character of line
-      l = l.charAt(0).toUpperCase() + l.slice(1);
-
-      // Capitalize first character after sentence punctuation (. ? !)
-      l = l.replace(/([.?!]\s+)([a-zàáảãạăắằẳẵặânấầnẩẫậnđèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ])/g,
-        (_, p1, p2) => p1 + p2.toUpperCase()
-      );
-
-      return l;
-    })
-    .filter(Boolean);
-
-  text = lines.join('\n');
-
-  if (isLowConfidence && text.length > 0 && !/[.?!…:]$/.test(text)) {
-    text += '...';
-  }
-
-  return text.trim();
+  // Capitalize first character of the sentence
+  return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
 
@@ -1169,84 +1084,39 @@ export const SpeechToTextModule: React.FC = () => {
     return common / Math.max(words1.length, words2.length);
   };
 
-  // Helper to commit transcript text with intelligent multi-message deduplication & live in-place replacement
+  // Helper to commit verbatim transcript text directly to conversation timeline without altering meaning
   const commitTranscriptToMessage = (rawText: string, isFinalUtterance: boolean = true) => {
     if (!rawText || !rawText.trim()) return;
     const textToCommit = rawText.trim();
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
-    const newClean = normalizeForComparison(enhancedText);
-    if (!newClean) return;
-
-    const translated = translateText(enhancedText, targetLanguage);
     const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
     const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    const translated = translateText(enhancedText, targetLanguage);
 
     setMessages(prev => {
-      if (prev.length === 0) {
-        const newMsg: MessageItem = {
-          id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          sender: 'HEARING',
-          senderName: currentSpk.name,
-          speakerId: currentSpk.id,
-          text: enhancedText,
-          translatedText: translated,
-          timestamp: timestampStr
-        };
-        return [newMsg];
-      }
-
-      // Search backwards through the last 4 messages for duplicates or prefix/context expansion
-      for (let i = prev.length - 1; i >= Math.max(0, prev.length - 4); i--) {
-        const target = prev[i];
-        if (target.sender !== 'HEARING') continue;
-
-        const targetClean = normalizeForComparison(target.text);
-
-        // 1. EXACT DUPLICATE -> Ignore completely
-        if (targetClean === newClean) {
-          return prev;
-        }
-
-        // 2. PREFIX OR SUBSTRING EXTENSION:
-        // E.g. target was "Gấp đôi" and new is "Gấp đôi thành viên ban kiểm soát..."
-        if (newClean.startsWith(targetClean) || (targetClean.length >= 6 && newClean.includes(targetClean))) {
-          const updated = [...prev];
-          updated[i] = {
-            ...target,
-            text: enhancedText,
-            translatedText: translated,
-            timestamp: timestampStr
-          };
-          return updated;
-        }
-
-        // 3. RETRACTION / SUBSUMED (Existing message is already longer / more complete)
-        if (targetClean.startsWith(newClean) || (newClean.length >= 6 && targetClean.includes(newClean))) {
-          return prev;
-        }
-
-        // 4. ASR REVISION / HIGH WORD OVERLAP (e.g. "...Cổ Đại hội đồng..." -> "...của Đại hội đồng...")
-        const overlap = getWordOverlapRatio(targetClean, newClean);
-        const targetWords = targetClean.split(' ');
-        const newWords = newClean.split(' ');
-        const prefixWordsMatch = targetWords.length >= 2 && newWords.length >= 2 &&
-          targetWords.slice(0, 2).join(' ') === newWords.slice(0, 2).join(' ');
-
-        if (overlap >= 0.50 || (prefixWordsMatch && overlap >= 0.40)) {
-          const updated = [...prev];
-          updated[i] = {
-            ...target,
-            text: enhancedText,
-            translatedText: translated,
-            timestamp: timestampStr
-          };
-          return updated;
+      if (prev.length > 0) {
+        const lastMsg = prev[prev.length - 1];
+        if (lastMsg && lastMsg.sender === 'HEARING') {
+          // If exact match (case-insensitive), skip duplicate
+          if (lastMsg.text.trim().toLowerCase() === enhancedText.trim().toLowerCase()) {
+            return prev;
+          }
+          // If incoming text extends the last message prefix, update it in-place seamlessly
+          if (enhancedText.toLowerCase().startsWith(lastMsg.text.toLowerCase())) {
+            const updated = [...prev];
+            updated[updated.length - 1] = {
+              ...lastMsg,
+              text: enhancedText,
+              translatedText: translated,
+              timestamp: timestampStr
+            };
+            return updated;
+          }
         }
       }
 
-      // If none of the recent messages match, append as a distinct new utterance
       const newMsg: MessageItem = {
         id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
         sender: 'HEARING',
