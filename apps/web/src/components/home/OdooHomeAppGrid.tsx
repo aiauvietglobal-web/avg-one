@@ -9,64 +9,64 @@ export const HOME_APP_MODULES = [
     id: 'apps' as AppModuleId,
     name: 'Ứng Dụng',
     icon: LayoutGrid,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'system' as AppModuleId,
     name: 'Hệ Thống',
     icon: BarChart3,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'inside' as AppModuleId,
     name: 'Bảng Tin Nội Bộ',
     icon: Newspaper,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'calendar' as AppModuleId,
     name: 'Lịch',
     icon: Calendar,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'orders' as AppModuleId,
     name: 'Đơn Hàng',
     icon: FolderKanban,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'hr' as AppModuleId,
     name: 'Nhân Sự',
     icon: Users,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'legal' as AppModuleId,
     name: 'Pháp Lý',
     icon: Scale,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'finance' as AppModuleId,
     name: 'Tài Chính',
     icon: Wallet,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   },
   {
     id: 'rd' as AppModuleId,
     name: 'Nghiên Cứu & Phát Triển',
     icon: Lightbulb,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    iconColor: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border-sky-200/80 dark:border-sky-800/80'
   }
 ];
 
@@ -224,7 +224,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 onClick={() => onSelectModule(app.id)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectModule(app.id); }}
                 style={{ borderRadius: '28px' }}
-                className="group flex flex-col items-center justify-center py-3 sm:py-3.5 px-2.5 min-h-[102px] sm:min-h-[112px] bg-white dark:bg-slate-900 rounded-[28px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+                className="group flex flex-col items-center justify-center py-3 sm:py-3.5 px-2.5 min-h-[102px] sm:min-h-[112px] bg-white dark:bg-slate-900 rounded-[28px] border-2 border-sky-200/90 dark:border-sky-900/60 hover:border-[#0284C7] hover:bg-gradient-to-br hover:from-white hover:via-sky-50/40 hover:to-blue-50/30 dark:hover:from-slate-900 dark:hover:to-sky-950/30 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md hover:shadow-sky-500/10 cursor-pointer select-none"
               >
                 {/* App Colorful Icon */}
                 <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${app.bgColor} border flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform shrink-0`}>
@@ -232,7 +232,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 </div>
                 
                 {/* App Title */}
-                <h3 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24] transition-colors whitespace-normal leading-tight w-full px-0.5">
+                <h3 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors whitespace-normal leading-tight w-full px-0.5">
                   {app.name}
                 </h3>
               </div>

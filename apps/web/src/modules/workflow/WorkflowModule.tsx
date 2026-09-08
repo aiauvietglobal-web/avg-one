@@ -1206,12 +1206,12 @@ export const WorkflowModule: React.FC = () => {
             onClick={() => setSelectedSubModule('design')}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedSubModule('design'); }}
             style={{ borderRadius: '32px' }}
-            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-sky-200/90 dark:border-sky-900/60 hover:border-[#0284C7] hover:bg-gradient-to-br hover:from-white hover:via-sky-50/40 hover:to-blue-50/30 dark:hover:from-slate-900 dark:hover:to-sky-950/30 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md hover:shadow-sky-500/10 cursor-pointer select-none"
           >
-            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] dark:text-orange-400 mb-3 group-hover:scale-105 transition-transform shrink-0">
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border border-sky-200/80 dark:border-sky-800/80 flex items-center justify-center text-[#0284C7] dark:text-sky-400 mb-3 group-hover:scale-105 transition-transform shrink-0">
               <Compass className="w-6.5 h-6.5 sm:w-7 sm:h-7" />
             </div>
-            <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24] transition-colors whitespace-normal leading-tight w-full px-0.5">
+            <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors whitespace-normal leading-tight w-full px-0.5">
               3.2 – THIẾT KẾ
             </h3>
           </div>
@@ -1223,12 +1223,12 @@ export const WorkflowModule: React.FC = () => {
             onClick={() => setSelectedSubModule('research')}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedSubModule('research'); }}
             style={{ borderRadius: '32px' }}
-            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
+            className="group flex flex-col items-center justify-center py-6 sm:py-7 px-4 min-h-[160px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-sky-200/90 dark:border-sky-900/60 hover:border-[#0284C7] hover:bg-gradient-to-br hover:from-white hover:via-sky-50/40 hover:to-blue-50/30 dark:hover:from-slate-900 dark:hover:to-sky-950/30 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md hover:shadow-sky-500/10 cursor-pointer select-none"
           >
-            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] dark:text-orange-400 mb-3 group-hover:scale-105 transition-transform shrink-0">
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border border-sky-200/80 dark:border-sky-800/80 flex items-center justify-center text-[#0284C7] dark:text-sky-400 mb-3 group-hover:scale-105 transition-transform shrink-0">
               <Cpu className="w-6.5 h-6.5 sm:w-7 sm:h-7" />
             </div>
-            <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24] transition-colors whitespace-normal leading-tight w-full px-0.5">
+            <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors whitespace-normal leading-tight w-full px-0.5">
               3.1 – NGHIÊN CỨU
             </h3>
           </div>
