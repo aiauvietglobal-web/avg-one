@@ -166,13 +166,6 @@ export const AppsModule: React.FC = () => {
                       style={{ borderRadius: '32px' }}
                       className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-orange-200/90 dark:border-orange-900/50 hover:border-[#F15A24] hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md cursor-pointer select-none"
                     >
-                      {/* Badge Trạng thái */}
-                      {app.badge && (
-                        <span className="absolute top-3.5 right-3.5 text-[9px] sm:text-[10px] font-black px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 tracking-wider">
-                          {app.badge}
-                        </span>
-                      )}
-
                       {/* Icon Hộp Vuông Bo Tròn Chuẩn Màu Cam AVG */}
                       <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-orange-50 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] dark:text-orange-400 mb-3 group-hover:scale-105 transition-transform shrink-0">
                         <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5" />
@@ -192,11 +185,6 @@ export const AppsModule: React.FC = () => {
                       onClick={() => alert(`Ứng dụng "${app.title}" sắp được phát hành trong phiên bản đợt tiếp theo!`)}
                       className="flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[32px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none"
                     >
-                      {/* Badge Trạng thái */}
-                      <span className="absolute top-3.5 right-3.5 text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 tracking-wider">
-                        SẮP PHÁT HÀNH
-                      </span>
-
                       {/* Icon Hộp xám */}
                       <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-3 bg-white/80 dark:bg-slate-800/40 shrink-0">
                         <Icon className="w-6 h-6 text-slate-400 dark:text-slate-500 opacity-60" />

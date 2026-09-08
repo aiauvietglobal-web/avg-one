@@ -1078,11 +1078,6 @@ export const CalendarModule: React.FC = () => {
                     onClick={() => setToastMessage(`🚀 "${app.title}" sắp được phát hành trong phiên bản đợt tiếp theo!`)}
                     className="flex flex-col items-center justify-center py-5 sm:py-6 px-4 min-h-[150px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[32px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none"
                   >
-                    {/* Badge Trạng thái */}
-                    <span className="absolute top-3.5 right-3.5 text-[9px] sm:text-[10px] font-bold px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 tracking-wider">
-                      SẮP PHÁT HÀNH
-                    </span>
-
                     {/* Icon Hộp xám */}
                     <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-3 bg-white/80 dark:bg-slate-800/40 shrink-0">
                       <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5 text-slate-400 opacity-60" />
