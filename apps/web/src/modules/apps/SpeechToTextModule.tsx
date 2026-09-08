@@ -238,7 +238,20 @@ export const enhanceVietnameseTranscript = (
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
-  // 1. Convert explicit voice dictation commands
+  // 1. Fix common Vietnamese speech ASR acoustic / phonetic misrecognitions
+  text = text.replace(/\b(cổ đại hội đồng)\b/gi, 'của Đại hội đồng');
+  text = text.replace(/\b(đại hội đồng cổ đông)\b/gi, 'Đại hội đồng Cổ đông');
+  text = text.replace(/\b(ban kiểm soát)\b/gi, 'Ban Kiểm soát');
+  text = text.replace(/\b(hội đồng quản trị)\b/gi, 'Hội đồng Quản trị');
+  text = text.replace(/\b(tổng giám đốc)\b/gi, 'Tổng Giám đốc');
+  text = text.replace(/\b(phó tổng giám đốc)\b/gi, 'Phó Tổng Giám đốc');
+  text = text.replace(/\b(giám đốc điều hành)\b/gi, 'Giám đốc Điều hành');
+  text = text.replace(/\b(báo cáo tài chính)\b/gi, 'Báo cáo Tài chính');
+  text = text.replace(/\b(nghị quyết)\b/gi, 'Nghị quyết');
+  text = text.replace(/\b(điều lệ công ty)\b/gi, 'Điều lệ Công ty');
+  text = text.replace(/\b(thù lao)\b/gi, 'thù lao');
+
+  // 2. Convert explicit voice dictation commands
   text = text.replace(/\b(xuống dòng|xuống hàng|dòng mới)\b/gi, '\n');
   text = text.replace(/\b(gạch đầu dòng)\b/gi, '\n- ');
   text = text.replace(/\b(dấu chấm|chấm câu)\b/gi, '. ');
@@ -250,10 +263,10 @@ export const enhanceVietnameseTranscript = (
   text = text.replace(/\b(đóng ngoặc)\b/gi, ') ');
   text = text.replace(/\b(phần trăm)\b/gi, '%');
 
-  // 2. Remove speech fillers (ừm, ơ, à, uhm, um, dạ à, thì là...)
+  // 3. Remove speech fillers (ừm, ơ, à, uhm, um, dạ à, thì là...)
   text = text.replace(/\b(ừm|uhm|um|dạ à|thì là|là ừ|kiểu như là)\b\s*/gi, '');
 
-  // 3. Smart paragraph line breaks on discourse transition markers
+  // 4. Smart paragraph line breaks on discourse transition markers
   const transitionMarkers = [
     'thứ nhất', 'thứ hai', 'thứ ba', 'thứ tư',
     'bên cạnh đó', 'ngoài ra', 'hơn nữa', 'mặt khác',
@@ -265,10 +278,10 @@ export const enhanceVietnameseTranscript = (
     text = text.replace(regex, '.\n$1');
   });
 
-  // 4. Smart commas before clause conjunctions
-  text = text.replace(/\s+\b(nhưng|tuy nhiên|bởi vì|cho nên|đồng thời)\b/gi, ', $1');
+  // 5. Smart commas before clause conjunctions (avoid duplicate commas)
+  text = text.replace(/(?<![,.?!:;])\s+\b(nhưng|tuy nhiên|bởi vì|cho nên|đồng thời|do đó|vì vậy)\b/gi, ', $1');
 
-  // 5. Smart Question Mark auto-detection
+  // 6. Smart Question Mark auto-detection
   const questionWordsRegex = /\b(phải không|chưa|hả|sao|thế nào|ở đâu|khi nào|tại sao|như thế nào|là gì|ai|bao nhiêu)\b/i;
 
   // Split into lines/sentences and apply punctuation & capitalization
@@ -285,6 +298,9 @@ export const enhanceVietnameseTranscript = (
         // Auto-insert period if line ends cleanly without punctuation
         l += '.';
       }
+
+      // Eliminate duplicate punctuation like ",," or ".. "
+      l = l.replace(/([,.?!:;])\s*([,.?!:;])+/g, '$1');
 
       // Fix spacing around punctuation: ", " ". " "? "
       l = l.replace(/\s+([,.?!:])/g, '$1');
@@ -1128,31 +1144,117 @@ export const SpeechToTextModule: React.FC = () => {
     showToast("🔊 Đang phát thử nghiệm giọng đọc HD Tiếng Việt Chuẩn Miền Bắc...");
   };
 
-  // Helper to commit interim/final transcript text into the message timeline immediately with zero delay
-  const commitInterimToMessage = (rawText: string) => {
+  // Helper to normalize text for deduplication & overlap detection
+  const normalizeForComparison = (s: string): string => {
+    return s
+      .toLowerCase()
+      .normalize('NFC')
+      .replace(/[.,?!:;…\-()_"']/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
+  // Helper to calculate word overlap ratio between two strings
+  const getWordOverlapRatio = (str1: string, str2: string): number => {
+    const words1 = str1.split(' ').filter(Boolean);
+    const words2 = str2.split(' ').filter(Boolean);
+    if (words1.length === 0 || words2.length === 0) return 0;
+    
+    const set1 = new Set(words1);
+    let common = 0;
+    for (const w of words2) {
+      if (set1.has(w)) common++;
+    }
+    return common / Math.max(words1.length, words2.length);
+  };
+
+  // Helper to commit transcript text with intelligent deduplication & live message in-place replacement
+  const commitTranscriptToMessage = (rawText: string, isFinalUtterance: boolean = true) => {
     if (!rawText || !rawText.trim()) return;
     const textToCommit = rawText.trim();
-    const enhancedText = enhanceVietnameseTranscript(textToCommit, false, true);
+    const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
+
+    const newClean = normalizeForComparison(enhancedText);
+    if (!newClean) return;
 
     const translated = translateText(enhancedText, targetLanguage);
     const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
-    const newMsg: MessageItem = {
-      id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      sender: 'HEARING',
-      senderName: currentSpk.name,
-      speakerId: currentSpk.id,
-      text: enhancedText,
-      translatedText: translated,
-      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-    };
+    const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
     setMessages(prev => {
-      // Prevent duplicate insertion if exact same text was committed in last message
-      const lastMsg = prev[prev.length - 1];
-      if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.text === enhancedText) {
-        return prev;
+      if (prev.length === 0) {
+        const newMsg: MessageItem = {
+          id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          sender: 'HEARING',
+          senderName: currentSpk.name,
+          speakerId: currentSpk.id,
+          text: enhancedText,
+          translatedText: translated,
+          timestamp: timestampStr
+        };
+        return [newMsg];
       }
+
+      const lastMsg = prev[prev.length - 1];
+      // Only merge/replace with messages from same speaker / 'HEARING'
+      if (lastMsg && lastMsg.sender === 'HEARING') {
+        const lastClean = normalizeForComparison(lastMsg.text);
+
+        // 1. EXACT DUPLICATE -> Ignore completely
+        if (lastClean === newClean) {
+          return prev;
+        }
+
+        // 2. PREFIX OR SUBSTRING EXTENSION:
+        // E.g. last was "Gấp đôi" and new is "Gấp đôi thành viên ban kiểm soát..."
+        if (newClean.startsWith(lastClean) || (lastClean.length >= 6 && newClean.includes(lastClean))) {
+          // UPDATE lastMsg with the expanded text in place! DO NOT duplicate!
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...lastMsg,
+            text: enhancedText,
+            translatedText: translated,
+            timestamp: timestampStr
+          };
+          return updated;
+        }
+
+        // 3. RETRACTION / SUBSUMED (Existing message is already longer / more complete)
+        if (lastClean.startsWith(newClean) || (newClean.length >= 6 && lastClean.includes(newClean))) {
+          return prev; // keep existing more complete message
+        }
+
+        // 4. ASR REVISION / HIGH WORD OVERLAP (e.g. "...Cổ Đại hội đồng..." -> "...của Đại hội đồng...")
+        const overlap = getWordOverlapRatio(lastClean, newClean);
+        const lastWords = lastClean.split(' ');
+        const newWords = newClean.split(' ');
+        const prefixWordsMatch = lastWords.length >= 2 && newWords.length >= 2 &&
+          lastWords.slice(0, 2).join(' ') === newWords.slice(0, 2).join(' ');
+
+        if (overlap >= 0.60 || (prefixWordsMatch && overlap >= 0.45)) {
+          // UPDATE lastMsg in place with the refined text!
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...lastMsg,
+            text: enhancedText,
+            translatedText: translated,
+            timestamp: timestampStr
+          };
+          return updated;
+        }
+      }
+
+      // If none of the above, this is truly a new, distinct sentence
+      const newMsg: MessageItem = {
+        id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+        sender: 'HEARING',
+        senderName: currentSpk.name,
+        speakerId: currentSpk.id,
+        text: enhancedText,
+        translatedText: translated,
+        timestamp: timestampStr
+      };
       return [...prev, newMsg];
     });
 
@@ -1163,6 +1265,10 @@ export const SpeechToTextModule: React.FC = () => {
       silenceCommitTimerRef.current = null;
     }
   };
+
+  // Backwards-compatible alias for any remaining references
+  const commitInterimToMessage = (rawText: string) => commitTranscriptToMessage(rawText, true);
+
 
   // Helper to restart speech recognition engine aggressively with retry backoff
   const restartSpeechEngine = () => {
@@ -1235,43 +1341,50 @@ export const SpeechToTextModule: React.FC = () => {
       };
 
       recognition.onresult = (event: any) => {
+        let finalPieces = '';
         let currentInterim = '';
-        let hasFinalResult = false;
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const speechResult = event.results[i][0];
           const transcriptPiece = speechResult ? speechResult.transcript : '';
 
           if (event.results[i].isFinal) {
-            hasFinalResult = true;
-            if (transcriptPiece.trim()) {
-              commitInterimToMessage(transcriptPiece.trim());
-            }
+            finalPieces += ' ' + transcriptPiece;
           } else {
-            currentInterim += transcriptPiece;
+            currentInterim += ' ' + transcriptPiece;
           }
         }
 
-        if (!hasFinalResult && currentInterim.trim()) {
+        finalPieces = finalPieces.trim();
+        currentInterim = currentInterim.trim();
+
+        // 1. Commit final phrase pieces immediately when engine finalizes
+        if (finalPieces) {
+          commitTranscriptToMessage(finalPieces, true);
+        }
+
+        // 2. Real-time interim preview streaming (0ms latency, zero duplication)
+        if (currentInterim) {
           const formattedInterim = enhanceVietnameseTranscript(currentInterim, false, false);
           setInterimTranscript(formattedInterim);
-          lastInterimRef.current = formattedInterim;
+          lastInterimRef.current = currentInterim;
 
-          // Clear existing silence timer
+          // Clear existing timer
           if (silenceCommitTimerRef.current) {
             clearTimeout(silenceCommitTimerRef.current);
           }
-          // Set 700ms silence timer to auto-commit interim transcript as soon as user takes a breath (Ultra-Fast 0ms Latency)
+          // Set relaxed 2500ms safety timer ONLY if browser hangs indefinitely on an interim without isFinal
           silenceCommitTimerRef.current = setTimeout(() => {
             if (lastInterimRef.current.trim() && micStateRef.current === 'recording') {
-              commitInterimToMessage(lastInterimRef.current);
+              commitTranscriptToMessage(lastInterimRef.current.trim(), true);
             }
-          }, 700);
-        } else if (!hasFinalResult && !currentInterim.trim()) {
+          }, 2500);
+        } else if (finalPieces) {
           setInterimTranscript('');
           lastInterimRef.current = '';
         }
       };
+
 
       recognition.onerror = (event: any) => {
         console.warn('Speech recognition event notice:', event.error);
