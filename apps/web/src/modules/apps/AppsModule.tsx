@@ -164,15 +164,15 @@ export const AppsModule: React.FC = () => {
                       onClick={() => setActiveApp(app.id)}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveApp(app.id); }}
                       style={{ borderRadius: '32px' }}
-                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-white dark:bg-slate-900 rounded-[32px] border-2 border-sky-200/90 dark:border-sky-900/60 hover:border-[#0284C7] hover:bg-gradient-to-br hover:from-white hover:via-sky-50/40 hover:to-blue-50/30 dark:hover:from-slate-900 dark:hover:to-sky-950/30 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-2xs hover:shadow-md hover:shadow-sky-500/10 cursor-pointer select-none"
+                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-gradient-to-br from-sky-50/90 via-blue-50/70 to-cyan-50/80 dark:from-slate-900 dark:via-sky-950/50 dark:to-blue-950/70 rounded-[32px] border-2 border-sky-200 dark:border-sky-800/80 hover:border-[#0077B6] dark:hover:border-sky-400 hover:from-sky-100/90 hover:via-blue-100/70 hover:to-cyan-100/90 dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-500/20 cursor-pointer select-none"
                     >
                       {/* Icon Hộp Vuông Bo Tròn Chuẩn Màu Gradient Xanh AVG */}
-                      <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/60 dark:to-blue-950/60 border border-sky-200/80 dark:border-sky-800/80 flex items-center justify-center text-[#0284C7] dark:text-sky-400 mb-3 group-hover:scale-105 transition-transform shrink-0">
+                      <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-sky-200/90 dark:border-sky-700/80 flex items-center justify-center text-[#0077B6] dark:text-sky-300 mb-3 group-hover:scale-105 transition-transform shrink-0 shadow-2xs">
                         <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5" />
                       </div>
 
                       {/* Tiêu đề */}
-                      <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors whitespace-normal leading-tight w-full px-0.5">
+                      <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0077B6] dark:group-hover:text-sky-300 transition-colors whitespace-normal leading-tight w-full px-0.5">
                         {app.title}
                       </h3>
                     </div>
