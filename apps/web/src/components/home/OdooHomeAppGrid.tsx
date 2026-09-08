@@ -105,11 +105,11 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
             </div>
 
-            {/* Slogan Badge (Căn lề trái thẳng lề với cụm chữ bên trên) */}
-            <div className="pt-2 sm:pt-3 text-left w-full flex justify-start">
-              <div className="relative inline-block p-0.5 rounded-3xl transition-all duration-300 max-w-full">
+            {/* Slogan Badge (Căn lề trái ngắn gọn, nhỏ gọn) */}
+            <div className="pt-2 sm:pt-2.5 text-left w-full flex justify-start">
+              <div className="relative inline-block p-0.5 rounded-full transition-all duration-300 max-w-full">
                 {/* SVG Clockwise Border Tracing Effect */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-3xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-full" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
                   <defs>
                     <linearGradient id="slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#0284C7" />
@@ -123,8 +123,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     y="1"
                     width="calc(100% - 2px)"
                     height="calc(100% - 2px)"
-                    rx="22"
-                    ry="22"
+                    rx="16"
+                    ry="16"
                     fill="none"
                     stroke="url(#slogan-border-gradient)"
                     strokeWidth="1.5"
@@ -132,13 +132,12 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   />
                 </svg>
 
-                <p className="relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-[22.5px] bg-transparent text-[11px] xs:text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
+                <p className="relative z-10 inline-flex items-center gap-1 xs:gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-3.5 sm:py-1 rounded-full bg-transparent text-[10px] xs:text-[11px] sm:text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-tight whitespace-nowrap">
                   <span>One Platform</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-[#0284C7] shrink-0" />
                   <span>One Direction</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#231F20] dark:bg-slate-400 shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-[#231F20] dark:bg-slate-400 shrink-0" />
                   <span>One Destination</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] shrink-0" />
                 </p>
               </div>
             </div>
