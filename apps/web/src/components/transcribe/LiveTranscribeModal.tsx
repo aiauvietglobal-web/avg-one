@@ -69,7 +69,23 @@ export const LiveTranscribeModal: React.FC<LiveTranscribeModalProps> = ({
     controller.onStatusChange = (newStatus) => setStatus(newStatus);
     controller.onInterim = (text) => setInterimText(text);
     controller.onFinal = (entry) => {
-      setTranscripts((prev) => [...prev, entry]);
+      setTranscripts((prev) => {
+        if (prev.length === 0) return [entry];
+        const last = prev[prev.length - 1];
+        // Cùng một người phát biểu: Nối tiếp vào đoạn hiện tại của người đó (không ngắt đoạn)
+        if (last.speaker === entry.speaker) {
+          const separator = last.text.endsWith('\n') ? '' : ' ';
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...last,
+            text: `${last.text}${separator}${entry.text}`,
+            timestamp: entry.timestamp
+          };
+          return updated;
+        }
+        // Khác người phát biểu: Ngắt đoạn mới để phân tách, phân biệt từng người đang giao tiếp
+        return [...prev, entry];
+      });
     };
     controller.onAudioLevel = (level) => setAudioLevel(level);
     controller.onError = (msg) => setErrorMessage(msg);

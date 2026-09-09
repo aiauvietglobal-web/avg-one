@@ -12,8 +12,7 @@
 
 import {
   processRealtimeSpeechPunctuation,
-  splitIntoReadableSpeechSegments,
-  stitchSpeechWithEllipsis
+  splitIntoReadableSpeechSegments
 } from './speechPunctuationEngine';
 
 export interface TranscriptItem {
@@ -85,7 +84,6 @@ export class LiveTranscribeController {
   private silenceTimer: any = null;
   private lastAudioEnergyTime: number = 0;
   private lastTextEmissionTime: number = 0;
-  private pendingAudioGap: boolean = false;
   private lastInterimChunk: string = '';
   private restartRetries: number = 0;
 
@@ -167,11 +165,6 @@ export class LiveTranscribeController {
           let processedInterim = normalizeAvgText(interimTranscript);
           processedInterim = processRealtimeSpeechPunctuation(processedInterim, false);
 
-          // Nếu trước đó có khoảng khuyết âm thanh chưa kịp nghe, đệm ...
-          if (this.pendingAudioGap) {
-            processedInterim = '... ' + processedInterim;
-          }
-
           this.onInterim(processedInterim);
           this.sendWsInterim(processedInterim);
 
@@ -227,44 +220,32 @@ export class LiveTranscribeController {
 
   /**
    * Chốt một đoạn phát biểu:
-   * - Nối dấu 3 chấm nếu phát hiện có khoảng hẫng âm thanh không kịp nghe
    * - Chuẩn hóa từ vựng doanh nghiệp AVG One
    * - Chuyển đổi khẩu lệnh dấu câu thực tế và tự động chấm câu
-   * - Chia nhỏ thành các phân đoạn ngắn gọn 8-14 từ dễ theo dõi
+   * - Giữ nguyên vẹn toàn bộ câu từ của người nói, không chia vụn
    */
   private commitSegmentDirectly(rawChunk: string) {
     let text = rawChunk.trim();
     if (!text) return;
-
-    // Nếu trước đó có khoảng khuyết âm thanh chưa kịp nghe, đệm ... để nối tiếp
-    if (this.pendingAudioGap) {
-      text = '... ' + text;
-      this.pendingAudioGap = false;
-    }
 
     // 1. Nắn từ khóa doanh nghiệp AVG
     let processed = normalizeAvgText(text);
 
     // 2. Chuyển đổi dấu câu khẩu lệnh & tự động gắn dấu câu/dấu hỏi
     processed = processRealtimeSpeechPunctuation(processed, true);
+    if (!processed.trim()) return;
 
-    // 3. Chia nhỏ thành các câu/mệnh đề ngắn gọn
-    const segments = splitIntoReadableSpeechSegments(processed, 13);
+    const entry: TranscriptItem = {
+      id: `tr-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      speaker: this.currentSpeaker,
+      speakerRole: this.currentRole,
+      text: processed.trim(),
+      isFinal: true,
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
+    };
 
-    segments.forEach((seg, idx) => {
-      if (!seg.trim()) return;
-      const entry: TranscriptItem = {
-        id: `tr-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
-        speaker: this.currentSpeaker,
-        speakerRole: this.currentRole,
-        text: seg.trim(),
-        isFinal: true,
-        timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
-      };
-
-      this.onFinal(entry);
-      this.sendWsFinal(entry);
-    });
+    this.onFinal(entry);
+    this.sendWsFinal(entry);
   }
 
   /**
@@ -369,7 +350,6 @@ export class LiveTranscribeController {
     this.meetingId = meetingId;
     this.currentSpeaker = speaker;
     this.currentRole = role;
-    this.pendingAudioGap = false;
     this.lastInterimChunk = '';
 
     this.connectWebSocket(meetingId);
@@ -553,12 +533,6 @@ export class LiveTranscribeController {
         // Nếu có tiếng nói rõ rệt vào micro (âm lượng > 15%)
         if (normalizedVolume > 15) {
           this.lastAudioEnergyTime = now;
-
-          // CƠ CHẾ PHÁT HIỆN KHOẢNG KHUYẾT ÂM THANH (GAP DETECTION):
-          // Nếu có âm thanh nói liên tục > 1.2 giây nhưng engine chưa trả về text kịp
-          if (this.lastTextEmissionTime > 0 && (now - this.lastTextEmissionTime) > 1200) {
-            this.pendingAudioGap = true;
-          }
         }
 
         this.animFrameId = requestAnimationFrame(updateMeter);

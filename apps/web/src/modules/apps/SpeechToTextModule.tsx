@@ -498,8 +498,7 @@ export const SpeechToTextModule: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Continuity & Smart Gap Fallback (...) Refs
-  const pendingSpeechGapRef = useRef<boolean>(false);
+  // Real-time speech timing & silence refs
   const lastTextReceivedTimeRef = useRef<number>(Date.now());
   const speechSilenceTimerRef = useRef<any>(null);
 
@@ -651,14 +650,6 @@ export const SpeechToTextModule: React.FC = () => {
         const rms = Math.sqrt(sumSq / buffer.length);
         const volPct = Math.min(100, Math.round(rms * 350));
         setAudioVolumeLevel(volPct);
-
-        // Gap detection: Nếu có âm thanh nói vào micro (volPct > 18) mà recognition chưa trả về text > 1.4s
-        if (volPct > 18) {
-          const nowWall = Date.now();
-          if (lastTextReceivedTimeRef.current > 0 && (nowWall - lastTextReceivedTimeRef.current) > 1400) {
-            pendingSpeechGapRef.current = true;
-          }
-        }
 
         const now = performance.now();
         // Throttle pitch analysis to run every 120ms (8Hz) to free JS thread completely
@@ -1101,59 +1092,71 @@ export const SpeechToTextModule: React.FC = () => {
   // Helper to commit verbatim transcript text directly to conversation timeline without altering meaning
   const commitTranscriptToMessage = (rawText: string, isFinalUtterance: boolean = true) => {
     if (!rawText || !rawText.trim()) return;
-    let textToCommit = rawText.trim();
-
-    // Nếu trước đó phát hiện có khoảng khuyết âm thanh chưa kịp nghe, đệm dấu 3 chấm
-    if (pendingSpeechGapRef.current) {
-      textToCommit = '... ' + textToCommit;
-      pendingSpeechGapRef.current = false;
-    }
+    const textToCommit = rawText.trim();
 
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
-    const segments = splitTextIntoDisplaySegments(enhancedText);
     const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
     const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
     setMessages(prev => {
-      let currentList = [...prev];
-
-      segments.forEach((seg, idx) => {
-        if (!seg.trim()) return;
-
-        // Check if last message can be extended or is duplicate
-        if (currentList.length > 0 && idx === 0) {
-          const lastMsg = currentList[currentList.length - 1];
-          if (lastMsg && lastMsg.sender === 'HEARING') {
-            if (lastMsg.text.trim().toLowerCase() === seg.trim().toLowerCase()) {
-              return;
-            }
-            if (seg.toLowerCase().startsWith(lastMsg.text.toLowerCase())) {
-              currentList[currentList.length - 1] = {
-                ...lastMsg,
-                text: seg,
-                translatedText: translateText(seg, targetLanguage),
-                timestamp: timestampStr
-              };
-              return;
-            }
-          }
-        }
-
-        // Add new concise segment bubble
-        currentList.push({
-          id: `msg-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 4)}`,
+      if (prev.length === 0) {
+        return [{
+          id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
           sender: 'HEARING',
           senderName: currentSpk.name,
           speakerId: currentSpk.id,
-          text: seg,
-          translatedText: translateText(seg, targetLanguage),
+          text: enhancedText,
+          translatedText: translateText(enhancedText, targetLanguage),
           timestamp: timestampStr
-        });
-      });
+        }];
+      }
 
-      return currentList;
+      const lastMsg = prev[prev.length - 1];
+
+      // Chỉ ngắt đoạn khi ghi nhận các giọng nói khác nhau (khác speakerId hoặc khác sender)
+      if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id) {
+        // Cùng một người đang nói: nối tiếp văn bản vào đoạn của người đó (không ngắt đoạn mới)
+        if (lastMsg.text.trim().toLowerCase() === enhancedText.trim().toLowerCase()) {
+          return prev;
+        }
+        if (enhancedText.toLowerCase().startsWith(lastMsg.text.toLowerCase())) {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...lastMsg,
+            text: enhancedText,
+            translatedText: translateText(enhancedText, targetLanguage),
+            timestamp: timestampStr
+          };
+          return updated;
+        }
+
+        const separator = lastMsg.text.endsWith('\n') ? '' : ' ';
+        const mergedText = `${lastMsg.text}${separator}${enhancedText}`;
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          ...lastMsg,
+          text: mergedText,
+          translatedText: translateText(mergedText, targetLanguage),
+          timestamp: timestampStr
+        };
+        return updated;
+      }
+
+      // Khác người nói: tạo phân đoạn/tin nhắn mới để phân biệt rõ từng người giao tiếp
+      return [
+        ...prev,
+        {
+          id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          sender: 'HEARING',
+          senderName: currentSpk.name,
+          speakerId: currentSpk.id,
+          text: enhancedText,
+          translatedText: translateText(enhancedText, targetLanguage),
+          timestamp: timestampStr
+        }
+      ];
     });
 
     setInterimTranscript('');
@@ -1284,10 +1287,7 @@ export const SpeechToTextModule: React.FC = () => {
 
         // Live real-time preview (0ms latency without premature permanent commits)
         if (currentInterim.trim()) {
-          let formattedInterim = enhanceVietnameseTranscript(currentInterim.trim(), false, false);
-          if (pendingSpeechGapRef.current) {
-            formattedInterim = '... ' + formattedInterim;
-          }
+          const formattedInterim = enhanceVietnameseTranscript(currentInterim.trim(), false, false);
           setInterimTranscript(formattedInterim);
           lastInterimRef.current = currentInterim.trim();
 
