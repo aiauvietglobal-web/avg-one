@@ -6,6 +6,10 @@ import {
   Users, UserPlus, Edit3, Filter, Plus, Activity, Zap, Maximize2, Minimize2, Gauge, X, Calendar, ToggleLeft, ToggleRight, Square,
   History, FolderOpen, PlusCircle, Clock, Edit2
 } from 'lucide-react';
+import {
+  processRealtimeSpeechPunctuation,
+  splitIntoReadableSpeechSegments
+} from '../../services/speechPunctuationEngine';
 
 // Web Speech API Types declaration for TypeScript compatibility
 declare global {
@@ -228,18 +232,10 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
 export const enhanceVietnameseTranscript = (
   rawText: string,
   _isLowConfidence: boolean = false,
-  _isFinal: boolean = true
+  isFinal: boolean = true
 ): string => {
   if (!rawText) return '';
-  let text = rawText.trim().replace(/\s+/g, ' ');
-  if (!text) return '';
-
-  // Standard typographical spacing around punctuation (preserves exact words without guessing or alteration)
-  text = text.replace(/\s+([,.?!:;])/g, '$1');
-  text = text.replace(/([,.?!:;])(?=[^\s\d])/g, '$1 ');
-
-  // Capitalize first character of the sentence
-  return text.charAt(0).toUpperCase() + text.slice(1);
+  return processRealtimeSpeechPunctuation(rawText, isFinal);
 };
 
 
@@ -502,6 +498,11 @@ export const SpeechToTextModule: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
+  // Continuity & Smart Gap Fallback (...) Refs
+  const pendingSpeechGapRef = useRef<boolean>(false);
+  const lastTextReceivedTimeRef = useRef<number>(Date.now());
+  const speechSilenceTimerRef = useRef<any>(null);
+
   // Dynamic Acoustic Pitch Signature Clusters (Learned & Pre-trained from voice samples)
   const cluster1Ref = useRef<number | null>(130); // Mẫu 1: #K1; DH (~130Hz)
   const cluster2Ref = useRef<number | null>(225); // Mẫu 2: 4.T - Lưu Trang (~225Hz)
@@ -650,6 +651,14 @@ export const SpeechToTextModule: React.FC = () => {
         const rms = Math.sqrt(sumSq / buffer.length);
         const volPct = Math.min(100, Math.round(rms * 350));
         setAudioVolumeLevel(volPct);
+
+        // Gap detection: Nếu có âm thanh nói vào micro (volPct > 18) mà recognition chưa trả về text > 1.4s
+        if (volPct > 18) {
+          const nowWall = Date.now();
+          if (lastTextReceivedTimeRef.current > 0 && (nowWall - lastTextReceivedTimeRef.current) > 1400) {
+            pendingSpeechGapRef.current = true;
+          }
+        }
 
         const now = performance.now();
         // Throttle pitch analysis to run every 120ms (8Hz) to free JS thread completely
@@ -1135,7 +1144,14 @@ export const SpeechToTextModule: React.FC = () => {
   // Helper to commit verbatim transcript text directly to conversation timeline without altering meaning
   const commitTranscriptToMessage = (rawText: string, isFinalUtterance: boolean = true) => {
     if (!rawText || !rawText.trim()) return;
-    const textToCommit = rawText.trim();
+    let textToCommit = rawText.trim();
+
+    // Nếu trước đó phát hiện có khoảng khuyết âm thanh chưa kịp nghe, đệm dấu 3 chấm
+    if (pendingSpeechGapRef.current) {
+      textToCommit = '... ' + textToCommit;
+      pendingSpeechGapRef.current = false;
+    }
+
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
@@ -1265,6 +1281,7 @@ export const SpeechToTextModule: React.FC = () => {
 
       recognition.onresult = (event: any) => {
         let currentInterim = '';
+        lastTextReceivedTimeRef.current = Date.now();
 
         for (let i = 0; i < event.results.length; i++) {
           const result = event.results[i];
@@ -1272,6 +1289,7 @@ export const SpeechToTextModule: React.FC = () => {
           const piece = result[0].transcript || '';
 
           if (result.isFinal) {
+            if (speechSilenceTimerRef.current) clearTimeout(speechSilenceTimerRef.current);
             // Strictly track processed index to prevent re-reading earlier finalized chunks
             if (i >= processedFinalIndexRef.current) {
               processedFinalIndexRef.current = i + 1;
@@ -1286,11 +1304,27 @@ export const SpeechToTextModule: React.FC = () => {
         }
 
         // Live real-time preview (0ms latency without premature permanent commits)
-        const formattedInterim = currentInterim.trim()
-          ? enhanceVietnameseTranscript(currentInterim.trim(), false, false)
-          : '';
-        setInterimTranscript(formattedInterim);
-        lastInterimRef.current = currentInterim.trim();
+        if (currentInterim.trim()) {
+          let formattedInterim = enhanceVietnameseTranscript(currentInterim.trim(), false, false);
+          if (pendingSpeechGapRef.current) {
+            formattedInterim = '... ' + formattedInterim;
+          }
+          setInterimTranscript(formattedInterim);
+          lastInterimRef.current = currentInterim.trim();
+
+          // Silence Pause Detector: Nếu người dùng dừng nói > 850ms, tự động chốt câu
+          if (speechSilenceTimerRef.current) clearTimeout(speechSilenceTimerRef.current);
+          speechSilenceTimerRef.current = setTimeout(() => {
+            if (micStateRef.current === 'recording' && lastInterimRef.current.trim()) {
+              commitTranscriptToMessage(lastInterimRef.current.trim(), true);
+              lastInterimRef.current = '';
+              setInterimTranscript('');
+            }
+          }, 850);
+        } else {
+          setInterimTranscript('');
+          lastInterimRef.current = '';
+        }
       };
 
       recognition.onerror = (event: any) => {

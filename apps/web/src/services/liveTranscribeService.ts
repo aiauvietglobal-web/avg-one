@@ -1,11 +1,20 @@
 /**
- * AVG One Live Speech-to-Text & Transcribe Service (Phase 1 PoC)
- * Supports:
- * - Native Browser Speech Recognition (vi-VN) with real-time interim results
- * - WebSocket Streaming Gateway integration for collaborative live transcripts
- * - Domain Keyword Normalizer for AVG enterprise terms (B5.1, #K2T, 2.1, AV, AVG, VBKL...)
- * - Web Audio API Volume Meter for live Waveform visualizer
+ * AVG One Live Speech-to-Text & Transcribe Service (Upgraded Engine)
+ * 
+ * Tính năng nâng cấp:
+ * 1. Chuyển đổi khẩu lệnh dấu câu thực tế ("dấu chấm", "dấu phẩy", "xuống dòng", "dấu hỏi", "hai chấm", "ba chấm")
+ * 2. Tự động chấm câu, ngắt câu, đặt dấu hỏi theo ngữ điệu & từ nghi vấn tiếng Việt ở thời gian thực
+ * 3. Cơ chế dự phòng dấu 3 chấm (...) khi phát hiện âm thanh nói vào mic nhưng chưa kịp nhận diện (không đoán từ)
+ * 4. Phát hiện ngắt nghỉ hơi theo thời gian thực (Silence Pause Detector) để chốt câu tức thì
+ * 5. Bộ giám sát luồng liên tục (Continuous Watchdog) tự động phục hồi ngay lập tức, không để bị ngắt quãng
+ * 6. Nắn chỉnh từ ngữ doanh nghiệp AVG One (Keyword Boosting)
  */
+
+import {
+  processRealtimeSpeechPunctuation,
+  splitIntoReadableSpeechSegments,
+  stitchSpeechWithEllipsis
+} from './speechPunctuationEngine';
 
 export interface TranscriptItem {
   id: string;
@@ -56,67 +65,6 @@ export function normalizeAvgText(text: string): string {
   return normalized;
 }
 
-/**
- * Chia nhỏ văn bản thành các phân đoạn/câu ngắn gọn (10-14 từ)
- * giúp người dùng dễ theo dõi trực tiếp và nắm bắt ý nhanh chóng.
- */
-export function splitIntoCleanSegments(text: string, maxWordsPerSegment: number = 14): string[] {
-  if (!text || !text.trim()) return [];
-  const clean = text.trim().replace(/\s+/g, ' ');
-
-  // 1. Tách theo dấu ngắt câu chuẩn (. ? ! ; hoặc xuống dòng)
-  const rawSentences = clean
-    .split(/(?<=[.?!;\n])\s+/)
-    .map(s => s.trim())
-    .filter(Boolean);
-
-  const finalSegments: string[] = [];
-
-  for (const sentence of rawSentences) {
-    const words = sentence.split(' ').filter(Boolean);
-    if (words.length <= maxWordsPerSegment) {
-      finalSegments.push(formatSegment(sentence));
-      continue;
-    }
-
-    // 2. Chia nhỏ câu quá dài tại điểm ngắt nghỉ tự nhiên
-    let currentChunk: string[] = [];
-    for (let i = 0; i < words.length; i++) {
-      const w = words[i];
-      currentChunk.push(w);
-
-      const hasComma = w.endsWith(',');
-      const isConjunction = /^(và|nhưng|tuy\s*nhiên|đồng\s*thời|do\s*đó|vì\s*vậy|ngoài\s*ra|tiếp\s*theo|để|thì|sau\s*đó)$/i.test(w);
-
-      if (
-        (currentChunk.length >= 8 && (hasComma || isConjunction)) ||
-        currentChunk.length >= maxWordsPerSegment
-      ) {
-        let chunkStr = currentChunk.join(' ').trim().replace(/,\s*$/, '');
-        if (chunkStr) {
-          finalSegments.push(formatSegment(chunkStr));
-        }
-        currentChunk = [];
-      }
-    }
-
-    if (currentChunk.length > 0) {
-      const rem = currentChunk.join(' ').trim();
-      if (rem) {
-        finalSegments.push(formatSegment(rem));
-      }
-    }
-  }
-
-  return finalSegments.length > 0 ? finalSegments : [formatSegment(clean)];
-}
-
-function formatSegment(s: string): string {
-  if (!s) return '';
-  const trimmed = s.trim();
-  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-}
-
 export class LiveTranscribeController {
   private recognition: any = null;
   private ws: WebSocket | null = null;
@@ -124,6 +72,15 @@ export class LiveTranscribeController {
   private mediaStream: MediaStream | null = null;
   private analyser: AnalyserNode | null = null;
   private animFrameId: number | null = null;
+
+  // Watchdog & Timing Control
+  private watchdogTimer: any = null;
+  private silenceTimer: any = null;
+  private lastAudioEnergyTime: number = 0;
+  private lastTextEmissionTime: number = 0;
+  private pendingAudioGap: boolean = false;
+  private lastInterimChunk: string = '';
+  private restartRetries: number = 0;
 
   public status: TranscribeStatus = 'idle';
   public meetingId: string = 'general-meeting';
@@ -139,6 +96,7 @@ export class LiveTranscribeController {
 
   constructor() {
     this.initSpeechRecognition();
+    this.startWatchdog();
   }
 
   private initSpeechRecognition() {
@@ -152,12 +110,18 @@ export class LiveTranscribeController {
       this.recognition.lang = 'vi-VN';
       this.recognition.maxAlternatives = 1;
 
+      this.recognition.onstart = () => {
+        this.restartRetries = 0;
+        this.lastTextEmissionTime = Date.now();
+      };
+
       this.recognition.onresult = (event: any) => {
         let interimTranscript = '';
         let finalTranscript = '';
+        this.lastTextEmissionTime = Date.now();
 
         for (let i = event.resultIndex; i < event.results.length; ++i) {
-          const transcriptChunk = event.results[i][0].transcript;
+          const transcriptChunk = event.results[i][0]?.transcript || '';
           if (event.results[i].isFinal) {
             finalTranscript += transcriptChunk;
           } else {
@@ -165,55 +129,150 @@ export class LiveTranscribeController {
           }
         }
 
+        // 1. Xử lý kết quả tạm thời (Interim)
         if (interimTranscript.trim()) {
-          const normalizedInterim = normalizeAvgText(interimTranscript);
-          this.onInterim(normalizedInterim);
-          this.sendWsInterim(normalizedInterim);
+          this.lastInterimChunk = interimTranscript.trim();
+          let processedInterim = normalizeAvgText(interimTranscript);
+          processedInterim = processRealtimeSpeechPunctuation(processedInterim, false);
+
+          // Nếu trước đó có khoảng khuyết âm thanh chưa kịp nghe, đệm ...
+          if (this.pendingAudioGap) {
+            processedInterim = '... ' + processedInterim;
+          }
+
+          this.onInterim(processedInterim);
+          this.sendWsInterim(processedInterim);
+
+          // Hẹn giờ phát hiện ngắt nghỉ hơi (Silence Pause Detector):
+          // Nếu người nói dừng hơi > 850ms mà trình duyệt chưa chốt final -> tự động chốt câu
+          if (this.silenceTimer) clearTimeout(this.silenceTimer);
+          this.silenceTimer = setTimeout(() => {
+            if (this.status === 'recording' && this.lastInterimChunk.trim()) {
+              this.commitSegmentDirectly(this.lastInterimChunk);
+              this.lastInterimChunk = '';
+              this.onInterim('');
+            }
+          }, 850);
         }
 
+        // 2. Xử lý kết quả chính thức (Final)
         if (finalTranscript.trim()) {
-          const normalizedFinal = normalizeAvgText(finalTranscript);
-          const segments = splitIntoCleanSegments(normalizedFinal);
-
-          segments.forEach((seg, idx) => {
-            const entry: TranscriptItem = {
-              id: `tr-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
-              speaker: this.currentSpeaker,
-              speakerRole: this.currentRole,
-              text: seg,
-              isFinal: true,
-              timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
-            };
-
-            this.onFinal(entry);
-            this.sendWsFinal(entry);
-          });
-
+          if (this.silenceTimer) clearTimeout(this.silenceTimer);
+          this.commitSegmentDirectly(finalTranscript);
+          this.lastInterimChunk = '';
           this.onInterim(''); // Clear interim
         }
       };
 
       this.recognition.onerror = (event: any) => {
-        // Ignore aborted error when stopping intentionally
         if (event.error === 'aborted') return;
-        console.warn('🎙️ SpeechRecognition warning:', event.error);
+        console.warn('🎙️ SpeechRecognition notice:', event.error);
+
         if (event.error === 'not-allowed') {
           this.onError('Trình duyệt chưa được cấp quyền truy cập Microphone. Vui lòng bật quyền mic.');
           this.setStatus('error');
+        } else if (this.status === 'recording') {
+          // Lỗi tạm thời -> tự động kết nối lại liền mạch
+          this.restartRecognitionWithBackoff();
         }
       };
 
       this.recognition.onend = () => {
-        // Auto-restart if we are still in recording mode (browser stops recognition on pauses)
+        // Tự động chốt phần interim còn sót nếu engine bị ngắt đột ngột
+        if (this.lastInterimChunk.trim()) {
+          this.commitSegmentDirectly(this.lastInterimChunk);
+          this.lastInterimChunk = '';
+          this.onInterim('');
+        }
+
+        // Tự động duy trì luồng thu âm liên tục không để bị ngắt quãng
         if (this.status === 'recording') {
-          try {
-            this.recognition.start();
-          } catch (e) {
-            // Already started or restarting
-          }
+          this.restartRecognitionWithBackoff();
         }
       };
     }
+  }
+
+  /**
+   * Chốt một đoạn phát biểu:
+   * - Nối dấu 3 chấm nếu phát hiện có khoảng hẫng âm thanh không kịp nghe
+   * - Chuẩn hóa từ vựng doanh nghiệp AVG One
+   * - Chuyển đổi khẩu lệnh dấu câu thực tế và tự động chấm câu
+   * - Chia nhỏ thành các phân đoạn ngắn gọn 8-14 từ dễ theo dõi
+   */
+  private commitSegmentDirectly(rawChunk: string) {
+    let text = rawChunk.trim();
+    if (!text) return;
+
+    // Nếu trước đó có khoảng khuyết âm thanh chưa kịp nghe, đệm ... để nối tiếp
+    if (this.pendingAudioGap) {
+      text = '... ' + text;
+      this.pendingAudioGap = false;
+    }
+
+    // 1. Nắn từ khóa doanh nghiệp AVG
+    let processed = normalizeAvgText(text);
+
+    // 2. Chuyển đổi dấu câu khẩu lệnh & tự động gắn dấu câu/dấu hỏi
+    processed = processRealtimeSpeechPunctuation(processed, true);
+
+    // 3. Chia nhỏ thành các câu/mệnh đề ngắn gọn
+    const segments = splitIntoReadableSpeechSegments(processed, 13);
+
+    segments.forEach((seg, idx) => {
+      if (!seg.trim()) return;
+      const entry: TranscriptItem = {
+        id: `tr-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+        speaker: this.currentSpeaker,
+        speakerRole: this.currentRole,
+        text: seg.trim(),
+        isFinal: true,
+        timestamp: new Date().toLocaleTimeString('vi-VN', { hour12: false })
+      };
+
+      this.onFinal(entry);
+      this.sendWsFinal(entry);
+    });
+  }
+
+  /**
+   * Khởi động lại engine với thuật toán backoff, đảm bảo tính liên tục 100%
+   */
+  private restartRecognitionWithBackoff() {
+    if (!this.recognition || this.status !== 'recording') return;
+
+    const delay = Math.min(1000, 80 + this.restartRetries * 120);
+    this.restartRetries++;
+
+    setTimeout(() => {
+      if (this.status === 'recording') {
+        try {
+          this.recognition.start();
+        } catch (err: any) {
+          if (err.name !== 'InvalidStateError') {
+            // Tiếp tục thử lại nếu chưa thành công
+            this.restartRecognitionWithBackoff();
+          }
+        }
+      }
+    }, delay);
+  }
+
+  /**
+   * Bộ giám sát nhịp tim (Heartbeat Watchdog):
+   * Đảm bảo luồng không bao giờ bị tắt khi đang trong trạng thái 'recording'
+   */
+  private startWatchdog() {
+    if (this.watchdogTimer) clearInterval(this.watchdogTimer);
+    this.watchdogTimer = setInterval(() => {
+      if (this.status === 'recording' && this.recognition) {
+        try {
+          this.recognition.start();
+        } catch (e) {
+          // Normal state: already running
+        }
+      }
+    }, 2500);
   }
 
   public connectWebSocket(meetingId: string) {
@@ -221,13 +280,11 @@ export class LiveTranscribeController {
     try {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const host = window.location.hostname;
-      // In dev mode, API server runs on port 5000
       const wsUrl = `${protocol}//${host}:5000/api/ws/transcribe`;
 
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
-        console.log('🎙️ [LiveTranscribe] Connected to WebSocket Gateway at', wsUrl);
         this.ws?.send(JSON.stringify({
           type: 'JOIN_MEETING',
           meetingId: this.meetingId,
@@ -240,18 +297,15 @@ export class LiveTranscribeController {
         try {
           const data = JSON.parse(evt.data);
           if (data.type === 'TRANSCRIPT_FINAL' && data.entry) {
-            // Incoming broadcast from another client in the same meeting
             if (data.entry.speaker !== this.currentSpeaker) {
               this.onFinal(data.entry);
             }
           }
-        } catch (e) {
-          // Non-json message
-        }
+        } catch (e) {}
       };
 
       this.ws.onerror = () => {
-        console.log('🎙️ [LiveTranscribe] WebSocket gateway offline (running in Standalone Browser Engine Mode)');
+        // Fallback gracefully in standalone browser mode
       };
     } catch (err) {
       console.warn('🎙️ [LiveTranscribe] WebSocket init skipped:', err);
@@ -283,20 +337,22 @@ export class LiveTranscribeController {
     this.meetingId = meetingId;
     this.currentSpeaker = speaker;
     this.currentRole = role;
+    this.pendingAudioGap = false;
+    this.lastInterimChunk = '';
 
     this.connectWebSocket(meetingId);
 
-    // 1. Start audio visualizer (Web Audio API)
+    // 1. Khởi động Web Audio API visualizer & bộ theo dõi âm lượng
     await this.startAudioMeter();
 
-    // 2. Start Speech Recognition
+    // 2. Khởi động Speech Recognition
     if (this.recognition) {
       try {
         this.recognition.start();
         this.setStatus('recording');
+        this.lastTextEmissionTime = Date.now();
       } catch (err: any) {
         if (err.name !== 'InvalidStateError') {
-          console.error('Error starting recognition:', err);
           this.onError('Không thể khởi động bộ nhận diện giọng nói: ' + err.message);
           this.setStatus('error');
           return;
@@ -312,6 +368,12 @@ export class LiveTranscribeController {
   public pause() {
     if (this.status === 'recording') {
       this.setStatus('paused');
+      if (this.silenceTimer) clearTimeout(this.silenceTimer);
+      if (this.lastInterimChunk.trim()) {
+        this.commitSegmentDirectly(this.lastInterimChunk);
+        this.lastInterimChunk = '';
+        this.onInterim('');
+      }
       if (this.recognition) {
         try {
           this.recognition.stop();
@@ -323,6 +385,7 @@ export class LiveTranscribeController {
   public resume() {
     if (this.status === 'paused') {
       this.setStatus('recording');
+      this.lastTextEmissionTime = Date.now();
       if (this.recognition) {
         try {
           this.recognition.start();
@@ -333,6 +396,12 @@ export class LiveTranscribeController {
 
   public stop() {
     this.setStatus('idle');
+    if (this.silenceTimer) clearTimeout(this.silenceTimer);
+    if (this.lastInterimChunk.trim()) {
+      this.commitSegmentDirectly(this.lastInterimChunk);
+      this.lastInterimChunk = '';
+      this.onInterim('');
+    }
     if (this.recognition) {
       try {
         this.recognition.stop();
@@ -392,6 +461,18 @@ export class LiveTranscribeController {
         const average = sum / bufferLength;
         const normalizedVolume = Math.min(100, Math.round((average / 128) * 100));
         this.onAudioLevel(normalizedVolume);
+
+        const now = Date.now();
+        // Nếu có tiếng nói rõ rệt vào micro (âm lượng > 18%)
+        if (normalizedVolume > 18) {
+          this.lastAudioEnergyTime = now;
+
+          // CƠ CHẾ PHÁT HIỆN KHOẢNG KHUYẾT ÂM THANH (GAP DETECTION):
+          // Nếu có âm thanh nói liên tục > 1.4 giây nhưng engine chưa trả về text kịp
+          if (this.lastTextEmissionTime > 0 && (now - this.lastTextEmissionTime) > 1400) {
+            this.pendingAudioGap = true;
+          }
+        }
 
         this.animFrameId = requestAnimationFrame(updateMeter);
       };
