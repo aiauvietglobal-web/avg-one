@@ -167,17 +167,6 @@ export class LiveTranscribeController {
 
           this.onInterim(processedInterim);
           this.sendWsInterim(processedInterim);
-
-          // Hẹn giờ phát hiện ngắt nghỉ hơi (Silence Pause Detector):
-          // Nếu người nói dừng hơi > 850ms mà trình duyệt chưa chốt final -> tự động chốt câu
-          if (this.silenceTimer) clearTimeout(this.silenceTimer);
-          this.silenceTimer = setTimeout(() => {
-            if (this.status === 'recording' && this.lastInterimChunk.trim()) {
-              this.commitSegmentDirectly(this.lastInterimChunk);
-              this.lastInterimChunk = '';
-              this.onInterim('');
-            }
-          }, 850);
         }
 
         // 2. Xử lý kết quả chính thức (Final)

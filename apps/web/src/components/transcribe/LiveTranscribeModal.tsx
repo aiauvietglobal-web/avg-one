@@ -10,6 +10,10 @@ import {
   TranscribeStatus,
   normalizeAvgText
 } from '../../services/liveTranscribeService';
+import {
+  mergeSpeechWithoutOverlap,
+  stripPrefixOverlap
+} from '../../services/speechPunctuationEngine';
 
 interface LiveTranscribeModalProps {
   isOpen: boolean;
@@ -72,19 +76,23 @@ export const LiveTranscribeModal: React.FC<LiveTranscribeModalProps> = ({
       setTranscripts((prev) => {
         if (prev.length === 0) return [entry];
         const last = prev[prev.length - 1];
-        // Cùng một người phát biểu: Nối tiếp vào đoạn hiện tại của người đó (không ngắt đoạn)
+        // Cùng một người phát biểu: Khử trùng lặp 100% và nối tiếp vào đoạn của người đó (không ngắt đoạn mới)
         if (last.speaker === entry.speaker) {
-          const separator = last.text.endsWith('\n') ? '' : ' ';
+          const mergedText = mergeSpeechWithoutOverlap(last.text, entry.text);
+          if (mergedText === last.text) return prev;
           const updated = [...prev];
           updated[updated.length - 1] = {
             ...last,
-            text: `${last.text}${separator}${entry.text}`,
+            text: mergedText,
             timestamp: entry.timestamp
           };
           return updated;
         }
-        // Khác người phát biểu: Ngắt đoạn mới để phân tách, phân biệt từng người đang giao tiếp
-        return [...prev, entry];
+        // Khác người phát biểu: Ngắt đoạn mới, khử trùng lặp tiền tố nếu có
+        const cleanNewText = stripPrefixOverlap(last.text, entry.text);
+        if (!cleanNewText.trim()) return prev;
+
+        return [...prev, { ...entry, text: cleanNewText.trim() }];
       });
     };
     controller.onAudioLevel = (level) => setAudioLevel(level);

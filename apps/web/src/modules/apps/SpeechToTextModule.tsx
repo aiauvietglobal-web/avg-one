@@ -8,7 +8,9 @@ import {
 } from 'lucide-react';
 import {
   processRealtimeSpeechPunctuation,
-  splitIntoReadableSpeechSegments
+  splitIntoReadableSpeechSegments,
+  mergeSpeechWithoutOverlap,
+  stripPrefixOverlap
 } from '../../services/speechPunctuationEngine';
 
 // Web Speech API Types declaration for TypeScript compatibility
@@ -660,28 +662,29 @@ export const SpeechToTextModule: React.FC = () => {
           if (pitch !== null) {
             setLivePitchHz(pitch);
             pitchSamples.push(pitch);
-            if (pitchSamples.length > 5) pitchSamples.shift();
+            if (pitchSamples.length > 12) pitchSamples.shift();
 
             const avgPitch = Math.round(pitchSamples.reduce((a, b) => a + b, 0) / pitchSamples.length);
 
             if (autoDiarizationRef.current) {
-              let targetSpkId = 'spk-male';
-              let label = '';
-
-              // Male fundamental pitch F0 is typically < 165Hz, Female F0 is >= 165Hz
-              if (avgPitch < 165) {
+              // Hysteresis: < 150Hz -> Nam, > 175Hz -> Nữ, vùng đệm 150Hz-175Hz giữ nguyên giọng hiện tại
+              let targetSpkId = activeSpeakerRef.current;
+              if (avgPitch < 150) {
                 targetSpkId = 'spk-male';
-                const maleSpk = speakers.find(s => s.id === 'spk-male') || DEFAULT_SPEAKERS[0];
-                label = `👨 ${maleSpk.name} (~${avgPitch}Hz)`;
-              } else {
+              } else if (avgPitch > 175) {
                 targetSpkId = 'spk-female';
-                const femaleSpk = speakers.find(s => s.id === 'spk-female') || DEFAULT_SPEAKERS[1];
-                label = `👩 ${femaleSpk.name} (~${avgPitch}Hz)`;
               }
 
-              setActiveSpeakerId(targetSpkId);
-              activeSpeakerRef.current = targetSpkId;
+              const targetSpk = speakers.find(s => s.id === targetSpkId) || DEFAULT_SPEAKERS[0];
+              const icon = targetSpkId === 'spk-male' ? '👨' : '👩';
+              const label = `${icon} ${targetSpk.name} (~${avgPitch}Hz)`;
               setDetectedVoiceLabel(label);
+
+              // Chỉ đổi giọng khi không có câu nói dở dang đang chạy (tránh cắt đôi câu đang nói)
+              if (!lastInterimRef.current.trim() && targetSpkId !== activeSpeakerRef.current) {
+                setActiveSpeakerId(targetSpkId);
+                activeSpeakerRef.current = targetSpkId;
+              }
             } else {
               setDetectedVoiceLabel(`Tần số giọng: ${avgPitch}Hz (Chế độ thủ công)`);
             }
@@ -1117,23 +1120,11 @@ export const SpeechToTextModule: React.FC = () => {
 
       // Chỉ ngắt đoạn khi ghi nhận các giọng nói khác nhau (khác speakerId hoặc khác sender)
       if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id) {
-        // Cùng một người đang nói: nối tiếp văn bản vào đoạn của người đó (không ngắt đoạn mới)
-        if (lastMsg.text.trim().toLowerCase() === enhancedText.trim().toLowerCase()) {
+        // Cùng một người đang nói: khử trùng lặp 100% và nối tiếp văn bản vào đoạn hiện tại
+        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText);
+        if (mergedText === lastMsg.text) {
           return prev;
         }
-        if (enhancedText.toLowerCase().startsWith(lastMsg.text.toLowerCase())) {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...lastMsg,
-            text: enhancedText,
-            translatedText: translateText(enhancedText, targetLanguage),
-            timestamp: timestampStr
-          };
-          return updated;
-        }
-
-        const separator = lastMsg.text.endsWith('\n') ? '' : ' ';
-        const mergedText = `${lastMsg.text}${separator}${enhancedText}`;
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...lastMsg,
@@ -1145,6 +1136,10 @@ export const SpeechToTextModule: React.FC = () => {
       }
 
       // Khác người nói: tạo phân đoạn/tin nhắn mới để phân biệt rõ từng người giao tiếp
+      // Khử trường hợp câu của người mới lặp lại tiền tố đã nói ở cuối câu của người trước
+      const cleanNewText = stripPrefixOverlap(lastMsg.text, enhancedText);
+      if (!cleanNewText.trim()) return prev;
+
       return [
         ...prev,
         {
@@ -1152,8 +1147,8 @@ export const SpeechToTextModule: React.FC = () => {
           sender: 'HEARING',
           senderName: currentSpk.name,
           speakerId: currentSpk.id,
-          text: enhancedText,
-          translatedText: translateText(enhancedText, targetLanguage),
+          text: cleanNewText.trim(),
+          translatedText: translateText(cleanNewText.trim(), targetLanguage),
           timestamp: timestampStr
         }
       ];
@@ -1290,16 +1285,6 @@ export const SpeechToTextModule: React.FC = () => {
           const formattedInterim = enhanceVietnameseTranscript(currentInterim.trim(), false, false);
           setInterimTranscript(formattedInterim);
           lastInterimRef.current = currentInterim.trim();
-
-          // Silence Pause Detector: Nếu người dùng dừng nói > 850ms, tự động chốt câu
-          if (speechSilenceTimerRef.current) clearTimeout(speechSilenceTimerRef.current);
-          speechSilenceTimerRef.current = setTimeout(() => {
-            if (micStateRef.current === 'recording' && lastInterimRef.current.trim()) {
-              commitTranscriptToMessage(lastInterimRef.current.trim(), true);
-              lastInterimRef.current = '';
-              setInterimTranscript('');
-            }
-          }, 850);
         } else {
           setInterimTranscript('');
           lastInterimRef.current = '';
