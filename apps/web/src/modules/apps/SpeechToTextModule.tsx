@@ -1093,52 +1093,9 @@ export const SpeechToTextModule: React.FC = () => {
     return common / Math.max(words1.length, words2.length);
   };
 
-  // Helper to split long spoken text into clean, easily readable segments (10-14 words per segment)
-  const splitTextIntoDisplaySegments = (text: string, maxWords: number = 14): string[] => {
-    if (!text || !text.trim()) return [];
-    const clean = text.trim().replace(/\s+/g, ' ');
-
-    // 1. Tách theo dấu kết thúc câu có sẵn (. ? ! ; hoặc xuống dòng)
-    const rawSentences = clean
-      .split(/(?<=[.?!;\n])\s+/)
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    const segments: string[] = [];
-
-    for (const sentence of rawSentences) {
-      const words = sentence.split(' ').filter(Boolean);
-      if (words.length <= maxWords) {
-        segments.push(sentence.charAt(0).toUpperCase() + sentence.slice(1));
-        continue;
-      }
-
-      // 2. Chia nhỏ câu dài tại các điểm ngắt nghỉ tự nhiên
-      let currentChunk: string[] = [];
-      for (let i = 0; i < words.length; i++) {
-        const w = words[i];
-        currentChunk.push(w);
-        const hasComma = w.endsWith(',');
-        const isConjunction = /^(và|nhưng|tuy\s*nhiên|đồng\s*thời|do\s*đó|vì\s*vậy|ngoài\s*ra|tiếp\s*theo|để|thì|sau\s*đó)$/i.test(w);
-
-        if ((currentChunk.length >= 8 && (hasComma || isConjunction)) || currentChunk.length >= maxWords) {
-          let chunkStr = currentChunk.join(' ').trim().replace(/,\s*$/, '');
-          if (chunkStr) {
-            segments.push(chunkStr.charAt(0).toUpperCase() + chunkStr.slice(1));
-          }
-          currentChunk = [];
-        }
-      }
-
-      if (currentChunk.length > 0) {
-        const rem = currentChunk.join(' ').trim();
-        if (rem) {
-          segments.push(rem.charAt(0).toUpperCase() + rem.slice(1));
-        }
-      }
-    }
-
-    return segments.length > 0 ? segments : [clean.charAt(0).toUpperCase() + clean.slice(1)];
+  // Helper to split long spoken text into clean, easily readable segments (8-14 words per segment)
+  const splitTextIntoDisplaySegments = (text: string, maxWords: number = 13): string[] => {
+    return splitIntoReadableSpeechSegments(text, maxWords);
   };
 
   // Helper to commit verbatim transcript text directly to conversation timeline without altering meaning
@@ -1277,7 +1234,7 @@ export const SpeechToTextModule: React.FC = () => {
       if (SpeechGrammarListObj) {
         try {
           const grammarList = new SpeechGrammarListObj();
-          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | lệnh sản xuất | xuất kho | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
+          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | AC1 | AC2 | #K1 | #K2T | #K2B | lệnh sản xuất | xuất kho | nhập kho | hợp đồng kinh tế | biên bản nghiệm thu | báo cáo tài chính | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
           grammarList.addFromString(grammar, 1.0);
           recognition.grammars = grammarList;
         } catch (e) {}
@@ -1303,7 +1260,7 @@ export const SpeechToTextModule: React.FC = () => {
           if (res.length > 1) {
             for (let a = 1; a < res.length; a++) {
               const altText = res[a]?.transcript || '';
-              if (/B5\.1|5\.1T|#K2T|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế/i.test(altText)) {
+              if (/B5\.1|5\.1T|#K2T|#K1|#K2B|AC1|AC2|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế|xuất kho|nhập kho|nghiệm thu/i.test(altText)) {
                 bestChunk = altText;
                 break;
               }

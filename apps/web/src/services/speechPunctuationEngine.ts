@@ -14,45 +14,65 @@
 // 1. Bảng ánh xạ khẩu lệnh đọc dấu câu tiếng Việt sang ký tự thực tế
 const SPOKEN_PUNCTUATION_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Xuống dòng / Đoạn mới
-  { pattern: /\b(xuống\s*dòng|ngắt\s*dòng|dòng\s*mới)\b/gi, replacement: '\n' },
-  { pattern: /\b(gạch\s*đầu\s*dòng)\b/gi, replacement: '\n- ' },
+  { pattern: /\b(ngắt\s*đoạn|sang\s*đoạn\s*mới|đoạn\s*mới|xuống\s*đoạn)\b/gi, replacement: '\n\n' },
+  { pattern: /\b(xuống\s*dòng|ngắt\s*dòng|dòng\s*mới|sang\s*dòng\s*mới|xuống\s*hàng|ngắt\s*hàng|hàng\s*mới)\b/gi, replacement: '\n' },
+  { pattern: /\b(gạch\s*đầu\s*dòng|gạch\s*ngang\s*đầu\s*dòng)\b/gi, replacement: '\n- ' },
+  { pattern: /\b(dấu\s*cộng\s*đầu\s*dòng|cộng\s*đầu\s*dòng)\b/gi, replacement: '\n+ ' },
 
   // Dấu kết thúc câu & ngắt câu
   { pattern: /\b(dấu\s*chấm\s*hỏi|chấm\s*hỏi|dấu\s*hỏi)\b/gi, replacement: '?' },
-  { pattern: /\b(dấu\s*chấm\s*than|chấm\s*than|dấu\s*than)\b/gi, replacement: '!' },
+  { pattern: /\b(dấu\s*chấm\s*than|chấm\s*than|dấu\s*than|dấu\s*cảm\s*thán)\b/gi, replacement: '!' },
   { pattern: /\b(dấu\s*hai\s*chấm|hai\s*chấm)\b/gi, replacement: ':' },
-  { pattern: /\b(dấu\s*ba\s*chấm|ba\s*chấm|chấm\s*lửng)\b/gi, replacement: '...' },
+  { pattern: /\b(dấu\s*ba\s*chấm|ba\s*chấm|chấm\s*lửng|dấu\s*chấm\s*lửng)\b/gi, replacement: '...' },
   { pattern: /\b(dấu\s*chấm\s*phẩy|chấm\s*phẩy)\b/gi, replacement: ';' },
-  { pattern: /\b(dấu\s*chấm|chấm\s*hết|chấm\s*câu)\b/gi, replacement: '.' },
-  { pattern: /\b(dấu\s*phẩy|phẩy)\b/gi, replacement: ',' },
+  { pattern: /\b(chấm\s*hết\s*câu|chấm\s*hết|dấu\s*chấm|chấm\s*câu)\b/gi, replacement: '.' },
+  { pattern: /\b(dấu\s*phẩy|ngắt\s*phẩy|phẩy)\b/gi, replacement: ',' },
 
   // Dấu ngoặc & biểu tượng
   { pattern: /\b(mở\s*ngoặc\s*đơn|mở\s*ngoặc)\b/gi, replacement: ' (' },
   { pattern: /\b(đóng\s*ngoặc\s*đơn|đóng\s*ngoặc)\b/gi, replacement: ') ' },
-  { pattern: /\b(phần\s*trăm)\b/gi, replacement: '%' }
+  { pattern: /\b(mở\s*ngoặc\s*kép|mở\s*kép)\b/gi, replacement: ' "' },
+  { pattern: /\b(đóng\s*ngoặc\s*kép|đóng\s*kép)\b/gi, replacement: '" ' },
+  { pattern: /\b(mở\s*ngoặc\s*vuông)\b/gi, replacement: ' [' },
+  { pattern: /\b(đóng\s*ngoặc\s*vuông)\b/gi, replacement: '] ' },
+  { pattern: /\b(dấu\s*phần\s*trăm|phần\s*trăm)\b/gi, replacement: '%' }
 ];
 
-// 2. Chuyển đổi từ mượn Tiếng Anh & Thuật ngữ điều hành doanh nghiệp khi người Việt phát âm
+// 2. Chuyển đổi từ mượn Tiếng Anh & Thuật ngữ điều hành doanh nghiệp khi người Việt phát âm bồi thực tế
 const LOANWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\b(chếch\s*meo|chếch\s*mail|check\s*meo)\b/gi, replacement: 'check mail' },
   { pattern: /\b(đét\s*lai|đét\s*line|đết\s*lai)\b/gi, replacement: 'deadline' },
   { pattern: /\b(phi\s*đơ\s*bách|phít\s*bách|phít\s*bắc|phít\s*back)\b/gi, replacement: 'feedback' },
-  { pattern: /\b(mít\s*ting|mít\s*tinh)\b/gi, replacement: 'meeting' },
-  { pattern: /\b(súp\s*pót|su\s*pót)\b/gi, replacement: 'support' },
-  { pattern: /\b(ấp\s*đết|áp\s*đết|úp\s*đết)\b/gi, replacement: 'update' },
+  { pattern: /\b(mít\s*ting|mít\s*tinh|mít\s*tin)\b/gi, replacement: 'meeting' },
+  { pattern: /\b(súp\s*pót|su\s*pót|súp\s*po)\b/gi, replacement: 'support' },
+  { pattern: /\b(ấp\s*đết|áp\s*đết|úp\s*đết|ắp\s*đết)\b/gi, replacement: 'update' },
   { pattern: /\b(rì\s*pót|ri\s*pót)\b/gi, replacement: 'report' },
-  { pattern: /\b(sét\s*úp|xét\s*úp)\b/gi, replacement: 'setup' },
+  { pattern: /\b(sét\s*úp|xét\s*úp|set\s*úp)\b/gi, replacement: 'setup' },
   { pattern: /\b(bách\s*úp|bắc\s*úp)\b/gi, replacement: 'backup' },
   { pattern: /\b(ki\s*bi\s*ai)\b/gi, replacement: 'KPI' },
   { pattern: /\b(ô\s*ca\s*rờ)\b/gi, replacement: 'OKR' },
   { pattern: /\b(pi\s*ô)\b/gi, replacement: 'PO' },
   { pattern: /\b(vát\s*thuế|vê\s*a\s*tê)\b/gi, replacement: 'thuế VAT' },
   { pattern: /\b(phai\s*đính\s*kèm|phay\s*đính\s*kèm)\b/gi, replacement: 'file đính kèm' },
-  { pattern: /\b(sét\s*tanh|xét\s*ting)\b/gi, replacement: 'setting' },
-  { pattern: /\b(xíp\s*hàng|xíp\s*pinh)\b/gi, replacement: 'ship hàng' }
+  { pattern: /\b(sét\s*tanh|xét\s*ting|xét\s*tinh)\b/gi, replacement: 'setting' },
+  { pattern: /\b(xíp\s*hàng|xíp\s*pinh)\b/gi, replacement: 'ship hàng' },
+  { pattern: /\b(con\s*phơm|công\s*phơm)\b/gi, replacement: 'confirm' },
+  { pattern: /\b(ken\s*xồ|can\s*xồ|hủy\s*kèo)\b/gi, replacement: 'cancel' },
+  { pattern: /\b(on\s*lai)\b/gi, replacement: 'online' },
+  { pattern: /\b(ọp\s*lai)\b/gi, replacement: 'offline' },
+  { pattern: /\b(lai\s*trym|lai\s*trim)\b/gi, replacement: 'livestream' },
+  { pattern: /\b(sờ\s*ken|quét\s*ken)\b/gi, replacement: 'scan' },
+  { pattern: /\b(áp\s*láp|úp\s*láp|úp\s*load)\b/gi, replacement: 'upload' },
+  { pattern: /\b(đao\s*loát|đao\s*load)\b/gi, replacement: 'download' },
+  { pattern: /\b(in\s*bốc|in\s*box)\b/gi, replacement: 'inbox' },
+  { pattern: /\b(xe\s*màn\s*hình)\b/gi, replacement: 'share màn hình' },
+  { pattern: /\b(xơ\s*vơ|xét\s*vơ)\b/gi, replacement: 'server' },
+  { pattern: /\b(đa\s*ta\s*bây|đê\s*ta\s*bét)\b/gi, replacement: 'database' },
+  { pattern: /\b(giao\s*diện\s*du\s*ai|du\s*ai)\b/gi, replacement: 'giao diện UI' },
+  { pattern: /\b(du\s*ích)\b/gi, replacement: 'UX' }
 ];
 
-// 3. Chuẩn hóa số đếm, phần trăm & thời gian theo chuẩn hành chính (ITN)
+// 3. Chuẩn hóa số đếm, phần trăm, tiền tệ & thời gian theo chuẩn hành chính (ITN)
 const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]) => string) }> = [
   // Phần trăm
   { pattern: /\b(một\s*trăm|100)\s*phần\s*trăm\b/gi, replacement: '100%' },
@@ -68,14 +88,33 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\b(mười\s*(?:lăm|nhăm)|15)\s*phần\s*trăm\b/gi, replacement: '15%' },
   { pattern: /\b(mười|10)\s*phần\s*trăm\b/gi, replacement: '10%' },
   { pattern: /\b(năm|5)\s*phần\s*trăm\b/gi, replacement: '5%' },
+  { pattern: /\b(\d+)\s*phần\s*trăm\b/gi, replacement: '$1%' },
+
+  // Số thập phân tiếng Việt (phẩy -> dấu phẩy thập phân)
+  { pattern: /\b(\d+)\s*phẩy\s*(\d+)\b/gi, replacement: '$1,$2' },
+  { pattern: /\b(không|0)\s*phẩy\s*năm\b/gi, replacement: '0,5' },
 
   // Thời gian giờ phút
-  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(30|ba\s*mươi)\s*(?:phút)?\b/gi, 
+  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(?:rưỡi|30|ba\s*mươi)\s*(?:phút)?\b/gi, 
     replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:30` },
   { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(15|mười\s*lăm)\s*(?:phút)?\b/gi, 
     replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:15` },
-  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(45|bốn\s*lăm)\s*(?:phút)?\b/gi, 
+  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(45|bốn\s*(?:mươi\s*)?lăm)\s*(?:phút)?\b/gi, 
     replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:45` },
+  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(?:đúng|tròn)\b/gi, 
+    replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:00` },
+
+  // Quý trong năm
+  { pattern: /\bquý\s*(?:một|1|i)\b/gi, replacement: 'Quý I' },
+  { pattern: /\bquý\s*(?:hai|2|ii)\b/gi, replacement: 'Quý II' },
+  { pattern: /\bquý\s*(?:ba|3|iii)\b/gi, replacement: 'Quý III' },
+  { pattern: /\bquý\s*(?:bốn|4|iv)\b/gi, replacement: 'Quý IV' },
+
+  // Điều, Khoản, Mục
+  { pattern: /\bđiều\s*(\d+)\b/gi, replacement: 'Điều $1' },
+  { pattern: /\bkhoản\s*(\d+)\b/gi, replacement: 'Khoản $1' },
+  { pattern: /\bmục\s*(\d+)\b/gi, replacement: 'Mục $1' },
+  { pattern: /\bphần\s*(\d+)\b/gi, replacement: 'Phần $1' },
 
   // Bước 1, Bước 2...
   { pattern: /\bbước\s*(?:một|1)\b/gi, replacement: 'Bước 1' },
@@ -90,23 +129,81 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\bbước\s*(?:mười|10)\b/gi, replacement: 'Bước 10' }
 ];
 
-// 4. Khử lỗi phát âm méo tiếng khi nói nhanh trong giao tiếp thực tế
+// 4. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế
 const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  // Lỗi l/n miền Bắc
   { pattern: /\b(thế\s*này\s*này|thế\s*lày)\b/gi, replacement: 'thế này' },
+  { pattern: /\b(như\s*lày)\b/gi, replacement: 'như này' },
   { pattern: /\b(khi\s*lào)\b/gi, replacement: 'khi nào' },
   { pattern: /\b(lăng\s*suất)\b/gi, replacement: 'năng suất' },
   { pattern: /\b(lăng\s*lượng)\b/gi, replacement: 'năng lượng' },
   { pattern: /\b(lói\s*chung)\b/gi, replacement: 'nói chung' },
-  { pattern: /\b(làm\s*chi)\b/gi, replacement: 'làm gì' },
+  { pattern: /\b(lói\s*chuyện)\b/gi, replacement: 'nói chuyện' },
+  { pattern: /\b(lăm\s*nay)\b/gi, replacement: 'năm nay' },
+  { pattern: /\b(lăm\s*ngoái)\b/gi, replacement: 'năm ngoái' },
+  { pattern: /\b(nàm\s*sao)\b/gi, replacement: 'làm sao' },
+  { pattern: /\b(nàm\s*gì)\b/gi, replacement: 'làm gì' },
+  { pattern: /\b(liên\s*nạc)\b/gi, replacement: 'liên lạc' },
+
+  // Lỗi chính tả âm học phụ âm đầu thường gặp
+  { pattern: /\b(sử\s*lý)\b/gi, replacement: 'xử lý' },
+  { pattern: /\b(xản\s*xuất)\b/gi, replacement: 'sản xuất' },
+  { pattern: /\b(sơ\s*xuất|xơ\s*suất)\b/gi, replacement: 'sơ suất' },
+  { pattern: /\b(chính\s*xách)\b/gi, replacement: 'chính sách' },
+  { pattern: /\b(chách\s*nhiệm)\b/gi, replacement: 'trách nhiệm' },
+  { pattern: /\b(chuyển\s*khai)\b/gi, replacement: 'triển khai' },
+  { pattern: /\b(dõ\s*ràng)\b/gi, replacement: 'rõ ràng' },
+  { pattern: /\b(rải\s*quyết)\b/gi, replacement: 'giải quyết' },
+  { pattern: /\b(dán\s*tiếp)\b/gi, replacement: 'gián tiếp' },
+
+  // Từ địa phương miền Trung & Nam khi nói nhanh
+  { pattern: /\b(hôm\s*ni)\b/gi, replacement: 'hôm nay' },
   { pattern: /\b(bây\s*chừ)\b/gi, replacement: 'bây giờ' },
-  { pattern: /\b(hôm\s*ni)\b/gi, replacement: 'hôm nay' }
+  { pattern: /\b(làm\s*chi)\b/gi, replacement: 'làm gì' },
+  { pattern: /\b(mần\s*răng)\b/gi, replacement: 'làm sao' },
+  { pattern: /\b(răng\s*rứa)\b/gi, replacement: 'sao thế' },
+  { pattern: /\b(chi\s*mô)\b/gi, replacement: 'gì đâu' },
+  { pattern: /\b(thiệt\s*tình)\b/gi, replacement: 'thật tình' },
+  { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' }
 ];
 
-// Các từ kết thúc biểu thị câu hỏi trong văn nói tiếng Việt
+// 5. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
+const TRANSITION_DISCOURSE_MARKERS = [
+  'tuy nhiên',
+  'vì vậy',
+  'do đó',
+  'cho nên',
+  'ngoài ra',
+  'hơn nữa',
+  'mặt khác',
+  'tóm lại',
+  'kết luận là',
+  'thứ nhất',
+  'thứ hai',
+  'thứ ba',
+  'thứ tư',
+  'thứ năm',
+  'ví dụ như',
+  'chẳng hạn như',
+  'cụ thể là',
+  'theo tôi',
+  'theo em',
+  'theo anh',
+  'trước hết',
+  'đồng thời',
+  'ngược lại',
+  'nói chung là',
+  'tổng kết lại'
+];
+
+// 6. Các từ kết thúc biểu thị câu hỏi trong văn nói tiếng Việt
 const QUESTION_ENDINGS = [
   'phải không',
   'đúng không',
   'được không',
+  'được chưa',
+  'xong chưa',
+  'chuẩn chưa',
   'chưa',
   'hả',
   'sao',
@@ -118,9 +215,44 @@ const QUESTION_ENDINGS = [
   'vì sao',
   'ai đấy',
   'ai thế',
+  'ai vậy',
   'là gì',
-  'mấy giờ'
+  'cái gì',
+  'mấy giờ',
+  'mấy cái',
+  'bao nhiêu',
+  'bao lâu',
+  'bao xa',
+  'làm sao',
+  'ra sao',
+  'thế nào rồi',
+  'như thế nào',
+  'ổn không',
+  'được chứ',
+  'phải chăng',
+  'có không',
+  'biết không',
+  'ok không',
+  'được ko',
+  'phải ko',
+  'đúng ko'
 ];
+
+// 7. Các cụm từ bắt đầu câu hỏi tiếng Việt (Question Starters)
+const QUESTION_STARTERS_REGEX = /^(tại\s*sao|vì\s*sao|làm\s*sao|có\s*phải|bao\s*giờ|khi\s*nào|ai\s*là|ai\s*sẽ|ai\s*chịu|liệu\s*có|bao\s*nhiêu|mấy\s*giờ|làm\s*thế\s*nào|có\s*cách\s*nào|cho\s*hỏi|xin\s*hỏi)\b/i;
+
+/**
+ * Tự động chèn dấu phẩy hợp lý sau các cụm từ chuyển tiếp mở đầu câu
+ */
+function insertSmartDiscourseCommas(text: string): string {
+  let res = text;
+  for (const marker of TRANSITION_DISCOURSE_MARKERS) {
+    // Nếu đứng ở đầu chuỗi hoặc ngay sau dấu chấm/dòng mới mà chưa có dấu phẩy ngay sau
+    const regex = new RegExp(`(^|[.?!\\n]\\s*)(${marker})(?![,.?!:;])\\s+`, 'gi');
+    res = res.replace(regex, (_m, prefix, match) => `${prefix}${match}, `);
+  }
+  return res;
+}
 
 /**
  * Xử lý văn bản thô từ giọng nói theo thời gian thực:
@@ -128,8 +260,10 @@ const QUESTION_ENDINGS = [
  * - Chuyển đổi khẩu lệnh dấu câu
  * - Áp dụng chuẩn hóa số đếm, phần trăm, giờ phút (ITN)
  * - Khử lỗi phát âm nói nhanh và dịch chuẩn từ mượn
- * - Nhận diện câu hỏi tiếng Việt
+ * - Tự động chèn dấu phẩy sau các trạng từ chuyển ý
+ * - Nhận diện ngữ điệu câu hỏi tiếng Việt (cả từ kết thúc và từ bắt đầu câu hỏi)
  * - Chuẩn hóa khoảng cách xung quanh dấu câu
+ * - Viết hoa chữ cái đầu câu và sau ngắt dòng
  */
 export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boolean = true): string {
   if (!rawText) return '';
@@ -153,33 +287,38 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     text = text.replace(rule.pattern, rule.replacement as any);
   }
 
-  // 5. Khử lỗi nói nhanh méo chữ
+  // 5. Khử lỗi nói nhanh méo chữ & phương ngữ
   for (const rule of SPOKEN_COLLOQUIAL_RULES) {
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // 6. Chuẩn hóa khoảng cách quanh dấu câu:
+  // 6. Tự động chèn dấu phẩy sau các liên từ / trạng từ chuyển ý
+  text = insertSmartDiscourseCommas(text);
+
+  // 7. Chuẩn hóa khoảng cách quanh dấu câu:
   // Không để khoảng trắng trước dấu câu: "xin chào ," -> "xin chào,"
   text = text.replace(/\s+([,.?!:;%])/g, '$1');
   // Phải có đúng 1 khoảng trắng sau dấu câu (nếu không phải là cuối chuỗi hoặc xuống dòng)
   text = text.replace(/([,.?!:;%])(?=[^\s\d\n)\]}])/g, '$1 ');
   // Xử lý khoảng cách quanh dấu mở đóng ngoặc
   text = text.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
+  text = text.replace(/"\s+/g, '"').replace(/\s+"/g, '"');
 
-  // 7. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
+  // 8. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
   if (isFinal) {
     const trimmed = text.trim();
     // Nếu chưa có dấu kết thúc câu (. ? ! ...)
     if (!/[.?!…]$/.test(trimmed)) {
       const lower = trimmed.toLowerCase();
-      const isQuestion = QUESTION_ENDINGS.some(ending => {
+      const hasQuestionEnding = QUESTION_ENDINGS.some(ending => {
         return lower.endsWith(ending) || lower.endsWith(ending + ',');
       });
+      const hasQuestionStarter = QUESTION_STARTERS_REGEX.test(lower);
 
-      if (isQuestion) {
+      if (hasQuestionEnding || hasQuestionStarter) {
         text = trimmed.replace(/,\s*$/, '') + '?';
       } else {
-        // Tự động thêm dấu chấm nếu câu đã có độ dài ý nghĩa (> 3 từ)
+        // Tự động thêm dấu chấm nếu câu đã có độ dài ý nghĩa (>= 3 từ)
         const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
         if (wordCount >= 3 && !trimmed.endsWith(':') && !trimmed.endsWith(',')) {
           text = trimmed + '.';
@@ -188,7 +327,7 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     }
   }
 
-  // 8. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
+  // 9. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
   text = autoCapitalizeSentences(text);
 
   return text.trim();

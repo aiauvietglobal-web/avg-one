@@ -33,12 +33,15 @@ export type TranscribeStatus = 'idle' | 'recording' | 'paused' | 'error';
 const AVG_KEYWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Personnel & Code names
   { pattern: /\b(bê\s*5\s*chấm\s*1|b5\.1|b\s*năm\s*chấm\s*một)\b/gi, replacement: 'B5.1' },
-  { pattern: /\b(5\.1\s*t|năm\s*chấm\s*một\s*tê)\b/gi, replacement: '5.1T' },
+  { pattern: /\b(5\.1\s*t|5\.1t|năm\s*chấm\s*một\s*tê)\b/gi, replacement: '5.1T' },
   { pattern: /\b(2\.1|hai\s*chấm\s*một)\b/gi, replacement: '2.1' },
   { pattern: /\b(3\.1|ba\s*chấm\s*một)\b/gi, replacement: '3.1 - RDI' },
-  { pattern: /\b(ca\s*2\s*tê|k2t|k\s*hai\s*tê)\b/gi, replacement: '#K2T' },
+  { pattern: /\b(rê\s*đê\s*i|r\s*d\s*i)\b/gi, replacement: 'RDI' },
+  { pattern: /\b(ca\s*2\s*tê|k2t|k\s*hai\s*tê|k\s*2\s*t)\b/gi, replacement: '#K2T' },
   { pattern: /\b(ca\s*1|k1|k\s*một)\b/gi, replacement: '#K1' },
-  { pattern: /\b(ca\s*2\s*bê|k2b|k\s*hai\s*bê)\b/gi, replacement: '#K2B' },
+  { pattern: /\b(ca\s*2\s*bê|k2b|k\s*hai\s*bê|k\s*2\s*b)\b/gi, replacement: '#K2B' },
+  { pattern: /\b(áp\s*1|áp\s*một|ác\s*1|ác\s*một)\b/gi, replacement: 'AC1' },
+  { pattern: /\b(áp\s*2|áp\s*hai|ác\s*2|ác\s*hai)\b/gi, replacement: 'AC2' },
   { pattern: /\b(bà\s*bích|chị\s*bích)\b/gi, replacement: 'bà Bích' },
   { pattern: /\b(bà\s*trang|chị\s*trang)\b/gi, replacement: 'bà Trang' },
   { pattern: /\b(ông\s*trịnh|anh\s*trịnh)\b/gi, replacement: 'ông Trịnh' },
@@ -52,6 +55,10 @@ const AVG_KEYWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\b(lệnh\s*sản\s*xuất)\b/gi, replacement: 'Lệnh sản xuất' },
   { pattern: /\b(quản\s*lý\s*thuế)\b/gi, replacement: 'Quản lý thuế' },
   { pattern: /\b(xuất\s*kho)\b/gi, replacement: 'Xuất kho' },
+  { pattern: /\b(nhập\s*kho)\b/gi, replacement: 'Nhập kho' },
+  { pattern: /\b(hợp\s*đồng\s*kinh\s*tế)\b/gi, replacement: 'Hợp đồng kinh tế' },
+  { pattern: /\b(biên\s*bản\s*nghiệm\s*thu)\b/gi, replacement: 'Biên bản nghiệm thu' },
+  { pattern: /\b(báo\s*cáo\s*tài\s*chính)\b/gi, replacement: 'Báo cáo tài chính' },
   { pattern: /\b(đăng\s*ký\s*bản\s*quyền|sở\s*hữu\s*trí\s*tuệ|shtt)\b/gi, replacement: 'Đăng ký SHTT' },
   { pattern: /\b(mẫu\s*h\s*1|mẫu\s*h1)\b/gi, replacement: 'mẫu H1' },
   { pattern: /\b(mẫu\s*h\s*2|mẫu\s*h2)\b/gi, replacement: 'mẫu H2' }
@@ -115,7 +122,7 @@ export class LiveTranscribeController {
       if (SpeechGrammarListObj) {
         try {
           const grammarList = new SpeechGrammarListObj();
-          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | lệnh sản xuất | xuất kho | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
+          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | AC1 | AC2 | #K1 | #K2T | #K2B | lệnh sản xuất | xuất kho | nhập kho | hợp đồng kinh tế | biên bản nghiệm thu | báo cáo tài chính | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
           grammarList.addFromString(grammar, 1.0);
           this.recognition.grammars = grammarList;
         } catch (e) {}
@@ -140,7 +147,7 @@ export class LiveTranscribeController {
           if (res.length > 1) {
             for (let a = 1; a < res.length; a++) {
               const altText = res[a]?.transcript || '';
-              if (/B5\.1|5\.1T|#K2T|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế/i.test(altText)) {
+              if (/B5\.1|5\.1T|#K2T|#K1|#K2B|AC1|AC2|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế|xuất kho|nhập kho|nghiệm thu/i.test(altText)) {
                 bestChunk = altText;
                 break;
               }
@@ -471,10 +478,57 @@ export class LiveTranscribeController {
       });
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       this.audioContext = new AudioCtx();
-      const source = this.audioContext.createMediaStreamSource(this.mediaStream);
-      this.analyser = this.audioContext.createAnalyser();
+      const ctx = this.audioContext;
+      const source = ctx.createMediaStreamSource(this.mediaStream);
+
+      // DSP 1: Sub-bass High-pass filter at 40Hz (removes low rumbling without affecting speech fundamentals)
+      const highpassFilter = ctx.createBiquadFilter();
+      highpassFilter.type = 'highpass';
+      highpassFilter.frequency.setValueAtTime(40, ctx.currentTime);
+
+      // DSP 2: Precise 50Hz Electrical Hum Notch Filter (removes AC line hum)
+      const notch50 = ctx.createBiquadFilter();
+      notch50.type = 'notch';
+      notch50.frequency.setValueAtTime(50, ctx.currentTime);
+      notch50.Q.setValueAtTime(10.0, ctx.currentTime);
+
+      // DSP 3: Precise 60Hz Power Supply Hum Notch Filter
+      const notch60 = ctx.createBiquadFilter();
+      notch60.type = 'notch';
+      notch60.frequency.setValueAtTime(60, ctx.currentTime);
+      notch60.Q.setValueAtTime(10.0, ctx.currentTime);
+
+      // DSP 4: High-frequency static hiss low-shelf at 14kHz
+      const notchRF = ctx.createBiquadFilter();
+      notchRF.type = 'lowshelf';
+      notchRF.frequency.setValueAtTime(14000, ctx.currentTime);
+      notchRF.gain.setValueAtTime(-6, ctx.currentTime);
+
+      // DSP 5: Peaking Equalizer (+3.5dB at 2.4kHz) to elevate Vietnamese vocal consonants & tone clarity
+      const presenceEq = ctx.createBiquadFilter();
+      presenceEq.type = 'peaking';
+      presenceEq.frequency.setValueAtTime(2400, ctx.currentTime);
+      presenceEq.gain.setValueAtTime(3.5, ctx.currentTime);
+      presenceEq.Q.setValueAtTime(1.0, ctx.currentTime);
+
+      // DSP 6: Dynamics Compressor to even out soft vs loud speaking levels
+      const compressor = ctx.createDynamicsCompressor();
+      compressor.threshold.setValueAtTime(-22, ctx.currentTime);
+      compressor.knee.setValueAtTime(20, ctx.currentTime);
+      compressor.ratio.setValueAtTime(10, ctx.currentTime);
+      compressor.attack.setValueAtTime(0.003, ctx.currentTime);
+      compressor.release.setValueAtTime(0.15, ctx.currentTime);
+
+      this.analyser = ctx.createAnalyser();
       this.analyser.fftSize = 64;
-      source.connect(this.analyser);
+
+      source.connect(highpassFilter);
+      highpassFilter.connect(notch50);
+      notch50.connect(notch60);
+      notch60.connect(notchRF);
+      notchRF.connect(presenceEq);
+      presenceEq.connect(compressor);
+      compressor.connect(this.analyser);
 
       const bufferLength = this.analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
@@ -496,13 +550,13 @@ export class LiveTranscribeController {
         this.onAudioLevel(normalizedVolume);
 
         const now = Date.now();
-        // Nếu có tiếng nói rõ rệt vào micro (âm lượng > 18%)
-        if (normalizedVolume > 18) {
+        // Nếu có tiếng nói rõ rệt vào micro (âm lượng > 15%)
+        if (normalizedVolume > 15) {
           this.lastAudioEnergyTime = now;
 
           // CƠ CHẾ PHÁT HIỆN KHOẢNG KHUYẾT ÂM THANH (GAP DETECTION):
-          // Nếu có âm thanh nói liên tục > 1.4 giây nhưng engine chưa trả về text kịp
-          if (this.lastTextEmissionTime > 0 && (now - this.lastTextEmissionTime) > 1400) {
+          // Nếu có âm thanh nói liên tục > 1.2 giây nhưng engine chưa trả về text kịp
+          if (this.lastTextEmissionTime > 0 && (now - this.lastTextEmissionTime) > 1200) {
             this.pendingAudioGap = true;
           }
         }
