@@ -562,7 +562,7 @@ export const SpeechToTextModule: React.FC = () => {
 
       const audioConstraints = {
         echoCancellation: { ideal: true },
-        noiseSuppression: false, // Disable aggressive speech gating so human voice is 100% preserved
+        noiseSuppression: { ideal: true }, // Enable acoustic noise suppression to eliminate fan and background hum
         autoGainControl: { ideal: true },
         channelCount: { ideal: 1 },
         sampleRate: { ideal: 48000 },
@@ -1270,7 +1270,18 @@ export const SpeechToTextModule: React.FC = () => {
       recognition.continuous = !isMobileClient;
       recognition.interimResults = true;
       recognition.lang = currentLanguage;
-      recognition.maxAlternatives = 1;
+      recognition.maxAlternatives = 3;
+
+      // 0. Nạp danh mục ngữ pháp JSGF ưu tiên từ vựng điều hành AVG One
+      const SpeechGrammarListObj = (window as any).SpeechGrammarList || (window as any).webkitSpeechGrammarList;
+      if (SpeechGrammarListObj) {
+        try {
+          const grammarList = new SpeechGrammarListObj();
+          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | lệnh sản xuất | xuất kho | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
+          grammarList.addFromString(grammar, 1.0);
+          recognition.grammars = grammarList;
+        } catch (e) {}
+      }
 
       recognition.onstart = () => {
         processedFinalIndexRef.current = 0;
@@ -1284,22 +1295,33 @@ export const SpeechToTextModule: React.FC = () => {
         lastTextReceivedTimeRef.current = Date.now();
 
         for (let i = 0; i < event.results.length; i++) {
-          const result = event.results[i];
-          if (!result || !result[0]) continue;
-          const piece = result[0].transcript || '';
+          const res = event.results[i];
+          if (!res) continue;
 
-          if (result.isFinal) {
+          // Chọn candidate tối ưu nhất trong các alternatives (ưu tiên từ vựng AVG One)
+          let bestChunk = res[0]?.transcript || '';
+          if (res.length > 1) {
+            for (let a = 1; a < res.length; a++) {
+              const altText = res[a]?.transcript || '';
+              if (/B5\.1|5\.1T|#K2T|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế/i.test(altText)) {
+                bestChunk = altText;
+                break;
+              }
+            }
+          }
+
+          if (res.isFinal) {
             if (speechSilenceTimerRef.current) clearTimeout(speechSilenceTimerRef.current);
             // Strictly track processed index to prevent re-reading earlier finalized chunks
             if (i >= processedFinalIndexRef.current) {
               processedFinalIndexRef.current = i + 1;
-              const text = piece.trim();
+              const text = bestChunk.trim();
               if (text) {
                 commitTranscriptToMessage(text, true);
               }
             }
           } else {
-            currentInterim += piece;
+            currentInterim += bestChunk;
           }
         }
 

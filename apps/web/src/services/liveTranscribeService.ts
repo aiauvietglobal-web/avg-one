@@ -108,7 +108,18 @@ export class LiveTranscribeController {
       this.recognition.continuous = true;
       this.recognition.interimResults = true;
       this.recognition.lang = 'vi-VN';
-      this.recognition.maxAlternatives = 1;
+      this.recognition.maxAlternatives = 3;
+
+      // 0. Nạp danh mục ngữ pháp JSGF ưu tiên từ vựng điều hành AVG One
+      const SpeechGrammarListObj = (window as any).SpeechGrammarList || (window as any).webkitSpeechGrammarList;
+      if (SpeechGrammarListObj) {
+        try {
+          const grammarList = new SpeechGrammarListObj();
+          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | lệnh sản xuất | xuất kho | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
+          grammarList.addFromString(grammar, 1.0);
+          this.recognition.grammars = grammarList;
+        } catch (e) {}
+      }
 
       this.recognition.onstart = () => {
         this.restartRetries = 0;
@@ -121,11 +132,25 @@ export class LiveTranscribeController {
         this.lastTextEmissionTime = Date.now();
 
         for (let i = event.resultIndex; i < event.results.length; ++i) {
-          const transcriptChunk = event.results[i][0]?.transcript || '';
-          if (event.results[i].isFinal) {
-            finalTranscript += transcriptChunk;
+          const res = event.results[i];
+          if (!res) continue;
+
+          // Chọn candidate tối ưu nhất trong các alternatives (ưu tiên từ vựng AVG One)
+          let bestChunk = res[0]?.transcript || '';
+          if (res.length > 1) {
+            for (let a = 1; a < res.length; a++) {
+              const altText = res[a]?.transcript || '';
+              if (/B5\.1|5\.1T|#K2T|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế/i.test(altText)) {
+                bestChunk = altText;
+                break;
+              }
+            }
+          }
+
+          if (res.isFinal) {
+            finalTranscript += bestChunk;
           } else {
-            interimTranscript += transcriptChunk;
+            interimTranscript += bestChunk;
           }
         }
 
@@ -435,7 +460,15 @@ export class LiveTranscribeController {
 
   private async startAudioMeter() {
     try {
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: { ideal: true },
+          noiseSuppression: { ideal: true },
+          autoGainControl: { ideal: true },
+          channelCount: { ideal: 1 },
+          sampleRate: { ideal: 48000 }
+        }
+      });
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
       this.audioContext = new AudioCtx();
       const source = this.audioContext.createMediaStreamSource(this.mediaStream);

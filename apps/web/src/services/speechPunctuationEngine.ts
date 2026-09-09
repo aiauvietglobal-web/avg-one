@@ -1,15 +1,17 @@
 /**
- * AVG One Real-Time Speech Punctuation & Continuity Engine
+ * AVG One Real-Time Speech Punctuation, Acoustic Normalization & Continuity Engine
  * 
- * Chức năng:
- * 1. Chuyển đổi khẩu lệnh dấu câu thực tế: "dấu chấm", "dấu phẩy", "xuống dòng", "dấu hỏi", "dấu than", "hai chấm", "ba chấm", "gạch đầu dòng"
+ * Các trụ cột nâng cấp chuyên sâu:
+ * 1. Khẩu lệnh dấu câu thực tế: "dấu chấm", "dấu phẩy", "xuống dòng", "dấu hỏi", "dấu than", "hai chấm", "ba chấm", "gạch đầu dòng"
  * 2. Tự động nhận diện ngữ điệu & câu hỏi tiếng Việt (phải không, đúng không, hả, sao, ở đâu...) -> ?
- * 3. Tự động chèn dấu ngắt câu, dấu phẩy theo liên từ và nhịp hơi
- * 4. Cơ chế dự phòng dấu 3 chấm (...) khi âm thanh bị nghẽn/chưa kịp nghe, đảm bảo tính liên tục, không đoán từ
- * 5. Chuẩn hóa chính tả & kiểu gõ tiếng Việt Unicode NFC
+ * 3. Chuẩn hóa số, ngày tháng, phần trăm theo chuẩn hành chính (Inverse Text Normalization - ITN)
+ * 4. Chuẩn hóa từ mượn tiếng Anh / thuật ngữ công sở (check mail, deadline, feedback, PO, VAT, OKR, KPI...)
+ * 5. Khử lỗi phát âm nói nhanh, dính chữ (thế lày -> thế này, lăng suất -> năng suất, khi lào -> khi nào...)
+ * 6. Cơ chế dự phòng dấu 3 chấm (...) khi âm thanh bị nghẽn/chưa kịp nghe, đảm bảo tính liên tục, không suy đoán từ
+ * 7. Chuẩn hóa chính tả & kiểu gõ tiếng Việt Unicode NFC
  */
 
-// Bảng ánh xạ khẩu lệnh đọc dấu câu tiếng Việt sang ký tự thực tế
+// 1. Bảng ánh xạ khẩu lệnh đọc dấu câu tiếng Việt sang ký tự thực tế
 const SPOKEN_PUNCTUATION_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Xuống dòng / Đoạn mới
   { pattern: /\b(xuống\s*dòng|ngắt\s*dòng|dòng\s*mới)\b/gi, replacement: '\n' },
@@ -28,6 +30,76 @@ const SPOKEN_PUNCTUATION_RULES: Array<{ pattern: RegExp; replacement: string }> 
   { pattern: /\b(mở\s*ngoặc\s*đơn|mở\s*ngoặc)\b/gi, replacement: ' (' },
   { pattern: /\b(đóng\s*ngoặc\s*đơn|đóng\s*ngoặc)\b/gi, replacement: ') ' },
   { pattern: /\b(phần\s*trăm)\b/gi, replacement: '%' }
+];
+
+// 2. Chuyển đổi từ mượn Tiếng Anh & Thuật ngữ điều hành doanh nghiệp khi người Việt phát âm
+const LOANWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  { pattern: /\b(chếch\s*meo|chếch\s*mail|check\s*meo)\b/gi, replacement: 'check mail' },
+  { pattern: /\b(đét\s*lai|đét\s*line|đết\s*lai)\b/gi, replacement: 'deadline' },
+  { pattern: /\b(phi\s*đơ\s*bách|phít\s*bách|phít\s*bắc|phít\s*back)\b/gi, replacement: 'feedback' },
+  { pattern: /\b(mít\s*ting|mít\s*tinh)\b/gi, replacement: 'meeting' },
+  { pattern: /\b(súp\s*pót|su\s*pót)\b/gi, replacement: 'support' },
+  { pattern: /\b(ấp\s*đết|áp\s*đết|úp\s*đết)\b/gi, replacement: 'update' },
+  { pattern: /\b(rì\s*pót|ri\s*pót)\b/gi, replacement: 'report' },
+  { pattern: /\b(sét\s*úp|xét\s*úp)\b/gi, replacement: 'setup' },
+  { pattern: /\b(bách\s*úp|bắc\s*úp)\b/gi, replacement: 'backup' },
+  { pattern: /\b(ki\s*bi\s*ai)\b/gi, replacement: 'KPI' },
+  { pattern: /\b(ô\s*ca\s*rờ)\b/gi, replacement: 'OKR' },
+  { pattern: /\b(pi\s*ô)\b/gi, replacement: 'PO' },
+  { pattern: /\b(vát\s*thuế|vê\s*a\s*tê)\b/gi, replacement: 'thuế VAT' },
+  { pattern: /\b(phai\s*đính\s*kèm|phay\s*đính\s*kèm)\b/gi, replacement: 'file đính kèm' },
+  { pattern: /\b(sét\s*tanh|xét\s*ting)\b/gi, replacement: 'setting' },
+  { pattern: /\b(xíp\s*hàng|xíp\s*pinh)\b/gi, replacement: 'ship hàng' }
+];
+
+// 3. Chuẩn hóa số đếm, phần trăm & thời gian theo chuẩn hành chính (ITN)
+const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]) => string) }> = [
+  // Phần trăm
+  { pattern: /\b(một\s*trăm|100)\s*phần\s*trăm\b/gi, replacement: '100%' },
+  { pattern: /\b(chín\s*mươi|90)\s*phần\s*trăm\b/gi, replacement: '90%' },
+  { pattern: /\b(tám\s*mươi|80)\s*phần\s*trăm\b/gi, replacement: '80%' },
+  { pattern: /\b(bảy\s*mươi|70)\s*phần\s*trăm\b/gi, replacement: '70%' },
+  { pattern: /\b(sáu\s*mươi|60)\s*phần\s*trăm\b/gi, replacement: '60%' },
+  { pattern: /\b(năm\s*mươi|50)\s*phần\s*trăm\b/gi, replacement: '50%' },
+  { pattern: /\b(bốn\s*mươi|40)\s*phần\s*trăm\b/gi, replacement: '40%' },
+  { pattern: /\b(ba\s*mươi|30)\s*phần\s*trăm\b/gi, replacement: '30%' },
+  { pattern: /\b(hai\s*(?:mươi\s*)?(?:lăm|nhăm)|25)\s*phần\s*trăm\b/gi, replacement: '25%' },
+  { pattern: /\b(hai\s*mươi|20)\s*phần\s*trăm\b/gi, replacement: '20%' },
+  { pattern: /\b(mười\s*(?:lăm|nhăm)|15)\s*phần\s*trăm\b/gi, replacement: '15%' },
+  { pattern: /\b(mười|10)\s*phần\s*trăm\b/gi, replacement: '10%' },
+  { pattern: /\b(năm|5)\s*phần\s*trăm\b/gi, replacement: '5%' },
+
+  // Thời gian giờ phút
+  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(30|ba\s*mươi)\s*(?:phút)?\b/gi, 
+    replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:30` },
+  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(15|mười\s*lăm)\s*(?:phút)?\b/gi, 
+    replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:15` },
+  { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(45|bốn\s*lăm)\s*(?:phút)?\b/gi, 
+    replacement: (_: any, h: string) => `${String(h).padStart(2, '0')}:45` },
+
+  // Bước 1, Bước 2...
+  { pattern: /\bbước\s*(?:một|1)\b/gi, replacement: 'Bước 1' },
+  { pattern: /\bbước\s*(?:hai|2)\b/gi, replacement: 'Bước 2' },
+  { pattern: /\bbước\s*(?:ba|3)\b/gi, replacement: 'Bước 3' },
+  { pattern: /\bbước\s*(?:bốn|4)\b/gi, replacement: 'Bước 4' },
+  { pattern: /\bbước\s*(?:năm|5)\b/gi, replacement: 'Bước 5' },
+  { pattern: /\bbước\s*(?:sáu|6)\b/gi, replacement: 'Bước 6' },
+  { pattern: /\bbước\s*(?:bảy|7)\b/gi, replacement: 'Bước 7' },
+  { pattern: /\bbước\s*(?:tám|8)\b/gi, replacement: 'Bước 8' },
+  { pattern: /\bbước\s*(?:chín|9)\b/gi, replacement: 'Bước 9' },
+  { pattern: /\bbước\s*(?:mười|10)\b/gi, replacement: 'Bước 10' }
+];
+
+// 4. Khử lỗi phát âm méo tiếng khi nói nhanh trong giao tiếp thực tế
+const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  { pattern: /\b(thế\s*này\s*này|thế\s*lày)\b/gi, replacement: 'thế này' },
+  { pattern: /\b(khi\s*lào)\b/gi, replacement: 'khi nào' },
+  { pattern: /\b(lăng\s*suất)\b/gi, replacement: 'năng suất' },
+  { pattern: /\b(lăng\s*lượng)\b/gi, replacement: 'năng lượng' },
+  { pattern: /\b(lói\s*chung)\b/gi, replacement: 'nói chung' },
+  { pattern: /\b(làm\s*chi)\b/gi, replacement: 'làm gì' },
+  { pattern: /\b(bây\s*chừ)\b/gi, replacement: 'bây giờ' },
+  { pattern: /\b(hôm\s*ni)\b/gi, replacement: 'hôm nay' }
 ];
 
 // Các từ kết thúc biểu thị câu hỏi trong văn nói tiếng Việt
@@ -54,6 +126,8 @@ const QUESTION_ENDINGS = [
  * Xử lý văn bản thô từ giọng nói theo thời gian thực:
  * - Chuẩn hóa Unicode NFC
  * - Chuyển đổi khẩu lệnh dấu câu
+ * - Áp dụng chuẩn hóa số đếm, phần trăm, giờ phút (ITN)
+ * - Khử lỗi phát âm nói nhanh và dịch chuẩn từ mượn
  * - Nhận diện câu hỏi tiếng Việt
  * - Chuẩn hóa khoảng cách xung quanh dấu câu
  */
@@ -69,7 +143,22 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // 3. Chuẩn hóa khoảng cách quanh dấu câu:
+  // 3. Chuẩn hóa từ mượn tiếng Anh công sở
+  for (const rule of LOANWORD_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
+
+  // 4. Chuẩn hóa số, ngày tháng, phần trăm (ITN)
+  for (const rule of ITN_RULES) {
+    text = text.replace(rule.pattern, rule.replacement as any);
+  }
+
+  // 5. Khử lỗi nói nhanh méo chữ
+  for (const rule of SPOKEN_COLLOQUIAL_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
+
+  // 6. Chuẩn hóa khoảng cách quanh dấu câu:
   // Không để khoảng trắng trước dấu câu: "xin chào ," -> "xin chào,"
   text = text.replace(/\s+([,.?!:;%])/g, '$1');
   // Phải có đúng 1 khoảng trắng sau dấu câu (nếu không phải là cuối chuỗi hoặc xuống dòng)
@@ -77,7 +166,7 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
   // Xử lý khoảng cách quanh dấu mở đóng ngoặc
   text = text.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
 
-  // 4. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
+  // 7. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
   if (isFinal) {
     const trimmed = text.trim();
     // Nếu chưa có dấu kết thúc câu (. ? ! ...)
@@ -99,7 +188,7 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     }
   }
 
-  // 5. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
+  // 8. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
   text = autoCapitalizeSentences(text);
 
   return text.trim();
