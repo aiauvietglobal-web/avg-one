@@ -250,33 +250,33 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Center: Phân hệ quản lý vận hành (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */}
+                {/* Center: Phân hệ quản lý vận hành (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) - Text Only, Elegant */}
                 <nav className="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3">
                   {[
-                    { id: 'system' as AppModuleId, label: 'Hệ Thống', icon: BarChart3 },
-                    { id: 'inside' as AppModuleId, label: 'Bảng Tin', icon: Newspaper },
-                    { id: 'calendar' as AppModuleId, label: 'Lịch', icon: Calendar },
-                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng', icon: FolderKanban },
+                    { id: 'system' as AppModuleId, label: 'Hệ Thống' },
+                    { id: 'inside' as AppModuleId, label: 'Bảng Tin' },
+                    { id: 'calendar' as AppModuleId, label: 'Lịch' },
+                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng' },
                   ].map((item) => {
-                    const Icon = item.icon;
                     return (
                       <button
                         key={item.id}
                         onClick={() => onSelectModule(item.id)}
-                        className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-orange-50/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group"
+                        className="relative px-3.5 sm:px-4 py-2 text-xs sm:text-[13px] font-extrabold tracking-wider uppercase text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] transition-all cursor-pointer group"
                       >
-                        <Icon className="w-4 h-4 text-[#F15A24] group-hover:scale-110 transition-transform" />
-                        <span className="tracking-wide uppercase">{item.label}</span>
+                        <span className="relative z-10 transition-transform duration-200 group-hover:scale-105 inline-block">{item.label}</span>
+                        {/* Underline hover indicator */}
+                        <span className="absolute bottom-1 left-3.5 right-3.5 h-[2px] bg-[#F15A24] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
                       </button>
                     );
                   })}
                 </nav>
 
-                {/* Right: SSO Profile / Login Button */}
+                {/* Right: SSO Profile / Phá cách Login Button */}
                 <div className="flex items-center gap-2 sm:gap-2.5">
                   <div className="relative">
                     {currentUser ? (
-                      /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn (Bỏ hộp đen & bỏ chữ) */
+                      /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn */
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
                         className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none"
@@ -285,13 +285,17 @@ export const AppShell: React.FC<AppShellProps> = ({
                         {currentUser.name.charAt(0)}
                       </button>
                     ) : (
-                      /* Chưa đăng nhập: Hộp màu cam, Chữ Đăng nhập, BỎ MŨI TÊN theo chỉ định */
+                      /* Chưa đăng nhập: Nút Đăng nhập thiết kế phá cách & đẳng cấp */
                       <button
                         onClick={() => setIsLoginModalOpen(true)}
-                        className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] active:scale-95 text-white font-extrabold text-xs sm:text-[13px] rounded-xl transition shadow-sm border border-[#F15A24] cursor-pointer"
+                        className="relative group overflow-hidden px-5 sm:px-6 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-[13px] tracking-wide text-white transition-all duration-300 transform active:scale-95 shadow-md hover:shadow-orange-500/35 hover:-translate-y-0.5 cursor-pointer bg-gradient-to-r from-[#F15A24] via-[#FF7043] to-[#F15A24] bg-[length:200%_auto] hover:bg-right border border-white/20"
                         title="Đăng nhập tài khoản AVG One"
                       >
-                        <span>Đăng nhập</span>
+                        {/* Hiệu ứng tia sáng quét qua phá cách (Shimmer) */}
+                        <span className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-[-25deg] group-hover:left-[200%] transition-all duration-1000 ease-out pointer-events-none" />
+                        <span className="relative z-10 flex items-center gap-1.5 font-black uppercase tracking-wider">
+                          Đăng nhập
+                        </span>
                       </button>
                     )}
 
@@ -369,27 +373,25 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Center: Operation Modules Quick Switch (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */}
+                {/* Center: Operation Modules Quick Switch (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) - Text Only */}
                 <nav className="hidden md:flex items-center gap-1 lg:gap-2">
                   {[
-                    { id: 'system' as AppModuleId, label: 'Hệ Thống', icon: BarChart3 },
-                    { id: 'inside' as AppModuleId, label: 'Bảng Tin', icon: Newspaper },
-                    { id: 'calendar' as AppModuleId, label: 'Lịch', icon: Calendar },
-                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng', icon: FolderKanban },
+                    { id: 'system' as AppModuleId, label: 'Hệ Thống' },
+                    { id: 'inside' as AppModuleId, label: 'Bảng Tin' },
+                    { id: 'calendar' as AppModuleId, label: 'Lịch' },
+                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng' },
                   ].map((item) => {
-                    const Icon = item.icon;
                     const isActive = activeModule === item.id;
                     return (
                       <button
                         key={item.id}
                         onClick={() => onSelectModule(item.id)}
-                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                           isActive
-                            ? 'text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 shadow-xs'
+                            ? 'text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 shadow-xs font-black'
                             : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
-                        <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#F15A24]' : 'text-slate-400 group-hover:text-[#F15A24]'}`} />
                         <span className="tracking-wide uppercase text-[11px] sm:text-xs">{item.label}</span>
                       </button>
                     );
