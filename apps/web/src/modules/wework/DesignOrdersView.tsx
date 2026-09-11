@@ -3,7 +3,7 @@ import {
   Palette, Sparkles, Plus, Clock, CheckCircle2, AlertCircle,
   Eye, Download, Layers, Box, Cpu, FileImage, User, Calendar,
   ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck, Tag,
-  Search
+  Search, RefreshCw, ExternalLink, Filter
 } from 'lucide-react';
 
 export interface DesignOrder {
@@ -186,10 +186,13 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
 export const DesignOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<DesignOrder[]>(INITIAL_DESIGN_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [filterPriority, setFilterPriority] = useState<string>('ALL');
+  const [filterCategory, setFilterCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<DesignOrder | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [commentInput, setCommentInput] = useState('');
+  const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString('vi-VN'));
+  const [dispatchToast, setDispatchToast] = useState<string | null>(null);
 
   // New Order Form state
   const [formCode, setFormCode] = useState(`TK-2026-${Math.floor(305 + Math.random() * 50)}`);
@@ -210,26 +213,20 @@ export const DesignOrdersView: React.FC = () => {
     };
   }, [orders]);
 
-  const STAGE_TABS = [
-    { id: 'ALL', label: 'Tất Cả Giai Đoạn' },
-    { id: 'CONCEPT', label: '1. Ý Tưởng & Moodboard' },
-    { id: 'MODELING_3D', label: '2. Dựng Hình 3D & CAD' },
-    { id: 'CMF_COLOR', label: '3. Phối Màu & CMF' },
-    { id: 'APPROVAL_RENDER', label: '4. Duyệt Mẫu Render' },
-    { id: 'RELEASE_CAD', label: '5. Bàn Giao Bản Vẽ' }
-  ];
-
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
       const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const matchCategory = filterCategory === 'ALL' || o.category === filterCategory;
+      const matchPriority = filterPriority === 'ALL' || o.priority === filterPriority;
       const q = searchQuery.toLowerCase().trim();
       const matchQuery = !q ||
         o.title.toLowerCase().includes(q) ||
         o.code.toLowerCase().includes(q) ||
-        o.designer.name.toLowerCase().includes(q);
-      return matchStage && matchQuery;
+        o.designer.name.toLowerCase().includes(q) ||
+        o.description.toLowerCase().includes(q);
+      return matchStage && matchCategory && matchPriority && matchQuery;
     });
-  }, [orders, activeStageFilter, searchQuery]);
+  }, [orders, activeStageFilter, filterCategory, filterPriority, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,7 +250,7 @@ export const DesignOrdersView: React.FC = () => {
       priority: formPriority,
       software: ['SolidWorks 2026', 'KeyShot 11'],
       designer: {
-        name: formDesigner,
+        name: formDesigner || 'Trần Minh Trí',
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
         role: 'Designer R&D'
       },
@@ -266,19 +263,28 @@ export const DesignOrdersView: React.FC = () => {
         colorCode: 'Cam AVG #F15A24 / Xám',
         fileFormat: 'STEP, SLDPRT, PDF'
       },
-      description: formDesc.trim(),
+      description: formDesc.trim() || 'Dự án nghiên cứu tạo mẫu kiểu dáng công nghiệp theo chỉ đạo AVG One.',
       tasks: [
         { id: `t-${Date.now()}-1`, text: 'Khảo sát đề bài thiết kế', done: true },
         { id: `t-${Date.now()}-2`, text: 'Lên phương án layout 3D', done: false }
       ],
-      comments: []
+      comments: [
+        {
+          id: `c-${Date.now()}-1`,
+          author: 'Ban Giám Đốc (CEO)',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+          time: 'Vừa xong',
+          text: `Đã phê duyệt khởi tạo đơn hàng thiết kế ${formCode}. Yêu cầu hoàn thành đúng tiến độ!`
+        }
+      ]
     };
 
     setOrders([newOrder, ...orders]);
-    setShowCreateModal(false);
     setFormTitle('');
     setFormDesc('');
-    setFormCode(`TK-2026-${Math.floor(350 + Math.random() * 50)}`);
+    const nextCode = `TK-2026-${Math.floor(350 + Math.random() * 50)}`;
+    setFormCode(nextCode);
+    setDispatchToast(`✨ Đã khởi tạo thành công đơn hàng thiết kế: ${newOrder.code} - "${newOrder.title}"!`);
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -320,141 +326,255 @@ export const DesignOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 w-full animate-fadeIn pb-8">
-      {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
-      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden space-y-4">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
-          {/* Cột trái: Badge, Title & Button */}
-          <div className="space-y-3">
-            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                <defs>
-                  <linearGradient id="design-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#0284C7" />
-                    <stop offset="50%" stopColor="#8B5CF6" />
-                    <stop offset="100%" stopColor="#F15A24" />
-                  </linearGradient>
-                </defs>
-                <rect
-                  x="1"
-                  y="1"
-                  width="calc(100% - 2px)"
-                  height="calc(100% - 2px)"
-                  rx="8"
-                  ry="8"
-                  fill="none"
-                  stroke="url(#design-banner-border)"
-                  strokeWidth="1.5"
-                  className="animate-slogan-box-border"
-                />
-              </svg>
-              <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                <Palette className="w-3.5 h-3.5 text-[#F15A24]" />
-                <span>AVG DESIGN HUB • THIẾT KẾ R&D (3.2)</span>
-              </div>
+    <div className="space-y-6 animate-fadeIn pb-8">
+      {/* 🔮 Header & Live Sync Banner - Đồng Bộ Phong Cách Thông Điệp Điều Hành */}
+      <div className="bg-gradient-to-r from-[#011E30] via-[#022B45] to-[#011422] p-6 rounded-3xl border border-orange-500/30 text-white shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5">
+              <Palette className="w-6 h-6 text-[#F15A24] animate-pulse" />
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase">
+                QUẢN LÝ ĐƠN HÀNG THIẾT KẾ AVG ONE (3.2)
+              </h2>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2">
-                <span>QUẢN LÝ ĐƠN HÀNG</span>
-                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                  <span className="relative z-10">THIẾT KẾ</span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                  </svg>
-                </span>
-              </h1>
-
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl shadow-sm hover:shadow-md transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Tạo Đơn Hàng Mới
-              </button>
-            </div>
+            <p className="text-xs text-sky-200/80 font-medium">
+              Đồng bộ dữ liệu thời gian thực 24/7 quy trình thiết kế 3D/CAD, phối màu CMF và chuyển giao bản vẽ kỹ thuật R&D
+            </p>
           </div>
 
-          {/* Cột phải: 4 Thẻ KPI Tinh Gọn (Mini Cards) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 xl:border-l xl:border-slate-200 dark:xl:border-slate-800 xl:pl-5">
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
-                <Layers className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Tổng đơn</div>
-                <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">{stats.total}</div>
-              </div>
-            </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => {
+                setLastSyncTime(new Date().toLocaleTimeString('vi-VN'));
+                setDispatchToast('🔄 Đã làm mới và đồng bộ 100% dữ liệu đơn hàng Thiết Kế!');
+              }}
+              className="px-4 py-2 bg-sky-950/80 hover:bg-sky-900 border border-cyan-400/40 text-cyan-300 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Tải Lại (Sync Live)</span>
+            </button>
 
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-[#0284C7] shrink-0">
-                <Box className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Dựng 3D/CAD</div>
-                <div className="text-lg font-black text-sky-600 dark:text-sky-400 leading-tight">{stats.in3D}</div>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 shrink-0">
-                <FileImage className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Duyệt CMF</div>
-                <div className="text-lg font-black text-purple-600 dark:text-purple-400 leading-tight">{stats.inReview}</div>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
-                <CheckCircle2 className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Bàn giao</div>
-                <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">{stats.completed}</div>
-              </div>
-            </div>
+            <a
+              href="https://drive.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Mở Kho CAD / 3D Gốc</span>
+            </a>
           </div>
         </div>
 
-        {/* Thanh Tích Hợp: Giai Đoạn (Pipeline Tabs) + Tìm Kiếm Nhanh */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-            {STAGE_TABS.map(stage => {
-              const count = stage.id === 'ALL' ? orders.length : orders.filter(o => o.stage === stage.id).length;
-              return (
-                <button
-                  key={stage.id}
-                  onClick={() => setActiveStageFilter(stage.id)}
-                  className={`px-3 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
-                    activeStageFilter === stage.id
-                      ? 'bg-[#F15A24] text-white shadow-xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#F15A24]'
-                  }`}
-                >
-                  <span>{stage.label}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
-                    activeStageFilter === stage.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+        {/* Stats Counter Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <div className="bg-[#021729]/80 border border-orange-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-orange-400">Tổng Đơn Thiết Kế</div>
+            <div className="text-2xl font-black text-orange-300 mt-0.5">{stats.total}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-cyan-500/30 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-sky-300">Dựng 3D / CAD</div>
+            <div className="text-2xl font-black text-sky-200 mt-0.5">{stats.in3D}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-purple-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-purple-400">Duyệt Mẫu CMF</div>
+            <div className="text-2xl font-black text-purple-300 mt-0.5">{stats.inReview}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-emerald-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-emerald-400">Đã Bàn Giao CAD</div>
+            <div className="text-2xl font-black text-emerald-300 mt-0.5">{stats.completed}</div>
+          </div>
+        </div>
+
+        {lastSyncTime && (
+          <div className="text-[11px] text-sky-300/70 font-mono text-right">
+            Lần cập nhật gần nhất: {lastSyncTime}
+          </div>
+        )}
+      </div>
+
+      {/* 🚀 Dispatcher Form Card - Ban Hành & Khởi Tạo Đơn Hàng Mới */}
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <Send className="w-5 h-5 text-[#F15A24]" />
+            <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
+              Khởi Tạo Đơn Hàng Thiết Kế & Bản Vẽ Mới
+            </h3>
+          </div>
+          <span className="text-xs text-slate-400 font-medium">Quyền hạn: Thiết Kế & R&D (3.2 / Design Lead)</span>
+        </div>
+
+        {dispatchToast && (
+          <div className="p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
+            <span>{dispatchToast}</span>
+            <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
+          </div>
+        )}
+
+        <form onSubmit={handleCreateOrder} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Mã Đơn Hàng
+              </label>
+              <input
+                type="text"
+                value={formCode}
+                onChange={(e) => setFormCode(e.target.value)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Designer Phụ Trách
+              </label>
+              <input
+                type="text"
+                value={formDesigner}
+                onChange={(e) => setFormDesigner(e.target.value)}
+                placeholder="VD: Trần Minh Trí..."
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Phân Loại Thiết Kế
+              </label>
+              <select
+                value={formCategory}
+                onChange={(e) => setFormCategory(e.target.value as any)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+              >
+                <option value="3D_MODEL">Kiểu dáng 3D Công nghiệp</option>
+                <option value="PACKAGING_CMF">Bao bì & CMF</option>
+                <option value="MOLD_DESIGN">Khuôn mẫu nhựa</option>
+                <option value="BRAND_IDENTITY">Catalog & HDSD</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Mức Độ Ưu Tiên
+              </label>
+              <select
+                value={formPriority}
+                onChange={(e) => setFormPriority(e.target.value as any)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+              >
+                <option value="URGENT">🟠 Khẩn Cấp (High)</option>
+                <option value="HIGH">🟡 Ưu Tiên Cao (Medium)</option>
+                <option value="NORMAL">🟢 Bình Thường (Normal)</option>
+              </select>
+            </div>
           </div>
 
-          <div className="relative w-full md:w-60 shrink-0">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Tiêu Đề Thiết Kế / Tóm Tắt Yêu Cầu
+            </label>
             <input
               type="text"
-              placeholder="Tìm mã, tên thiết kế..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F15A24] font-medium"
+              value={formTitle}
+              onChange={(e) => setFormTitle(e.target.value)}
+              placeholder="Nhập tiêu đề hoặc tóm tắt yêu cầu thiết kế kiểu dáng..."
+              required
+              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
             />
           </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Yêu Cầu Kỹ Thuật Chi Tiết & Quy Cách 3D / CMF
+            </label>
+            <textarea
+              rows={3}
+              value={formDesc}
+              onChange={(e) => setFormDesc(e.target.value)}
+              placeholder="Nhập chi tiết yêu cầu vật liệu, kích thước, định dạng file STEP/CAD, tone màu Pantone..."
+              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="px-5 py-2.5 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 cursor-pointer transition"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Khởi Tạo Đơn Hàng Thiết Kế</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* 🔍 Search & Filters Bar - Đồng Bộ Bố Cục Thông Điệp Điều Hành */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-72">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Tìm kiếm nội dung, mã đơn, designer..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-3.5 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 shadow-xs font-medium"
+          />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
+            <Filter className="w-3.5 h-3.5" />
+            <span>Lọc:</span>
+          </div>
+
+          <select
+            value={activeStageFilter}
+            onChange={(e) => setActiveStageFilter(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả giai đoạn</option>
+            <option value="CONCEPT">1. Ý Tưởng & Moodboard</option>
+            <option value="MODELING_3D">2. Dựng Hình 3D & CAD</option>
+            <option value="CMF_COLOR">3. Phối Màu & CMF</option>
+            <option value="APPROVAL_RENDER">4. Duyệt Mẫu Render</option>
+            <option value="RELEASE_CAD">5. Bàn Giao Bản Vẽ</option>
+          </select>
+
+          <select
+            value={filterPriority}
+            onChange={(e) => setFilterPriority(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả mức ưu tiên</option>
+            <option value="URGENT">Khẩn cấp</option>
+            <option value="HIGH">Ưu tiên cao</option>
+            <option value="NORMAL">Bình thường</option>
+          </select>
+
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả phân loại</option>
+            <option value="3D_MODEL">Kiểu dáng 3D</option>
+            <option value="PACKAGING_CMF">Bao bì & CMF</option>
+            <option value="MOLD_DESIGN">Khuôn mẫu nhựa</option>
+            <option value="BRAND_IDENTITY">Catalog & HDSD</option>
+          </select>
+        </div>
+      </div>
+
+      {/* 📋 Section Title: Danh Sách Đơn Hàng Thiết Kế */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>Danh Sách Đơn Hàng Thiết Kế</span>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            {filteredOrders.length} / {orders.length}
+          </span>
+        </h3>
       </div>
 
       {/* 🎨 DANH SÁCH THẺ DỰ ÁN THIẾT KẾ (MỞ RỘNG TOÀN DIỆN) */}
@@ -731,117 +851,6 @@ export const DesignOrdersView: React.FC = () => {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 📝 MODAL TẠO ĐƠN THIẾT KẾ MỚI */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-[24px] shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-5 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Palette className="w-5 h-5 text-[#F15A24]" />
-                Tạo Đơn Hàng Thiết Kế R&D Mới
-              </h3>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateOrder} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mã Đơn Thiết Kế</label>
-                  <input
-                    type="text"
-                    value={formCode}
-                    onChange={e => setFormCode(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-black text-[#F15A24]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Loại Thiết Kế</label>
-                  <select
-                    value={formCategory}
-                    onChange={e => setFormCategory(e.target.value as any)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  >
-                    <option value="3D_MODEL">Kiểu dáng 3D Công nghiệp</option>
-                    <option value="PACKAGING_CMF">Bao bì & CMF</option>
-                    <option value="MOLD_DESIGN">Khuôn mẫu nhựa</option>
-                    <option value="BRAND_IDENTITY">Catalog & HDSD</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Tên Đơn Hàng Thiết Kế</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ví dụ: Thiết kế kiểu dáng vỏ nhôm Anodized cho..."
-                  value={formTitle}
-                  onChange={e => setFormTitle(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Nhà Thiết Kế Phụ Trách</label>
-                  <select
-                    value={formDesigner}
-                    onChange={e => setFormDesigner(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  >
-                    <option value="Trần Minh Trí">Trần Minh Trí (3D Senior)</option>
-                    <option value="Lê Thảo Vy">Lê Thảo Vy (Packaging)</option>
-                    <option value="Vũ Hải Đăng">Vũ Hải Đăng (Mold Engineer)</option>
-                    <option value="Nguyễn Bích Ngọc">Nguyễn Bích Ngọc (Brand)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Hạn Bàn Giao Mẫu</label>
-                  <input
-                    type="text"
-                    value={formDueDate}
-                    onChange={e => setFormDueDate(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mô Tả Yêu Cầu Thiết Kế</label>
-                <textarea
-                  rows={3}
-                  placeholder="Mô tả phong cách thiết kế, kích thước sơ bộ, tiêu chuẩn kháng nước/kháng bụi..."
-                  value={formDesc}
-                  onChange={e => setFormDesc(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-extrabold text-slate-600 dark:text-slate-300 hover:bg-slate-50"
-                >
-                  Hủy Bỏ
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl shadow-md cursor-pointer transition"
-                >
-                  Lưu & Khởi Tạo Thiết Kế
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}

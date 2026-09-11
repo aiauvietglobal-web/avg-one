@@ -4,7 +4,7 @@ import {
   Layers, FlaskConical, Gauge, FileCode, User, Calendar,
   ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck,
   Zap, Microchip, Thermometer, BatteryCharging, FileSpreadsheet,
-  Search
+  Search, RefreshCw, ExternalLink, Filter, Flame
 } from 'lucide-react';
 
 export interface ResearchOrder {
@@ -190,11 +190,14 @@ const INITIAL_RESEARCH_ORDERS: ResearchOrder[] = [
 export const ResearchOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<ResearchOrder[]>(INITIAL_RESEARCH_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [filterCategory, setFilterCategory] = useState<string>('ALL');
+  const [filterVersion, setFilterVersion] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<ResearchOrder | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [newLogNote, setNewLogNote] = useState('');
   const [commentInput, setCommentInput] = useState('');
+  const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString('vi-VN'));
+  const [dispatchToast, setDispatchToast] = useState<string | null>(null);
 
   // Form state for creating new research order
   const [formCode, setFormCode] = useState(`NC-2026-${Math.floor(105 + Math.random() * 50)}`);
@@ -210,32 +213,26 @@ export const ResearchOrdersView: React.FC = () => {
     return {
       total: orders.length,
       sampleH1: orders.filter(o => o.stage === 'SAMPLE_H1' || o.category === 'SAMPLE_H1').length,
-      labTesting: orders.filter(o => o.stage === 'LAB_TEST' || o.stage === 'PCB_SCHEMATIC').length,
+      inTesting: orders.filter(o => o.stage === 'LAB_TEST' || o.stage === 'PCB_SCHEMATIC' || o.stage === 'SAMPLE_H1').length,
       goldenReleased: orders.filter(o => o.stage === 'GOLDEN_RELEASE' || o.progress === 100).length
     };
   }, [orders]);
 
-  const STAGE_TABS = [
-    { id: 'ALL', label: 'Tất Cả Đề Tài' },
-    { id: 'FEASIBILITY', label: '1. Nghiên Cứu Khả Thi' },
-    { id: 'PCB_SCHEMATIC', label: '2. Thiết Kế Mạch PCB' },
-    { id: 'SAMPLE_H1', label: '3. Chế Tạo Mẫu H1' },
-    { id: 'LAB_TEST', label: '4. Đo Kiểm Lab Test' },
-    { id: 'GOLDEN_RELEASE', label: '5. Golden Sample Nghiệm Thu' }
-  ];
-
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
       const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const matchCategory = filterCategory === 'ALL' || o.category === filterCategory;
+      const matchVersion = filterVersion === 'ALL' || o.h1Version.includes(filterVersion);
       const q = searchQuery.toLowerCase().trim();
       const matchQuery = !q ||
         o.title.toLowerCase().includes(q) ||
         o.code.toLowerCase().includes(q) ||
         o.h1Version.toLowerCase().includes(q) ||
-        o.leadEngineer.name.toLowerCase().includes(q);
-      return matchStage && matchQuery;
+        o.leadEngineer.name.toLowerCase().includes(q) ||
+        o.description.toLowerCase().includes(q);
+      return matchStage && matchCategory && matchVersion && matchQuery;
     });
-  }, [orders, activeStageFilter, searchQuery]);
+  }, [orders, activeStageFilter, filterCategory, filterVersion, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -259,7 +256,7 @@ export const ResearchOrdersView: React.FC = () => {
       priority: 'HIGH',
       h1Version: formVersion.trim() || 'H1-v1.0',
       leadEngineer: {
-        name: formLead,
+        name: formLead || 'TS. Hoàng Đăng Khoa',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
         role: 'R&D Lead'
       },
@@ -271,7 +268,7 @@ export const ResearchOrdersView: React.FC = () => {
         accuracy: 'Đang kiểm nghiệm',
         passRate: 'Đang đo kiểm'
       },
-      description: formDesc.trim(),
+      description: formDesc.trim() || 'Đề tài nghiên cứu ứng dụng công nghệ lõi và thử nghiệm linh kiện H1 AVG.',
       labLogs: [
         { time: 'Vừa tạo', note: 'Khởi tạo đề tài nghiên cứu và lập danh mục linh kiện BOM.', status: 'INFO' }
       ],
@@ -279,22 +276,31 @@ export const ResearchOrdersView: React.FC = () => {
         { id: `t-${Date.now()}-1`, text: 'Khảo sát linh kiện bán dẫn và vi xử lý', done: true },
         { id: `t-${Date.now()}-2`, text: 'Thiết kế nguyên lý bo mạch H1', done: false }
       ],
-      comments: []
+      comments: [
+        {
+          id: `c-${Date.now()}-1`,
+          author: 'Ban Giám Đốc (CEO)',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+          time: 'Vừa xong',
+          text: `Đã phê duyệt khởi tạo đề tài nghiên cứu ${formCode}. Yêu cầu tập trung kiểm thử mẫu H1 đúng quy chuẩn!`
+        }
+      ]
     };
 
     setOrders([newOrder, ...orders]);
-    setShowCreateModal(false);
     setFormTitle('');
     setFormDesc('');
-    setFormCode(`NC-2026-${Math.floor(150 + Math.random() * 50)}`);
+    const nextCode = `NC-2026-${Math.floor(150 + Math.random() * 50)}`;
+    setFormCode(nextCode);
+    setDispatchToast(`✨ Đã khởi tạo thành công đề tài nghiên cứu: ${newOrder.code} - "${newOrder.title}"!`);
   };
 
   const handleAddLabLog = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newLogNote.trim() || !selectedOrder) return;
 
-    const nowStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }) + ' ' +
-                   new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    const now = new Date();
+    const nowStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} Hôm nay`;
 
     const newEntry = {
       time: nowStr,
@@ -350,141 +356,253 @@ export const ResearchOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 w-full animate-fadeIn pb-8">
-      {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
-      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden space-y-4">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
-          {/* Cột trái: Badge, Title & Button */}
-          <div className="space-y-3">
-            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                <defs>
-                  <linearGradient id="research-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#0284C7" />
-                    <stop offset="50%" stopColor="#00A8E8" />
-                    <stop offset="100%" stopColor="#F15A24" />
-                  </linearGradient>
-                </defs>
-                <rect
-                  x="1"
-                  y="1"
-                  width="calc(100% - 2px)"
-                  height="calc(100% - 2px)"
-                  rx="8"
-                  ry="8"
-                  fill="none"
-                  stroke="url(#research-banner-border)"
-                  strokeWidth="1.5"
-                  className="animate-slogan-box-border"
-                />
-              </svg>
-              <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                <Cpu className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span>AVG RDI LAB • NGHIÊN CỨU & PHÁT TRIỂN (3.1)</span>
-              </div>
+    <div className="space-y-6 animate-fadeIn pb-8">
+      {/* 🔮 Header & Live Sync Banner - Đồng Bộ Phong Cách Thông Điệp Điều Hành */}
+      <div className="bg-gradient-to-r from-[#011E30] via-[#022B45] to-[#011422] p-6 rounded-3xl border border-cyan-500/30 text-white shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5">
+              <Cpu className="w-6 h-6 text-[#00E5FF] animate-pulse" />
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase">
+                QUẢN LÝ ĐƠN HÀNG NGHIÊN CỨU & RDI AVG ONE (3.1)
+              </h2>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2">
-                <span>QUẢN LÝ ĐƠN HÀNG</span>
-                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#0284C7] to-cyan-500">
-                  <span className="relative z-10">NGHIÊN CỨU</span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                  </svg>
-                </span>
-              </h1>
-
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 bg-[#0284C7] hover:bg-[#0369a1] text-white font-extrabold rounded-xl shadow-sm hover:shadow-md transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Khởi Tạo Đề Tài Mới
-              </button>
-            </div>
+            <p className="text-xs text-sky-200/80 font-medium">
+              Đồng bộ dữ liệu thời gian thực 24/7 tiến độ chế tạo mẫu H1, đo kiểm phòng Lab, nạp Firmware và nghiệm thu Golden Sample
+            </p>
           </div>
 
-          {/* Cột phải: 4 Thẻ KPI Tinh Gọn */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 xl:border-l xl:border-slate-200 dark:xl:border-slate-800 xl:pl-5">
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-[#0284C7] shrink-0">
-                <FlaskConical className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Đề tài R&D</div>
-                <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">{stats.total}</div>
-              </div>
-            </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => {
+                setLastSyncTime(new Date().toLocaleTimeString('vi-VN'));
+                setDispatchToast('🔄 Đã làm mới và đồng bộ 100% dữ liệu nghiên cứu phòng Lab!');
+              }}
+              className="px-4 py-2 bg-sky-950/80 hover:bg-sky-900 border border-cyan-400/40 text-cyan-300 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Tải Lại (Sync Live)</span>
+            </button>
 
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
-                <Flame className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Thử nghiệm H1</div>
-                <div className="text-lg font-black text-[#F15A24] leading-tight">{stats.inTesting}</div>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
-                <Gauge className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Đo kiểm Pass</div>
-                <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">98.6%</div>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 shrink-0">
-                <CheckCircle2 className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Golden Sample</div>
-                <div className="text-lg font-black text-purple-600 dark:text-purple-400 leading-tight">{stats.goldenReleased}</div>
-              </div>
-            </div>
+            <a
+              href="https://drive.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-[#0284C7] hover:bg-sky-600 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Mở Nhật Ký Lab Gốc</span>
+            </a>
           </div>
         </div>
 
-        {/* Thanh Tích Hợp: Giai Đoạn (Pipeline Tabs) + Tìm Kiếm Nhanh */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-            {STAGE_TABS.map(stage => {
-              const count = stage.id === 'ALL' ? orders.length : orders.filter(o => o.stage === stage.id).length;
-              return (
-                <button
-                  key={stage.id}
-                  onClick={() => setActiveStageFilter(stage.id)}
-                  className={`px-3 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
-                    activeStageFilter === stage.id
-                      ? 'bg-[#0284C7] text-white shadow-xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#0284C7]'
-                  }`}
-                >
-                  <span>{stage.label}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
-                    activeStageFilter === stage.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+        {/* Stats Counter Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <div className="bg-[#021729]/80 border border-cyan-500/30 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-sky-300">Tổng Đề Tài R&D</div>
+            <div className="text-2xl font-black text-white mt-0.5">{stats.total}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-orange-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-orange-400">Thử Nghiệm H1</div>
+            <div className="text-2xl font-black text-orange-300 mt-0.5">{stats.inTesting}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-emerald-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-emerald-400">Đo Kiểm Pass</div>
+            <div className="text-2xl font-black text-emerald-300 mt-0.5">98.6%</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-purple-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-purple-400">Golden Sample</div>
+            <div className="text-2xl font-black text-purple-300 mt-0.5">{stats.goldenReleased}</div>
+          </div>
+        </div>
+
+        {lastSyncTime && (
+          <div className="text-[11px] text-sky-300/70 font-mono text-right">
+            Lần cập nhật gần nhất: {lastSyncTime}
+          </div>
+        )}
+      </div>
+
+      {/* 🚀 Dispatcher Form Card - Khởi Tạo Đề Tài Mới */}
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <Send className="w-5 h-5 text-[#0284C7]" />
+            <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
+              Khởi Tạo Đề Tài Nghiên Cứu & Chế Tạo Mẫu H1 Mới
+            </h3>
+          </div>
+          <span className="text-xs text-slate-400 font-medium">Quyền hạn: Ban R&D & Phòng Lab (3.1 / Lead)</span>
+        </div>
+
+        {dispatchToast && (
+          <div className="p-3.5 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-[#0284C7] dark:text-sky-300 text-xs font-bold flex items-center justify-between">
+            <span>{dispatchToast}</span>
+            <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
+          </div>
+        )}
+
+        <form onSubmit={handleCreateOrder} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Mã Đề Tài
+              </label>
+              <input
+                type="text"
+                value={formCode}
+                onChange={(e) => setFormCode(e.target.value)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Kỹ Sư Phụ Trách
+              </label>
+              <input
+                type="text"
+                value={formLead}
+                onChange={(e) => setFormLead(e.target.value)}
+                placeholder="VD: TS. Hoàng Đăng Khoa..."
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Lĩnh Vực R&D
+              </label>
+              <select
+                value={formCategory}
+                onChange={(e) => setFormCategory(e.target.value as any)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 font-bold"
+              >
+                <option value="SAMPLE_H1">Chế tạo Mẫu H1</option>
+                <option value="FIRMWARE_AI">Thuật toán & Firmware AI</option>
+                <option value="HARDWARE_PCB">Phần cứng & Bo mạch</option>
+                <option value="STRESS_TEST">Đo Kiểm & Thử Nghiệm</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Phiên Bản Mẫu H1
+              </label>
+              <input
+                type="text"
+                value={formVersion}
+                onChange={(e) => setFormVersion(e.target.value)}
+                placeholder="VD: Prototype H1-v1.0"
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 font-bold"
+              />
+            </div>
           </div>
 
-          <div className="relative w-full md:w-60 shrink-0">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Tiêu Đề Đề Tài / Mục Tiêu Nghiên Cứu
+            </label>
             <input
               type="text"
-              placeholder="Tìm mã, đề tài, mẫu H1..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0284C7] font-medium"
+              value={formTitle}
+              onChange={(e) => setFormTitle(e.target.value)}
+              placeholder="Nhập tiêu đề hoặc mục tiêu nghiên cứu, chế tạo bo mạch..."
+              required
+              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 font-medium"
             />
           </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Thông Số Kỹ Thuật Chi Tiết & Quy Trình Thử Nghiệm Lab
+            </label>
+            <textarea
+              rows={3}
+              value={formDesc}
+              onChange={(e) => setFormDesc(e.target.value)}
+              placeholder="Nhập chi tiết yêu cầu điện áp, dải nhiệt độ, sai số, phương pháp kiểm tra đo kiểm phòng Lab..."
+              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 font-medium"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="px-5 py-2.5 bg-[#0284C7] hover:bg-sky-600 text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 cursor-pointer transition"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Khởi Tạo Đề Tài Nghiên Cứu</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* 🔍 Search & Filters Bar - Đồng Bộ Bố Cục Thông Điệp Điều Hành */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-72">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Tìm kiếm mã, đề tài, mẫu H1, kỹ sư..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-3.5 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/40 shadow-xs font-medium"
+          />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
+            <Filter className="w-3.5 h-3.5" />
+            <span>Lọc:</span>
+          </div>
+
+          <select
+            value={activeStageFilter}
+            onChange={(e) => setActiveStageFilter(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả giai đoạn</option>
+            <option value="FEASIBILITY">1. Nghiên Cứu Khả Thi</option>
+            <option value="PCB_SCHEMATIC">2. Thiết Kế Bo Mạch PCB</option>
+            <option value="SAMPLE_H1">3. Chế Tạo Mẫu H1</option>
+            <option value="LAB_TEST">4. Đo Kiểm Lab Test</option>
+            <option value="GOLDEN_RELEASE">5. Golden Sample</option>
+          </select>
+
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả lĩnh vực</option>
+            <option value="SAMPLE_H1">Chế tạo Mẫu H1</option>
+            <option value="FIRMWARE_AI">Thuật toán & AI</option>
+            <option value="HARDWARE_PCB">Bo mạch & Phần cứng</option>
+            <option value="STRESS_TEST">Đo kiểm & Stress Test</option>
+          </select>
+
+          <select
+            value={filterVersion}
+            onChange={(e) => setFilterVersion(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả mẫu H1</option>
+            <option value="H1">Hệ Mẫu H1</option>
+            <option value="Golden">Golden Sample</option>
+            <option value="Beta">Bản thử nghiệm Beta</option>
+          </select>
+        </div>
+      </div>
+
+      {/* 📋 Section Title: Danh Sách Đề Tài Nghiên Cứu */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>Danh Sách Đề Tài Nghiên Cứu R&D</span>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            {filteredOrders.length} / {orders.length}
+          </span>
+        </h3>
       </div>
 
       {/* 🔬 DANH SÁCH THẺ ĐƠN HÀNG NGHIÊN CỨU (MỞ RỘNG TOÀN DIỆN) */}
@@ -807,117 +925,6 @@ export const ResearchOrdersView: React.FC = () => {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 📝 MODAL TẠO ĐƠN NGHIÊN CỨU MỚI */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-[24px] shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-5 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Cpu className="w-5 h-5 text-[#0284C7]" />
-                Khởi Tạo Đơn Nghiên Cứu & Phát Triển (3.1 - RDI)
-              </h3>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateOrder} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mã Đơn Nghiên Cứu</label>
-                  <input
-                    type="text"
-                    value={formCode}
-                    onChange={e => setFormCode(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-black text-[#0284C7]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mục Tiêu RDI</label>
-                  <select
-                    value={formCategory}
-                    onChange={e => setFormCategory(e.target.value as any)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  >
-                    <option value="SAMPLE_H1">Chế tạo Mẫu H1</option>
-                    <option value="FIRMWARE_AI">Thuật toán & Firmware</option>
-                    <option value="HARDWARE_PCB">Phần cứng & Bo mạch</option>
-                    <option value="STRESS_TEST">Đo Kiểm & Thử Nghiệm</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Tên Đề Tài / Đơn Nghiên Cứu</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ví dụ: Nghiên cứu cảm biến AI nhận diện dị vật tốc độ cao..."
-                  value={formTitle}
-                  onChange={e => setFormTitle(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Phiên Bản Mẫu H1</label>
-                  <input
-                    type="text"
-                    placeholder="VD: Prototype H1-v1.0"
-                    value={formVersion}
-                    onChange={e => setFormVersion(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-[#F15A24]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Chủ Nhiệm Đề Tài (R&D Lead)</label>
-                  <select
-                    value={formLead}
-                    onChange={e => setFormLead(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  >
-                    <option value="TS. Hoàng Đăng Khoa">TS. Hoàng Đăng Khoa (R&D Lead)</option>
-                    <option value="Vũ Đức Mạnh">Vũ Đức Mạnh (Firmware & AI)</option>
-                    <option value="Phạm Thị Mỹ Linh">Phạm Thị Mỹ Linh (Hardware PCB)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mô Tả Mục Tiêu Kỹ Thuật</label>
-                <textarea
-                  rows={3}
-                  placeholder="Yêu cầu thông số kỹ thuật, nguồn nuôi, dải nhiệt độ làm việc, tiêu chuẩn đo kiểm..."
-                  value={formDesc}
-                  onChange={e => setFormDesc(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-extrabold text-slate-600 dark:text-slate-300 hover:bg-slate-50"
-                >
-                  Hủy Bỏ
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-[#0284C7] hover:bg-[#0369a1] text-white font-extrabold rounded-xl shadow-md cursor-pointer transition"
-                >
-                  Lưu & Khởi Tạo Đề Tài
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}

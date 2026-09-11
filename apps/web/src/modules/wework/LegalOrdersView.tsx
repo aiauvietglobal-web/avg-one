@@ -3,7 +3,7 @@ import {
   Scale, Sparkles, Plus, CheckCircle2, AlertTriangle, ShieldCheck,
   FileText, Award, Building2, Calendar, Clock, ArrowRight, X,
   MessageSquare, Send, Download, ExternalLink, BookmarkCheck, FileCheck2,
-  Search
+  Search, RefreshCw, Filter
 } from 'lucide-react';
 
 export interface LegalOrder {
@@ -175,10 +175,13 @@ const INITIAL_LEGAL_ORDERS: LegalOrder[] = [
 export const LegalOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<LegalOrder[]>(INITIAL_LEGAL_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [filterCategory, setFilterCategory] = useState<string>('ALL');
+  const [filterAgency, setFilterAgency] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<LegalOrder | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [commentInput, setCommentInput] = useState('');
+  const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString('vi-VN'));
+  const [dispatchToast, setDispatchToast] = useState<string | null>(null);
 
   // New Legal Order Form state
   const [formCode, setFormCode] = useState(`PL-2026-${Math.floor(55 + Math.random() * 40)}`);
@@ -200,28 +203,22 @@ export const LegalOrdersView: React.FC = () => {
     };
   }, [orders]);
 
-  const STAGE_TABS = [
-    { id: 'ALL', label: 'Tất Cả Hồ Sơ' },
-    { id: 'PRIOR_ART', label: '1. Tra Cứu SHTT' },
-    { id: 'FORMAL_EXAM', label: '2. Thẩm Định Hình Thức' },
-    { id: 'TESTING_QUATEST', label: '3. Kiểm Định QUATEST' },
-    { id: 'CONTENT_EXAM', label: '4. Thẩm Định Nội Dung' },
-    { id: 'GRANTED', label: '5. Đã Cấp Văn Bằng' }
-  ];
-
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
       const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const matchCategory = filterCategory === 'ALL' || o.category === filterCategory;
+      const matchAgency = filterAgency === 'ALL' || o.agency.includes(filterAgency);
       const q = searchQuery.toLowerCase().trim();
       const matchQuery = !q ||
         o.title.toLowerCase().includes(q) ||
         o.code.toLowerCase().includes(q) ||
         o.filingNumber.toLowerCase().includes(q) ||
         o.agency.toLowerCase().includes(q) ||
-        o.leadLegal.name.toLowerCase().includes(q);
-      return matchStage && matchQuery;
+        o.leadLegal.name.toLowerCase().includes(q) ||
+        o.description.toLowerCase().includes(q);
+      return matchStage && matchCategory && matchAgency && matchQuery;
     });
-  }, [orders, activeStageFilter, searchQuery]);
+  }, [orders, activeStageFilter, filterCategory, filterAgency, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,14 +243,14 @@ export const LegalOrdersView: React.FC = () => {
       filingNumber: formFilingNum.trim() || 'Đang chuẩn bị nộp',
       agency: formAgency,
       leadLegal: {
-        name: formLead,
+        name: formLead || 'Luật sư Lê Anh Tuấn',
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
         role: 'Pháp chế Sở Hữu Trí Tuệ'
       },
       progress: 10,
       dueDate: formDueDate,
       legalValidity: 'Theo quy định hiện hành',
-      description: formDesc.trim(),
+      description: formDesc.trim() || 'Hồ sơ pháp lý đăng ký quyền SHTT và chứng nhận hợp chuẩn hợp quy.',
       documents: [
         { id: `doc-${Date.now()}`, name: 'Ban_Thao_Ho_So_Phap_Ly.pdf', date: 'Hôm nay', type: 'PDF' }
       ],
@@ -261,15 +258,24 @@ export const LegalOrdersView: React.FC = () => {
         { id: `t-${Date.now()}-1`, text: 'Rà soát tính pháp lý và không trùng lặp', done: true },
         { id: `t-${Date.now()}-2`, text: 'Nộp hồ sơ chính thức tại Cơ quan tiếp nhận', done: false }
       ],
-      comments: []
+      comments: [
+        {
+          id: `c-${Date.now()}-1`,
+          author: 'Ban Giám Đốc (CEO)',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+          time: 'Vừa xong',
+          text: `Đã duyệt hồ sơ pháp lý ${formCode}. Yêu cầu đẩy nhanh tiến độ nộp đơn tại ${formAgency}!`
+        }
+      ]
     };
 
     setOrders([newOrder, ...orders]);
-    setShowCreateModal(false);
     setFormTitle('');
     setFormDesc('');
     setFormFilingNum('');
-    setFormCode(`PL-2026-${Math.floor(70 + Math.random() * 30)}`);
+    const nextCode = `PL-2026-${Math.floor(70 + Math.random() * 30)}`;
+    setFormCode(nextCode);
+    setDispatchToast(`✨ Đã nộp thành công hồ sơ pháp lý: ${newOrder.code} - "${newOrder.title}"!`);
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -279,7 +285,7 @@ export const LegalOrdersView: React.FC = () => {
     const newC = {
       id: `c-${Date.now()}`,
       author: 'Nguyễn Văn Quản Lý',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
       time: 'Vừa xong',
       text: commentInput.trim()
     };
@@ -311,141 +317,256 @@ export const LegalOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 w-full animate-fadeIn pb-8">
-      {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
-      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden space-y-4">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
-          {/* Cột trái: Badge, Title & Button */}
-          <div className="space-y-3">
-            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                <defs>
-                  <linearGradient id="legal-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#8B5CF6" />
-                    <stop offset="50%" stopColor="#0284C7" />
-                    <stop offset="100%" stopColor="#F15A24" />
-                  </linearGradient>
-                </defs>
-                <rect
-                  x="1"
-                  y="1"
-                  width="calc(100% - 2px)"
-                  height="calc(100% - 2px)"
-                  rx="8"
-                  ry="8"
-                  fill="none"
-                  stroke="url(#legal-banner-border)"
-                  strokeWidth="1.5"
-                  className="animate-slogan-box-border"
-                />
-              </svg>
-              <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                <Scale className="w-3.5 h-3.5 text-purple-600" />
-                <span>AVG LEGAL & COMPLIANCE • PHÁP LÝ & SHTT (6.0)</span>
-              </div>
+    <div className="space-y-6 animate-fadeIn pb-8">
+      {/* 🔮 Header & Live Sync Banner - Đồng Bộ Phong Cách Thông Điệp Điều Hành */}
+      <div className="bg-gradient-to-r from-[#011E30] via-[#022B45] to-[#011422] p-6 rounded-3xl border border-purple-500/30 text-white shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5">
+              <Scale className="w-6 h-6 text-purple-400 animate-pulse" />
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase">
+                QUẢN LÝ ĐƠN HÀNG PHÁP LÝ & SHTT AVG ONE (6.0)
+              </h2>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2">
-                <span>QUẢN LÝ ĐƠN HÀNG</span>
-                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-[#F15A24]">
-                  <span className="relative z-10">PHÁP LÝ</span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-purple-500 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                  </svg>
-                </span>
-              </h1>
-
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-90 text-white font-extrabold rounded-xl shadow-sm hover:shadow-md transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Nộp Hồ Sơ Pháp Lý
-              </button>
-            </div>
+            <p className="text-xs text-sky-200/80 font-medium">
+              Đồng bộ dữ liệu thời gian thực 24/7 tiến độ đăng ký nhãn hiệu, kiểu dáng công nghiệp, bằng sáng chế và hợp chuẩn QUATEST/CR
+            </p>
           </div>
 
-          {/* Cột phải: 4 Thẻ KPI Tinh Gọn */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 xl:border-l xl:border-slate-200 dark:xl:border-slate-800 xl:pl-5">
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 shrink-0">
-                <FileText className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Tổng hồ sơ</div>
-                <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">{stats.total}</div>
-              </div>
-            </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={() => {
+                setLastSyncTime(new Date().toLocaleTimeString('vi-VN'));
+                setDispatchToast('🔄 Đã làm mới và đồng bộ 100% hồ sơ pháp lý & văn bằng SHTT!');
+              }}
+              className="px-4 py-2 bg-sky-950/80 hover:bg-sky-900 border border-cyan-400/40 text-cyan-300 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Tải Lại (Sync Live)</span>
+            </button>
 
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-[#0284C7] shrink-0">
-                <Building2 className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Cục SHTT</div>
-                <div className="text-lg font-black text-sky-600 dark:text-sky-400 leading-tight">{stats.inExam}</div>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">QUATEST / CR</div>
-                <div className="text-lg font-black text-orange-600 dark:text-orange-400 leading-tight">{stats.testingQuatest}</div>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
-                <Award className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Đã cấp bằng</div>
-                <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">{stats.granted}</div>
-              </div>
-            </div>
+            <a
+              href="http://wipopublish.ipvietnam.gov.vn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-95 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Tra Cứu Cục SHTT</span>
+            </a>
           </div>
         </div>
 
-        {/* Thanh Tích Hợp: Giai Đoạn (Pipeline Tabs) + Tìm Kiếm Nhanh */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-            {STAGE_TABS.map(stage => {
-              const count = stage.id === 'ALL' ? orders.length : orders.filter(o => o.stage === stage.id).length;
-              return (
-                <button
-                  key={stage.id}
-                  onClick={() => setActiveStageFilter(stage.id)}
-                  className={`px-3 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
-                    activeStageFilter === stage.id
-                      ? 'bg-purple-600 text-white shadow-xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-purple-600'
-                  }`}
-                >
-                  <span>{stage.label}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
-                    activeStageFilter === stage.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
+        {/* Stats Counter Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+          <div className="bg-[#021729]/80 border border-purple-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-purple-400">Tổng Hồ Sơ</div>
+            <div className="text-2xl font-black text-white mt-0.5">{stats.total}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-cyan-500/30 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-sky-300">Cục SHTT Thẩm Định</div>
+            <div className="text-2xl font-black text-sky-200 mt-0.5">{stats.inExam}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-orange-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-orange-400">QUATEST / CR</div>
+            <div className="text-2xl font-black text-orange-300 mt-0.5">{stats.testingQuatest}</div>
+          </div>
+          <div className="bg-[#021729]/80 border border-emerald-500/40 rounded-2xl p-3.5 text-center">
+            <div className="text-xs font-bold text-emerald-400">Đã Cấp Văn Bằng</div>
+            <div className="text-2xl font-black text-emerald-300 mt-0.5">{stats.granted}</div>
+          </div>
+        </div>
+
+        {lastSyncTime && (
+          <div className="text-[11px] text-sky-300/70 font-mono text-right">
+            Lần cập nhật gần nhất: {lastSyncTime}
+          </div>
+        )}
+      </div>
+
+      {/* 🚀 Dispatcher Form Card - Nộp Hồ Sơ Mới */}
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <Send className="w-5 h-5 text-purple-600" />
+            <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
+              Nộp & Khởi Tạo Hồ Sơ Pháp Lý & SHTT Mới
+            </h3>
+          </div>
+          <span className="text-xs text-slate-400 font-medium">Quyền hạn: Pháp Lý & Quản Trị SHTT (6.0 / Lead)</span>
+        </div>
+
+        {dispatchToast && (
+          <div className="p-3.5 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-xs font-bold flex items-center justify-between">
+            <span>{dispatchToast}</span>
+            <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
+          </div>
+        )}
+
+        <form onSubmit={handleCreateOrder} className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Mã Hồ Sơ
+              </label>
+              <input
+                type="text"
+                value={formCode}
+                onChange={(e) => setFormCode(e.target.value)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600/40 font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Chuyên Viên Phụ Trách
+              </label>
+              <input
+                type="text"
+                value={formLead}
+                onChange={(e) => setFormLead(e.target.value)}
+                placeholder="VD: Luật sư Lê Anh Tuấn..."
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600/40 font-bold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Loại Hình Bảo Hộ
+              </label>
+              <select
+                value={formCategory}
+                onChange={(e) => setFormCategory(e.target.value as any)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600/40 font-bold"
+              >
+                <option value="INDUSTRIAL_DESIGN">Kiểu Dáng Công Nghiệp</option>
+                <option value="PATENT">Bằng Sáng Chế / Giải Pháp</option>
+                <option value="TRADEMARK">Nhãn Hiệu Độc Quyền</option>
+                <option value="CERTIFICATION">Chứng Nhận Hợp Quy / Quatest</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                Cơ Quan Tiếp Nhận
+              </label>
+              <select
+                value={formAgency}
+                onChange={(e) => setFormAgency(e.target.value)}
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600/40 font-bold"
+              >
+                <option value="Cục Sở hữu Trí tuệ Việt Nam (NOIP)">Cục Sở hữu Trí tuệ (NOIP)</option>
+                <option value="Trung tâm Kỹ thuật Tiêu chuẩn QUATEST 1">QUATEST 1</option>
+                <option value="Trung tâm Kỹ thuật Tiêu chuẩn QUATEST 3">QUATEST 3</option>
+                <option value="Cục Bản quyền Tác giả (COV)">Cục Bản quyền Tác giả (COV)</option>
+              </select>
+            </div>
           </div>
 
-          <div className="relative w-full md:w-60 shrink-0">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Tiêu Đề Hồ Sơ / Đối Tượng Đăng Ký
+            </label>
             <input
               type="text"
-              placeholder="Tìm mã, số đơn, văn bằng..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-600 font-medium"
+              value={formTitle}
+              onChange={(e) => setFormTitle(e.target.value)}
+              placeholder="Nhập tên đối tượng kiểu dáng, nhãn hiệu hoặc tiêu chuẩn cần đăng ký..."
+              required
+              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600/40 font-medium"
             />
           </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              Căn Cứ Pháp Lý & Danh Mục Tài Liệu Kèm Theo
+            </label>
+            <textarea
+              rows={3}
+              value={formDesc}
+              onChange={(e) => setFormDesc(e.target.value)}
+              placeholder="Nhập chi tiết căn cứ luật sở hữu trí tuệ, bản mô tả 3D, danh mục tài liệu nộp kèm..."
+              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-600/40 font-medium"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-90 text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 cursor-pointer transition"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Nộp Hồ Sơ Pháp Lý</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* 🔍 Search & Filters Bar - Đồng Bộ Bố Cục Thông Điệp Điều Hành */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-72">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Tìm mã, số đơn, văn bằng, chuyên viên..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-3.5 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-600/40 shadow-xs font-medium"
+          />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
+            <Filter className="w-3.5 h-3.5" />
+            <span>Lọc:</span>
+          </div>
+
+          <select
+            value={activeStageFilter}
+            onChange={(e) => setActiveStageFilter(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả giai đoạn</option>
+            <option value="PRIOR_ART">1. Tra Cứu SHTT</option>
+            <option value="FORMAL_EXAM">2. Thẩm Định Hình Thức</option>
+            <option value="TESTING_QUATEST">3. Kiểm Định QUATEST</option>
+            <option value="CONTENT_EXAM">4. Thẩm Định Nội Dung</option>
+            <option value="GRANTED">5. Đã Cấp Văn Bằng</option>
+          </select>
+
+          <select
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả loại bảo hộ</option>
+            <option value="INDUSTRIAL_DESIGN">Kiểu Dáng Công Nghiệp</option>
+            <option value="PATENT">Bằng Sáng Chế</option>
+            <option value="TRADEMARK">Nhãn Hiệu</option>
+            <option value="CERTIFICATION">Chứng Nhận QUATEST</option>
+          </select>
+
+          <select
+            value={filterAgency}
+            onChange={(e) => setFilterAgency(e.target.value)}
+            className="px-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold shadow-xs cursor-pointer"
+          >
+            <option value="ALL">Tất cả cơ quan</option>
+            <option value="NOIP">Cục SHTT (NOIP)</option>
+            <option value="QUATEST">QUATEST</option>
+            <option value="COV">Cục Bản quyền</option>
+          </select>
+        </div>
+      </div>
+
+      {/* 📋 Section Title: Danh Sách Hồ Sơ Pháp Lý */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>Danh Sách Hồ Sơ Pháp Lý & SHTT</span>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+            {filteredOrders.length} / {orders.length}
+          </span>
+        </h3>
       </div>
 
       {/* ⚖️ DANH SÁCH THẺ HỒ SƠ PHÁP LÝ (MỞ RỘNG TOÀN DIỆN) */}
@@ -732,137 +853,6 @@ export const LegalOrdersView: React.FC = () => {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 📝 MODAL TẠO HỒ SƠ PHÁP LÝ MỚI */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-[24px] shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-5 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Scale className="w-5 h-5 text-purple-600" />
-                Nộp Hồ Sơ Pháp Lý / Sở Hữu Trí Tuệ Mới (6.0)
-              </h3>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateOrder} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mã Hồ Sơ Pháp Lý</label>
-                  <input
-                    type="text"
-                    value={formCode}
-                    onChange={e => setFormCode(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-black text-purple-600"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Loại Thủ Tục Pháp Lý</label>
-                  <select
-                    value={formCategory}
-                    onChange={e => setFormCategory(e.target.value as any)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  >
-                    <option value="INDUSTRIAL_DESIGN">Kiểu Dáng Công Nghiệp</option>
-                    <option value="PATENT">Bằng Sáng Chế / Giải Pháp</option>
-                    <option value="TRADEMARK">Nhãn Hiệu Độc Quyền</option>
-                    <option value="CERTIFICATION">Chứng Nhận Hợp Quy / Quatest</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Tên Hồ Sơ / Đơn Đăng Ký</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ví dụ: Đăng ký Bằng độc quyền Kiểu dáng công nghiệp..."
-                  value={formTitle}
-                  onChange={e => setFormTitle(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Số Đơn / Số Hợp Đồng</label>
-                  <input
-                    type="text"
-                    placeholder="VD: Đơn số 3-2026-00421"
-                    value={formFilingNum}
-                    onChange={e => setFormFilingNum(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Cơ Quan Tiếp Nhận</label>
-                  <input
-                    type="text"
-                    value={formAgency}
-                    onChange={e => setFormAgency(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Chuyên Viên Phụ Trách</label>
-                  <select
-                    value={formLead}
-                    onChange={e => setFormLead(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  >
-                    <option value="Luật sư Lê Anh Tuấn">Luật sư Lê Anh Tuấn (SHTT)</option>
-                    <option value="Vũ Thị Minh Hạnh">Vũ Thị Minh Hạnh (Pháp chế Tiêu chuẩn)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Hạn Xử Lý Tiếp Theo</label>
-                  <input
-                    type="text"
-                    value={formDueDate}
-                    onChange={e => setFormDueDate(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mô Tả Yêu Cầu Pháp Lý</label>
-                <textarea
-                  rows={3}
-                  placeholder="Ghi chú nội dung yêu cầu bảo hộ, tình trạng hồ sơ giấy tờ hiện tại..."
-                  value={formDesc}
-                  onChange={e => setFormDesc(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-extrabold text-slate-600 dark:text-slate-300 hover:bg-slate-50"
-                >
-                  Hủy Bỏ
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-xl shadow-md cursor-pointer transition"
-                >
-                  Lưu & Khởi Tạo Hồ Sơ
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}
