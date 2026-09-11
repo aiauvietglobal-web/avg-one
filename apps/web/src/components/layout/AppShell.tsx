@@ -126,6 +126,53 @@ export const AppShell: React.FC<AppShellProps> = ({
       setIsSystemDropdownOpen(prev => !prev);
     }
   };
+
+  // Đơn hàng dropdown state & ref
+  const [ordersTabState, setOrdersTabState] = useState<'design' | 'sample-h1' | 'legal'>('design');
+  const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
+  const ordersDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Đóng hộp Đơn hàng khi chuyển qua phân hệ khác
+  useEffect(() => {
+    if (activeModule !== 'orders' && activeModule !== 'wework') {
+      setIsOrdersDropdownOpen(false);
+    }
+  }, [activeModule]);
+
+  // Đóng hộp Đơn hàng khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ordersDropdownRef.current && !ordersDropdownRef.current.contains(e.target as Node)) {
+        setIsOrdersDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Chọn đầu mục con Đơn hàng: chuyển tab, đồng bộ dữ liệu và ĐÓNG hộp dropdown
+  const handleSelectOrdersSubTab = (tab: 'design' | 'sample-h1' | 'legal') => {
+    setOrdersTabState(tab);
+    setIsOrdersDropdownOpen(false);
+    onSelectModule('orders');
+    window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: tab }));
+    const btn = document.getElementById(`btn-orders-subtab-${tab}`);
+    if (btn) btn.click();
+  };
+
+  // Click vào nút Đơn hàng: mở ở lần 1, ấn lần 2 thì đóng lại
+  const handleToggleOrdersModule = () => {
+    if (activeModule !== 'orders' && activeModule !== 'wework') {
+      onSelectModule('orders');
+      setIsOrdersDropdownOpen(true);
+      window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: ordersTabState }));
+      const btn = document.getElementById(`btn-orders-subtab-${ordersTabState}`);
+      if (btn) btn.click();
+    } else {
+      setIsOrdersDropdownOpen(prev => !prev);
+    }
+  };
+
   const [workflowTabState, setWorkflowTabState] = useState<string>('design');
   const [speechTabState, setSpeechTabState] = useState<string>('direct');
   const [isArrowActive, setIsArrowActive] = useState(false);
@@ -365,6 +412,97 @@ export const AppShell: React.FC<AppShellProps> = ({
                                 >
                                   <span className="text-slate-900 dark:text-white font-medium">Thông điệp điều hành</span>
                                   {isActive && systemTabState === 'executive-directive' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+
+                      if (item.id === 'orders') {
+                        return (
+                          <div
+                            key={item.id}
+                            ref={ordersDropdownRef}
+                            className="relative"
+                          >
+                            <button
+                              onClick={handleToggleOrdersModule}
+                              style={{ color: isActive ? '#F15A24' : undefined }}
+                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
+                                isActive
+                                  ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
+                                  : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                              }`}
+                            >
+                              <span className="relative inline-block">
+                                <span
+                                  style={{ color: isActive ? '#F15A24' : undefined }}
+                                  className="relative z-10 transition-colors duration-150 inline-block"
+                                >
+                                  {item.label}
+                                </span>
+                                {/* Line ngắn dưới chân chữ (cố định khi active) */}
+                                {isActive && (
+                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                                )}
+                              </span>
+                              <ChevronDown
+                                style={{ color: isActive ? '#F15A24' : undefined }}
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isActive ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                              />
+                            </button>
+
+                            {/* Dropdown Menu for Đơn hàng */}
+                            {isOrdersDropdownOpen && (
+                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectOrdersSubTab('design');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && ordersTabState === 'design'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Thiết kế</span>
+                                  {isActive && ordersTabState === 'design' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectOrdersSubTab('sample-h1');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && ordersTabState === 'sample-h1'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Sản mẫu H1</span>
+                                  {isActive && ordersTabState === 'sample-h1' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectOrdersSubTab('legal');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && ordersTabState === 'legal'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Pháp Lý</span>
+                                  {isActive && ordersTabState === 'legal' && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
                                 </button>
