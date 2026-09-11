@@ -35,7 +35,7 @@ export const HOME_APP_MODULES = [
   },
   {
     id: 'rd' as AppModuleId,
-    name: 'Nghiên Cứu & Phát Triển',
+    name: 'Nghiên Cứu & Sáng Tạo',
     icon: Lightbulb,
     iconColor: 'text-[#0284C7] dark:text-sky-300',
     bgColor: 'bg-white/95 dark:bg-slate-800/90 border-sky-200 dark:border-sky-700/80 shadow-2xs'
