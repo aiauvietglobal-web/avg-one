@@ -230,16 +230,16 @@ export const AppShell: React.FC<AppShellProps> = ({
       ) : (
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
-          {activeModule === 'home' ? (
-            /* HOME PAGE HEADER (Logo Chính Thức AVG One + SSO - Gióng thẳng hàng với các hộp phân hệ) */
-            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-none transition-all shadow-xs dark:shadow-none">
+          {['home', 'system', 'admin', 'inside', 'calendar', 'orders', 'wework'].includes(activeModule) ? (
+            /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
+            <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
               <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
                 {/* Left: AVG One Official Logo */}
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => onSelectModule('home')}
-                    className="flex items-center gap-3 hover:opacity-90 transition text-left group"
+                    className="flex items-center gap-3 hover:opacity-90 transition text-left group cursor-pointer"
                     title="Trang Chủ Tất Cả Ứng Dụng AVG One"
                   >
                     <img
@@ -254,22 +254,33 @@ export const AppShell: React.FC<AppShellProps> = ({
                 <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
                   <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-6">
                     {[
-                      { id: 'system' as AppModuleId, label: 'Hệ thống' },
-                      { id: 'inside' as AppModuleId, label: 'Bảng tin' },
-                      { id: 'calendar' as AppModuleId, label: 'Lịch' },
-                      { id: 'orders' as AppModuleId, label: 'Đơn hàng' },
+                      { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
+                      { id: 'inside' as AppModuleId, aliases: ['inside'], label: 'Bảng tin' },
+                      { id: 'calendar' as AppModuleId, aliases: ['calendar'], label: 'Lịch' },
+                      { id: 'orders' as AppModuleId, aliases: ['orders', 'wework'], label: 'Đơn hàng' },
                     ].map((item) => {
+                      const isActive = item.aliases.includes(activeModule);
                       return (
                         <button
                           key={item.id}
                           onClick={() => onSelectModule(item.id)}
-                          className="relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] transition-all cursor-pointer group select-none tracking-normal"
+                          className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal ${
+                            isActive
+                              ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
+                              : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                          }`}
                         >
-                          <span className="relative z-10 transition-transform duration-200 group-hover:scale-105 inline-block">
+                          <span className={`relative z-10 transition-transform duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}>
                             {item.label}
                           </span>
-                          {/* Underline hover indicator */}
-                          <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-[#F15A24] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
+                          {/* Underline hover and active indicator */}
+                          <span
+                            className={`absolute bottom-0 left-2 right-2 h-[2px] bg-[#F15A24] rounded-full transition-transform duration-300 origin-center ${
+                              isActive
+                                ? 'scale-x-100 opacity-100'
+                                : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
+                            }`}
+                          />
                         </button>
                       );
                     })}
