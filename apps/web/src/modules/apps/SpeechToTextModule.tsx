@@ -486,6 +486,7 @@ export const SpeechToTextModule: React.FC = () => {
   const silenceCommitTimerRef = useRef<any>(null);
   const speakerSwitchCountRef = useRef<number>(0);
   const restartTimeoutRef = useRef<any>(null);
+  const utterancePitchSamplesRef = useRef<number[]>([]);
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
   const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
@@ -664,52 +665,27 @@ export const SpeechToTextModule: React.FC = () => {
           if (pitch !== null) {
             setLivePitchHz(pitch);
             pitchSamples.push(pitch);
-            if (pitchSamples.length > 10) pitchSamples.shift();
+            if (pitchSamples.length > 12) pitchSamples.shift();
+
+            utterancePitchSamplesRef.current.push(pitch);
+            if (utterancePitchSamplesRef.current.length > 60) utterancePitchSamplesRef.current.shift();
 
             const avgPitch = Math.round(pitchSamples.reduce((a, b) => a + b, 0) / pitchSamples.length);
 
             if (autoDiarizationRef.current) {
-              // Phân định giọng nói tự động dựa trên tần số cơ bản (F0):
-              // Giọng Nam: <= 155Hz | Giọng Nữ: >= 170Hz | 155Hz-170Hz: giữ nguyên chống rung lắc
-              let detectedSpkId: string | null = null;
-              if (avgPitch <= 155) {
-                detectedSpkId = 'spk-male';
-              } else if (avgPitch >= 170) {
-                detectedSpkId = 'spk-female';
-              }
-
-              if (detectedSpkId) {
-                const targetSpk = speakers.find(s => s.id === detectedSpkId) || DEFAULT_SPEAKERS[0];
-                const icon = detectedSpkId === 'spk-male' ? '👨' : '👩';
-                const label = `${icon} ${targetSpk.name} (~${avgPitch}Hz)`;
-                setDetectedVoiceLabel(label);
-
-                // Chuyển người nói khi nhận diện nhất quán giọng khác liên tiếp >= 2 khung hình (~240ms)
-                if (detectedSpkId !== activeSpeakerRef.current) {
-                  speakerSwitchCountRef.current = (speakerSwitchCountRef.current || 0) + 1;
-                  if (speakerSwitchCountRef.current >= 2) {
-                    // Nếu còn đoạn dở dang của người trước, chốt ngay vào tin nhắn của người trước
-                    if (lastInterimRef.current.trim()) {
-                      commitTranscriptToMessage(lastInterimRef.current.trim(), true);
-                      lastInterimRef.current = '';
-                      setInterimTranscript('');
-                    }
-                    setActiveSpeakerId(detectedSpkId);
-                    activeSpeakerRef.current = detectedSpkId;
-                    speakerSwitchCountRef.current = 0;
-                  }
-                } else {
-                  speakerSwitchCountRef.current = 0;
-                }
-              }
+              const detectedSpkId = avgPitch < 165 ? 'spk-male' : 'spk-female';
+              const targetSpk = speakers.find(s => s.id === detectedSpkId) || DEFAULT_SPEAKERS[0];
+              const icon = detectedSpkId === 'spk-male' ? '👨' : '👩';
+              setDetectedVoiceLabel(`${icon} ${targetSpk.name} (~${avgPitch}Hz)`);
+              activeSpeakerRef.current = detectedSpkId;
+              setActiveSpeakerId(detectedSpkId);
             } else {
               setDetectedVoiceLabel(`Tần số giọng: ${avgPitch}Hz (Chế độ thủ công)`);
             }
           } else {
-            // Khi im lặng > 350ms, làm mới buffer để đón nhận chính xác người phát biểu tiếp theo
-            if (now - lastPitchCalcTime > 350 && pitchSamples.length > 0) {
+            // Khi khoảng lặng > 400ms giữa các câu nói, làm mới buffer cục bộ
+            if (now - lastPitchCalcTime > 400 && pitchSamples.length > 0) {
               pitchSamples = [];
-              speakerSwitchCountRef.current = 0;
             }
           }
         }
@@ -1123,7 +1099,17 @@ export const SpeechToTextModule: React.FC = () => {
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
-    const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
+    // Xác định người nói dựa trên tần số trung bình của câu nói vừa kết thúc
+    let speakerIdToAssign = activeSpeakerRef.current;
+    if (autoDiarizationRef.current && utterancePitchSamplesRef.current.length > 0) {
+      const utteranceAvg = Math.round(
+        utterancePitchSamplesRef.current.reduce((a, b) => a + b, 0) / utterancePitchSamplesRef.current.length
+      );
+      speakerIdToAssign = utteranceAvg < 165 ? 'spk-male' : 'spk-female';
+      utterancePitchSamplesRef.current = [];
+    }
+
+    const currentSpk = speakers.find(s => s.id === speakerIdToAssign) || DEFAULT_SPEAKERS[0];
     const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 
     setMessages(prev => {
