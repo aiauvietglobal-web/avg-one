@@ -145,9 +145,12 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
               ) : (
                 <button
                   onClick={onOpenLoginModal}
-                  className="px-3 py-1 bg-gradient-to-r from-[#F15A24] via-[#FF7043] to-[#F15A24] hover:bg-right active:scale-95 text-white font-black text-[11px] uppercase tracking-wider rounded-full shadow-xs transition cursor-pointer border border-white/20"
+                  className="px-3.5 py-1 bg-white dark:bg-slate-900 active:scale-95 text-[#FF1744] dark:text-[#FF4081] font-bold text-[11px] shadow-xs transition cursor-pointer border border-slate-200 dark:border-slate-700"
+                  style={{
+                    borderRadius: '12px 9999px 9999px 2px'
+                  }}
                 >
-                  Đăng nhập
+                  Đăng Nhập
                 </button>
               )}
 

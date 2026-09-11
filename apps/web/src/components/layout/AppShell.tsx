@@ -285,16 +285,17 @@ export const AppShell: React.FC<AppShellProps> = ({
                         {currentUser.name.charAt(0)}
                       </button>
                     ) : (
-                      /* Chưa đăng nhập: Nút Đăng nhập thiết kế phá cách & đẳng cấp */
+                      /* Chưa đăng nhập: Nút Đăng Nhập phá cách dáng giọt nước/lá cây (góc dưới-trái vuông, 3 góc còn lại bo tròn) */
                       <button
                         onClick={() => setIsLoginModalOpen(true)}
-                        className="relative group overflow-hidden px-5 sm:px-6 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-[13px] tracking-wide text-white transition-all duration-300 transform active:scale-95 shadow-md hover:shadow-orange-500/35 hover:-translate-y-0.5 cursor-pointer bg-gradient-to-r from-[#F15A24] via-[#FF7043] to-[#F15A24] bg-[length:200%_auto] hover:bg-right border border-white/20"
+                        className="px-5 sm:px-6 py-2 sm:py-2.5 bg-white dark:bg-slate-900 text-[#F15A24] dark:text-[#FF4066] font-bold text-xs sm:text-[13px] tracking-wide rounded-tr-full rounded-tl-2xl rounded-br-full rounded-bl-none shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer border border-slate-200/80 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        style={{
+                          borderRadius: '16px 9999px 9999px 2px'
+                        }}
                         title="Đăng nhập tài khoản AVG One"
                       >
-                        {/* Hiệu ứng tia sáng quét qua phá cách (Shimmer) */}
-                        <span className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/35 to-transparent skew-x-[-25deg] group-hover:left-[200%] transition-all duration-1000 ease-out pointer-events-none" />
-                        <span className="relative z-10 flex items-center gap-1.5 font-black uppercase tracking-wider">
-                          Đăng nhập
+                        <span className="font-bold text-[#FF1744] dark:text-[#FF4081] transition-colors">
+                          Đăng Nhập
                         </span>
                       </button>
                     )}
