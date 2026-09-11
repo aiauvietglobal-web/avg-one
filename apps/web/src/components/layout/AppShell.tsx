@@ -309,7 +309,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                             <button
                               onClick={handleToggleSystemModule}
                               style={{ color: isActive ? '#F15A24' : undefined }}
-                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal flex items-center gap-1 ${
+                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
                                 isActive
                                   ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                                   : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
@@ -318,22 +318,18 @@ export const AppShell: React.FC<AppShellProps> = ({
                               <span className="relative inline-block">
                                 <span
                                   style={{ color: isActive ? '#F15A24' : undefined }}
-                                  className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
+                                  className="relative z-10 transition-colors duration-150 inline-block"
                                 >
                                   {item.label}
                                 </span>
-                                {/* Line ngắn dưới chân chữ */}
-                                <span
-                                  className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full transition-all duration-300 origin-center ${
-                                    isActive
-                                      ? 'scale-x-100 opacity-100'
-                                      : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
-                                  }`}
-                                />
+                                {/* Line ngắn dưới chân chữ (cố định khi active) */}
+                                {isActive && (
+                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                                )}
                               </span>
                               <ChevronDown
                                 style={{ color: isActive ? '#F15A24' : undefined }}
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isActive ? 'text-[#F15A24]' : 'opacity-60 group-hover:opacity-100 group-hover:text-[#F15A24]'}`}
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isActive ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
                               />
                             </button>
 
@@ -383,7 +379,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                           key={item.id}
                           onClick={() => onSelectModule(item.id)}
                           style={{ color: isActive ? '#F15A24' : undefined }}
-                          className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal ${
+                          className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal ${
                             isActive
                               ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                               : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
@@ -392,18 +388,14 @@ export const AppShell: React.FC<AppShellProps> = ({
                           <span className="relative inline-block">
                             <span
                               style={{ color: isActive ? '#F15A24' : undefined }}
-                              className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
+                              className="relative z-10 transition-colors duration-150 inline-block"
                             >
                               {item.label}
                             </span>
-                            {/* Line ngắn dưới chân chữ */}
-                            <span
-                              className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full transition-all duration-300 origin-center ${
-                                isActive
-                                  ? 'scale-x-100 opacity-100'
-                                  : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
-                              }`}
-                            />
+                            {/* Line ngắn dưới chân chữ (cố định khi active) */}
+                            {isActive && (
+                              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                            )}
                           </span>
                         </button>
                       );
