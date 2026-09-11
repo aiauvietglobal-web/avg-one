@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import {
   Palette, Sparkles, Plus, Clock, CheckCircle2, AlertCircle,
   Eye, Download, Layers, Box, Cpu, FileImage, User, Calendar,
-  ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck, Tag
+  ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck, Tag,
+  Search, LayoutList, LayoutGrid, FileText, ChevronRight, SlidersHorizontal
 } from 'lucide-react';
 
 export interface DesignOrder {
@@ -22,7 +23,6 @@ export interface DesignOrder {
   };
   progress: number;
   dueDate: string;
-  previewImage?: string;
   specs: {
     dimensions?: string;
     material?: string;
@@ -52,7 +52,6 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     },
     progress: 85,
     dueDate: '18/03/2026',
-    previewImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
     specs: {
       dimensions: '240 x 160 x 45 mm',
       material: 'Hợp kim nhôm 6061 phay CNC',
@@ -83,7 +82,7 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     category: 'PACKAGING_CMF',
     categoryLabel: 'Bao bì & CMF',
     stage: 'CMF_COLOR',
-    stageLabel: 'Phối màu & Chất liệu CMF',
+    stageLabel: 'Phối màu & CMF',
     priority: 'HIGH',
     software: ['Adobe Illustrator', 'Photoshop 2026', 'Esko'],
     designer: {
@@ -93,7 +92,6 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     },
     progress: 65,
     dueDate: '22/03/2026',
-    previewImage: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=800&auto=format&fit=crop&q=80',
     specs: {
       dimensions: '180 x 120 x 60 mm',
       material: 'Carton sóng định lượng 350gsm, cán mờ',
@@ -115,7 +113,7 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     category: 'MOLD_DESIGN',
     categoryLabel: 'Khuôn mẫu nhựa',
     stage: 'RELEASE_CAD',
-    stageLabel: 'Xuất bản vẽ Bàn giao',
+    stageLabel: 'Bàn giao Bản vẽ CAD',
     priority: 'HIGH',
     software: ['Creo Parametric', 'Moldex3D', 'AutoCAD'],
     designer: {
@@ -125,10 +123,9 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     },
     progress: 100,
     dueDate: '14/03/2026',
-    previewImage: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80',
     specs: {
       dimensions: 'Khối khuôn 2 cavity 400 x 300 x 280 mm',
-      material: 'Thép NAK80 tôi cao tần, nhựa PC Bayer quang học',
+      material: 'Thép NAK80 tôi cao tần, nhựa PC Bayer',
       colorCode: 'Nhựa trong suốt độ truyền quang 92%',
       fileFormat: 'STP, IGS, 2D PDF Bàn giao'
     },
@@ -155,7 +152,7 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     category: 'BRAND_IDENTITY',
     categoryLabel: 'Catalog & HDSD',
     stage: 'CONCEPT',
-    stageLabel: 'Lên Concept & Bố cục',
+    stageLabel: 'Ý tưởng & Concept',
     priority: 'NORMAL',
     software: ['Adobe InDesign', 'Figma', 'Illustrator'],
     designer: {
@@ -165,7 +162,6 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
     },
     progress: 30,
     dueDate: '30/03/2026',
-    previewImage: 'https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800&auto=format&fit=crop&q=80',
     specs: {
       dimensions: 'Khổ A4 ngang (297 x 210 mm), 48 trang',
       material: 'Giấy Couche 250gsm bìa, 150gsm ruột',
@@ -185,6 +181,8 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
 export const DesignOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<DesignOrder[]>(INITIAL_DESIGN_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
   const [selectedOrder, setSelectedOrder] = useState<DesignOrder | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [commentInput, setCommentInput] = useState('');
@@ -209,9 +207,17 @@ export const DesignOrdersView: React.FC = () => {
   }, [orders]);
 
   const filteredOrders = useMemo(() => {
-    if (activeStageFilter === 'ALL') return orders;
-    return orders.filter(o => o.stage === activeStageFilter);
-  }, [orders, activeStageFilter]);
+    return orders.filter(o => {
+      const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const q = searchQuery.toLowerCase().trim();
+      const matchSearch = !q ||
+        o.code.toLowerCase().includes(q) ||
+        o.title.toLowerCase().includes(q) ||
+        o.designer.name.toLowerCase().includes(q) ||
+        o.categoryLabel.toLowerCase().includes(q);
+      return matchStage && matchSearch;
+    });
+  }, [orders, activeStageFilter, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,7 +237,7 @@ export const DesignOrdersView: React.FC = () => {
       category: formCategory,
       categoryLabel: catLabels[formCategory],
       stage: 'CONCEPT',
-      stageLabel: 'Lên Concept & Bố cục',
+      stageLabel: 'Ý tưởng & Concept',
       priority: formPriority,
       software: ['SolidWorks 2026', 'KeyShot 11'],
       designer: {
@@ -241,7 +247,6 @@ export const DesignOrdersView: React.FC = () => {
       },
       progress: 10,
       dueDate: formDueDate,
-      previewImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80',
       specs: {
         dimensions: 'Theo tiêu chuẩn sản phẩm AVG',
         material: 'Vật liệu quy định',
@@ -302,286 +307,330 @@ export const DesignOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* 🌟 BANNER ĐƠN HÀNG THIẾT KẾ (3.2) */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden">
-        <div className="flex flex-col items-start space-y-2 text-left">
-          {/* Slogan badge with animated border */}
-          <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-              <defs>
-                <linearGradient id="design-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#0284C7" />
-                  <stop offset="50%" stopColor="#8B5CF6" />
-                  <stop offset="100%" stopColor="#F15A24" />
-                </linearGradient>
-              </defs>
-              <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
-                rx="8"
-                ry="8"
-                fill="none"
-                stroke="url(#design-banner-border)"
-                strokeWidth="1.5"
-                className="animate-slogan-box-border"
-              />
-            </svg>
-            <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-transparent text-xs font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-              <Palette className="w-3.5 h-3.5 text-[#F15A24]" />
-              <span>AVG DESIGN HUB • PHÂN HỆ THIẾT KẾ CÔNG NGHIỆP R&D (3.2)</span>
-            </div>
+    <div className="space-y-4">
+      {/* 🚀 SCIENTIFIC EXECUTIVE HEADER (TÍCH HỢP GỌN GÀNG: TIÊU ĐỀ + 4 KPI CHIPS + NÚT TẠO) */}
+      <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+        {/* Left: Module Title & Slogan */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-[#F15A24] shrink-0">
+            <Palette className="w-5 h-5" />
           </div>
-
-          <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-              <span>QUẢN LÝ ĐƠN HÀNG</span>
-              <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                <span className="relative z-10">THIẾT KẾ</span>
-                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                  <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                </svg>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+                ĐƠN HÀNG THIẾT KẾ
+              </h1>
+              <span className="px-2 py-0.5 rounded-md bg-[#F15A24]/10 text-[#F15A24] text-[10px] font-black uppercase">
+                3.2 - THIẾT KẾ
               </span>
-            </h1>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 max-w-2xl">
-              Không gian sáng tạo kiểu dáng sản phẩm 3D, tối ưu kết cấu CAD, hoàn thiện nhận diện CMF và hồ sơ bàn giao khuôn mẫu sản xuất.
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              Kiểu dáng 3D • Kết cấu CAD • Bao bì CMF • Bản vẽ khuôn mẫu sản xuất
             </p>
           </div>
         </div>
 
+        {/* Center: 4 Compact KPI Metrics (Dạng Chip Đo Lường Khoa Học) */}
+        <div className="flex items-center gap-2 overflow-x-auto py-1">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] font-black text-slate-400 uppercase">Tổng đơn:</span>
+            <span className="text-sm font-black text-slate-900 dark:text-white">{stats.total}</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60">
+            <span className="text-[10px] font-black text-sky-700 dark:text-sky-400 uppercase">Dựng 3D:</span>
+            <span className="text-sm font-black text-sky-700 dark:text-sky-300">{stats.in3D}</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60">
+            <span className="text-[10px] font-black text-purple-700 dark:text-purple-400 uppercase">Duyệt CMF:</span>
+            <span className="text-sm font-black text-purple-700 dark:text-purple-300">{stats.inReview}</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60">
+            <span className="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase">Bàn giao:</span>
+            <span className="text-sm font-black text-emerald-700 dark:text-emerald-300">{stats.completed}</span>
+          </div>
+        </div>
+
+        {/* Right: Action Button */}
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-5 py-3 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-2xl shadow-md hover:shadow-lg transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
+          className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl shadow-xs transition transform active:scale-95 text-xs whitespace-nowrap shrink-0 cursor-pointer"
         >
-          <Plus className="w-4 h-4 stroke-[3]" /> Tạo Đơn Hàng Thiết Kế
+          <Plus className="w-3.5 h-3.5 stroke-[3]" /> Tạo Đơn Thiết Kế Mới
         </button>
       </div>
 
-      {/* 📊 KPI THỐNG KÊ NHANH THIẾT KẾ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Tổng Đơn Thiết Kế</span>
-            <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/50 flex items-center justify-center text-[#F15A24]">
-              <Layers className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.total}</span>
-            <span className="text-[11px] font-bold text-slate-400">dự án</span>
-          </div>
+      {/* 🧭 WORKFLOW STEPPER & SCIENTIFIC CONTROL TOOLBAR */}
+      <div className="bg-white/90 dark:bg-slate-900/90 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        {/* Stage Filter Chips (Chuỗi quy trình 5 bước liền mạch) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+          {[
+            { id: 'ALL', label: 'Tất Cả' },
+            { id: 'CONCEPT', label: '1. Ý Tưởng & Moodboard' },
+            { id: 'MODELING_3D', label: '2. Dựng Hình 3D' },
+            { id: 'CMF_COLOR', label: '3. Phối Màu CMF' },
+            { id: 'APPROVAL_RENDER', label: '4. Duyệt Render' },
+            { id: 'RELEASE_CAD', label: '5. Bàn Giao CAD' }
+          ].map(stage => (
+            <button
+              key={stage.id}
+              onClick={() => setActiveStageFilter(stage.id)}
+              className={`px-3 py-1 text-xs font-bold rounded-xl whitespace-nowrap transition cursor-pointer ${
+                activeStageFilter === stage.id
+                  ? 'bg-[#F15A24] text-white shadow-2xs'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+              }`}
+            >
+              {stage.label}
+            </button>
+          ))}
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Đang Lên 3D / CAD</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-[#0284C7]">
-              <Box className="w-4 h-4" />
-            </div>
+        {/* Search & View Switcher (Table / Cards) */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 md:w-56">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tìm mã TK, tên đơn, designer..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F15A24] font-medium text-slate-800 dark:text-slate-100"
+            />
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.in3D}</span>
-            <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400">đang dựng hình</span>
-          </div>
-        </div>
 
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Chờ Duyệt Render/CMF</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
-              <FileImage className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.inReview}</span>
-            <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400">cần review</span>
-          </div>
-        </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Đã Bàn Giao Kỹ Thuật</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.completed}</span>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">xuất xưởng</span>
+          <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`p-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                viewMode === 'table' ? 'bg-white dark:bg-slate-700 text-[#F15A24] dark:text-white shadow-xs' : 'text-slate-400 hover:text-slate-600'
+              }`}
+              title="Xem Bảng Kỹ Thuật (Khoa học nhất)"
+            >
+              <LayoutList className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode('cards')}
+              className={`p-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
+                viewMode === 'cards' ? 'bg-white dark:bg-slate-700 text-[#F15A24] dark:text-white shadow-xs' : 'text-slate-400 hover:text-slate-600'
+              }`}
+              title="Xem Dạng Thẻ Tinh Gọn"
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* 🚀 PIPELINE FILTER STAGES (CÁC GIAI ĐOẠN THIẾT KẾ) */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white/70 dark:bg-slate-900/70 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 backdrop-blur-md">
-        <span className="text-xs font-black text-slate-400 uppercase whitespace-nowrap pl-2">GIAI ĐOẠN:</span>
-        {[
-          { id: 'ALL', label: 'Tất Cả Giai Đoạn' },
-          { id: 'CONCEPT', label: '1. Ý Tưởng & Moodboard' },
-          { id: 'MODELING_3D', label: '2. Dựng Hình 3D & CAD' },
-          { id: 'CMF_COLOR', label: '3. Phối Màu & CMF' },
-          { id: 'APPROVAL_RENDER', label: '4. Duyệt Mẫu Render' },
-          { id: 'RELEASE_CAD', label: '5. Bàn Giao Bản Vẽ' }
-        ].map(stage => (
-          <button
-            key={stage.id}
-            onClick={() => setActiveStageFilter(stage.id)}
-            className={`px-3.5 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeStageFilter === stage.id
-                ? 'bg-[#F15A24] text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#F15A24]'
-            }`}
-          >
-            {stage.label}
-          </button>
-        ))}
-      </div>
+      {/* 📊 CHẾ ĐỘ 1: BẢNG DỮ LIỆU KỸ THUẬT (SCIENTIFIC TECHNICAL TABLE - ƯU TIÊN MẶC ĐỊNH) */}
+      {viewMode === 'table' ? (
+        <div className="bg-white/95 dark:bg-slate-900/95 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-800/70 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-extrabold uppercase text-[10px]">
+                  <th className="p-3.5">Mã Bản Vẽ</th>
+                  <th className="p-3.5">Tên Đơn Hàng & Quy Cách Kỹ Thuật</th>
+                  <th className="p-3.5">Phân Loại</th>
+                  <th className="p-3.5">Giai Đoạn Quy Trình</th>
+                  <th className="p-3.5">Designer</th>
+                  <th className="p-3.5 text-center">Tiến Độ</th>
+                  <th className="p-3.5">Hạn Chót</th>
+                  <th className="p-3.5 text-right">Hồ Sơ</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                {filteredOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="p-8 text-center text-slate-400">
+                      Không tìm thấy đơn hàng thiết kế phù hợp với bộ lọc.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredOrders.map(order => (
+                    <tr
+                      key={order.id}
+                      onClick={() => setSelectedOrder(order)}
+                      className="hover:bg-orange-50/40 dark:hover:bg-slate-800/50 transition cursor-pointer group"
+                    >
+                      {/* Mã đơn */}
+                      <td className="p-3.5 font-mono font-black text-[#F15A24] dark:text-orange-400 whitespace-nowrap">
+                        {order.code}
+                      </td>
 
-      {/* 🎨 DANH SÁCH THẺ DỰ ÁN THIẾT KẾ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
-        {filteredOrders.map(order => (
-          <div
-            key={order.id}
-            className="group bg-white/95 dark:bg-slate-900/95 rounded-[24px] border border-slate-200/90 dark:border-slate-800 p-5 shadow-xs hover:shadow-md transition-all duration-200 hover:border-[#F15A24]/40 flex flex-col justify-between space-y-4"
-          >
-            <div className="space-y-3">
-              {/* Header card: Code, Category, Priority */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] font-mono font-black text-xs border border-orange-200 dark:border-orange-800">
+                      {/* Tiêu đề & Thông số */}
+                      <td className="p-3.5 max-w-xs md:max-w-md">
+                        <div className="font-extrabold text-slate-900 dark:text-slate-100 group-hover:text-[#F15A24] transition leading-snug">
+                          {order.title}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
+                          <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-[10px]">
+                            {order.specs.dimensions}
+                          </span>
+                          <span className="truncate">{order.specs.material}</span>
+                        </div>
+                      </td>
+
+                      {/* Phân loại & Tool */}
+                      <td className="p-3.5 whitespace-nowrap">
+                        <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs">
+                          {order.categoryLabel}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          {order.software.slice(0, 2).join(', ')}
+                        </span>
+                      </td>
+
+                      {/* Giai đoạn */}
+                      <td className="p-3.5 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold ${
+                          order.stage === 'RELEASE_CAD'
+                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                            : order.stage === 'APPROVAL_RENDER'
+                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-400'
+                            : order.stage === 'CMF_COLOR'
+                            ? 'bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-400'
+                            : 'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400'
+                        }`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                          {order.stageLabel}
+                        </span>
+                      </td>
+
+                      {/* Designer */}
+                      <td className="p-3.5 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={order.designer.avatar}
+                            alt=""
+                            className="w-5 h-5 rounded-full object-cover ring-1 ring-slate-200"
+                          />
+                          <div>
+                            <span className="font-bold text-slate-800 dark:text-slate-200 block text-xs">
+                              {order.designer.name}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block leading-none">
+                              {order.designer.role}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Tiến độ */}
+                      <td className="p-3.5 whitespace-nowrap text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <div className="w-16 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-orange-400 to-[#F15A24] rounded-full"
+                              style={{ width: `${order.progress}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] font-black text-slate-600 dark:text-slate-300 w-7 text-right">
+                            {order.progress}%
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Hạn chót */}
+                      <td className="p-3.5 whitespace-nowrap font-bold text-slate-600 dark:text-slate-300 text-xs">
+                        {order.dueDate}
+                      </td>
+
+                      {/* Thao tác */}
+                      <td className="p-3.5 whitespace-nowrap text-right">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedOrder(order);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-[#F15A24] hover:text-white font-extrabold text-[11px] text-slate-700 dark:text-slate-200 transition cursor-pointer"
+                        >
+                          Chi Tiết
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        /* 🎴 CHẾ ĐỘ 2: THẺ KỸ THUẬT TINH GỌN (COMPACT ENGINEERING CARDS) */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredOrders.map(order => (
+            <div
+              key={order.id}
+              onClick={() => setSelectedOrder(order)}
+              className="bg-white/95 dark:bg-slate-900/95 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-2xs hover:shadow-md transition hover:border-[#F15A24]/40 cursor-pointer flex flex-col justify-between space-y-3"
+            >
+              <div className="space-y-2">
+                {/* Header card: Code & Stage */}
+                <div className="flex items-center justify-between">
+                  <span className="px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/50 text-[#F15A24] font-mono font-black text-xs border border-orange-200 dark:border-orange-800">
                     {order.code}
                   </span>
-                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
-                    {order.categoryLabel}
-                  </span>
-                </div>
-                <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                  order.priority === 'URGENT'
-                    ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200'
-                    : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
-                }`}>
-                  {order.priority === 'URGENT' ? 'Khẩn cấp' : 'Ưu tiên cao'}
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <div>
-                <h3
-                  onClick={() => setSelectedOrder(order)}
-                  className="text-base font-black text-slate-900 dark:text-slate-100 group-hover:text-[#F15A24] transition cursor-pointer leading-snug"
-                >
-                  {order.title}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  {order.description}
-                </p>
-              </div>
-
-              {/* Visual Preview (Thumbnail Mockup) */}
-              {order.previewImage && (
-                <div
-                  onClick={() => setSelectedOrder(order)}
-                  className="relative h-44 w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer"
-                >
-                  <img
-                    src={order.previewImage}
-                    alt={order.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-3">
-                    <div className="flex flex-wrap gap-1.5">
-                      {order.software.map(sw => (
-                        <span key={sw} className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-bold">
-                          {sw}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-white text-[10px] font-extrabold flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-[#F15A24]" /> Xem bản mẫu
-                  </div>
-                </div>
-              )}
-
-              {/* Progress bar */}
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-black">
-                  <span className="text-slate-600 dark:text-slate-300 flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-[#F15A24]" />
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                     {order.stageLabel}
                   </span>
-                  <span className="text-[#F15A24]">{order.progress}%</span>
                 </div>
-                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-orange-400 to-[#F15A24] rounded-full transition-all duration-300"
-                    style={{ width: `${order.progress}%` }}
-                  />
+
+                {/* Title */}
+                <h3 className="font-black text-sm text-slate-900 dark:text-slate-100 hover:text-[#F15A24] transition line-clamp-2 leading-snug">
+                  {order.title}
+                </h3>
+
+                {/* Tech Specs Box */}
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-[11px] space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400 font-bold">Quy Cách:</span>
+                    <span className="font-extrabold text-slate-700 dark:text-slate-200 truncate max-w-[150px]">{order.specs.dimensions}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400 font-bold">Vật Liệu:</span>
+                    <span className="font-extrabold text-slate-700 dark:text-slate-200 truncate max-w-[150px]">{order.specs.material}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400 font-bold">File Xuất:</span>
+                    <span className="font-mono text-[10px] font-bold text-slate-700 dark:text-slate-200">{order.specs.fileFormat}</span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="space-y-1 pt-1">
+                  <div className="flex justify-between text-[10px] font-black">
+                    <span className="text-slate-400">Tiến Độ Bản Vẽ</span>
+                    <span className="text-[#F15A24]">{order.progress}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-orange-400 to-[#F15A24] rounded-full"
+                      style={{ width: `${order.progress}%` }}
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Specs pill tags */}
-              <div className="grid grid-cols-2 gap-2 text-[11px] p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                <div>
-                  <span className="text-slate-400 font-bold block text-[10px]">Quy Cách:</span>
-                  <span className="font-bold text-slate-700 dark:text-slate-200 truncate block">{order.specs.dimensions || 'Tiêu chuẩn'}</span>
+              {/* Footer card */}
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
+                <div className="flex items-center gap-1.5">
+                  <img src={order.designer.avatar} alt="" className="w-4 h-4 rounded-full object-cover" />
+                  <span className="font-bold text-slate-700 dark:text-slate-300">{order.designer.name}</span>
                 </div>
-                <div>
-                  <span className="text-slate-400 font-bold block text-[10px]">Định Dạng File:</span>
-                  <span className="font-bold text-slate-700 dark:text-slate-200 truncate block">{order.specs.fileFormat || 'STEP / CAD'}</span>
-                </div>
+                <span className="font-bold text-slate-500">{order.dueDate}</span>
               </div>
             </div>
-
-            {/* Footer card: Designer, DueDate, and Action */}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-              <div className="flex items-center gap-2">
-                <img
-                  src={order.designer.avatar}
-                  alt={order.designer.name}
-                  className="w-6 h-6 rounded-full object-cover ring-1 ring-[#F15A24]"
-                />
-                <div>
-                  <span className="font-black text-slate-800 dark:text-slate-200 block text-[11px] leading-tight">
-                    {order.designer.name}
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-semibold block">
-                    {order.designer.role}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <span className="text-[10px] text-slate-400 font-bold block">Hạn Bàn Giao</span>
-                  <span className="text-[11px] font-black text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-[#F15A24]" />
-                    {order.dueDate}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setSelectedOrder(order)}
-                  className="p-2 rounded-xl bg-orange-50 hover:bg-[#F15A24] text-[#F15A24] hover:text-white transition cursor-pointer shadow-2xs"
-                  title="Xem hồ sơ thiết kế"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* 🔍 DRAWER CHI TIẾT ĐƠN THIẾT KẾ */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200">
-          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 h-full shadow-2xl overflow-y-auto flex flex-col border-l border-slate-200 dark:border-slate-800">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-150">
+          <div className="w-full max-w-xl bg-white dark:bg-slate-900 h-full shadow-2xl overflow-y-auto flex flex-col border-l border-slate-200 dark:border-slate-800">
             {/* Header Drawer */}
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md z-10">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-xl bg-[#F15A24] text-white font-mono font-black text-xs shadow-xs">
+            <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md z-10">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded-lg bg-[#F15A24] text-white font-mono font-black text-xs">
                   {selectedOrder.code}
                 </span>
                 <span className="text-xs font-bold text-slate-500">
@@ -590,79 +639,68 @@ export const DesignOrdersView: React.FC = () => {
               </div>
               <button
                 onClick={() => setSelectedOrder(null)}
-                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Content Drawer */}
-            <div className="p-6 space-y-6 flex-1">
+            <div className="p-5 space-y-5 flex-1">
               <div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white leading-snug">
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-snug">
                   {selectedOrder.title}
                 </h2>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed">
                   {selectedOrder.description}
                 </p>
               </div>
 
-              {/* Large Image Preview */}
-              {selectedOrder.previewImage && (
-                <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-                  <img
-                    src={selectedOrder.previewImage}
-                    alt={selectedOrder.title}
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
-              )}
-
               {/* Specs Breakdown */}
-              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3">
-                <h4 className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Thông Số & Bản Vẽ Kỹ Thuật
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                  Bản Vẽ & Thông Số Kỹ Thuật
                 </h4>
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-2 gap-2.5 text-xs">
                   <div>
-                    <span className="text-slate-400 font-bold block">Kích Thước:</span>
+                    <span className="text-slate-400 font-bold block text-[10px]">Kích Thước:</span>
                     <span className="font-extrabold text-slate-800 dark:text-slate-200">{selectedOrder.specs.dimensions}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-bold block">Vật Liệu Khuyên Dùng:</span>
+                    <span className="text-slate-400 font-bold block text-[10px]">Vật Liệu:</span>
                     <span className="font-extrabold text-slate-800 dark:text-slate-200">{selectedOrder.specs.material}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-bold block">Mã Màu / Hoàn Thiện:</span>
+                    <span className="text-slate-400 font-bold block text-[10px]">Mã Màu / CMF:</span>
                     <span className="font-extrabold text-slate-800 dark:text-slate-200">{selectedOrder.specs.colorCode}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 font-bold block">Định Dạng Bàn Giao:</span>
+                    <span className="text-slate-400 font-bold block text-[10px]">Định Dạng Bàn Giao:</span>
                     <span className="font-extrabold text-slate-800 dark:text-slate-200">{selectedOrder.specs.fileFormat}</span>
                   </div>
                 </div>
               </div>
 
               {/* Checklist công việc thiết kế */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
                     Các Bước Thực Hiện ({selectedOrder.tasks.filter(t => t.done).length}/{selectedOrder.tasks.length})
                   </h4>
                   <span className="text-xs font-extrabold text-[#F15A24]">{selectedOrder.progress}%</span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {selectedOrder.tasks.map(t => (
                     <div
                       key={t.id}
                       onClick={() => handleToggleTask(t.id)}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#F15A24]/40 cursor-pointer transition"
+                      className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#F15A24]/40 cursor-pointer transition"
                     >
                       <input
                         type="checkbox"
                         checked={t.done}
                         onChange={() => {}}
-                        className="rounded text-[#F15A24] focus:ring-[#F15A24] w-4 h-4"
+                        className="rounded text-[#F15A24] focus:ring-[#F15A24] w-3.5 h-3.5"
                       />
                       <span className={`text-xs font-bold ${t.done ? 'line-through text-slate-400' : 'text-slate-800 dark:text-slate-200'}`}>
                         {t.text}
@@ -673,23 +711,23 @@ export const DesignOrdersView: React.FC = () => {
               </div>
 
               {/* Trao đổi phản hồi duyệt mẫu */}
-              <div className="space-y-4 pt-2">
-                <h4 className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-[#F15A24]" />
-                  Trao Đổi Duyệt Mẫu & Sửa Đổi ({selectedOrder.comments.length})
+              <div className="space-y-3 pt-2">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <MessageSquare className="w-3.5 h-3.5 text-[#F15A24]" />
+                  Phản Hồi Duyệt Mẫu ({selectedOrder.comments.length})
                 </h4>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {selectedOrder.comments.map(c => (
-                    <div key={c.id} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1.5">
+                    <div key={c.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 font-black text-slate-800 dark:text-slate-200">
-                          <img src={c.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
+                        <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                          <img src={c.avatar} alt="" className="w-4 h-4 rounded-full object-cover" />
                           <span>{c.author}</span>
                         </div>
                         <span className="text-[10px] text-slate-400">{c.time}</span>
                       </div>
-                      <p className="text-xs text-slate-700 dark:text-slate-300 font-medium pl-7">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 font-medium pl-6">
                         {c.text}
                       </p>
                     </div>
@@ -699,16 +737,16 @@ export const DesignOrdersView: React.FC = () => {
                 <form onSubmit={handleAddComment} className="flex gap-2">
                   <input
                     type="text"
-                    placeholder="Gửi ý kiến duyệt màu, điều chỉnh kết cấu 3D..."
+                    placeholder="Gửi ý kiến duyệt màu, điều chỉnh kết cấu..."
                     value={commentInput}
                     onChange={e => setCommentInput(e.target.value)}
-                    className="flex-1 p-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40"
+                    className="flex-1 p-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F15A24]"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer"
+                    className="px-3.5 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl text-xs flex items-center gap-1 transition cursor-pointer"
                   >
-                    <Send className="w-3.5 h-3.5" /> Gửi
+                    <Send className="w-3 h-3" /> Gửi
                   </button>
                 </form>
               </div>
@@ -720,21 +758,21 @@ export const DesignOrdersView: React.FC = () => {
       {/* 📝 MODAL TẠO ĐƠN THIẾT KẾ MỚI */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-[24px] shadow-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-5 animate-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Palette className="w-5 h-5 text-[#F15A24]" />
-                Tạo Đơn Hàng Thiết Kế R&D Mới
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-5 space-y-4 animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Palette className="w-4 h-4 text-[#F15A24]" />
+                Tạo Đơn Hàng Thiết Kế R&D Mới (3.2)
               </h3>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-600"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateOrder} className="space-y-4 text-xs">
+            <form onSubmit={handleCreateOrder} className="space-y-3.5 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mã Đơn Thiết Kế</label>
@@ -742,7 +780,7 @@ export const DesignOrdersView: React.FC = () => {
                     type="text"
                     value={formCode}
                     onChange={e => setFormCode(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-black text-[#F15A24]"
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono font-black text-[#F15A24]"
                   />
                 </div>
                 <div>
@@ -750,7 +788,7 @@ export const DesignOrdersView: React.FC = () => {
                   <select
                     value={formCategory}
                     onChange={e => setFormCategory(e.target.value as any)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
                   >
                     <option value="3D_MODEL">Kiểu dáng 3D Công nghiệp</option>
                     <option value="PACKAGING_CMF">Bao bì & CMF</option>
@@ -768,7 +806,7 @@ export const DesignOrdersView: React.FC = () => {
                   placeholder="Ví dụ: Thiết kế kiểu dáng vỏ nhôm Anodized cho..."
                   value={formTitle}
                   onChange={e => setFormTitle(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
+                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium"
                 />
               </div>
 
@@ -778,7 +816,7 @@ export const DesignOrdersView: React.FC = () => {
                   <select
                     value={formDesigner}
                     onChange={e => setFormDesigner(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
                   >
                     <option value="Trần Minh Trí">Trần Minh Trí (3D Senior)</option>
                     <option value="Lê Thảo Vy">Lê Thảo Vy (Packaging)</option>
@@ -787,40 +825,40 @@ export const DesignOrdersView: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Hạn Bàn Giao Mẫu</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Hạn Bàn Giao</label>
                   <input
                     type="text"
                     value={formDueDate}
                     onChange={e => setFormDueDate(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
+                    className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mô Tả Yêu Cầu Thiết Kế</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">Mô Tả Yêu Cầu Kỹ Thuật</label>
                 <textarea
-                  rows={3}
-                  placeholder="Mô tả phong cách thiết kế, kích thước sơ bộ, tiêu chuẩn kháng nước/kháng bụi..."
+                  rows={2}
+                  placeholder="Mô tả phong cách, kích thước, tiêu chuẩn kháng nước..."
                   value={formDesc}
                   onChange={e => setFormDesc(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
+                  className="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-extrabold text-slate-600 dark:text-slate-300 hover:bg-slate-50"
+                  className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50"
                 >
                   Hủy Bỏ
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl shadow-md cursor-pointer transition"
+                  className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl shadow-xs cursor-pointer transition"
                 >
-                  Lưu & Khởi Tạo Thiết Kế
+                  Lưu & Khởi Tạo
                 </button>
               </div>
             </form>
