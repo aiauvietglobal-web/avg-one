@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Handlee&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,600;0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,7 +30,7 @@
 }
 
 :root {
-  --font-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-primary: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* 3 TÔNG MÀU CHỦ ĐẠO CHÍNH: CAM, XÁM XANH & TRẮNG */
   --accent-orange: #ff5722;
@@ -384,7 +385,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 html,
@@ -400,7 +401,7 @@ body,
 body {
   background-color: var(--bg-primary);
   color: var(--text-main);
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
   -webkit-font-smoothing: antialiased;
 }
 

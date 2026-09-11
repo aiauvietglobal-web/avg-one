@@ -7,6 +7,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
       colors: {
         odoo: {
           purple: '#714B67',
