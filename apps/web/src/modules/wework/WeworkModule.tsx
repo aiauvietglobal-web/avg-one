@@ -325,73 +325,12 @@ export const WeworkModule: React.FC = () => {
           </button>
         </div>
 
-        {/* Control Bar & Filters */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white/90 dark:bg-slate-900/90 p-4 rounded-[22px] border border-slate-200 dark:border-slate-800 shadow-2xs backdrop-blur-md">
-          {/* Department Filter (Thiết kế, Nghiên cứu, Pháp lý) */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-            <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase whitespace-nowrap">ĐẦU MỤC:</span>
-            {[
-              { id: 'ALL', label: 'Tất cả' },
-              { id: '3.2 - THIẾT KẾ', label: 'Thiết kế' },
-              { id: '3.1 - RDI', label: 'Nghiên cứu' },
-              { id: '6 - PHÁP LÝ', label: 'Pháp lý' }
-            ].map(d => (
-              <button
-                key={d.id}
-                onClick={() => setSelectedDept(d.id)}
-                className={`px-3.5 py-1.5 text-xs font-extrabold rounded-xl whitespace-nowrap transition cursor-pointer ${
-                  selectedDept === d.id
-                    ? 'bg-[#F15A24] text-white shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-slate-700 hover:text-[#F15A24]'
-                }`}
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Hidden DOM trigger buttons for AppShell sync */}
-          <div className="hidden">
-            <button id="btn-orders-subtab-design" onClick={() => setSelectedDept('3.2 - THIẾT KẾ')} />
-            <button id="btn-orders-subtab-research" onClick={() => setSelectedDept('3.1 - RDI')} />
-            <button id="btn-orders-subtab-sample-h1" onClick={() => setSelectedDept('3.1 - RDI')} />
-            <button id="btn-orders-subtab-legal" onClick={() => setSelectedDept('6 - PHÁP LÝ')} />
-          </div>
-
-          {/* Search & View Switcher */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 sm:w-64">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Tìm mã đơn DH-2026..."
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-100/80 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F15A24]/50 font-medium text-slate-800 dark:text-slate-100"
-              />
-            </div>
-
-            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
-              <button
-                onClick={() => setViewMode('kanban')}
-                className={`p-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  viewMode === 'kanban' ? 'bg-white dark:bg-slate-700 text-[#F15A24] dark:text-white shadow-xs' : 'text-slate-500'
-                }`}
-                title="Xem dạng Kanban Card Odoo"
-              >
-                <LayoutGrid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  viewMode === 'list' ? 'bg-white dark:bg-slate-700 text-[#F15A24] dark:text-white shadow-xs' : 'text-slate-500'
-                }`}
-                title="Xem dạng Danh sách Bảng"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+        {/* Hidden DOM trigger buttons for AppShell sync */}
+        <div className="hidden">
+          <button id="btn-orders-subtab-design" onClick={() => setSelectedDept('3.2 - THIẾT KẾ')} />
+          <button id="btn-orders-subtab-research" onClick={() => setSelectedDept('3.1 - RDI')} />
+          <button id="btn-orders-subtab-sample-h1" onClick={() => setSelectedDept('3.1 - RDI')} />
+          <button id="btn-orders-subtab-legal" onClick={() => setSelectedDept('6 - PHÁP LÝ')} />
         </div>
 
         {/* Main View: Kanban Board */}
