@@ -250,26 +250,26 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Right: Phân hệ quản lý vận hành (chữ to hơn, viết hoa chữ cái đầu, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
+                {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
                 <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
-                  <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-5">
+                  <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-6">
                     {[
-                      { id: 'system' as AppModuleId, label: 'Hệ Thống' },
-                      { id: 'inside' as AppModuleId, label: 'Bảng Tin' },
+                      { id: 'system' as AppModuleId, label: 'Hệ thống' },
+                      { id: 'inside' as AppModuleId, label: 'Bảng tin' },
                       { id: 'calendar' as AppModuleId, label: 'Lịch' },
-                      { id: 'orders' as AppModuleId, label: 'Đơn Hàng' },
+                      { id: 'orders' as AppModuleId, label: 'Đơn hàng' },
                     ].map((item) => {
                       return (
                         <button
                           key={item.id}
                           onClick={() => onSelectModule(item.id)}
-                          className="relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[15px] lg:text-base font-bold text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] transition-all cursor-pointer group select-none"
+                          className="relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] transition-all cursor-pointer group select-none tracking-normal"
                         >
                           <span className="relative z-10 transition-transform duration-200 group-hover:scale-105 inline-block">
                             {item.label}
                           </span>
                           {/* Underline hover indicator */}
-                          <span className="absolute bottom-0 left-2 right-2 h-[2.5px] bg-[#F15A24] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
+                          <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-[#F15A24] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
                         </button>
                       );
                     })}
@@ -373,26 +373,26 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Center: Operation Modules Quick Switch (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) - Text Only */}
+                {/* Center: Operation Modules Quick Switch (Hệ thống, Bảng tin, Lịch, Đơn hàng) - Text Only */}
                 <nav className="hidden md:flex items-center gap-1 lg:gap-2">
                   {[
-                    { id: 'system' as AppModuleId, label: 'Hệ Thống' },
-                    { id: 'inside' as AppModuleId, label: 'Bảng Tin' },
+                    { id: 'system' as AppModuleId, label: 'Hệ thống' },
+                    { id: 'inside' as AppModuleId, label: 'Bảng tin' },
                     { id: 'calendar' as AppModuleId, label: 'Lịch' },
-                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng' },
+                    { id: 'orders' as AppModuleId, label: 'Đơn hàng' },
                   ].map((item) => {
                     const isActive = activeModule === item.id;
                     return (
                       <button
                         key={item.id}
                         onClick={() => onSelectModule(item.id)}
-                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                           isActive
-                            ? 'text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 shadow-xs font-black'
+                            ? 'text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 shadow-xs font-semibold'
                             : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
-                        <span className="font-bold text-xs sm:text-[13px]">{item.label}</span>
+                        <span>{item.label}</span>
                       </button>
                     );
                   })}
