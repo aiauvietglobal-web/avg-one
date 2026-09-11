@@ -308,11 +308,21 @@ export const AppShell: React.FC<AppShellProps> = ({
                                   : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                               }`}
                             >
-                              <span
-                                style={{ color: isActive ? '#F15A24' : undefined }}
-                                className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
-                              >
-                                {item.label}
+                              <span className="relative inline-block">
+                                <span
+                                  style={{ color: isActive ? '#F15A24' : undefined }}
+                                  className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
+                                >
+                                  {item.label}
+                                </span>
+                                {/* Line ngắn dưới chân chữ */}
+                                <span
+                                  className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full transition-all duration-300 origin-center ${
+                                    isActive
+                                      ? 'scale-x-100 opacity-100'
+                                      : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
+                                  }`}
+                                />
                               </span>
                               <ChevronDown
                                 style={{ color: isActive ? '#F15A24' : undefined }}
@@ -372,11 +382,21 @@ export const AppShell: React.FC<AppShellProps> = ({
                               : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                           }`}
                         >
-                          <span
-                            style={{ color: isActive ? '#F15A24' : undefined }}
-                            className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
-                          >
-                            {item.label}
+                          <span className="relative inline-block">
+                            <span
+                              style={{ color: isActive ? '#F15A24' : undefined }}
+                              className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
+                            >
+                              {item.label}
+                            </span>
+                            {/* Line ngắn dưới chân chữ */}
+                            <span
+                              className={`absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full transition-all duration-300 origin-center ${
+                                isActive
+                                  ? 'scale-x-100 opacity-100'
+                                  : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
+                              }`}
+                            />
                           </span>
                         </button>
                       );
