@@ -428,12 +428,15 @@ export const AppShell: React.FC<AppShellProps> = ({
                         {currentUser.name.charAt(0)}
                       </button>
                     ) : (
-                      /* Chưa đăng nhập: Hộp viền cam, chữ cam, bo tròn hoàn toàn dạng viên thuốc (rounded-full) */
+                      /* Chưa đăng nhập: Hộp viền cam, chữ cam, bo tròn 3 góc tối đa (trừ góc dưới cùng bên trái bỏ bo góc) */
                       <button
                         onClick={() => setIsLoginModalOpen(true)}
-                        className="px-6 sm:px-7 py-2 sm:py-2.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-sm sm:text-[15px] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] rounded-full select-none flex items-center justify-center"
+                        className="btn-speech-bubble px-6 sm:px-7 py-2 sm:py-2.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-sm sm:text-[15px] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] select-none flex items-center justify-center"
                         style={{
-                          borderRadius: '9999px'
+                          borderTopLeftRadius: '9999px',
+                          borderTopRightRadius: '9999px',
+                          borderBottomRightRadius: '9999px',
+                          borderBottomLeftRadius: '0px'
                         }}
                         title="Đăng nhập tài khoản AVG One"
                       >
