@@ -278,19 +278,13 @@ export const AppShell: React.FC<AppShellProps> = ({
             <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
               <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
-                {/* Left: AVG One Official Logo */}
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => onSelectModule('home')}
-                    className="flex items-center gap-3 hover:opacity-90 transition text-left group cursor-pointer"
-                    title="Trang Chủ Tất Cả Ứng Dụng AVG One"
-                  >
-                    <img
-                      src={avgOfficialLogo}
-                      alt="AVG One Official Logo"
-                      className="h-7 sm:h-8 object-contain group-hover:scale-105 transition-transform"
-                    />
-                  </button>
+                {/* Left: AVG One Official Logo (Hiển thị tĩnh, không hiệu ứng hover/zoom, không tính năng click) */}
+                <div className="flex items-center gap-3 select-none">
+                  <img
+                    src={avgOfficialLogo}
+                    alt="AVG One Official Logo"
+                    className="h-7 sm:h-8 object-contain pointer-events-none"
+                  />
                 </div>
 
                 {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}

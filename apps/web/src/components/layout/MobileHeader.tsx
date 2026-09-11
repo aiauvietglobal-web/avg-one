@@ -56,17 +56,13 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
               </span>
             </button>
           ) : (
-            <button
-              onClick={() => onSelectModule('home')}
-              className="flex items-center gap-1.5 cursor-pointer"
-              title="Trang chủ AVG One"
-            >
+            <div className="flex items-center gap-1.5 select-none pointer-events-none">
               <img
                 src={avgOfficialLogo}
                 alt="AVG One Logo"
                 className="h-5 sm:h-6 object-contain"
               />
-            </button>
+            </div>
           )}
         </div>
 
