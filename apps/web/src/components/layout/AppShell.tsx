@@ -240,8 +240,8 @@ export const AppShell: React.FC<AppShellProps> = ({
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {activeModule === 'home' ? (
             /* HOME PAGE HEADER (Logo Chính Thức AVG One + Search + SSO - Không Đường Phân Cách) */
-            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-none transition-all">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 sm:h-13 flex items-center justify-between gap-4">
+            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-none transition-all shadow-xs dark:shadow-none">
+              <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
                 {/* Left: AVG One Official Logo */}
                 <div className="flex items-center gap-3">
@@ -253,44 +253,44 @@ export const AppShell: React.FC<AppShellProps> = ({
                     <img
                       src={avgOfficialLogo}
                       alt="AVG One Official Logo"
-                      className="h-6 sm:h-7 object-contain group-hover:scale-105 transition-transform"
+                      className="h-7 sm:h-8 object-contain group-hover:scale-105 transition-transform"
                     />
                   </button>
                 </div>
 
                 {/* Center: Odoo Universal Search Bar */}
-                <div className="flex-1 max-w-xl hidden md:block">
+                <div className="flex-1 max-w-xl lg:max-w-2xl hidden md:block">
                   <div className="relative">
-                    <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       id="odoo-universal-search"
                       type="text"
                       placeholder="Tìm kiếm"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-3.5 py-1 text-xs bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 focus:bg-white transition shadow-xs placeholder:text-slate-400 font-medium"
+                      className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-xl border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 focus:bg-white transition shadow-xs placeholder:text-slate-400 font-medium"
                     />
                   </div>
                 </div>
 
                 {/* Right: Reset Build Button + Fullscreen Toggle + SSO Profile Button */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:gap-2.5">
                   <button
                     onClick={() => {
                       if (typeof window !== 'undefined') window.location.reload();
                     }}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center active:scale-90"
+                    className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center active:scale-90"
                     title="Tải lại / Cập nhật bản build mới nhất (Reset)"
                   >
-                    <RotateCw className="w-4 h-4 text-[#F15A24] hover:rotate-180 transition-transform duration-300" />
+                    <RotateCw className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#F15A24] hover:rotate-180 transition-transform duration-300" />
                   </button>
 
                   <button
                     onClick={toggleFullscreen}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
+                    className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
                     title={isFullscreen ? "Thoát toàn màn hình (F11 / Alt+F)" : "Mở rộng toàn màn hình (F11 / Alt+F)"}
                   >
-                    {isFullscreen ? <Minimize2 className="w-4 h-4 text-[#F15A24]" /> : <Maximize2 className="w-4 h-4" />}
+                    {isFullscreen ? <Minimize2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#F15A24]" /> : <Maximize2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />}
                   </button>
 
                   <div className="relative">
@@ -298,7 +298,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                       /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn (Bỏ hộp đen & bỏ chữ) */
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
-                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none"
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none"
                         title={`${currentUser.name} (${currentUser.role})`}
                       >
                         {currentUser.name.charAt(0)}
@@ -307,7 +307,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                       /* Chưa đăng nhập: Hộp màu cam, Chữ Đăng nhập, BỎ MŨI TÊN theo chỉ định */
                       <button
                         onClick={() => setIsLoginModalOpen(true)}
-                        className="px-3.5 py-1.5 bg-[#F15A24] hover:bg-[#d94e1f] active:scale-95 text-white font-extrabold text-[11px] rounded-lg transition shadow-sm border border-[#F15A24] cursor-pointer"
+                        className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] active:scale-95 text-white font-extrabold text-xs sm:text-[13px] rounded-xl transition shadow-sm border border-[#F15A24] cursor-pointer"
                         title="Đăng nhập tài khoản AVG One"
                       >
                         <span>Đăng nhập</span>
@@ -351,7 +351,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           ) : (
             /* SUB-MODULE TOPBAR HEADER */
             <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-slate-900 text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
-              <div className="w-full px-4 sm:px-6 h-11 sm:h-12 flex items-center justify-between gap-4 text-xs sm:text-sm font-medium">
+              <div className="w-full px-4 sm:px-8 h-12 sm:h-14 flex items-center justify-between gap-4 text-xs sm:text-sm font-medium">
                 
                 {/* Left Stack */}
                 <div className="flex items-center gap-3 overflow-x-auto no-scrollbar flex-1 mr-2 h-full">
