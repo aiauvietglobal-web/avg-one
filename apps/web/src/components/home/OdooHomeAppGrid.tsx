@@ -98,7 +98,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             <div className="space-y-2 sm:space-y-2.5 w-fit flex flex-col items-start justify-start text-left">
               
               {/* Hàng 1: Một nền tảng Vững chắc! */}
-              <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
+              <div className="animate-hero-row-1 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một nền tảng</span>
                 <span className="relative inline-block px-1">
                   <span
@@ -108,7 +108,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                       WebkitTextFillColor: 'transparent',
                       display: 'inline-block'
                     }}
-                    className="relative z-10 font-black"
+                    className="relative z-10 font-black animate-hero-accent-1"
                   >
                     Vững chắc!
                   </span>
@@ -119,7 +119,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               </div>
 
               {/* Hàng 2: Một định hướng Rõ ràng! */}
-              <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
+              <div className="animate-hero-row-2 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một định hướng</span>
                 <span className="relative inline-block px-1">
                   <span
@@ -128,7 +128,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent'
                     }}
-                    className="relative z-10 font-black inline-block dark:hidden"
+                    className="relative z-10 font-black inline-block dark:hidden animate-hero-accent-2"
                   >
                     Rõ ràng!
                   </span>
@@ -138,7 +138,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent'
                     }}
-                    className="relative z-10 font-black hidden dark:inline-block"
+                    className="relative z-10 font-black hidden dark:inline-block animate-hero-accent-2"
                   >
                     Rõ ràng!
                   </span>
@@ -149,7 +149,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               </div>
 
               {/* Hàng 3: Một đích đến Tươi sáng! */}
-              <div className="text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
+              <div className="animate-hero-row-3 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một đích đến</span>
                 <span className="relative inline-block px-1">
                   <span
@@ -159,7 +159,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                       WebkitTextFillColor: 'transparent',
                       display: 'inline-block'
                     }}
-                    className="relative z-10 font-black"
+                    className="relative z-10 font-black animate-hero-accent-3"
                   >
                     Tươi sáng!
                   </span>
@@ -198,11 +198,11 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   />
                 </svg>
 
-                <p className="relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
+                <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
                   <span>One Platform</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
+                  <span className="animate-hero-dot-1 w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
                   <span>One Direction</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#231F20] dark:bg-slate-400 shrink-0" />
+                  <span className="animate-hero-dot-2 w-1.5 h-1.5 rounded-full bg-[#231F20] dark:bg-slate-400 shrink-0" />
                   <span>One Destination</span>
                 </p>
               </div>
