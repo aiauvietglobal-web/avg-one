@@ -21,11 +21,11 @@ const SUB_APPS_GRID: SubAppCard[] = [
   {
     id: 'speech-to-text',
     code: 'APP-01',
-    title: 'CHUYỂN ĐỔI TRỰC TIẾP & KÝ HIỆU TAY AI',
-    headerTitle: 'CHUYỂN ĐỔI TRỰC TIẾP AI',
+    title: 'CHUYỂN ĐỔI TRỰC TIẾP',
+    headerTitle: 'CHUYỂN ĐỔI TRỰC TIẾP',
     icon: Mic,
     isAvailable: true,
-    badge: 'AI KÝ HIỆU TAY'
+    badge: 'ĐÃ SẴN SÀNG'
   },
   {
     id: 'dashboard',
