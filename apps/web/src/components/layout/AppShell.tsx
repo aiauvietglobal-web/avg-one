@@ -328,13 +328,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                                     e.stopPropagation();
                                     handleSelectSystemSubTab('annual-plan');
                                   }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
                                     isActive && systemTabState === 'annual-plan'
-                                      ? 'bg-orange-50 dark:bg-orange-950/40 text-[#F15A24]'
-                                      : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#F15A24]'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
-                                  <span>Kế hoạch năm</span>
+                                  <span className="text-slate-900 dark:text-white font-medium">Kế hoạch năm</span>
                                   {isActive && systemTabState === 'annual-plan' && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
@@ -344,13 +344,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                                     e.stopPropagation();
                                     handleSelectSystemSubTab('executive-directive');
                                   }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
                                     isActive && systemTabState === 'executive-directive'
-                                      ? 'bg-orange-50 dark:bg-orange-950/40 text-[#F15A24]'
-                                      : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#F15A24]'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
-                                  <span>Thông điệp điều hành</span>
+                                  <span className="text-slate-900 dark:text-white font-medium">Thông điệp điều hành</span>
                                   {isActive && systemTabState === 'executive-directive' && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
