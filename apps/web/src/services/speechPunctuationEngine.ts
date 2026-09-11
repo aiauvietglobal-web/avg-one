@@ -23,7 +23,6 @@ const SPOKEN_PUNCTUATION_RULES: Array<{ pattern: RegExp; replacement: string }> 
   { pattern: /\b(dấu\s*chấm\s*hỏi|chấm\s*hỏi|dấu\s*hỏi)\b/gi, replacement: '?' },
   { pattern: /\b(dấu\s*chấm\s*than|chấm\s*than|dấu\s*than|dấu\s*cảm\s*thán)\b/gi, replacement: '!' },
   { pattern: /\b(dấu\s*hai\s*chấm|hai\s*chấm)\b/gi, replacement: ':' },
-  { pattern: /\b(dấu\s*ba\s*chấm|ba\s*chấm|chấm\s*lửng|dấu\s*chấm\s*lửng)\b/gi, replacement: '...' },
   { pattern: /\b(dấu\s*chấm\s*phẩy|chấm\s*phẩy)\b/gi, replacement: ';' },
   { pattern: /\b(chấm\s*hết\s*câu|chấm\s*hết|dấu\s*chấm|chấm\s*câu)\b/gi, replacement: '.' },
   { pattern: /\b(dấu\s*phẩy|ngắt\s*phẩy|phẩy)\b/gi, replacement: ',' },
@@ -272,28 +271,13 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
   let text = rawText.normalize('NFC').trim();
   if (!text) return '';
 
-  // 2. Chuyển đổi khẩu lệnh dấu câu đọc bằng lời nói
+  // 2. Chuyển đổi khẩu lệnh dấu câu đọc bằng lời nói thực tế (chấm, phẩy, xuống dòng...)
   for (const rule of SPOKEN_PUNCTUATION_RULES) {
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // 3. Chuẩn hóa từ mượn tiếng Anh công sở
-  for (const rule of LOANWORD_RULES) {
-    text = text.replace(rule.pattern, rule.replacement);
-  }
-
-  // 4. Chuẩn hóa số, ngày tháng, phần trăm (ITN)
-  for (const rule of ITN_RULES) {
-    text = text.replace(rule.pattern, rule.replacement as any);
-  }
-
-  // 5. Khử lỗi nói nhanh méo chữ & phương ngữ
-  for (const rule of SPOKEN_COLLOQUIAL_RULES) {
-    text = text.replace(rule.pattern, rule.replacement);
-  }
-
-  // 6. Tự động chèn dấu phẩy sau các liên từ / trạng từ chuyển ý
-  text = insertSmartDiscourseCommas(text);
+  // Tuyệt đối không tự ý thêm bớt từ ngữ, sửa lời thoại hay suy đoán từ của người nói.
+  // Giữ đúng nguyên văn 100% những gì thu âm được.
 
   // 7. Chuẩn hóa khoảng cách quanh dấu câu:
   // Không để khoảng trắng trước dấu câu: "xin chào ," -> "xin chào,"

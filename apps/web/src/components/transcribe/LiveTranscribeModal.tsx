@@ -88,11 +88,8 @@ export const LiveTranscribeModal: React.FC<LiveTranscribeModalProps> = ({
           };
           return updated;
         }
-        // Khác người phát biểu: Ngắt đoạn mới, khử trùng lặp tiền tố nếu có
-        const cleanNewText = stripPrefixOverlap(last.text, entry.text);
-        if (!cleanNewText.trim()) return prev;
-
-        return [...prev, { ...entry, text: cleanNewText.trim() }];
+        // Khác người phát biểu: Ngắt đoạn mới, giữ đúng 100% nguyên văn lời người nói
+        return [...prev, { ...entry, text: entry.text.trim() }];
       });
     };
     controller.onAudioLevel = (level) => setAudioLevel(level);

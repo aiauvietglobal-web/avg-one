@@ -1159,10 +1159,7 @@ export const SpeechToTextModule: React.FC = () => {
       }
 
       // Khác người nói: tạo phân đoạn/tin nhắn mới để phân biệt rõ từng người giao tiếp
-      // Khử trường hợp câu của người mới lặp lại tiền tố đã nói ở cuối câu của người trước
-      const cleanNewText = stripPrefixOverlap(lastMsg.text, enhancedText);
-      if (!cleanNewText.trim()) return prev;
-
+      // Giữ đúng nguyên văn 100% câu từ của người nói mới, tuyệt đối không thêm bớt lời thoại
       return [
         ...prev,
         {
@@ -1170,8 +1167,8 @@ export const SpeechToTextModule: React.FC = () => {
           sender: 'HEARING',
           senderName: currentSpk.name,
           speakerId: currentSpk.id,
-          text: cleanNewText.trim(),
-          translatedText: translateText(cleanNewText.trim(), targetLanguage),
+          text: enhancedText.trim(),
+          translatedText: translateText(enhancedText.trim(), targetLanguage),
           timestamp: timestampStr
         }
       ];
@@ -2316,11 +2313,11 @@ export const SpeechToTextModule: React.FC = () => {
                   <div className="flex flex-col items-start w-full">
                     <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50 dark:bg-slate-900 border-2 border-[#00A8E8] text-slate-900 dark:text-white w-fit max-w-[88%] shadow-md">
                       <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[#00A8E8] dark:text-[#38BDF8] mb-1">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8]" />
-                        Đang nói trực tiếp...
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8] animate-pulse" />
+                        Đang nói trực tiếp:
                       </div>
                       <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>
-                        {interimTranscript} ...
+                        {interimTranscript}
                       </div>
                     </div>
                   </div>
@@ -2883,10 +2880,10 @@ export const SpeechToTextModule: React.FC = () => {
                 <div className="flex flex-col items-start w-full">
                   <div className="p-4 rounded-xl bg-sky-50 dark:bg-slate-900 border-2 border-[#00A8E8] text-slate-900 dark:text-white w-fit max-w-[85%] shadow-md">
                     <div className="flex items-center gap-1.5 text-xs font-extrabold text-[#00A8E8] dark:text-[#38BDF8] mb-1">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8]" />
-                      Đang nói trực tiếp...
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8] animate-pulse" />
+                      Đang nói trực tiếp:
                     </div>
-                    <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>{interimTranscript} ...</div>
+                    <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>{interimTranscript}</div>
                   </div>
                 </div>
               )}
