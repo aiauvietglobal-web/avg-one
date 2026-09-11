@@ -132,13 +132,13 @@ export const WeworkModule: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
 
-  // Lắng nghe sự kiện chọn đầu mục con từ thanh Header (Thiết kế, Sản mẫu H1, Pháp Lý)
+  // Lắng nghe sự kiện chọn đầu mục con từ thanh Header (Thiết kế, Nghiên cứu, Pháp lý)
   React.useEffect(() => {
     const handleOrdersTabChange = (e: any) => {
       if (e.detail) {
         if (e.detail === 'design' || e.detail === '3.2 - THIẾT KẾ') {
           setSelectedDept('3.2 - THIẾT KẾ');
-        } else if (e.detail === 'sample-h1' || e.detail === '3.1 - RDI') {
+        } else if (e.detail === 'research' || e.detail === 'sample-h1' || e.detail === '3.1 - RDI') {
           setSelectedDept('3.1 - RDI');
         } else if (e.detail === 'legal' || e.detail === '6 - PHÁP LÝ') {
           setSelectedDept('6 - PHÁP LÝ');
@@ -327,14 +327,14 @@ export const WeworkModule: React.FC = () => {
 
         {/* Control Bar & Filters */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white/90 dark:bg-slate-900/90 p-4 rounded-[22px] border border-slate-200 dark:border-slate-800 shadow-2xs backdrop-blur-md">
-          {/* Department Filter (Thiết kế, Sản mẫu H1, Pháp Lý) */}
+          {/* Department Filter (Thiết kế, Nghiên cứu, Pháp lý) */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
             <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase whitespace-nowrap">ĐẦU MỤC:</span>
             {[
               { id: 'ALL', label: 'Tất cả' },
               { id: '3.2 - THIẾT KẾ', label: 'Thiết kế' },
-              { id: '3.1 - RDI', label: 'Sản mẫu H1' },
-              { id: '6 - PHÁP LÝ', label: 'Pháp Lý' }
+              { id: '3.1 - RDI', label: 'Nghiên cứu' },
+              { id: '6 - PHÁP LÝ', label: 'Pháp lý' }
             ].map(d => (
               <button
                 key={d.id}
@@ -353,6 +353,7 @@ export const WeworkModule: React.FC = () => {
           {/* Hidden DOM trigger buttons for AppShell sync */}
           <div className="hidden">
             <button id="btn-orders-subtab-design" onClick={() => setSelectedDept('3.2 - THIẾT KẾ')} />
+            <button id="btn-orders-subtab-research" onClick={() => setSelectedDept('3.1 - RDI')} />
             <button id="btn-orders-subtab-sample-h1" onClick={() => setSelectedDept('3.1 - RDI')} />
             <button id="btn-orders-subtab-legal" onClick={() => setSelectedDept('6 - PHÁP LÝ')} />
           </div>
@@ -718,8 +719,8 @@ export const WeworkModule: React.FC = () => {
                     className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-extrabold"
                   >
                     <option value="3.2 - THIẾT KẾ">Thiết kế (3.2)</option>
-                    <option value="3.1 - RDI">Sản mẫu H1 (3.1)</option>
-                    <option value="6 - PHÁP LÝ">Pháp Lý (6)</option>
+                    <option value="3.1 - RDI">Nghiên cứu (3.1)</option>
+                    <option value="6 - PHÁP LÝ">Pháp lý (6)</option>
                   </select>
                 </div>
               </div>

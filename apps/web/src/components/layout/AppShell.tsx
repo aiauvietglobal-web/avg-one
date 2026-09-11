@@ -128,7 +128,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   };
 
   // Đơn hàng dropdown state & ref
-  const [ordersTabState, setOrdersTabState] = useState<'design' | 'sample-h1' | 'legal'>('design');
+  const [ordersTabState, setOrdersTabState] = useState<'design' | 'research' | 'sample-h1' | 'legal'>('design');
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
   const ordersDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -151,7 +151,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   }, []);
 
   // Chọn đầu mục con Đơn hàng: chuyển tab, đồng bộ dữ liệu và ĐÓNG hộp dropdown
-  const handleSelectOrdersSubTab = (tab: 'design' | 'sample-h1' | 'legal') => {
+  const handleSelectOrdersSubTab = (tab: 'design' | 'research' | 'sample-h1' | 'legal') => {
     setOrdersTabState(tab);
     setIsOrdersDropdownOpen(false);
     onSelectModule('orders');
@@ -477,16 +477,16 @@ export const AppShell: React.FC<AppShellProps> = ({
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleSelectOrdersSubTab('sample-h1');
+                                    handleSelectOrdersSubTab('research');
                                   }}
                                   className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && ordersTabState === 'sample-h1'
+                                    isActive && (ordersTabState === 'research' || ordersTabState === 'sample-h1')
                                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
                                       : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
-                                  <span className="text-slate-900 dark:text-white font-medium">Sản mẫu H1</span>
-                                  {isActive && ordersTabState === 'sample-h1' && (
+                                  <span className="text-slate-900 dark:text-white font-medium">Nghiên cứu</span>
+                                  {isActive && (ordersTabState === 'research' || ordersTabState === 'sample-h1') && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
                                 </button>
@@ -501,7 +501,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                                       : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
-                                  <span className="text-slate-900 dark:text-white font-medium">Pháp Lý</span>
+                                  <span className="text-slate-900 dark:text-white font-medium">Pháp lý</span>
                                   {isActive && ordersTabState === 'legal' && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
