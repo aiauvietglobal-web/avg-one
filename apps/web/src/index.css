@@ -2180,14 +2180,16 @@ div.box-speech-bubble {
   background: #bae6fd;
 }
 
-/* Master 8.0s Rhythm Timeline (Refined with 1.0s Snappy Line Drawing & Dynamic Opacity Breathing Border):
-   - 0.0s -> 1.0s (0% -> 12.5%): Line 1 draws out fast (1.0s)
-   - 1.0s -> 2.0s (12.5% -> 25.0%): Line 2 draws out fast (1.0s)
-   - 2.0s -> 3.0s (25.0% -> 37.5%): Line 3 draws out fast (1.0s)
-   - 3.0s -> 5.5s (37.5% -> 68.75%): Box Border traces clockwise with dynamic opacity wave right as Line 3 finishes at 3.0s
-   - 5.5s -> 7.2s (68.75% -> 90.0%): All elements hold visible with subtle breathing glow
-   - 7.2s -> 8.0s (90.0% -> 100%): All elements fade out together in unison
-*/
+/* ==========================================================================
+   MASTER 30s RHYTHM TIMELINE FOR HERO LINES & BOX BORDER
+   - 0.0s -> 2.2s (0% -> 7.33%): Line 1 draws slowly & smoothly under "Vững chắc!"
+   - 2.2s -> 4.4s (7.33% -> 14.67%): Line 2 draws slowly & smoothly under "Rõ ràng!"
+   - 4.4s -> 6.6s (14.67% -> 22.0%): Line 3 draws slowly & smoothly under "Tươi sáng!"
+   - 6.6s -> 10.5s (22.0% -> 35.0%): Box Border traces clockwise around slogan badge
+   - 10.5s -> 28.0s (35.0% -> 93.33%): All lines hold visible & luminous (~18s hold)
+   - 28.0s -> 30.0s (93.33% -> 100%): Lines fade out gently to prepare for the 30s cycle repeat
+   - After 30s: Full line drawing cycle repeats (Text remains continuously visible)
+   ========================================================================== */
 
 /* Line 1 */
 @keyframes beat-line-1 {
@@ -2195,18 +2197,18 @@ div.box-speech-bubble {
     stroke-dashoffset: 210;
     opacity: 0;
   }
-  2% {
-    opacity: 0.5;
+  1% {
+    opacity: 0.6;
   }
-  12.5% {
+  7.33% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  87.5% {
+  93.33% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  93.75% {
+  96.67% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2218,22 +2220,22 @@ div.box-speech-bubble {
 
 /* Line 2 */
 @keyframes beat-line-2 {
-  0%, 12.49% {
+  0%, 7.32% {
     stroke-dashoffset: 210;
     opacity: 0;
   }
-  12.5% {
+  7.33% {
     opacity: 0.3;
   }
-  25% {
+  14.67% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  87.5% {
+  93.33% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  93.75% {
+  96.67% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2245,22 +2247,22 @@ div.box-speech-bubble {
 
 /* Line 3 */
 @keyframes beat-line-3 {
-  0%, 24.99% {
+  0%, 14.66% {
     stroke-dashoffset: 210;
     opacity: 0;
   }
-  25% {
+  14.67% {
     opacity: 0.3;
   }
-  37.5% {
+  22.0% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  87.5% {
+  93.33% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  93.75% {
+  96.67% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2270,38 +2272,28 @@ div.box-speech-bubble {
   }
 }
 
-/* Box Border (Starts AT 37.5% [3.0s] right as Line 3 finishes. Traces clockwise with dynamic opacity wave, completes at 68.75% [5.5s], holds, then fades out smoothly at 87.5%->100%) */
+/* Box Border (traces around slogan pill from 6.6s to 10.5s) */
 @keyframes beat-box-border {
-  0%, 37.49% {
+  0%, 21.99% {
     stroke-dashoffset: 1200;
     opacity: 0;
   }
-  37.5% {
+  22.0% {
     opacity: 0.2;
     stroke-dashoffset: 1200;
   }
-  45% {
+  25.0% {
     opacity: 0.85;
   }
-  52.5% {
-    opacity: 0.55;
-  }
-  60% {
-    opacity: 1;
-  }
-  68.75% {
+  35.0% {
     stroke-dashoffset: 0;
-    opacity: 0.8;
+    opacity: 0.9;
   }
-  78% {
+  93.33% {
     stroke-dashoffset: 0;
-    opacity: 1;
+    opacity: 0.9;
   }
-  87.5% {
-    stroke-dashoffset: 0;
-    opacity: 0.85;
-  }
-  93.75% {
+  96.67% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2314,41 +2306,41 @@ div.box-speech-bubble {
 .animate-draw-line-1 {
   stroke-dasharray: 210;
   stroke-dashoffset: 210;
-  animation: beat-line-1 8s linear infinite;
+  animation: beat-line-1 30s linear infinite;
 }
 
 .animate-draw-line-2 {
   stroke-dasharray: 210;
   stroke-dashoffset: 210;
-  animation: beat-line-2 8s linear infinite;
+  animation: beat-line-2 30s linear infinite;
 }
 
 .animate-draw-line-3 {
   stroke-dasharray: 210;
   stroke-dashoffset: 210;
-  animation: beat-line-3 8s linear infinite;
+  animation: beat-line-3 30s linear infinite;
 }
 
 .animate-slogan-box-border {
   stroke-dasharray: 1200;
   stroke-dashoffset: 1200;
-  animation: beat-box-border 8s linear infinite;
+  animation: beat-box-border 30s linear infinite;
 }
 
 /* ==========================================================================
-   HERO TYPOGRAPHY INTRO ANIMATION (Xuất hiện lần đầu, sau đó hiển thị xuyên suốt)
-   - 0.0s -> 0.8s: Row 1 ("Một nền tảng Vững chắc!") glides in
-   - 1.0s -> 1.8s: Row 2 ("Một định hướng Rõ ràng!") glides in
-   - 2.0s -> 2.8s: Row 3 ("Một đích đến Tươi sáng!") glides in
-   - 3.0s -> 3.8s: Slogan Badge ("One Platform • One Direction • One Destination") reveals
+   HERO TYPOGRAPHY INTRO ANIMATION (Xuất hiện lần đầu chậm rãi, sau đó hiển thị xuyên suốt)
+   - 0.0s -> 2.2s: Row 1 ("Một nền tảng Vững chắc!") trượt vào chậm rãi (1.8s)
+   - 2.2s -> 4.4s: Row 2 ("Một định hướng Rõ ràng!") trượt vào chậm rãi (1.8s)
+   - 4.4s -> 6.6s: Row 3 ("Một đích đến Tươi sáng!") trượt vào chậm rãi (1.8s)
+   - 6.6s -> 9.0s: Slogan Badge ("One Platform • One Direction • One Destination") mở rộng & sáng dần
    - Sau khi hiển thị xong toàn bộ nội dung: Chữ vẫn hiển thị xuyên suốt 100% (không biến mất).
-   - Các chu kỳ hiệu ứng lần kế tiếp: CHỈ CẦN CHẠY HIỆU ỨNG CÁC ĐƯỜNG LINE (Line 1, 2, 3 và viền hộp).
+   - Sau mỗi 30s: Lặp lại chu kỳ tổng hiệu ứng vẽ nét các đường line.
    ========================================================================== */
 
 @keyframes hero-fade-in-row-1 {
   0% {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   100% {
     opacity: 1;
@@ -2359,7 +2351,7 @@ div.box-speech-bubble {
 @keyframes hero-fade-in-row-2 {
   0% {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   100% {
     opacity: 1;
@@ -2370,7 +2362,7 @@ div.box-speech-bubble {
 @keyframes hero-fade-in-row-3 {
   0% {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   100% {
     opacity: 1;
@@ -2381,7 +2373,7 @@ div.box-speech-bubble {
 @keyframes hero-fade-in-slogan {
   0% {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.95);
   }
   100% {
     opacity: 1;
@@ -2391,7 +2383,7 @@ div.box-speech-bubble {
 
 @keyframes hero-dot-appear-1 {
   0% {
-    transform: scale(0.6);
+    transform: scale(0.4);
     opacity: 0;
   }
   60% {
@@ -2408,7 +2400,7 @@ div.box-speech-bubble {
 
 @keyframes hero-dot-appear-2 {
   0% {
-    transform: scale(0.6);
+    transform: scale(0.4);
     opacity: 0;
   }
   60% {
@@ -2424,31 +2416,31 @@ div.box-speech-bubble {
 }
 
 .animate-hero-row-1 {
-  animation: hero-fade-in-row-1 0.8s ease-out 0s 1 both;
+  animation: hero-fade-in-row-1 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-row-2 {
-  animation: hero-fade-in-row-2 0.8s ease-out 1.0s 1 both;
+  animation: hero-fade-in-row-2 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-row-3 {
-  animation: hero-fade-in-row-3 0.8s ease-out 2.0s 1 both;
+  animation: hero-fade-in-row-3 1.8s cubic-bezier(0.16, 1, 0.3, 1) 4.4s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-slogan {
-  animation: hero-fade-in-slogan 0.8s ease-out 3.0s 1 both;
+  animation: hero-fade-in-slogan 2.0s cubic-bezier(0.16, 1, 0.3, 1) 6.6s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-dot-1 {
-  animation: hero-dot-appear-1 0.6s ease-out 3.3s 1 both;
+  animation: hero-dot-appear-1 0.8s ease-out 7.6s 1 both;
 }
 
 .animate-hero-dot-2 {
-  animation: hero-dot-appear-2 0.6s ease-out 3.6s 1 both;
+  animation: hero-dot-appear-2 0.8s ease-out 8.4s 1 both;
 }
 
 .animate-hero-accent-1,
