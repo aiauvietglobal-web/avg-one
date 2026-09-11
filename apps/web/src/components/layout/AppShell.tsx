@@ -254,6 +254,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                 <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
                   <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-6">
                     {[
+                      { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
                       { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
                       { id: 'inside' as AppModuleId, aliases: ['inside'], label: 'Bảng tin' },
                       { id: 'calendar' as AppModuleId, aliases: ['calendar'], label: 'Lịch' },
