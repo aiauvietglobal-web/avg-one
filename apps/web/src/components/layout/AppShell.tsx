@@ -448,37 +448,6 @@ export const AppShell: React.FC<AppShellProps> = ({
                 </div>
 
               </div>
-
-              {/* Sub-header Tabs for System Module */}
-              {(activeModule === 'system' || activeModule === 'admin') && (
-                <div className="border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/60 backdrop-blur-xs">
-                  <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-10 flex items-center gap-2 sm:gap-3">
-                    <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mr-1 hidden sm:inline">
-                      Hệ thống:
-                    </span>
-                    <button
-                      onClick={() => handleSelectSystemSubTab('annual-plan')}
-                      className={`relative px-3 py-1 text-xs sm:text-sm rounded-lg transition-all cursor-pointer select-none ${
-                        systemTabState === 'annual-plan'
-                          ? 'font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/50 shadow-2xs'
-                          : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      Kế hoạch năm
-                    </button>
-                    <button
-                      onClick={() => handleSelectSystemSubTab('executive-directive')}
-                      className={`relative px-3 py-1 text-xs sm:text-sm rounded-lg transition-all cursor-pointer select-none ${
-                        systemTabState === 'executive-directive'
-                          ? 'font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/50 shadow-2xs'
-                          : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      Thông điệp điều hành
-                    </button>
-                  </div>
-                </div>
-              )}
             </header>
           ) : (
             /* SUB-MODULE TOPBAR HEADER */
