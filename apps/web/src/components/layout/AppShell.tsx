@@ -83,22 +83,15 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [hrTabState, setHrTabState] = useState<string>('employees');
   const [calendarTabState, setCalendarTabState] = useState<string>('talk');
   const [systemTabState, setSystemTabState] = useState<'annual-plan' | 'executive-directive'>('annual-plan');
-  const [isSystemDropdownOpen, setIsSystemDropdownOpen] = useState(false);
+  const [isSystemHovered, setIsSystemHovered] = useState(false);
   const systemDropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (systemDropdownRef.current && !systemDropdownRef.current.contains(e.target as Node)) {
-        setIsSystemDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Giữ nguyên trạng thái hộp và mũi tên mở khi đang ở phân hệ Hệ thống. Chỉ đóng khi chuyển qua phân hệ khác.
+  const isSystemActive = activeModule === 'system' || activeModule === 'admin';
+  const isSystemDropdownOpen = isSystemActive || isSystemHovered;
 
   const handleSelectSystemSubTab = (tab: 'annual-plan' | 'executive-directive') => {
     setSystemTabState(tab);
-    setIsSystemDropdownOpen(false);
     onSelectModule('system');
     window.dispatchEvent(new CustomEvent('system_tab_change', { detail: tab }));
     const btn = document.getElementById(`btn-system-subtab-${tab}`);
@@ -296,8 +289,12 @@ export const AppShell: React.FC<AppShellProps> = ({
                             key={item.id}
                             ref={systemDropdownRef}
                             className="relative"
-                            onMouseEnter={() => setIsSystemDropdownOpen(true)}
-                            onMouseLeave={() => setIsSystemDropdownOpen(false)}
+                            onMouseEnter={() => {
+                              if (!isSystemActive) setIsSystemHovered(true);
+                            }}
+                            onMouseLeave={() => {
+                              if (!isSystemActive) setIsSystemHovered(false);
+                            }}
                           >
                             <button
                               onClick={handleSelectSystemModule}
