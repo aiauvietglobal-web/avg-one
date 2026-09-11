@@ -122,24 +122,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               <div className="animate-hero-row-2 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
                 <span>Một định hướng</span>
                 <span className="relative inline-block px-1">
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                    className="relative z-10 font-black inline-block dark:hidden animate-hero-accent-2"
-                  >
-                    Rõ ràng!
-                  </span>
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}
-                    className="relative z-10 font-black hidden dark:inline-block animate-hero-accent-2"
-                  >
+                  <span className="relative z-10 font-black hero-gradient-ro-rang animate-hero-accent-2">
                     Rõ ràng!
                   </span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">

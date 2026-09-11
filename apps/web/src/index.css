@@ -2592,21 +2592,33 @@ span[style*="borderRadius: 50%"] {
   will-change: transform, opacity;
 }
 
+.hero-gradient-ro-rang {
+  background: linear-gradient(135deg, #0F172A 0%, #334155 50%, #64748B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.dark .hero-gradient-ro-rang,
+[data-theme='dark'] .hero-gradient-ro-rang {
+  background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
 .animate-hero-accent-1 {
   animation: beat-accent-1 8s linear infinite;
-  display: inline-block;
   transform-origin: left center;
 }
 
 .animate-hero-accent-2 {
   animation: beat-accent-2 8s linear infinite;
-  display: inline-block;
   transform-origin: left center;
 }
 
 .animate-hero-accent-3 {
   animation: beat-accent-3 8s linear infinite;
-  display: inline-block;
   transform-origin: left center;
 }
 
