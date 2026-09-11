@@ -18,6 +18,16 @@ export const SystemModule: React.FC<SystemModuleProps> = ({ activeTab }) => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    const handleTabChange = (e: any) => {
+      if (e.detail && (e.detail === 'annual-plan' || e.detail === 'executive-directive' || e.detail === 'it-system')) {
+        setActiveMainTab(e.detail);
+      }
+    };
+    window.addEventListener('system_tab_change', handleTabChange);
+    return () => window.removeEventListener('system_tab_change', handleTabChange);
+  }, []);
+
   return (
     <div className="system-module-container w-full h-full flex-1 min-h-0 overflow-hidden bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans p-3 sm:p-4 relative flex flex-col justify-between">
       

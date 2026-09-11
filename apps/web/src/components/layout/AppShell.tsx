@@ -82,7 +82,35 @@ export const AppShell: React.FC<AppShellProps> = ({
   });
   const [hrTabState, setHrTabState] = useState<string>('employees');
   const [calendarTabState, setCalendarTabState] = useState<string>('talk');
-  const [systemTabState, setSystemTabState] = useState<string>('annual-plan');
+  const [systemTabState, setSystemTabState] = useState<'annual-plan' | 'executive-directive'>('annual-plan');
+  const [isSystemDropdownOpen, setIsSystemDropdownOpen] = useState(false);
+  const systemDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (systemDropdownRef.current && !systemDropdownRef.current.contains(e.target as Node)) {
+        setIsSystemDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelectSystemSubTab = (tab: 'annual-plan' | 'executive-directive') => {
+    setSystemTabState(tab);
+    setIsSystemDropdownOpen(false);
+    onSelectModule('system');
+    window.dispatchEvent(new CustomEvent('system_tab_change', { detail: tab }));
+    const btn = document.getElementById(`btn-system-subtab-${tab}`);
+    if (btn) btn.click();
+  };
+
+  const handleSelectSystemModule = () => {
+    onSelectModule('system');
+    window.dispatchEvent(new CustomEvent('system_tab_change', { detail: systemTabState }));
+    const btn = document.getElementById(`btn-system-subtab-${systemTabState}`);
+    if (btn) btn.click();
+  };
   const [workflowTabState, setWorkflowTabState] = useState<string>('design');
   const [speechTabState, setSpeechTabState] = useState<string>('direct');
   const [isArrowActive, setIsArrowActive] = useState(false);
@@ -261,6 +289,79 @@ export const AppShell: React.FC<AppShellProps> = ({
                       { id: 'orders' as AppModuleId, aliases: ['orders', 'wework'], label: 'Đơn hàng' },
                     ].map((item) => {
                       const isActive = item.aliases.includes(activeModule);
+
+                      if (item.id === 'system') {
+                        return (
+                          <div
+                            key={item.id}
+                            ref={systemDropdownRef}
+                            className="relative"
+                            onMouseEnter={() => setIsSystemDropdownOpen(true)}
+                            onMouseLeave={() => setIsSystemDropdownOpen(false)}
+                          >
+                            <button
+                              onClick={handleSelectSystemModule}
+                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal flex items-center gap-1 ${
+                                isActive
+                                  ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
+                                  : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                              }`}
+                            >
+                              <span className={`relative z-10 transition-transform duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}>
+                                {item.label}
+                              </span>
+                              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180 text-[#F15A24]' : 'opacity-60 group-hover:opacity-100'}`} />
+                              {/* Underline hover and active indicator */}
+                              <span
+                                className={`absolute bottom-0 left-2 right-2 h-[2px] bg-[#F15A24] rounded-full transition-transform duration-300 origin-center ${
+                                  isActive
+                                    ? 'scale-x-100 opacity-100'
+                                    : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
+                                }`}
+                              />
+                            </button>
+
+                            {/* Dropdown Menu for Hệ thống */}
+                            {isSystemDropdownOpen && (
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-1.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectSystemSubTab('annual-plan');
+                                  }}
+                                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && systemTabState === 'annual-plan'
+                                      ? 'bg-orange-50 dark:bg-orange-950/40 text-[#F15A24]'
+                                      : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#F15A24]'
+                                  }`}
+                                >
+                                  <span>Kế hoạch năm</span>
+                                  {isActive && systemTabState === 'annual-plan' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectSystemSubTab('executive-directive');
+                                  }}
+                                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && systemTabState === 'executive-directive'
+                                      ? 'bg-orange-50 dark:bg-orange-950/40 text-[#F15A24]'
+                                      : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-[#F15A24]'
+                                  }`}
+                                >
+                                  <span>Thông điệp điều hành</span>
+                                  {isActive && systemTabState === 'executive-directive' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+
                       return (
                         <button
                           key={item.id}
@@ -347,6 +448,37 @@ export const AppShell: React.FC<AppShellProps> = ({
                 </div>
 
               </div>
+
+              {/* Sub-header Tabs for System Module */}
+              {(activeModule === 'system' || activeModule === 'admin') && (
+                <div className="border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/60 backdrop-blur-xs">
+                  <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-10 flex items-center gap-2 sm:gap-3">
+                    <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mr-1 hidden sm:inline">
+                      Hệ thống:
+                    </span>
+                    <button
+                      onClick={() => handleSelectSystemSubTab('annual-plan')}
+                      className={`relative px-3 py-1 text-xs sm:text-sm rounded-lg transition-all cursor-pointer select-none ${
+                        systemTabState === 'annual-plan'
+                          ? 'font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/50 shadow-2xs'
+                          : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      Kế hoạch năm
+                    </button>
+                    <button
+                      onClick={() => handleSelectSystemSubTab('executive-directive')}
+                      className={`relative px-3 py-1 text-xs sm:text-sm rounded-lg transition-all cursor-pointer select-none ${
+                        systemTabState === 'executive-directive'
+                          ? 'font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/50 shadow-2xs'
+                          : 'font-semibold text-slate-600 dark:text-slate-300 hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      Thông điệp điều hành
+                    </button>
+                  </div>
+                </div>
+              )}
             </header>
           ) : (
             /* SUB-MODULE TOPBAR HEADER */
