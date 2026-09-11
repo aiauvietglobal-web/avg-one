@@ -327,19 +327,23 @@ export const DesignOrdersView: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn pb-8">
-      {/* 🔮 Header & Live Sync Banner - Đồng Bộ Phong Cách Thông Điệp Điều Hành */}
-      <div className="bg-gradient-to-r from-[#011E30] via-[#022B45] to-[#011422] p-6 rounded-3xl border border-orange-500/30 text-white shadow-xl space-y-4">
+      {/* 🔮 Header & Live Sync Banner - Sáng màu, thanh lịch, đồng bộ AVG One */}
+      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2.5">
-              <Palette className="w-6 h-6 text-[#F15A24] animate-pulse" />
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-wide uppercase">
-                QUẢN LÝ ĐƠN HÀNG THIẾT KẾ AVG ONE (3.2)
-              </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-orange-950/50 flex items-center justify-center border border-orange-200/60 dark:border-orange-800/60 flex-shrink-0">
+                <Palette className="w-5 h-5 text-[#F15A24]" />
+              </div>
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-wide uppercase">
+                  QUẢN LÝ ĐƠN HÀNG THIẾT KẾ AVG ONE (3.2)
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                  Đồng bộ dữ liệu thời gian thực 24/7 quy trình thiết kế 3D/CAD, phối màu CMF và chuyển giao bản vẽ kỹ thuật R&D
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-sky-200/80 font-medium">
-              Đồng bộ dữ liệu thời gian thực 24/7 quy trình thiết kế 3D/CAD, phối màu CMF và chuyển giao bản vẽ kỹ thuật R&D
-            </p>
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
@@ -348,7 +352,7 @@ export const DesignOrdersView: React.FC = () => {
                 setLastSyncTime(new Date().toLocaleTimeString('vi-VN'));
                 setDispatchToast('🔄 Đã làm mới và đồng bộ 100% dữ liệu đơn hàng Thiết Kế!');
               }}
-              className="px-4 py-2 bg-sky-950/80 hover:bg-sky-900 border border-cyan-400/40 text-cyan-300 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-2xs cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Tải Lại (Sync Live)</span>
@@ -358,7 +362,7 @@ export const DesignOrdersView: React.FC = () => {
               href="https://drive.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-md cursor-pointer"
+              className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-sm cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Mở Kho CAD / 3D Gốc</span>
@@ -366,28 +370,28 @@ export const DesignOrdersView: React.FC = () => {
           </div>
         </div>
 
-        {/* Stats Counter Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-          <div className="bg-[#021729]/80 border border-orange-500/40 rounded-2xl p-3.5 text-center">
-            <div className="text-xs font-bold text-orange-400">Tổng Đơn Thiết Kế</div>
-            <div className="text-2xl font-black text-orange-300 mt-0.5">{stats.total}</div>
+        {/* Stats Counter Cards - Các hộp sáng màu */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+          <div className="bg-orange-50/80 dark:bg-orange-950/40 border border-orange-100 dark:border-orange-800/60 rounded-2xl p-4 text-center transition hover:shadow-xs">
+            <div className="text-xs font-bold text-orange-700 dark:text-orange-300 uppercase tracking-wider">Tổng Đơn Thiết Kế</div>
+            <div className="text-2xl sm:text-3xl font-black text-[#F15A24] dark:text-orange-300 mt-1">{stats.total}</div>
           </div>
-          <div className="bg-[#021729]/80 border border-cyan-500/30 rounded-2xl p-3.5 text-center">
-            <div className="text-xs font-bold text-sky-300">Dựng 3D / CAD</div>
-            <div className="text-2xl font-black text-sky-200 mt-0.5">{stats.in3D}</div>
+          <div className="bg-sky-50/80 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-800/60 rounded-2xl p-4 text-center transition hover:shadow-xs">
+            <div className="text-xs font-bold text-sky-700 dark:text-sky-300 uppercase tracking-wider">Dựng 3D / CAD</div>
+            <div className="text-2xl sm:text-3xl font-black text-sky-900 dark:text-sky-100 mt-1">{stats.in3D}</div>
           </div>
-          <div className="bg-[#021729]/80 border border-purple-500/40 rounded-2xl p-3.5 text-center">
-            <div className="text-xs font-bold text-purple-400">Duyệt Mẫu CMF</div>
-            <div className="text-2xl font-black text-purple-300 mt-0.5">{stats.inReview}</div>
+          <div className="bg-purple-50/80 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-800/60 rounded-2xl p-4 text-center transition hover:shadow-xs">
+            <div className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Duyệt Mẫu CMF</div>
+            <div className="text-2xl sm:text-3xl font-black text-purple-900 dark:text-purple-100 mt-1">{stats.inReview}</div>
           </div>
-          <div className="bg-[#021729]/80 border border-emerald-500/40 rounded-2xl p-3.5 text-center">
-            <div className="text-xs font-bold text-emerald-400">Đã Bàn Giao CAD</div>
-            <div className="text-2xl font-black text-emerald-300 mt-0.5">{stats.completed}</div>
+          <div className="bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-800/60 rounded-2xl p-4 text-center transition hover:shadow-xs">
+            <div className="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Đã Bàn Giao CAD</div>
+            <div className="text-2xl sm:text-3xl font-black text-emerald-900 dark:text-emerald-100 mt-1">{stats.completed}</div>
           </div>
         </div>
 
         {lastSyncTime && (
-          <div className="text-[11px] text-sky-300/70 font-mono text-right">
+          <div className="text-[11px] text-slate-400 dark:text-slate-500 font-mono text-right">
             Lần cập nhật gần nhất: {lastSyncTime}
           </div>
         )}
