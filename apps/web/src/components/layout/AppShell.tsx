@@ -83,26 +83,48 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [hrTabState, setHrTabState] = useState<string>('employees');
   const [calendarTabState, setCalendarTabState] = useState<string>('talk');
   const [systemTabState, setSystemTabState] = useState<'annual-plan' | 'executive-directive'>('annual-plan');
-  const [isSystemHovered, setIsSystemHovered] = useState(false);
+  const [isSystemDropdownOpen, setIsSystemDropdownOpen] = useState(false);
   const systemDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Giữ nguyên trạng thái hộp và mũi tên mở khi đang ở phân hệ Hệ thống. Chỉ đóng khi chuyển qua phân hệ khác.
-  const isSystemActive = activeModule === 'system' || activeModule === 'admin';
-  const isSystemDropdownOpen = isSystemActive || isSystemHovered;
+  // Đóng hộp khi chuyển qua phân hệ khác
+  useEffect(() => {
+    if (activeModule !== 'system' && activeModule !== 'admin') {
+      setIsSystemDropdownOpen(false);
+    }
+  }, [activeModule]);
 
+  // Đóng hộp khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (systemDropdownRef.current && !systemDropdownRef.current.contains(e.target as Node)) {
+        setIsSystemDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Chọn đầu mục con: chuyển tab, đồng bộ dữ liệu và ĐÓNG hộp dropdown
   const handleSelectSystemSubTab = (tab: 'annual-plan' | 'executive-directive') => {
     setSystemTabState(tab);
+    setIsSystemDropdownOpen(false);
     onSelectModule('system');
     window.dispatchEvent(new CustomEvent('system_tab_change', { detail: tab }));
     const btn = document.getElementById(`btn-system-subtab-${tab}`);
     if (btn) btn.click();
   };
 
-  const handleSelectSystemModule = () => {
-    onSelectModule('system');
-    window.dispatchEvent(new CustomEvent('system_tab_change', { detail: systemTabState }));
-    const btn = document.getElementById(`btn-system-subtab-${systemTabState}`);
-    if (btn) btn.click();
+  // Click vào nút Hệ thống: mở ở lần 1, ấn lần 2 thì đóng lại
+  const handleToggleSystemModule = () => {
+    if (activeModule !== 'system' && activeModule !== 'admin') {
+      onSelectModule('system');
+      setIsSystemDropdownOpen(true);
+      window.dispatchEvent(new CustomEvent('system_tab_change', { detail: systemTabState }));
+      const btn = document.getElementById(`btn-system-subtab-${systemTabState}`);
+      if (btn) btn.click();
+    } else {
+      setIsSystemDropdownOpen(prev => !prev);
+    }
   };
   const [workflowTabState, setWorkflowTabState] = useState<string>('design');
   const [speechTabState, setSpeechTabState] = useState<string>('direct');
@@ -289,15 +311,9 @@ export const AppShell: React.FC<AppShellProps> = ({
                             key={item.id}
                             ref={systemDropdownRef}
                             className="relative"
-                            onMouseEnter={() => {
-                              if (!isSystemActive) setIsSystemHovered(true);
-                            }}
-                            onMouseLeave={() => {
-                              if (!isSystemActive) setIsSystemHovered(false);
-                            }}
                           >
                             <button
-                              onClick={handleSelectSystemModule}
+                              onClick={handleToggleSystemModule}
                               style={{ color: isActive ? '#F15A24' : undefined }}
                               className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal flex items-center gap-1 ${
                                 isActive
