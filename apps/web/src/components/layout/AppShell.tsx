@@ -376,53 +376,12 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Center: Operation Modules Quick Switch (Hệ thống, Bảng tin, Lịch, Đơn hàng) - Text Only */}
-                <nav className="hidden md:flex items-center gap-1 lg:gap-2">
-                  {[
-                    { id: 'system' as AppModuleId, label: 'Hệ thống' },
-                    { id: 'inside' as AppModuleId, label: 'Bảng tin' },
-                    { id: 'calendar' as AppModuleId, label: 'Lịch' },
-                    { id: 'orders' as AppModuleId, label: 'Đơn hàng' },
-                  ].map((item) => {
-                    const isActive = activeModule === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => onSelectModule(item.id)}
-                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                          isActive
-                            ? 'text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 shadow-xs font-semibold'
-                            : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
-                        }`}
-                      >
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                {/* Right Stack */}
+                {/* Right Stack: SSO Avatar back to Home */}
                 <div className="flex items-center gap-2 flex-shrink-0 text-xs sm:text-sm">
-                  <button
-                    onClick={() => {
-                      if (typeof window !== 'undefined') window.location.reload();
-                    }}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center active:scale-90"
-                    title="Tải lại / Cập nhật bản build mới nhất (Reset)"
-                  >
-                    <RotateCw className="w-4 h-4 text-[#F15A24] hover:rotate-180 transition-transform duration-300" />
-                  </button>
-
-                  <button
-                    onClick={toggleFullscreen}
-                    className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
-                  >
-                    {isFullscreen ? <Minimize2 className="w-4 h-4 text-[#F15A24]" /> : <Maximize2 className="w-4 h-4" />}
-                  </button>
-
                   <div
                     onClick={() => onSelectModule('home')}
-                    className="w-7 h-7 rounded-full bg-[#D97706] text-white font-black text-xs flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 transition-transform"
+                    className="w-8 h-8 rounded-full bg-[#D97706] text-white font-black text-xs flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 transition-transform"
+                    title="Về Trang Chủ"
                   >
                     D
                   </div>
