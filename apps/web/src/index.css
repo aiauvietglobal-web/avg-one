@@ -2336,280 +2336,127 @@ div.box-speech-bubble {
 }
 
 /* ==========================================================================
-   MASTER 8.0s RHYTHM TIMELINE FOR HERO TYPOGRAPHY ("CỤM CHỮ")
-   Harmonized with beat-line-1, beat-line-2, beat-line-3, & beat-box-border:
-   - 0.0s -> 1.0s (0% -> 12.5%): Row 1 ("Một nền tảng Vững chắc!") glides in, Line 1 draws
-   - 1.0s -> 2.0s (12.5% -> 25.0%): Row 2 ("Một định hướng Rõ ràng!") glides in, Line 2 draws
-   - 2.0s -> 3.0s (25.0% -> 37.5%): Row 3 ("Một đích đến Tươi sáng!") glides in, Line 3 draws
-   - 3.0s -> 5.5s (37.5% -> 68.75%): Slogan Badge traces & reveals with vibrant radiance
-   - 5.5s -> 7.0s (68.75% -> 87.5%): All 3 rows & slogan hold proudly in full glory
-   - 7.0s -> 8.0s (87.5% -> 100%): All elements fade out gracefully together in unison
+   HERO TYPOGRAPHY INTRO ANIMATION (Xuất hiện lần đầu, sau đó hiển thị xuyên suốt)
+   - 0.0s -> 0.8s: Row 1 ("Một nền tảng Vững chắc!") glides in
+   - 1.0s -> 1.8s: Row 2 ("Một định hướng Rõ ràng!") glides in
+   - 2.0s -> 2.8s: Row 3 ("Một đích đến Tươi sáng!") glides in
+   - 3.0s -> 3.8s: Slogan Badge ("One Platform • One Direction • One Destination") reveals
+   - Sau khi hiển thị xong toàn bộ nội dung: Chữ vẫn hiển thị xuyên suốt 100% (không biến mất).
+   - Các chu kỳ hiệu ứng lần kế tiếp: CHỈ CẦN CHẠY HIỆU ỨNG CÁC ĐƯỜNG LINE (Line 1, 2, 3 và viền hộp).
    ========================================================================== */
 
-@keyframes beat-text-row-1 {
+@keyframes hero-fade-in-row-1 {
   0% {
     opacity: 0;
     transform: translateY(6px);
   }
-  2% {
-    opacity: 0.4;
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  87.5% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  93.75% {
-    opacity: 0.4;
-    transform: translateY(0);
-  }
   100% {
-    opacity: 0;
-    transform: translateY(-4px);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes beat-text-row-2 {
-  0%, 12.49% {
+@keyframes hero-fade-in-row-2 {
+  0% {
     opacity: 0;
     transform: translateY(6px);
-  }
-  12.5% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  14.5% {
-    opacity: 0.4;
-  }
-  22.5% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  87.5% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  93.75% {
-    opacity: 0.4;
-    transform: translateY(0);
   }
   100% {
-    opacity: 0;
-    transform: translateY(-4px);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes beat-text-row-3 {
-  0%, 24.99% {
+@keyframes hero-fade-in-row-3 {
+  0% {
     opacity: 0;
     transform: translateY(6px);
-  }
-  25% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  27% {
-    opacity: 0.4;
-  }
-  35% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  87.5% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  93.75% {
-    opacity: 0.4;
-    transform: translateY(0);
   }
   100% {
-    opacity: 0;
-    transform: translateY(-4px);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes beat-text-slogan {
-  0%, 37.49% {
+@keyframes hero-fade-in-slogan {
+  0% {
     opacity: 0;
     transform: scale(0.96);
   }
-  37.5% {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  42% {
-    opacity: 0.5;
-  }
-  48% {
+  100% {
     opacity: 1;
     transform: scale(1);
   }
-  87.5% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  93.75% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.98);
-  }
 }
 
-/* Keyword Accent Pops & Glows */
-@keyframes beat-accent-1 {
-  0%, 9.99% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  12.5% {
-    transform: scale(1.035);
-    filter: drop-shadow(0 2px 8px rgba(0, 168, 232, 0.45));
-  }
-  16% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  68% {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  78% {
-    filter: drop-shadow(0 1px 6px rgba(0, 168, 232, 0.35));
-  }
-  87.5% {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-}
-
-@keyframes beat-accent-2 {
-  0%, 22.49% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  25% {
-    transform: scale(1.035);
-    filter: drop-shadow(0 2px 8px rgba(100, 116, 139, 0.35));
-  }
-  28.5% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  68% {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  78% {
-    filter: drop-shadow(0 1px 6px rgba(100, 116, 139, 0.3));
-  }
-  87.5% {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-}
-
-@keyframes beat-accent-3 {
-  0%, 34.99% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  37.5% {
-    transform: scale(1.035);
-    filter: drop-shadow(0 2px 10px rgba(241, 90, 36, 0.5));
-  }
-  41% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  68% {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  78% {
-    filter: drop-shadow(0 1px 8px rgba(241, 90, 36, 0.4));
-  }
-  87.5% {
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
-}
-
-@keyframes beat-dot-pulse-1 {
-  0%, 37.49% {
+@keyframes hero-dot-appear-1 {
+  0% {
     transform: scale(0.6);
     opacity: 0;
   }
-  42% {
+  60% {
     transform: scale(1.3);
     opacity: 1;
     box-shadow: 0 0 8px #0284C7;
   }
-  48% {
+  100% {
     transform: scale(1);
     box-shadow: none;
     opacity: 1;
   }
-  87.5% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
 }
 
-@keyframes beat-dot-pulse-2 {
-  0%, 46.99% {
+@keyframes hero-dot-appear-2 {
+  0% {
     transform: scale(0.6);
     opacity: 0;
   }
-  51% {
+  60% {
     transform: scale(1.3);
     opacity: 1;
     box-shadow: 0 0 8px rgba(100, 116, 139, 0.6);
   }
-  57% {
+  100% {
     transform: scale(1);
     box-shadow: none;
     opacity: 1;
   }
-  87.5% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
 }
 
 .animate-hero-row-1 {
-  animation: beat-text-row-1 8s linear infinite;
+  animation: hero-fade-in-row-1 0.8s ease-out 0s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-row-2 {
-  animation: beat-text-row-2 8s linear infinite;
+  animation: hero-fade-in-row-2 0.8s ease-out 1.0s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-row-3 {
-  animation: beat-text-row-3 8s linear infinite;
+  animation: hero-fade-in-row-3 0.8s ease-out 2.0s 1 both;
   will-change: transform, opacity;
 }
 
 .animate-hero-slogan {
-  animation: beat-text-slogan 8s linear infinite;
+  animation: hero-fade-in-slogan 0.8s ease-out 3.0s 1 both;
   will-change: transform, opacity;
+}
+
+.animate-hero-dot-1 {
+  animation: hero-dot-appear-1 0.6s ease-out 3.3s 1 both;
+}
+
+.animate-hero-dot-2 {
+  animation: hero-dot-appear-2 0.6s ease-out 3.6s 1 both;
+}
+
+.animate-hero-accent-1,
+.animate-hero-accent-2,
+.animate-hero-accent-3 {
+  animation: none;
+  transform: none;
+  filter: none;
 }
 
 .hero-gradient-ro-rang {
@@ -2625,28 +2472,5 @@ div.box-speech-bubble {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-}
-
-.animate-hero-accent-1 {
-  animation: beat-accent-1 8s linear infinite;
-  transform-origin: left center;
-}
-
-.animate-hero-accent-2 {
-  animation: beat-accent-2 8s linear infinite;
-  transform-origin: left center;
-}
-
-.animate-hero-accent-3 {
-  animation: beat-accent-3 8s linear infinite;
-  transform-origin: left center;
-}
-
-.animate-hero-dot-1 {
-  animation: beat-dot-pulse-1 8s linear infinite;
-}
-
-.animate-hero-dot-2 {
-  animation: beat-dot-pulse-2 8s linear infinite;
 }
 
