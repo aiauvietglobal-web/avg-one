@@ -231,9 +231,9 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {activeModule === 'home' ? (
-            /* HOME PAGE HEADER (Logo Chính Thức AVG One + SSO - Khoảng cách vừa vặn, hài hòa) */
+            /* HOME PAGE HEADER (Logo Chính Thức AVG One + SSO - Gióng thẳng hàng với các hộp phân hệ) */
             <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-none transition-all shadow-xs dark:shadow-none">
-              <div className="max-w-6xl w-full mx-auto px-6 sm:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
                 {/* Left: AVG One Official Logo */}
                 <div className="flex items-center gap-3">
