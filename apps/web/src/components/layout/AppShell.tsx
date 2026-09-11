@@ -70,7 +70,6 @@ export const AppShell: React.FC<AppShellProps> = ({
 }) => {
   const { isMobile, toggleMobileMode } = useIsMobile();
   const [showLauncher, setShowLauncher] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
@@ -239,7 +238,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {activeModule === 'home' ? (
-            /* HOME PAGE HEADER (Logo Chính Thức AVG One + Search + SSO - Không Đường Phân Cách) */
+            /* HOME PAGE HEADER (Logo Chính Thức AVG One + SSO - Không Đường Phân Cách) */
             <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-none transition-all shadow-xs dark:shadow-none">
               <div className="max-w-[1440px] w-full mx-auto px-4 sm:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
@@ -258,41 +257,8 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Center: Odoo Universal Search Bar */}
-                <div className="flex-1 max-w-xl lg:max-w-2xl hidden md:block">
-                  <div className="relative">
-                    <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      id="odoo-universal-search"
-                      type="text"
-                      placeholder="Tìm kiếm"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-xl border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 focus:bg-white transition shadow-xs placeholder:text-slate-400 font-medium"
-                    />
-                  </div>
-                </div>
-
-                {/* Right: Reset Build Button + Fullscreen Toggle + SSO Profile Button */}
+                {/* Right: SSO Profile / Login Button */}
                 <div className="flex items-center gap-2 sm:gap-2.5">
-                  <button
-                    onClick={() => {
-                      if (typeof window !== 'undefined') window.location.reload();
-                    }}
-                    className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center active:scale-90"
-                    title="Tải lại / Cập nhật bản build mới nhất (Reset)"
-                  >
-                    <RotateCw className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#F15A24] hover:rotate-180 transition-transform duration-300" />
-                  </button>
-
-                  <button
-                    onClick={toggleFullscreen}
-                    className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center"
-                    title={isFullscreen ? "Thoát toàn màn hình (F11 / Alt+F)" : "Mở rộng toàn màn hình (F11 / Alt+F)"}
-                  >
-                    {isFullscreen ? <Minimize2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#F15A24]" /> : <Maximize2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />}
-                  </button>
-
                   <div className="relative">
                     {currentUser ? (
                       /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn (Bỏ hộp đen & bỏ chữ) */
