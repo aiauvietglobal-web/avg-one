@@ -320,9 +320,9 @@ export const DesignOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-3.5 w-full">
+    <div className="space-y-4 w-full animate-fadeIn pb-8">
       {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden space-y-3.5">
+      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden space-y-4">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
           {/* Cột trái: Badge, Title & Button */}
           <div className="space-y-3">
@@ -458,11 +458,11 @@ export const DesignOrdersView: React.FC = () => {
       </div>
 
       {/* 🎨 DANH SÁCH THẺ DỰ ÁN THIẾT KẾ (MỞ RỘNG TOÀN DIỆN) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-5">
         {filteredOrders.map(order => (
           <div
             key={order.id}
-            className="group bg-white/95 dark:bg-slate-900/95 rounded-2xl border border-slate-200/90 dark:border-slate-800 p-4 shadow-xs hover:shadow-md transition-all duration-200 hover:border-[#F15A24]/40 flex flex-col justify-between space-y-3"
+            className="group bg-white/95 dark:bg-slate-900/95 rounded-[22px] border border-slate-200/90 dark:border-slate-800 p-5 shadow-xs hover:shadow-lg transition-all duration-200 hover:border-[#F15A24]/40 flex flex-col justify-between space-y-4"
           >
             <div className="space-y-3">
               {/* Header card: Code, Category, Priority */}
@@ -501,7 +501,7 @@ export const DesignOrdersView: React.FC = () => {
               {order.previewImage && (
                 <div
                   onClick={() => setSelectedOrder(order)}
-                  className="relative h-40 w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer"
+                  className="relative h-44 sm:h-48 w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer"
                 >
                   <img
                     src={order.previewImage}

@@ -350,9 +350,9 @@ export const ResearchOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-3.5 w-full">
+    <div className="space-y-4 w-full animate-fadeIn pb-8">
       {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden space-y-3.5">
+      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden space-y-4">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
           {/* Cột trái: Badge, Title & Button */}
           <div className="space-y-3">
@@ -418,11 +418,11 @@ export const ResearchOrdersView: React.FC = () => {
 
             <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
-                <Cpu className="w-4 h-4" />
+                <Flame className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Sản mẫu H1</div>
-                <div className="text-lg font-black text-orange-600 dark:text-orange-400 leading-tight">{stats.sampleH1}</div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Thử nghiệm H1</div>
+                <div className="text-lg font-black text-[#F15A24] leading-tight">{stats.inTesting}</div>
               </div>
             </div>
 
@@ -488,11 +488,11 @@ export const ResearchOrdersView: React.FC = () => {
       </div>
 
       {/* 🔬 DANH SÁCH THẺ ĐƠN HÀNG NGHIÊN CỨU (MỞ RỘNG TOÀN DIỆN) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 sm:gap-5">
         {filteredOrders.map(order => (
           <div
             key={order.id}
-            className="group bg-white/95 dark:bg-slate-900/95 rounded-2xl border border-slate-200/90 dark:border-slate-800 p-4 shadow-xs hover:shadow-md transition-all duration-200 hover:border-[#0284C7]/40 flex flex-col justify-between space-y-3"
+            className="group bg-white/95 dark:bg-slate-900/95 rounded-[22px] border border-slate-200/90 dark:border-slate-800 p-5 shadow-xs hover:shadow-lg transition-all duration-200 hover:border-[#0284C7]/40 flex flex-col justify-between space-y-4"
           >
             <div className="space-y-3">
               {/* Header card: Code, Category, H1 Version badge */}
