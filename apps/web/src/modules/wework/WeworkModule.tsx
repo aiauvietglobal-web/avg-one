@@ -36,7 +36,7 @@ export const WeworkModule: React.FC<WeworkModuleProps> = ({ initialSubTab }) => 
   }, []);
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-hidden p-3 sm:p-5 lg:p-6 space-y-6 flex flex-col justify-between">
+    <div className="w-full h-full flex-1 min-h-0 bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-hidden px-2 sm:px-3 lg:px-4 py-2 sm:py-3 space-y-3.5 flex flex-col justify-between">
       
       {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
@@ -54,7 +54,7 @@ export const WeworkModule: React.FC<WeworkModuleProps> = ({ initialSubTab }) => 
       </div>
 
       {/* Main Scrollable Content Container */}
-      <div className="w-full h-full flex-1 overflow-y-auto relative z-10 pr-1 space-y-6">
+      <div className="w-full h-full flex-1 overflow-y-auto relative z-10 pr-0.5 space-y-3.5">
         {/* Render standalone independent views based on Header selection */}
         {activeSubTab === 'design' && <DesignOrdersView />}
         {activeSubTab === 'research' && <ResearchOrdersView />}
