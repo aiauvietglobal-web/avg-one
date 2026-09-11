@@ -141,7 +141,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
               ) : (
                 <button
                   onClick={onOpenLoginModal}
-                  className="btn-speech-bubble px-4 py-1.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-xs shadow-xs transition cursor-pointer border-2 border-[#F15A24]"
+                  className="btn-speech-bubble px-3.5 py-1 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-xs shadow-xs transition cursor-pointer border-2 border-[#F15A24]"
                   style={{
                     borderTopLeftRadius: '9999px',
                     borderTopRightRadius: '9999px',
