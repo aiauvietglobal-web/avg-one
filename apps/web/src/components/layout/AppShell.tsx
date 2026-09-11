@@ -250,30 +250,32 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
-                {/* Center: Phân hệ quản lý vận hành (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) - Text Only, Elegant */}
-                <nav className="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3">
-                  {[
-                    { id: 'system' as AppModuleId, label: 'Hệ Thống' },
-                    { id: 'inside' as AppModuleId, label: 'Bảng Tin' },
-                    { id: 'calendar' as AppModuleId, label: 'Lịch' },
-                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng' },
-                  ].map((item) => {
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => onSelectModule(item.id)}
-                        className="relative px-3.5 sm:px-4 py-2 text-xs sm:text-[13px] font-extrabold tracking-wider uppercase text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] transition-all cursor-pointer group"
-                      >
-                        <span className="relative z-10 transition-transform duration-200 group-hover:scale-105 inline-block">{item.label}</span>
-                        {/* Underline hover indicator */}
-                        <span className="absolute bottom-1 left-3.5 right-3.5 h-[2px] bg-[#F15A24] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
-                      </button>
-                    );
-                  })}
-                </nav>
+                {/* Right: Phân hệ quản lý vận hành (chữ to hơn, viết hoa chữ cái đầu, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
+                <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
+                  <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-5">
+                    {[
+                      { id: 'system' as AppModuleId, label: 'Hệ Thống' },
+                      { id: 'inside' as AppModuleId, label: 'Bảng Tin' },
+                      { id: 'calendar' as AppModuleId, label: 'Lịch' },
+                      { id: 'orders' as AppModuleId, label: 'Đơn Hàng' },
+                    ].map((item) => {
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => onSelectModule(item.id)}
+                          className="relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[15px] lg:text-base font-bold text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] transition-all cursor-pointer group select-none"
+                        >
+                          <span className="relative z-10 transition-transform duration-200 group-hover:scale-105 inline-block">
+                            {item.label}
+                          </span>
+                          {/* Underline hover indicator */}
+                          <span className="absolute bottom-0 left-2 right-2 h-[2.5px] bg-[#F15A24] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
+                        </button>
+                      );
+                    })}
+                  </nav>
 
-                {/* Right: SSO Profile / Phá cách Login Button */}
-                <div className="flex items-center gap-2 sm:gap-2.5">
+                  {/* SSO Profile / Login Button */}
                   <div className="relative">
                     {currentUser ? (
                       /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn */
@@ -288,7 +290,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                       /* Chưa đăng nhập: Hộp màu cam, bo góc bo tròn mềm mại chuẩn khối thẻ, chữ trắng Đăng Nhập */
                       <button
                         onClick={() => setIsLoginModalOpen(true)}
-                        className="px-5 sm:px-6 py-2 sm:py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] active:scale-95 text-white font-bold text-xs sm:text-[13px] tracking-wide rounded-2xl shadow-md hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 cursor-pointer border border-[#F15A24] select-none flex items-center justify-center"
+                        className="px-5 sm:px-6 py-2 sm:py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] active:scale-95 text-white font-bold text-sm sm:text-[15px] rounded-2xl shadow-md hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-200 cursor-pointer border border-[#F15A24] select-none flex items-center justify-center"
                         title="Đăng nhập tài khoản AVG One"
                       >
                         <span className="font-bold text-white tracking-wide">
@@ -390,7 +392,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                             : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
                         }`}
                       >
-                        <span className="tracking-wide uppercase text-[11px] sm:text-xs">{item.label}</span>
+                        <span className="font-bold text-xs sm:text-[13px]">{item.label}</span>
                       </button>
                     );
                   })}
