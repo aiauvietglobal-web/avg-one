@@ -484,6 +484,8 @@ export const SpeechToTextModule: React.FC = () => {
   const realtimeTimerRef = useRef<any>(null);
   const lastInterimRef = useRef<string>('');
   const silenceCommitTimerRef = useRef<any>(null);
+  const speakerSwitchCountRef = useRef<number>(0);
+  const restartTimeoutRef = useRef<any>(null);
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
   const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
@@ -662,31 +664,52 @@ export const SpeechToTextModule: React.FC = () => {
           if (pitch !== null) {
             setLivePitchHz(pitch);
             pitchSamples.push(pitch);
-            if (pitchSamples.length > 12) pitchSamples.shift();
+            if (pitchSamples.length > 10) pitchSamples.shift();
 
             const avgPitch = Math.round(pitchSamples.reduce((a, b) => a + b, 0) / pitchSamples.length);
 
             if (autoDiarizationRef.current) {
-              // Hysteresis: < 150Hz -> Nam, > 175Hz -> Nữ, vùng đệm 150Hz-175Hz giữ nguyên giọng hiện tại
-              let targetSpkId = activeSpeakerRef.current;
-              if (avgPitch < 150) {
-                targetSpkId = 'spk-male';
-              } else if (avgPitch > 175) {
-                targetSpkId = 'spk-female';
+              // Phân định giọng nói tự động dựa trên tần số cơ bản (F0):
+              // Giọng Nam: <= 155Hz | Giọng Nữ: >= 170Hz | 155Hz-170Hz: giữ nguyên chống rung lắc
+              let detectedSpkId: string | null = null;
+              if (avgPitch <= 155) {
+                detectedSpkId = 'spk-male';
+              } else if (avgPitch >= 170) {
+                detectedSpkId = 'spk-female';
               }
 
-              const targetSpk = speakers.find(s => s.id === targetSpkId) || DEFAULT_SPEAKERS[0];
-              const icon = targetSpkId === 'spk-male' ? '👨' : '👩';
-              const label = `${icon} ${targetSpk.name} (~${avgPitch}Hz)`;
-              setDetectedVoiceLabel(label);
+              if (detectedSpkId) {
+                const targetSpk = speakers.find(s => s.id === detectedSpkId) || DEFAULT_SPEAKERS[0];
+                const icon = detectedSpkId === 'spk-male' ? '👨' : '👩';
+                const label = `${icon} ${targetSpk.name} (~${avgPitch}Hz)`;
+                setDetectedVoiceLabel(label);
 
-              // Chỉ đổi giọng khi không có câu nói dở dang đang chạy (tránh cắt đôi câu đang nói)
-              if (!lastInterimRef.current.trim() && targetSpkId !== activeSpeakerRef.current) {
-                setActiveSpeakerId(targetSpkId);
-                activeSpeakerRef.current = targetSpkId;
+                // Chuyển người nói khi nhận diện nhất quán giọng khác liên tiếp >= 2 khung hình (~240ms)
+                if (detectedSpkId !== activeSpeakerRef.current) {
+                  speakerSwitchCountRef.current = (speakerSwitchCountRef.current || 0) + 1;
+                  if (speakerSwitchCountRef.current >= 2) {
+                    // Nếu còn đoạn dở dang của người trước, chốt ngay vào tin nhắn của người trước
+                    if (lastInterimRef.current.trim()) {
+                      commitTranscriptToMessage(lastInterimRef.current.trim(), true);
+                      lastInterimRef.current = '';
+                      setInterimTranscript('');
+                    }
+                    setActiveSpeakerId(detectedSpkId);
+                    activeSpeakerRef.current = detectedSpkId;
+                    speakerSwitchCountRef.current = 0;
+                  }
+                } else {
+                  speakerSwitchCountRef.current = 0;
+                }
               }
             } else {
               setDetectedVoiceLabel(`Tần số giọng: ${avgPitch}Hz (Chế độ thủ công)`);
+            }
+          } else {
+            // Khi im lặng > 350ms, làm mới buffer để đón nhận chính xác người phát biểu tiếp theo
+            if (now - lastPitchCalcTime > 350 && pitchSamples.length > 0) {
+              pitchSamples = [];
+              speakerSwitchCountRef.current = 0;
             }
           }
         }
@@ -1162,81 +1185,25 @@ export const SpeechToTextModule: React.FC = () => {
   const commitInterimToMessage = (rawText: string) => commitTranscriptToMessage(rawText, true);
 
 
-  // Helper to restart speech recognition engine aggressively with retry backoff
-  const restartSpeechEngine = () => {
-    if (!recognitionRef.current || micStateRef.current !== 'recording') return;
-
-    const attemptStart = (retriesLeft: number, delayMs: number) => {
-      if (micStateRef.current !== 'recording') return;
-      try {
-        processedFinalIndexRef.current = 0;
-        recognitionRef.current.start();
-        setIsListening(true);
-        isListeningRef.current = true;
-      } catch (err: any) {
-        if (err?.name === 'InvalidStateError' || err?.message?.includes('already started')) {
-          setIsListening(true);
-          isListeningRef.current = true;
-          return;
-        }
-        console.warn(`Speech recognition restart attempt (${retriesLeft} retries remaining):`, err);
-        if (retriesLeft > 0) {
-          setTimeout(() => attemptStart(retriesLeft - 1, Math.min(1000, Math.round(delayMs * 1.4))), delayMs);
-        }
-      }
-    };
-
-    attemptStart(5, 120);
-  };
-
-  // Heartbeat Watchdog Interval: Automatically resurrects recognition if browser silently pauses while micState === 'recording'
-  useEffect(() => {
-    const watchdogInterval = setInterval(() => {
-      if (micStateRef.current === 'recording') {
-        if (!recognitionRef.current) return;
-        try {
-          recognitionRef.current.start();
-          setIsListening(true);
-          isListeningRef.current = true;
-        } catch (e: any) {
-          // If already started (normal state), ignore error
-        }
-      }
-    }, 4000);
-
-    return () => clearInterval(watchdogInterval);
-  }, []);
-
-  // Initialize Web Speech Recognition with Zero-Delay & High-Accuracy Voice Capture
-  useEffect(() => {
+  // Factory to create and configure SpeechRecognition instance
+  const createSpeechRecognitionInstance = useCallback(() => {
     const SpeechRecognitionObj = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognitionObj) {
-      setSpeechSupported(false);
-      setRecognitionError('Trình duyệt của bạn chưa hỗ trợ trực tiếp Web Speech API. Bạn có thể sử dụng chế độ Nhập liệu Giả lập bên dưới.');
-      return;
-    }
+    if (!SpeechRecognitionObj) return null;
 
     try {
       const recognition = new SpeechRecognitionObj();
       const isMobileClient = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      
+
       // On mobile browsers, continuous MUST be false to allow iOS Safari & Chrome Android to return speech chunks
       recognition.continuous = !isMobileClient;
       recognition.interimResults = true;
       recognition.lang = currentLanguage;
       recognition.maxAlternatives = 3;
 
-      // 0. Nạp danh mục ngữ pháp JSGF ưu tiên từ vựng điều hành AVG One
-      const SpeechGrammarListObj = (window as any).SpeechGrammarList || (window as any).webkitSpeechGrammarList;
-      if (SpeechGrammarListObj) {
-        try {
-          const grammarList = new SpeechGrammarListObj();
-          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | AC1 | AC2 | #K1 | #K2T | #K2B | lệnh sản xuất | xuất kho | nhập kho | hợp đồng kinh tế | biên bản nghiệm thu | báo cáo tài chính | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
-          grammarList.addFromString(grammar, 1.0);
-          recognition.grammars = grammarList;
-        } catch (e) {}
-      }
+      // NOTE: We deliberately do NOT set recognition.grammars!
+      // In Chromium, JSGF SpeechGrammarList restricts speech recognition strictly to the listed words,
+      // which causes normal speech to freeze, stall, or get dropped by Google Cloud ASR!
+      // AVG enterprise keywords are instead accurately normalized in JS via enhanceVietnameseTranscript.
 
       recognition.onstart = () => {
         processedFinalIndexRef.current = 0;
@@ -1313,6 +1280,9 @@ export const SpeechToTextModule: React.FC = () => {
       };
 
       recognition.onend = () => {
+        setIsListening(false);
+        isListeningRef.current = false;
+
         // Auto-commit lingering interim text if browser disconnected unexpectedly
         if (lastInterimRef.current.trim()) {
           commitTranscriptToMessage(lastInterimRef.current.trim(), true);
@@ -1322,20 +1292,98 @@ export const SpeechToTextModule: React.FC = () => {
 
         if (micStateRef.current === 'recording') {
           restartSpeechEngine();
-        } else {
-          setIsListening(false);
-          isListeningRef.current = false;
         }
       };
 
-
-            recognitionRef.current = recognition;
+      return recognition;
     } catch (err) {
-      console.error('Error initializing Speech Recognition:', err);
-      setSpeechSupported(false);
+      console.error('Error creating Speech Recognition instance:', err);
+      return null;
+    }
+  }, [currentLanguage, targetLanguage]);
+
+  // Helper to restart speech recognition engine aggressively with retry backoff & instance recreation
+  const restartSpeechEngine = useCallback(() => {
+    if (micStateRef.current !== 'recording') return;
+
+    if (restartTimeoutRef.current) {
+      clearTimeout(restartTimeoutRef.current);
     }
 
+    restartTimeoutRef.current = setTimeout(() => {
+      if (micStateRef.current !== 'recording') return;
+
+      const attemptStart = (retriesLeft: number, delayMs: number) => {
+        if (micStateRef.current !== 'recording') return;
+        try {
+          processedFinalIndexRef.current = 0;
+          if (!recognitionRef.current) {
+            recognitionRef.current = createSpeechRecognitionInstance();
+          }
+          recognitionRef.current?.start();
+          setIsListening(true);
+          isListeningRef.current = true;
+        } catch (err: any) {
+          if (err?.message?.includes('already started')) {
+            setIsListening(true);
+            isListeningRef.current = true;
+            return;
+          }
+          console.warn(`Speech recognition restart attempt (${retriesLeft} retries remaining):`, err);
+          if (retriesLeft > 0) {
+            if (retriesLeft <= 2) {
+              // Re-create a fresh recognition instance on repeated failures
+              try {
+                recognitionRef.current?.stop();
+              } catch (e) {}
+              recognitionRef.current = createSpeechRecognitionInstance();
+            }
+            setTimeout(() => attemptStart(retriesLeft - 1, Math.min(800, Math.round(delayMs * 1.3))), delayMs);
+          }
+        }
+      };
+
+      attemptStart(4, 150);
+    }, 120);
+  }, [createSpeechRecognitionInstance]);
+
+  // Heartbeat Watchdog Interval: Automatically resurrects recognition if browser silently pauses while micState === 'recording'
+  useEffect(() => {
+    const watchdogInterval = setInterval(() => {
+      if (micStateRef.current === 'recording') {
+        if (!recognitionRef.current || !isListeningRef.current) {
+          restartSpeechEngine();
+          return;
+        }
+        try {
+          recognitionRef.current.start();
+          setIsListening(true);
+          isListeningRef.current = true;
+        } catch (e: any) {
+          // If already started (normal state), ignore error
+        }
+      }
+    }, 3000);
+
+    return () => clearInterval(watchdogInterval);
+  }, [restartSpeechEngine]);
+
+  // Initialize Web Speech Recognition with Zero-Delay & High-Accuracy Voice Capture
+  useEffect(() => {
+    const recognition = createSpeechRecognitionInstance();
+    if (!recognition) {
+      setSpeechSupported(false);
+      setRecognitionError('Trình duyệt của bạn chưa hỗ trợ trực tiếp Web Speech API. Bạn có thể sử dụng chế độ Nhập liệu Giả lập bên dưới.');
+      return;
+    }
+
+    setSpeechSupported(true);
+    recognitionRef.current = recognition;
+
     return () => {
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+      }
       if (silenceCommitTimerRef.current) {
         clearTimeout(silenceCommitTimerRef.current);
       }
@@ -1345,7 +1393,7 @@ export const SpeechToTextModule: React.FC = () => {
         } catch (e) {}
       }
     };
-  }, [currentLanguage, targetLanguage]);
+  }, [createSpeechRecognitionInstance]);
 
   // 3-State Toggle Listening Handler (Green = Bắt đầu | Red = Đang thu âm [Tạm dừng] | Yellow = Tạm dừng [Tiếp tục])
   const toggleListening = async () => {

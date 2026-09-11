@@ -115,16 +115,9 @@ export class LiveTranscribeController {
       this.recognition.lang = 'vi-VN';
       this.recognition.maxAlternatives = 3;
 
-      // 0. Nạp danh mục ngữ pháp JSGF ưu tiên từ vựng điều hành AVG One
-      const SpeechGrammarListObj = (window as any).SpeechGrammarList || (window as any).webkitSpeechGrammarList;
-      if (SpeechGrammarListObj) {
-        try {
-          const grammarList = new SpeechGrammarListObj();
-          const grammar = `#JSGF V1.0; grammar avgTerms; public <term> = AVG | AV | DH | B5.1 | 5.1T | 2.1 | 3.1 | RDI | VBKL | AC1 | AC2 | #K1 | #K2T | #K2B | lệnh sản xuất | xuất kho | nhập kho | hợp đồng kinh tế | biên bản nghiệm thu | báo cáo tài chính | quản lý thuế | mẫu H1 | mẫu H2 | đăng ký SHTT | bà Bích | bà Trang | ông Trịnh | deadline | check mail | feedback | OKR | KPI | PO | VAT ;`;
-          grammarList.addFromString(grammar, 1.0);
-          this.recognition.grammars = grammarList;
-        } catch (e) {}
-      }
+      // Lưu ý: Không gán recognition.grammars bằng SpeechGrammarList vì trong Chromium
+      // nó giới hạn nhận diện nghiêm ngặt trong danh mục đó, làm đứt đoạn hoặc đứng hình
+      // khi người dùng nói các từ ngữ tự nhiên trong thực tế. Từ vựng AVG được chuẩn hóa qua normalizeAvgText.
 
       this.recognition.onstart = () => {
         this.restartRetries = 0;
@@ -243,7 +236,7 @@ export class LiveTranscribeController {
   private restartRecognitionWithBackoff() {
     if (!this.recognition || this.status !== 'recording') return;
 
-    const delay = Math.min(1000, 80 + this.restartRetries * 120);
+    const delay = Math.min(1000, 100 + this.restartRetries * 150);
     this.restartRetries++;
 
     setTimeout(() => {
@@ -251,8 +244,15 @@ export class LiveTranscribeController {
         try {
           this.recognition.start();
         } catch (err: any) {
-          if (err.name !== 'InvalidStateError') {
-            // Tiếp tục thử lại nếu chưa thành công
+          if (err?.message?.includes('already started')) {
+            return;
+          }
+          console.warn(`[LiveTranscribe] Restart attempt ${this.restartRetries}:`, err);
+          if (this.restartRetries <= 5) {
+            if (this.restartRetries >= 3) {
+              try { this.recognition.stop(); } catch (e) {}
+              this.initRecognition();
+            }
             this.restartRecognitionWithBackoff();
           }
         }

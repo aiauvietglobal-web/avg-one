@@ -414,7 +414,8 @@ export function splitIntoReadableSpeechSegments(text: string, maxWords: number =
 
 /**
  * Ghép nối hai đoạn văn bản liên tiếp mà không bị lặp từ / lặp câu (Deduplication & Overlap Merging)
- * Tự động phát hiện nếu đoạn mới đã chứa đoạn cũ (hoặc ngược lại) để khử trùng lặp 100%.
+ * Chỉ loại bỏ khi câu mới là bản sửa lại của câu cũ (extension) hoặc có phần giao thoa đuôi-đầu (suffix-to-prefix overlap).
+ * Tuyệt đối không nuốt lời nói hay xóa bỏ các câu từ hợp lệ.
  */
 export function mergeSpeechWithoutOverlap(prevText: string, newText: string): string {
   const prev = prevText.trim();
@@ -428,29 +429,25 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   const prevNorm = stripPunct(prev);
   const nextNorm = stripPunct(next);
 
-  // 1. Nếu văn bản mới giống hệt văn bản cũ (hoàn toàn trùng lặp)
+  // 1. Nếu văn bản mới giống hệt văn bản cũ (trùng lặp hoàn toàn)
   if (prevNorm === nextNorm) {
     return prev;
   }
 
-  // 2. Nếu văn bản mới là phần mở rộng đầy đủ hơn của văn bản cũ (next bắt đầu bằng prev)
+  // 2. Nếu văn bản mới là phần mở rộng đầy đủ hơn của câu cũ (trình duyệt gửi lại câu đang nói hoàn chỉnh hơn)
   if (nextNorm.startsWith(prevNorm)) {
     return next;
   }
 
-  // 3. Nếu văn bản cũ đã bao trùm toàn bộ văn bản mới
-  if (prevNorm.endsWith(nextNorm) || prevNorm.includes(nextNorm)) {
-    return prev;
-  }
-
-  // 4. Tìm phần giao thoa (suffix-to-prefix overlap) giữa đuôi của prev và đầu của next
+  // 3. Tìm phần giao thoa (suffix-to-prefix overlap) giữa đuôi của prev và đầu của next
   const prevWords = prev.split(/\s+/);
   const nextWords = next.split(/\s+/);
   const prevNormWords = prevWords.map(w => stripPunct(w)).filter(Boolean);
   const nextNormWords = nextWords.map(w => stripPunct(w)).filter(Boolean);
 
   let maxOverlap = 0;
-  const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 30);
+  // Chỉ kiểm tra tối đa 15 từ ở đuôi của câu trước
+  const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 15);
 
   for (let k = maxCheck; k >= 1; k--) {
     const prevSuffix = prevNormWords.slice(prevNormWords.length - k).join(' ');
@@ -469,12 +466,13 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
     return `${prev}${separator}${remainingWords}`;
   }
 
+  // 4. Nếu là câu phát biểu mới hoàn toàn, nối tiếp bình thường
   const separator = prev.endsWith('\n') ? '' : ' ';
   return `${prev}${separator}${next}`;
 }
 
 /**
- * Khử phần tiền tố bị trùng lặp của câu mới nếu câu trước đã chứa đoạn đó (ví dụ khi chuyển người nói)
+ * Khử phần tiền tố bị trùng lặp của câu mới nếu đầu câu mới trùng với đuôi câu trước (ví dụ khi chuyển người nói)
  */
 export function stripPrefixOverlap(existingText: string, incomingText: string): string {
   const exist = existingText.trim();
@@ -487,15 +485,8 @@ export function stripPrefixOverlap(existingText: string, incomingText: string): 
   const incomingWords = incoming.split(/\s+/);
   const incomingNormWords = incomingWords.map(w => stripPunct(w)).filter(Boolean);
 
-  // Nếu câu mới nằm hoàn toàn trong câu cũ
-  const existNorm = stripPunct(exist);
-  const incomingNorm = stripPunct(incoming);
-  if (existNorm.includes(incomingNorm)) {
-    return '';
-  }
-
   let maxOverlap = 0;
-  const maxCheck = Math.min(existWords.length, incomingNormWords.length, 30);
+  const maxCheck = Math.min(existWords.length, incomingNormWords.length, 15);
 
   for (let k = maxCheck; k >= 1; k--) {
     const existSuffix = existWords.slice(existWords.length - k).join(' ');
@@ -508,7 +499,7 @@ export function stripPrefixOverlap(existingText: string, incomingText: string): 
 
   if (maxOverlap > 0) {
     const remaining = incomingWords.slice(maxOverlap).join(' ').trim();
-    return remaining ? autoCapitalizeSentences(remaining) : '';
+    return remaining ? autoCapitalizeSentences(remaining) : incoming;
   }
 
   return incoming;
