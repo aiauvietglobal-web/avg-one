@@ -13,34 +13,6 @@ export const HOME_APP_MODULES = [
     bgColor: 'bg-white/90 dark:bg-slate-800/90 border-sky-200/90 dark:border-sky-700/80 shadow-2xs'
   },
   {
-    id: 'system' as AppModuleId,
-    name: 'Hệ Thống',
-    icon: BarChart3,
-    iconColor: 'text-[#0077B6] dark:text-sky-300',
-    bgColor: 'bg-white/90 dark:bg-slate-800/90 border-sky-200/90 dark:border-sky-700/80 shadow-2xs'
-  },
-  {
-    id: 'inside' as AppModuleId,
-    name: 'Bảng Tin Nội Bộ',
-    icon: Newspaper,
-    iconColor: 'text-[#0077B6] dark:text-sky-300',
-    bgColor: 'bg-white/90 dark:bg-slate-800/90 border-sky-200/90 dark:border-sky-700/80 shadow-2xs'
-  },
-  {
-    id: 'calendar' as AppModuleId,
-    name: 'Lịch',
-    icon: Calendar,
-    iconColor: 'text-[#0077B6] dark:text-sky-300',
-    bgColor: 'bg-white/90 dark:bg-slate-800/90 border-sky-200/90 dark:border-sky-700/80 shadow-2xs'
-  },
-  {
-    id: 'orders' as AppModuleId,
-    name: 'Đơn Hàng',
-    icon: FolderKanban,
-    iconColor: 'text-[#0077B6] dark:text-sky-300',
-    bgColor: 'bg-white/90 dark:bg-slate-800/90 border-sky-200/90 dark:border-sky-700/80 shadow-2xs'
-  },
-  {
     id: 'hr' as AppModuleId,
     name: 'Nhân Sự',
     icon: Users,
@@ -222,8 +194,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             );
           })}
 
-          {/* Placeholder Slots for Future Expansion */}
-          {Array.from({ length: 6 }).map((_, idx) => (
+          {/* Placeholder Slots for Future Expansion (5 vị trí tương lai tạo thành 2 hàng x 5 cột trọn vẹn) */}
+          {Array.from({ length: 5 }).map((_, idx) => (
             <div
               key={`placeholder-${idx}`}
               style={{ borderRadius: '28px' }}
