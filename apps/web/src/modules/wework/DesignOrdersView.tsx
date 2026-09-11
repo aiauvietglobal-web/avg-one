@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import {
   Palette, Sparkles, Plus, Clock, CheckCircle2, AlertCircle,
   Eye, Download, Layers, Box, Cpu, FileImage, User, Calendar,
-  ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck, Tag
+  ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck, Tag,
+  Search
 } from 'lucide-react';
 
 export interface DesignOrder {
@@ -185,6 +186,7 @@ const INITIAL_DESIGN_ORDERS: DesignOrder[] = [
 export const DesignOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<DesignOrder[]>(INITIAL_DESIGN_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<DesignOrder | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [commentInput, setCommentInput] = useState('');
@@ -208,10 +210,26 @@ export const DesignOrdersView: React.FC = () => {
     };
   }, [orders]);
 
+  const STAGE_TABS = [
+    { id: 'ALL', label: 'Tất Cả Giai Đoạn' },
+    { id: 'CONCEPT', label: '1. Ý Tưởng & Moodboard' },
+    { id: 'MODELING_3D', label: '2. Dựng Hình 3D & CAD' },
+    { id: 'CMF_COLOR', label: '3. Phối Màu & CMF' },
+    { id: 'APPROVAL_RENDER', label: '4. Duyệt Mẫu Render' },
+    { id: 'RELEASE_CAD', label: '5. Bàn Giao Bản Vẽ' }
+  ];
+
   const filteredOrders = useMemo(() => {
-    if (activeStageFilter === 'ALL') return orders;
-    return orders.filter(o => o.stage === activeStageFilter);
-  }, [orders, activeStageFilter]);
+    return orders.filter(o => {
+      const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery = !q ||
+        o.title.toLowerCase().includes(q) ||
+        o.code.toLowerCase().includes(q) ||
+        o.designer.name.toLowerCase().includes(q);
+      return matchStage && matchQuery;
+    });
+  }, [orders, activeStageFilter, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -302,142 +320,145 @@ export const DesignOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* 🌟 BANNER ĐƠN HÀNG THIẾT KẾ (3.2) */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden">
-        <div className="flex flex-col items-start space-y-2 text-left">
-          {/* Slogan badge with animated border */}
-          <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-              <defs>
-                <linearGradient id="design-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#0284C7" />
-                  <stop offset="50%" stopColor="#8B5CF6" />
-                  <stop offset="100%" stopColor="#F15A24" />
-                </linearGradient>
-              </defs>
-              <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
-                rx="8"
-                ry="8"
-                fill="none"
-                stroke="url(#design-banner-border)"
-                strokeWidth="1.5"
-                className="animate-slogan-box-border"
-              />
-            </svg>
-            <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-transparent text-xs font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-              <Palette className="w-3.5 h-3.5 text-[#F15A24]" />
-              <span>AVG DESIGN HUB • PHÂN HỆ THIẾT KẾ CÔNG NGHIỆP R&D (3.2)</span>
+    <div className="space-y-5">
+      {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-5 sm:p-6 rounded-[26px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden space-y-4">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+          {/* Cột trái: Badge, Title & Button */}
+          <div className="space-y-3">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="design-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="50%" stopColor="#8B5CF6" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#design-banner-border)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Palette className="w-3.5 h-3.5 text-[#F15A24]" />
+                <span>AVG DESIGN HUB • THIẾT KẾ R&D (3.2)</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2">
+                <span>QUẢN LÝ ĐƠN HÀNG</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
+                  <span className="relative z-10">THIẾT KẾ</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
+              </h1>
+
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-xl shadow-sm hover:shadow-md transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Tạo Đơn Hàng Mới
+              </button>
             </div>
           </div>
 
-          <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-              <span>QUẢN LÝ ĐƠN HÀNG</span>
-              <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                <span className="relative z-10">THIẾT KẾ</span>
-                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                  <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                </svg>
-              </span>
-            </h1>
-          </div>
-        </div>
+          {/* Cột phải: 4 Thẻ KPI Tinh Gọn (Mini Cards) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 xl:border-l xl:border-slate-200 dark:xl:border-slate-800 xl:pl-5">
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
+                <Layers className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Tổng đơn</div>
+                <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">{stats.total}</div>
+              </div>
+            </div>
 
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-5 py-3 bg-[#F15A24] hover:bg-[#d94e1f] text-white font-extrabold rounded-2xl shadow-md hover:shadow-lg transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
-        >
-          <Plus className="w-4 h-4 stroke-[3]" /> Tạo Đơn Hàng Thiết Kế
-        </button>
-      </div>
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-[#0284C7] shrink-0">
+                <Box className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Dựng 3D/CAD</div>
+                <div className="text-lg font-black text-sky-600 dark:text-sky-400 leading-tight">{stats.in3D}</div>
+              </div>
+            </div>
 
-      {/* 📊 KPI THỐNG KÊ NHANH THIẾT KẾ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Tổng Đơn Thiết Kế</span>
-            <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/50 flex items-center justify-center text-[#F15A24]">
-              <Layers className="w-4 h-4" />
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 shrink-0">
+                <FileImage className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Duyệt CMF</div>
+                <div className="text-lg font-black text-purple-600 dark:text-purple-400 leading-tight">{stats.inReview}</div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Bàn giao</div>
+                <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">{stats.completed}</div>
+              </div>
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.total}</span>
-            <span className="text-[11px] font-bold text-slate-400">dự án</span>
-          </div>
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Đang Lên 3D / CAD</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-[#0284C7]">
-              <Box className="w-4 h-4" />
-            </div>
+        {/* Thanh Tích Hợp: Giai Đoạn (Pipeline Tabs) + Tìm Kiếm Nhanh */}
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+            {STAGE_TABS.map(stage => {
+              const count = stage.id === 'ALL' ? orders.length : orders.filter(o => o.stage === stage.id).length;
+              return (
+                <button
+                  key={stage.id}
+                  onClick={() => setActiveStageFilter(stage.id)}
+                  className={`px-3 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
+                    activeStageFilter === stage.id
+                      ? 'bg-[#F15A24] text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#F15A24]'
+                  }`}
+                >
+                  <span>{stage.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                    activeStageFilter === stage.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.in3D}</span>
-            <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400">đang dựng hình</span>
+
+          <div className="relative w-full md:w-60 shrink-0">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tìm mã, tên thiết kế..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#F15A24] font-medium"
+            />
           </div>
         </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Chờ Duyệt Render/CMF</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
-              <FileImage className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.inReview}</span>
-            <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400">cần review</span>
-          </div>
-        </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Đã Bàn Giao Kỹ Thuật</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.completed}</span>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">xuất xưởng</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 🚀 PIPELINE FILTER STAGES (CÁC GIAI ĐOẠN THIẾT KẾ) */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white/70 dark:bg-slate-900/70 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 backdrop-blur-md">
-        <span className="text-xs font-black text-slate-400 uppercase whitespace-nowrap pl-2">GIAI ĐOẠN:</span>
-        {[
-          { id: 'ALL', label: 'Tất Cả Giai Đoạn' },
-          { id: 'CONCEPT', label: '1. Ý Tưởng & Moodboard' },
-          { id: 'MODELING_3D', label: '2. Dựng Hình 3D & CAD' },
-          { id: 'CMF_COLOR', label: '3. Phối Màu & CMF' },
-          { id: 'APPROVAL_RENDER', label: '4. Duyệt Mẫu Render' },
-          { id: 'RELEASE_CAD', label: '5. Bàn Giao Bản Vẽ' }
-        ].map(stage => (
-          <button
-            key={stage.id}
-            onClick={() => setActiveStageFilter(stage.id)}
-            className={`px-3.5 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeStageFilter === stage.id
-                ? 'bg-[#F15A24] text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#F15A24]'
-            }`}
-          >
-            {stage.label}
-          </button>
-        ))}
       </div>
 
       {/* 🎨 DANH SÁCH THẺ DỰ ÁN THIẾT KẾ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {filteredOrders.map(order => (
           <div
             key={order.id}
@@ -480,7 +501,7 @@ export const DesignOrdersView: React.FC = () => {
               {order.previewImage && (
                 <div
                   onClick={() => setSelectedOrder(order)}
-                  className="relative h-44 w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer"
+                  className="relative h-40 w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 cursor-pointer"
                 >
                   <img
                     src={order.previewImage}

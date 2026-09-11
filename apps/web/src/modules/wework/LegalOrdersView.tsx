@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import {
   Scale, Sparkles, Plus, CheckCircle2, AlertTriangle, ShieldCheck,
   FileText, Award, Building2, Calendar, Clock, ArrowRight, X,
-  MessageSquare, Send, Download, ExternalLink, BookmarkCheck, FileCheck2
+  MessageSquare, Send, Download, ExternalLink, BookmarkCheck, FileCheck2,
+  Search
 } from 'lucide-react';
 
 export interface LegalOrder {
@@ -174,6 +175,7 @@ const INITIAL_LEGAL_ORDERS: LegalOrder[] = [
 export const LegalOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<LegalOrder[]>(INITIAL_LEGAL_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<LegalOrder | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [commentInput, setCommentInput] = useState('');
@@ -198,10 +200,28 @@ export const LegalOrdersView: React.FC = () => {
     };
   }, [orders]);
 
+  const STAGE_TABS = [
+    { id: 'ALL', label: 'Tất Cả Hồ Sơ' },
+    { id: 'PRIOR_ART', label: '1. Tra Cứu SHTT' },
+    { id: 'FORMAL_EXAM', label: '2. Thẩm Định Hình Thức' },
+    { id: 'TESTING_QUATEST', label: '3. Kiểm Định QUATEST' },
+    { id: 'CONTENT_EXAM', label: '4. Thẩm Định Nội Dung' },
+    { id: 'GRANTED', label: '5. Đã Cấp Văn Bằng' }
+  ];
+
   const filteredOrders = useMemo(() => {
-    if (activeStageFilter === 'ALL') return orders;
-    return orders.filter(o => o.stage === activeStageFilter);
-  }, [orders, activeStageFilter]);
+    return orders.filter(o => {
+      const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery = !q ||
+        o.title.toLowerCase().includes(q) ||
+        o.code.toLowerCase().includes(q) ||
+        o.filingNumber.toLowerCase().includes(q) ||
+        o.agency.toLowerCase().includes(q) ||
+        o.leadLegal.name.toLowerCase().includes(q);
+      return matchStage && matchQuery;
+    });
+  }, [orders, activeStageFilter, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -291,142 +311,145 @@ export const LegalOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* 🌟 BANNER ĐƠN HÀNG PHÁP LÝ (6.0) */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden">
-        <div className="flex flex-col items-start space-y-2 text-left">
-          {/* Slogan badge with animated border */}
-          <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-              <defs>
-                <linearGradient id="legal-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#8B5CF6" />
-                  <stop offset="50%" stopColor="#0284C7" />
-                  <stop offset="100%" stopColor="#F15A24" />
-                </linearGradient>
-              </defs>
-              <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
-                rx="8"
-                ry="8"
-                fill="none"
-                stroke="url(#legal-banner-border)"
-                strokeWidth="1.5"
-                className="animate-slogan-box-border"
-              />
-            </svg>
-            <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-transparent text-xs font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-              <Scale className="w-3.5 h-3.5 text-purple-600" />
-              <span>AVG LEGAL & COMPLIANCE • PHÂN HỆ QUẢN LÝ PHÁP LÝ & SHTT (6.0)</span>
+    <div className="space-y-5">
+      {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-5 sm:p-6 rounded-[26px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden space-y-4">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+          {/* Cột trái: Badge, Title & Button */}
+          <div className="space-y-3">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="legal-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#8B5CF6" />
+                    <stop offset="50%" stopColor="#0284C7" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#legal-banner-border)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Scale className="w-3.5 h-3.5 text-purple-600" />
+                <span>AVG LEGAL & COMPLIANCE • PHÁP LÝ & SHTT (6.0)</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2">
+                <span>QUẢN LÝ ĐƠN HÀNG</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-[#F15A24]">
+                  <span className="relative z-10">PHÁP LÝ</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-purple-500 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
+              </h1>
+
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-90 text-white font-extrabold rounded-xl shadow-sm hover:shadow-md transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Nộp Hồ Sơ Pháp Lý
+              </button>
             </div>
           </div>
 
-          <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-              <span>QUẢN LÝ ĐƠN HÀNG</span>
-              <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-[#F15A24]">
-                <span className="relative z-10">PHÁP LÝ</span>
-                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-purple-500 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                  <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                </svg>
-              </span>
-            </h1>
-          </div>
-        </div>
+          {/* Cột phải: 4 Thẻ KPI Tinh Gọn */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 xl:border-l xl:border-slate-200 dark:xl:border-slate-800 xl:pl-5">
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 shrink-0">
+                <FileText className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Tổng hồ sơ</div>
+                <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">{stats.total}</div>
+              </div>
+            </div>
 
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-90 text-white font-extrabold rounded-2xl shadow-md hover:shadow-lg transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
-        >
-          <Plus className="w-4 h-4 stroke-[3]" /> Nộp Hồ Sơ Pháp Lý Mới
-        </button>
-      </div>
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-[#0284C7] shrink-0">
+                <Building2 className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Cục SHTT</div>
+                <div className="text-lg font-black text-sky-600 dark:text-sky-400 leading-tight">{stats.inExam}</div>
+              </div>
+            </div>
 
-      {/* 📊 KPI THỐNG KÊ NHANH PHÁP LÝ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Tổng Hồ Sơ Pháp Lý</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
-              <FileText className="w-4 h-4" />
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">QUATEST / CR</div>
+                <div className="text-lg font-black text-orange-600 dark:text-orange-400 leading-tight">{stats.testingQuatest}</div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
+                <Award className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Đã cấp bằng</div>
+                <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">{stats.granted}</div>
+              </div>
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.total}</span>
-            <span className="text-[11px] font-bold text-slate-400">hồ sơ</span>
-          </div>
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Đang Thẩm Định Cục SHTT</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-[#0284C7]">
-              <Building2 className="w-4 h-4" />
-            </div>
+        {/* Thanh Tích Hợp: Giai Đoạn (Pipeline Tabs) + Tìm Kiếm Nhanh */}
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+            {STAGE_TABS.map(stage => {
+              const count = stage.id === 'ALL' ? orders.length : orders.filter(o => o.stage === stage.id).length;
+              return (
+                <button
+                  key={stage.id}
+                  onClick={() => setActiveStageFilter(stage.id)}
+                  className={`px-3 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
+                    activeStageFilter === stage.id
+                      ? 'bg-purple-600 text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-purple-600'
+                  }`}
+                >
+                  <span>{stage.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                    activeStageFilter === stage.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.inExam}</span>
-            <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400">chờ xét duyệt</span>
+
+          <div className="relative w-full md:w-60 shrink-0">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tìm mã, số đơn, văn bằng..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-600 font-medium"
+            />
           </div>
         </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Kiểm Định QUATEST / CR</span>
-            <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/50 flex items-center justify-center text-[#F15A24]">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.testingQuatest}</span>
-            <span className="text-[11px] font-bold text-orange-600 dark:text-orange-400">đo kiểm an toàn</span>
-          </div>
-        </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Văn Bằng Đã Cấp & Hiệu Lực</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
-              <Award className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.granted}</span>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">văn bằng</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 🚀 PIPELINE FILTER GIAI ĐOẠN PHÁP LÝ */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white/70 dark:bg-slate-900/70 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 backdrop-blur-md">
-        <span className="text-xs font-black text-slate-400 uppercase whitespace-nowrap pl-2">GIAI ĐOẠN:</span>
-        {[
-          { id: 'ALL', label: 'Tất Cả Hồ Sơ' },
-          { id: 'PRIOR_ART', label: '1. Tra Cứu SHTT' },
-          { id: 'FORMAL_EXAM', label: '2. Thẩm Định Hình Thức' },
-          { id: 'TESTING_QUATEST', label: '3. Kiểm Định QUATEST' },
-          { id: 'CONTENT_EXAM', label: '4. Thẩm Định Nội Dung' },
-          { id: 'GRANTED', label: '5. Đã Cấp Văn Bằng' }
-        ].map(stage => (
-          <button
-            key={stage.id}
-            onClick={() => setActiveStageFilter(stage.id)}
-            className={`px-3.5 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeStageFilter === stage.id
-                ? 'bg-purple-600 text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-purple-600'
-            }`}
-          >
-            {stage.label}
-          </button>
-        ))}
       </div>
 
       {/* ⚖️ DANH SÁCH THẺ HỒ SƠ PHÁP LÝ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {filteredOrders.map(order => (
           <div
             key={order.id}

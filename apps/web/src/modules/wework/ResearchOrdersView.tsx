@@ -3,7 +3,8 @@ import {
   Cpu, Sparkles, Plus, CheckCircle2, AlertTriangle, Activity,
   Layers, FlaskConical, Gauge, FileCode, User, Calendar,
   ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck,
-  Zap, Microchip, Thermometer, BatteryCharging, FileSpreadsheet
+  Zap, Microchip, Thermometer, BatteryCharging, FileSpreadsheet,
+  Search
 } from 'lucide-react';
 
 export interface ResearchOrder {
@@ -189,6 +190,7 @@ const INITIAL_RESEARCH_ORDERS: ResearchOrder[] = [
 export const ResearchOrdersView: React.FC = () => {
   const [orders, setOrders] = useState<ResearchOrder[]>(INITIAL_RESEARCH_ORDERS);
   const [activeStageFilter, setActiveStageFilter] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<ResearchOrder | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newLogNote, setNewLogNote] = useState('');
@@ -213,10 +215,27 @@ export const ResearchOrdersView: React.FC = () => {
     };
   }, [orders]);
 
+  const STAGE_TABS = [
+    { id: 'ALL', label: 'Tất Cả Đề Tài' },
+    { id: 'FEASIBILITY', label: '1. Nghiên Cứu Khả Thi' },
+    { id: 'PCB_SCHEMATIC', label: '2. Thiết Kế Mạch PCB' },
+    { id: 'SAMPLE_H1', label: '3. Chế Tạo Mẫu H1' },
+    { id: 'LAB_TEST', label: '4. Đo Kiểm Lab Test' },
+    { id: 'GOLDEN_RELEASE', label: '5. Golden Sample Nghiệm Thu' }
+  ];
+
   const filteredOrders = useMemo(() => {
-    if (activeStageFilter === 'ALL') return orders;
-    return orders.filter(o => o.stage === activeStageFilter);
-  }, [orders, activeStageFilter]);
+    return orders.filter(o => {
+      const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery = !q ||
+        o.title.toLowerCase().includes(q) ||
+        o.code.toLowerCase().includes(q) ||
+        o.h1Version.toLowerCase().includes(q) ||
+        o.leadEngineer.name.toLowerCase().includes(q);
+      return matchStage && matchQuery;
+    });
+  }, [orders, activeStageFilter, searchQuery]);
 
   const handleCreateOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -331,142 +350,145 @@ export const ResearchOrdersView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* 🌟 BANNER ĐƠN HÀNG NGHIÊN CỨU (3.1 - RDI) */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-[28px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden">
-        <div className="flex flex-col items-start space-y-2 text-left">
-          {/* Slogan badge with animated border */}
-          <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-              <defs>
-                <linearGradient id="research-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#0284C7" />
-                  <stop offset="50%" stopColor="#00A8E8" />
-                  <stop offset="100%" stopColor="#F15A24" />
-                </linearGradient>
-              </defs>
-              <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
-                rx="8"
-                ry="8"
-                fill="none"
-                stroke="url(#research-banner-border)"
-                strokeWidth="1.5"
-                className="animate-slogan-box-border"
-              />
-            </svg>
-            <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-transparent text-xs font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-              <Cpu className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span>AVG RDI LAB • PHÂN HỆ NGHIÊN CỨU & PHÁT TRIỂN CÔNG NGHỆ LÕI (3.1)</span>
+    <div className="space-y-5">
+      {/* 🌟 HERO COMPACT CARD: TIÊU ĐỀ + 4 CHỈ SỐ KPI + NÚT TẠO ĐƠN */}
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-5 sm:p-6 rounded-[26px] border border-slate-200/80 dark:border-slate-800 shadow-xs relative overflow-hidden space-y-4">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5">
+          {/* Cột trái: Badge, Title & Button */}
+          <div className="space-y-3">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="research-banner-border" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="50%" stopColor="#00A8E8" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#research-banner-border)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-black text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Cpu className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span>AVG RDI LAB • NGHIÊN CỨU & PHÁT TRIỂN (3.1)</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2">
+                <span>QUẢN LÝ ĐƠN HÀNG</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#0284C7] to-cyan-500">
+                  <span className="relative z-10">NGHIÊN CỨU</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
+              </h1>
+
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center gap-1.5 px-4 py-2 bg-[#0284C7] hover:bg-[#0369a1] text-white font-extrabold rounded-xl shadow-sm hover:shadow-md transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Khởi Tạo Đề Tài Mới
+              </button>
             </div>
           </div>
 
-          <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-              <span>QUẢN LÝ ĐƠN HÀNG</span>
-              <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#0284C7] to-cyan-500">
-                <span className="relative z-10">NGHIÊN CỨU</span>
-                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                  <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                </svg>
-              </span>
-            </h1>
-          </div>
-        </div>
+          {/* Cột phải: 4 Thẻ KPI Tinh Gọn */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 xl:border-l xl:border-slate-200 dark:xl:border-slate-800 xl:pl-5">
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-sky-500/10 flex items-center justify-center text-[#0284C7] shrink-0">
+                <FlaskConical className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Đề tài R&D</div>
+                <div className="text-lg font-black text-slate-900 dark:text-white leading-tight">{stats.total}</div>
+              </div>
+            </div>
 
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-5 py-3 bg-[#0284C7] hover:bg-[#0369a1] text-white font-extrabold rounded-2xl shadow-md hover:shadow-lg transition transform active:scale-95 text-xs uppercase tracking-wider whitespace-nowrap shrink-0 cursor-pointer"
-        >
-          <Plus className="w-4 h-4 stroke-[3]" /> Khởi Tạo Đơn Nghiên Cứu Mới
-        </button>
-      </div>
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-[#F15A24] shrink-0">
+                <Cpu className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Sản mẫu H1</div>
+                <div className="text-lg font-black text-orange-600 dark:text-orange-400 leading-tight">{stats.sampleH1}</div>
+              </div>
+            </div>
 
-      {/* 📊 KPI THỐNG KÊ NHANH R&D / RDI */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Đề Tài R&D Đang Chạy</span>
-            <div className="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-[#0284C7]">
-              <FlaskConical className="w-4 h-4" />
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 shrink-0">
+                <Gauge className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Đo kiểm Pass</div>
+                <div className="text-lg font-black text-emerald-600 dark:text-emerald-400 leading-tight">98.6%</div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-600 shrink-0">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] font-bold text-slate-400 uppercase truncate">Golden Sample</div>
+                <div className="text-lg font-black text-purple-600 dark:text-purple-400 leading-tight">{stats.goldenReleased}</div>
+              </div>
             </div>
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.total}</span>
-            <span className="text-[11px] font-bold text-slate-400">đề tài</span>
-          </div>
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Mẫu Thử H1 Đang Chế Tạo</span>
-            <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/50 flex items-center justify-center text-[#F15A24]">
-              <Cpu className="w-4 h-4" />
-            </div>
+        {/* Thanh Tích Hợp: Giai Đoạn (Pipeline Tabs) + Tìm Kiếm Nhanh */}
+        <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+            {STAGE_TABS.map(stage => {
+              const count = stage.id === 'ALL' ? orders.length : orders.filter(o => o.stage === stage.id).length;
+              return (
+                <button
+                  key={stage.id}
+                  onClick={() => setActiveStageFilter(stage.id)}
+                  className={`px-3 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer flex items-center gap-1.5 ${
+                    activeStageFilter === stage.id
+                      ? 'bg-[#0284C7] text-white shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#0284C7]'
+                  }`}
+                >
+                  <span>{stage.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                    activeStageFilter === stage.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.sampleH1}</span>
-            <span className="text-[11px] font-bold text-orange-600 dark:text-orange-400">nguyên mẫu H1</span>
+
+          <div className="relative w-full md:w-60 shrink-0">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Tìm mã, đề tài, mẫu H1..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0284C7] font-medium"
+            />
           </div>
         </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Tỷ Lệ Đo Kiểm Pass</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
-              <Gauge className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">98.6%</span>
-            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">đạt chuẩn</span>
-          </div>
-        </div>
-
-        <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold text-slate-500 uppercase">Golden Sample Bàn Giao</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900 dark:text-white">{stats.goldenReleased}</span>
-            <span className="text-[11px] font-bold text-purple-600 dark:text-purple-400">xuất xưởng</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 🚀 PIPELINE FILTER GIAI ĐOẠN NGHIÊN CỨU */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 bg-white/70 dark:bg-slate-900/70 p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 backdrop-blur-md">
-        <span className="text-xs font-black text-slate-400 uppercase whitespace-nowrap pl-2">GIAI ĐOẠN:</span>
-        {[
-          { id: 'ALL', label: 'Tất Cả Đề Tài' },
-          { id: 'FEASIBILITY', label: '1. Nghiên Cứu Khả Thi' },
-          { id: 'PCB_SCHEMATIC', label: '2. Thiết Kế Mạch PCB' },
-          { id: 'SAMPLE_H1', label: '3. Chế Tạo Mẫu H1' },
-          { id: 'LAB_TEST', label: '4. Đo Kiểm Lab Test' },
-          { id: 'GOLDEN_RELEASE', label: '5. Golden Sample Nghiệm Thu' }
-        ].map(stage => (
-          <button
-            key={stage.id}
-            onClick={() => setActiveStageFilter(stage.id)}
-            className={`px-3.5 py-1.5 text-xs font-black rounded-xl whitespace-nowrap transition cursor-pointer ${
-              activeStageFilter === stage.id
-                ? 'bg-[#0284C7] text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-[#0284C7]'
-            }`}
-          >
-            {stage.label}
-          </button>
-        ))}
       </div>
 
       {/* 🔬 DANH SÁCH THẺ ĐƠN HÀNG NGHIÊN CỨU */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {filteredOrders.map(order => (
           <div
             key={order.id}
