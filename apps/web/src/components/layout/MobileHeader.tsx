@@ -93,27 +93,31 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
           </div>
         ) : (
           <div className="flex items-center gap-1 flex-shrink-0">
-            {/* Search Trigger */}
-            <button
-              onClick={() => setShowSearch(true)}
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-              title="Tìm kiếm"
-            >
-              <Search className="w-4 h-4" />
-            </button>
+            {/* Search Trigger (Ẩn ở Trang chủ) */}
+            {activeModule !== 'home' && (
+              <button
+                onClick={() => setShowSearch(true)}
+                className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                title="Tìm kiếm"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            )}
 
-            {/* Reset / Reload Latest Build Icon-Only Button */}
-            <button
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  window.location.reload();
-                }
-              }}
-              className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
-              title="Tải lại / Cập nhật bản build mới nhất (Reset)"
-            >
-              <RotateCw className="w-4 h-4 text-[#F15A24] dark:text-orange-400 hover:rotate-180 transition-transform duration-300" />
-            </button>
+            {/* Reset / Reload Latest Build Icon-Only Button (Ẩn ở Trang chủ) */}
+            {activeModule !== 'home' && (
+              <button
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.reload();
+                  }
+                }}
+                className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer active:scale-90"
+                title="Tải lại / Cập nhật bản build mới nhất (Reset)"
+              >
+                <RotateCw className="w-4 h-4 text-[#F15A24] dark:text-orange-400 hover:rotate-180 transition-transform duration-300" />
+              </button>
+            )}
 
             {/* Toggle Mobile/Desktop View */}
             <button

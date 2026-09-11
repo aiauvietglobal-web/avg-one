@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  LayoutGrid, Search, Plus, Bell, Sun, Moon, Zap, User, Users, ChevronDown, ChevronLeft, CheckCircle2, Home,
+  LayoutGrid, Plus, Bell, Sun, Moon, Zap, User, Users, ChevronDown, ChevronLeft, CheckCircle2, Home,
   FileText, Newspaper, Target, Layers, BarChart3, LogOut, Shield, MessageSquare, Clock, SlidersHorizontal, Sparkles, Wrench, ArrowLeft, Maximize2, Minimize2, Smartphone, RotateCw
 } from 'lucide-react';
 import { AppLauncherModal, AppModuleId, APP_MODULES } from './AppLauncherModal';
@@ -173,7 +173,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     }
   };
 
-  // Keyboard Shortcuts: F11 or (Ctrl+Shift+F) or (Alt+F) for Fullscreen, Ctrl+K for Search
+  // Keyboard Shortcuts: F11 or (Ctrl+Shift+F) or (Alt+F) for Fullscreen
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Toggle Fullscreen Shortcut
@@ -184,13 +184,6 @@ export const AppShell: React.FC<AppShellProps> = ({
       ) {
         e.preventDefault();
         toggleFullscreen();
-      }
-
-      // Shortcut Ctrl + K for search
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        const input = document.getElementById('odoo-universal-search');
-        if (input) input.focus();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
