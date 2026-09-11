@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   LayoutGrid, Plus, Bell, Sun, Moon, Zap, User, Users, ChevronDown, ChevronLeft, CheckCircle2, Home,
-  FileText, Newspaper, Target, Layers, BarChart3, LogOut, Shield, MessageSquare, Clock, SlidersHorizontal, Sparkles, Wrench, ArrowLeft, Maximize2, Minimize2, Smartphone, RotateCw
+  FileText, Newspaper, Target, Layers, BarChart3, LogOut, Shield, MessageSquare, Clock, SlidersHorizontal, Sparkles, Wrench, ArrowLeft, Maximize2, Minimize2, Smartphone, RotateCw, Calendar, FolderKanban
 } from 'lucide-react';
 import { AppLauncherModal, AppModuleId, APP_MODULES } from './AppLauncherModal';
 import { LoginModal, UserProfile } from '../auth/LoginModal';
@@ -250,6 +250,28 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </button>
                 </div>
 
+                {/* Center: Phân hệ quản lý vận hành (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */}
+                <nav className="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3">
+                  {[
+                    { id: 'system' as AppModuleId, label: 'Hệ Thống', icon: BarChart3 },
+                    { id: 'inside' as AppModuleId, label: 'Bảng Tin', icon: Newspaper },
+                    { id: 'calendar' as AppModuleId, label: 'Lịch', icon: Calendar },
+                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng', icon: FolderKanban },
+                  ].map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => onSelectModule(item.id)}
+                        className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-orange-50/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer group"
+                      >
+                        <Icon className="w-4 h-4 text-[#F15A24] group-hover:scale-110 transition-transform" />
+                        <span className="tracking-wide uppercase">{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
+
                 {/* Right: SSO Profile / Login Button */}
                 <div className="flex items-center gap-2 sm:gap-2.5">
                   <div className="relative">
@@ -346,6 +368,33 @@ export const AppShell: React.FC<AppShellProps> = ({
                     </span>
                   </button>
                 </div>
+
+                {/* Center: Operation Modules Quick Switch (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */}
+                <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+                  {[
+                    { id: 'system' as AppModuleId, label: 'Hệ Thống', icon: BarChart3 },
+                    { id: 'inside' as AppModuleId, label: 'Bảng Tin', icon: Newspaper },
+                    { id: 'calendar' as AppModuleId, label: 'Lịch', icon: Calendar },
+                    { id: 'orders' as AppModuleId, label: 'Đơn Hàng', icon: FolderKanban },
+                  ].map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeModule === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => onSelectModule(item.id)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          isActive
+                            ? 'text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 shadow-xs'
+                            : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#F15A24]' : 'text-slate-400 group-hover:text-[#F15A24]'}`} />
+                        <span className="tracking-wide uppercase text-[11px] sm:text-xs">{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
 
                 {/* Right Stack */}
                 <div className="flex items-center gap-2 flex-shrink-0 text-xs sm:text-sm">
