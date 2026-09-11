@@ -2180,35 +2180,46 @@ div.box-speech-bubble {
   background: #bae6fd;
 }
 
-/* ==========================================================================
-   MASTER 30s RHYTHM TIMELINE FOR HERO LINES & BOX BORDER
-   - 0.0s -> 2.2s (0% -> 7.33%): Line 1 draws slowly & smoothly under "Vững chắc!"
-   - 2.2s -> 4.4s (7.33% -> 14.67%): Line 2 draws slowly & smoothly under "Rõ ràng!"
-   - 4.4s -> 6.6s (14.67% -> 22.0%): Line 3 draws slowly & smoothly under "Tươi sáng!"
-   - 6.6s -> 10.5s (22.0% -> 35.0%): Box Border traces clockwise around slogan badge
-   - 10.5s -> 28.0s (35.0% -> 93.33%): All lines hold visible & luminous (~18s hold)
-   - 28.0s -> 30.0s (93.33% -> 100%): Lines fade out gently to prepare for the 30s cycle repeat
-   - After 30s: Full line drawing cycle repeats (Text remains continuously visible)
-   ========================================================================== */
+/* Master 8.0s Rhythm Timeline (Refined with 1.0s Snappy Line Drawing & Dynamic Opacity Breathing Border):
+   - 0.0s -> 1.0s (0% -> 12.5%): Line 1 draws out fast (1.0s)
+   - 1.0s -> 2.0s (12.5% -> 25.0%): Line 2 draws out fast (1.0s)
+   - 2.0s -> 3.0s (25.0% -> 37.5%): Line 3 draws out fast (1.0s)
+   - 3.0s -> 5.5s (37.5% -> 68.75%): Box Border traces clockwise with dynamic opacity wave right as Line 3 finishes at 3.0s
+   - 5.5s -> 7.2s (68.75% -> 90.0%): All elements hold visible with subtle breathing glow
+   - 7.2s -> 8.0s (90.0% -> 100%): All elements fade out together in unison
+/* Master 30s Rhythm Timeline with 7.5s Line-Drawing Harmonics:
+   - Line Cycle (7.5s infinite, runs 4 times per 30s):
+     * 0.0s -> 1.0s (0% -> 13.33%): Line 1 draws out under "Vững chắc!"
+     * 1.0s -> 2.0s (13.33% -> 26.67%): Line 2 draws out under "Rõ ràng!"
+     * 2.0s -> 3.0s (26.67% -> 40.0%): Line 3 draws out under "Tươi sáng!"
+     * 3.0s -> 5.25s (40.0% -> 70.0%): Box border traces clockwise around slogan badge
+     * 5.25s -> 6.6s (70.0% -> 88.0%): All lines hold drawn and vibrant
+     * 6.6s -> 7.5s (88.0% -> 100%): Lines fade out smoothly to prepare for next 7.5s cycle
+   - Text Cycle (30.0s infinite master loop):
+     * 0.0s -> 3.8s: Row 1, Row 2, Row 3, and Slogan Badge appear in sequence
+     * 3.8s -> 28.5s (~25 giây!): Chữ vẫn hiển thị xuyên suốt 100% không biến mất
+     * 28.5s -> 30.0s: Chữ nhẹ nhàng fade out cùng đường nét
+     * Đúng sau 30s: Lặp lại toàn bộ chu kỳ tổng hiệu ứng 1 lần (cả hiệu ứng của cụm chữ)
+*/
 
-/* Line 1 */
+/* Line 1 (7.5s cycle) */
 @keyframes beat-line-1 {
   0% {
     stroke-dashoffset: 210;
     opacity: 0;
   }
-  1% {
-    opacity: 0.6;
+  2% {
+    opacity: 0.5;
   }
-  7.33% {
+  13.33% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  93.33% {
+  88% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  96.67% {
+  94% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2218,24 +2229,24 @@ div.box-speech-bubble {
   }
 }
 
-/* Line 2 */
+/* Line 2 (7.5s cycle) */
 @keyframes beat-line-2 {
-  0%, 7.32% {
+  0%, 13.32% {
     stroke-dashoffset: 210;
     opacity: 0;
   }
-  7.33% {
+  13.33% {
     opacity: 0.3;
   }
-  14.67% {
+  26.67% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  93.33% {
+  88% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  96.67% {
+  94% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2245,24 +2256,24 @@ div.box-speech-bubble {
   }
 }
 
-/* Line 3 */
+/* Line 3 (7.5s cycle) */
 @keyframes beat-line-3 {
-  0%, 14.66% {
+  0%, 26.66% {
     stroke-dashoffset: 210;
     opacity: 0;
   }
-  14.67% {
+  26.67% {
     opacity: 0.3;
   }
-  22.0% {
+  40.0% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  93.33% {
+  88% {
     stroke-dashoffset: 0;
     opacity: 1;
   }
-  96.67% {
+  94% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2272,28 +2283,38 @@ div.box-speech-bubble {
   }
 }
 
-/* Box Border (traces around slogan pill from 6.6s to 10.5s) */
+/* Box Border (7.5s cycle) */
 @keyframes beat-box-border {
-  0%, 21.99% {
+  0%, 39.99% {
     stroke-dashoffset: 1200;
     opacity: 0;
   }
-  22.0% {
+  40.0% {
     opacity: 0.2;
     stroke-dashoffset: 1200;
   }
-  25.0% {
+  48% {
     opacity: 0.85;
   }
-  35.0% {
-    stroke-dashoffset: 0;
-    opacity: 0.9;
+  56% {
+    opacity: 0.55;
   }
-  93.33% {
-    stroke-dashoffset: 0;
-    opacity: 0.9;
+  64% {
+    opacity: 1;
   }
-  96.67% {
+  70.0% {
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+  }
+  80% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+  }
+  94% {
     stroke-dashoffset: 0;
     opacity: 0.4;
   }
@@ -2306,141 +2327,220 @@ div.box-speech-bubble {
 .animate-draw-line-1 {
   stroke-dasharray: 210;
   stroke-dashoffset: 210;
-  animation: beat-line-1 30s linear infinite;
+  animation: beat-line-1 7.5s linear infinite;
 }
 
 .animate-draw-line-2 {
   stroke-dasharray: 210;
   stroke-dashoffset: 210;
-  animation: beat-line-2 30s linear infinite;
+  animation: beat-line-2 7.5s linear infinite;
 }
 
 .animate-draw-line-3 {
   stroke-dasharray: 210;
   stroke-dashoffset: 210;
-  animation: beat-line-3 30s linear infinite;
+  animation: beat-line-3 7.5s linear infinite;
 }
 
 .animate-slogan-box-border {
   stroke-dasharray: 1200;
   stroke-dashoffset: 1200;
-  animation: beat-box-border 30s linear infinite;
+  animation: beat-box-border 7.5s linear infinite;
 }
 
 /* ==========================================================================
-   HERO TYPOGRAPHY INTRO ANIMATION (Xuất hiện lần đầu chậm rãi, sau đó hiển thị xuyên suốt)
-   - 0.0s -> 2.2s: Row 1 ("Một nền tảng Vững chắc!") trượt vào chậm rãi (1.8s)
-   - 2.2s -> 4.4s: Row 2 ("Một định hướng Rõ ràng!") trượt vào chậm rãi (1.8s)
-   - 4.4s -> 6.6s: Row 3 ("Một đích đến Tươi sáng!") trượt vào chậm rãi (1.8s)
-   - 6.6s -> 9.0s: Slogan Badge ("One Platform • One Direction • One Destination") mở rộng & sáng dần
-   - Sau khi hiển thị xong toàn bộ nội dung: Chữ vẫn hiển thị xuyên suốt 100% (không biến mất).
-   - Sau mỗi 30s: Lặp lại chu kỳ tổng hiệu ứng vẽ nét các đường line.
+   HERO TYPOGRAPHY 30s MASTER CYCLE (LẶP LẠI TỔNG THỂ SAU 30S)
+   - Chữ xuất hiện đầu chu kỳ: Row 1 -> Row 2 -> Row 3 -> Slogan
+   - Giữ hiển thị xuyên suốt trong suốt ~25 giây (từ 3.8s đến 28.5s)
+   - Lặp lại toàn bộ chu kỳ mỗi 30 giây
    ========================================================================== */
 
-@keyframes hero-fade-in-row-1 {
+@keyframes hero-row-1-30s {
   0% {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
-  100% {
+  1% {
+    opacity: 0.4;
+  }
+  2.67% {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes hero-fade-in-row-2 {
-  0% {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  100% {
+  95.0% {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes hero-fade-in-row-3 {
-  0% {
-    opacity: 0;
-    transform: translateY(8px);
+  97.5% {
+    opacity: 0.4;
+    transform: translateY(0);
   }
   100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hero-row-2-30s {
+  0%, 3.3% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  3.33% {
+    opacity: 0.3;
+    transform: translateY(6px);
+  }
+  6.0% {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes hero-fade-in-slogan {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
+  95.0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  97.5% {
+    opacity: 0.4;
+    transform: translateY(0);
   }
   100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hero-row-3-30s {
+  0%, 6.63% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  6.67% {
+    opacity: 0.3;
+    transform: translateY(6px);
+  }
+  9.33% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  95.0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  97.5% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hero-slogan-30s {
+  0%, 9.97% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  10.0% {
+    opacity: 0.3;
+    transform: scale(0.96);
+  }
+  12.67% {
     opacity: 1;
     transform: scale(1);
   }
+  95.0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  97.5% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
 }
 
-@keyframes hero-dot-appear-1 {
-  0% {
-    transform: scale(0.4);
+@keyframes hero-dot-1-30s {
+  0%, 10.63% {
     opacity: 0;
+    transform: scale(0.6);
   }
-  60% {
-    transform: scale(1.3);
+  10.67% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  11.67% {
     opacity: 1;
+    transform: scale(1.3);
     box-shadow: 0 0 8px #0284C7;
   }
-  100% {
+  13.0% {
+    opacity: 1;
     transform: scale(1);
     box-shadow: none;
+  }
+  95.0% {
     opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
-@keyframes hero-dot-appear-2 {
-  0% {
-    transform: scale(0.4);
+@keyframes hero-dot-2-30s {
+  0%, 11.97% {
     opacity: 0;
+    transform: scale(0.6);
   }
-  60% {
-    transform: scale(1.3);
+  12.0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  13.0% {
     opacity: 1;
+    transform: scale(1.3);
     box-shadow: 0 0 8px rgba(100, 116, 139, 0.6);
   }
-  100% {
+  14.33% {
+    opacity: 1;
     transform: scale(1);
     box-shadow: none;
+  }
+  95.0% {
     opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
 .animate-hero-row-1 {
-  animation: hero-fade-in-row-1 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0s 1 both;
+  animation: hero-row-1-30s 30s linear infinite;
   will-change: transform, opacity;
 }
 
 .animate-hero-row-2 {
-  animation: hero-fade-in-row-2 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s 1 both;
+  animation: hero-row-2-30s 30s linear infinite;
   will-change: transform, opacity;
 }
 
 .animate-hero-row-3 {
-  animation: hero-fade-in-row-3 1.8s cubic-bezier(0.16, 1, 0.3, 1) 4.4s 1 both;
+  animation: hero-row-3-30s 30s linear infinite;
   will-change: transform, opacity;
 }
 
 .animate-hero-slogan {
-  animation: hero-fade-in-slogan 2.0s cubic-bezier(0.16, 1, 0.3, 1) 6.6s 1 both;
+  animation: hero-slogan-30s 30s linear infinite;
   will-change: transform, opacity;
 }
 
 .animate-hero-dot-1 {
-  animation: hero-dot-appear-1 0.8s ease-out 7.6s 1 both;
+  animation: hero-dot-1-30s 30s linear infinite;
 }
 
 .animate-hero-dot-2 {
-  animation: hero-dot-appear-2 0.8s ease-out 8.4s 1 both;
+  animation: hero-dot-2-30s 30s linear infinite;
 }
 
 .animate-hero-accent-1,
