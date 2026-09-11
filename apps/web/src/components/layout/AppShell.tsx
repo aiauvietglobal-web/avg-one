@@ -301,23 +301,22 @@ export const AppShell: React.FC<AppShellProps> = ({
                           >
                             <button
                               onClick={handleSelectSystemModule}
+                              style={{ color: isActive ? '#F15A24' : undefined }}
                               className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal flex items-center gap-1 ${
                                 isActive
                                   ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                                   : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                               }`}
                             >
-                              <span className={`relative z-10 transition-transform duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}>
+                              <span
+                                style={{ color: isActive ? '#F15A24' : undefined }}
+                                className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
+                              >
                                 {item.label}
                               </span>
-                              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180 text-[#F15A24]' : 'opacity-60 group-hover:opacity-100'}`} />
-                              {/* Underline hover and active indicator */}
-                              <span
-                                className={`absolute bottom-0 left-2 right-2 h-[2px] bg-[#F15A24] rounded-full transition-transform duration-300 origin-center ${
-                                  isActive
-                                    ? 'scale-x-100 opacity-100'
-                                    : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
-                                }`}
+                              <ChevronDown
+                                style={{ color: isActive ? '#F15A24' : undefined }}
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isActive ? 'text-[#F15A24]' : 'opacity-60 group-hover:opacity-100 group-hover:text-[#F15A24]'}`}
                               />
                             </button>
 
@@ -366,23 +365,19 @@ export const AppShell: React.FC<AppShellProps> = ({
                         <button
                           key={item.id}
                           onClick={() => onSelectModule(item.id)}
+                          style={{ color: isActive ? '#F15A24' : undefined }}
                           className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] transition-all cursor-pointer group select-none tracking-normal ${
                             isActive
                               ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                               : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                           }`}
                         >
-                          <span className={`relative z-10 transition-transform duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}>
+                          <span
+                            style={{ color: isActive ? '#F15A24' : undefined }}
+                            className={`relative z-10 transition-colors duration-200 inline-block ${isActive ? 'scale-105' : 'group-hover:scale-105'}`}
+                          >
                             {item.label}
                           </span>
-                          {/* Underline hover and active indicator */}
-                          <span
-                            className={`absolute bottom-0 left-2 right-2 h-[2px] bg-[#F15A24] rounded-full transition-transform duration-300 origin-center ${
-                              isActive
-                                ? 'scale-x-100 opacity-100'
-                                : 'scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100'
-                            }`}
-                          />
                         </button>
                       );
                     })}

@@ -321,8 +321,8 @@
 }
 
 /* Sidebar navigation buttons */
-[data-theme="light"] nav button {
-  color: #374151 !important;
+[data-theme="light"] aside nav button {
+  color: #374151;
 }
 
 [data-theme="light"] nav button span[style*="backgroundColor: 'rgba(255,255,255,0.08)'"],
