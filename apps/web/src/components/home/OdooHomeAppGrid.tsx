@@ -147,51 +147,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </svg>
           </div>
 
-          {/* 📐 MINIMALIST HAIRLINE INTERCONNECT (SỢI QUANG KẾT NỐI TỐI GIẢN BAUHAUS) */}
-          <svg className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible" preserveAspectRatio="none" viewBox="0 0 1200 320">
-            <defs>
-              <linearGradient id="hairline-laser-fade" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#0284C7" stopOpacity="0.45" />
-                <stop offset="40%" stopColor="#38BDF8" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {/* Sợi quang 1: AI Node -> Tiêu đề "Một nền tảng Vững chắc!" */}
-            <path
-              d="M 285,46 C 360,46 410,68 490,72"
-              fill="none"
-              stroke="url(#hairline-laser-fade)"
-              strokeWidth="1.25"
-              strokeDasharray="4 6"
-              className="animate-bauhaus-pulse"
-            />
-            <circle cx="285" cy="46" r="2" fill="#0284C7">
-              <animateMotion
-                path="M 285,46 C 360,46 410,68 490,72"
-                dur="4.2s"
-                repeatCount="indefinite"
-              />
-            </circle>
-
-            {/* Sợi quang 2: AI Node -> Đồ thị số hóa bên dưới */}
-            <path
-              d="M 115,70 L 115,180 L 135,242"
-              fill="none"
-              stroke="#0284C7"
-              strokeOpacity="0.18"
-              strokeWidth="1"
-              strokeDasharray="3 5"
-              className="animate-bauhaus-pulse"
-            />
-            <circle cx="115" cy="70" r="1.5" fill="#38BDF8">
-              <animateMotion
-                path="M 115,70 L 115,180 L 135,242"
-                dur="5s"
-                repeatCount="indefinite"
-              />
-            </circle>
-          </svg>
 
           {/* 📐 2. FLAT MODERNIST TECH AI NODE (TOP-LEFT - STRIPE & VERCEL STYLE) */}
           <div className="hidden lg:flex absolute left-2 xl:left-8 top-2 xl:top-5 z-20 items-center animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300" style={{ animationDelay: '150ms' }}>
