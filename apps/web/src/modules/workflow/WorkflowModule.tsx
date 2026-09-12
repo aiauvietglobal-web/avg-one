@@ -733,43 +733,23 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
   return (
     <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 p-4 sm:p-6 space-y-6">
-      {/* Top Navigation Bar with Back Button & Breadcrumbs */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5 flex-wrap">
-          <button
-            onClick={onBack}
-            className="px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl transition flex items-center gap-2 text-xs font-black cursor-pointer shadow-2xs"
-          >
-            <ArrowLeft className="w-4 h-4" /> Quay lại Phân Hệ Con
-          </button>
-          
-          <div className="h-5 w-0.5 bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-xl border border-orange-200/60 shrink-0">
-              <Compass className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                <span>Hệ Sinh Thái AVG One</span>
-                <span>/</span>
-                <span>Quy Trình Kỹ Thuật</span>
-              </div>
-              <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
-                <span>PHÂN HỆ 3.2 – THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Hệ thống sẵn sàng" />
-              </h1>
-            </div>
+      {/* Top Header Title Section */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-2xl border border-orange-200/60 shrink-0 shadow-2xs">
+            <Compass className="w-5 h-5" />
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="w-full md:w-auto px-4 py-2.5 bg-gradient-to-r from-[#00A8E8] via-[#0096C7] to-[#0077B6] hover:brightness-105 text-white rounded-xl text-xs font-black transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <Plus className="w-4 h-4 stroke-[3]" /> Tạo Bản Vẽ CAD / Gerber Mới
-          </button>
+          <div>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span>Hệ Sinh Thái AVG One</span>
+              <span>/</span>
+              <span>Quy Trình Kỹ Thuật</span>
+            </div>
+            <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <span>PHÂN HỆ 3.2 – THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Hệ thống sẵn sàng" />
+            </h1>
+          </div>
         </div>
       </div>
 
@@ -1186,43 +1166,23 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
 
   return (
     <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 p-4 sm:p-6 space-y-6">
-      {/* Top Navigation Bar with Back Button & Breadcrumbs */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5 flex-wrap">
-          <button
-            onClick={onBack}
-            className="px-3 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl transition flex items-center gap-2 text-xs font-black cursor-pointer shadow-2xs"
-          >
-            <ArrowLeft className="w-4 h-4" /> Quay lại Phân Hệ Con
-          </button>
-          
-          <div className="h-5 w-0.5 bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-xl border border-emerald-200/60 shrink-0">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                <span>Hệ Sinh Thái AVG One</span>
-                <span>/</span>
-                <span>Nghiên Cứu & Phát Triển</span>
-              </div>
-              <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
-                <span>PHÂN HỆ 3.1 – NGHIÊN CỨU & PHÁT TRIỂN (RDI)</span>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Hệ thống sẵn sàng" />
-              </h1>
-            </div>
+      {/* Top Header Title Section */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-2xl border border-emerald-200/60 shrink-0 shadow-2xs">
+            <Cpu className="w-5 h-5" />
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="w-full md:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <Plus className="w-4 h-4 stroke-[3]" /> Thêm Đề Xuất R&D & Mã Đơn DH-2026
-          </button>
+          <div>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span>Hệ Sinh Thái AVG One</span>
+              <span>/</span>
+              <span>Nghiên Cứu & Phát Triển</span>
+            </div>
+            <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
+              <span>PHÂN HỆ 3.1 – NGHIÊN CỨU & PHÁT TRIỂN (RDI)</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Hệ thống sẵn sàng" />
+            </h1>
+          </div>
         </div>
       </div>
 
