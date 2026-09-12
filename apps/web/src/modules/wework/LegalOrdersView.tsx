@@ -3,7 +3,7 @@ import {
   Scale, Sparkles, Plus, CheckCircle2, AlertTriangle, ShieldCheck,
   FileText, Award, Building2, Calendar, Clock, ArrowRight, X,
   MessageSquare, Send, Download, ExternalLink, BookmarkCheck, FileCheck2,
-  Search, RefreshCw, Filter
+  Search, Filter
 } from 'lucide-react';
 
 export interface LegalOrder {
@@ -318,133 +318,99 @@ export const LegalOrdersView: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn pb-8">
-      {/* 🔮 Header & Live Sync Banner - Bố Cục Tối Ưu Hiện Đại Chuẩn AVG One */}
-      <div className="flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
+      {/* 🔮 Header & Live Sync Banner - Đồng Bộ Thiết Kế & Animation Chuẩn AVG One */}
+      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-5 sm:p-6 shadow-xs relative overflow-hidden space-y-5">
         {/* Ambient Glow Orbs */}
-        <div className="absolute -top-24 -left-24 w-80 h-80 bg-[#0284C7]/10 dark:bg-[#0284C7]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
-        <div className="absolute -top-24 -right-24 w-80 h-80 bg-[#F15A24]/10 dark:bg-[#F15A24]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#0284C7]/10 dark:bg-[#0284C7]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#F15A24]/10 dark:bg-[#F15A24]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
 
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          {/* CỘT TRÁI: Nhận diện, Tiêu đề & Nút thao tác */}
-          <div className="lg:col-span-5 xl:col-span-5 space-y-3 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50/90 dark:bg-purple-950/40 border border-purple-200/80 dark:border-purple-800/60 shadow-2xs">
-              <Scale className="w-3.5 h-3.5 text-purple-600" />
-              <span className="text-[11px] font-extrabold text-purple-950 dark:text-purple-200 tracking-wider uppercase">
-                AVG LEGAL & INTELLECTUAL PROPERTY 6.0
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Title & Animated Slogan Box Badge */}
+          <div className="space-y-2 text-left">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="legal-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="35%" stopColor="#00A8E8" />
+                    <stop offset="70%" stopColor="#FF7043" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#legal-slogan-border-gradient)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Scale className="w-3.5 h-3.5 text-purple-600" />
+                <span>AVG LEGAL & INTELLECTUAL PROPERTY 6.0</span>
+              </div>
             </div>
 
             <div className="space-y-1">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
                 <span>QUẢN LÝ</span>
                 <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                  <span className="relative z-10">ĐƠN HÀNG PHÁP LÝ</span>
+                  <span className="relative z-10">ĐƠN HÀNG PHÁP LÝ (6.0)</span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
                   </svg>
                 </span>
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
-                Đồng bộ dữ liệu thời gian thực 24/7 tiến độ đăng ký nhãn hiệu, kiểu dáng công nghiệp, bằng sáng chế và hợp chuẩn QUATEST/CR.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2.5 pt-1 flex-wrap">
-              <button
-                onClick={() => {
-                  setLastSyncTime(new Date().toLocaleTimeString('vi-VN'));
-                  setDispatchToast('🔄 Đã làm mới và đồng bộ 100% hồ sơ pháp lý & văn bằng SHTT!');
-                }}
-                className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 cursor-pointer"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Tải Lại (Sync Live)</span>
-              </button>
-
-              <a
-                href="http://wipopublish.ipvietnam.gov.vn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-95 text-white rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-sm hover:shadow-md hover:shadow-purple-500/20 hover:-translate-y-0.5 cursor-pointer"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                <span>Tra Cứu Cục SHTT</span>
-              </a>
-
-              {lastSyncTime && (
-                <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono ml-auto sm:ml-2">
-                  Đồng bộ: {lastSyncTime}
-                </span>
-              )}
             </div>
           </div>
 
-          {/* CỘT PHẢI: 4 Thẻ KPI Stat cân đối */}
-          <div className="lg:col-span-7 xl:col-span-7 grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 lg:border-l lg:border-slate-200/80 dark:lg:border-slate-800 lg:pl-6">
-            <div className="bg-purple-50/70 hover:bg-purple-50 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 border border-purple-200/80 dark:border-purple-800/60 rounded-2xl p-3.5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-purple-500/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-purple-800 dark:text-purple-300 uppercase tracking-wider">Tổng Hồ Sơ</span>
-                <div className="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600">
-                  <FileText className="w-3.5 h-3.5" />
-                </div>
-              </div>
-              <div className="mt-2">
-                <div className="text-2xl sm:text-3xl font-black text-purple-900 dark:text-purple-100">{stats.total}</div>
-                <div className="flex items-center gap-1 text-[10px] font-semibold text-purple-700 dark:text-purple-400 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
-                  Hồ sơ SHTT
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <a
+              href="http://wipopublish.ipvietnam.gov.vn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-[#F15A24] hover:opacity-95 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-purple-500/20 hover:-translate-y-0.5 cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Tra Cứu Cục SHTT</span>
+            </a>
+          </div>
+        </div>
 
-            <div className="bg-sky-50/70 hover:bg-sky-50 dark:bg-sky-950/30 dark:hover:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800/60 rounded-2xl p-3.5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-sky-500/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-sky-800 dark:text-sky-300 uppercase tracking-wider">Thẩm Định NOIP</span>
-                <div className="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-900/40 flex items-center justify-center text-[#0284C7]">
-                  <Clock className="w-3.5 h-3.5" />
-                </div>
-              </div>
-              <div className="mt-2">
-                <div className="text-2xl sm:text-3xl font-black text-sky-900 dark:text-sky-100">{stats.inExam}</div>
-                <div className="flex items-center gap-1 text-[10px] font-semibold text-sky-700 dark:text-sky-400 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
-                  Đang xét duyệt
-                </div>
-              </div>
+        {/* Stats Counter Cards - Các hộp sáng màu có nhịp đập & animation hover */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-1 relative z-10">
+          <div className="bg-purple-50/70 hover:bg-purple-50 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 border border-purple-200/80 dark:border-purple-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-purple-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-purple-800 dark:text-purple-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+              <span>Tổng Hồ Sơ</span>
             </div>
-
-            <div className="bg-orange-50/70 hover:bg-orange-50 dark:bg-orange-950/30 dark:hover:bg-orange-950/50 border border-orange-200/80 dark:border-orange-800/60 rounded-2xl p-3.5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-orange-500/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-orange-800 dark:text-orange-300 uppercase tracking-wider">QUATEST / CR</span>
-                <div className="w-7 h-7 rounded-lg bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center text-[#F15A24]">
-                  <Building2 className="w-3.5 h-3.5" />
-                </div>
-              </div>
-              <div className="mt-2">
-                <div className="text-2xl sm:text-3xl font-black text-[#F15A24] dark:text-orange-300">{stats.testingQuatest}</div>
-                <div className="flex items-center gap-1 text-[10px] font-semibold text-orange-700 dark:text-orange-400 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-pulse" />
-                  Hợp chuẩn CR
-                </div>
-              </div>
+            <div className="text-2xl sm:text-3xl font-black text-purple-900 dark:text-purple-100 mt-1">{stats.total}</div>
+          </div>
+          <div className="bg-sky-50/70 hover:bg-sky-50 dark:bg-sky-950/30 dark:hover:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-sky-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-sky-800 dark:text-sky-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse" />
+              <span>Cục SHTT Thẩm Định</span>
             </div>
-
-            <div className="bg-emerald-50/70 hover:bg-emerald-50 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 rounded-2xl p-3.5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/10">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">Cấp Văn Bằng</span>
-                <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600">
-                  <Award className="w-3.5 h-3.5" />
-                </div>
-              </div>
-              <div className="mt-2">
-                <div className="text-2xl sm:text-3xl font-black text-emerald-900 dark:text-emerald-100">{stats.granted}</div>
-                <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Bảo hộ thành công
-                </div>
-              </div>
+            <div className="text-2xl sm:text-3xl font-black text-sky-900 dark:text-sky-100 mt-1">{stats.inExam}</div>
+          </div>
+          <div className="bg-orange-50/70 hover:bg-orange-50 dark:bg-orange-950/30 dark:hover:bg-orange-950/50 border border-orange-200/80 dark:border-orange-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-orange-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-orange-800 dark:text-orange-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#F15A24] animate-pulse" />
+              <span>QUATEST / CR</span>
             </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#F15A24] dark:text-orange-300 mt-1">{stats.testingQuatest}</div>
+          </div>
+          <div className="bg-emerald-50/70 hover:bg-emerald-50 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Đã Cấp Văn Bằng</span>
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-emerald-900 dark:text-emerald-100 mt-1">{stats.granted}</div>
           </div>
         </div>
       </div>
