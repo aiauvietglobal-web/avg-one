@@ -369,7 +369,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 
                             {/* Dropdown Menu for Hệ thống */}
                             {isSystemDropdownOpen && (
-                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -445,7 +445,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 
                             {/* Dropdown Menu for Đơn hàng */}
                             {isOrdersDropdownOpen && (
-                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-lg p-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
