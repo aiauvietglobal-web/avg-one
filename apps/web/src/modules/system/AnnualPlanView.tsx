@@ -306,9 +306,6 @@ export const AnnualPlanView: React.FC = () => {
                   </svg>
                 </span>
               </h1>
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                11 Nhóm nhiệm vụ chiến lược Tập đoàn Âu Việt
-              </p>
             </div>
           </div>
 
