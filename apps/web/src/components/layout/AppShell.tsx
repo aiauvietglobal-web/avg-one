@@ -481,22 +481,6 @@ export const AppShell: React.FC<AppShellProps> = ({
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleSelectOrdersSubTab('sample-h1');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && ordersTabState === 'sample-h1'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Mẫu H1</span>
-                                  {isActive && ordersTabState === 'sample-h1' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
                                     handleSelectOrdersSubTab('legal');
                                   }}
                                   className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
