@@ -3,7 +3,7 @@ import {
   Palette, Sparkles, Plus, Clock, CheckCircle2, AlertCircle,
   Eye, Download, Layers, Box, Cpu, FileImage, User, Calendar,
   ArrowRight, X, MessageSquare, Send, CheckSquare, ShieldCheck, Tag,
-  Search, ExternalLink, Filter
+  Search, ExternalLink, Filter, ChevronDown
 } from 'lucide-react';
 
 export interface DesignOrder {
@@ -193,6 +193,7 @@ export const DesignOrdersView: React.FC = () => {
   const [commentInput, setCommentInput] = useState('');
   const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString('vi-VN'));
   const [dispatchToast, setDispatchToast] = useState<string | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   // New Order Form state
   const [formCode, setFormCode] = useState(`TK-2026-${Math.floor(305 + Math.random() * 50)}`);
@@ -424,121 +425,173 @@ export const DesignOrdersView: React.FC = () => {
         </div>
       </div>
 
-      {/* 🚀 Dispatcher Form Card - Ban Hành & Khởi Tạo Đơn Hàng Mới */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+      {/* 🚀 Dispatcher Form Card - Hộp Khởi Tạo Đơn Hàng Thiết Kế (Khi nào ấn mới mở ra) */}
+      <div className="bg-white dark:bg-slate-900 rounded-[24px] border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden transition-all duration-300">
+        {/* Clickable Header Bar */}
+        <div
+          onClick={() => setIsCreateOpen(!isCreateOpen)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsCreateOpen(!isCreateOpen); }}
+          className={`p-4 sm:p-5 flex items-center justify-between cursor-pointer transition-colors duration-200 select-none ${
+            isCreateOpen
+              ? 'border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40'
+              : 'hover:bg-slate-50/80 dark:hover:bg-slate-800/60'
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+              isCreateOpen 
+                ? 'bg-[#F15A24] text-white shadow-xs' 
+                : 'bg-orange-50 dark:bg-orange-950/50 text-[#F15A24] border border-orange-200/60 dark:border-orange-800/60'
+            }`}>
+              {isCreateOpen ? <Send className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
+                  Khởi Tạo Đơn Hàng Thiết Kế & Bản Vẽ Mới
+                </h3>
+                <span className={`hidden sm:inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                  isCreateOpen
+                    ? 'bg-orange-100 text-[#F15A24] dark:bg-orange-950/60 dark:text-orange-300'
+                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                }`}>
+                  {isCreateOpen ? 'Đang mở' : 'Nhấn để mở'}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium">
+                Quyền hạn: Thiết Kế & R&D (3.2 / Design Lead)
+              </p>
+            </div>
+          </div>
+
           <div className="flex items-center gap-2">
-            <Send className="w-5 h-5 text-[#F15A24]" />
-            <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
-              Khởi Tạo Đơn Hàng Thiết Kế & Bản Vẽ Mới
-            </h3>
-          </div>
-          <span className="text-xs text-slate-400 font-medium">Quyền hạn: Thiết Kế & R&D (3.2 / Design Lead)</span>
-        </div>
-
-        {dispatchToast && (
-          <div className="p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
-            <span>{dispatchToast}</span>
-            <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
-          </div>
-        )}
-
-        <form onSubmit={handleCreateOrder} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Mã Đơn Hàng
-              </label>
-              <input
-                type="text"
-                value={formCode}
-                onChange={(e) => setFormCode(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Designer Phụ Trách
-              </label>
-              <input
-                type="text"
-                value={formDesigner}
-                onChange={(e) => setFormDesigner(e.target.value)}
-                placeholder="VD: Trần Minh Trí..."
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Phân Loại Thiết Kế
-              </label>
-              <select
-                value={formCategory}
-                onChange={(e) => setFormCategory(e.target.value as any)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-              >
-                <option value="3D_MODEL">Kiểu dáng 3D Công nghiệp</option>
-                <option value="PACKAGING_CMF">Bao bì & CMF</option>
-                <option value="MOLD_DESIGN">Khuôn mẫu nhựa</option>
-                <option value="BRAND_IDENTITY">Catalog & HDSD</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Mức Độ Ưu Tiên
-              </label>
-              <select
-                value={formPriority}
-                onChange={(e) => setFormPriority(e.target.value as any)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-              >
-                <option value="URGENT">🟠 Khẩn Cấp (High)</option>
-                <option value="HIGH">🟡 Ưu Tiên Cao (Medium)</option>
-                <option value="NORMAL">🟢 Bình Thường (Normal)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Tiêu Đề Thiết Kế / Tóm Tắt Yêu Cầu
-            </label>
-            <input
-              type="text"
-              value={formTitle}
-              onChange={(e) => setFormTitle(e.target.value)}
-              placeholder="Nhập tiêu đề hoặc tóm tắt yêu cầu thiết kế kiểu dáng..."
-              required
-              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Yêu Cầu Kỹ Thuật Chi Tiết & Quy Cách 3D / CMF
-            </label>
-            <textarea
-              rows={3}
-              value={formDesc}
-              onChange={(e) => setFormDesc(e.target.value)}
-              placeholder="Nhập chi tiết yêu cầu vật liệu, kích thước, định dạng file STEP/CAD, tone màu Pantone..."
-              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
-            />
-          </div>
-
-          <div className="flex justify-end">
             <button
-              type="submit"
-              className="px-5 py-2.5 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 cursor-pointer transition"
+              type="button"
+              className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5 shadow-2xs pointer-events-none"
             >
-              <Send className="w-3.5 h-3.5" />
-              <span>Khởi Tạo Đơn Hàng Thiết Kế</span>
+              <span>{isCreateOpen ? 'Thu gọn' : 'Mở form khởi tạo'}</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCreateOpen ? 'rotate-180 text-[#F15A24]' : ''}`} />
             </button>
           </div>
-        </form>
+        </div>
+
+        {/* Collapsible Form Body */}
+        {isCreateOpen && (
+          <div className="p-5 sm:p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
+            {dispatchToast && (
+              <div className="p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
+                <span>{dispatchToast}</span>
+                <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
+              </div>
+            )}
+
+            <form onSubmit={handleCreateOrder} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Mã Đơn Hàng
+                  </label>
+                  <input
+                    type="text"
+                    value={formCode}
+                    onChange={(e) => setFormCode(e.target.value)}
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Designer Phụ Trách
+                  </label>
+                  <input
+                    type="text"
+                    value={formDesigner}
+                    onChange={(e) => setFormDesigner(e.target.value)}
+                    placeholder="VD: Trần Minh Trí..."
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Phân Loại Thiết Kế
+                  </label>
+                  <select
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value as any)}
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                  >
+                    <option value="3D_MODEL">Kiểu dáng 3D Công nghiệp</option>
+                    <option value="PACKAGING_CMF">Bao bì & CMF</option>
+                    <option value="MOLD_DESIGN">Khuôn mẫu nhựa</option>
+                    <option value="BRAND_IDENTITY">Catalog & HDSD</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Mức Độ Ưu Tiên
+                  </label>
+                  <select
+                    value={formPriority}
+                    onChange={(e) => setFormPriority(e.target.value as any)}
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                  >
+                    <option value="URGENT">🟠 Khẩn Cấp (High)</option>
+                    <option value="HIGH">🟡 Ưu Tiên Cao (Medium)</option>
+                    <option value="NORMAL">🟢 Bình Thường (Normal)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Tiêu Đề Thiết Kế / Tóm Tắt Yêu Cầu
+                </label>
+                <input
+                  type="text"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  placeholder="Nhập tiêu đề hoặc tóm tắt yêu cầu thiết kế kiểu dáng..."
+                  required
+                  className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Yêu Cầu Kỹ Thuật Chi Tiết & Quy Cách 3D / CMF
+                </label>
+                <textarea
+                  rows={3}
+                  value={formDesc}
+                  onChange={(e) => setFormDesc(e.target.value)}
+                  placeholder="Nhập chi tiết yêu cầu vật liệu, kích thước, định dạng file STEP/CAD, tone màu Pantone..."
+                  className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateOpen(false)}
+                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-xl transition cursor-pointer"
+                >
+                  Đóng lại
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 cursor-pointer transition"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Khởi Tạo Đơn Hàng Thiết Kế</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
 
       {/* 🔍 Search & Filters Bar - Đồng Bộ Bố Cục Thông Điệp Điều Hành */}
