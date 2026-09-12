@@ -487,22 +487,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     <span className="font-mono text-slate-400 opacity-60">⟩</span>
                   </p>
                 </div>
-
-                {/* 🧭 6. DOWN NAVIGATION BUTTON & VALUE STATUS (LIKE VIETTEL AI) */}
-                <div className="flex items-center gap-3 mt-0.5">
-                  <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-amber-300 dark:border-amber-700/80 shadow-2xs group animate-float-node-5 cursor-default hover:shadow-amber-400/20 transition-shadow">
-                    <Coins className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                    <span className="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-wider">
-                      Giá Tối Ưu • Hiệu Quả Vượt Trội
-                    </span>
-                  </div>
-
-                  {/* Circular Down Indicator Button */}
-                  <div className="w-6 h-6 rounded-full border-2 border-slate-400/80 dark:border-slate-500/80 hover:border-[#F15A24] flex items-center justify-center text-slate-500 hover:text-[#F15A24] transition-colors cursor-pointer animate-bounce">
-                    <span className="text-xs font-black leading-none -mt-0.5">↓</span>
-                  </div>
-                </div>
-
               </div>
 
             </div>
