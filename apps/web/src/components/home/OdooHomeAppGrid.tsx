@@ -106,164 +106,178 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
   return (
     <div className="w-full h-full flex-1 min-h-0 bg-white dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-y-auto md:overflow-hidden flex flex-col items-center justify-start md:justify-center p-2 sm:p-3 select-none">
       
-      {/* 🌐 ULTRA-CLEAN GRID LINES PATTERN */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-60 dark:opacity-30 pointer-events-none -z-0" />
+      {/* 🌐 ULTRA-CLEAN GRID LINES & FACETED ANGLED POLYGON PLANES (PHONG CÁCH MẢNG HÌNH HỌC VIETTEL AI) */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-50 dark:opacity-25 pointer-events-none -z-0" />
 
-      {/* 🎨 RADIANT AMBIENT COLOR MESHES (MẢNG MÀU CHUYỂN SẮC RỰC RỠ, CHUYỂN ĐỘNG RÕ NÉT) */}
-      <div className="absolute top-2 left-4 sm:left-16 w-[360px] sm:w-[500px] h-[360px] sm:h-[500px] bg-gradient-to-tr from-sky-400/20 via-[#0284C7]/15 to-transparent rounded-full blur-[85px] pointer-events-none -z-0 animate-kinetic-glow" />
-      <div className="absolute top-2 right-4 sm:right-16 w-[360px] sm:w-[500px] h-[360px] sm:h-[500px] bg-gradient-to-bl from-amber-400/18 via-[#F15A24]/18 to-transparent rounded-full blur-[85px] pointer-events-none -z-0 animate-kinetic-glow" />
-      <div className="absolute bottom-4 left-1/3 w-[400px] sm:w-[560px] h-[260px] bg-gradient-to-t from-sky-300/12 via-emerald-300/10 to-transparent rounded-full blur-[90px] pointer-events-none -z-0" />
+      {/* 🎨 ANGLED FACETED GEOMETRIC PLANES (MẢNG VÁT ĐA GIÁC ĐẶC TRƯNG VIETTEL AI) */}
+      <div className="absolute -top-12 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-sky-400/15 via-[#0284C7]/10 to-transparent [clip-path:polygon(0_0,100%_0,65%_100%,0_80%)] pointer-events-none -z-0" />
+      <div className="absolute -top-12 -right-20 w-[550px] h-[550px] bg-gradient-to-bl from-orange-400/15 via-[#F15A24]/10 to-transparent [clip-path:polygon(35%_0,100%_0,100%_80%,0_100%)] pointer-events-none -z-0" />
+      <div className="absolute bottom-0 left-1/4 w-[600px] h-[300px] bg-gradient-to-t from-sky-300/10 via-emerald-300/8 to-transparent rounded-full blur-[100px] pointer-events-none -z-0" />
 
       {/* Synchronized widescreen container (Tận dụng toàn diện màn hình rộng) */}
-      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2.5 sm:gap-4 relative z-10 py-1.5 sm:py-2.5">
+      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10 py-1 sm:py-2">
         
-        {/* 🛸 WIDE CYBERNETIC KINETIC CONSTELLATION HERO (PHÁ CÁCH & TRẢI RỘNG TOÀN MÀN HÌNH) */}
-        <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-4 sm:py-8 px-2 overflow-visible min-h-[250px] sm:min-h-[290px] xl:min-h-[330px]">
+        {/* 🛸 VIETTEL AI-STYLE VECTOR LINE-ART & GEOMETRIC ANIMATED HERO */}
+        <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-4 sm:py-7 px-2 overflow-visible min-h-[250px] sm:min-h-[290px] xl:min-h-[330px]">
           
-          {/* ⚡ HORIZONTAL LASER SCANLINE SWEEP ACROSS WIDE CANVAS */}
-          <div className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-sky-400/50 via-[#F15A24]/50 to-transparent pointer-events-none animate-cyber-scanline z-0" />
+          {/* 🪐 1. LARGE CONCENTRIC ORBITAL RINGS WITH SATELLITES (TOP-RIGHT CORNER) */}
+          <div className="hidden md:block absolute -top-10 -right-8 xl:-right-14 w-64 h-64 xl:w-80 xl:h-80 pointer-events-none overflow-visible z-0">
+            <svg className="w-full h-full" viewBox="0 0 320 320" fill="none">
+              {/* Inner Concentric Orbit */}
+              <circle cx="300" cy="20" r="140" stroke="#F15A24" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="6 6" />
+              {/* Middle Concentric Orbit */}
+              <circle cx="300" cy="20" r="210" stroke="#F15A24" strokeOpacity="0.35" strokeWidth="2" />
+              {/* Outer Sweeping Orbit */}
+              <circle cx="300" cy="20" r="280" stroke="#0284C7" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="8 4" />
+              
+              {/* Solid White / Brand Circular Satellite Balls on Tracks */}
+              <circle cx="160" cy="20" r="7" fill="#F15A24" />
+              <circle cx="160" cy="20" r="3" fill="#FFFFFF" />
 
-          {/* 🌐 WIDE-SPAN SVG NEURAL CONSTELLATION LASER MESH (1600px WIDE VIEWPORT) */}
-          <div className="absolute inset-0 w-full h-full pointer-events-none -z-0 hidden md:block overflow-visible">
-            <svg className="w-full h-full" viewBox="0 0 1600 300" preserveAspectRatio="none" fill="none">
-              <defs>
-                <linearGradient id="ray-cyan-orange-wide" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#0284C7" stopOpacity="0.7" />
-                  <stop offset="25%" stopColor="#38BDF8" stopOpacity="0.4" />
-                  <stop offset="50%" stopColor="#6366F1" stopOpacity="0.3" />
-                  <stop offset="75%" stopColor="#FB923C" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#F15A24" stopOpacity="0.7" />
-                </linearGradient>
-                <linearGradient id="ray-indigo-emerald-wide" x1="0%" y1="100%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#6366F1" stopOpacity="0.6" />
-                  <stop offset="35%" stopColor="#818CF8" stopOpacity="0.3" />
-                  <stop offset="50%" stopColor="#D97706" stopOpacity="0.35" />
-                  <stop offset="70%" stopColor="#34D399" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#10B981" stopOpacity="0.6" />
-                </linearGradient>
-              </defs>
+              <circle cx="225" cy="170" r="6" fill="#0284C7" />
+              <circle cx="225" cy="170" r="2.5" fill="#FFFFFF" />
 
-              {/* 1. Main High Arc: Far-Left (Số Hóa) -> Center Horizon -> Far-Right (Tốc Độ) */}
-              <path
-                d="M 140,55 Q 800,-15 1460,55"
-                stroke="url(#ray-cyan-orange-wide)"
-                strokeWidth="1.75"
-                strokeDasharray="8 8"
-                className="animate-kinetic-data"
-              />
-
-              {/* 2. Main Low Arc: Inner-Left (Công Nghệ Hóa) -> Center Anchor -> Inner-Right (Chất Lượng) */}
-              <path
-                d="M 260,245 Q 800,305 1340,245"
-                stroke="url(#ray-indigo-emerald-wide)"
-                strokeWidth="1.75"
-                strokeDasharray="8 8"
-                className="animate-kinetic-data"
-              />
-
-              {/* 3. Star Chords Connecting Wings to Center Value Anchor */}
-              <path
-                d="M 140,55 Q 500,190 800,270"
-                stroke="#0284C7"
-                strokeOpacity="0.16"
-                strokeWidth="1.2"
-                strokeDasharray="5 5"
-              />
-              <path
-                d="M 1460,55 Q 1100,190 800,270"
-                stroke="#F15A24"
-                strokeOpacity="0.16"
-                strokeWidth="1.2"
-                strokeDasharray="5 5"
-              />
-              <path
-                d="M 260,245 Q 500,100 800,25"
-                stroke="#6366F1"
-                strokeOpacity="0.12"
-                strokeWidth="1"
-                strokeDasharray="4 4"
-              />
-              <path
-                d="M 1340,245 Q 1100,100 800,25"
-                stroke="#10B981"
-                strokeOpacity="0.12"
-                strokeWidth="1"
-                strokeDasharray="4 4"
-              />
-
-              {/* 4. Glowing HUD Crosshairs at Key Coordinates */}
-              <g className="animate-hud-crosshair">
-                <circle cx="140" cy="55" r="4" fill="#0284C7" />
-                <circle cx="140" cy="55" r="12" stroke="#0284C7" strokeWidth="1" strokeDasharray="2 2" />
-                <line x1="124" y1="55" x2="156" y2="55" stroke="#0284C7" strokeWidth="0.75" strokeOpacity="0.6" />
-                <line x1="140" y1="39" x2="140" y2="71" stroke="#0284C7" strokeWidth="0.75" strokeOpacity="0.6" />
-              </g>
-              <g className="animate-hud-crosshair" style={{ animationDelay: '1.5s' }}>
-                <circle cx="1460" cy="55" r="4" fill="#F15A24" />
-                <circle cx="1460" cy="55" r="12" stroke="#F15A24" strokeWidth="1" strokeDasharray="2 2" />
-                <line x1="1444" y1="55" x2="1476" y2="55" stroke="#F15A24" strokeWidth="0.75" strokeOpacity="0.6" />
-                <line x1="1460" y1="39" x2="1460" y2="71" stroke="#F15A24" strokeWidth="0.75" strokeOpacity="0.6" />
-              </g>
-              <g className="animate-hud-crosshair" style={{ animationDelay: '0.8s' }}>
-                <circle cx="260" cy="245" r="3.5" fill="#6366F1" />
-                <circle cx="1340" cy="245" r="3.5" fill="#10B981" />
-              </g>
+              <circle cx="90" cy="20" r="5" fill="#F15A24" />
+              <circle cx="90" cy="20" r="2" fill="#FFFFFF" />
             </svg>
           </div>
 
-          {/* 🛰️ WIDE NODE 1: SỐ HÓA (Far-Left Orbital Hemisphere) */}
-          <div className="hidden md:flex absolute left-0 sm:left-2 xl:left-8 2xl:left-14 top-1 xl:top-3 z-20 group cursor-default items-center gap-3 animate-float-node-1">
-            <div className="relative w-13 h-13 xl:w-15 xl:h-15 flex items-center justify-center shrink-0">
-              <div className="absolute -inset-3 rounded-full border border-sky-400/40 dark:border-sky-500/30 animate-kinetic-ripple pointer-events-none" />
-              <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-[#0284C7]/60 dark:border-sky-400/50 animate-kinetic-spin pointer-events-none" />
-              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-white/98 via-sky-50/90 to-white/90 dark:from-slate-900/98 dark:via-sky-950/70 dark:to-slate-900/90 backdrop-blur-md border border-sky-300 dark:border-sky-600/80 shadow-lg group-hover:shadow-sky-400/40 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                <Binary className="w-6 h-6 xl:w-7 xl:h-7 text-[#0284C7] dark:text-sky-400 drop-shadow-xs" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-ping" />
+          {/* 💎 2. 3D HEXAGONAL NEURAL LATTICE MOLECULE (TOP-LEFT) */}
+          <div className="hidden lg:flex absolute left-2 xl:left-10 top-2 xl:top-6 z-20 items-center gap-3 animate-float-node-1 cursor-default group">
+            <div className="relative w-20 h-20 xl:w-24 xl:h-24 flex items-center justify-center shrink-0">
+              <svg width="100%" height="100%" viewBox="0 0 110 110" fill="none" className="overflow-visible drop-shadow-sm">
+                {/* Central Solid Hexagon */}
+                <polygon
+                  points="55,24 86,42 86,78 55,96 24,78 24,42"
+                  fill="#0284C7"
+                  fillOpacity="0.14"
+                  stroke="#0284C7"
+                  strokeWidth="1.75"
+                />
+                
+                {/* 6 Perimeter Line Segments */}
+                <line x1="55" y1="12" x2="94" y2="34" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="94" y1="34" x2="94" y2="78" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="94" y1="78" x2="55" y2="100" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="55" y1="100" x2="16" y2="78" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="16" y1="78" x2="16" y2="34" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="16" y1="34" x2="55" y2="12" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                
+                {/* Center 3D Isometric Axes */}
+                <line x1="55" y1="12" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" />
+                <line x1="94" y1="78" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" />
+                <line x1="16" y1="78" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" />
+                <circle cx="55" cy="56" r="4.5" fill="#0284C7" />
+
+                {/* 6 Circular Node Balls on Vertices */}
+                <circle cx="55" cy="12" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="94" cy="34" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="94" cy="78" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="55" cy="100" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="16" cy="78" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="16" cy="34" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              </svg>
             </div>
-            <div className="flex flex-col items-start px-3 py-1.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-sky-200 dark:border-sky-700/80 shadow-sm group-hover:shadow-md transition-all duration-200">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[9px] font-mono font-bold text-sky-600 dark:text-sky-400 opacity-80 tracking-wider">
-                  SYS.01 //
-                </span>
-                <span className="text-xs xl:text-[13px] font-black text-slate-800 dark:text-white uppercase tracking-wider whitespace-nowrap">
-                  Số Hóa
-                </span>
-                <span className="w-2 h-2 rounded-full bg-[#0284C7] shrink-0" />
-              </div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 leading-tight whitespace-nowrap">
-                100% Real-time Data
+            <div className="flex flex-col text-left">
+              <span className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                AVG ONE // AI
+              </span>
+              <span className="text-xs xl:text-sm font-extrabold text-slate-800 dark:text-white leading-tight">
+                Kiến tạo Nền tảng Số
               </span>
             </div>
           </div>
 
-          {/* 🛰️ WIDE NODE 2: CÔNG NGHỆ HÓA (Inner-Left Orbital Hemisphere) */}
-          <div className="hidden md:flex absolute left-4 sm:left-10 xl:left-24 2xl:left-40 bottom-1 xl:bottom-3 z-20 group cursor-default items-center gap-3 animate-float-node-2">
-            <div className="relative w-13 h-13 xl:w-15 xl:h-15 flex items-center justify-center shrink-0">
-              <div className="absolute -inset-3 rounded-full border border-indigo-400/40 dark:border-indigo-500/30 animate-kinetic-ripple pointer-events-none" style={{ animationDelay: '0.8s' }} />
-              <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-indigo-500/60 dark:border-indigo-400/50 animate-kinetic-spin-rev pointer-events-none" />
-              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-white/98 via-indigo-50/90 to-white/90 dark:from-slate-900/98 dark:via-indigo-950/70 dark:to-slate-900/90 backdrop-blur-md border border-indigo-300 dark:border-indigo-600/80 shadow-lg group-hover:shadow-indigo-400/40 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                <Cpu className="w-6 h-6 xl:w-7 xl:h-7 text-indigo-600 dark:text-indigo-400 drop-shadow-xs" />
+          {/* 🎙️ 3. RADAR VOICE/AI ORB + MINIMALIST CHECKLIST LINE CARD (TOP-RIGHT) */}
+          <div className="hidden lg:flex absolute right-14 xl:right-28 top-2 xl:top-6 z-20 items-center gap-3.5 animate-float-node-3 cursor-default group">
+            {/* Concentric Dotted Radar Orb with Mic/Sound/Zap Icon */}
+            <div className="relative w-15 h-15 xl:w-17 xl:h-17 flex items-center justify-center shrink-0">
+              <div className="absolute -inset-3.5 rounded-full border-2 border-dotted border-[#F15A24]/40 animate-kinetic-spin pointer-events-none" />
+              <div className="absolute -inset-1.5 rounded-full border border-dashed border-[#F15A24]/50 animate-kinetic-spin-rev pointer-events-none" />
+              <div className="absolute inset-0 rounded-full border border-orange-400/40 animate-kinetic-ripple pointer-events-none" />
+              
+              <div className="w-11 h-11 xl:w-12 xl:h-12 rounded-full bg-gradient-to-tr from-[#F15A24] via-[#FB923C] to-[#FF7043] text-white flex items-center justify-center shadow-md shadow-orange-500/25 group-hover:scale-110 transition-transform">
+                <Zap className="w-5 h-5 text-white fill-white" />
               </div>
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-indigo-600 animate-ping" />
             </div>
-            <div className="flex flex-col items-start px-3 py-1.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-indigo-200 dark:border-indigo-700/80 shadow-sm group-hover:shadow-md transition-all duration-200">
+
+            {/* Outlined Checklist Line Card */}
+            <div className="w-13 h-17 xl:w-15 xl:h-19 rounded-2xl border-2 border-slate-700/60 dark:border-slate-300/60 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xs flex flex-col justify-center gap-2 px-2.5 shadow-2xs group-hover:border-[#F15A24] transition-colors">
               <div className="flex items-center gap-1.5">
-                <span className="text-[9px] font-mono font-bold text-indigo-600 dark:text-indigo-400 opacity-80 tracking-wider">
-                  AI.02 //
-                </span>
-                <span className="text-xs xl:text-[13px] font-black text-slate-800 dark:text-white uppercase tracking-wider whitespace-nowrap">
-                  Công Nghệ Hóa
-                </span>
-                <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
+                <div className="w-2 h-2 rounded-full bg-[#F15A24] shrink-0" />
+                <div className="h-1 flex-1 rounded-full bg-slate-700/60 dark:bg-slate-300/60" />
               </div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 leading-tight whitespace-nowrap">
-                Tự Động Hóa AI
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#0284C7] shrink-0" />
+                <div className="h-1 flex-1 rounded-full bg-slate-700/60 dark:bg-slate-300/60" />
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <div className="h-1 flex-1 rounded-full bg-slate-700/60 dark:bg-slate-300/60" />
+              </div>
+            </div>
+          </div>
+
+          {/* 📈 4. DATA CONSTELLATION ZIGZAG LINE GRAPH WITH WHITE NODES (BOTTOM-LEFT) */}
+          <div className="hidden md:flex absolute left-4 xl:left-14 bottom-2 xl:bottom-5 z-20 items-end gap-3 animate-float-node-2 cursor-default group">
+            <svg width="170" height="70" viewBox="0 0 170 70" fill="none" className="overflow-visible drop-shadow-2xs">
+              {/* Zigzag Connection Stroke */}
+              <polyline
+                points="10,60 55,18 105,45 158,10"
+                fill="none"
+                stroke="#0284C7"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <polyline
+                points="10,60 55,18 105,45 158,10"
+                fill="none"
+                stroke="#38BDF8"
+                strokeWidth="1.5"
+                strokeDasharray="6 6"
+                className="animate-kinetic-data"
+              />
+
+              {/* 4 Circular Junction Node Balls */}
+              <circle cx="10" cy="60" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              <circle cx="55" cy="18" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              <circle cx="105" cy="45" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              <circle cx="158" cy="10" r="6.5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="158" cy="10" r="3" fill="#FFFFFF" className="animate-ping" style={{ transformOrigin: '158px 10px' }} />
+            </svg>
+            <div className="flex flex-col text-left mb-1">
+              <span className="text-[10px] font-mono font-bold text-sky-600 dark:text-sky-400">
+                REAL-TIME DATA
+              </span>
+              <span className="text-xs font-extrabold text-slate-700 dark:text-slate-200">
+                Số Hóa Toàn Diện
               </span>
             </div>
           </div>
 
-          {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & CENTER VALUE NODE */}
+          {/* 💬 5. OVERLAPPING SPEECH OUTLINE & SOUNDWAVE EQUALIZER BARS (BOTTOM-RIGHT) */}
+          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-2 xl:bottom-5 z-20 items-end gap-4 animate-float-node-4 cursor-default group">
+            {/* Overlapping Dialogue Bubbles */}
+            <div className="relative w-16 h-14 xl:w-18 xl:h-16">
+              {/* Back Filled Bubble */}
+              <div className="absolute top-0 left-0 w-11 h-9 rounded-2xl bg-[#F15A24]/15 border border-[#F15A24]/30" />
+              {/* Front Outlined Bubble */}
+              <div className="absolute bottom-0 right-0 w-12 h-10 rounded-2xl border-2 border-slate-700 dark:border-white bg-transparent flex items-center justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-ping" />
+              </div>
+            </div>
+
+            {/* Vibrating Equalizer Soundwave Bars */}
+            <div className="flex items-end gap-1 pb-1">
+              <div className="w-1.5 bg-[#F15A24] rounded-full animate-soundwave-1" />
+              <div className="w-1.5 bg-[#0284C7] rounded-full animate-soundwave-2" />
+              <div className="w-1.5 bg-[#F15A24] rounded-full animate-soundwave-3" />
+              <div className="w-1.5 bg-emerald-500 rounded-full animate-soundwave-4" />
+            </div>
+          </div>
+
+          {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10">
             <div className="w-fit mx-auto space-y-2 sm:space-y-2.5 py-0.5 flex flex-col items-center text-center">
               
@@ -327,7 +341,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
               </div>
 
-              {/* Slogan Badge & Center Floating Node */}
+              {/* Slogan Badge & Down Indicator */}
               <div className="pt-2 text-center w-full flex flex-col items-center gap-2.5">
                 <div className="relative inline-block p-0.5 rounded-full transition-all duration-300 max-w-full">
                   {/* SVG Clockwise Border Tracing Effect */}
@@ -365,23 +379,18 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   </p>
                 </div>
 
-                {/* 🛰️ WIDE NODE 5: GIÁ TỐI ƯU (Center Anchor Orb) */}
-                <div className="hidden sm:inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-amber-200 dark:border-amber-700/80 shadow-sm hover:shadow-amber-400/25 group cursor-default animate-float-node-5 transition-all duration-300">
-                  <div className="relative w-6 h-6 rounded-full bg-amber-50 dark:bg-amber-950/70 border border-amber-300 dark:border-amber-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                {/* 🧭 6. DOWN NAVIGATION BUTTON & VALUE STATUS (LIKE VIETTEL AI) */}
+                <div className="flex items-center gap-3 mt-0.5">
+                  <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-amber-300 dark:border-amber-700/80 shadow-2xs group animate-float-node-5 cursor-default">
                     <Coins className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                    <div className="absolute -inset-1 rounded-full border border-amber-400/30 animate-kinetic-ripple pointer-events-none" />
+                    <span className="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-wider">
+                      Giá Tối Ưu • Hiệu Quả Vượt Trội
+                    </span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-left">
-                    <span className="text-[9px] font-mono font-bold text-amber-600 dark:text-amber-400 opacity-80 tracking-wider">
-                      VAL.05 //
-                    </span>
-                    <span className="text-xs font-black text-slate-800 dark:text-white uppercase tracking-wider">
-                      Giá Tối Ưu
-                    </span>
-                    <span className="text-slate-300 dark:text-slate-600">•</span>
-                    <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">
-                      Tiết Kiệm Chi Phí Tối Đa
-                    </span>
+
+                  {/* Circular Down Indicator Button */}
+                  <div className="w-6 h-6 rounded-full border-2 border-slate-400/80 dark:border-slate-500/80 hover:border-[#F15A24] flex items-center justify-center text-slate-500 hover:text-[#F15A24] transition-colors cursor-pointer animate-bounce">
+                    <span className="text-xs font-black leading-none -mt-0.5">↓</span>
                   </div>
                 </div>
 
@@ -390,60 +399,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 🛰️ WIDE NODE 3: TỐC ĐỘ (Far-Right Orbital Hemisphere) */}
-          <div className="hidden md:flex absolute right-0 sm:right-2 xl:right-8 2xl:right-14 top-1 xl:top-3 z-20 group cursor-default items-center gap-3 animate-float-node-3">
-            <div className="flex flex-col items-end px-3 py-1.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-orange-200 dark:border-orange-700/80 shadow-sm group-hover:shadow-md transition-all duration-200">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#F15A24] shrink-0" />
-                <span className="text-xs xl:text-[13px] font-black text-slate-800 dark:text-white uppercase tracking-wider whitespace-nowrap">
-                  Tốc Độ
-                </span>
-                <span className="text-[9px] font-mono font-bold text-[#F15A24] opacity-80 tracking-wider">
-                  // SPD.03
-                </span>
-              </div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 leading-tight whitespace-nowrap">
-                Vận Hành Tức Thì
-              </span>
-            </div>
-            <div className="relative w-13 h-13 xl:w-15 xl:h-15 flex items-center justify-center shrink-0">
-              <div className="absolute -inset-3 rounded-full border border-orange-400/40 dark:border-orange-500/30 animate-kinetic-ripple pointer-events-none" style={{ animationDelay: '0.4s' }} />
-              <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-[#F15A24]/60 dark:border-orange-400/50 animate-kinetic-spin pointer-events-none" />
-              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-white/98 via-orange-50/90 to-white/90 dark:from-slate-900/98 dark:via-orange-950/70 dark:to-slate-900/90 backdrop-blur-md border border-orange-300 dark:border-orange-600/80 shadow-lg group-hover:shadow-orange-400/40 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                <Zap className="w-6 h-6 xl:w-7 xl:h-7 text-[#F15A24] dark:text-orange-400 drop-shadow-xs" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#F15A24] animate-ping" />
-            </div>
-          </div>
-
-          {/* 🛰️ WIDE NODE 4: CHẤT LƯỢNG (Inner-Right Orbital Hemisphere) */}
-          <div className="hidden md:flex absolute right-4 sm:right-10 xl:right-24 2xl:right-40 bottom-1 xl:bottom-3 z-20 group cursor-default items-center gap-3 animate-float-node-4">
-            <div className="flex flex-col items-end px-3 py-1.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-emerald-200 dark:border-emerald-700/80 shadow-sm group-hover:shadow-md transition-all duration-200">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
-                <span className="text-xs xl:text-[13px] font-black text-slate-800 dark:text-white uppercase tracking-wider whitespace-nowrap">
-                  Chất Lượng
-                </span>
-                <span className="text-[9px] font-mono font-bold text-emerald-600 dark:text-emerald-400 opacity-80 tracking-wider">
-                  // QAL.04
-                </span>
-              </div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 leading-tight whitespace-nowrap">
-                Chuẩn Mực Tối Ưu
-              </span>
-            </div>
-            <div className="relative w-13 h-13 xl:w-15 xl:h-15 flex items-center justify-center shrink-0">
-              <div className="absolute -inset-3 rounded-full border border-emerald-400/40 dark:border-emerald-500/30 animate-kinetic-ripple pointer-events-none" style={{ animationDelay: '1.2s' }} />
-              <div className="absolute -inset-1.5 rounded-full border-2 border-dashed border-emerald-500/60 dark:border-emerald-400/50 animate-kinetic-spin-rev pointer-events-none" />
-              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-white/98 via-emerald-50/90 to-white/90 dark:from-slate-900/98 dark:via-emerald-950/70 dark:to-slate-900/90 backdrop-blur-md border border-emerald-300 dark:border-emerald-600/80 shadow-lg group-hover:shadow-emerald-400/40 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                <Award className="w-6 h-6 xl:w-7 xl:h-7 text-emerald-600 dark:text-emerald-400 drop-shadow-xs" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping" />
-            </div>
-          </div>
-
           {/* 📱 MOBILE / TABLET FLOATING CONSTELLATION ROW (< md screens) */}
-          <div className="md:hidden flex flex-wrap items-center justify-center gap-2.5 mt-3 w-full">
+          <div className="md:hidden flex flex-wrap items-center justify-center gap-2 mt-3 w-full">
             {STRATEGIC_PILLARS.map((pillar, idx) => {
               const PillarIcon = pillar.icon;
               const floatClasses = [
@@ -472,7 +429,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
         </div>
 
         {/* Centered Odoo App Grid (Kiểu dáng hộp bo tròn 28px y hệt bản Desktop) */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 xl:gap-5 w-full shrink-0 mt-2 sm:mt-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 xl:gap-5 w-full shrink-0 mt-1 sm:mt-2">
           {HOME_APP_MODULES.map((app) => {
             const Icon = app.icon;
             return (
