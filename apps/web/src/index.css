@@ -2796,7 +2796,40 @@ div.box-speech-bubble {
   animation: kinetic-glow-pulse 4s ease-in-out infinite;
 }
 
+/* ⚡ FUTURISTIC CYBERNETIC HUD & WIDE SCANLINE KEYFRAMES */
+@keyframes cyber-scanline {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  70% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(1000%);
+    opacity: 0;
+  }
+}
 
+@keyframes hud-crosshair-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.15);
+  }
+}
 
+.animate-cyber-scanline {
+  animation: cyber-scanline 8s linear infinite;
+}
 
+.animate-hud-crosshair {
+  animation: hud-crosshair-pulse 3s ease-in-out infinite;
+}
 
