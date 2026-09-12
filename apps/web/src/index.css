@@ -2566,3 +2566,163 @@ div.box-speech-bubble {
   display: inline-block;
 }
 
+/* ==========================================================================
+   ARCHITECTURAL GEOMETRY & TRANSPARENCY VISUAL SYSTEM (TRANG CHỦ AVG ONE)
+   - Thể hiện: Vững chắc, Bền bỉ, Rõ ràng, Minh bạch
+   - Các hình khối đa giác 3D Isometric, mảng màu kính trong suốt, icon nét kỹ thuật
+   ========================================================================== */
+
+@keyframes float-geom-1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-14px) rotate(3deg) scale(1.02);
+  }
+}
+
+@keyframes float-geom-2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(16px) rotate(-4deg) scale(0.98);
+  }
+}
+
+@keyframes float-geom-3 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(8px, -10px) rotate(2deg);
+  }
+  66% {
+    transform: translate(-6px, 8px) rotate(-1deg);
+  }
+}
+
+@keyframes plane-shimmer-blue {
+  0%, 100% {
+    opacity: 0.35;
+    transform: rotate(-6deg) scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: rotate(-4deg) scale(1.06);
+  }
+}
+
+@keyframes plane-shimmer-orange {
+  0%, 100% {
+    opacity: 0.3;
+    transform: rotate(8deg) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: rotate(10deg) scale(1.05);
+  }
+}
+
+@keyframes rotate-wireframe-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-wireframe-ccw {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes laser-scan-clarity {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes beam-dash-flow {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+@keyframes radar-pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.animate-float-geom-1 {
+  animation: float-geom-1 12s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-geom-2 {
+  animation: float-geom-2 15s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-geom-3 {
+  animation: float-geom-3 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-plane-blue {
+  animation: plane-shimmer-blue 10s ease-in-out infinite;
+}
+
+.animate-plane-orange {
+  animation: plane-shimmer-orange 12s ease-in-out infinite;
+}
+
+.animate-rotate-cw {
+  animation: rotate-wireframe-cw 40s linear infinite;
+  transform-origin: center;
+}
+
+.animate-rotate-ccw {
+  animation: rotate-wireframe-ccw 50s linear infinite;
+  transform-origin: center;
+}
+
+.animate-laser-scan {
+  animation: laser-scan-clarity 4.5s ease-in-out infinite;
+}
+
+.animate-beam-flow {
+  stroke-dasharray: 8 6;
+  animation: beam-dash-flow 6s linear infinite;
+}
+
+.animate-radar-ring {
+  animation: radar-pulse-ring 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+
