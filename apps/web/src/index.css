@@ -2567,52 +2567,39 @@ div.box-speech-bubble {
 }
 
 /* ==========================================================================
-   ELEGANT & MINIMALIST ARCHITECTURAL VISUAL SYSTEM (TRANG CHỦ AVG ONE)
-   - Tinh tế, đơn giản, hiện đại: Thể hiện Vững chắc, Bền bỉ, Rõ ràng, Minh bạch
-   - Nét vẽ siêu mảnh 0.75-1px, mảng màu chuyển sắc quang học hữu cơ, chuyển động êm dịu
+   DYNAMIC KINETIC ARCHITECTURAL VISUAL SYSTEM (TRANG CHỦ AVG ONE)
+   - Thể hiện rõ nét: Vững chắc, Bền bỉ, Rõ ràng, Minh bạch
+   - Hình khối đa giác 3D, mảng màu quang học, icon nét kỹ thuật chuyển động sinh động
    ========================================================================== */
 
-@keyframes ambient-mesh-1 {
-  0%, 100% {
-    transform: translate(0px, 0px) scale(1);
-    opacity: 0.45;
-  }
-  50% {
-    transform: translate(25px, -18px) scale(1.08);
-    opacity: 0.75;
-  }
-}
-
-@keyframes ambient-mesh-2 {
-  0%, 100% {
-    transform: translate(0px, 0px) scale(1);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translate(-20px, 22px) scale(1.06);
-    opacity: 0.7;
-  }
-}
-
-@keyframes float-subtle-cube {
+@keyframes kinetic-float-1 {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-10px) rotate(1.5deg);
+    transform: translateY(-12px) rotate(2deg);
   }
 }
 
-@keyframes float-subtle-prism {
+@keyframes kinetic-float-2 {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(12px) rotate(-1.5deg);
+    transform: translateY(14px) rotate(-2deg);
   }
 }
 
-@keyframes rotate-slow-wireframe {
+@keyframes kinetic-float-3 {
+  0%, 100% {
+    transform: translate(0px, 0px);
+  }
+  50% {
+    transform: translate(6px, -10px);
+  }
+}
+
+@keyframes kinetic-spin-cw {
   from {
     transform: rotate(0deg);
   }
@@ -2621,7 +2608,7 @@ div.box-speech-bubble {
   }
 }
 
-@keyframes rotate-slow-reverse {
+@keyframes kinetic-spin-ccw {
   from {
     transform: rotate(360deg);
   }
@@ -2630,93 +2617,99 @@ div.box-speech-bubble {
   }
 }
 
-@keyframes light-beam-travel {
-  0% {
-    stroke-dashoffset: 240;
-    opacity: 0.2;
+@keyframes kinetic-data-flow {
+  from {
+    stroke-dashoffset: 60;
   }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    stroke-dashoffset: -240;
-    opacity: 0.2;
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
-@keyframes optical-clarity-sweep {
+@keyframes kinetic-laser-sweep {
   0% {
-    top: -20%;
+    top: -10%;
     opacity: 0;
   }
-  30% {
-    opacity: 0.6;
+  20% {
+    opacity: 1;
   }
-  70% {
-    opacity: 0.6;
+  80% {
+    opacity: 1;
   }
   100% {
-    top: 120%;
+    top: 110%;
     opacity: 0;
   }
 }
 
-@keyframes soft-concentric-ripple {
+@keyframes kinetic-ripple {
   0% {
-    transform: scale(0.9);
-    opacity: 0.6;
+    transform: scale(0.85);
+    opacity: 0.9;
   }
   60% {
-    opacity: 0.2;
+    opacity: 0.4;
   }
   100% {
-    transform: scale(1.5);
+    transform: scale(1.6);
     opacity: 0;
   }
 }
 
-.animate-mesh-1 {
-  animation: ambient-mesh-1 18s ease-in-out infinite;
-  will-change: transform, opacity;
+@keyframes kinetic-glow-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
 }
 
-.animate-mesh-2 {
-  animation: ambient-mesh-2 22s ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-.animate-subtle-cube {
-  animation: float-subtle-cube 16s ease-in-out infinite;
+.animate-kinetic-float-1 {
+  animation: kinetic-float-1 4.5s ease-in-out infinite;
   will-change: transform;
 }
 
-.animate-subtle-prism {
-  animation: float-subtle-prism 20s ease-in-out infinite;
+.animate-kinetic-float-2 {
+  animation: kinetic-float-2 5.2s ease-in-out infinite;
   will-change: transform;
 }
 
-.animate-rotate-slow {
-  animation: rotate-slow-wireframe 80s linear infinite;
+.animate-kinetic-float-3 {
+  animation: kinetic-float-3 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-kinetic-spin {
+  animation: kinetic-spin-cw 12s linear infinite;
   transform-origin: center;
 }
 
-.animate-rotate-slow-rev {
-  animation: rotate-slow-reverse 90s linear infinite;
+.animate-kinetic-spin-rev {
+  animation: kinetic-spin-ccw 14s linear infinite;
   transform-origin: center;
 }
 
-.animate-light-beam {
-  stroke-dasharray: 40 160;
-  animation: light-beam-travel 10s ease-in-out infinite;
+.animate-kinetic-data {
+  stroke-dasharray: 8 8;
+  animation: kinetic-data-flow 1.8s linear infinite;
 }
 
-.animate-clarity-sweep {
-  animation: optical-clarity-sweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+.animate-kinetic-laser {
+  animation: kinetic-laser-sweep 2.6s ease-in-out infinite;
 }
 
-.animate-soft-ripple {
-  animation: soft-concentric-ripple 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+.animate-kinetic-ripple {
+  animation: kinetic-ripple 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
+
+.animate-kinetic-glow {
+  animation: kinetic-glow-pulse 4s ease-in-out infinite;
+}
+
 
 
 

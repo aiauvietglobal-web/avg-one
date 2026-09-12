@@ -52,226 +52,261 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
     <div className="w-full h-full flex-1 min-h-0 bg-white dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-y-auto md:overflow-hidden flex flex-col items-center justify-start md:justify-center p-2 sm:p-3 select-none">
       
       {/* 🌐 ULTRA-CLEAN GRID LINES PATTERN */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-70 dark:opacity-30 pointer-events-none -z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-60 dark:opacity-30 pointer-events-none -z-0" />
 
-      {/* 🎨 DYNAMIC AMBIENT COLOR MESHES (MẢNG MÀU QUANG HỌC CHUYỂN ĐỘNG ÊM ÁI) */}
-      <div className="absolute top-6 left-8 sm:left-20 w-[420px] sm:w-[520px] h-[420px] sm:h-[520px] bg-gradient-to-tr from-sky-400/10 via-blue-500/5 to-transparent rounded-full blur-[110px] pointer-events-none -z-0 animate-mesh-1" />
-      <div className="absolute top-4 right-8 sm:right-20 w-[420px] sm:w-[520px] h-[420px] sm:h-[520px] bg-gradient-to-bl from-orange-400/10 via-[#F15A24]/5 to-transparent rounded-full blur-[110px] pointer-events-none -z-0 animate-mesh-2" />
-      <div className="absolute bottom-6 left-1/3 w-[450px] sm:w-[600px] h-[280px] bg-gradient-to-t from-sky-300/5 via-amber-200/5 to-transparent rounded-full blur-[120px] pointer-events-none -z-0" />
+      {/* 🎨 RADIANT AMBIENT COLOR MESHES (MẢNG MÀU CHUYỂN SẮC RỰC RỠ, CHUYỂN ĐỘNG RÕ NÉT) */}
+      <div className="absolute top-2 left-4 sm:left-16 w-[360px] sm:w-[500px] h-[360px] sm:h-[500px] bg-gradient-to-tr from-sky-400/20 via-[#0284C7]/15 to-transparent rounded-full blur-[85px] pointer-events-none -z-0 animate-kinetic-glow" />
+      <div className="absolute top-2 right-4 sm:right-16 w-[360px] sm:w-[500px] h-[360px] sm:h-[500px] bg-gradient-to-bl from-amber-400/18 via-[#F15A24]/18 to-transparent rounded-full blur-[85px] pointer-events-none -z-0 animate-kinetic-glow" />
+      <div className="absolute bottom-4 left-1/3 w-[400px] sm:w-[560px] h-[260px] bg-gradient-to-t from-sky-300/12 via-emerald-300/10 to-transparent rounded-full blur-[90px] pointer-events-none -z-0" />
 
-      {/* 📐 FLOATING ARCHITECTURAL WIREFRAMES & LINE ART (HÌNH KHỐI TINH TẾ & ICON NÉT HIỆN ĐẠI) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-0">
-        
-        {/* Left Subtle Wireframe Cube & Shield Badge (Biểu trưng Vững chắc & Bền bỉ) */}
-        <div className="absolute top-20 left-12 lg:left-24 animate-subtle-cube opacity-75 hidden xl:block">
-          <div className="relative">
-            {/* Concentric Calibration Ring */}
-            <div className="absolute -inset-6 rounded-full border border-dashed border-sky-400/30 dark:border-sky-500/20 animate-rotate-slow" />
-            
-            {/* Minimalist 3D Isometric Wireframe */}
-            <svg width="90" height="96" viewBox="0 0 90 96" fill="none" className="overflow-visible">
-              <polygon points="45,12 77,30 45,48 13,30" fill="#0284C7" fillOpacity="0.04" stroke="#0284C7" strokeWidth="1" strokeLinejoin="round" />
-              <polygon points="13,30 45,48 45,84 13,66" fill="#0284C7" fillOpacity="0.08" stroke="#0284C7" strokeWidth="1" strokeLinejoin="round" />
-              <polygon points="45,48 77,30 77,66 45,84" fill="#0284C7" fillOpacity="0.03" stroke="#0284C7" strokeWidth="1" strokeLinejoin="round" />
-              {/* Inner Transparent Structural Lines */}
-              <line x1="45" y1="12" x2="45" y2="48" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 3" strokeOpacity="0.4" />
-              <line x1="13" y1="66" x2="45" y2="48" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 3" strokeOpacity="0.4" />
-              <line x1="77" y1="66" x2="45" y2="48" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 3" strokeOpacity="0.4" />
-              {/* Center Core Dot */}
-              <circle cx="45" cy="48" r="2.5" fill="#0284C7" />
-            </svg>
-
-            {/* Floating Glass Icon Bead */}
-            <div className="absolute -bottom-4 -right-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-sky-200/80 dark:border-sky-800/80 shadow-xs">
-              <ShieldCheck className="w-3 h-3 text-[#0284C7]" />
-              <span className="text-[9px] font-bold text-sky-700 dark:text-sky-300 tracking-wider">SOLID</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Subtle Faceted Prism & Compass Badge (Biểu trưng Rõ ràng & Minh bạch) */}
-        <div className="absolute top-18 right-12 lg:right-24 animate-subtle-prism opacity-75 hidden xl:block">
-          <div className="relative">
-            {/* Concentric Calibration Ring */}
-            <div className="absolute -inset-6 rounded-full border border-dashed border-orange-400/30 dark:border-orange-500/20 animate-rotate-slow-rev" />
-
-            {/* Minimalist Faceted Hexagon Crystal */}
-            <svg width="90" height="96" viewBox="0 0 90 96" fill="none" className="overflow-visible">
-              <polygon points="45,8 77,26 77,64 45,82 13,64 13,26" fill="#F15A24" fillOpacity="0.04" stroke="#F15A24" strokeWidth="1" strokeLinejoin="round" />
-              {/* Internal Refraction Ray Lines */}
-              <line x1="45" y1="8" x2="45" y2="45" stroke="#F15A24" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="77" y1="26" x2="45" y2="45" stroke="#F15A24" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="77" y1="64" x2="45" y2="45" stroke="#F15A24" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="45" y1="82" x2="45" y2="45" stroke="#F15A24" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="13" y1="64" x2="45" y2="45" stroke="#F15A24" strokeWidth="0.8" strokeOpacity="0.5" />
-              <line x1="13" y1="26" x2="45" y2="45" stroke="#F15A24" strokeWidth="0.8" strokeOpacity="0.5" />
-              {/* Center Core Dot */}
-              <circle cx="45" cy="45" r="2.5" fill="#F15A24" />
-            </svg>
-
-            {/* Optical Clarity Laser Light Sweep */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl">
-              <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-[#F15A24]/40 to-transparent animate-clarity-sweep" />
-            </div>
-
-            {/* Floating Glass Icon Bead */}
-            <div className="absolute -bottom-4 -left-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-orange-200/80 dark:border-orange-800/80 shadow-xs">
-              <Compass className="w-3 h-3 text-[#F15A24]" />
-              <span className="text-[9px] font-bold text-orange-700 dark:text-orange-300 tracking-wider">CLARITY</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Minimalist Horizon Beam Wave */}
-        <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-20 pointer-events-none" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="horizon-beam-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0284C7" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="#94A3B8" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#F15A24" stopOpacity="0.6" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M 80,100 Q 50% 30, calc(100% - 80) 100"
-            fill="none"
-            stroke="url(#horizon-beam-grad)"
-            strokeWidth="1"
-            className="animate-light-beam"
-          />
-        </svg>
-      </div>
+      {/* 📐 FLOATING COLOR PLANES (MẢNG MÀU HÌNH HỌC VÁT GÓC ĐA CHIỀU) */}
+      <div className="absolute top-10 left-6 sm:left-14 w-44 sm:w-64 h-24 sm:h-36 rounded-3xl bg-gradient-to-br from-sky-400/20 via-blue-500/10 to-transparent backdrop-blur-xs border border-sky-300/50 dark:border-sky-600/40 shadow-lg shadow-sky-500/10 pointer-events-none -z-0 animate-kinetic-float-1 -rotate-6 hidden md:block" />
+      <div className="absolute top-12 right-6 sm:right-14 w-44 sm:w-64 h-24 sm:h-36 rounded-3xl bg-gradient-to-bl from-orange-400/20 via-[#F15A24]/10 to-transparent backdrop-blur-xs border border-orange-300/50 dark:border-orange-600/40 shadow-lg shadow-orange-500/10 pointer-events-none -z-0 animate-kinetic-float-2 rotate-6 hidden md:block" />
 
       {/* Synchronized container matching Header alignment (max-w-7xl px-4 sm:px-6) */}
-      <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2.5 sm:gap-4 relative z-10 py-2 sm:py-2">
+      <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10 py-1 sm:py-2">
         
-        {/* Modern Minimalist Hero Section (Căn lề trái gióng thẳng hàng 3 dòng theo media_1788692283298.png) */}
-        <div className="flex flex-col items-center max-w-3xl mx-auto shrink-0 mb-3 sm:mb-5 w-full">
+        {/* 🚀 MODERN KINETIC HERO ROW (BAO GỒM 2 KHỐI HÌNH HỌC CHUYỂN ĐỘNG & TIÊU ĐỀ TRUNG TÂM) */}
+        <div className="w-full flex items-center justify-center gap-2 sm:gap-6 lg:gap-10 shrink-0 mb-2 sm:mb-4 relative">
           
-          <div className="w-fit mx-auto space-y-3 sm:space-y-4 py-1 flex flex-col items-start">
+          {/* 🔷 KHỐI TRÁI: 3D ISOMETRIC CUBE (VỮNG CHẮC & BỀN BỈ) - HIỂN THỊ TRÊN MỌI MÀN HÌNH */}
+          <div className="hidden sm:flex flex-col items-center shrink-0 animate-kinetic-float-1 relative group cursor-default">
+            {/* Pulsing Radar Aura */}
+            <div className="absolute -inset-3 rounded-full border border-sky-400/40 dark:border-sky-500/30 animate-kinetic-ripple pointer-events-none" />
             
-            {/* Main Headline (Gióng lề trái phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
-            <div className="space-y-2 sm:space-y-2.5 w-fit flex flex-col items-start justify-start text-left">
+            {/* Rotating Technical Gyroscope Ring */}
+            <div className="absolute -inset-4 rounded-full border-2 border-dashed border-[#0284C7]/50 dark:border-sky-400/40 animate-kinetic-spin pointer-events-none" />
+
+            {/* 3D Isometric Cube SVG with Vibrant Lines and Translucent Glass Faces */}
+            <svg width="105" height="110" viewBox="0 0 105 110" fill="none" className="drop-shadow-md overflow-visible">
+              {/* Top Face */}
+              <polygon points="52,14 90,34 52,54 14,34" fill="#0284C7" fillOpacity="0.22" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
+              {/* Left Face */}
+              <polygon points="14,34 52,54 52,94 14,74" fill="#0369A1" fillOpacity="0.3" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
+              {/* Right Face */}
+              <polygon points="52,54 90,34 90,74 52,94" fill="#38BDF8" fillOpacity="0.18" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
               
-              {/* Hàng 1: Một nền tảng Vững chắc! */}
-              <div className="animate-hero-row-1 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
-                <span>Một nền tảng</span>
-                <span className="relative inline-block px-1">
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 50%, #48CAE4 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block'
-                    }}
-                    className="relative z-10 font-black animate-hero-accent-1"
-                  >
-                    Vững chắc!
-                  </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,0 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-1" />
-                  </svg>
-                </span>
-              </div>
+              {/* Inner Transparent Structural Grid (Nhìn xuyên thấu kết cấu - Minh bạch) */}
+              <line x1="52" y1="14" x2="52" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
+              <line x1="14" y1="74" x2="52" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
+              <line x1="90" y1="74" x2="52" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
 
-              {/* Hàng 2: Một định hướng Rõ ràng! */}
-              <div className="animate-hero-row-2 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
-                <span>Một định hướng</span>
-                <span className="relative inline-block px-1">
-                  <span className="relative z-10 font-black hero-gradient-ro-rang animate-hero-accent-2">
-                    Rõ ràng!
-                  </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,18 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-2" />
-                  </svg>
-                </span>
-              </div>
+              {/* Glowing Vertices */}
+              <circle cx="52" cy="14" r="3" fill="#0284C7" />
+              <circle cx="90" cy="34" r="3" fill="#0284C7" />
+              <circle cx="14" cy="34" r="3" fill="#0284C7" />
+              <circle cx="52" cy="94" r="3.5" fill="#0284C7" />
+              
+              {/* Central Glowing Energy Node */}
+              <circle cx="52" cy="54" r="5" fill="#00A8E8" className="animate-ping" style={{ transformOrigin: '52px 54px' }} />
+              <circle cx="52" cy="54" r="4" fill="#00A8E8" />
+              <circle cx="52" cy="54" r="2" fill="#FFFFFF" />
+            </svg>
 
-              {/* Hàng 3: Một đích đến Tươi sáng! */}
-              <div className="animate-hero-row-3 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
-                <span>Một đích đến</span>
-                <span className="relative inline-block px-1">
-                  <span
-                    style={{
-                      background: 'linear-gradient(135deg, #E63946 0%, #F15A24 45%, #FF9F1C 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block'
-                    }}
-                    className="relative z-10 font-black animate-hero-accent-3"
-                  >
-                    Tươi sáng!
-                  </span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                  </svg>
-                </span>
-              </div>
-
+            {/* Glowing Frosted Glass Badge */}
+            <div className="mt-1 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-sky-300 dark:border-sky-700 shadow-sm text-sky-800 dark:text-sky-300">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
+              <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Vững Chắc</span>
             </div>
-
-            {/* Slogan Badge (Căn lề trái vừa vặn, cân đối) */}
-            <div className="pt-2.5 sm:pt-3 text-left w-full flex flex-col items-start gap-2.5">
-              <div className="relative inline-block p-0.5 rounded-full transition-all duration-300 max-w-full">
-                {/* SVG Clockwise Border Tracing Effect */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-full" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                  <defs>
-                    <linearGradient id="slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#0284C7" />
-                      <stop offset="35%" stopColor="#00A8E8" />
-                      <stop offset="70%" stopColor="#FF7043" />
-                      <stop offset="100%" stopColor="#F15A24" />
-                    </linearGradient>
-                  </defs>
-                  <rect
-                    x="1"
-                    y="1"
-                    width="calc(100% - 2px)"
-                    height="calc(100% - 2px)"
-                    rx="20"
-                    ry="20"
-                    fill="none"
-                    stroke="url(#slogan-border-gradient)"
-                    strokeWidth="1.5"
-                    className="animate-slogan-box-border"
-                  />
-                </svg>
-
-                <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
-                  <span>One Platform</span>
-                  <span className="animate-hero-dot-1 w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
-                  <span>One Direction</span>
-                  <span className="animate-hero-dot-2 w-1.5 h-1.5 rounded-full bg-[#231F20] dark:bg-slate-400 shrink-0" />
-                  <span>One Destination</span>
-                </p>
-              </div>
-
-              {/* 💎 Minimalist Values Ribbon (Dải giá trị tinh tế, thanh thoát) */}
-              <div className="inline-flex items-center gap-3 sm:gap-4 px-3.5 py-1 rounded-full bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 backdrop-blur-xs text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                <span className="inline-flex items-center gap-1.5 text-[#0284C7]">
-                  <ShieldCheck className="w-3.5 h-3.5 stroke-[2.2]" />
-                  <span>Vững chắc</span>
-                </span>
-                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
-                  <Box className="w-3.5 h-3.5 stroke-[2.2] text-slate-500" />
-                  <span>Bền bỉ</span>
-                </span>
-                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                <span className="inline-flex items-center gap-1.5 text-[#F15A24]">
-                  <Compass className="w-3.5 h-3.5 stroke-[2.2]" />
-                  <span>Rõ ràng</span>
-                </span>
-                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                  <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.2]" />
-                  <span>Minh bạch</span>
-                </span>
-              </div>
-
-            </div>
-
           </div>
 
+          {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE */}
+          <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10">
+            <div className="w-fit mx-auto space-y-2.5 sm:space-y-3 py-0.5 flex flex-col items-start">
+              
+              {/* Main Headline (Gióng lề trái phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
+              <div className="space-y-1.5 sm:space-y-2 w-fit flex flex-col items-start justify-start text-left">
+                
+                {/* Hàng 1: Một nền tảng Vững chắc! */}
+                <div className="animate-hero-row-1 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
+                  <span>Một nền tảng</span>
+                  <span className="relative inline-block px-1">
+                    <span
+                      style={{
+                        background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 50%, #48CAE4 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        display: 'inline-block'
+                      }}
+                      className="relative z-10 font-black animate-hero-accent-1"
+                    >
+                      Vững chắc!
+                    </span>
+                    <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#0284C7] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                      <path d="M 0,10 Q 100,0 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-1" />
+                    </svg>
+                  </span>
+                </div>
+
+                {/* Hàng 2: Một định hướng Rõ ràng! */}
+                <div className="animate-hero-row-2 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
+                  <span>Một định hướng</span>
+                  <span className="relative inline-block px-1">
+                    <span className="relative z-10 font-black hero-gradient-ro-rang animate-hero-accent-2">
+                      Rõ ràng!
+                    </span>
+                    <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#231F20] dark:text-slate-400 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                      <path d="M 0,10 Q 100,18 200,10" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-2" />
+                    </svg>
+                  </span>
+                </div>
+
+                {/* Hàng 3: Một đích đến Tươi sáng! */}
+                <div className="animate-hero-row-3 text-[1.35rem] xs:text-[1.6rem] sm:text-[1.95rem] lg:text-[2.35rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-3.5 flex-nowrap whitespace-nowrap justify-start">
+                  <span>Một đích đến</span>
+                  <span className="relative inline-block px-1">
+                    <span
+                      style={{
+                        background: 'linear-gradient(135deg, #E63946 0%, #F15A24 45%, #FF9F1C 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        display: 'inline-block'
+                      }}
+                      className="relative z-10 font-black animate-hero-accent-3"
+                    >
+                      Tươi sáng!
+                    </span>
+                    <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-60 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                      <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                    </svg>
+                  </span>
+                </div>
+
+              </div>
+
+              {/* Slogan Badge (Căn lề trái vừa vặn, cân đối) */}
+              <div className="pt-2 sm:pt-2.5 text-left w-full flex flex-col items-start gap-2.5">
+                <div className="relative inline-block p-0.5 rounded-full transition-all duration-300 max-w-full">
+                  {/* SVG Clockwise Border Tracing Effect */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-full" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                    <defs>
+                      <linearGradient id="slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#0284C7" />
+                        <stop offset="35%" stopColor="#00A8E8" />
+                        <stop offset="70%" stopColor="#FF7043" />
+                        <stop offset="100%" stopColor="#F15A24" />
+                      </linearGradient>
+                    </defs>
+                    <rect
+                      x="1"
+                      y="1"
+                      width="calc(100% - 2px)"
+                      height="calc(100% - 2px)"
+                      rx="20"
+                      ry="20"
+                      fill="none"
+                      stroke="url(#slogan-border-gradient)"
+                      strokeWidth="1.5"
+                      className="animate-slogan-box-border"
+                    />
+                  </svg>
+
+                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-2.5 px-3 py-1.5 sm:px-4 sm:py-1.5 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
+                    <span>One Platform</span>
+                    <span className="animate-hero-dot-1 w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
+                    <span>One Direction</span>
+                    <span className="animate-hero-dot-2 w-1.5 h-1.5 rounded-full bg-[#231F20] dark:bg-slate-400 shrink-0" />
+                    <span>One Destination</span>
+                  </p>
+                </div>
+
+                {/* 💎 KINETIC VALUES CAPSULE (4 TRỤ CỘT GIÁ TRỊ CÓ ICON LINE & CHỈ BÁO PHÁT SÁNG) */}
+                <div className="inline-flex items-center gap-2 sm:gap-3.5 px-3 sm:px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs backdrop-blur-md text-[11px] sm:text-xs font-extrabold text-slate-700 dark:text-slate-200">
+                  <div className="inline-flex items-center gap-1.5 text-[#0284C7]">
+                    <ShieldCheck className="w-3.5 h-3.5 stroke-[2.4]" />
+                    <span>Vững chắc</span>
+                  </div>
+                  <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
+                  <div className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                    <Box className="w-3.5 h-3.5 stroke-[2.4]" />
+                    <span>Bền bỉ</span>
+                  </div>
+                  <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
+                  <div className="inline-flex items-center gap-1.5 text-[#F15A24]">
+                    <Compass className="w-3.5 h-3.5 stroke-[2.4]" />
+                    <span>Rõ ràng</span>
+                  </div>
+                  <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
+                  <div className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.4]" />
+                    <span>Minh bạch</span>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          {/* 🔶 KHỐI PHẢI: FACETED PRISM CRYSTAL (RÕ RÀNG & MINH BẠCH) - HIỂN THỊ TRÊN MỌI MÀN HÌNH */}
+          <div className="hidden sm:flex flex-col items-center shrink-0 animate-kinetic-float-2 relative group cursor-default">
+            {/* Pulsing Radar Aura */}
+            <div className="absolute -inset-3 rounded-full border border-orange-400/40 dark:border-orange-500/30 animate-kinetic-ripple pointer-events-none" style={{ animationDelay: '1s' }} />
+            
+            {/* Rotating Technical Gyroscope Ring (Counter-clockwise) */}
+            <div className="absolute -inset-4 rounded-full border-2 border-dashed border-[#F15A24]/50 dark:border-orange-400/40 animate-kinetic-spin-rev pointer-events-none" />
+
+            {/* Faceted Hexagonal Crystal SVG with Vibrant Lines & Optical Laser Sweep */}
+            <div className="relative overflow-visible">
+              <svg width="105" height="110" viewBox="0 0 105 110" fill="none" className="drop-shadow-md overflow-visible">
+                {/* Hexagon Outer Facet */}
+                <polygon points="52,10 90,32 90,78 52,98 14,78 14,32" fill="#F15A24" fillOpacity="0.2" stroke="#F15A24" strokeWidth="2" strokeLinejoin="round" />
+                
+                {/* Inner Triangulation Refraction Lines */}
+                <line x1="52" y1="10" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="90" y1="32" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="90" y1="78" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="52" y1="98" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="14" y1="78" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="14" y1="32" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+
+                {/* Facet Corner Vertices */}
+                <circle cx="52" cy="10" r="3" fill="#F15A24" />
+                <circle cx="90" cy="32" r="3" fill="#F15A24" />
+                <circle cx="90" cy="78" r="3" fill="#F15A24" />
+                <circle cx="52" cy="98" r="3.5" fill="#F15A24" />
+                <circle cx="14" cy="78" r="3" fill="#F15A24" />
+                <circle cx="14" cy="32" r="3" fill="#F15A24" />
+
+                {/* Central Optical Focus Core */}
+                <circle cx="52" cy="55" r="5" fill="#FF7043" className="animate-ping" style={{ transformOrigin: '52px 55px' }} />
+                <circle cx="52" cy="55" r="4" fill="#FFA000" />
+                <circle cx="52" cy="55" r="2" fill="#FFFFFF" />
+              </svg>
+
+              {/* Brilliant Laser Light Beam Sweeping Across the Crystal */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-xl">
+                <div className="w-full h-1.5 bg-gradient-to-r from-transparent via-white to-transparent shadow-xs animate-kinetic-laser" />
+              </div>
+            </div>
+
+            {/* Glowing Frosted Glass Badge */}
+            <div className="mt-1 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-orange-300 dark:border-orange-700 shadow-sm text-orange-800 dark:text-orange-300">
+              <Compass className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
+              <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Minh Bạch</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* ⚡ KINETIC DATA BEAM CIRCUIT CONNECTING LEFT & RIGHT */}
+        <div className="w-full max-w-4xl h-3 pointer-events-none relative -my-1 hidden sm:block">
+          <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 400 12">
+            <defs>
+              <linearGradient id="kinetic-beam-stream" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#0284C7" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#94A3B8" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#F15A24" stopOpacity="0.8" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 10,6 Q 200,12 390,6"
+              fill="none"
+              stroke="url(#kinetic-beam-stream)"
+              strokeWidth="2"
+              className="animate-kinetic-data"
+            />
+          </svg>
         </div>
 
         {/* Centered Odoo App Grid (Kiểu dáng hộp bo tròn 28px y hệt bản Desktop) */}
