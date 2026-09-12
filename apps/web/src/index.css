@@ -2567,64 +2567,52 @@ div.box-speech-bubble {
 }
 
 /* ==========================================================================
-   ARCHITECTURAL GEOMETRY & TRANSPARENCY VISUAL SYSTEM (TRANG CHỦ AVG ONE)
-   - Thể hiện: Vững chắc, Bền bỉ, Rõ ràng, Minh bạch
-   - Các hình khối đa giác 3D Isometric, mảng màu kính trong suốt, icon nét kỹ thuật
+   ELEGANT & MINIMALIST ARCHITECTURAL VISUAL SYSTEM (TRANG CHỦ AVG ONE)
+   - Tinh tế, đơn giản, hiện đại: Thể hiện Vững chắc, Bền bỉ, Rõ ràng, Minh bạch
+   - Nét vẽ siêu mảnh 0.75-1px, mảng màu chuyển sắc quang học hữu cơ, chuyển động êm dịu
    ========================================================================== */
 
-@keyframes float-geom-1 {
+@keyframes ambient-mesh-1 {
   0%, 100% {
-    transform: translateY(0px) rotate(0deg) scale(1);
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.45;
   }
   50% {
-    transform: translateY(-14px) rotate(3deg) scale(1.02);
+    transform: translate(25px, -18px) scale(1.08);
+    opacity: 0.75;
   }
 }
 
-@keyframes float-geom-2 {
+@keyframes ambient-mesh-2 {
   0%, 100% {
-    transform: translateY(0px) rotate(0deg) scale(1);
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.4;
   }
   50% {
-    transform: translateY(16px) rotate(-4deg) scale(0.98);
+    transform: translate(-20px, 22px) scale(1.06);
+    opacity: 0.7;
   }
 }
 
-@keyframes float-geom-3 {
+@keyframes float-subtle-cube {
   0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  33% {
-    transform: translate(8px, -10px) rotate(2deg);
-  }
-  66% {
-    transform: translate(-6px, 8px) rotate(-1deg);
-  }
-}
-
-@keyframes plane-shimmer-blue {
-  0%, 100% {
-    opacity: 0.35;
-    transform: rotate(-6deg) scale(1);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    opacity: 0.65;
-    transform: rotate(-4deg) scale(1.06);
+    transform: translateY(-10px) rotate(1.5deg);
   }
 }
 
-@keyframes plane-shimmer-orange {
+@keyframes float-subtle-prism {
   0%, 100% {
-    opacity: 0.3;
-    transform: rotate(8deg) scale(1);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    opacity: 0.6;
-    transform: rotate(10deg) scale(1.05);
+    transform: translateY(12px) rotate(-1.5deg);
   }
 }
 
-@keyframes rotate-wireframe-cw {
+@keyframes rotate-slow-wireframe {
   from {
     transform: rotate(0deg);
   }
@@ -2633,7 +2621,7 @@ div.box-speech-bubble {
   }
 }
 
-@keyframes rotate-wireframe-ccw {
+@keyframes rotate-slow-reverse {
   from {
     transform: rotate(360deg);
   }
@@ -2642,36 +2630,44 @@ div.box-speech-bubble {
   }
 }
 
-@keyframes laser-scan-clarity {
+@keyframes light-beam-travel {
   0% {
-    top: 0%;
-    opacity: 0;
+    stroke-dashoffset: 240;
+    opacity: 0.2;
   }
-  15% {
-    opacity: 0.85;
-  }
-  85% {
-    opacity: 0.85;
-  }
-  100% {
-    top: 100%;
-    opacity: 0;
-  }
-}
-
-@keyframes beam-dash-flow {
-  to {
-    stroke-dashoffset: -120;
-  }
-}
-
-@keyframes radar-pulse-ring {
-  0% {
-    transform: scale(0.85);
+  50% {
     opacity: 0.8;
   }
-  50% {
-    opacity: 0.4;
+  100% {
+    stroke-dashoffset: -240;
+    opacity: 0.2;
+  }
+}
+
+@keyframes optical-clarity-sweep {
+  0% {
+    top: -20%;
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 0.6;
+  }
+  100% {
+    top: 120%;
+    opacity: 0;
+  }
+}
+
+@keyframes soft-concentric-ripple {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.2;
   }
   100% {
     transform: scale(1.5);
@@ -2679,50 +2675,48 @@ div.box-speech-bubble {
   }
 }
 
-.animate-float-geom-1 {
-  animation: float-geom-1 12s ease-in-out infinite;
+.animate-mesh-1 {
+  animation: ambient-mesh-1 18s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-mesh-2 {
+  animation: ambient-mesh-2 22s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-subtle-cube {
+  animation: float-subtle-cube 16s ease-in-out infinite;
   will-change: transform;
 }
 
-.animate-float-geom-2 {
-  animation: float-geom-2 15s ease-in-out infinite;
+.animate-subtle-prism {
+  animation: float-subtle-prism 20s ease-in-out infinite;
   will-change: transform;
 }
 
-.animate-float-geom-3 {
-  animation: float-geom-3 18s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-plane-blue {
-  animation: plane-shimmer-blue 10s ease-in-out infinite;
-}
-
-.animate-plane-orange {
-  animation: plane-shimmer-orange 12s ease-in-out infinite;
-}
-
-.animate-rotate-cw {
-  animation: rotate-wireframe-cw 40s linear infinite;
+.animate-rotate-slow {
+  animation: rotate-slow-wireframe 80s linear infinite;
   transform-origin: center;
 }
 
-.animate-rotate-ccw {
-  animation: rotate-wireframe-ccw 50s linear infinite;
+.animate-rotate-slow-rev {
+  animation: rotate-slow-reverse 90s linear infinite;
   transform-origin: center;
 }
 
-.animate-laser-scan {
-  animation: laser-scan-clarity 4.5s ease-in-out infinite;
+.animate-light-beam {
+  stroke-dasharray: 40 160;
+  animation: light-beam-travel 10s ease-in-out infinite;
 }
 
-.animate-beam-flow {
-  stroke-dasharray: 8 6;
-  animation: beam-dash-flow 6s linear infinite;
+.animate-clarity-sweep {
+  animation: optical-clarity-sweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.animate-radar-ring {
-  animation: radar-pulse-ring 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+.animate-soft-ripple {
+  animation: soft-concentric-ripple 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
 }
+
 
 
