@@ -107,198 +107,199 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
     <div className="w-full h-full flex-1 min-h-0 bg-white dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-y-auto md:overflow-hidden flex flex-col items-center justify-start md:justify-center p-2 sm:p-3 select-none">
       
       {/* 🌐 ULTRA-CLEAN GRID LINES & FACETED ANGLED POLYGON PLANES (PHONG CÁCH MẢNG HÌNH HỌC VIETTEL AI) */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:3rem_3rem] opacity-45 dark:opacity-20 pointer-events-none -z-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-50 dark:opacity-25 pointer-events-none -z-0" />
 
       {/* 🎨 ANGLED FACETED GEOMETRIC PLANES (MẢNG VÁT ĐA GIÁC ĐẶC TRƯNG VIETTEL AI) */}
-      <div className="absolute -top-16 -left-20 w-[550px] h-[550px] bg-gradient-to-br from-sky-400/18 via-[#0284C7]/12 to-transparent [clip-path:polygon(0_0,100%_0,60%_100%,0_75%)] pointer-events-none -z-0" />
-      <div className="absolute -top-16 -right-20 w-[600px] h-[600px] bg-gradient-to-bl from-orange-400/18 via-[#F15A24]/12 to-transparent [clip-path:polygon(40%_0,100%_0,100%_80%,0_100%)] pointer-events-none -z-0" />
-      <div className="absolute bottom-0 left-1/4 w-[700px] h-[320px] bg-gradient-to-t from-sky-300/12 via-emerald-300/8 to-transparent rounded-full blur-[110px] pointer-events-none -z-0" />
+      <div className="absolute -top-12 -left-20 w-[500px] h-[500px] bg-gradient-to-br from-sky-400/15 via-[#0284C7]/10 to-transparent [clip-path:polygon(0_0,100%_0,65%_100%,0_80%)] pointer-events-none -z-0" />
+      <div className="absolute -top-12 -right-20 w-[550px] h-[550px] bg-gradient-to-bl from-orange-400/15 via-[#F15A24]/10 to-transparent [clip-path:polygon(35%_0,100%_0,100%_80%,0_100%)] pointer-events-none -z-0" />
+      <div className="absolute bottom-0 left-1/4 w-[600px] h-[300px] bg-gradient-to-t from-sky-300/10 via-emerald-300/8 to-transparent rounded-full blur-[100px] pointer-events-none -z-0" />
 
       {/* Synchronized widescreen container (Tận dụng toàn diện màn hình rộng) */}
-      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-12 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-4 relative z-10 py-1.5 sm:py-2.5">
+      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10 py-1 sm:py-2">
         
-        {/* 🛸 VIETTEL AI-STYLE VECTOR LINE-ART & GEOMETRIC ANIMATED HERO (TÁI HIỆN CHUẨN XÁC NÉT LINE & ICON) */}
-        <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-6 sm:py-10 px-2 overflow-visible min-h-[300px] sm:min-h-[340px] xl:min-h-[380px]">
+        {/* 🛸 VIETTEL AI-STYLE VECTOR LINE-ART & GEOMETRIC ANIMATED HERO */}
+        <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-4 sm:py-7 px-2 overflow-visible min-h-[250px] sm:min-h-[290px] xl:min-h-[330px]">
           
-          {/* 🪐 1. LARGE CONCENTRIC ORBITAL RINGS WITH SATELLITE SPHERES (TOP-RIGHT CORNER) */}
-          <div className="hidden md:block absolute -top-14 -right-10 xl:-right-16 w-72 h-72 xl:w-96 xl:h-96 pointer-events-none overflow-visible z-0">
-            <svg className="w-full h-full" viewBox="0 0 360 360" fill="none">
-              {/* Inner Concentric Orbit */}
-              <circle cx="340" cy="20" r="160" stroke="#F15A24" strokeOpacity="0.3" strokeWidth="2" strokeDasharray="8 8" />
-              {/* Middle Concentric Orbit */}
-              <circle cx="340" cy="20" r="240" stroke="#F15A24" strokeOpacity="0.4" strokeWidth="2.5" />
-              {/* Outer Sweeping Orbit */}
-              <circle cx="340" cy="20" r="320" stroke="#0284C7" strokeOpacity="0.25" strokeWidth="2" strokeDasharray="10 5" />
+          {/* 🪐 1. LARGE CONCENTRIC ORBITAL RINGS WITH LIVE REVOLVING SATELLITES (TOP-RIGHT CORNER) */}
+          <div className="hidden md:block absolute -top-10 -right-8 xl:-right-14 w-64 h-64 xl:w-84 xl:h-84 pointer-events-none overflow-visible z-0 animate-entrance-right" style={{ animationDelay: '200ms' }}>
+            <svg className="w-full h-full" viewBox="0 0 320 320" fill="none">
+              {/* Inner Concentric Orbit (r=140) */}
+              <circle cx="300" cy="20" r="140" stroke="#F15A24" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="6 6" />
+              {/* Middle Concentric Orbit (r=210) */}
+              <circle cx="300" cy="20" r="210" stroke="#F15A24" strokeOpacity="0.35" strokeWidth="2" />
+              {/* Outer Sweeping Orbit (r=280) */}
+              <circle cx="300" cy="20" r="280" stroke="#0284C7" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="8 4" />
               
-              {/* Solid Circular Satellite Balls on Tracks */}
-              <circle cx="180" cy="20" r="8" fill="#F15A24" />
-              <circle cx="180" cy="20" r="3.5" fill="#FFFFFF" />
+              {/* 🛰️ Revolving Satellites on Orbit 1 (Counter-Clockwise) */}
+              <g className="animate-orbit-satellite-2">
+                <circle cx="160" cy="20" r="7" fill="#F15A24" />
+                <circle cx="160" cy="20" r="3" fill="#FFFFFF" />
+                <circle cx="160" cy="20" r="12" stroke="#F15A24" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.6" />
+              </g>
 
-              <circle cx="260" cy="190" r="7" fill="#0284C7" />
-              <circle cx="260" cy="190" r="3" fill="#FFFFFF" />
-
-              <circle cx="100" cy="20" r="6" fill="#F15A24" />
-              <circle cx="100" cy="20" r="2.5" fill="#FFFFFF" />
+              {/* 🛰️ Revolving Satellites on Orbit 2 (Clockwise) */}
+              <g className="animate-orbit-satellite-1">
+                <circle cx="90" cy="20" r="6" fill="#0284C7" />
+                <circle cx="90" cy="20" r="2.5" fill="#FFFFFF" />
+                <circle cx="510" cy="20" r="5" fill="#F15A24" />
+                <circle cx="510" cy="20" r="2" fill="#FFFFFF" />
+              </g>
             </svg>
           </div>
 
-          {/* 💎 2. 3D HEXAGONAL NEURAL LATTICE MOLECULE (TOP-LEFT - Y HỆT VIETTEL AI) */}
-          <div className="hidden lg:flex absolute left-4 xl:left-14 top-3 xl:top-6 z-20 items-center gap-3.5 animate-float-node-1 cursor-default group">
-            <div className="relative w-24 h-24 xl:w-28 xl:h-28 flex items-center justify-center shrink-0">
-              <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" className="overflow-visible drop-shadow-md">
+          {/* 💎 2. 3D HEXAGONAL NEURAL LATTICE MOLECULE (TOP-LEFT) */}
+          <div className="hidden lg:flex absolute left-2 xl:left-10 top-2 xl:top-6 z-20 items-center gap-3.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300" style={{ animationDelay: '150ms' }}>
+            <div className="relative w-20 h-20 xl:w-24 xl:h-24 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg width="100%" height="100%" viewBox="0 0 110 110" fill="none" className="overflow-visible drop-shadow-md">
                 {/* Central Solid Hexagon */}
                 <polygon
-                  points="60,26 94,46 94,86 60,106 26,86 26,46"
+                  points="55,24 86,42 86,78 55,96 24,78 24,42"
                   fill="#0284C7"
-                  fillOpacity="0.16"
+                  fillOpacity="0.15"
                   stroke="#0284C7"
-                  strokeWidth="2"
+                  strokeWidth="1.75"
+                  className="group-hover:fill-opacity-25 transition-all"
                 />
                 
                 {/* 6 Perimeter Line Segments */}
-                <line x1="60" y1="12" x2="104" y2="37" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
-                <line x1="104" y1="37" x2="104" y2="87" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
-                <line x1="104" y1="87" x2="60" y2="112" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
-                <line x1="60" y1="112" x2="16" y2="87" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
-                <line x1="16" y1="87" x2="16" y2="37" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
-                <line x1="16" y1="37" x2="60" y2="12" stroke="#0284C7" strokeWidth="3" strokeLinecap="round" />
+                <line x1="55" y1="12" x2="94" y2="34" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="94" y1="34" x2="94" y2="78" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="94" y1="78" x2="55" y2="100" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="55" y1="100" x2="16" y2="78" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="16" y1="78" x2="16" y2="34" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="16" y1="34" x2="55" y2="12" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
                 
                 {/* Center 3D Isometric Axes */}
-                <line x1="60" y1="12" x2="60" y2="62" stroke="#38BDF8" strokeWidth="2" strokeDasharray="3 3" />
-                <line x1="104" y1="87" x2="60" y2="62" stroke="#38BDF8" strokeWidth="2" strokeDasharray="3 3" />
-                <line x1="16" y1="87" x2="60" y2="62" stroke="#38BDF8" strokeWidth="2" strokeDasharray="3 3" />
-                <circle cx="60" cy="62" r="5" fill="#0284C7" />
+                <line x1="55" y1="12" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.75" strokeDasharray="3 3" />
+                <line x1="94" y1="78" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.75" strokeDasharray="3 3" />
+                <line x1="16" y1="78" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.75" strokeDasharray="3 3" />
+                <circle cx="55" cy="56" r="4.5" fill="#0284C7" />
 
-                {/* 6 Circular White Node Balls on Vertices */}
-                <circle cx="60" cy="12" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-                <circle cx="104" cy="37" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-                <circle cx="104" cy="87" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-                <circle cx="60" cy="112" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-                <circle cx="16" cy="87" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-                <circle cx="16" cy="37" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
+                {/* 6 Circular Node Balls on Vertices */}
+                <circle cx="55" cy="12" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="94" cy="34" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="94" cy="78" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="55" cy="100" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="16" cy="78" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="16" cy="34" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
               </svg>
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
-                AVG ONE // AI
-              </span>
-              <span className="text-sm xl:text-base font-extrabold text-slate-800 dark:text-white leading-tight">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                  AVG ONE // AI
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
+              </div>
+              <span className="text-xs xl:text-sm font-extrabold text-slate-800 dark:text-white leading-tight">
                 Kiến tạo Nền tảng Số
               </span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-tight">
+                Công Nghệ Hóa Vững Chắc
+              </span>
             </div>
           </div>
 
-          {/* 🎙️ 3. RADAR VOICE ORB WITH FANNING DOTTED ARCS + CHECKLIST CARD (TOP-RIGHT) */}
-          <div className="hidden lg:flex absolute right-16 xl:right-32 top-3 xl:top-6 z-20 items-center gap-4 animate-float-node-3 cursor-default group">
-            {/* Voice Orb with Fanning Dotted Sound Radar Waves */}
-            <div className="relative flex items-center justify-center shrink-0">
-              {/* Circular Mic / Energy Core */}
-              <div className="w-13 h-13 xl:w-15 xl:h-15 rounded-full bg-gradient-to-tr from-[#F15A24] via-[#FB923C] to-[#FF7043] text-white flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-105 transition-transform z-10">
-                <Zap className="w-6 h-6 text-white fill-white" />
-              </div>
-
-              {/* Fanning Dotted Radar Waves (Tỏa ra bên phải y hệt Viettel AI) */}
-              <div className="absolute left-full ml-1 w-10 h-16 flex items-center justify-start pointer-events-none">
-                <svg width="40" height="64" viewBox="0 0 40 64" fill="none">
-                  <path d="M 4,8 A 28,28 0 0 1 4,56" stroke="#F15A24" strokeWidth="2.5" strokeDasharray="3 3" strokeLinecap="round" className="animate-pulse" />
-                  <path d="M 16,16 A 20,20 0 0 1 16,48" stroke="#F15A24" strokeWidth="2.5" strokeDasharray="3 3" strokeLinecap="round" style={{ animationDelay: '0.3s' }} />
-                  <path d="M 28,24 A 12,12 0 0 1 28,40" stroke="#F15A24" strokeWidth="2.5" strokeDasharray="3 3" strokeLinecap="round" style={{ animationDelay: '0.6s' }} />
-                </svg>
+          {/* 🎙️ 3. RADAR VOICE/AI ORB + MINIMALIST CHECKLIST LINE CARD (TOP-RIGHT) */}
+          <div className="hidden lg:flex absolute right-14 xl:right-28 top-2 xl:top-6 z-20 items-center gap-3.5 animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300" style={{ animationDelay: '300ms' }}>
+            {/* Concentric Dotted Radar Orb with Mic/Sound/Zap Icon */}
+            <div className="relative w-15 h-15 xl:w-17 xl:h-17 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <div className="absolute -inset-3.5 rounded-full border-2 border-dotted border-[#F15A24]/40 animate-kinetic-spin pointer-events-none" />
+              <div className="absolute -inset-1.5 rounded-full border border-dashed border-[#F15A24]/50 animate-kinetic-spin-rev pointer-events-none" />
+              <div className="absolute inset-0 rounded-full border border-orange-400/50 animate-kinetic-ripple pointer-events-none" />
+              
+              <div className="w-11 h-11 xl:w-12 xl:h-12 rounded-full bg-gradient-to-tr from-[#F15A24] via-[#FB923C] to-[#FF7043] text-white flex items-center justify-center shadow-lg shadow-orange-500/30">
+                <Zap className="w-5 h-5 text-white fill-white animate-pulse" />
               </div>
             </div>
 
-            {/* Outlined Checklist Line Card (Y hệt Viettel AI) */}
-            <div className="w-14 h-19 xl:w-16 xl:h-21 rounded-2xl border-2 border-slate-700/80 dark:border-white/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs flex flex-col justify-center gap-2.5 px-3 shadow-xs group-hover:border-[#F15A24] transition-colors ml-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#F15A24] shrink-0" />
-                <div className="h-1 flex-1 rounded-full bg-slate-700/70 dark:bg-white/70" />
+            {/* Outlined Checklist Line Card */}
+            <div className="w-14 h-18 xl:w-16 xl:h-20 rounded-2xl border-2 border-slate-700/60 dark:border-slate-300/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xs flex flex-col justify-center gap-2 px-3 shadow-sm group-hover:border-[#F15A24] transition-colors">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#F15A24] shrink-0 animate-ping" />
+                <div className="h-1 flex-1 rounded-full bg-slate-700/70 dark:bg-slate-200/70" />
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#0284C7] shrink-0" />
-                <div className="h-1 flex-1 rounded-full bg-slate-700/70 dark:bg-white/70" />
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-[#0284C7] shrink-0" />
+                <div className="h-1 flex-1 rounded-full bg-slate-700/70 dark:bg-slate-200/70" />
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
-                <div className="h-1 flex-1 rounded-full bg-slate-700/70 dark:bg-white/70" />
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <div className="h-1 flex-1 rounded-full bg-slate-700/70 dark:bg-slate-200/70" />
               </div>
             </div>
           </div>
 
-          {/* 📈 4. DATA CONSTELLATION ZIGZAG LINE GRAPH WITH WHITE NODES (BOTTOM-LEFT - Y HỆT VIETTEL AI) */}
-          <div className="hidden md:flex absolute left-6 xl:left-20 bottom-3 xl:bottom-6 z-20 items-end gap-3 animate-float-node-2 cursor-default group">
-            <svg width="200" height="80" viewBox="0 0 200 80" fill="none" className="overflow-visible drop-shadow-sm">
+          {/* 📈 4. DATA CONSTELLATION ZIGZAG LINE GRAPH WITH WHITE NODES (BOTTOM-LEFT) */}
+          <div className="hidden md:flex absolute left-4 xl:left-14 bottom-2 xl:bottom-5 z-20 items-end gap-3 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300" style={{ animationDelay: '450ms' }}>
+            <svg width="170" height="70" viewBox="0 0 170 70" fill="none" className="overflow-visible drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
               {/* Zigzag Connection Stroke */}
               <polyline
-                points="12,70 65,22 125,52 188,12"
+                points="10,60 55,18 105,45 158,10"
                 fill="none"
                 stroke="#0284C7"
-                strokeWidth="3"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <polyline
-                points="12,70 65,22 125,52 188,12"
+                points="10,60 55,18 105,45 158,10"
                 fill="none"
                 stroke="#38BDF8"
-                strokeWidth="2"
+                strokeWidth="1.75"
                 strokeDasharray="6 6"
                 className="animate-kinetic-data"
               />
 
-              {/* 4 Circular Junction Node Balls (White center, Bold colored ring) */}
-              <circle cx="12" cy="70" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-              <circle cx="65" cy="22" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-              <circle cx="125" cy="52" r="6.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="3" />
-              <circle cx="188" cy="12" r="7.5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2.5" />
-              <circle cx="188" cy="12" r="3.5" fill="#FFFFFF" className="animate-ping" style={{ transformOrigin: '188px 12px' }} />
+              {/* 4 Circular Junction Node Balls */}
+              <circle cx="10" cy="60" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              <circle cx="55" cy="18" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              <circle cx="105" cy="45" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+              <circle cx="158" cy="10" r="6.5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="158" cy="10" r="3" fill="#FFFFFF" className="animate-ping" style={{ transformOrigin: '158px 10px' }} />
             </svg>
+            <div className="flex flex-col text-left mb-1">
+              <span className="text-[10px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                REAL-TIME DATA
+              </span>
+              <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
+                Số Hóa Toàn Diện
+              </span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-tight">
+                Chuẩn Xác Tức Thì
+              </span>
+            </div>
           </div>
 
-          {/* 💬 5. TRUE GEOMETRIC SPEECH BUBBLE & EQUALIZER SOUNDWAVE BARS (BOTTOM-RIGHT - Y HỆT VIETTEL AI) */}
-          <div className="hidden md:flex absolute right-6 xl:right-20 bottom-3 xl:bottom-6 z-20 items-end gap-5 animate-float-node-4 cursor-default group">
-            {/* Overlapping Dialogue Bubbles with Tail */}
-            <div className="relative w-20 h-18 xl:w-22 xl:h-20 flex items-center justify-center">
-              {/* Back Filled Bubble with Tail */}
-              <svg width="60" height="52" viewBox="0 0 60 52" fill="none" className="absolute top-0 left-0">
-                <path
-                  d="M 6,4 L 54,4 A 6,6 0 0 1 60,10 L 60,38 A 6,6 0 0 1 54,44 L 22,44 L 10,52 L 12,44 L 6,44 A 6,6 0 0 1 0,38 L 0,10 A 6,6 0 0 1 6,4 Z"
-                  fill="#F15A24"
-                  fillOpacity="0.2"
-                />
-              </svg>
-
-              {/* Front Outlined Bubble with Tail (2.5px crisp stroke) */}
-              <svg width="66" height="58" viewBox="0 0 66 58" fill="none" className="absolute bottom-0 right-0">
-                <path
-                  d="M 8,4 L 58,4 A 6,6 0 0 1 64,10 L 64,42 A 6,6 0 0 1 58,48 L 26,48 L 14,58 L 16,48 L 8,48 A 6,6 0 0 1 2,42 L 2,10 A 6,6 0 0 1 8,4 Z"
-                  stroke="#1E293B"
-                  strokeWidth="2.5"
-                  className="dark:stroke-white"
-                  fill="none"
-                />
-                <circle cx="33" cy="26" r="3" fill="#F15A24" className="animate-ping" style={{ transformOrigin: '33px 26px' }} />
-                <circle cx="33" cy="26" r="2.5" fill="#F15A24" />
-              </svg>
+          {/* 💬 5. OVERLAPPING SPEECH OUTLINE & SOUNDWAVE EQUALIZER BARS (BOTTOM-RIGHT) */}
+          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-2 xl:bottom-5 z-20 items-end gap-4 animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300" style={{ animationDelay: '550ms' }}>
+            {/* Overlapping Dialogue Bubbles */}
+            <div className="relative w-16 h-14 xl:w-18 xl:h-16 group-hover:scale-105 transition-transform duration-300">
+              <div className="absolute top-0 left-0 w-11 h-9 rounded-2xl bg-[#F15A24]/15 border border-[#F15A24]/30" />
+              <div className="absolute bottom-0 right-0 w-12 h-10 rounded-2xl border-2 border-slate-700 dark:border-white bg-transparent flex items-center justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-ping" />
+              </div>
             </div>
 
-            {/* Vibrating Equalizer Soundwave Bars (Góc dưới bên phải) */}
+            {/* 5 Vibrating Equalizer Soundwave Bars */}
             <div className="flex items-end gap-1.5 pb-1">
-              <div className="w-2 bg-[#F15A24] rounded-full animate-soundwave-1" />
-              <div className="w-2 bg-[#0284C7] rounded-full animate-soundwave-2" />
-              <div className="w-2 bg-[#F15A24] rounded-full animate-soundwave-3" />
-              <div className="w-2 bg-emerald-500 rounded-full animate-soundwave-4" />
+              <div className="w-1.5 bg-[#F15A24] rounded-full animate-soundwave-1" />
+              <div className="w-1.5 bg-[#0284C7] rounded-full animate-soundwave-2" />
+              <div className="w-1.5 bg-indigo-500 rounded-full animate-soundwave-3" />
+              <div className="w-1.5 bg-emerald-500 rounded-full animate-soundwave-4" />
+              <div className="w-1.5 bg-amber-500 rounded-full animate-soundwave-2" />
             </div>
           </div>
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}
-          <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10">
-            <div className="w-fit mx-auto space-y-2.5 sm:space-y-3 py-0.5 flex flex-col items-center text-center">
+          <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
+            <div className="w-fit mx-auto space-y-2 sm:space-y-2.5 py-0.5 flex flex-col items-center text-center">
               
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
                 
                 {/* Hàng 1: Một nền tảng Vững chắc! */}
-                <div className="animate-hero-row-1 text-[1.45rem] xs:text-[1.75rem] sm:text-[2.15rem] lg:text-[2.65rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-4 flex-nowrap whitespace-nowrap justify-start">
+                <div className="animate-hero-row-1 text-[1.4rem] xs:text-[1.7rem] sm:text-[2.05rem] lg:text-[2.5rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-4 flex-nowrap whitespace-nowrap justify-start">
                   <span>Một nền tảng</span>
                   <span className="relative inline-block px-1">
                     <span
@@ -319,7 +320,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 </div>
 
                 {/* Hàng 2: Một định hướng Rõ ràng! */}
-                <div className="animate-hero-row-2 text-[1.45rem] xs:text-[1.75rem] sm:text-[2.15rem] lg:text-[2.65rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-4 flex-nowrap whitespace-nowrap justify-start">
+                <div className="animate-hero-row-2 text-[1.4rem] xs:text-[1.7rem] sm:text-[2.05rem] lg:text-[2.5rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-4 flex-nowrap whitespace-nowrap justify-start">
                   <span>Một định hướng</span>
                   <span className="relative inline-block px-1">
                     <span className="relative z-10 font-black hero-gradient-ro-rang animate-hero-accent-2">
@@ -332,7 +333,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 </div>
 
                 {/* Hàng 3: Một đích đến Tươi sáng! */}
-                <div className="animate-hero-row-3 text-[1.45rem] xs:text-[1.75rem] sm:text-[2.15rem] lg:text-[2.65rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-4 flex-nowrap whitespace-nowrap justify-start">
+                <div className="animate-hero-row-3 text-[1.4rem] xs:text-[1.7rem] sm:text-[2.05rem] lg:text-[2.5rem] font-extrabold text-[#231F20] dark:text-white tracking-tight leading-tight flex items-baseline gap-2.5 sm:gap-4 flex-nowrap whitespace-nowrap justify-start">
                   <span>Một đích đến</span>
                   <span className="relative inline-block px-1">
                     <span
@@ -354,8 +355,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
               </div>
 
-              {/* Slogan Badge & Down Navigation (Y hệt Viettel AI) */}
-              <div className="pt-2 text-center w-full flex flex-col items-center gap-3">
+              {/* Slogan Badge & Down Indicator */}
+              <div className="pt-2 text-center w-full flex flex-col items-center gap-2.5">
                 <div className="relative inline-block p-0.5 rounded-full transition-all duration-300 max-w-full">
                   {/* SVG Clockwise Border Tracing Effect */}
                   <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-full" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
@@ -381,7 +382,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     />
                   </svg>
 
-                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-4 py-2 sm:px-6 sm:py-2.5 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
+                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
                     <span className="font-mono text-slate-400 opacity-60">⟨</span>
                     <span>One Platform</span>
                     <span className="animate-hero-dot-1 w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
@@ -392,9 +393,17 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   </p>
                 </div>
 
-                {/* 🧭 6. CIRCULAR DOWN ARROW BUTTON (Y HỆT VIETTEL AI) */}
+                {/* 🧭 6. DOWN NAVIGATION BUTTON & VALUE STATUS (LIKE VIETTEL AI) */}
                 <div className="flex items-center gap-3 mt-0.5">
-                  <div className="w-7 h-7 rounded-full border-2 border-slate-400 dark:border-slate-500 hover:border-[#F15A24] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-[#F15A24] transition-all cursor-pointer animate-bounce shadow-2xs">
+                  <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-amber-300 dark:border-amber-700/80 shadow-2xs group animate-float-node-5 cursor-default hover:shadow-amber-400/20 transition-shadow">
+                    <Coins className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                    <span className="text-[11px] font-black text-slate-800 dark:text-white uppercase tracking-wider">
+                      Giá Tối Ưu • Hiệu Quả Vượt Trội
+                    </span>
+                  </div>
+
+                  {/* Circular Down Indicator Button */}
+                  <div className="w-6 h-6 rounded-full border-2 border-slate-400/80 dark:border-slate-500/80 hover:border-[#F15A24] flex items-center justify-center text-slate-500 hover:text-[#F15A24] transition-colors cursor-pointer animate-bounce">
                     <span className="text-xs font-black leading-none -mt-0.5">↓</span>
                   </div>
                 </div>
