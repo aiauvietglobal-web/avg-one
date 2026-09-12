@@ -266,7 +266,29 @@ export const CalendarModule: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Active Sub-App state: null = Landing Home Grid | 'talk' = Lịch trao đổi | 'work' = Lịch công tác | 'problem' = Lịch tháo gỡ vướng mắc | 'event' = Lịch sự kiện
-  const [activeSubApp, setActiveSubApp] = useState<CalendarSubAppId | null>(null);
+  const [activeSubApp, setActiveSubApp] = useState<CalendarSubAppId | null>(() => {
+    try {
+      const saved = localStorage.getItem('avg_calendar_active_subapp');
+      if (saved && ['talk', 'work', 'problem', 'event'].includes(saved)) {
+        return saved as CalendarSubAppId;
+      }
+    } catch (e) {}
+    return 'talk';
+  });
+
+  // Listen for calendar subapp change from AppShell header dropdown
+  useEffect(() => {
+    const handleCalendarChange = (e: any) => {
+      if (e.detail && ['talk', 'work', 'problem', 'event'].includes(e.detail)) {
+        setActiveSubApp(e.detail as CalendarSubAppId);
+        try {
+          localStorage.setItem('avg_calendar_active_subapp', e.detail);
+        } catch (err) {}
+      }
+    };
+    window.addEventListener('calendar_subapp_change', handleCalendarChange);
+    return () => window.removeEventListener('calendar_subapp_change', handleCalendarChange);
+  }, []);
 
   // Sync Header Title with AppShell when activeSubApp changes
   useEffect(() => {
@@ -287,6 +309,9 @@ export const CalendarModule: React.FC = () => {
   useEffect(() => {
     const handleSubBack = () => {
       setActiveSubApp(null);
+      try {
+        localStorage.removeItem('avg_calendar_active_subapp');
+      } catch (err) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     };
     window.addEventListener('submodule_back', handleSubBack);
@@ -1533,16 +1558,22 @@ export const CalendarModule: React.FC = () => {
                 <h1 className="text-lg sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
                   <span>Lịch</span>
                   <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                    <span className="relative z-10">Trao Đổi</span>
+                    <span className="relative z-10">
+                      {activeSubApp === 'problem' ? 'Tháo Gỡ Vướng Mắc' : activeSubApp === 'event' ? 'Sự Kiện Hệ Thống' : 'Trao Đổi'}
+                    </span>
                     <svg className="absolute -bottom-1 left-0 w-full h-2.5 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                       <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
                     </svg>
                   </span>
-                  <span>Công Việc</span>
+                  {activeSubApp === 'problem' ? <span>Trọng Điểm</span> : activeSubApp === 'event' ? <span>Tập Đoàn</span> : <span>Công Việc</span>}
                 </h1>
 
                 <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  Quản lý và theo dõi các cuộc trao đổi công việc một cách hiệu quả theo thời gian thực.
+                  {activeSubApp === 'problem'
+                    ? 'Lịch làm việc trọng điểm tháo gỡ điểm nghẽn thủ tục hải quan, pháp lý & tiến độ dự án.'
+                    : activeSubApp === 'event'
+                    ? 'Lịch sự kiện toàn tập đoàn, lễ tổng kết, đào tạo nội bộ & hội nghị chiến lược năm 2026.'
+                    : 'Quản lý và theo dõi các cuộc trao đổi công việc một cách hiệu quả theo thời gian thực.'}
                 </p>
               </div>
 

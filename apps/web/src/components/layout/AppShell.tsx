@@ -81,7 +81,50 @@ export const AppShell: React.FC<AppShellProps> = ({
     }
   });
   const [hrTabState, setHrTabState] = useState<string>('employees');
-  const [calendarTabState, setCalendarTabState] = useState<string>('talk');
+  const [calendarTabState, setCalendarTabState] = useState<'talk' | 'work' | 'problem' | 'event'>('talk');
+  const [isCalendarDropdownOpen, setIsCalendarDropdownOpen] = useState(false);
+  const calendarDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Đóng hộp Lịch khi chuyển qua phân hệ khác
+  useEffect(() => {
+    if (activeModule !== 'calendar') {
+      setIsCalendarDropdownOpen(false);
+    }
+  }, [activeModule]);
+
+  // Đóng hộp Lịch khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (calendarDropdownRef.current && !calendarDropdownRef.current.contains(e.target as Node)) {
+        setIsCalendarDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Chọn đầu mục con Lịch: chuyển tab, đồng bộ dữ liệu và ĐÓNG hộp dropdown
+  const handleSelectCalendarSubTab = (tab: 'talk' | 'work' | 'problem' | 'event') => {
+    setCalendarTabState(tab);
+    setIsCalendarDropdownOpen(false);
+    try {
+      localStorage.setItem('avg_calendar_active_subapp', tab);
+    } catch (e) {}
+    onSelectModule('calendar');
+    window.dispatchEvent(new CustomEvent('calendar_subapp_change', { detail: tab }));
+    setTimeout(() => {
+      const btn = document.getElementById(`btn-calendar-subtab-${tab}`);
+      if (btn) btn.click();
+    }, 50);
+  };
+
+  // Click vào nút Lịch: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
+  const handleToggleCalendarModule = () => {
+    setIsSystemDropdownOpen(false);
+    setIsOrdersDropdownOpen(false);
+    setIsCalendarDropdownOpen(prev => !prev);
+  };
+
   const [systemTabState, setSystemTabState] = useState<'annual-plan' | 'executive-directive'>('annual-plan');
   const [isSystemDropdownOpen, setIsSystemDropdownOpen] = useState(false);
   const systemDropdownRef = useRef<HTMLDivElement>(null);
@@ -117,6 +160,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   // Click vào nút Hệ thống: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
   const handleToggleSystemModule = () => {
     setIsOrdersDropdownOpen(false);
+    setIsCalendarDropdownOpen(false);
     setIsSystemDropdownOpen(prev => !prev);
   };
 
@@ -156,6 +200,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   // Click vào nút Đơn hàng: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
   const handleToggleOrdersModule = () => {
     setIsSystemDropdownOpen(false);
+    setIsCalendarDropdownOpen(false);
     setIsOrdersDropdownOpen(prev => !prev);
   };
 
@@ -408,6 +453,114 @@ export const AppShell: React.FC<AppShellProps> = ({
                         );
                       }
 
+                      if (item.id === 'calendar') {
+                        const isHighlighted = isActive || isCalendarDropdownOpen;
+                        return (
+                          <div
+                            key={item.id}
+                            ref={calendarDropdownRef}
+                            className="relative"
+                          >
+                            <button
+                              onClick={handleToggleCalendarModule}
+                              style={{ color: isHighlighted ? '#F15A24' : undefined }}
+                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
+                                isHighlighted
+                                  ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
+                                  : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                              }`}
+                            >
+                              <span className="relative inline-block">
+                                <span
+                                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
+                                  className="relative z-10 transition-colors duration-150 inline-block"
+                                >
+                                  {item.label}
+                                </span>
+                                {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
+                                {isHighlighted && (
+                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                                )}
+                              </span>
+                              <ChevronDown
+                                style={{ color: isHighlighted ? '#F15A24' : undefined }}
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isCalendarDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                              />
+                            </button>
+
+                            {/* Dropdown Menu for Lịch */}
+                            {isCalendarDropdownOpen && (
+                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-56 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectCalendarSubTab('talk');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && calendarTabState === 'talk'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Lịch trao đổi</span>
+                                  {isActive && calendarTabState === 'talk' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectCalendarSubTab('work');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && calendarTabState === 'work'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Lịch công tác</span>
+                                  {isActive && calendarTabState === 'work' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectCalendarSubTab('problem');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && calendarTabState === 'problem'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Lịch tháo gỡ vướng mắc</span>
+                                  {isActive && calendarTabState === 'problem' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectCalendarSubTab('event');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && calendarTabState === 'event'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Lịch sự kiện hệ thống</span>
+                                  {isActive && calendarTabState === 'event' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+
                       if (item.id === 'orders') {
                         const isHighlighted = isActive || isOrdersDropdownOpen;
                         return (
@@ -505,6 +658,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                           key={item.id}
                           onClick={() => {
                             setIsSystemDropdownOpen(false);
+                            setIsCalendarDropdownOpen(false);
                             setIsOrdersDropdownOpen(false);
                             onSelectModule(item.id);
                           }}
