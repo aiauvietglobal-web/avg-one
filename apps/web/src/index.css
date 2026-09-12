@@ -2683,6 +2683,92 @@ div.box-speech-bubble {
   will-change: transform;
 }
 
+/* 🛸 VIETTEL AI-STYLE 5 INDEPENDENT ORGANIC FLOATING CYCLES (BAY BỔNG PHI TRỌNG LỰC) */
+@keyframes kinetic-float-node-1 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(-5px, -12px) rotate(1.5deg);
+  }
+  66% {
+    transform: translate(4px, -6px) rotate(-1deg);
+  }
+}
+
+@keyframes kinetic-float-node-2 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(6px, 10px) rotate(-2deg);
+  }
+  66% {
+    transform: translate(-4px, 5px) rotate(1deg);
+  }
+}
+
+@keyframes kinetic-float-node-3 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(5px, -14px) rotate(2deg);
+  }
+  66% {
+    transform: translate(-3px, -7px) rotate(-1.5deg);
+  }
+}
+
+@keyframes kinetic-float-node-4 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  33% {
+    transform: translate(-6px, 11px) rotate(-1.5deg);
+  }
+  66% {
+    transform: translate(5px, 4px) rotate(1deg);
+  }
+}
+
+@keyframes kinetic-float-node-5 {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  40% {
+    transform: translate(0px, -10px) rotate(1deg);
+  }
+  75% {
+    transform: translate(-4px, -4px) rotate(-1deg);
+  }
+}
+
+.animate-float-node-1 {
+  animation: kinetic-float-node-1 4.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-node-2 {
+  animation: kinetic-float-node-2 5.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-node-3 {
+  animation: kinetic-float-node-3 4.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-node-4 {
+  animation: kinetic-float-node-4 5.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-node-5 {
+  animation: kinetic-float-node-5 6.0s ease-in-out infinite;
+  will-change: transform;
+}
+
 .animate-kinetic-spin {
   animation: kinetic-spin-cw 12s linear infinite;
   transform-origin: center;
@@ -2709,6 +2795,7 @@ div.box-speech-bubble {
 .animate-kinetic-glow {
   animation: kinetic-glow-pulse 4s ease-in-out infinite;
 }
+
 
 
 
