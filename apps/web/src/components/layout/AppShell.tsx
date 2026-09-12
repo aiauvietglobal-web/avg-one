@@ -114,17 +114,10 @@ export const AppShell: React.FC<AppShellProps> = ({
     if (btn) btn.click();
   };
 
-  // Click vào nút Hệ thống: mở ở lần 1, ấn lần 2 thì đóng lại
+  // Click vào nút Hệ thống: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
   const handleToggleSystemModule = () => {
-    if (activeModule !== 'system' && activeModule !== 'admin') {
-      onSelectModule('system');
-      setIsSystemDropdownOpen(true);
-      window.dispatchEvent(new CustomEvent('system_tab_change', { detail: systemTabState }));
-      const btn = document.getElementById(`btn-system-subtab-${systemTabState}`);
-      if (btn) btn.click();
-    } else {
-      setIsSystemDropdownOpen(prev => !prev);
-    }
+    setIsOrdersDropdownOpen(false);
+    setIsSystemDropdownOpen(prev => !prev);
   };
 
   // Đơn hàng dropdown state & ref
@@ -160,17 +153,10 @@ export const AppShell: React.FC<AppShellProps> = ({
     if (btn) btn.click();
   };
 
-  // Click vào nút Đơn hàng: mở ở lần 1, ấn lần 2 thì đóng lại
+  // Click vào nút Đơn hàng: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
   const handleToggleOrdersModule = () => {
-    if (activeModule !== 'orders' && activeModule !== 'wework') {
-      onSelectModule('orders');
-      setIsOrdersDropdownOpen(true);
-      window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: ordersTabState }));
-      const btn = document.getElementById(`btn-orders-subtab-${ordersTabState}`);
-      if (btn) btn.click();
-    } else {
-      setIsOrdersDropdownOpen(prev => !prev);
-    }
+    setIsSystemDropdownOpen(false);
+    setIsOrdersDropdownOpen(prev => !prev);
   };
 
   const [workflowTabState, setWorkflowTabState] = useState<string>('design');
@@ -347,6 +333,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                       const isActive = item.aliases.includes(activeModule);
 
                       if (item.id === 'system') {
+                        const isHighlighted = isActive || isSystemDropdownOpen;
                         return (
                           <div
                             key={item.id}
@@ -355,28 +342,28 @@ export const AppShell: React.FC<AppShellProps> = ({
                           >
                             <button
                               onClick={handleToggleSystemModule}
-                              style={{ color: isActive ? '#F15A24' : undefined }}
+                              style={{ color: isHighlighted ? '#F15A24' : undefined }}
                               className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
-                                isActive
+                                isHighlighted
                                   ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                                   : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                               }`}
                             >
                               <span className="relative inline-block">
                                 <span
-                                  style={{ color: isActive ? '#F15A24' : undefined }}
+                                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
                                   className="relative z-10 transition-colors duration-150 inline-block"
                                 >
                                   {item.label}
                                 </span>
-                                {/* Line ngắn dưới chân chữ (cố định khi active) */}
-                                {isActive && (
+                                {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
+                                {isHighlighted && (
                                   <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
                                 )}
                               </span>
                               <ChevronDown
-                                style={{ color: isActive ? '#F15A24' : undefined }}
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isActive ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                                style={{ color: isHighlighted ? '#F15A24' : undefined }}
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
                               />
                             </button>
 
@@ -422,6 +409,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                       }
 
                       if (item.id === 'orders') {
+                        const isHighlighted = isActive || isOrdersDropdownOpen;
                         return (
                           <div
                             key={item.id}
@@ -430,28 +418,28 @@ export const AppShell: React.FC<AppShellProps> = ({
                           >
                             <button
                               onClick={handleToggleOrdersModule}
-                              style={{ color: isActive ? '#F15A24' : undefined }}
+                              style={{ color: isHighlighted ? '#F15A24' : undefined }}
                               className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
-                                isActive
+                                isHighlighted
                                   ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                                   : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                               }`}
                             >
                               <span className="relative inline-block">
                                 <span
-                                  style={{ color: isActive ? '#F15A24' : undefined }}
+                                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
                                   className="relative z-10 transition-colors duration-150 inline-block"
                                 >
                                   {item.label}
                                 </span>
-                                {/* Line ngắn dưới chân chữ (cố định khi active) */}
-                                {isActive && (
+                                {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
+                                {isHighlighted && (
                                   <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
                                 )}
                               </span>
                               <ChevronDown
-                                style={{ color: isActive ? '#F15A24' : undefined }}
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isActive ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                                style={{ color: isHighlighted ? '#F15A24' : undefined }}
+                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
                               />
                             </button>
 
@@ -480,13 +468,29 @@ export const AppShell: React.FC<AppShellProps> = ({
                                     handleSelectOrdersSubTab('research');
                                   }}
                                   className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && (ordersTabState === 'research' || ordersTabState === 'sample-h1')
+                                    isActive && ordersTabState === 'research'
                                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
                                       : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
                                   <span className="text-slate-900 dark:text-white font-medium">Nghiên cứu</span>
-                                  {isActive && (ordersTabState === 'research' || ordersTabState === 'sample-h1') && (
+                                  {isActive && ordersTabState === 'research' && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                                  )}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectOrdersSubTab('sample-h1');
+                                  }}
+                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                                    isActive && ordersTabState === 'sample-h1'
+                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
+                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                                  }`}
+                                >
+                                  <span className="text-slate-900 dark:text-white font-medium">Mẫu H1</span>
+                                  {isActive && ordersTabState === 'sample-h1' && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
                                 </button>
@@ -515,7 +519,11 @@ export const AppShell: React.FC<AppShellProps> = ({
                       return (
                         <button
                           key={item.id}
-                          onClick={() => onSelectModule(item.id)}
+                          onClick={() => {
+                            setIsSystemDropdownOpen(false);
+                            setIsOrdersDropdownOpen(false);
+                            onSelectModule(item.id);
+                          }}
                           style={{ color: isActive ? '#F15A24' : undefined }}
                           className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal ${
                             isActive
