@@ -1,45 +1,100 @@
 import React from 'react';
 import {
   Boxes, Users, Calendar, FolderKanban, ShieldCheck, Newspaper, BarChart3, Clock, Scale, Sparkles, CheckCircle2, Wallet, Lightbulb, LayoutGrid,
-  Compass, Eye, Layers, Shield, Box, Activity, Workflow, Target, Lock, ArrowUpRight, Cpu
+  Compass, Eye, Layers, Shield, Box, Activity, Workflow, Target, Lock, ArrowUpRight, Cpu,
+  Binary, Zap, Rocket, Award, Gem, Coins, CircleDollarSign, Gauge, Database, TrendingDown
 } from 'lucide-react';
 import { AppModuleId } from '../layout/AppLauncherModal';
+
+// 5 TRỤ CỘT CHIẾN LƯỢC: SỐ HÓA - CÔNG NGHỆ HÓA - TỐC ĐỘ - CHẤT LƯỢNG - GIÁ
+export const STRATEGIC_PILLARS = [
+  {
+    id: 'digital',
+    label: 'Số Hóa',
+    subLabel: '100% Real-time Data',
+    icon: Binary,
+    color: 'text-[#0284C7] dark:text-sky-400',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/70',
+    borderColor: 'border-sky-200 dark:border-sky-800/80',
+    glowHover: 'hover:border-[#0284C7] hover:shadow-sky-400/20'
+  },
+  {
+    id: 'technology',
+    label: 'Công Nghệ Hóa',
+    subLabel: 'Tự Động Hóa AI',
+    icon: Cpu,
+    color: 'text-indigo-600 dark:text-indigo-400',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/70',
+    borderColor: 'border-indigo-200 dark:border-indigo-800/80',
+    glowHover: 'hover:border-indigo-500 hover:shadow-indigo-400/20'
+  },
+  {
+    id: 'speed',
+    label: 'Tốc Độ',
+    subLabel: 'Vận Hành Tức Thì',
+    icon: Zap,
+    color: 'text-[#F15A24] dark:text-orange-400',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/70',
+    borderColor: 'border-orange-200 dark:border-orange-800/80',
+    glowHover: 'hover:border-[#F15A24] hover:shadow-orange-400/20'
+  },
+  {
+    id: 'quality',
+    label: 'Chất Lượng',
+    subLabel: 'Chuẩn Mực Tối Ưu',
+    icon: Award,
+    color: 'text-emerald-600 dark:text-emerald-400',
+    bgColor: 'bg-emerald-50 dark:bg-emerald-950/70',
+    borderColor: 'border-emerald-200 dark:border-emerald-800/80',
+    glowHover: 'hover:border-emerald-500 hover:shadow-emerald-400/20'
+  },
+  {
+    id: 'value',
+    label: 'Giá Tối Ưu',
+    subLabel: 'Tiết Kiệm Chi Phí',
+    icon: Coins,
+    color: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/70',
+    borderColor: 'border-amber-200 dark:border-amber-800/80',
+    glowHover: 'hover:border-amber-500 hover:shadow-amber-400/20'
+  }
+];
 
 export const HOME_APP_MODULES = [
   {
     id: 'apps' as AppModuleId,
     name: 'Ứng Dụng',
-    icon: LayoutGrid,
+    icon: Cpu,
     iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-white/95 dark:bg-slate-800/90 border-sky-200 dark:border-sky-700/80 shadow-2xs'
+    bgColor: 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800 shadow-2xs'
   },
   {
     id: 'hr' as AppModuleId,
     name: 'Nhân Sự',
     icon: Users,
-    iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-white/95 dark:bg-slate-800/90 border-sky-200 dark:border-sky-700/80 shadow-2xs'
+    iconColor: 'text-blue-600 dark:text-blue-300',
+    bgColor: 'bg-blue-50 dark:bg-blue-950/80 border-blue-200 dark:border-blue-800 shadow-2xs'
   },
   {
     id: 'legal' as AppModuleId,
     name: 'Pháp Lý',
     icon: Scale,
-    iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-white/95 dark:bg-slate-800/90 border-sky-200 dark:border-sky-700/80 shadow-2xs'
+    iconColor: 'text-indigo-600 dark:text-indigo-300',
+    bgColor: 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-200 dark:border-indigo-800 shadow-2xs'
   },
   {
     id: 'finance' as AppModuleId,
     name: 'Tài Chính',
-    icon: Wallet,
-    iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-white/95 dark:bg-slate-800/90 border-sky-200 dark:border-sky-700/80 shadow-2xs'
+    icon: Coins,
+    iconColor: 'text-emerald-600 dark:text-emerald-300',
+    bgColor: 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-200 dark:border-emerald-800 shadow-2xs'
   },
   {
     id: 'rd' as AppModuleId,
     name: 'Nghiên Cứu & Sáng Tạo',
-    icon: Lightbulb,
-    iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-white/95 dark:bg-slate-800/90 border-sky-200 dark:border-sky-700/80 shadow-2xs'
+    icon: Sparkles,
+    iconColor: 'text-[#F15A24] dark:text-orange-300',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/80 border-orange-200 dark:border-orange-800 shadow-2xs'
   }
 ];
 
@@ -64,49 +119,40 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
       <div className="absolute top-12 right-6 sm:right-14 w-44 sm:w-64 h-24 sm:h-36 rounded-3xl bg-gradient-to-bl from-orange-400/20 via-[#F15A24]/10 to-transparent backdrop-blur-xs border border-orange-300/50 dark:border-orange-600/40 shadow-lg shadow-orange-500/10 pointer-events-none -z-0 animate-kinetic-float-2 rotate-6 hidden md:block" />
 
       {/* Synchronized container matching Header alignment (max-w-7xl px-4 sm:px-6) */}
-      <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10 py-1 sm:py-2">
+      <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3 relative z-10 py-1 sm:py-1.5">
         
-        {/* 🚀 MODERN KINETIC HERO ROW (BAO GỒM 2 KHỐI HÌNH HỌC CHUYỂN ĐỘNG & TIÊU ĐỀ TRUNG TÂM) */}
-        <div className="w-full flex items-center justify-center gap-2 sm:gap-6 lg:gap-10 shrink-0 mb-2 sm:mb-4 relative">
+        {/* 🚀 MODERN KINETIC HERO ROW */}
+        <div className="w-full flex items-center justify-center gap-2 sm:gap-6 lg:gap-8 shrink-0 mb-1 sm:mb-2 relative">
           
-          {/* 🔷 KHỐI TRÁI: 3D ISOMETRIC CUBE (VỮNG CHẮC & BỀN BỈ) - HIỂN THỊ TRÊN MỌI MÀN HÌNH */}
+          {/* 🔷 KHỐI TRÁI: DATA CUBE (SỐ HÓA & CÔNG NGHỆ) */}
           <div className="hidden sm:flex flex-col items-center shrink-0 animate-kinetic-float-1 relative group cursor-default">
-            {/* Pulsing Radar Aura */}
             <div className="absolute -inset-3 rounded-full border border-sky-400/40 dark:border-sky-500/30 animate-kinetic-ripple pointer-events-none" />
-            
-            {/* Rotating Technical Gyroscope Ring */}
             <div className="absolute -inset-4 rounded-full border-2 border-dashed border-[#0284C7]/50 dark:border-sky-400/40 animate-kinetic-spin pointer-events-none" />
 
-            {/* 3D Isometric Cube SVG with Vibrant Lines and Translucent Glass Faces */}
-            <svg width="105" height="110" viewBox="0 0 105 110" fill="none" className="drop-shadow-md overflow-visible">
-              {/* Top Face */}
-              <polygon points="52,14 90,34 52,54 14,34" fill="#0284C7" fillOpacity="0.22" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
-              {/* Left Face */}
-              <polygon points="14,34 52,54 52,94 14,74" fill="#0369A1" fillOpacity="0.3" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
-              {/* Right Face */}
-              <polygon points="52,54 90,34 90,74 52,94" fill="#38BDF8" fillOpacity="0.18" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
+            {/* 3D Isometric Data Cube with Binary & Circuit Lines */}
+            <svg width="100" height="105" viewBox="0 0 100 105" fill="none" className="drop-shadow-md overflow-visible">
+              <polygon points="50,14 88,34 50,54 12,34" fill="#0284C7" fillOpacity="0.22" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
+              <polygon points="12,34 50,54 50,92 12,72" fill="#0369A1" fillOpacity="0.3" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
+              <polygon points="50,54 88,34 88,72 50,92" fill="#38BDF8" fillOpacity="0.18" stroke="#0284C7" strokeWidth="2" strokeLinejoin="round" />
               
-              {/* Inner Transparent Structural Grid (Nhìn xuyên thấu kết cấu - Minh bạch) */}
-              <line x1="52" y1="14" x2="52" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
-              <line x1="14" y1="74" x2="52" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
-              <line x1="90" y1="74" x2="52" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
+              <line x1="50" y1="14" x2="50" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
+              <line x1="12" y1="72" x2="50" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
+              <line x1="88" y1="72" x2="50" y2="54" stroke="#00A8E8" strokeWidth="1.5" strokeDasharray="4 3" />
 
-              {/* Glowing Vertices */}
-              <circle cx="52" cy="14" r="3" fill="#0284C7" />
-              <circle cx="90" cy="34" r="3" fill="#0284C7" />
-              <circle cx="14" cy="34" r="3" fill="#0284C7" />
-              <circle cx="52" cy="94" r="3.5" fill="#0284C7" />
+              <circle cx="50" cy="14" r="3" fill="#0284C7" />
+              <circle cx="88" cy="34" r="3" fill="#0284C7" />
+              <circle cx="12" cy="34" r="3" fill="#0284C7" />
+              <circle cx="50" cy="92" r="3.5" fill="#0284C7" />
               
-              {/* Central Glowing Energy Node */}
-              <circle cx="52" cy="54" r="5" fill="#00A8E8" className="animate-ping" style={{ transformOrigin: '52px 54px' }} />
-              <circle cx="52" cy="54" r="4" fill="#00A8E8" />
-              <circle cx="52" cy="54" r="2" fill="#FFFFFF" />
+              <circle cx="50" cy="54" r="5" fill="#00A8E8" className="animate-ping" style={{ transformOrigin: '50px 54px' }} />
+              <circle cx="50" cy="54" r="4" fill="#00A8E8" />
+              <circle cx="50" cy="54" r="2" fill="#FFFFFF" />
             </svg>
 
-            {/* Glowing Frosted Glass Badge */}
+            {/* Frosted Glass Badge with Binary Icon */}
             <div className="mt-1 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-sky-300 dark:border-sky-700 shadow-sm text-sky-800 dark:text-sky-300">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
-              <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Vững Chắc</span>
+              <Binary className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
+              <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Số Hóa</span>
             </div>
           </div>
 
@@ -174,7 +220,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
               </div>
 
-              {/* Slogan Badge (Căn lề trái vừa vặn, cân đối) */}
+              {/* Slogan Badge & 5 Strategic Value Pillars */}
               <div className="pt-2 sm:pt-2.5 text-left w-full flex flex-col items-start gap-2.5">
                 <div className="relative inline-block p-0.5 rounded-full transition-all duration-300 max-w-full">
                   {/* SVG Clockwise Border Tracing Effect */}
@@ -210,27 +256,29 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   </p>
                 </div>
 
-                {/* 💎 KINETIC VALUES CAPSULE (4 TRỤ CỘT GIÁ TRỊ CÓ ICON LINE & CHỈ BÁO PHÁT SÁNG) */}
-                <div className="inline-flex items-center gap-2 sm:gap-3.5 px-3 sm:px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs backdrop-blur-md text-[11px] sm:text-xs font-extrabold text-slate-700 dark:text-slate-200">
-                  <div className="inline-flex items-center gap-1.5 text-[#0284C7]">
-                    <ShieldCheck className="w-3.5 h-3.5 stroke-[2.4]" />
-                    <span>Vững chắc</span>
-                  </div>
-                  <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                  <div className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                    <Box className="w-3.5 h-3.5 stroke-[2.4]" />
-                    <span>Bền bỉ</span>
-                  </div>
-                  <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                  <div className="inline-flex items-center gap-1.5 text-[#F15A24]">
-                    <Compass className="w-3.5 h-3.5 stroke-[2.4]" />
-                    <span>Rõ ràng</span>
-                  </div>
-                  <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                  <div className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.4]" />
-                    <span>Minh bạch</span>
-                  </div>
+                {/* 💎 5 TRỤ CỘT CHIẾN LƯỢC: SỐ HÓA • CÔNG NGHỆ HÓA • TỐC ĐỘ • CHẤT LƯỢNG • GIÁ */}
+                <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-5 gap-1.5 sm:gap-2 w-full pt-0.5">
+                  {STRATEGIC_PILLARS.map((pillar) => {
+                    const PillarIcon = pillar.icon;
+                    return (
+                      <div
+                        key={pillar.id}
+                        className={`group flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border ${pillar.borderColor} ${pillar.glowHover} shadow-2xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 cursor-default`}
+                      >
+                        <div className={`w-6 h-6 rounded-lg ${pillar.bgColor} flex items-center justify-center shrink-0 border ${pillar.borderColor} group-hover:scale-110 transition-transform`}>
+                          <PillarIcon className={`w-3.5 h-3.5 ${pillar.color}`} />
+                        </div>
+                        <div className="text-left overflow-hidden">
+                          <div className="text-[11px] font-black leading-tight text-slate-800 dark:text-white">
+                            {pillar.label}
+                          </div>
+                          <div className="text-[9px] font-semibold text-slate-400 dark:text-slate-500 leading-none truncate hidden lg:block">
+                            {pillar.subLabel}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
               </div>
@@ -238,7 +286,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 🔶 KHỐI PHẢI: FACETED PRISM CRYSTAL (RÕ RÀNG & MINH BẠCH) - HIỂN THỊ TRÊN MỌI MÀN HÌNH */}
+          {/* 🔶 KHỐI PHẢI: FACETED PRISM CRYSTAL (TỐC ĐỘ & CHẤT LƯỢNG & GIÁ TRỊ) */}
           <div className="hidden sm:flex flex-col items-center shrink-0 animate-kinetic-float-2 relative group cursor-default">
             {/* Pulsing Radar Aura */}
             <div className="absolute -inset-3 rounded-full border border-orange-400/40 dark:border-orange-500/30 animate-kinetic-ripple pointer-events-none" style={{ animationDelay: '1s' }} />
@@ -248,42 +296,38 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
             {/* Faceted Hexagonal Crystal SVG with Vibrant Lines & Optical Laser Sweep */}
             <div className="relative overflow-visible">
-              <svg width="105" height="110" viewBox="0 0 105 110" fill="none" className="drop-shadow-md overflow-visible">
-                {/* Hexagon Outer Facet */}
-                <polygon points="52,10 90,32 90,78 52,98 14,78 14,32" fill="#F15A24" fillOpacity="0.2" stroke="#F15A24" strokeWidth="2" strokeLinejoin="round" />
+              <svg width="100" height="105" viewBox="0 0 100 105" fill="none" className="drop-shadow-md overflow-visible">
+                <polygon points="50,10 88,32 88,76 50,96 12,76 12,32" fill="#F15A24" fillOpacity="0.2" stroke="#F15A24" strokeWidth="2" strokeLinejoin="round" />
                 
-                {/* Inner Triangulation Refraction Lines */}
-                <line x1="52" y1="10" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
-                <line x1="90" y1="32" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
-                <line x1="90" y1="78" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
-                <line x1="52" y1="98" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
-                <line x1="14" y1="78" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
-                <line x1="14" y1="32" x2="52" y2="55" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="50" y1="10" x2="50" y2="54" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="88" y1="32" x2="50" y2="54" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="88" y1="76" x2="50" y2="54" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="50" y1="96" x2="50" y2="54" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="12" y1="76" x2="50" y2="54" stroke="#FFA000" strokeWidth="1.5" />
+                <line x1="12" y1="32" x2="50" y2="54" stroke="#FFA000" strokeWidth="1.5" />
 
-                {/* Facet Corner Vertices */}
-                <circle cx="52" cy="10" r="3" fill="#F15A24" />
-                <circle cx="90" cy="32" r="3" fill="#F15A24" />
-                <circle cx="90" cy="78" r="3" fill="#F15A24" />
-                <circle cx="52" cy="98" r="3.5" fill="#F15A24" />
-                <circle cx="14" cy="78" r="3" fill="#F15A24" />
-                <circle cx="14" cy="32" r="3" fill="#F15A24" />
+                <circle cx="50" cy="10" r="3" fill="#F15A24" />
+                <circle cx="88" cy="32" r="3" fill="#F15A24" />
+                <circle cx="88" cy="76" r="3" fill="#F15A24" />
+                <circle cx="50" cy="96" r="3.5" fill="#F15A24" />
+                <circle cx="12" cy="76" r="3" fill="#F15A24" />
+                <circle cx="12" cy="32" r="3" fill="#F15A24" />
 
-                {/* Central Optical Focus Core */}
-                <circle cx="52" cy="55" r="5" fill="#FF7043" className="animate-ping" style={{ transformOrigin: '52px 55px' }} />
-                <circle cx="52" cy="55" r="4" fill="#FFA000" />
-                <circle cx="52" cy="55" r="2" fill="#FFFFFF" />
+                <circle cx="50" cy="54" r="5" fill="#FF7043" className="animate-ping" style={{ transformOrigin: '50px 54px' }} />
+                <circle cx="50" cy="54" r="4" fill="#FFA000" />
+                <circle cx="50" cy="54" r="2" fill="#FFFFFF" />
               </svg>
 
-              {/* Brilliant Laser Light Beam Sweeping Across the Crystal */}
+              {/* Laser Light Beam Sweeping Across the Crystal */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-xl">
                 <div className="w-full h-1.5 bg-gradient-to-r from-transparent via-white to-transparent shadow-xs animate-kinetic-laser" />
               </div>
             </div>
 
-            {/* Glowing Frosted Glass Badge */}
+            {/* Frosted Glass Badge with Zap & Award Icon */}
             <div className="mt-1 flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-orange-300 dark:border-orange-700 shadow-sm text-orange-800 dark:text-orange-300">
-              <Compass className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
-              <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Minh Bạch</span>
+              <Zap className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
+              <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Tốc Độ</span>
             </div>
           </div>
 
