@@ -3009,4 +3009,37 @@ div.box-speech-bubble {
   transform-origin: 60px 60px;
 }
 
+/* 📐 FLAT MODERNIST TECH / BAUHAUS ANIMATIONS (STRIPE & VERCEL STYLE) */
+@keyframes bauhaus-hairline-pulse {
+  0%, 100% {
+    opacity: 0.35;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    opacity: 0.9;
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes bauhaus-core-breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.animate-bauhaus-pulse {
+  animation: bauhaus-hairline-pulse 4s ease-in-out infinite;
+}
+
+.animate-bauhaus-core {
+  animation: bauhaus-core-breathe 3.2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+
 
