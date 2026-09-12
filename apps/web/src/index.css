@@ -2952,3 +2952,61 @@ div.box-speech-bubble {
   transform-origin: 300px 20px;
 }
 
+/* 💎 3D ISOMETRIC AI NEURAL CRYSTAL & DATA INTERCONNECT ANIMATIONS */
+@keyframes crystal-facet-shimmer {
+  0%, 100% {
+    fill-opacity: 0.35;
+    filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.4));
+  }
+  50% {
+    fill-opacity: 0.75;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8));
+  }
+}
+
+@keyframes laser-beam-pulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes hud-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hud-spin-ccw {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-crystal-shimmer {
+  animation: crystal-facet-shimmer 3.2s ease-in-out infinite;
+}
+
+.animate-laser-pulse {
+  animation: laser-beam-pulse 2.2s ease-in-out infinite;
+}
+
+.animate-hud-spin-slow {
+  animation: hud-spin-cw 18s linear infinite;
+  transform-origin: 60px 60px;
+}
+
+.animate-hud-spin-rev {
+  animation: hud-spin-ccw 14s linear infinite;
+  transform-origin: 60px 60px;
+}
+
+

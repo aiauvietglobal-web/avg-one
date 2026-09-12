@@ -147,56 +147,269 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </svg>
           </div>
 
-          {/* 💎 2. 3D HEXAGONAL NEURAL LATTICE MOLECULE (TOP-LEFT) */}
-          <div className="hidden lg:flex absolute left-2 xl:left-10 top-2 xl:top-6 z-20 items-center gap-3.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300" style={{ animationDelay: '150ms' }}>
-            <div className="relative w-20 h-20 xl:w-24 xl:h-24 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <svg width="100%" height="100%" viewBox="0 0 110 110" fill="none" className="overflow-visible drop-shadow-md">
-                {/* Central Solid Hexagon */}
-                <polygon
-                  points="55,24 86,42 86,78 55,96 24,78 24,42"
-                  fill="#0284C7"
-                  fillOpacity="0.15"
-                  stroke="#0284C7"
-                  strokeWidth="1.75"
-                  className="group-hover:fill-opacity-25 transition-all"
-                />
-                
-                {/* 6 Perimeter Line Segments */}
-                <line x1="55" y1="12" x2="94" y2="34" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="94" y1="34" x2="94" y2="78" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="94" y1="78" x2="55" y2="100" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="55" y1="100" x2="16" y2="78" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="16" y1="78" x2="16" y2="34" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="16" y1="34" x2="55" y2="12" stroke="#0284C7" strokeWidth="2.5" strokeLinecap="round" />
-                
-                {/* Center 3D Isometric Axes */}
-                <line x1="55" y1="12" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.75" strokeDasharray="3 3" />
-                <line x1="94" y1="78" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.75" strokeDasharray="3 3" />
-                <line x1="16" y1="78" x2="55" y2="56" stroke="#38BDF8" strokeWidth="1.75" strokeDasharray="3 3" />
-                <circle cx="55" cy="56" r="4.5" fill="#0284C7" />
+          {/* ⚡ SYNCHRONIZED INTERCONNECT DATA HIGHWAY (DÂY CHUYỀN LIÊN KẾT LASER DỮ LIỆU ĐỒNG BỘ) */}
+          <svg className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible" preserveAspectRatio="none" viewBox="0 0 1200 320">
+            <defs>
+              <linearGradient id="ai-headline-laser" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.9" />
+                <stop offset="35%" stopColor="#0284C7" stopOpacity="0.8" />
+                <stop offset="85%" stopColor="#38BDF8" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
+              </linearGradient>
 
-                {/* 6 Circular Node Balls on Vertices */}
-                <circle cx="55" cy="12" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-                <circle cx="94" cy="34" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-                <circle cx="94" cy="78" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-                <circle cx="55" cy="100" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-                <circle cx="16" cy="78" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-                <circle cx="16" cy="34" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-              </svg>
-            </div>
-            <div className="flex flex-col text-left">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
-                  AVG ONE // AI
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
+              <linearGradient id="ai-data-bus" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#0284C7" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#00E5FF" stopOpacity="0.15" />
+              </linearGradient>
+
+              <linearGradient id="headline-radar-beam" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#F15A24" stopOpacity="0" />
+                <stop offset="30%" stopColor="#FB923C" stopOpacity="0.5" />
+                <stop offset="70%" stopColor="#F15A24" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#FF7043" stopOpacity="0.9" />
+              </linearGradient>
+            </defs>
+
+            {/* 🔗 TIA 1: KẾT NỐI AI QUANTUM NODE -> TIÊU ĐỀ CHÍNH "Vững chắc!" */}
+            <path
+              d="M 290,48 C 360,48 410,72 490,75"
+              fill="none"
+              stroke="#0284C7"
+              strokeOpacity="0.15"
+              strokeWidth="3"
+            />
+            <path
+              d="M 290,48 C 360,48 410,72 490,75"
+              fill="none"
+              stroke="url(#ai-headline-laser)"
+              strokeWidth="1.75"
+              strokeDasharray="6 6"
+              className="animate-kinetic-data animate-laser-pulse"
+            />
+            <circle cx="290" cy="48" r="3" fill="#00E5FF">
+              <animateMotion
+                path="M 290,48 C 360,48 410,72 490,75"
+                dur="2.8s"
+                repeatCount="indefinite"
+              />
+            </circle>
+
+            {/* 🔗 TIA 2: KẾT NỐI AI QUANTUM NODE -> ĐỒ THỊ DỮ LIỆU SỐ HÓA BÊN DƯỚI */}
+            <path
+              d="M 125,75 L 125,175 L 140,245"
+              fill="none"
+              stroke="#0284C7"
+              strokeOpacity="0.12"
+              strokeWidth="2"
+            />
+            <path
+              d="M 125,75 L 125,175 L 140,245"
+              fill="none"
+              stroke="url(#ai-data-bus)"
+              strokeWidth="1.5"
+              strokeDasharray="4 6"
+              className="animate-kinetic-data"
+            />
+            <circle cx="125" cy="75" r="2.5" fill="#38BDF8">
+              <animateMotion
+                path="M 125,75 L 125,175 L 140,245"
+                dur="3.6s"
+                repeatCount="indefinite"
+              />
+            </circle>
+
+            {/* 🔗 TIA 3: KẾT NỐI DÒNG "Tươi sáng!" -> RADAR ORB BÊN PHẢI */}
+            <path
+              d="M 720,165 C 810,165 860,65 940,52"
+              fill="none"
+              stroke="#F15A24"
+              strokeOpacity="0.12"
+              strokeWidth="2"
+            />
+            <path
+              d="M 720,165 C 810,165 860,65 940,52"
+              fill="none"
+              stroke="url(#headline-radar-beam)"
+              strokeWidth="1.5"
+              strokeDasharray="6 6"
+              className="animate-kinetic-data animate-laser-pulse"
+            />
+            <circle cx="720" cy="165" r="3" fill="#F15A24">
+              <animateMotion
+                path="M 720,165 C 810,165 860,65 940,52"
+                dur="3.2s"
+                repeatCount="indefinite"
+              />
+            </circle>
+          </svg>
+
+          {/* 💎 2. 3D ISOMETRIC AI QUANTUM CRYSTAL & NEURAL MATRIX (TOP-LEFT) */}
+          <div className="hidden lg:flex absolute left-2 xl:left-8 top-2 xl:top-5 z-20 items-center animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300" style={{ animationDelay: '150ms' }}>
+            {/* Glassmorphic Cyber HUD Pill Container */}
+            <div className="flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-sky-200/90 dark:border-sky-800/80 shadow-md shadow-sky-500/10 hover:shadow-sky-500/25 hover:border-sky-400 dark:hover:border-sky-500 transition-all duration-300">
+              
+              {/* 3D Holographic AI Neural Crystal Graphic */}
+              <div className="relative w-20 h-20 xl:w-24 xl:h-24 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+                
+                {/* SVG 3D Isometric Neural Crystal with Dual HUD Rings */}
+                <svg width="100%" height="100%" viewBox="0 0 120 120" fill="none" className="overflow-visible drop-shadow-md">
+                  <defs>
+                    {/* Isometric Facet Gradients */}
+                    <linearGradient id="cyber-top-facet" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.9" />
+                      <stop offset="60%" stopColor="#38BDF8" stopOpacity="0.75" />
+                      <stop offset="100%" stopColor="#0284C7" stopOpacity="0.6" />
+                    </linearGradient>
+
+                    <linearGradient id="cyber-left-facet" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#0284C7" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#0369A1" stopOpacity="0.95" />
+                    </linearGradient>
+
+                    <linearGradient id="cyber-right-facet" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#0077B6" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#0284C7" stopOpacity="0.9" />
+                    </linearGradient>
+
+                    <radialGradient id="neural-singularity" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#FFFFFF" />
+                      <stop offset="35%" stopColor="#00E5FF" />
+                      <stop offset="75%" stopColor="#0284C7" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
+
+                  {/* 1. Outer Ambient Radial Glow */}
+                  <circle cx="60" cy="60" r="50" fill="url(#neural-singularity)" opacity="0.12" className="animate-pulse" />
+
+                  {/* 2. Outer Rotating Precision HUD Calibration Ring */}
+                  <g className="animate-hud-spin-slow">
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="52"
+                      stroke="#0284C7"
+                      strokeOpacity="0.35"
+                      strokeWidth="1.25"
+                      strokeDasharray="4 8 16 8"
+                    />
+                    {/* Micro Calibration Crosshairs */}
+                    <line x1="60" y1="5" x2="60" y2="11" stroke="#38BDF8" strokeWidth="1.5" />
+                    <line x1="60" y1="109" x2="60" y2="115" stroke="#38BDF8" strokeWidth="1.5" />
+                    <line x1="5" y1="60" x2="11" y2="60" stroke="#38BDF8" strokeWidth="1.5" />
+                    <line x1="109" y1="60" x2="115" y2="60" stroke="#38BDF8" strokeWidth="1.5" />
+                  </g>
+
+                  {/* 3. Middle Counter-Rotating Orbital Data Ring */}
+                  <g className="animate-hud-spin-rev">
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="43"
+                      stroke="#38BDF8"
+                      strokeOpacity="0.4"
+                      strokeWidth="1"
+                      strokeDasharray="16 10 4 10"
+                    />
+                    {/* Traveling Micro Data Photons */}
+                    <circle cx="60" cy="17" r="2.5" fill="#00E5FF" />
+                    <circle cx="60" cy="103" r="2.5" fill="#38BDF8" />
+                    <circle cx="17" cy="60" r="2" fill="#FFFFFF" />
+                    <circle cx="103" cy="60" r="2" fill="#0284C7" />
+                  </g>
+
+                  {/* 4. The 3D Isometric Cyber Crystal Facets */}
+                  {/* Top Facet */}
+                  <polygon
+                    points="60,25 88,41 60,57 32,41"
+                    fill="url(#cyber-top-facet)"
+                    stroke="#7DD3FC"
+                    strokeWidth="1.5"
+                    className="animate-crystal-shimmer"
+                  />
+                  {/* Etched Diamond Lattice inside Top Facet */}
+                  <line x1="32" y1="41" x2="88" y2="41" stroke="#BAE6FD" strokeWidth="0.75" strokeDasharray="2 2" strokeOpacity="0.8" />
+                  <line x1="60" y1="25" x2="60" y2="57" stroke="#BAE6FD" strokeWidth="0.75" strokeDasharray="2 2" strokeOpacity="0.8" />
+
+                  {/* Left Facet */}
+                  <polygon
+                    points="32,41 60,57 60,89 32,73"
+                    fill="url(#cyber-left-facet)"
+                    stroke="#0284C7"
+                    strokeWidth="1.5"
+                  />
+                  {/* Circuit Traces inside Left Facet */}
+                  <line x1="46" y1="49" x2="46" y2="81" stroke="#38BDF8" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.7" />
+                  <circle cx="46" cy="65" r="1.5" fill="#38BDF8" />
+
+                  {/* Right Facet */}
+                  <polygon
+                    points="60,57 88,41 88,73 60,89"
+                    fill="url(#cyber-right-facet)"
+                    stroke="#0096C7"
+                    strokeWidth="1.5"
+                  />
+                  {/* Circuit Traces inside Right Facet */}
+                  <line x1="74" y1="49" x2="74" y2="81" stroke="#00E5FF" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.7" />
+                  <circle cx="74" cy="65" r="1.5" fill="#00E5FF" />
+
+                  {/* Outer Hex Perimeter Laser Framing */}
+                  <polygon
+                    points="60,25 88,41 88,73 60,89 32,73 32,41"
+                    fill="none"
+                    stroke="#38BDF8"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="group-hover:stroke-[#00E5FF] transition-colors"
+                  />
+
+                  {/* 5. Central AI Quantum Core Singularity */}
+                  <line x1="60" y1="25" x2="60" y2="57" stroke="#00E5FF" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <line x1="32" y1="73" x2="60" y2="57" stroke="#00E5FF" strokeWidth="1.5" strokeDasharray="2 2" />
+                  <line x1="88" y1="73" x2="60" y2="57" stroke="#00E5FF" strokeWidth="1.5" strokeDasharray="2 2" />
+                  
+                  {/* Expanding Core Pulse Wave */}
+                  <circle cx="60" cy="57" r="9" className="animate-ping" fill="#00E5FF" fillOpacity="0.35" />
+                  {/* Singularity Core Bulb */}
+                  <circle cx="60" cy="57" r="6" fill="url(#neural-singularity)" className="animate-pulse" />
+                  <circle cx="60" cy="57" r="2.5" fill="#FFFFFF" />
+
+                  {/* 6. Precision Vertex Hub Pearls on 6 Outer Corners */}
+                  <circle cx="60" cy="25" r="4.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2" />
+                  <circle cx="60" cy="25" r="1.5" fill="#00E5FF" />
+                  
+                  <circle cx="88" cy="41" r="4" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.75" />
+                  <circle cx="88" cy="73" r="4" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.75" />
+                  <circle cx="60" cy="89" r="4" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.75" />
+                  <circle cx="32" cy="73" r="4" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.75" />
+                  <circle cx="32" cy="41" r="4" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.75" />
+                </svg>
               </div>
-              <span className="text-xs xl:text-sm font-extrabold text-slate-800 dark:text-white leading-tight">
-                Kiến tạo Nền tảng Số
-              </span>
-              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-tight">
-                Công Nghệ Hóa Vững Chắc
-              </span>
+
+              {/* High-Tech Cyber HUD Typography */}
+              <div className="flex flex-col text-left pr-1">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-[10px] xl:text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                    AVG ONE // AI CORE
+                  </span>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0284C7]" />
+                  </span>
+                  <span className="text-[9px] font-mono font-semibold px-1 py-0.2 rounded bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 border border-sky-300/40">
+                    LIVE
+                  </span>
+                </div>
+                <span className="text-xs xl:text-sm font-black text-slate-800 dark:text-white leading-tight">
+                  Kiến tạo Nền tảng Số
+                </span>
+                <span className="text-[10px] font-bold text-sky-700/80 dark:text-sky-400/80 uppercase tracking-tight flex items-center gap-1 mt-0.5">
+                  <span>Công Nghệ Hóa Vững Chắc</span>
+                  <span className="text-sky-500 font-mono text-[9px]">►</span>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -231,43 +444,45 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           </div>
 
           {/* 📈 4. DATA CONSTELLATION ZIGZAG LINE GRAPH WITH WHITE NODES (BOTTOM-LEFT) */}
-          <div className="hidden md:flex absolute left-4 xl:left-14 bottom-2 xl:bottom-5 z-20 items-end gap-3 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300" style={{ animationDelay: '450ms' }}>
-            <svg width="170" height="70" viewBox="0 0 170 70" fill="none" className="overflow-visible drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
-              {/* Zigzag Connection Stroke */}
-              <polyline
-                points="10,60 55,18 105,45 158,10"
-                fill="none"
-                stroke="#0284C7"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <polyline
-                points="10,60 55,18 105,45 158,10"
-                fill="none"
-                stroke="#38BDF8"
-                strokeWidth="1.75"
-                strokeDasharray="6 6"
-                className="animate-kinetic-data"
-              />
+          <div className="hidden md:flex absolute left-4 xl:left-12 bottom-2 xl:bottom-5 z-20 items-center gap-3 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300" style={{ animationDelay: '450ms' }}>
+            <div className="flex items-center gap-3 px-3.5 py-2 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-sky-400/80 transition-all duration-300">
+              <svg width="150" height="56" viewBox="0 0 170 70" fill="none" className="overflow-visible drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
+                {/* Zigzag Connection Stroke */}
+                <polyline
+                  points="10,60 55,18 105,45 158,10"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <polyline
+                  points="10,60 55,18 105,45 158,10"
+                  fill="none"
+                  stroke="#38BDF8"
+                  strokeWidth="1.75"
+                  strokeDasharray="6 6"
+                  className="animate-kinetic-data"
+                />
 
-              {/* 4 Circular Junction Node Balls */}
-              <circle cx="10" cy="60" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-              <circle cx="55" cy="18" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-              <circle cx="105" cy="45" r="5.5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
-              <circle cx="158" cy="10" r="6.5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2" />
-              <circle cx="158" cy="10" r="3" fill="#FFFFFF" className="animate-ping" style={{ transformOrigin: '158px 10px' }} />
-            </svg>
-            <div className="flex flex-col text-left mb-1">
-              <span className="text-[10px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
-                REAL-TIME DATA
-              </span>
-              <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
-                Số Hóa Toàn Diện
-              </span>
-              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-tight">
-                Chuẩn Xác Tức Thì
-              </span>
+                {/* 4 Circular Junction Node Balls */}
+                <circle cx="10" cy="60" r="5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="55" cy="18" r="5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="105" cy="45" r="5" fill="#FFFFFF" stroke="#0284C7" strokeWidth="2.5" />
+                <circle cx="158" cy="10" r="6" fill="#0284C7" stroke="#FFFFFF" strokeWidth="2" />
+                <circle cx="158" cy="10" r="2.5" fill="#FFFFFF" className="animate-ping" style={{ transformOrigin: '158px 10px' }} />
+              </svg>
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                  REAL-TIME DATA
+                </span>
+                <span className="text-xs font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
+                  Số Hóa Toàn Diện
+                </span>
+                <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-tight">
+                  Chuẩn Xác Tức Thì
+                </span>
+              </div>
             </div>
           </div>
 
