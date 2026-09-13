@@ -231,6 +231,18 @@ export const AppShell: React.FC<AppShellProps> = ({
   // Tab đầu mục chính phân hệ Thiết kế (Đơn hàng, Phẩm, Tồn) & Thanh tìm kiếm nhanh
   const [designNavTab, setDesignNavTab] = useState<'orders' | 'products' | 'inventory'>('orders');
   const [designSearch, setDesignSearch] = useState('');
+  const [designCounts, setDesignCounts] = useState({ orders: 3, products: 8, inventory: 8 });
+
+  // Lắng nghe số lượng bản vẽ / đơn hàng đồng bộ từ submodule
+  useEffect(() => {
+    const handleCounts = (e: any) => {
+      if (e.detail) {
+        setDesignCounts(prev => ({ ...prev, ...e.detail }));
+      }
+    };
+    window.addEventListener('design_counts_sync', handleCounts);
+    return () => window.removeEventListener('design_counts_sync', handleCounts);
+  }, []);
 
   // Lắng nghe sự kiện đồng bộ tab từ submodule
   useEffect(() => {
@@ -471,14 +483,15 @@ export const AppShell: React.FC<AppShellProps> = ({
                   {/* Vạch ngăn đứng */}
                   <div className="h-4 sm:h-4.5 w-px bg-slate-300 dark:bg-slate-700 flex-shrink-0" />
 
-                  {/* 3 ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) */}
-                  <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                  {/* BỘ 3 ĐẦU MỤC CHÍNH DẠNG CAPSULE PILL ĐỒNG BỘ NGUYÊN BẢN (Đơn hàng, Phẩm, Tồn) */}
+                  <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 sm:p-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shrink-0 select-none">
                     {[
-                      { id: 'orders' as const, label: 'Đơn hàng' },
-                      { id: 'products' as const, label: 'Phẩm' },
-                      { id: 'inventory' as const, label: 'Tồn' },
+                      { id: 'orders' as const, label: 'Đơn hàng', count: designCounts.orders, icon: ClipboardCheck },
+                      { id: 'products' as const, label: 'Phẩm', count: designCounts.products, icon: Layers },
+                      { id: 'inventory' as const, label: 'Tồn', count: designCounts.inventory, icon: Box },
                     ].map((tab) => {
                       const isActive = designNavTab === tab.id;
+                      const IconComponent = tab.icon;
                       return (
                         <button
                           key={tab.id}
@@ -486,16 +499,19 @@ export const AppShell: React.FC<AppShellProps> = ({
                             setDesignNavTab(tab.id);
                             window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: tab.id }));
                           }}
-                          className={`relative px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm cursor-pointer select-none tracking-normal transition-colors shrink-0 whitespace-nowrap ${
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
                             isActive
-                              ? 'font-black text-[#F15A24] dark:text-[#F15A24]'
-                              : 'font-bold text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                              ? 'bg-[#F15A24] text-white shadow-xs font-black'
+                              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                           }`}
                         >
+                          <IconComponent className="w-3.5 h-3.5" />
                           <span>{tab.label}</span>
-                          {isActive && (
-                            <span className="absolute -bottom-1.5 left-2 right-2 h-[2px] bg-[#F15A24] rounded-full" />
-                          )}
+                          <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                            isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                          }`}>
+                            {tab.count}
+                          </span>
                         </button>
                       );
                     })}

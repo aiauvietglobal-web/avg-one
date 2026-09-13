@@ -796,6 +796,12 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     return matchCat && matchSearch;
   });
 
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('design_counts_sync', {
+      detail: { orders: designOrders.length, products: designFiles.length, inventory: inventoryItems.length }
+    }));
+  }, [designOrders.length, designFiles.length, inventoryItems.length]);
+
   return (
     <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       
@@ -807,7 +813,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       )}
 
-      {/* 1. TOP COMMAND BAR: TIÊU ĐỀ PHÂN HỆ + BỘ CHỌN ĐẦU MỤC CHÍNH (ĐƠN HÀNG, PHẨM, TỒN) */}
+      {/* 1. TOP COMMAND BAR: TIÊU ĐỀ PHÂN HỆ (BÓC TÁCH ĐỘC LẬP VỚI THANH HEADER) */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-gradient-to-br from-[#F15A24] to-amber-500 text-white rounded-xl shadow-xs shrink-0">
@@ -830,35 +836,9 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* 3 ĐẦU MỤC CHÍNH ĐỒNG BỘ SONG HÀNH VỚI HEADER */}
-        <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-full md:w-auto">
-          {[
-            { id: 'orders' as const, label: 'Đơn hàng', count: designOrders.length, icon: ClipboardCheck },
-            { id: 'products' as const, label: 'Phẩm', count: designFiles.length, icon: Layers },
-            { id: 'inventory' as const, label: 'Tồn', count: inventoryItems.length, icon: Box },
-          ].map((tab) => {
-            const isActive = currentMainTab === tab.id;
-            const IconComponent = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => handleSwitchTab(tab.id)}
-                className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                  isActive
-                    ? 'bg-[#F15A24] text-white shadow-xs font-black'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <IconComponent className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                  isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                }`}>
-                  {tab.count}
-                </span>
-              </button>
-            );
-          })}
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+          <span>Không gian nghiệp vụ CAD/PCB</span>
         </div>
       </div>
 
