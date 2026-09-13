@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   LayoutGrid, Plus, Bell, Sun, Moon, Zap, User, Users, ChevronDown, ChevronLeft, CheckCircle2, Home,
-  FileText, Newspaper, Target, Layers, BarChart3, LogOut, Shield, MessageSquare, Clock, SlidersHorizontal, Sparkles, Wrench, ArrowLeft, Maximize2, Minimize2, Smartphone, RotateCw, Calendar, FolderKanban, Search
+  FileText, Newspaper, Target, Layers, BarChart3, LogOut, Shield, MessageSquare, Clock, SlidersHorizontal, Sparkles, Wrench, ArrowLeft, Maximize2, Minimize2, Smartphone, RotateCw, Calendar, FolderKanban, Search, ClipboardCheck, Box
 } from 'lucide-react';
 import { AppLauncherModal, AppModuleId, APP_MODULES } from './AppLauncherModal';
 import { LoginModal, UserProfile } from '../auth/LoginModal';
@@ -425,19 +425,21 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {isDesignModule ? (
-            /* HEADER CHO PHÂN HỆ THIẾT KẾ: Đơn hàng, Phẩm, Tồn, Thanh tìm kiếm nhanh */
-            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
-              <div className="w-full px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
+            /* HEADER CHUYÊN NGHIỆP PHÂN HỆ THIẾT KẾ (3.2 - THIẾT KẾ) */
+            <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
+              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
                 
                 {/* 1. Left: Apps Launcher + Tiêu đề Phân Hệ (3.2 – THIẾT KẾ) */}
-                <div className="flex items-center gap-2.5 shrink-0 select-none">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0 select-none">
                   <button
                     onClick={() => setShowLauncher(true)}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-[#F15A24] dark:text-orange-400 transition flex items-center justify-center cursor-pointer"
+                    className="p-2 rounded-xl text-slate-600 hover:text-[#F15A24] dark:text-slate-300 dark:hover:text-orange-400 hover:bg-orange-50/80 dark:hover:bg-orange-950/40 border border-slate-200/60 dark:border-slate-800/80 hover:border-orange-200 dark:hover:border-orange-800/60 transition-all duration-200 flex items-center justify-center cursor-pointer shadow-2xs group"
                     title="Mở danh mục Tất cả Ứng dụng AVG One"
                   >
-                    <LayoutGrid className="w-5 h-5 stroke-[2.5]" />
+                    <LayoutGrid className="w-4.5 h-4.5 stroke-[2.2] group-hover:scale-105 transition-transform" />
                   </button>
+
+                  <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 hidden xs:block" />
 
                   <button
                     onClick={() => {
@@ -448,21 +450,30 @@ export const AppShell: React.FC<AppShellProps> = ({
                         onSelectModule('home');
                       }
                     }}
-                    className="font-black text-[#F15A24] text-base sm:text-lg tracking-wide uppercase hover:opacity-85 transition flex items-center gap-1.5 cursor-pointer"
+                    className="flex items-center gap-1.5 px-2 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all cursor-pointer group"
+                    title="Quay lại danh mục phân hệ"
                   >
-                    <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-                    <span>{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
+                    <ChevronLeft className="w-4 h-4 stroke-[2.5] text-slate-400 group-hover:text-[#F15A24] group-hover:-translate-x-0.5 transition-all" />
+                    <div className="flex items-center gap-1.5">
+                      <span className="px-1.5 py-0.5 rounded-md bg-[#F15A24]/10 text-[#F15A24] font-mono text-[11px] font-black tracking-tight border border-[#F15A24]/20">
+                        3.2
+                      </span>
+                      <span className="font-black text-slate-900 dark:text-white text-sm sm:text-[15px] tracking-wide uppercase">
+                        THIẾT KẾ
+                      </span>
+                    </div>
                   </button>
                 </div>
 
                 {/* 2. Center: CÁC ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) */}
-                <nav className="flex items-center gap-1.5 sm:gap-3 lg:gap-5">
+                <nav className="flex items-center p-1 bg-slate-100/90 dark:bg-slate-800/90 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-2xs">
                   {[
-                    { id: 'orders', label: 'Đơn hàng' },
-                    { id: 'products', label: 'Phẩm' },
-                    { id: 'inventory', label: 'Tồn' },
+                    { id: 'orders', label: 'Đơn hàng', icon: ClipboardCheck },
+                    { id: 'products', label: 'Phẩm', icon: Layers },
+                    { id: 'inventory', label: 'Tồn', icon: Box },
                   ].map((item) => {
                     const isActive = designNavTab === item.id;
+                    const Icon = item.icon;
                     return (
                       <button
                         key={item.id}
@@ -470,26 +481,23 @@ export const AppShell: React.FC<AppShellProps> = ({
                           setDesignNavTab(item.id as any);
                           window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: item.id }));
                         }}
-                        style={{ color: isActive ? '#F15A24' : undefined }}
-                        className={`relative px-2.5 sm:px-3.5 py-1.5 text-sm sm:text-[15px] font-bold cursor-pointer select-none transition-colors ${
+                        className={`relative px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-[13px] font-bold cursor-pointer select-none transition-all duration-200 flex items-center gap-1.5 ${
                           isActive
-                            ? 'text-[#F15A24] dark:text-[#F15A24]'
-                            : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                            ? 'bg-white dark:bg-slate-900 text-[#F15A24] dark:text-[#F15A24] shadow-xs font-black'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/40'
                         }`}
                       >
+                        <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#F15A24] stroke-[2.5]' : 'text-slate-400'}`} />
                         <span>{item.label}</span>
-                        {isActive && (
-                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-[2.5px] bg-[#F15A24] rounded-full" />
-                        )}
                       </button>
                     );
                   })}
                 </nav>
 
                 {/* 3. THANH TÌM KIẾM NHANH */}
-                <div className="flex-1 max-w-sm sm:max-w-md mx-2 sm:mx-4 hidden sm:block">
+                <div className="flex-1 max-w-xs sm:max-w-sm hidden md:block">
                   <div className="relative flex items-center">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
                     <input
                       id="design-quick-search-input"
                       type="text"
@@ -498,29 +506,71 @@ export const AppShell: React.FC<AppShellProps> = ({
                         setDesignSearch(e.target.value);
                         window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
                       }}
-                      placeholder="Tìm kiếm bản vẽ, mã đơn, linh kiện..."
-                      className="w-full pl-9 pr-14 py-1.5 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] transition shadow-2xs"
+                      placeholder="Tìm bản vẽ, mã đơn, linh kiện..."
+                      className="w-full pl-8.5 pr-14 py-1.5 h-9 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800/90 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] transition-all shadow-2xs font-medium"
                     />
-                    <kbd className="absolute right-2.5 px-1.5 py-0.5 text-[10px] font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded shadow-2xs pointer-events-none">
-                      Ctrl K
+                    <kbd className="absolute right-2 px-1.5 py-0.5 text-[10px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200/80 dark:border-slate-600 rounded-md shadow-2xs pointer-events-none flex items-center gap-0.5">
+                      <span>Ctrl</span>
+                      <span>K</span>
                     </kbd>
                   </div>
                 </div>
 
                 {/* 4. Right: SSO Avatar / Login */}
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-3 shrink-0 relative">
                   {currentUser ? (
-                    <button
-                      onClick={() => setShowUserMenu(!showUserMenu)}
-                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#D97706] hover:bg-[#b45309] text-white font-black text-xs sm:text-sm flex items-center justify-center transition hover:scale-105 shadow-xs cursor-pointer"
-                      title={`${currentUser.name} (${currentUser.role})`}
-                    >
-                      {currentUser.name.charAt(0)}
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setShowUserMenu(!showUserMenu)}
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-amber-500 to-[#F15A24] hover:from-amber-600 hover:to-[#d94a18] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-all hover:scale-105 shadow-xs hover:ring-2 hover:ring-[#F15A24]/30 cursor-pointer"
+                        title={`${currentUser.name} (${currentUser.role})`}
+                      >
+                        {currentUser.name.charAt(0)}
+                      </button>
+
+                      {/* User Dropdown Menu */}
+                      {showUserMenu && (
+                        <div
+                          ref={userMenuRef}
+                          className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2 z-50 animate-dropdown-slide"
+                        >
+                          <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
+                            <div className="font-bold text-slate-900 dark:text-white text-xs">{currentUser.name}</div>
+                            <div className="text-[10px] text-slate-400">{currentUser.email}</div>
+                            <span className="inline-block px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 mt-1">
+                              {currentUser.role}
+                            </span>
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              onToggleDarkMode();
+                              setShowUserMenu(false);
+                            }}
+                            className="w-full text-left px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg flex items-center justify-between transition-colors cursor-pointer"
+                          >
+                            <span>Giao diện: {darkMode ? 'Tối' : 'Sáng'}</span>
+                            {darkMode ? <Moon className="w-3.5 h-3.5 text-amber-400" /> : <Sun className="w-3.5 h-3.5 text-amber-500" />}
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              localStorage.removeItem('avg_logged_user');
+                              setCurrentUser(null);
+                              setShowUserMenu(false);
+                            }}
+                            className="w-full text-left px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg flex items-center gap-2 transition-colors cursor-pointer mt-1"
+                          >
+                            <LogOut className="w-3.5 h-3.5" />
+                            <span>Đăng xuất tài khoản</span>
+                          </button>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <div
                       onClick={() => setIsLoginModalOpen(true)}
-                      className="w-8 h-8 rounded-full bg-[#D97706] text-white font-black text-xs flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 transition-transform"
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-amber-500 to-[#F15A24] hover:from-amber-600 hover:to-[#d94a18] text-white font-black text-xs sm:text-sm flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 hover:ring-2 hover:ring-[#F15A24]/30 transition-all"
                       title="Đăng nhập tài khoản"
                     >
                       D
