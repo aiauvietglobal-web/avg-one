@@ -427,7 +427,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           {isDesignModule ? (
             /* HEADER CHUYÊN NGHIỆP PHÂN HỆ THIẾT KẾ (3.2 - THIẾT KẾ) */
             <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
-              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
+              <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
                 
                 {/* 1. Left: Apps Launcher + Tiêu đề Phân Hệ (3.2 – THIẾT KẾ) */}
                 <div className="flex items-center gap-2 sm:gap-3 shrink-0 select-none">
@@ -454,50 +454,62 @@ export const AppShell: React.FC<AppShellProps> = ({
                     title="Quay lại danh mục phân hệ"
                   >
                     <ChevronLeft className="w-4 h-4 stroke-[2.5] text-slate-400 group-hover:text-[#F15A24] group-hover:-translate-x-0.5 transition-all" />
-                    <div className="flex items-center gap-1.5">
-                      <span className="px-1.5 py-0.5 rounded-md bg-[#F15A24]/10 text-[#F15A24] font-mono text-[11px] font-black tracking-tight border border-[#F15A24]/20">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-lg bg-[#F15A24]/10 text-[#F15A24] font-mono text-xs font-black tracking-tight border border-[#F15A24]/20 shadow-2xs">
                         3.2
                       </span>
-                      <span className="font-black text-slate-900 dark:text-white text-sm sm:text-[15px] tracking-wide uppercase">
+                      <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base tracking-wide uppercase">
                         THIẾT KẾ
                       </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="Phân hệ hoạt động bình thường" />
                     </div>
                   </button>
                 </div>
 
-                {/* 2. Center: CÁC ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) */}
-                <nav className="flex items-center p-1 bg-slate-100/90 dark:bg-slate-800/90 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-2xs">
-                  {[
-                    { id: 'orders', label: 'Đơn hàng', icon: ClipboardCheck },
-                    { id: 'products', label: 'Phẩm', icon: Layers },
-                    { id: 'inventory', label: 'Tồn', icon: Box },
-                  ].map((item) => {
-                    const isActive = designNavTab === item.id;
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setDesignNavTab(item.id as any);
-                          window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: item.id }));
-                        }}
-                        className={`relative px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-[13px] font-bold cursor-pointer select-none transition-all duration-200 flex items-center gap-1.5 ${
-                          isActive
-                            ? 'bg-white dark:bg-slate-900 text-[#F15A24] dark:text-[#F15A24] shadow-xs font-black'
-                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/40'
-                        }`}
-                      >
-                        <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#F15A24] stroke-[2.5]' : 'text-slate-400'}`} />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
+                {/* 2. Center: CÁC ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) - Căn giữa cân đối */}
+                <div className="flex-1 flex justify-center items-center px-2">
+                  <nav className="flex items-center p-1 bg-slate-100/90 dark:bg-slate-800/90 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 shadow-2xs">
+                    {[
+                      { id: 'orders', label: 'Đơn hàng', count: 3, icon: ClipboardCheck },
+                      { id: 'products', label: 'Phẩm', count: 8, icon: Layers },
+                      { id: 'inventory', label: 'Tồn', count: 8, icon: Box },
+                    ].map((item) => {
+                      const isActive = designNavTab === item.id;
+                      const Icon = item.icon;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            setDesignNavTab(item.id as any);
+                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: item.id }));
+                          }}
+                          className={`relative px-3 sm:px-4 py-1.5 rounded-xl text-xs sm:text-[13px] font-bold cursor-pointer select-none transition-all duration-200 flex items-center gap-1.5 ${
+                            isActive
+                              ? 'bg-white dark:bg-slate-900 text-[#F15A24] dark:text-[#F15A24] shadow-xs font-black'
+                              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-white/50 dark:hover:bg-slate-700/40'
+                          }`}
+                        >
+                          <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#F15A24] stroke-[2.5]' : 'text-slate-400'}`} />
+                          <span>{item.label}</span>
+                          <span
+                            className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold transition-colors ${
+                              isActive
+                                ? 'bg-[#F15A24]/10 text-[#F15A24] font-black'
+                                : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                            }`}
+                          >
+                            {item.count}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </div>
 
-                {/* 3. THANH TÌM KIẾM NHANH */}
-                <div className="flex-1 max-w-xs sm:max-w-sm hidden md:block">
-                  <div className="relative flex items-center">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
+                {/* 3. Right: THANH TÌM KIẾM RỘNG RÃI + TOÀN MÀN HÌNH + SSO PROFILE */}
+                <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+                  <div className="relative w-44 sm:w-60 md:w-72 lg:w-84 xl:w-96 hidden md:block">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                       id="design-quick-search-input"
                       type="text"
@@ -506,18 +518,27 @@ export const AppShell: React.FC<AppShellProps> = ({
                         setDesignSearch(e.target.value);
                         window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
                       }}
-                      placeholder="Tìm bản vẽ, mã đơn, linh kiện..."
+                      placeholder="Tìm bản vẽ CAD, mã đơn, linh kiện..."
                       className="w-full pl-8.5 pr-14 py-1.5 h-9 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800/90 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] transition-all shadow-2xs font-medium"
                     />
-                    <kbd className="absolute right-2 px-1.5 py-0.5 text-[10px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200/80 dark:border-slate-600 rounded-md shadow-2xs pointer-events-none flex items-center gap-0.5">
+                    <kbd className="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200/80 dark:border-slate-600 rounded-md shadow-2xs pointer-events-none flex items-center gap-0.5">
                       <span>Ctrl</span>
                       <span>K</span>
                     </kbd>
                   </div>
-                </div>
 
-                {/* 4. Right: SSO Avatar / Login */}
-                <div className="flex items-center gap-3 shrink-0 relative">
+                  <button
+                    onClick={toggleFullscreen}
+                    className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-800 transition-all flex items-center justify-center cursor-pointer shadow-2xs"
+                    title={isFullscreen ? "Thu nhỏ cửa sổ" : "Mở rộng toàn màn hình"}
+                  >
+                    {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                  </button>
+
+                  <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 hidden xs:block" />
+
+                  {/* SSO Avatar / Login */}
+                  <div className="flex items-center gap-3 shrink-0 relative">
                   {currentUser ? (
                     <>
                       <button
@@ -579,11 +600,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                 </div>
 
               </div>
-            </header>
+
+            </div>
+          </header>
           ) : (
             /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
             <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              <div className="w-full px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
                 {/* Left: AVG One Official Logo & Sub-module Title */}
                 <div className="flex items-center gap-3 select-none">

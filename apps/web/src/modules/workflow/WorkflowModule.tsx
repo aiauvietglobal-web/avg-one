@@ -797,7 +797,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   });
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 p-4 sm:p-6 space-y-6">
+    <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
       
       {/* TOAST THÔNG BÁO TÁC VỤ */}
       {toastMessage && (
