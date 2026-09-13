@@ -28,29 +28,32 @@ interface TabItem {
 const AnimatedHeaderTabs: React.FC<{
   tabs: TabItem[];
   activeId: string;
-}> = ({ tabs, activeId }) => {
+  activeColor?: string;
+}> = ({ tabs, activeId, activeColor = '#F15A24' }) => {
   return (
-    <div className="relative flex items-center h-full gap-3 sm:gap-4 text-xs sm:text-sm font-medium flex-shrink-0 ml-1">
+    <div className="relative flex items-center h-full gap-2 sm:gap-3 text-xs sm:text-sm font-medium flex-shrink-0 ml-1 whitespace-nowrap">
       {tabs.map((tab) => {
         const isActive = tab.id === activeId;
         return (
-          <div key={tab.id} className="relative h-full flex items-center">
+          <div key={tab.id} className="relative h-full flex items-center shrink-0">
             <button
               id={tab.domId}
               data-tab-id={tab.id}
               onClick={tab.onClick}
-              className={`h-full flex items-center text-xs sm:text-sm transition-colors duration-200 select-none whitespace-nowrap cursor-pointer ${
+              style={{ color: isActive ? activeColor : undefined }}
+              className={`h-full flex items-center text-xs sm:text-sm transition-colors duration-200 select-none whitespace-nowrap cursor-pointer shrink-0 ${
                 isActive
-                  ? 'text-[#00A8E8] dark:text-[#00A8E8] font-black'
-                  : 'text-slate-600 dark:text-slate-300 font-bold hover:text-[#00A8E8] dark:hover:text-[#00A8E8]'
+                  ? 'font-black'
+                  : 'text-slate-600 dark:text-slate-300 font-bold hover:opacity-80'
               }`}
             >
               {tab.label}
             </button>
 
-            {/* Line mỏng 2px xuất hiện mở rộng nhẹ nhàng thu ngắn hơn nữa dưới chân từng đầu mục khi được chọn */}
+            {/* Line mỏng 2px xuất hiện dưới chân từng đầu mục khi được chọn */}
             <span
-              className={`absolute bottom-0 left-5 right-5 h-[2px] bg-[#00A8E8] rounded-full transform origin-center transition-transform duration-300 ease-out pointer-events-none ${
+              style={{ backgroundColor: activeColor }}
+              className={`absolute bottom-0 left-2 right-2 h-[2px] rounded-full transform origin-center transition-transform duration-300 ease-out pointer-events-none ${
                 isActive ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
               }`}
             />
@@ -432,11 +435,11 @@ export const AppShell: React.FC<AppShellProps> = ({
             <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
               
               {/* Left: AVG One Official Logo & Sub-module Title & Các đầu mục tích hợp theo phân hệ */}
-              <div className="flex items-center gap-3 select-none">
+              <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
                 <img
                   src={avgOfficialLogo}
                   alt="AVG One Official Logo"
-                  className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto"
+                  className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
                   onClick={() => {
                     setActiveSubTitle('');
                     onSelectModule('home');
@@ -444,29 +447,30 @@ export const AppShell: React.FC<AppShellProps> = ({
                   title="Trang chủ AVG One"
                 />
                 {activeSubTitle && activeModule !== 'home' && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap">
                     <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
                     <button
                       onClick={() => {
                         setActiveSubTitle('');
                         window.dispatchEvent(new CustomEvent('submodule_back'));
                       }}
-                      className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group"
+                      className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group whitespace-nowrap shrink-0"
                       title="Quay lại danh mục phân hệ"
                     >
-                      <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform" />
-                      <span>{activeSubTitle}</span>
+                      <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                      <span className="whitespace-nowrap shrink-0">{activeSubTitle}</span>
                     </button>
                   </div>
                 )}
 
                 {/* ĐẦU MỤC TÍCH HỢP CHO PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn, Tìm kiếm nhanh) */}
                 {isDesignModule && (
-                  <div className="flex items-center gap-2 ml-1">
+                  <div className="flex items-center gap-1.5 sm:gap-2 ml-1 shrink-0 whitespace-nowrap">
                     <div className="h-4 sm:h-4.5 w-px bg-slate-300 dark:bg-slate-700 flex-shrink-0" />
                     
                     <AnimatedHeaderTabs
                       activeId={designNavTab}
+                      activeColor="#F15A24"
                       tabs={[
                         {
                           id: 'orders',
@@ -498,9 +502,9 @@ export const AppShell: React.FC<AppShellProps> = ({
                       ]}
                     />
 
-                    {/* Thanh tìm kiếm nhanh tích hợp */}
-                    <div className="relative hidden xl:block w-36 lg:w-44 ml-1">
-                      <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    {/* Thanh tìm kiếm nhanh tích hợp - Thiết kế co giãn thông minh không đè chữ */}
+                    <div className="relative hidden 2xl:flex items-center ml-1 shrink-0">
+                      <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
                       <input
                         id="design-quick-search-input"
                         type="text"
@@ -510,9 +514,9 @@ export const AppShell: React.FC<AppShellProps> = ({
                           window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
                         }}
                         placeholder="Tìm bản vẽ..."
-                        className="w-full pl-7 pr-10 py-1 h-7 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#F15A24] transition font-medium"
+                        className="w-28 focus:w-40 pl-7 pr-8 py-1 h-7 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#F15A24] transition-all duration-200 font-medium shrink-0"
                       />
-                      <kbd className="absolute right-1.5 top-1/2 -translate-y-1/2 px-1 py-0.2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded pointer-events-none">
+                      <kbd className="absolute right-1.5 px-1 py-0.2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded pointer-events-none">
                         Ctrl K
                       </kbd>
                     </div>
@@ -521,8 +525,8 @@ export const AppShell: React.FC<AppShellProps> = ({
               </div>
 
               {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
-              <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
-                <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-6">
+              <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 shrink-0 whitespace-nowrap">
+                <nav className="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3.5 shrink-0 whitespace-nowrap">
                   {[
                     { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
                     { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
@@ -538,27 +542,27 @@ export const AppShell: React.FC<AppShellProps> = ({
                           <div
                             key={item.id}
                             ref={systemDropdownRef}
-                            className="relative"
+                            className="relative shrink-0 whitespace-nowrap"
                           >
                             <button
                               onClick={handleToggleSystemModule}
                               style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
+                              className={`relative px-2 sm:px-2.5 py-1 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-0.5 whitespace-nowrap shrink-0 ${
                                 isHighlighted
                                   ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                                   : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                               }`}
                             >
-                              <span className="relative inline-block">
+                              <span className="relative inline-block whitespace-nowrap">
                                 <span
                                   style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                  className="relative z-10 transition-colors duration-150 inline-block"
+                                  className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap"
                                 >
                                   {item.label}
                                 </span>
                                 {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
                                 {isHighlighted && (
-                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-4 sm:w-5 h-[2px] bg-[#F15A24] rounded-full" />
                                 )}
                               </span>
                               <ChevronDown
