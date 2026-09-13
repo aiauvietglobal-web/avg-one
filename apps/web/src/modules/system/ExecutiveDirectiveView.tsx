@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Megaphone, Send, RefreshCw, ExternalLink, Search, Filter, AlertTriangle, FileText, User, Users, Calendar } from 'lucide-react';
+import { Megaphone, Send, RefreshCw, Search, Filter, AlertTriangle, FileText, User, Users, Calendar } from 'lucide-react';
 import {
   fetchExecutiveDirectivesFromGoogleSheet,
-  ExecutiveDirectiveItem,
-  EXECUTIVE_DIRECTIVE_SHEET_EDIT_URL
+  ExecutiveDirectiveItem
 } from '../../services/googleSheetSync';
 
 export const ExecutiveDirectiveView: React.FC = () => {
@@ -101,15 +100,16 @@ export const ExecutiveDirectiveView: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      {/* 🔮 Header & Live Sync Banner - Đồng Bộ Thiết Kế & Animation Chuẩn AVG One */}
-      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-5 sm:p-6 shadow-xs relative overflow-hidden space-y-5">
+      {/* 🔮 TÍCH HỢP 2 HỘP LỚN: HEADER, THỐNG KÊ & BAN HÀNH THÔNG ĐIỆP TỐI ƯU KHÔNG GIAN */}
+      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-5 sm:p-6 shadow-xs relative overflow-hidden space-y-4">
         {/* Ambient Glow Orbs */}
         <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#0284C7]/10 dark:bg-[#0284C7]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#F15A24]/10 dark:bg-[#F15A24]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Top Row: Title & Slogan on Left, 4 Stats Counters on Right */}
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Title & Animated Slogan Box Badge */}
-          <div className="space-y-2 text-left">
+          <div className="space-y-1.5 text-left flex-shrink-0">
             <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
               <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
                 <defs>
@@ -152,179 +152,158 @@ export const ExecutiveDirectiveView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
-            <button
-              onClick={() => loadData(true)}
-              disabled={loading}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 cursor-pointer disabled:opacity-50"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-              <span>{loading ? 'Đang đồng bộ...' : 'Tải Lại (Sync Live)'}</span>
-            </button>
+          {/* 4 Stats Counter Cards in Header - Compact & Space-optimized */}
+          <div className="flex-initial">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
+              <div className="bg-sky-50/70 hover:bg-sky-50 dark:bg-sky-950/30 dark:hover:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800/60 rounded-xl px-3 py-1.5 sm:py-2 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs min-w-[105px]">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-sky-800 dark:text-sky-300 uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
+                  <span>Tổng Thông Điệp</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-sky-900 dark:text-sky-100 mt-0.5">{totalCount}</div>
+              </div>
 
-            <a
-              href={EXECUTIVE_DIRECTIVE_SHEET_EDIT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-orange-500/20 hover:-translate-y-0.5 cursor-pointer"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Mở Google Sheet Gốc</span>
-            </a>
+              <div className="bg-emerald-50/70 hover:bg-emerald-50 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 rounded-xl px-3 py-1.5 sm:py-2 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs min-w-[105px]">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Trực Tiếp</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-emerald-900 dark:text-emerald-100 mt-0.5">{directCount}</div>
+              </div>
+
+              <div className="bg-amber-50/70 hover:bg-amber-50 dark:bg-amber-950/30 dark:hover:bg-amber-950/50 border border-amber-200/80 dark:border-amber-800/60 rounded-xl px-3 py-1.5 sm:py-2 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs min-w-[105px]">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  <span>Gián Tiếp</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-amber-900 dark:text-amber-100 mt-0.5">{indirectCount}</div>
+              </div>
+
+              <div className="bg-rose-50/70 hover:bg-rose-50 dark:bg-rose-950/30 dark:hover:bg-rose-950/50 border border-rose-200/80 dark:border-rose-800/60 rounded-xl px-3 py-1.5 sm:py-2 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs min-w-[105px]">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wider">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                  <span>Chưa Xác Nhận</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-rose-900 dark:text-rose-100 mt-0.5">{unconfirmedCount}</div>
+              </div>
+            </div>
+            {lastSyncTime && (
+              <div className="text-[10px] text-slate-400 dark:text-slate-500 font-mono text-right mt-1">
+                Lần cập nhật gần nhất: {lastSyncTime}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Stats Counter Cards - Các hộp sáng màu có nhịp đập & animation hover */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-1 relative z-10">
-          <div className="bg-sky-50/70 hover:bg-sky-50 dark:bg-sky-950/30 dark:hover:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-sky-500/10">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-sky-800 dark:text-sky-300 uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse" />
-              <span>Tổng Thông Điệp</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-sky-900 dark:text-sky-100 mt-1">{totalCount}</div>
-          </div>
-          <div className="bg-emerald-50/70 hover:bg-emerald-50 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/10">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Trực Tiếp</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-emerald-900 dark:text-emerald-100 mt-1">{directCount}</div>
-          </div>
-          <div className="bg-amber-50/70 hover:bg-amber-50 dark:bg-amber-950/30 dark:hover:bg-amber-950/50 border border-amber-200/80 dark:border-amber-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-amber-500/10">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              <span>Gián Tiếp</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-amber-900 dark:text-amber-100 mt-1">{indirectCount}</div>
-          </div>
-          <div className="bg-rose-50/70 hover:bg-rose-50 dark:bg-rose-950/30 dark:hover:bg-rose-950/50 border border-rose-200/80 dark:border-rose-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-rose-500/10">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-rose-800 dark:text-rose-300 uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-              <span>Chưa Xác Nhận</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-black text-rose-900 dark:text-rose-100 mt-1">{unconfirmedCount}</div>
-          </div>
-        </div>
-
-        {lastSyncTime && (
-          <div className="text-[11px] text-slate-400 dark:text-slate-500 font-mono text-right relative z-10">
-            Lần cập nhật gần nhất: {lastSyncTime}
-          </div>
-        )}
-      </div>
-
-      {/* Dispatcher Form (Collapseable / Admin) */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <Send className="w-5 h-5 text-[#F15A24]" />
-            <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
+        {/* Integrated Dispatcher Form - Optimized Space & Clean Typography */}
+        <div className="border-t border-slate-200/80 dark:border-slate-800 pt-3.5 space-y-3 relative z-10">
+          <div className="flex items-center justify-between">
+            <h3 className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
               Ban Hành Thông Điệp & Chỉ Đạo Mới
             </h3>
           </div>
-          <span className="text-xs text-slate-400 font-medium">Quyền hạn: Điều Hành (DH / Key Leads)</span>
-        </div>
 
-        {dispatchToast && (
-          <div className="p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
-            <span>{dispatchToast}</span>
-            <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
-          </div>
-        )}
+          {dispatchToast && (
+            <div className="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
+              <span>{dispatchToast}</span>
+              <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
+            </div>
+          )}
 
-        <form onSubmit={handleCreateDirective} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <form onSubmit={handleCreateDirective} className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Mã Thông Điệp
+                </label>
+                <input
+                  type="text"
+                  value={newCode}
+                  onChange={(e) => setNewCode(e.target.value)}
+                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Đầu Mối Chủ Thể (Người Phát)
+                </label>
+                <input
+                  type="text"
+                  value={newIssuer}
+                  onChange={(e) => setNewIssuer(e.target.value)}
+                  placeholder="VD: DH, Kiến, 1, 5.1..."
+                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Đầu Mối Phối Hợp (Người Nhận)
+                </label>
+                <input
+                  type="text"
+                  value={newRecipients}
+                  onChange={(e) => setNewRecipients(e.target.value)}
+                  placeholder="VD: @All, 5.1; 0; 8; 9"
+                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Mức Độ Ưu Tiên
+                </label>
+                <select
+                  value={newPriority}
+                  onChange={(e) => setNewPriority(e.target.value as any)}
+                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                >
+                  <option value="URGENT">🔴 Khẩn Cấp (Urgent)</option>
+                  <option value="HIGH">🟠 Trọng Tâm (High)</option>
+                  <option value="NORMAL">🔵 Bình Thường (Normal)</option>
+                </select>
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Mã Thông Điệp
+                Tiêu Đề Thông Điệp / Tóm Tắt Chỉ Đạo
               </label>
               <input
                 type="text"
-                value={newCode}
-                onChange={(e) => setNewCode(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Nhập tiêu đề hoặc tóm tắt chỉ đạo ngắn gọn..."
+                className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                required
               />
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Đầu Mối Chủ Thể (Người Phát)
+                Nội Dung Chi Tiết Thông Điệp Điều Hành
               </label>
-              <input
-                type="text"
-                value={newIssuer}
-                onChange={(e) => setNewIssuer(e.target.value)}
-                placeholder="VD: DH, Kiến, 1, 5.1..."
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+              <textarea
+                rows={2}
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                placeholder="Nhập chi tiết nội dung chỉ đạo chiến lược..."
+                className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
+                required
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Đầu Mối Phối Hợp (Người Nhận)
-              </label>
-              <input
-                type="text"
-                value={newRecipients}
-                onChange={(e) => setNewRecipients(e.target.value)}
-                placeholder="VD: @All, 5.1; 0; 8; 9"
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Mức Độ Ưu Tiên
-              </label>
-              <select
-                value={newPriority}
-                onChange={(e) => setNewPriority(e.target.value as any)}
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+            <div className="flex justify-end pt-1">
+              <button
+                type="submit"
+                className="px-5 py-2 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md transition flex items-center gap-2 cursor-pointer"
               >
-                <option value="URGENT">🔴 Khẩn Cấp (Urgent)</option>
-                <option value="HIGH">🟠 Trọng Tâm (High)</option>
-                <option value="NORMAL">🔵 Bình Thường (Normal)</option>
-              </select>
+                <Send className="w-3.5 h-3.5" /> <span>Ban Hành Thông Điệp</span>
+              </button>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Tiêu Đề Thông Điệp / Tóm Tắt Chỉ Đạo
-            </label>
-            <input
-              type="text"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Nhập tiêu đề hoặc tóm tắt chỉ đạo ngắn gọn..."
-              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Nội Dung Chi Tiết Thông Điệp Điều Hành
-            </label>
-            <textarea
-              rows={3}
-              value={newContent}
-              onChange={(e) => setNewContent(e.target.value)}
-              placeholder="Nhập chi tiết nội dung chỉ đạo chiến lược..."
-              className="w-full px-3.5 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
-              required
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-5 py-2.5 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md transition flex items-center gap-2 cursor-pointer"
-            >
-              <Send className="w-4 h-4" /> <span>📢 Ban Hành Thông Điệp</span>
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
 
       {/* Filter & Search Bar */}
