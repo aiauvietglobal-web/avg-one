@@ -191,10 +191,20 @@ export const AppShell: React.FC<AppShellProps> = ({
   const handleSelectOrdersSubTab = (tab: 'design' | 'research' | 'sample-h1' | 'legal') => {
     setOrdersTabState(tab);
     setIsOrdersDropdownOpen(false);
-    onSelectModule('orders');
-    window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: tab }));
-    const btn = document.getElementById(`btn-orders-subtab-${tab}`);
-    if (btn) btn.click();
+    if (tab === 'design' || tab === 'research') {
+      onSelectModule('rd');
+      window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: tab }));
+      window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: tab }));
+      setTimeout(() => {
+        const btn = document.getElementById(`btn-workflow-subtab-${tab}`);
+        if (btn) btn.click();
+      }, 50);
+    } else {
+      onSelectModule('orders');
+      window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: tab }));
+      const btn = document.getElementById(`btn-orders-subtab-${tab}`);
+      if (btn) btn.click();
+    }
   };
 
   // Click vào nút Đơn hàng: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
@@ -351,30 +361,45 @@ export const AppShell: React.FC<AppShellProps> = ({
       ) : (
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
-          {['home', 'system', 'admin', 'inside', 'calendar', 'orders', 'wework'].includes(activeModule) ? (
-            /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
-            <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
-                
-                {/* Left: AVG One Official Logo (Hiển thị tĩnh, không hiệu ứng hover/zoom, không tính năng click) */}
-                <div className="flex items-center gap-3 select-none">
-                  <img
-                    src={avgOfficialLogo}
-                    alt="AVG One Official Logo"
-                    className="h-7 sm:h-8 object-contain pointer-events-none"
-                  />
-                </div>
+          {/* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */}
+          <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
+            <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              
+              {/* Left: AVG One Official Logo & Sub-module Title */}
+              <div className="flex items-center gap-3 select-none">
+                <img
+                  src={avgOfficialLogo}
+                  alt="AVG One Official Logo"
+                  className="h-7 sm:h-8 object-contain pointer-events-none"
+                />
+                {activeSubTitle && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
+                    <button
+                      onClick={() => {
+                        setActiveSubTitle('');
+                        window.dispatchEvent(new CustomEvent('submodule_back'));
+                      }}
+                      className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group"
+                      title="Quay lại danh mục phân hệ"
+                    >
+                      <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform" />
+                      <span>{activeSubTitle}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
 
-                {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
-                <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
-                  <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-6">
-                    {[
-                      { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
-                      { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
-                      { id: 'inside' as AppModuleId, aliases: ['inside'], label: 'Bảng tin' },
-                      { id: 'calendar' as AppModuleId, aliases: ['calendar'], label: 'Lịch' },
-                      { id: 'orders' as AppModuleId, aliases: ['orders', 'wework'], label: 'Đơn hàng' },
-                    ].map((item) => {
+              {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
+              <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
+                <nav className="hidden md:flex items-center gap-3 sm:gap-4 lg:gap-6">
+                  {[
+                    { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
+                    { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
+                    { id: 'inside' as AppModuleId, aliases: ['inside'], label: 'Bảng tin' },
+                    { id: 'calendar' as AppModuleId, aliases: ['calendar'], label: 'Lịch' },
+                    { id: 'orders' as AppModuleId, aliases: ['orders', 'wework', 'workflow', 'rd'], label: 'Đơn hàng' },
+                  ].map((item) => {
                       const isActive = item.aliases.includes(activeModule);
 
                       if (item.id === 'system') {
@@ -605,13 +630,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                                     handleSelectOrdersSubTab('design');
                                   }}
                                   className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && ordersTabState === 'design'
+                                    (isActive && ordersTabState === 'design') || activeSubTitle.includes('THIẾT KẾ')
                                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
                                       : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
                                   <span className="text-slate-900 dark:text-white font-medium">Thiết kế</span>
-                                  {isActive && ordersTabState === 'design' && (
+                                  {((isActive && ordersTabState === 'design') || activeSubTitle.includes('THIẾT KẾ')) && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
                                 </button>
@@ -621,13 +646,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                                     handleSelectOrdersSubTab('research');
                                   }}
                                   className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && ordersTabState === 'research'
+                                    (isActive && ordersTabState === 'research') || activeSubTitle.includes('NGHIÊN CỨU')
                                       ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
                                       : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                                   }`}
                                 >
                                   <span className="text-slate-900 dark:text-white font-medium">Nghiên cứu</span>
-                                  {isActive && ordersTabState === 'research' && (
+                                  {((isActive && ordersTabState === 'research') || activeSubTitle.includes('NGHIÊN CỨU')) && (
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                                   )}
                                 </button>
@@ -750,65 +775,12 @@ export const AppShell: React.FC<AppShellProps> = ({
 
               </div>
             </header>
-          ) : (
-            /* SUB-MODULE TOPBAR HEADER */
-            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-slate-900 text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
-              <div className="w-full px-4 sm:px-8 h-12 sm:h-14 flex items-center justify-between gap-4 text-xs sm:text-sm font-medium">
-                
-                {/* Left Stack */}
-                <div className="flex items-center gap-3 overflow-x-auto no-scrollbar flex-1 mr-2 h-full">
-                  <button
-                    onClick={() => setShowLauncher(true)}
-                    className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-[#F15A24] dark:text-orange-400 transition flex items-center justify-center flex-shrink-0 cursor-pointer"
-                    title="Mở danh mục Tất cả Ứng dụng AVG One"
-                  >
-                    <LayoutGrid className="w-5 h-5 stroke-[2.5]" />
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (activeSubTitle) {
-                        if (isArrowActive) {
-                          setIsArrowActive(false);
-                          setActiveSubTitle('');
-                          window.dispatchEvent(new CustomEvent('submodule_back'));
-                        } else {
-                          setIsArrowActive(true);
-                        }
-                      } else {
-                        handleAppTitleClick();
-                      }
-                    }}
-                    className="font-black text-slate-900 dark:text-white text-base sm:text-lg tracking-wide uppercase hover:text-[#F15A24] transition flex items-center gap-1.5 flex-shrink-0 mr-0.5 group cursor-pointer"
-                  >
-                    {isArrowActive && (
-                      <ChevronLeft className="w-5 h-5 stroke-[2.5] text-[#F15A24] dark:text-orange-400" />
-                    )}
-                    <span>
-                      {activeSubTitle || (currentApp.name === 'Lịch' ? 'LỊCH' : currentApp.name)}
-                    </span>
-                  </button>
-                </div>
-
-                {/* Right Stack: SSO Avatar back to Home */}
-                <div className="flex items-center gap-2 flex-shrink-0 text-xs sm:text-sm">
-                  <div
-                    onClick={() => onSelectModule('home')}
-                    className="w-8 h-8 rounded-full bg-[#D97706] text-white font-black text-xs flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 transition-transform"
-                    title="Về Trang Chủ"
-                  >
-                    D
-                  </div>
-                </div>
-
-              </div>
-            </header>
-          )}
 
           {/* Main Content Viewport for Desktop */}
           <main className="flex-1 w-full min-h-0 h-full overflow-hidden flex flex-col relative">
             {children}
           </main>
+
         </div>
       )}
 

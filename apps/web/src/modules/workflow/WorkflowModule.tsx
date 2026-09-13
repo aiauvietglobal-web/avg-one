@@ -1466,6 +1466,21 @@ export const WorkflowModule: React.FC = () => {
     };
   }, []);
 
+  // Lắng nghe sự kiện chọn phân hệ con từ Header Topbar (Thiết kế / Nghiên cứu)
+  React.useEffect(() => {
+    const handleSelectSub = (e: any) => {
+      if (e.detail === 'design' || e.detail === 'research') {
+        setSelectedSubModule(e.detail);
+      }
+    };
+    window.addEventListener('workflow_submodule_select', handleSelectSub);
+    window.addEventListener('orders_tab_change', handleSelectSub);
+    return () => {
+      window.removeEventListener('workflow_submodule_select', handleSelectSub);
+      window.removeEventListener('orders_tab_change', handleSelectSub);
+    };
+  }, []);
+
   if (selectedSubModule === 'design') {
     return <DesignSubModuleView onBack={() => setSelectedSubModule(null)} />;
   }
