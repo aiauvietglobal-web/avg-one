@@ -262,7 +262,7 @@ export const AnnualPlanView: React.FC = () => {
     <div className="space-y-6 animate-fadeIn pb-8">
       {/* 🔮 HERO BANNER HỆ THỐNG: KẾ HOẠCH NĂM 2026 - AVG ONE EXECUTIVE STYLE */}
       <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden">
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-start gap-6 lg:gap-8">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
           {/* Left: Title & Animated Slogan Box Badge */}
           <div className="space-y-2 text-left flex-shrink-0">
@@ -309,9 +309,9 @@ export const AnnualPlanView: React.FC = () => {
             </div>
           </div>
 
-          {/* Right: Quick Navigation 11 Task Groups Grid (Compact & Well-proportioned Boxes) */}
-          <div className="border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 pt-4 lg:pt-0 lg:pl-6 flex-initial">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full max-w-full lg:max-w-[840px]">
+          {/* Right: Quick Navigation 11 Task Groups Grid (3 rows, 4 columns) */}
+          <div className="flex-1 border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 pt-4 lg:pt-0 lg:pl-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 w-full">
               {TASK_GROUPS.map((g) => (
                 <div
                   key={g.id}
@@ -319,7 +319,7 @@ export const AnnualPlanView: React.FC = () => {
                     const el = document.getElementById(`task-group-${g.id}`);
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="bg-slate-100/80 dark:bg-slate-800/80 hover:bg-sky-50 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2.5 cursor-pointer transition-all duration-150 shadow-2xs hover:border-sky-400 group"
+                  className="bg-slate-100/80 dark:bg-slate-800/80 hover:bg-sky-50 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-2.5 sm:px-3 py-1.5 text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all duration-150 shadow-2xs hover:border-sky-400 group"
                   title={g.title}
                 >
                   <span className="w-5 h-5 rounded-md bg-[#0284C7] text-white flex items-center justify-center text-[10px] font-black flex-shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
