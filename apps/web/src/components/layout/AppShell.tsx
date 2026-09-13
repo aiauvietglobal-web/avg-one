@@ -228,7 +228,38 @@ export const AppShell: React.FC<AppShellProps> = ({
     };
   }, [activeModule]);
 
+  // Tab đầu mục chính phân hệ Thiết kế (Đơn hàng, Phẩm, Tồn) & Thanh tìm kiếm nhanh
+  const [designNavTab, setDesignNavTab] = useState<'orders' | 'products' | 'inventory'>('orders');
+  const [designSearch, setDesignSearch] = useState('');
 
+  // Lắng nghe sự kiện đồng bộ tab từ submodule
+  useEffect(() => {
+    const handleDesignTabSync = (e: any) => {
+      if (e.detail && ['orders', 'products', 'inventory'].includes(e.detail)) {
+        setDesignNavTab(e.detail);
+      }
+    };
+    window.addEventListener('design_subtab_sync', handleDesignTabSync);
+    return () => window.removeEventListener('design_subtab_sync', handleDesignTabSync);
+  }, []);
+
+  // Shortcut Ctrl + K để focus nhanh vào thanh tìm kiếm trên header
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        const searchInput = document.getElementById('design-quick-search-input');
+        if (searchInput) {
+          e.preventDefault();
+          searchInput.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Kiểm tra nếu đang đứng ở phân hệ Thiết kế (R&D / Workflow)
+  const isDesignModule = activeModule !== 'home' && (activeModule === 'rd' || activeModule === 'workflow' || activeModule === 'orders') && activeSubTitle.includes('THIẾT KẾ');
 
   const handleAppTitleClick = () => {
     if (isArrowActive) {
@@ -317,6 +348,68 @@ export const AppShell: React.FC<AppShellProps> = ({
 
   const currentApp = APP_MODULES.find(m => m.id === activeModule) || APP_MODULES[0];
 
+  const renderUserAuthButton = () => (
+    <div className="relative">
+      {currentUser ? (
+        /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn */
+        <button
+          onClick={() => setShowUserMenu(!showUserMenu)}
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none"
+          title={`${currentUser.name} (${currentUser.role})`}
+        >
+          {currentUser.name.charAt(0)}
+        </button>
+      ) : (
+        /* Chưa đăng nhập: Hộp viền cam, chữ cam, bo tròn 3 góc tối đa */
+        <button
+          onClick={() => setIsLoginModalOpen(true)}
+          className="btn-speech-bubble px-4 sm:px-5 py-1 sm:py-1.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-sm sm:text-[15px] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] select-none flex items-center justify-center"
+          style={{
+            borderTopLeftRadius: '9999px',
+            borderTopRightRadius: '9999px',
+            borderBottomRightRadius: '9999px',
+            borderBottomLeftRadius: '0px'
+          }}
+          title="Đăng nhập tài khoản AVG One"
+        >
+          <span className="font-bold text-[#F15A24] tracking-wide">
+            Đăng Nhập
+          </span>
+        </button>
+      )}
+
+      {showUserMenu && currentUser && (
+        <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2 z-50 text-slate-800 dark:text-slate-100">
+          <div className="p-2.5 border-b border-slate-100 dark:border-slate-800 text-xs">
+            <div className="font-bold text-slate-900 dark:text-white">{currentUser.name}</div>
+            <div className="text-[10px] text-slate-400 font-medium truncate">{currentUser.email}</div>
+            <div className="mt-1.5 text-[10px] font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 px-2 py-0.5 rounded-md inline-block">
+              {currentUser.role}
+            </div>
+          </div>
+          <div className="py-1 text-xs space-y-0.5">
+            <button
+              onClick={() => { onSelectModule('admin'); setShowUserMenu(false); }}
+              className="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg font-medium flex items-center gap-2 cursor-pointer"
+            >
+              <Shield className="w-3.5 h-3.5 text-[#714B67]" /> Cài đặt IT Admin
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem('avg_logged_user');
+                setCurrentUser(null);
+                setShowUserMenu(false);
+              }}
+              className="w-full text-left px-3 py-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg font-medium flex items-center gap-2 cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" /> Đăng xuất tài khoản
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="w-screen h-screen overflow-hidden flex flex-col font-sans antialiased bg-white dark:bg-slate-950 text-[#333333] dark:text-slate-100 transition-colors duration-200">
       
@@ -355,9 +448,90 @@ export const AppShell: React.FC<AppShellProps> = ({
       ) : (
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
-          {/* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */}
-          <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-            <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+          {isDesignModule ? (
+            /* HEADER CHUYÊN BIỆT CHO PHÂN HỆ THIẾT KẾ: ĐÃ BỎ LOGO AVGONE VÀ BỎ MENU VẬN HÀNH */
+            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
+              <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
+                
+                {/* Cụm trái: < 3.2 – THIẾT KẾ + | + Các đầu mục Đơn hàng, Phẩm, Tồn + Thanh tìm kiếm nhanh */}
+                <div className="flex items-center gap-2.5 sm:gap-3.5 select-none shrink-0 whitespace-nowrap">
+                  {/* Nút quay lại kèm tiêu đề: < 3.2 – THIẾT KẾ */}
+                  <button
+                    onClick={() => {
+                      setActiveSubTitle('');
+                      window.dispatchEvent(new CustomEvent('submodule_back'));
+                    }}
+                    className="text-xs sm:text-sm md:text-base font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group whitespace-nowrap shrink-0"
+                    title="Quay lại danh mục phân hệ"
+                  >
+                    <ChevronLeft className="w-4.5 h-4.5 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                    <span className="whitespace-nowrap shrink-0">{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
+                  </button>
+
+                  {/* Vạch ngăn đứng */}
+                  <div className="h-4 sm:h-4.5 w-px bg-slate-300 dark:bg-slate-700 flex-shrink-0" />
+
+                  {/* 3 ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) */}
+                  <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                    {[
+                      { id: 'orders' as const, label: 'Đơn hàng' },
+                      { id: 'products' as const, label: 'Phẩm' },
+                      { id: 'inventory' as const, label: 'Tồn' },
+                    ].map((tab) => {
+                      const isActive = designNavTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => {
+                            setDesignNavTab(tab.id);
+                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: tab.id }));
+                          }}
+                          className={`relative px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm cursor-pointer select-none tracking-normal transition-colors shrink-0 whitespace-nowrap ${
+                            isActive
+                              ? 'font-black text-[#F15A24] dark:text-[#F15A24]'
+                              : 'font-bold text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                          }`}
+                        >
+                          <span>{tab.label}</span>
+                          {isActive && (
+                            <span className="absolute -bottom-1.5 left-2 right-2 h-[2px] bg-[#F15A24] rounded-full" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Thanh tìm kiếm nhanh tích hợp */}
+                  <div className="relative flex items-center ml-1 sm:ml-2 shrink-0">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
+                    <input
+                      id="design-quick-search-input"
+                      type="text"
+                      value={designSearch}
+                      onChange={(e) => {
+                        setDesignSearch(e.target.value);
+                        window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
+                      }}
+                      placeholder="Tìm bản vẽ..."
+                      className="w-32 sm:w-44 focus:w-56 pl-8 pr-12 py-1 h-7 sm:h-8 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#F15A24] transition-all duration-200 font-medium shrink-0"
+                    />
+                    <kbd className="absolute right-1.5 px-1 py-0.2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded pointer-events-none">
+                      Ctrl K
+                    </kbd>
+                  </div>
+                </div>
+
+                {/* Right: Hộp Đăng Nhập / Profile Avatar */}
+                <div className="flex items-center gap-3 shrink-0">
+                  {renderUserAuthButton()}
+                </div>
+
+              </div>
+            </header>
+          ) : (
+            /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
+            <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
+              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
               
               {/* Left: AVG One Official Logo & Sub-module Title & Các đầu mục tích hợp theo phân hệ */}
               <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
@@ -712,69 +886,12 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </nav>
 
                   {/* SSO Profile / Login Button */}
-                  <div className="relative">
-                    {currentUser ? (
-                      /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn */
-                      <button
-                        onClick={() => setShowUserMenu(!showUserMenu)}
-                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none"
-                        title={`${currentUser.name} (${currentUser.role})`}
-                      >
-                        {currentUser.name.charAt(0)}
-                      </button>
-                    ) : (
-                      /* Chưa đăng nhập: Hộp viền cam, chữ cam, bo tròn 3 góc tối đa (trừ góc dưới cùng bên trái bỏ bo góc), hộp nhỏ gọn hơn */
-                      <button
-                        onClick={() => setIsLoginModalOpen(true)}
-                        className="btn-speech-bubble px-4 sm:px-5 py-1 sm:py-1.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-sm sm:text-[15px] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] select-none flex items-center justify-center"
-                        style={{
-                          borderTopLeftRadius: '9999px',
-                          borderTopRightRadius: '9999px',
-                          borderBottomRightRadius: '9999px',
-                          borderBottomLeftRadius: '0px'
-                        }}
-                        title="Đăng nhập tài khoản AVG One"
-                      >
-                        <span className="font-bold text-[#F15A24] tracking-wide">
-                          Đăng Nhập
-                        </span>
-                      </button>
-                    )}
-
-                    {showUserMenu && currentUser && (
-                      <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2 z-50 text-slate-800 dark:text-slate-100">
-                        <div className="p-2.5 border-b border-slate-100 dark:border-slate-800 text-xs">
-                          <div className="font-bold text-slate-900 dark:text-white">{currentUser.name}</div>
-                          <div className="text-[10px] text-slate-400 font-medium truncate">{currentUser.email}</div>
-                          <div className="mt-1.5 text-[10px] font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 px-2 py-0.5 rounded-md inline-block">
-                            {currentUser.role}
-                          </div>
-                        </div>
-                        <div className="py-1 text-xs space-y-0.5">
-                          <button
-                            onClick={() => { onSelectModule('admin'); setShowUserMenu(false); }}
-                            className="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg font-medium flex items-center gap-2 cursor-pointer"
-                          >
-                            <Shield className="w-3.5 h-3.5 text-[#714B67]" /> Cài đặt IT Admin
-                          </button>
-                          <button
-                            onClick={() => {
-                              localStorage.removeItem('avg_logged_user');
-                              setCurrentUser(null);
-                              setShowUserMenu(false);
-                            }}
-                            className="w-full text-left px-3 py-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 rounded-lg font-medium flex items-center gap-2 cursor-pointer"
-                          >
-                            <LogOut className="w-3.5 h-3.5" /> Đăng xuất tài khoản
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  {renderUserAuthButton()}
                 </div>
 
               </div>
             </header>
+          )}
 
           {/* Main Content Viewport for Desktop */}
           <main className="flex-1 w-full min-h-0 h-full overflow-hidden flex flex-col relative">
