@@ -422,68 +422,74 @@ export const AppShell: React.FC<AppShellProps> = ({
           {isDesignModule ? (
             /* HEADER CHO PHÂN HỆ THIẾT KẾ: Đơn hàng, Phẩm, Tồn, Thanh tìm kiếm nhanh */
             <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
-              <div className="w-full px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
+              <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
-                {/* 1. Left: Apps Launcher + Tiêu đề Phân Hệ (3.2 – THIẾT KẾ) */}
-                <div className="flex items-center gap-2.5 shrink-0 select-none">
-                  <button
-                    onClick={() => setShowLauncher(true)}
-                    className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-[#F15A24] dark:text-orange-400 transition flex items-center justify-center cursor-pointer"
-                    title="Mở danh mục Tất cả Ứng dụng AVG One"
-                  >
-                    <LayoutGrid className="w-5 h-5 stroke-[2.5]" />
-                  </button>
+                {/* 1. KHỐI TRÁI: App Launcher + Tiêu đề Phân Hệ (3.2 – THIẾT KẾ) + Vách ngăn + Các đầu mục chính (Đơn hàng, Phẩm, Tồn) */}
+                <div className="flex items-center gap-3 sm:gap-4 lg:gap-5 shrink-0 select-none">
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => setShowLauncher(true)}
+                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-[#F15A24] dark:text-orange-400 transition flex items-center justify-center cursor-pointer"
+                      title="Mở danh mục Tất cả Ứng dụng AVG One"
+                    >
+                      <LayoutGrid className="w-5 h-5 stroke-[2.5]" />
+                    </button>
 
-                  <button
-                    onClick={() => {
-                      if (activeSubTitle) {
-                        setActiveSubTitle('');
-                        window.dispatchEvent(new CustomEvent('submodule_back'));
-                      } else {
-                        onSelectModule('home');
-                      }
-                    }}
-                    className="font-black text-[#F15A24] text-base sm:text-lg tracking-wide uppercase hover:opacity-85 transition flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-                    <span>{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
-                  </button>
+                    <button
+                      onClick={() => {
+                        if (activeSubTitle) {
+                          setActiveSubTitle('');
+                          window.dispatchEvent(new CustomEvent('submodule_back'));
+                        } else {
+                          onSelectModule('home');
+                        }
+                      }}
+                      className="font-black text-[#F15A24] text-base sm:text-lg tracking-wide uppercase hover:opacity-85 transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
+                      <span>{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
+                    </button>
+                  </div>
+
+                  {/* Vách ngăn dọc mỏng */}
+                  <div className="h-5 w-[1.5px] bg-slate-200 dark:bg-slate-700 hidden sm:block" />
+
+                  {/* Menu các đầu mục chính của phân hệ Thiết kế */}
+                  <nav className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+                    {[
+                      { id: 'orders', label: 'Đơn hàng' },
+                      { id: 'products', label: 'Phẩm' },
+                      { id: 'inventory', label: 'Tồn' },
+                    ].map((item) => {
+                      const isActive = designNavTab === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            setDesignNavTab(item.id as any);
+                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: item.id }));
+                          }}
+                          style={{ color: isActive ? '#F15A24' : undefined }}
+                          className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-base font-bold cursor-pointer select-none transition-colors ${
+                            isActive
+                              ? 'text-[#F15A24] dark:text-[#F15A24]'
+                              : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                          }`}
+                        >
+                          <span>{item.label}</span>
+                          {isActive && (
+                            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2.5px] bg-[#F15A24] rounded-full" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </nav>
                 </div>
 
-                {/* 2. Center: CÁC ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) */}
-                <nav className="flex items-center gap-1.5 sm:gap-3 lg:gap-5">
-                  {[
-                    { id: 'orders', label: 'Đơn hàng' },
-                    { id: 'products', label: 'Phẩm' },
-                    { id: 'inventory', label: 'Tồn' },
-                  ].map((item) => {
-                    const isActive = designNavTab === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setDesignNavTab(item.id as any);
-                          window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: item.id }));
-                        }}
-                        style={{ color: isActive ? '#F15A24' : undefined }}
-                        className={`relative px-2.5 sm:px-3.5 py-1.5 text-sm sm:text-[15px] font-bold cursor-pointer select-none transition-colors ${
-                          isActive
-                            ? 'text-[#F15A24] dark:text-[#F15A24]'
-                            : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
-                        }`}
-                      >
-                        <span>{item.label}</span>
-                        {isActive && (
-                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-[2.5px] bg-[#F15A24] rounded-full" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                {/* 3. THANH TÌM KIẾM NHANH */}
-                <div className="flex-1 max-w-sm sm:max-w-md mx-2 sm:mx-4 hidden sm:block">
-                  <div className="relative flex items-center">
+                {/* 2. KHỐI PHẢI: Thanh tìm kiếm nhanh + SSO Avatar / Login */}
+                <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+                  {/* Thanh tìm kiếm nhanh */}
+                  <div className="w-48 sm:w-64 md:w-72 lg:w-80 relative flex items-center">
                     <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
                     <input
                       id="design-quick-search-input"
@@ -500,27 +506,27 @@ export const AppShell: React.FC<AppShellProps> = ({
                       Ctrl K
                     </kbd>
                   </div>
-                </div>
 
-                {/* 4. Right: SSO Avatar / Login */}
-                <div className="flex items-center gap-3 shrink-0">
-                  {currentUser ? (
-                    <button
-                      onClick={() => setShowUserMenu(!showUserMenu)}
-                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#D97706] hover:bg-[#b45309] text-white font-black text-xs sm:text-sm flex items-center justify-center transition hover:scale-105 shadow-xs cursor-pointer"
-                      title={`${currentUser.name} (${currentUser.role})`}
-                    >
-                      {currentUser.name.charAt(0)}
-                    </button>
-                  ) : (
-                    <div
-                      onClick={() => setIsLoginModalOpen(true)}
-                      className="w-8 h-8 rounded-full bg-[#D97706] text-white font-black text-xs flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 transition-transform"
-                      title="Đăng nhập tài khoản"
-                    >
-                      D
-                    </div>
-                  )}
+                  {/* SSO Avatar / Login */}
+                  <div className="flex items-center">
+                    {currentUser ? (
+                      <button
+                        onClick={() => setShowUserMenu(!showUserMenu)}
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#D97706] hover:bg-[#b45309] text-white font-black text-xs sm:text-sm flex items-center justify-center transition hover:scale-105 shadow-xs cursor-pointer"
+                        title={`${currentUser.name} (${currentUser.role})`}
+                      >
+                        {currentUser.name.charAt(0)}
+                      </button>
+                    ) : (
+                      <div
+                        onClick={() => setIsLoginModalOpen(true)}
+                        className="w-8 h-8 rounded-full bg-[#D97706] text-white font-black text-xs flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 transition-transform"
+                        title="Đăng nhập tài khoản"
+                      >
+                        D
+                      </div>
+                    )}
+                  </div>
                 </div>
 
               </div>
