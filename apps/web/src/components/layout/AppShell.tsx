@@ -235,7 +235,10 @@ export const AppShell: React.FC<AppShellProps> = ({
   });
 
   useEffect(() => {
-    if (activeModule === 'rd' || activeModule === 'workflow') {
+    if (activeModule === 'home') {
+      setActiveSubTitle('');
+      setIsArrowActive(false);
+    } else if (activeModule === 'rd' || activeModule === 'workflow') {
       try {
         const saved = localStorage.getItem('avg_workflow_submodule');
         if (saved === 'design') {
@@ -256,7 +259,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 
   useEffect(() => {
     const handleSubModuleChange = (e: any) => {
-      if (e.detail !== undefined) {
+      if (activeModule !== 'home' && e.detail !== undefined) {
         setActiveSubTitle(e.detail);
       }
     };
@@ -264,7 +267,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     return () => {
       window.removeEventListener('submodule_change', handleSubModuleChange);
     };
-  }, []);
+  }, [activeModule]);
 
   // Tab đầu mục chính phân hệ Thiết kế (Đơn hàng, Phẩm, Tồn) & Thanh tìm kiếm nhanh
   const [designNavTab, setDesignNavTab] = useState<'orders' | 'products' | 'inventory'>('orders');
@@ -296,8 +299,8 @@ export const AppShell: React.FC<AppShellProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Chỉ riêng phân hệ Thiết kế mới hiển thị thanh Header chuyên biệt (Đơn hàng, Phẩm, Tồn, Tìm kiếm)
-  const isDesignModule = activeSubTitle.includes('THIẾT KẾ');
+  // Chỉ riêng khi đang đứng ở phân hệ Thiết kế (R&D / Workflow) mới hiển thị thanh Header chuyên biệt
+  const isDesignModule = activeModule !== 'home' && (activeModule === 'rd' || activeModule === 'workflow') && activeSubTitle.includes('THIẾT KẾ');
 
   const handleAppTitleClick = () => {
     if (isArrowActive) {
@@ -595,7 +598,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           ) : (
             /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
             <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-              <div className="w-full px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
                 
                 {/* Left: AVG One Official Logo & Sub-module Title */}
                 <div className="flex items-center gap-3 select-none">
@@ -604,7 +607,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                     alt="AVG One Official Logo"
                     className="h-7 sm:h-8 object-contain pointer-events-none"
                   />
-                {activeSubTitle && (
+                {activeSubTitle && activeModule !== 'home' && (
                   <div className="flex items-center gap-2">
                     <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
                     <button
