@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Megaphone, Send, RefreshCw, Search, Filter, AlertTriangle, FileText, User, Users, Calendar } from 'lucide-react';
+import { Megaphone, Send, RefreshCw, Search, Filter, AlertTriangle, FileText, User, Users, Calendar, ChevronDown } from 'lucide-react';
 import {
   fetchExecutiveDirectivesFromGoogleSheet,
   ExecutiveDirectiveItem
@@ -17,6 +17,7 @@ export const ExecutiveDirectiveView: React.FC = () => {
   const [filterIssuer, setFilterIssuer] = useState<string>('ALL');
 
   // Dispatch Form State
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [newCode, setNewCode] = useState(`TĐ-2026-${Math.floor(Math.random() * 900 + 100)}`);
   const [newTitle, setNewTitle] = useState('');
   const [newContent, setNewContent] = useState('');
@@ -195,114 +196,136 @@ export const ExecutiveDirectiveView: React.FC = () => {
           </div>
         </div>
 
-        {/* Integrated Dispatcher Form - Optimized Space & Clean Typography */}
-        <div className="border-t border-slate-200/80 dark:border-slate-800 pt-3.5 space-y-3 relative z-10">
-          <div className="flex items-center justify-between">
-            <h3 className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
-              Ban Hành Thông Điệp & Chỉ Đạo Mới
-            </h3>
-          </div>
+        {/* Integrated Dispatcher Box - Collapsible 'Ban Hành Thông Điệp' */}
+        <div className="border-t border-slate-200/80 dark:border-slate-800 pt-3 relative z-10">
+          <button
+            type="button"
+            onClick={() => setIsFormOpen(!isFormOpen)}
+            className="w-full flex items-center justify-between px-4 py-2.5 bg-slate-50/80 hover:bg-orange-50/30 dark:bg-slate-800/60 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 rounded-2xl transition-all cursor-pointer group"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-6 h-6 rounded-lg bg-[#F15A24]/10 text-[#F15A24] flex items-center justify-center font-bold text-xs">
+                <Send className="w-3.5 h-3.5" />
+              </div>
+              <span className="font-extrabold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
+                Ban Hành Thông Điệp
+              </span>
+              <span className="text-[11px] text-slate-400 font-medium">
+                ({isFormOpen ? 'Nhấp để thu gọn biểu mẫu' : 'Nhấp để mở biểu mẫu soạn thông điệp & chỉ đạo mới'})
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold text-[#F15A24] opacity-0 group-hover:opacity-100 transition-opacity">
+                {isFormOpen ? 'Đóng lại' : 'Soạn ngay'}
+              </span>
+              <ChevronDown className={`w-4 h-4 text-slate-400 group-hover:text-[#F15A24] transition-transform duration-200 ${isFormOpen ? 'rotate-180 text-[#F15A24]' : ''}`} />
+            </div>
+          </button>
 
           {dispatchToast && (
-            <div className="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
+            <div className="mt-3 p-3 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#F15A24] dark:text-orange-300 text-xs font-bold flex items-center justify-between">
               <span>{dispatchToast}</span>
               <button onClick={() => setDispatchToast(null)} className="text-xs font-black cursor-pointer">✕</button>
             </div>
           )}
 
-          <form onSubmit={handleCreateDirective} className="space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Mã Thông Điệp
-                </label>
-                <input
-                  type="text"
-                  value={newCode}
-                  onChange={(e) => setNewCode(e.target.value)}
-                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-                />
-              </div>
+          {isFormOpen && (
+            <div className="mt-3.5 pt-1 space-y-3 animate-fadeIn">
+              <form onSubmit={handleCreateDirective} className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Mã Thông Điệp
+                    </label>
+                    <input
+                      type="text"
+                      value={newCode}
+                      onChange={(e) => setNewCode(e.target.value)}
+                      className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Đầu Mối Chủ Thể (Người Phát)
-                </label>
-                <input
-                  type="text"
-                  value={newIssuer}
-                  onChange={(e) => setNewIssuer(e.target.value)}
-                  placeholder="VD: DH, Kiến, 1, 5.1..."
-                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-                />
-              </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Đầu Mối Chủ Thể (Người Phát)
+                    </label>
+                    <input
+                      type="text"
+                      value={newIssuer}
+                      onChange={(e) => setNewIssuer(e.target.value)}
+                      placeholder="VD: DH, Kiến, 1, 5.1..."
+                      className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Đầu Mối Phối Hợp (Người Nhận)
-                </label>
-                <input
-                  type="text"
-                  value={newRecipients}
-                  onChange={(e) => setNewRecipients(e.target.value)}
-                  placeholder="VD: @All, 5.1; 0; 8; 9"
-                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-                />
-              </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Đầu Mối Phối Hợp (Người Nhận)
+                    </label>
+                    <input
+                      type="text"
+                      value={newRecipients}
+                      onChange={(e) => setNewRecipients(e.target.value)}
+                      placeholder="VD: @All, 5.1; 0; 8; 9"
+                      className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Mức Độ Ưu Tiên
-                </label>
-                <select
-                  value={newPriority}
-                  onChange={(e) => setNewPriority(e.target.value as any)}
-                  className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-                >
-                  <option value="URGENT">🔴 Khẩn Cấp (Urgent)</option>
-                  <option value="HIGH">🟠 Trọng Tâm (High)</option>
-                  <option value="NORMAL">🔵 Bình Thường (Normal)</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Mức Độ Ưu Tiên
+                    </label>
+                    <select
+                      value={newPriority}
+                      onChange={(e) => setNewPriority(e.target.value as any)}
+                      className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                    >
+                      <option value="URGENT">🔴 Khẩn Cấp (Urgent)</option>
+                      <option value="HIGH">🟠 Trọng Tâm (High)</option>
+                      <option value="NORMAL">🔵 Bình Thường (Normal)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Tiêu Đề Thông Điệp / Tóm Tắt Chỉ Đạo
+                  </label>
+                  <input
+                    type="text"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="Nhập tiêu đề hoặc tóm tắt chỉ đạo ngắn gọn..."
+                    className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    Nội Dung Chi Tiết Thông Điệp Điều Hành
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={newContent}
+                    onChange={(e) => setNewContent(e.target.value)}
+                    placeholder="Nhập chi tiết nội dung chỉ đạo chiến lược..."
+                    className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
+                    required
+                  />
+                </div>
+
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md transition flex items-center gap-2 cursor-pointer"
+                  >
+                    <Send className="w-3.5 h-3.5" /> <span>Ban Hành Thông Điệp</span>
+                  </button>
+                </div>
+              </form>
             </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Tiêu Đề Thông Điệp / Tóm Tắt Chỉ Đạo
-              </label>
-              <input
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="Nhập tiêu đề hoặc tóm tắt chỉ đạo ngắn gọn..."
-                className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-bold"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Nội Dung Chi Tiết Thông Điệp Điều Hành
-              </label>
-              <textarea
-                rows={2}
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                placeholder="Nhập chi tiết nội dung chỉ đạo chiến lược..."
-                className="w-full px-3 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/40 font-medium"
-                required
-              />
-            </div>
-
-            <div className="flex justify-end pt-1">
-              <button
-                type="submit"
-                className="px-5 py-2 bg-[#F15A24] hover:bg-orange-600 text-white rounded-xl text-xs font-black shadow-md transition flex items-center gap-2 cursor-pointer"
-              >
-                <Send className="w-3.5 h-3.5" /> <span>Ban Hành Thông Điệp</span>
-              </button>
-            </div>
-          </form>
+          )}
         </div>
       </div>
 
