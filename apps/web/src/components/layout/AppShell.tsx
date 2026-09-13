@@ -551,7 +551,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           ) : (
             /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
             <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
               
               {/* Left: AVG One Official Logo hoặc Nút quay lại kèm tiêu đề phân hệ con */}
               <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
@@ -561,10 +561,12 @@ export const AppShell: React.FC<AppShellProps> = ({
                       setActiveSubTitle('');
                       window.dispatchEvent(new CustomEvent('submodule_back'));
                     }}
-                    className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
+                    className="group text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide cursor-pointer flex items-center hover:text-orange-600 dark:hover:text-orange-300 transition-colors select-none shrink-0 py-1"
                     title="Quay lại danh mục phân hệ"
                   >
-                    <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                    <span className="inline-flex items-center overflow-hidden transition-all duration-200 ease-out w-0 opacity-0 -translate-x-1 group-hover:w-4 group-hover:opacity-100 group-hover:translate-x-0 group-hover:mr-1 group-active:w-4 group-active:opacity-100 group-active:translate-x-0 group-active:mr-1 group-focus-visible:w-4 group-focus-visible:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:mr-1 shrink-0">
+                      <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] dark:text-orange-400 shrink-0" />
+                    </span>
                     <span className="whitespace-nowrap font-black">{activeSubTitle}</span>
                   </button>
                 ) : (
