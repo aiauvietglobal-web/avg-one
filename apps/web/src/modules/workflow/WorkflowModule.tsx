@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass, Cpu, ArrowLeft, CheckCircle2, ArrowRight, Wrench, Flame, CheckSquare,
   Layers, FileText, AlertCircle, ShieldCheck, Plus, Search, Filter, Download,
   Eye, Code2, HardDrive, CheckSquare2, Sparkles, SlidersHorizontal, RefreshCw, X, FolderKanban,
   Clock, Package, Check, ChevronRight, Share2, ClipboardCheck, Lightbulb,
-  FileCode, Box, ExternalLink, Play, Zap, Award, Activity, FileSpreadsheet
+  FileCode, Box, ExternalLink, Play, Zap, Award, Activity, FileSpreadsheet,
+  Database, Tag, AlertTriangle, ChevronDown, User, Calendar
 } from 'lucide-react';
 
 interface StepDetail {
@@ -614,18 +615,115 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
 /* 🎨 1. GIAO DIỆN LÀM VIỆC CHUYÊN NGHIỆP PHÂN HỆ CON: 3.2 - THIẾT KẾ */
 /* ========================================================================= */
 const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  // 3 đầu mục chính của phân hệ Thiết kế: Đơn hàng, Phẩm, Tồn
+  const [currentMainTab, setCurrentMainTab] = useState<'orders' | 'products' | 'inventory'>('orders');
   const [activeWorkflowTab, setActiveWorkflowTab] = useState<'4steps' | '13sop'>('4steps');
   const [steps, setSteps] = useState<StepDetail[]>(SOP_13_STEPS);
   const [activeStep, setActiveStep] = useState<number>(3);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Lọc theo phân loại
+  const [productCategory, setProductCategory] = useState<string>('ALL');
+  const [inventoryCategory, setInventoryCategory] = useState<string>('ALL');
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // Đồng bộ tab từ Header Topbar
+  useEffect(() => {
+    const handleSubTabChange = (e: any) => {
+      if (e.detail && ['orders', 'products', 'inventory'].includes(e.detail)) {
+        setCurrentMainTab(e.detail);
+      }
+    };
+    window.addEventListener('design_subtab_change', handleSubTabChange);
+    return () => window.removeEventListener('design_subtab_change', handleSubTabChange);
+  }, []);
+
+  // Lắng nghe thanh tìm kiếm nhanh từ Header Topbar (Ctrl + K)
+  useEffect(() => {
+    const handleSearchChange = (e: any) => {
+      if (typeof e.detail === 'string') {
+        setSearchQuery(e.detail);
+      }
+    };
+    window.addEventListener('design_search_change', handleSearchChange);
+    return () => window.removeEventListener('design_search_change', handleSearchChange);
+  }, []);
+
+  // Chuyển tab từ giao diện nội bộ và đồng bộ lên Header
+  const handleSwitchTab = (tab: 'orders' | 'products' | 'inventory') => {
+    setCurrentMainTab(tab);
+    window.dispatchEvent(new CustomEvent('design_subtab_sync', { detail: tab }));
+  };
+
+  // 1. Dữ liệu Đơn hàng Thiết kế
+  const [designOrders, setDesignOrders] = useState([
+    {
+      id: 'des-1',
+      code: 'TK-2026-301',
+      title: 'Thiết kế kiểu dáng vỏ nhôm Anodized cho Bộ điều khiển AVG Controller X1',
+      category: '3D Công nghiệp',
+      stage: 'Duyệt Render 4K',
+      priority: 'P1 - Khẩn Cấp',
+      designer: 'KS. Trần Minh Trí',
+      dueDate: '18/09/2026',
+      progress: 85,
+      specs: 'Nhôm 6061 phay CNC, Anodized Space Gray, Tiêu chuẩn IP67'
+    },
+    {
+      id: 'des-2',
+      code: 'TK-2026-302',
+      title: 'Hồ sơ thiết kế khuôn ép nhựa nắp đậy quang học cho Cụm Sensor Laser',
+      category: 'Khuôn ép nhựa',
+      stage: 'Phay mẫu thử',
+      priority: 'P2 - Cao',
+      designer: 'KS. Lê Văn Thiết Kế',
+      dueDate: '24/09/2026',
+      progress: 60,
+      specs: 'Nhựa PC chống cháy UL94-V0, Độ truyền quang 92%'
+    },
+    {
+      id: 'des-3',
+      code: 'TK-2026-303',
+      title: 'Thiết kế bao bì hộp sản phẩm CMF cao cấp cho Dòng Cảm biến Smart Sensor AVG',
+      category: 'Bao bì & CMF',
+      stage: 'In Market Thử',
+      priority: 'P3 - Tiêu Chuẩn',
+      designer: 'Phạm Đồ Họa',
+      dueDate: '30/09/2026',
+      progress: 40,
+      specs: 'Mã màu Pantone #F15A24, Ép kim logo AVG One'
+    }
+  ]);
+
+  // 2. Dữ liệu Phẩm (Bản vẽ CAD, Gerber, PCB, BOM List)
   const [designFiles, setDesignFiles] = useState([
-    { id: 'DSG-001', name: 'Sơ đồ Nguyên lý Altium PCB AI Sensor v3.2', author: 'Lê Văn Thiết Kế (Senior CAD)', date: '03/09/2026', type: 'Altium Gerber', status: 'APPROVED', size: '24.8 MB' },
-    { id: 'DSG-002', name: 'Bản vẽ Lắp ráp SolidWorks 3D Vỏ Hộp AVG-X', author: 'Hoàng Quốc Việt (3D Specialist)', date: '02/09/2026', type: 'SolidWorks STEP', status: 'IN_PROGRESS', size: '158.4 MB' },
-    { id: 'DSG-003', name: 'File Gerber Bo mạch 4 Lớp Xuất Nhà Máy', author: 'Trần Kỹ Thuật (PCB Layout)', date: '01/09/2026', type: 'Gerber Zip', status: 'APPROVED', size: '8.2 MB' },
-    { id: 'DSG-004', name: 'Mẫu Thư viện Linh kiện SMT Chipset AI', author: 'Lê Văn Thiết Kế (Senior CAD)', date: '28/08/2026', type: 'BOM List Excel', status: 'APPROVED', size: '2.1 MB' }
+    { id: 'DSG-CAD-301', name: 'Bản vẽ Khung Vỏ Nhôm Anodized AVG Controller X1', author: 'KS. Hoàng Quốc Việt (3D Lead)', date: '12/09/2026', type: 'SolidWorks STEP', category: '3D_MODEL', status: 'APPROVED', size: '158.4 MB', desc: 'Mô hình 3D SolidWorks lắp ráp vỏ hộp nhôm phay CNC tiêu chuẩn IP67' },
+    { id: 'DSG-PCB-201', name: 'Sơ đồ Nguyên lý Mạch Bo Chính Telemetry AI v3.2', author: 'KS. Lê Văn Thiết Kế (Senior CAD)', date: '03/09/2026', type: 'Altium Schematic', category: 'PCB', status: 'APPROVED', size: '24.8 MB', desc: 'Schematic mạch 4 lớp tích hợp MCU ESP32-S3 và mạch lọc chống sét lan truyền' },
+    { id: 'DSG-GBR-105', name: 'File Gerber Bo Mạch 4 Lớp Xuất Nhà Máy Gia Công', author: 'Trần Kỹ Thuật (PCB Layout)', date: '08/09/2026', type: 'Gerber Zip', category: 'GERBER', status: 'APPROVED', size: '12.6 MB', desc: 'Bộ file Gerber chuẩn RS-274X, độ dày đồng 1oz mạ vàng ENIG sẵn sàng sản xuất' },
+    { id: 'DSG-BOM-004', name: 'BOM List Linh Kiện SMT & IC Chipset AI Toàn Diện', author: 'KS. Lê Văn Thiết Kế (Senior CAD)', date: '28/08/2026', type: 'BOM List Excel', category: 'BOM', status: 'APPROVED', size: '2.4 MB', desc: 'Danh mục BOM 84 linh kiện SMT đóng gói 0603/0402 kèm mã DigiKey và Mouser' },
+    { id: 'DSG-CAD-302', name: 'Thiết Kế Khuôn Ép Nhựa Nắp Đậy Quang Học Laser', author: 'KS. Nguyễn Văn Cơ Khí', date: '05/09/2026', type: 'SolidWorks STEP', category: '3D_MODEL', status: 'IN_PROGRESS', size: '86.2 MB', desc: 'Khuôn mẫu nhựa PC quang học truyền sáng 92% cho ống kính cảm biến khoảng cách' },
+    { id: 'DSG-PCB-202', name: 'Layout Mạch Vi Điều Khiển ESP32-S3 + LoRa RF', author: 'KS. Lê Văn Thiết Kế (Senior CAD)', date: '01/09/2026', type: 'Altium PCB', category: 'PCB', status: 'APPROVED', size: '31.5 MB', desc: 'Bản vẽ layout mạch RF phối hợp trở kháng anten 50 Ohm chống nhiễu bức xạ' },
+    { id: 'DSG-CMF-401', name: 'Bản Thiết Kế CMF Màu Sắc & Tem Nhãn Vỏ Hộp AVG-X', author: 'Phạm Đồ Họa (CMF Specialist)', date: '10/09/2026', type: 'Vector CMF', category: 'CMF', status: 'APPROVED', size: '18.2 MB', desc: 'Hồ sơ mã màu CMF chuẩn quốc tế, tiêu chuẩn sơn tĩnh điện và vị trí dán tem mác' },
+    { id: 'DSG-DOC-501', name: 'Hồ Sơ Đặc Tả Kỹ Thuật Dung Sai Cơ Khí & Tiêu Chuẩn IP', author: 'KS. Hoàng Quốc Việt (3D Lead)', date: '02/09/2026', type: 'Tài Liệu SOP', category: 'DOC', status: 'APPROVED', size: '5.8 MB', desc: 'Tài liệu hướng dẫn lắp ráp, lực siết ốc bu-lông và quy trình kiểm tra độ kín nước IP67' }
+  ]);
+
+  // 3. Dữ liệu Tồn (Kho Mẫu R&D & Linh Kiện Thiết Kế)
+  const [inventoryItems, setInventoryItems] = useState([
+    { id: 'TON-3D-01', name: 'Vỏ hộp In 3D Mẫu Nhựa Resin Chịu Nhiệt AVG-X', category: 'PROTOTYPE', qty: 14, unit: 'Chiếc', minQty: 5, location: 'Tủ R&D - Kệ A1-02', status: 'IN_STOCK', note: 'Mẫu in máy SLA độ phân giải 50 micron để thử khớp mạch' },
+    { id: 'TON-CNC-02', name: 'Vỏ Nhôm Phay CNC Anodized Space Gray (Sample)', category: 'PROTOTYPE', qty: 4, unit: 'Bộ', minQty: 2, location: 'Bàn Lab 01 - Hộp Test', status: 'IN_STOCK', note: 'Vỏ nhôm nguyên khối phay CNC gắn ron chống nước IP67' },
+    { id: 'TON-PCB-03', name: 'Bo Mạch Trắng 4 Lớp Mạ ENIG Chưa Hàn (Blank Board)', category: 'PCB', qty: 38, unit: 'Bo mạch', minQty: 10, location: 'Tủ Chống Ẩm B2', status: 'IN_STOCK', note: 'Bo mạch test đặt xưởng gia công phục vụ hàn linh kiện mẫu' },
+    { id: 'TON-MCU-04', name: 'Vi Điều Khiển AI ESP32-S3-WROOM-1 (N16R8)', category: 'CHIPSET', qty: 26, unit: 'Con', minQty: 15, location: 'Khay SMT Tủ C1-03', status: 'IN_STOCK', note: 'Chip vi xử lý AI Dual-Core 240MHz, Flash 16MB PSRAM 8MB' },
+    { id: 'TON-RF-05', name: 'Mô-đun Viễn Thông LoRa SX1262 433/868/915MHz', category: 'SENSOR', qty: 18, unit: 'Module', minQty: 5, location: 'Khay SMT Tủ C1-05', status: 'IN_STOCK', note: 'Module truyền sóng tầm xa LoRa 22dBm có thạch anh TCXO chống trôi tần' },
+    { id: 'TON-SNS-06', name: 'Cảm Biến Khí NDIR Đo Nồng Độ CO2 SCD40', category: 'SENSOR', qty: 3, unit: 'Cảm biến', minQty: 5, location: 'Ngăn Test Lab C3', status: 'LOW_STOCK', note: 'Cần bổ sung thêm 10 cảm biến cho đợt thử nghiệm quý 4' },
+    { id: 'TON-JIG-07', name: 'Bộ Đồ Gá Kim Pogo Pin Nạp Firmware & Test Mạch', category: 'JIG', qty: 2, unit: 'Bộ đồ gá', minQty: 1, location: 'Bàn Lập Trình Lab 03', status: 'IN_USE', note: 'Đồ gá nạp code tự động không cần hàn header kết nối' },
+    { id: 'TON-CAB-08', name: 'Dây Cáp FPC Mềm 24-Pin Bước 0.5mm Nối Màn Hình', category: 'ACCESSORY', qty: 45, unit: 'Sợi', minQty: 10, location: 'Hộp Phụ Kiện Kệ B3', status: 'IN_STOCK', note: 'Cáp kết nối tín hiệu SPI/I2C từ bo chính sang cụm hiển thị' }
   ]);
 
   const currentStepInfo = steps.find(s => s.step === activeStep) || steps[2];
@@ -643,21 +741,73 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const handleAddNewDesign = (e: React.FormEvent) => {
     e.preventDefault();
     const newDoc = {
-      id: `DSG-00${designFiles.length + 1}`,
+      id: `DSG-CAD-00${designFiles.length + 1}`,
       name: 'Bản vẽ Thiết kế CAD 3D Vỏ Hộp Cảm Biến Thế Hệ Mới',
-      author: 'Lê Văn Thiết Kế (Senior CAD)',
+      author: 'KS. Lê Văn Thiết Kế (Senior CAD)',
       date: 'Hôm nay',
       type: 'SolidWorks STEP',
+      category: '3D_MODEL',
       status: 'APPROVED',
-      size: '42.5 MB'
+      size: '42.5 MB',
+      desc: 'Bản vẽ xuất xưởng cập nhật mới nhất theo yêu cầu đơn hàng'
     };
     setDesignFiles([newDoc, ...designFiles]);
     setShowAddModal(false);
+    showToast('✨ Đã khởi tạo thành công bản vẽ mới vào Danh mục Phẩm!');
   };
+
+  const handleUpdateStock = (itemId: string, delta: number) => {
+    setInventoryItems(items => items.map(item => {
+      if (item.id === itemId) {
+        const newQty = Math.max(0, item.qty + delta);
+        const newStatus = newQty === 0 ? 'OUT_OF_STOCK' : newQty <= item.minQty ? 'LOW_STOCK' : 'IN_STOCK';
+        return { ...item, qty: newQty, status: newStatus };
+      }
+      return item;
+    }));
+  };
+
+  // Lọc dữ liệu theo search query và category
+  const filteredOrders = designOrders.filter(o =>
+    o.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    o.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    o.designer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    o.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredFiles = designFiles.filter(f => {
+    const matchCat = productCategory === 'ALL' || f.category === productCategory;
+    const matchSearch =
+      f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      f.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      f.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      f.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      f.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  const filteredInventory = inventoryItems.filter(item => {
+    const matchCat = inventoryCategory === 'ALL' || item.category === inventoryCategory;
+    const matchSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.note.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCat && matchSearch;
+  });
 
   return (
     <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 p-4 sm:p-6 space-y-6">
-      {/* 1. TOP EXECUTIVE COMMAND BAR (TITLE + TAB SWITCHER INTEGRATED) */}
+      
+      {/* TOAST THÔNG BÁO TÁC VỤ */}
+      {toastMessage && (
+        <div className="fixed top-18 right-6 z-50 bg-[#2C1D29] text-white px-4 py-2.5 rounded-xl shadow-lg border border-[#F15A24]/40 text-xs font-bold flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          <Sparkles className="w-4 h-4 text-[#F15A24]" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* 1. TOP COMMAND BAR: TIÊU ĐỀ PHÂN HỆ + BỘ CHỌN ĐẦU MỤC CHÍNH (ĐƠN HÀNG, PHẨM, TỒN) */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-gradient-to-br from-[#F15A24] to-amber-500 text-white rounded-xl shadow-xs shrink-0">
@@ -667,7 +817,11 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
               <span>Hệ Thống AVG One</span>
               <span>/</span>
-              <span>Quy Trình Kỹ Thuật</span>
+              <span>3.2 – THIẾT KẾ</span>
+              <span>/</span>
+              <span className="text-[#F15A24] font-black">
+                {currentMainTab === 'orders' ? 'ĐƠN HÀNG' : currentMainTab === 'products' ? 'PHẨM' : 'TỒN'}
+              </span>
             </div>
             <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
               <span>PHÂN HỆ 3.2 – THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
@@ -676,300 +830,677 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Tab Switcher Integrated Directly in Header */}
-        <div className="flex items-center gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 p-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-full md:w-auto">
-          <button
-            onClick={() => setActiveWorkflowTab('4steps')}
-            className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
-              activeWorkflowTab === '4steps'
-                ? 'bg-[#F15A24] text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <ClipboardCheck className="w-3.5 h-3.5" />
-            <span>Quy Trình 4 Bước Đơn Hàng</span>
-          </button>
-
-          <button
-            onClick={() => setActiveWorkflowTab('13sop')}
-            className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
-              activeWorkflowTab === '13sop'
-                ? 'bg-[#0088CC] text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Chi Tiết Luồng 13 Bước SOP</span>
-          </button>
+        {/* 3 ĐẦU MỤC CHÍNH ĐỒNG BỘ SONG HÀNH VỚI HEADER */}
+        <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-full md:w-auto">
+          {[
+            { id: 'orders' as const, label: 'Đơn hàng', count: designOrders.length, icon: ClipboardCheck },
+            { id: 'products' as const, label: 'Phẩm', count: designFiles.length, icon: Layers },
+            { id: 'inventory' as const, label: 'Tồn', count: inventoryItems.length, icon: Box },
+          ].map((tab) => {
+            const isActive = currentMainTab === tab.id;
+            const IconComponent = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleSwitchTab(tab.id)}
+                className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#F15A24] text-white shadow-xs font-black'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                <IconComponent className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                  isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                }`}>
+                  {tab.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* 2. COMPACT KPI METRICS STRIP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tổng File CAD/PCB</span>
-            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-              <span>24 Bản vẽ</span>
-              <span className="text-[10px] text-emerald-600 font-bold">(100% Altium)</span>
-            </div>
-          </div>
-          <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-[#0077B6] rounded-lg shrink-0">
-            <Layers className="w-4 h-4" />
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Mẫu In 3D Prototype</span>
-            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-              <span>8 Vỏ hộp</span>
-              <span className="text-[10px] text-cyan-600 font-bold">(IP67)</span>
-            </div>
-          </div>
-          <div className="p-2 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg shrink-0">
-            <Box className="w-4 h-4" />
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tiêu Chuẩn SOP Kỹ Thuật</span>
-            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-              <span className="text-emerald-600">95.8% Đạt</span>
-              <span className="text-[10px] text-slate-400 font-bold">(3, 4, 10)</span>
-            </div>
-          </div>
-          <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg shrink-0">
-            <ClipboardCheck className="w-4 h-4" />
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Đơn Hàng Active</span>
-            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-              <span className="text-[#F15A24]">3 Đơn Hàng</span>
-              <span className="text-[10px] text-slate-400 font-bold">(Active)</span>
-            </div>
-          </div>
-          <div className="p-2 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-lg shrink-0">
-            <Package className="w-4 h-4" />
-          </div>
-        </div>
-      </div>
-
-      {/* CONDITIONAL RENDER: 4 BƯỚC XỬ LÝ ĐƠN HÀNG VS 13 BƯỚC SOP */}
-      {activeWorkflowTab === '4steps' ? (
-        <Order4StepFlowView themeColor="#F15A24" defaultStep={2} />
-      ) : (
-        /* MAIN TWO-COLUMN WORKSPACE FOR 13 SOP STEPS */
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: 13-Steps SOP Tracker */}
-          <div className="lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 max-h-[720px] overflow-y-auto">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="text-xs font-black text-slate-400 uppercase tracking-wider">
-                Luồng 13 Bước SOP (Ưu Tiên 3.2):
-              </h2>
-              <span className="px-2.5 py-0.5 bg-cyan-100 dark:bg-cyan-950/60 text-[#0077B6] dark:text-cyan-300 text-[10px] font-black rounded-md">
-                3.2 - THIẾT KẾ
-              </span>
+      {/* ========================================================================= */}
+      {/* 🎯 TAB 1: ĐƠN HÀNG (4 BƯỚC ĐƠN HÀNG & 13 BƯỚC SOP KỸ THUẬT) */}
+      {/* ========================================================================= */}
+      {currentMainTab === 'orders' && (
+        <div className="space-y-6">
+          {/* KPI METRICS STRIP */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tổng Đơn Thiết Kế</span>
+                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+                  <span className="text-[#F15A24]">{designOrders.length} Đơn Hàng</span>
+                  <span className="text-[10px] text-emerald-600 font-bold">(Đang Chạy)</span>
+                </div>
+              </div>
+              <div className="p-2 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-lg shrink-0">
+                <Package className="w-4 h-4" />
+              </div>
             </div>
 
-            {steps.map((s) => {
-              const isDesignStep = s.department === '3.2 - THIẾT KẾ';
-              return (
-                <button
-                  key={s.step}
-                  onClick={() => setActiveStep(s.step)}
-                  className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between gap-3 cursor-pointer ${
-                    activeStep === s.step
-                      ? 'bg-cyan-50 dark:bg-cyan-950/80 border-[#0088CC] text-slate-900 dark:text-white shadow-xs font-black'
-                      : isDesignStep
-                        ? 'bg-sky-50/60 dark:bg-slate-800/80 border-cyan-200 dark:border-slate-700 text-slate-900 dark:text-white font-extrabold'
-                        : 'bg-slate-50/60 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800 opacity-70 text-slate-600 dark:text-slate-400'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className={`w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-xs shadow-xs flex-shrink-0 ${
-                      s.status === 'COMPLETED' ? 'bg-emerald-600 text-white' :
-                      s.step === activeStep ? 'bg-[#0088CC] text-white' :
-                      isDesignStep ? 'bg-[#0077B6] text-white' :
-                      'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}>
-                      {s.step}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-bold text-xs line-clamp-1">{s.title}</div>
-                      <div className={`text-[10px] font-bold ${isDesignStep ? 'text-[#0077B6] dark:text-cyan-400' : 'text-slate-400'}`}>
-                        {s.department}
-                      </div>
-                    </div>
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Bản Vẽ CAD / PCB</span>
+                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+                  <span>{designFiles.length} Bản vẽ</span>
+                  <span className="text-[10px] text-emerald-600 font-bold">(Altium & 3D)</span>
+                </div>
+              </div>
+              <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-[#0077B6] rounded-lg shrink-0">
+                <Layers className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Mẫu In 3D Prototype</span>
+                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+                  <span>8 Vỏ hộp</span>
+                  <span className="text-[10px] text-cyan-600 font-bold">(IP67)</span>
+                </div>
+              </div>
+              <div className="p-2 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg shrink-0">
+                <Box className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tiêu Chuẩn SOP Kỹ Thuật</span>
+                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+                  <span className="text-emerald-600">95.8% Đạt</span>
+                  <span className="text-[10px] text-slate-400 font-bold">(Chuẩn Hóa)</span>
+                </div>
+              </div>
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg shrink-0">
+                <ClipboardCheck className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* WORKFLOW SUB-SWITCHER: 4 BƯỚC ĐƠN HÀNG VS 13 BƯỚC SOP */}
+          <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xs">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Tiến Trình Xử Lý:</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+              <button
+                onClick={() => setActiveWorkflowTab('4steps')}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeWorkflowTab === '4steps'
+                    ? 'bg-[#F15A24] text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                }`}
+              >
+                <ClipboardCheck className="w-3.5 h-3.5" />
+                <span>Quy Trình 4 Bước Đơn Hàng</span>
+              </button>
+              <button
+                onClick={() => setActiveWorkflowTab('13sop')}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeWorkflowTab === '13sop'
+                    ? 'bg-[#0088CC] text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Chi Tiết Luồng 13 Bước SOP</span>
+              </button>
+            </div>
+          </div>
+
+          {/* CONDITIONAL CONTENT: 4 BƯỚC VS 13 BƯỚC SOP */}
+          {activeWorkflowTab === '4steps' ? (
+            <div className="space-y-6">
+              <Order4StepFlowView themeColor="#F15A24" defaultStep={2} />
+
+              {/* DANH SÁCH ĐƠN HÀNG THIẾT KẾ ĐANG CHẠY */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Package className="w-5 h-5 text-[#F15A24]" />
+                    <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                      Danh Sách Đơn Hàng Thiết Kế Đang Thực Hiện
+                    </h3>
                   </div>
-
-                  {s.status === 'COMPLETED' ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  ) : (
-                    <ArrowRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right: Detailed Workspaces & Technical Design Tables */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Active Step Runner Box */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-                <div className="flex items-center gap-3">
-                  <span className="px-3.5 py-1 bg-[#0088CC] text-white font-black text-sm rounded-xl shadow-xs">
-                    Bước {currentStepInfo.step}
+                  <span className="text-xs font-bold text-slate-400">
+                    Hiển thị {filteredOrders.length} đơn hàng
                   </span>
-                  <div>
-                    <span className="text-xs font-black text-[#0077B6] dark:text-cyan-400 uppercase tracking-wider block">
-                      {currentStepInfo.department}
-                    </span>
-                    <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100">
-                      {currentStepInfo.title}
-                    </h2>
-                  </div>
                 </div>
 
-                <button
-                  onClick={() => handleToggleStep(currentStepInfo.step)}
-                  className={`px-4 py-2 font-bold text-xs rounded-xl transition flex items-center gap-2 shadow cursor-pointer ${
-                    currentStepInfo.status === 'COMPLETED'
-                      ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                      : 'bg-[#0088CC] text-white hover:bg-[#0077B6]'
-                  }`}
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{currentStepInfo.status === 'COMPLETED' ? 'Đã Hoàn Thành' : 'Đánh Dấu Hoàn Thành Step này'}</span>
-                </button>
-              </div>
-
-              <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
-                <h3 className="text-xs font-bold text-slate-500 uppercase">Mô tả Chi tiết Quy trình Thiết Kế:</h3>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
-                  {currentStepInfo.description}
-                </p>
-              </div>
-
-              {/* Checklist */}
-              <div className="space-y-2.5">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">Danh Mục Checklist Bắt Buộc (Thiết Kế SOP Standard):</h3>
-                {[
-                  'Đã hoàn tất bản vẽ Sơ đồ nguyên lý & phác thảo 3D kiểu dáng công nghiệp',
-                  'Đã xuất file Gerber PCB và tài liệu đính kèm (Google Drive / CAD / Gerber)',
-                  'Đã được Trưởng phòng 3.2 duyệt xác nhận chất lượng kỹ thuật'
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200">
-                    <CheckSquare className="w-4 h-4 text-[#0088CC] flex-shrink-0" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
-                <button
-                  disabled={activeStep <= 1}
-                  onClick={() => setActiveStep(activeStep - 1)}
-                  className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-xl font-bold disabled:opacity-40 cursor-pointer"
-                >
-                  ← Bước Trước
-                </button>
-                <span className="font-bold text-slate-400">Bước {activeStep} trên 13</span>
-                <button
-                  disabled={activeStep >= 13}
-                  onClick={() => setActiveStep(activeStep + 1)}
-                  className="px-4 py-2 bg-[#0088CC] hover:bg-[#0077B6] text-white rounded-xl font-bold disabled:opacity-40 cursor-pointer"
-                >
-                  Bước Tiếp Theo →
-                </button>
-              </div>
-            </div>
-
-            {/* DỊCH VỤ TRẠM THIẾT KẾ CAD / PCB GERBER TABLE */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <Layers className="w-5 h-5 text-[#0077B6]" />
-                  <h3 className="text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                    Quản Lý File Gerber & Bản Vẽ Lắp Ráp CAD 3D
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <div className="relative flex-1 sm:w-48">
-                    <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
-                    <input
-                      type="text"
-                      placeholder="Tìm file CAD..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0088CC]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-extrabold uppercase text-[10px]">
-                      <th className="py-2.5 px-3">Mã File</th>
-                      <th className="py-2.5 px-3">Tên Bản Vẽ Thiết Kế CAD / PCB</th>
-                      <th className="py-2.5 px-3">Kỹ Sư Phụ Trách</th>
-                      <th className="py-2.5 px-3">Loại File</th>
-                      <th className="py-2.5 px-3 text-center">Trạng Thái</th>
-                      <th className="py-2.5 px-3 text-right">Thao Tác</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-200">
-                    {designFiles
-                      .filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
-                      .map((file) => (
-                        <tr key={file.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
-                          <td className="py-3 px-3 font-mono font-black text-[#0077B6]">{file.id}</td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-extrabold uppercase text-[10px]">
+                        <th className="py-2.5 px-3">Mã Đơn</th>
+                        <th className="py-2.5 px-3">Tên Yêu Cầu Thiết Kế</th>
+                        <th className="py-2.5 px-3">Kỹ Sư Phụ Trách</th>
+                        <th className="py-2.5 px-3">Phân Loại</th>
+                        <th className="py-2.5 px-3">Ưu Tiên</th>
+                        <th className="py-2.5 px-3">Hạn Chót</th>
+                        <th className="py-2.5 px-3 text-center">Tiến Độ</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-200">
+                      {filteredOrders.map((order) => (
+                        <tr key={order.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                          <td className="py-3 px-3 font-mono font-black text-[#F15A24]">{order.code}</td>
                           <td className="py-3 px-3">
-                            <div className="font-bold text-slate-900 dark:text-slate-100">{file.name}</div>
-                            <div className="text-[10px] text-slate-400">Dung lượng: {file.size} • Cập nhật: {file.date}</div>
+                            <div className="font-bold text-slate-900 dark:text-slate-100">{order.title}</div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">{order.specs}</div>
                           </td>
-                          <td className="py-3 px-3 text-slate-600 dark:text-slate-300 font-bold">{file.author}</td>
-                          <td className="py-3 px-3 font-bold text-cyan-600">{file.type}</td>
-                          <td className="py-3 px-3 text-center">
-                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
-                              file.status === 'APPROVED' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' :
-                              'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
-                            }`}>
-                              {file.status === 'APPROVED' ? 'Đã Phê Duyệt' : 'Đang Thiết Kế'}
+                          <td className="py-3 px-3 text-slate-600 dark:text-slate-300 font-bold">{order.designer}</td>
+                          <td className="py-3 px-3">
+                            <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-[10px]">
+                              {order.category}
                             </span>
                           </td>
-                          <td className="py-3 px-3 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <button
-                                onClick={() => setSelectedFile(file)}
-                                className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition cursor-pointer"
-                                title="Xem chi tiết bản vẽ"
-                              >
-                                <Eye className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => alert(`Đang tải xuống file ${file.name}...`)}
-                                className="p-1.5 bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-100 text-[#0077B6] rounded-lg transition cursor-pointer"
-                                title="Tải về file Gerber"
-                              >
-                                <Download className="w-3.5 h-3.5" />
-                              </button>
+                          <td className="py-3 px-3">
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                              order.priority.includes('P1') ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400' :
+                              order.priority.includes('P2') ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400' :
+                              'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400'
+                            }`}>
+                              {order.priority}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 font-mono text-slate-500">{order.dueDate}</td>
+                          <td className="py-3 px-3 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <div className="w-16 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-[#F15A24] rounded-full transition-all"
+                                  style={{ width: `${order.progress}%` }}
+                                />
+                              </div>
+                              <span className="font-mono font-black text-[11px] text-[#F15A24]">{order.progress}%</span>
                             </div>
                           </td>
                         </tr>
                       ))}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
+            </div>
+          ) : (
+            /* 13 BƯỚC SOP VIEW */
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left: 13-Steps SOP Tracker */}
+              <div className="lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 max-h-[720px] overflow-y-auto">
+                <div className="flex items-center justify-between px-1">
+                  <h2 className="text-xs font-black text-slate-400 uppercase tracking-wider">
+                    Luồng 13 Bước SOP (Ưu Tiên 3.2):
+                  </h2>
+                  <span className="px-2.5 py-0.5 bg-cyan-100 dark:bg-cyan-950/60 text-[#0077B6] dark:text-cyan-300 text-[10px] font-black rounded-md">
+                    3.2 - THIẾT KẾ
+                  </span>
+                </div>
+
+                {steps.map((s) => {
+                  const isDesignStep = s.department === '3.2 - THIẾT KẾ';
+                  return (
+                    <button
+                      key={s.step}
+                      onClick={() => setActiveStep(s.step)}
+                      className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between gap-3 cursor-pointer ${
+                        activeStep === s.step
+                          ? 'bg-cyan-50 dark:bg-cyan-950/80 border-[#0088CC] text-slate-900 dark:text-white shadow-xs font-black'
+                          : isDesignStep
+                            ? 'bg-sky-50/60 dark:bg-slate-800/80 border-cyan-200 dark:border-slate-700 text-slate-900 dark:text-white font-extrabold'
+                            : 'bg-slate-50/60 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800 opacity-70 text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-xs shadow-xs flex-shrink-0 ${
+                          s.status === 'COMPLETED' ? 'bg-emerald-600 text-white' :
+                          s.step === activeStep ? 'bg-[#0088CC] text-white' :
+                          isDesignStep ? 'bg-[#0077B6] text-white' :
+                          'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        }`}>
+                          {s.step}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-bold text-xs line-clamp-1">{s.title}</div>
+                          <div className={`text-[10px] font-bold ${isDesignStep ? 'text-[#0077B6] dark:text-cyan-400' : 'text-slate-400'}`}>
+                            {s.department}
+                          </div>
+                        </div>
+                      </div>
+
+                      {s.status === 'COMPLETED' ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                      ) : (
+                        <ArrowRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right: Active Step Workspace */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                    <div className="flex items-center gap-3">
+                      <span className="px-3.5 py-1 bg-[#0088CC] text-white font-black text-sm rounded-xl shadow-xs">
+                        Bước {currentStepInfo.step}
+                      </span>
+                      <div>
+                        <span className="text-xs font-black text-[#0077B6] dark:text-cyan-400 uppercase tracking-wider block">
+                          {currentStepInfo.department}
+                        </span>
+                        <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100">
+                          {currentStepInfo.title}
+                        </h2>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleToggleStep(currentStepInfo.step)}
+                      className={`px-4 py-2 font-bold text-xs rounded-xl transition flex items-center gap-2 shadow cursor-pointer ${
+                        currentStepInfo.status === 'COMPLETED'
+                          ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                          : 'bg-[#0088CC] text-white hover:bg-[#0077B6]'
+                      }`}
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{currentStepInfo.status === 'COMPLETED' ? 'Đã Hoàn Thành' : 'Đánh Dấu Hoàn Thành'}</span>
+                    </button>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                    <h3 className="text-xs font-bold text-slate-500 uppercase">Mô tả Chi tiết Quy trình Thiết Kế:</h3>
+                    <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
+                      {currentStepInfo.description}
+                    </p>
+                  </div>
+
+                  {/* Checklist */}
+                  <div className="space-y-2.5">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">Danh Mục Checklist Bắt Buộc:</h3>
+                    {[
+                      'Đã hoàn tất bản vẽ Sơ đồ nguyên lý & phác thảo 3D kiểu dáng công nghiệp',
+                      'Đã xuất file Gerber PCB và tài liệu đính kèm (Google Drive / CAD / Gerber)',
+                      'Đã được Trưởng phòng 3.2 duyệt xác nhận chất lượng kỹ thuật'
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200">
+                        <CheckSquare className="w-4 h-4 text-[#0088CC] flex-shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
+                    <button
+                      disabled={activeStep <= 1}
+                      onClick={() => setActiveStep(activeStep - 1)}
+                      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-xl font-bold disabled:opacity-40 cursor-pointer"
+                    >
+                      ← Bước Trước
+                    </button>
+                    <span className="font-bold text-slate-400">Bước {activeStep} trên 13</span>
+                    <button
+                      disabled={activeStep >= 13}
+                      onClick={() => setActiveStep(activeStep + 1)}
+                      className="px-4 py-2 bg-[#0088CC] hover:bg-[#0077B6] text-white rounded-xl font-bold disabled:opacity-40 cursor-pointer"
+                    >
+                      Bước Tiếp Theo →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 📦 TAB 2: PHẨM (BẢN VẼ CAD 3D, MẠCH PCB ALTIUM, GERBER, BOM LIST) */}
+      {/* ========================================================================= */}
+      {currentMainTab === 'products' && (
+        <div className="space-y-5">
+          {/* Header Bar: Title + Action Create */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-[#F15A24]" />
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                  Danh Mục Phẩm & Bản Vẽ Kỹ Thuật (CAD 3D / PCB / BOM)
+                </h2>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Kho lưu trữ chính thức các bản vẽ lắp ráp 3D SolidWorks, sơ đồ nguyên lý Altium, file Gerber và BOM linh kiện đã phê duyệt.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="px-4 py-2.5 bg-[#F15A24] hover:bg-[#d94a18] text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-xs cursor-pointer shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Thêm Bản Vẽ / Phẩm Mới</span>
+            </button>
+          </div>
+
+          {/* Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { id: 'ALL', label: 'Tất Cả', count: designFiles.length },
+              { id: '3D_MODEL', label: 'Bản Vẽ 3D SolidWorks', count: designFiles.filter(f => f.category === '3D_MODEL').length },
+              { id: 'PCB', label: 'Mạch Altium PCB', count: designFiles.filter(f => f.category === 'PCB').length },
+              { id: 'GERBER', label: 'File Gerber Mạch', count: designFiles.filter(f => f.category === 'GERBER').length },
+              { id: 'BOM', label: 'BOM List Linh Kiện', count: designFiles.filter(f => f.category === 'BOM').length },
+            ].map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setProductCategory(cat.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  productCategory === cat.id
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                }`}
+              >
+                <span>{cat.label}</span>
+                <span className="text-[10px] opacity-70">({cat.count})</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Table Phẩm */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 font-extrabold uppercase text-[10px]">
+                    <th className="py-3 px-4">Mã Phẩm / File</th>
+                    <th className="py-3 px-4">Tên Bản Vẽ Kỹ Thuật</th>
+                    <th className="py-3 px-4">Định Dạng</th>
+                    <th className="py-3 px-4">Kỹ Sư Phụ Trách</th>
+                    <th className="py-3 px-4">Dung Lượng</th>
+                    <th className="py-3 px-4 text-center">Trạng Thái</th>
+                    <th className="py-3 px-4 text-right">Hành Động</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-200">
+                  {filteredFiles.map((file) => (
+                    <tr key={file.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                      <td className="py-3.5 px-4 font-mono font-black text-[#0077B6]">{file.id}</td>
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">{file.name}</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">{file.desc}</div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="px-2.5 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#0077B6] font-extrabold text-[11px]">
+                          {file.type}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300 font-bold">{file.author}</td>
+                      <td className="py-3.5 px-4 font-mono text-slate-500">{file.size}</td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${
+                          file.status === 'APPROVED'
+                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400'
+                            : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400'
+                        }`}>
+                          {file.status === 'APPROVED' ? 'Đã Phê Duyệt' : 'Đang Thiết Kế'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => setSelectedFile(file)}
+                            className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300 transition cursor-pointer"
+                            title="Xem chi tiết bản vẽ"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => showToast(`📥 Đang tải xuống file ${file.name} (${file.size})...`)}
+                            className="p-1.5 bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 text-[#F15A24] rounded-lg transition cursor-pointer"
+                            title="Tải về file kỹ thuật"
+                          >
+                            <Download className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 📦 TAB 3: TỒN (KHO TỒN MẪU R&D & LINH KIỆN THIẾT KẾ) */}
+      {/* ========================================================================= */}
+      {currentMainTab === 'inventory' && (
+        <div className="space-y-5">
+          {/* Header Bar: Title + KPI Metrics */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Box className="w-5 h-5 text-[#F15A24]" />
+                  <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                    Kho Tồn Mẫu R&D & Linh Kiện Thiết Kế
+                  </h2>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Kiểm kê linh kiện mẫu, mẫu in 3D prototype vỏ hộp, bo mạch blank PCB và đồ gá thử nghiệm phòng Thiết kế.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-xs font-black rounded-xl">
+                  ● Sẵn sàng thử nghiệm
+                </span>
+              </div>
+            </div>
+
+            {/* Inventory KPI Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700/60">
+                <span className="text-[10px] font-bold text-slate-400 uppercase">Tổng Chủng Loại</span>
+                <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-0.5">
+                  {inventoryItems.length} Loại Mẫu
+                </div>
+              </div>
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700/60">
+                <span className="text-[10px] font-bold text-slate-400 uppercase">Tổng Số Lượng Tồn</span>
+                <div className="text-base sm:text-lg font-black text-[#F15A24] mt-0.5">
+                  {inventoryItems.reduce((acc, it) => acc + it.qty, 0)} Đơn Vị
+                </div>
+              </div>
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700/60">
+                <span className="text-[10px] font-bold text-slate-400 uppercase">Cảnh Báo Tồn Thấp</span>
+                <div className="text-base sm:text-lg font-black text-amber-600 mt-0.5">
+                  {inventoryItems.filter(it => it.status === 'LOW_STOCK').length} Mục Cần Mua
+                </div>
+              </div>
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-700/60">
+                <span className="text-[10px] font-bold text-slate-400 uppercase">Vị Trí Lưu Trữ</span>
+                <div className="text-base sm:text-lg font-black text-[#0077B6] mt-0.5">
+                  Phòng R&D Lab 03
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Pills for Inventory */}
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { id: 'ALL', label: 'Tất Cả Mẫu & Linh Kiện', count: inventoryItems.length },
+              { id: 'PROTOTYPE', label: 'Mẫu In 3D & Vỏ Nhôm', count: inventoryItems.filter(i => i.category === 'PROTOTYPE').length },
+              { id: 'PCB', label: 'Bo Mạch Blank PCB', count: inventoryItems.filter(i => i.category === 'PCB').length },
+              { id: 'CHIPSET', label: 'Chipset & Vi Xử Lý', count: inventoryItems.filter(i => i.category === 'CHIPSET').length },
+              { id: 'SENSOR', label: 'Cảm Biến & LoRa RF', count: inventoryItems.filter(i => i.category === 'SENSOR').length },
+              { id: 'JIG', label: 'Đồ Gá Nạp Code', count: inventoryItems.filter(i => i.category === 'JIG').length },
+            ].map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setInventoryCategory(cat.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  inventoryCategory === cat.id
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                }`}
+              >
+                <span>{cat.label}</span>
+                <span className="text-[10px] opacity-70">({cat.count})</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Table Tồn Kho */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 text-slate-400 font-extrabold uppercase text-[10px]">
+                    <th className="py-3 px-4">Mã Tồn</th>
+                    <th className="py-3 px-4">Tên Mẫu / Linh Kiện R&D</th>
+                    <th className="py-3 px-4">Vị Trí Kệ / Khay</th>
+                    <th className="py-3 px-4 text-center">Số Lượng Tồn</th>
+                    <th className="py-3 px-4 text-center">Trạng Thái</th>
+                    <th className="py-3 px-4 text-right">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-200">
+                  {filteredInventory.map((item) => (
+                    <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                      <td className="py-3.5 px-4 font-mono font-black text-[#F15A24]">{item.id}</td>
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-slate-900 dark:text-slate-100 text-sm">{item.name}</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">{item.note}</div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[11px] inline-flex items-center gap-1">
+                          📍 {item.location}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <div className="inline-flex items-center gap-2">
+                          <button
+                            onClick={() => handleUpdateStock(item.id, -1)}
+                            className="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-black flex items-center justify-center cursor-pointer transition active:scale-95"
+                            title="Giảm 1"
+                          >
+                            -
+                          </button>
+                          <span className="font-mono font-black text-sm text-slate-900 dark:text-white min-w-10">
+                            {item.qty} {item.unit}
+                          </span>
+                          <button
+                            onClick={() => handleUpdateStock(item.id, 1)}
+                            className="w-6 h-6 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-black flex items-center justify-center cursor-pointer transition active:scale-95"
+                            title="Tăng 1"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black ${
+                          item.status === 'IN_STOCK' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400' :
+                          item.status === 'LOW_STOCK' ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400' :
+                          item.status === 'IN_USE' ? 'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400' :
+                          'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400'
+                        }`}>
+                          {item.status === 'IN_STOCK' ? 'Sẵn Sàng' :
+                           item.status === 'LOW_STOCK' ? 'Sắp Hết (Min ' + item.minQty + ')' :
+                           item.status === 'IN_USE' ? 'Đang Sử Dụng' : 'Hết Hàng'}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <button
+                          onClick={() => {
+                            handleUpdateStock(item.id, -1);
+                            showToast(`🧪 Đã xuất 1 ${item.unit} ${item.name} cho phòng thử nghiệm!`);
+                          }}
+                          disabled={item.qty <= 0}
+                          className="px-3 py-1.5 bg-sky-50 dark:bg-sky-950/60 hover:bg-sky-100 text-[#0077B6] rounded-xl text-xs font-bold transition cursor-pointer disabled:opacity-40"
+                        >
+                          Xuất Dùng Test
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL XEM CHI TIẾT BẢN VẼ / PHẨM */}
+      {selectedFile && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Layers className="w-5 h-5 text-[#F15A24]" />
+                <h3 className="text-base font-black text-slate-900 dark:text-white uppercase">
+                  Thông Số Chi Tiết Bản Vẽ Kỹ Thuật
+                </h3>
+              </div>
+              <button onClick={() => setSelectedFile(null)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs font-semibold text-slate-600 dark:text-slate-300">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/70 rounded-xl space-y-1">
+                <span className="text-[10px] font-bold text-slate-400 uppercase">Tên Phẩm / Bản Vẽ</span>
+                <div className="text-sm font-black text-slate-900 dark:text-white">{selectedFile.name}</div>
+                <div className="text-xs text-slate-500">{selectedFile.desc}</div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/70 rounded-xl">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Mã Hồ Sơ</span>
+                  <div className="font-mono font-bold text-slate-900 dark:text-white mt-0.5">{selectedFile.id}</div>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/70 rounded-xl">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Định Dạng File</span>
+                  <div className="font-bold text-[#0077B6] mt-0.5">{selectedFile.type}</div>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/70 rounded-xl">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Kỹ Sư Phụ Trách</span>
+                  <div className="font-bold text-slate-900 dark:text-white mt-0.5">{selectedFile.author}</div>
+                </div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/70 rounded-xl">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase">Dung Lượng / Ngày</span>
+                  <div className="font-bold text-slate-900 dark:text-white mt-0.5">{selectedFile.size} • {selectedFile.date}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => setSelectedFile(null)}
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded-xl cursor-pointer"
+              >
+                Đóng
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  showToast(`📥 Đang tải xuống file ${selectedFile.name}...`);
+                  setSelectedFile(null);
+                }}
+                className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94a18] text-white rounded-xl font-bold cursor-pointer flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Tải Xuống Bản Vẽ</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1002,9 +1533,10 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <div>
                 <label className="block text-slate-600 dark:text-slate-300 mb-1">Loại định dạng file</label>
                 <select className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0088CC]">
-                  <option value="Altium Gerber">Altium PCB Gerber (.Zip)</option>
                   <option value="SolidWorks STEP">SolidWorks 3D (.STEP)</option>
+                  <option value="Altium Schematic">Altium PCB Gerber (.Zip / .SchDoc)</option>
                   <option value="BOM List Excel">Danh Mục BOM Linh Kiện (.XLSX)</option>
+                  <option value="Vector CMF">Hồ Sơ Thiết Kế Bao Bì CMF (.PDF)</option>
                 </select>
               </div>
 
@@ -1012,7 +1544,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <label className="block text-slate-600 dark:text-slate-300 mb-1">Kỹ sư phụ trách</label>
                 <input
                   type="text"
-                  defaultValue="Lê Văn Thiết Kế (Senior CAD)"
+                  defaultValue="KS. Lê Văn Thiết Kế (Senior CAD)"
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200"
                 />
               </div>
@@ -1027,7 +1559,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#0088CC] hover:bg-[#0077B6] text-white rounded-xl cursor-pointer font-extrabold"
+                  className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94a18] text-white rounded-xl cursor-pointer font-extrabold"
                 >
                   Khởi Tạo Bản Vẽ
                 </button>
@@ -1442,15 +1974,27 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
 /* 🌟 COMPONENT CHÍNH: MÀN HÌNH TỔNG QUAN CHỈ HIỂN THỊ 2 HỘP LỰA CHỌN PHÂN HỆ CON */
 /* ========================================================================= */
 export const WorkflowModule: React.FC = () => {
-  const [selectedSubModule, setSelectedSubModule] = useState<'design' | 'research' | null>(null);
+  const [selectedSubModule, setSelectedSubModule] = useState<'design' | 'research' | null>(() => {
+    try {
+      const saved = localStorage.getItem('avg_workflow_submodule');
+      if (saved === 'research') return 'research';
+      if (saved === 'overview') return null;
+      return 'design';
+    } catch (e) {
+      return 'design';
+    }
+  });
 
   // Đồng bộ tên phân hệ con lên thanh Header Topbar
   React.useEffect(() => {
     if (selectedSubModule === 'design') {
+      try { localStorage.setItem('avg_workflow_submodule', 'design'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.2 – THIẾT KẾ' }));
     } else if (selectedSubModule === 'research') {
+      try { localStorage.setItem('avg_workflow_submodule', 'research'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.1 – NGHIÊN CỨU' }));
     } else {
+      try { localStorage.setItem('avg_workflow_submodule', 'overview'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     }
   }, [selectedSubModule]);
@@ -1459,6 +2003,7 @@ export const WorkflowModule: React.FC = () => {
   React.useEffect(() => {
     const handleSubModuleBack = () => {
       setSelectedSubModule(null);
+      try { localStorage.setItem('avg_workflow_submodule', 'overview'); } catch (e) {}
     };
     window.addEventListener('submodule_back', handleSubModuleBack);
     return () => {
