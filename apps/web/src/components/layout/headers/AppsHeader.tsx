@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, Sun, Moon } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import avgOfficialLogo from '../../../assets/avg-one-official-logo.png';
 import { AppModuleId } from '../AppLauncherModal';
 import { HeaderNavMenu } from './HeaderNavMenu';
@@ -9,21 +9,17 @@ export interface AppsHeaderProps {
   onBack: () => void;
   onSelectModule: (module: AppModuleId) => void;
   renderUserAuthButton: () => React.ReactNode;
-  darkMode?: boolean;
-  onToggleDarkMode?: () => void;
 }
 
 export const AppsHeader: React.FC<AppsHeaderProps> = ({
   activeSubTitle,
   onBack,
   onSelectModule,
-  renderUserAuthButton,
-  darkMode,
-  onToggleDarkMode
+  renderUserAuthButton
 }) => {
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs dark:shadow-none select-none">
-      <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+      <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
         {/* Left: Chuyển đổi trực tiếp / Phân hệ con (bỏ hộp, hiện mũi tên khi hover/ấn) hoặc Logo AVG One */}
         <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           {activeSubTitle ? (
@@ -48,22 +44,13 @@ export const AppsHeader: React.FC<AppsHeaderProps> = ({
           )}
         </div>
 
-        {/* Right: Phân hệ điều hướng + Dark Mode + Đăng Nhập */}
+        {/* Right: Phân hệ điều hướng + Nút Đăng Nhập */}
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 shrink-0 whitespace-nowrap">
           <HeaderNavMenu
             activeModule="apps"
             onSelectModule={onSelectModule}
             activeSubTitle={activeSubTitle}
           />
-          {onToggleDarkMode && (
-            <button
-              onClick={onToggleDarkMode}
-              className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
-              title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
-            >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
-          )}
           {renderUserAuthButton()}
         </div>
       </div>

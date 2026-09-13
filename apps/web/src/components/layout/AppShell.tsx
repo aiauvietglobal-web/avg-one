@@ -378,8 +378,6 @@ export const AppShell: React.FC<AppShellProps> = ({
               }}
               onSelectModule={onSelectModule}
               renderUserAuthButton={renderUserAuthButton}
-              darkMode={darkMode}
-              onToggleDarkMode={onToggleDarkMode}
             />
           ) : (
             /* 4. HEADER CÁC PHÂN HỆ VẬN HÀNH KHÁC (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */
