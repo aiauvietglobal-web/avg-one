@@ -461,30 +461,27 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {isDesignModule ? (
-            /* HEADER CHUYÊN BIỆT CHO PHÂN HỆ THIẾT KẾ: ĐÃ BỎ LOGO AVGONE VÀ BỎ MENU VẬN HÀNH */
-            <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
+            /* HEADER CHUYÊN BIỆT CHO PHÂN HỆ THIẾT KẾ: THIẾT KẾ ĐẲNG CẤP, TINH TẾ, ĐỒNG BỘ CHIỀU CAO H-9 */
+            <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
               <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
                 
-                {/* Cụm trái: < 3.2 – THIẾT KẾ + | + Các đầu mục Đơn hàng, Phẩm, Tồn + Thanh tìm kiếm nhanh */}
-                <div className="flex items-center gap-2.5 sm:gap-3.5 select-none shrink-0 whitespace-nowrap">
-                  {/* Nút quay lại kèm tiêu đề: < 3.2 – THIẾT KẾ */}
+                {/* Cụm trái: [ < 3.2 – THIẾT KẾ ] + [ 📋 Đơn hàng 3 | 📚 Phẩm 8 | 📦 Tồn 8 ] + [ 🔍 Tìm bản vẽ...  Ctrl K ] */}
+                <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
+                  {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp: < 3.2 – THIẾT KẾ */}
                   <button
                     onClick={() => {
                       setActiveSubTitle('');
                       window.dispatchEvent(new CustomEvent('submodule_back'));
                     }}
-                    className="text-xs sm:text-sm md:text-base font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group whitespace-nowrap shrink-0"
+                    className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
                     title="Quay lại danh mục phân hệ"
                   >
-                    <ChevronLeft className="w-4.5 h-4.5 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-                    <span className="whitespace-nowrap shrink-0">{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
+                    <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                    <span className="whitespace-nowrap font-black">{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
                   </button>
 
-                  {/* Vạch ngăn đứng */}
-                  <div className="h-4 sm:h-4.5 w-px bg-slate-300 dark:bg-slate-700 flex-shrink-0" />
-
                   {/* BỘ 3 ĐẦU MỤC CHÍNH DẠNG CAPSULE PILL ĐỒNG BỘ NGUYÊN BẢN (Đơn hàng, Phẩm, Tồn) */}
-                  <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 sm:p-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shrink-0 select-none">
+                  <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
                     {[
                       { id: 'orders' as const, label: 'Đơn hàng', count: designCounts.orders, icon: ClipboardCheck },
                       { id: 'products' as const, label: 'Phẩm', count: designCounts.products, icon: Layers },
@@ -499,13 +496,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                             setDesignNavTab(tab.id);
                             window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: tab.id }));
                           }}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                          className={`h-7 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
                             isActive
-                              ? 'bg-[#F15A24] text-white shadow-xs font-black'
-                              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                              ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs font-black'
+                              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60'
                           }`}
                         >
-                          <IconComponent className="w-3.5 h-3.5" />
+                          <IconComponent className="w-3.5 h-3.5 shrink-0" />
                           <span>{tab.label}</span>
                           <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
                             isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
@@ -517,9 +514,9 @@ export const AppShell: React.FC<AppShellProps> = ({
                     })}
                   </div>
 
-                  {/* Thanh tìm kiếm nhanh tích hợp */}
-                  <div className="relative flex items-center ml-1 sm:ml-2 shrink-0">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
+                  {/* Thanh tìm kiếm nhanh tích hợp chuẩn chiều cao h-9 */}
+                  <div className="relative flex items-center shrink-0">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
                     <input
                       id="design-quick-search-input"
                       type="text"
@@ -529,16 +526,23 @@ export const AppShell: React.FC<AppShellProps> = ({
                         window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
                       }}
                       placeholder="Tìm bản vẽ..."
-                      className="w-32 sm:w-44 focus:w-56 pl-8 pr-12 py-1 h-7 sm:h-8 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#F15A24] transition-all duration-200 font-medium shrink-0"
+                      className="w-36 sm:w-48 focus:w-60 pl-8.5 pr-12 h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
                     />
-                    <kbd className="absolute right-1.5 px-1 py-0.2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded pointer-events-none">
+                    <kbd className="absolute right-2 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md pointer-events-none shadow-2xs">
                       Ctrl K
                     </kbd>
                   </div>
                 </div>
 
-                {/* Right: Hộp Đăng Nhập / Profile Avatar */}
-                <div className="flex items-center gap-3 shrink-0">
+                {/* Right: Dark Mode Toggle + Hộp Đăng Nhập / Profile Avatar */}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <button
+                    onClick={onToggleDarkMode}
+                    className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
+                    title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
+                  >
+                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  </button>
                   {renderUserAuthButton()}
                 </div>
 
