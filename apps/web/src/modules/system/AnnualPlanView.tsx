@@ -265,7 +265,7 @@ export const AnnualPlanView: React.FC = () => {
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-start gap-6 lg:gap-8">
           
           {/* Left: Title & Animated Slogan Box Badge */}
-          <div className="space-y-2 text-left flex-shrink-0 lg:max-w-xs">
+          <div className="space-y-2 text-left flex-shrink-0">
             {/* Animated Slogan Badge - Hộp vuông bo góc rounded-xl */}
             <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
               <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
@@ -297,11 +297,11 @@ export const AnnualPlanView: React.FC = () => {
             </div>
 
             <div className="space-y-1">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2.5 flex-wrap">
                 <span>KẾ HOẠCH</span>
                 <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
                   <span className="relative z-10">NĂM 2026</span>
-                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                  <svg className="absolute -bottom-2 left-0 w-full h-3.5 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
                   </svg>
                 </span>
@@ -309,9 +309,9 @@ export const AnnualPlanView: React.FC = () => {
             </div>
           </div>
 
-          {/* Right: Quick Navigation 11 Task Groups Grid (Compact Boxes) */}
+          {/* Right: Quick Navigation 11 Task Groups Grid (Compact & Well-proportioned Boxes) */}
           <div className="border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 pt-4 lg:pt-0 lg:pl-6 flex-initial">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-2 w-full max-w-full lg:max-w-[680px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full max-w-full lg:max-w-[840px]">
               {TASK_GROUPS.map((g) => (
                 <div
                   key={g.id}
@@ -319,13 +319,13 @@ export const AnnualPlanView: React.FC = () => {
                     const el = document.getElementById(`task-group-${g.id}`);
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="bg-slate-100/80 dark:bg-slate-800/80 hover:bg-sky-50 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all duration-150 shadow-2xs hover:border-sky-400 group"
+                  className="bg-slate-100/80 dark:bg-slate-800/80 hover:bg-sky-50 dark:hover:bg-slate-700/80 border border-slate-200/80 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-2.5 cursor-pointer transition-all duration-150 shadow-2xs hover:border-sky-400 group"
                   title={g.title}
                 >
                   <span className="w-5 h-5 rounded-md bg-[#0284C7] text-white flex items-center justify-center text-[10px] font-black flex-shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                     {g.id}
                   </span>
-                  <span className="truncate text-[11px] leading-tight">{g.title.split(' (Nhóm')[0]}</span>
+                  <span className="truncate text-xs font-semibold">{g.title.split(' (Nhóm')[0]}</span>
                 </div>
               ))}
             </div>
