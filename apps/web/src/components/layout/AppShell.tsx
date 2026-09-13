@@ -527,16 +527,6 @@ export const AppShell: React.FC<AppShellProps> = ({
                     </kbd>
                   </div>
 
-                  <button
-                    onClick={toggleFullscreen}
-                    className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-800 transition-all flex items-center justify-center cursor-pointer shadow-2xs"
-                    title={isFullscreen ? "Thu nhỏ cửa sổ" : "Mở rộng toàn màn hình"}
-                  >
-                    {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-                  </button>
-
-                  <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 hidden xs:block" />
-
                   {/* SSO Avatar / Login */}
                   <div className="flex items-center gap-3 shrink-0 relative">
                   {currentUser ? (
