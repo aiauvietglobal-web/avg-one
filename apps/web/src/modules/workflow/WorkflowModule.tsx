@@ -257,7 +257,7 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
 
   return (
     /* MASTER ORDER WORKSPACE - CLEAN, MODERN & INTUITIVE */
-    <div className="space-y-4">
+    <div className="max-w-7xl mx-auto w-full space-y-4">
       {/* 1. THANH ĐIỀU HÀNH ĐƠN HÀNG (ORDER CONTROL STRIP) */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5">
         {/* Left: Order dropdown & badges */}

@@ -1159,7 +1159,7 @@ export const CalendarModule: React.FC = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
 
         {/* LỊCH CÔNG TÁC CONTENT */}
-        <div className="w-full h-full flex flex-col space-y-3.5 relative z-10 overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full h-full flex flex-col space-y-3.5 relative z-10 overflow-hidden">
           
           {/* Header Bar with Back Button */}
           <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs flex items-center justify-between gap-3">
@@ -1271,7 +1271,7 @@ export const CalendarModule: React.FC = () => {
       )}
 
       {/* 🎯 4 EQUAL COLUMNS GRID SYSTEM ON DESKTOP | RESPONSIVE MOBILE FLEX LAYOUT */}
-      <div className="w-full h-full flex flex-col lg:grid lg:grid-cols-4 gap-3 sm:gap-3.5 relative z-10">
+      <div className="max-w-7xl mx-auto w-full h-full flex flex-col lg:grid lg:grid-cols-4 gap-3 sm:gap-3.5 relative z-10">
         
         {/* ========================================================================= */}
         {/* ⚙️ SIDEBAR 1 (COL 1): BỘ LỌC, TÌM KIẾM & TIỆN ÍCH DỮ LIỆU */}
