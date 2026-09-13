@@ -362,13 +362,13 @@ export const DesignOrdersView: React.FC = () => {
               </svg>
               <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
                 <Palette className="w-3.5 h-3.5 text-[#F15A24]" />
-                <span>AVG INDUSTRIAL DESIGN & CMF 3.2</span>
+                <span>THEO DÕI TỔNG QUAN TIẾN ĐỘ ĐƠN HÀNG</span>
               </div>
             </div>
 
             <div className="space-y-1">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-                <span>QUẢN LÝ</span>
+                <span>TỔNG QUAN TIẾN ĐỘ</span>
                 <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
                   <span className="relative z-10">ĐƠN HÀNG THIẾT KẾ (3.2)</span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -376,18 +376,31 @@ export const DesignOrdersView: React.FC = () => {
                   </svg>
                 </span>
               </h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Theo dõi tiến độ, phân kỳ thực hiện, thời hạn bàn giao (SLA) và tình trạng kiểm duyệt toàn bộ đơn hàng thiết kế của AVG One.
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('open_design_workspace'));
+              }}
+              className="px-4 py-2 bg-gradient-to-r from-[#F15A24] to-amber-500 hover:from-[#d94e1f] hover:to-amber-600 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-orange-500/20 hover:-translate-y-0.5 cursor-pointer"
+              title="Mở Không gian làm việc chi tiết nghiệp vụ Hộp 3.2 – Thiết Kế"
+            >
+              <Box className="w-3.5 h-3.5" />
+              <span>Mở Không Gian Làm Việc Nghiệp Vụ (Hộp 3.2)</span>
+            </button>
             <a
               href="https://drive.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-orange-500/20 hover:-translate-y-0.5 cursor-pointer"
+              className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              <span>Mở Kho CAD / 3D Gốc</span>
+              <span>Kho Drive</span>
             </a>
           </div>
         </div>

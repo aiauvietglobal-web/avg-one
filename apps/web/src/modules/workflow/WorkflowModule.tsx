@@ -1977,11 +1977,11 @@ export const WorkflowModule: React.FC = () => {
   const [selectedSubModule, setSelectedSubModule] = useState<'design' | 'research' | null>(() => {
     try {
       const saved = localStorage.getItem('avg_workflow_submodule');
+      if (saved === 'design') return 'design';
       if (saved === 'research') return 'research';
-      if (saved === 'overview') return null;
-      return 'design';
+      return null;
     } catch (e) {
-      return 'design';
+      return null;
     }
   });
 
@@ -2097,7 +2097,7 @@ export const WorkflowModule: React.FC = () => {
         {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP PHÂN HỆ CON (BỐ CỤC 2 HÀNG 2 CỘT CHUẨN ĐỒNG BỘ 32PX) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 max-w-3xl mx-auto w-full pb-2">
           
-          {/* HỘP 1: 3.2 - THIẾT KẾ */}
+          {/* HỘP 1: 3.2 - THIẾT KẾ (Không gian làm việc & thực hành nghiệp vụ) */}
           <div
             role="button"
             tabIndex={0}
@@ -2110,8 +2110,11 @@ export const WorkflowModule: React.FC = () => {
               <Compass className="w-6.5 h-6.5 sm:w-7 sm:h-7" />
             </div>
             <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0077B6] dark:group-hover:text-sky-300 transition-colors whitespace-normal leading-tight w-full px-0.5">
-              3.2 – THIẾT KẾ
+              HỘP 3.2 – THIẾT KẾ
             </h3>
+            <span className="text-[11px] text-[#0077B6] dark:text-sky-300 mt-1 font-bold">
+              Không gian làm việc & thực hành nghiệp vụ
+            </span>
           </div>
 
           {/* HỘP 2: 3.1 - NGHIÊN CỨU */}
@@ -2127,8 +2130,11 @@ export const WorkflowModule: React.FC = () => {
               <Cpu className="w-6.5 h-6.5 sm:w-7 sm:h-7" />
             </div>
             <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0077B6] dark:group-hover:text-sky-300 transition-colors whitespace-normal leading-tight w-full px-0.5">
-              3.1 – NGHIÊN CỨU
+              HỘP 3.1 – NGHIÊN CỨU
             </h3>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">
+              Không gian nghiên cứu thử nghiệm RDI & Lab
+            </span>
           </div>
 
           {/* 2 THẺ PLACEHOLDER DỰ PHÒNG CHUẨN */}
