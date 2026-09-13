@@ -553,35 +553,32 @@ export const AppShell: React.FC<AppShellProps> = ({
             <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
               <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
               
-              {/* Left: AVG One Official Logo & Sub-module Title & Các đầu mục tích hợp theo phân hệ */}
+              {/* Left: AVG One Official Logo hoặc Nút quay lại kèm tiêu đề phân hệ con */}
               <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-                <img
-                  src={avgOfficialLogo}
-                  alt="AVG One Official Logo"
-                  className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
-                  onClick={() => {
-                    setActiveSubTitle('');
-                    onSelectModule('home');
-                  }}
-                  title="Trang chủ AVG One"
-                />
-                {activeSubTitle && activeModule !== 'home' && (
-                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap">
-                    <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
-                    <button
-                      onClick={() => {
-                        setActiveSubTitle('');
-                        window.dispatchEvent(new CustomEvent('submodule_back'));
-                      }}
-                      className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group whitespace-nowrap shrink-0"
-                      title="Quay lại danh mục phân hệ"
-                    >
-                      <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-                      <span className="whitespace-nowrap shrink-0">{activeSubTitle}</span>
-                    </button>
-                  </div>
+                {activeSubTitle && activeModule !== 'home' ? (
+                  <button
+                    onClick={() => {
+                      setActiveSubTitle('');
+                      window.dispatchEvent(new CustomEvent('submodule_back'));
+                    }}
+                    className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
+                    title="Quay lại danh mục phân hệ"
+                  >
+                    <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                    <span className="whitespace-nowrap font-black">{activeSubTitle}</span>
+                  </button>
+                ) : (
+                  <img
+                    src={avgOfficialLogo}
+                    alt="AVG One Official Logo"
+                    className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
+                    onClick={() => {
+                      setActiveSubTitle('');
+                      onSelectModule('home');
+                    }}
+                    title="Trang chủ AVG One"
+                  />
                 )}
-
               </div>
 
               {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
