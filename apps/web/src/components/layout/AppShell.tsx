@@ -386,10 +386,6 @@ export const AppShell: React.FC<AppShellProps> = ({
             <StandardModuleHeader
               activeModule={activeModule}
               activeSubTitle={activeSubTitle}
-              onBack={() => {
-                setActiveSubTitle('');
-                window.dispatchEvent(new CustomEvent('submodule_back'));
-              }}
               onSelectModule={onSelectModule}
               renderUserAuthButton={renderUserAuthButton}
             />
