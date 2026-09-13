@@ -460,42 +460,27 @@ export const AppShell: React.FC<AppShellProps> = ({
       ) : (
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
-          {/* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */}
-          <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-            <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
-            
-            {/* Left: AVG One Official Logo & Sub-module Title & Các đầu mục tích hợp theo phân hệ */}
-            <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-              <img
-                src={avgOfficialLogo}
-                alt="AVG One Official Logo"
-                className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
-                onClick={() => {
-                  setActiveSubTitle('');
-                  onSelectModule('home');
-                }}
-                title="Trang chủ AVG One"
-              />
-              {activeSubTitle && activeModule !== 'home' && (
-                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap">
-                  <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
+          {isDesignModule ? (
+            /* HEADER CHUYÊN BIỆT CHO PHÂN HỆ THIẾT KẾ: THIẾT KẾ ĐẲNG CẤP, TINH TẾ, ĐỒNG BỘ CHIỀU CAO H-9 */
+            <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
+              <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
+                
+                {/* Cụm trái: [ < 3.2 – THIẾT KẾ ] + [ 📋 Đơn hàng 3 | 📚 Phẩm 8 | 📦 Tồn 8 ] + [ 🔍 Tìm bản vẽ...  Ctrl K ] */}
+                <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
+                  {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp: < 3.2 – THIẾT KẾ */}
                   <button
                     onClick={() => {
                       setActiveSubTitle('');
                       window.dispatchEvent(new CustomEvent('submodule_back'));
                     }}
-                    className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group whitespace-nowrap shrink-0"
+                    className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
                     title="Quay lại danh mục phân hệ"
                   >
-                    <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-                    <span className="whitespace-nowrap shrink-0">{activeSubTitle}</span>
+                    <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                    <span className="whitespace-nowrap font-black">{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
                   </button>
-                </div>
-              )}
 
-              {/* TÍCH HỢP ĐẦU MỤC PHÂN HỆ THIẾT KẾ: [ Đơn hàng 3 | Phẩm 8 | Tồn 8 ] + [ Tìm bản vẽ... ] */}
-              {isDesignModule && (
-                <>
+                  {/* BỘ 3 ĐẦU MỤC CHÍNH DẠNG CAPSULE PILL ĐỒNG BỘ NGUYÊN BẢN (Đơn hàng, Phẩm, Tồn) */}
                   <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
                     {[
                       { id: 'orders' as const, label: 'Đơn hàng', count: designCounts.orders, icon: ClipboardCheck },
@@ -511,7 +496,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                             setDesignNavTab(tab.id);
                             window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: tab.id }));
                           }}
-                          className={`h-7 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                          className={`h-7 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
                             isActive
                               ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs font-black'
                               : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60'
@@ -529,7 +514,8 @@ export const AppShell: React.FC<AppShellProps> = ({
                     })}
                   </div>
 
-                  <div className="relative hidden xl:flex items-center shrink-0">
+                  {/* Thanh tìm kiếm nhanh tích hợp chuẩn chiều cao h-9 */}
+                  <div className="relative flex items-center shrink-0">
                     <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
                     <input
                       id="design-quick-search-input"
@@ -540,16 +526,63 @@ export const AppShell: React.FC<AppShellProps> = ({
                         window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
                       }}
                       placeholder="Tìm bản vẽ..."
-                      className="w-32 sm:w-44 focus:w-52 pl-8.5 pr-12 h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
+                      className="w-36 sm:w-48 focus:w-60 pl-8.5 pr-12 h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
                     />
                     <kbd className="absolute right-2 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md pointer-events-none shadow-2xs">
                       Ctrl K
                     </kbd>
                   </div>
-                </>
-              )}
+                </div>
 
-            </div>
+                {/* Right: Dark Mode Toggle + Hộp Đăng Nhập / Profile Avatar */}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  <button
+                    onClick={onToggleDarkMode}
+                    className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
+                    title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
+                  >
+                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                  </button>
+                  {renderUserAuthButton()}
+                </div>
+
+              </div>
+            </header>
+          ) : (
+            /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
+            <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
+              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              
+              {/* Left: AVG One Official Logo & Sub-module Title & Các đầu mục tích hợp theo phân hệ */}
+              <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
+                <img
+                  src={avgOfficialLogo}
+                  alt="AVG One Official Logo"
+                  className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
+                  onClick={() => {
+                    setActiveSubTitle('');
+                    onSelectModule('home');
+                  }}
+                  title="Trang chủ AVG One"
+                />
+                {activeSubTitle && activeModule !== 'home' && (
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 whitespace-nowrap">
+                    <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
+                    <button
+                      onClick={() => {
+                        setActiveSubTitle('');
+                        window.dispatchEvent(new CustomEvent('submodule_back'));
+                      }}
+                      className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group whitespace-nowrap shrink-0"
+                      title="Quay lại danh mục phân hệ"
+                    >
+                      <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
+                      <span className="whitespace-nowrap shrink-0">{activeSubTitle}</span>
+                    </button>
+                  </div>
+                )}
+
+              </div>
 
               {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
               <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 shrink-0 whitespace-nowrap">
@@ -872,21 +905,13 @@ export const AppShell: React.FC<AppShellProps> = ({
                     })}
                   </nav>
 
-                  {/* Dark Mode Toggle */}
-                  <button
-                    onClick={onToggleDarkMode}
-                    className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
-                    title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
-                  >
-                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  </button>
-
                   {/* SSO Profile / Login Button */}
                   {renderUserAuthButton()}
                 </div>
 
               </div>
             </header>
+          )}
 
           {/* Main Content Viewport for Desktop */}
           <main className="flex-1 w-full min-h-0 h-full overflow-hidden flex flex-col relative">

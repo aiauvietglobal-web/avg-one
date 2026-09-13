@@ -813,6 +813,77 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       )}
 
+      {/* 🔮 1. TOP EXECUTIVE HERO BANNER - ĐỒNG BỘ THIẾT KẾ & HIỆU ỨNG CHUYỂN ĐỘNG CHUẨN AVG ONE */}
+      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden">
+        {/* 🎨 Ambient Glow Orbs */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#0284C7]/10 dark:bg-[#0284C7]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#F15A24]/10 dark:bg-[#F15A24]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Left: Animated Slogan Box Badge & Dynamic Title with Brush Stroke */}
+          <div className="space-y-2 text-left">
+            {/* Animated Slogan Badge - Hộp vuông bo góc rounded-xl với viền gradient chạy vòng quanh */}
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="design-32-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="35%" stopColor="#00A8E8" />
+                    <stop offset="70%" stopColor="#FF7043" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#design-32-slogan-border-gradient)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Compass className="w-3.5 h-3.5 text-[#00A8E8]" />
+                <span>AVG ENGINEERING & CAD/PCB DESIGN SYSTEM</span>
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                <span>HỆ THỐNG AVG ONE</span>
+                <span>/</span>
+                <span>3.2 – THIẾT KẾ</span>
+                <span>/</span>
+                <span className="text-[#F15A24] font-black">
+                  {currentMainTab === 'orders' ? 'ĐƠN HÀNG' : currentMainTab === 'products' ? 'PHẨM' : 'TỒN'}
+                </span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
+                <span>PHÂN HỆ 3.2 –</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
+                  <span className="relative z-10">THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
+              </h1>
+            </div>
+          </div>
+
+          {/* Right: Status Pill */}
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Không gian nghiệp vụ CAD/PCB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ========================================================================= */}
       {/* 🎯 TAB 1: ĐƠN HÀNG (4 BƯỚC ĐƠN HÀNG & 13 BƯỚC SOP KỸ THUẬT) */}
       {/* ========================================================================= */}
@@ -1567,50 +1638,88 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
 
   return (
     <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 p-4 sm:p-6 space-y-6">
-      {/* 1. TOP EXECUTIVE COMMAND BAR (TITLE + TAB SWITCHER INTEGRATED) */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-emerald-600 to-teal-500 text-white rounded-xl shadow-xs shrink-0">
-            <Cpu className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-              <span>Hệ Thống AVG One</span>
-              <span>/</span>
-              <span>Nghiên Cứu & Phát Triển</span>
+      {/* 🔮 1. TOP EXECUTIVE HERO BANNER - ĐỒNG BỘ THIẾT KẾ & HIỆU ỨNG CHUYỂN ĐỘNG CHUẨN AVG ONE */}
+      <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden">
+        {/* 🎨 Ambient Glow Orbs */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#0284C7]/10 dark:bg-[#0284C7]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#10B981]/10 dark:bg-[#10B981]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Left: Animated Slogan Box Badge & Dynamic Title with Brush Stroke */}
+          <div className="space-y-2 text-left">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="research-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="35%" stopColor="#00A8E8" />
+                    <stop offset="70%" stopColor="#10B981" />
+                    <stop offset="100%" stopColor="#059669" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#research-slogan-border-gradient)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Cpu className="w-3.5 h-3.5 text-[#00A8E8]" />
+                <span>AVG R&D & EMBEDDED FIRMWARE SYSTEM</span>
+              </div>
             </div>
-            <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
-              <span>PHÂN HỆ 3.1 – NGHIÊN CỨU & PHÁT TRIỂN (RDI)</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Hệ thống sẵn sàng" />
-            </h1>
+
+            <div className="space-y-1">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                <span>HỆ THỐNG AVG ONE</span>
+                <span>/</span>
+                <span className="text-emerald-600 font-black">3.1 – NGHIÊN CỨU & PHÁT TRIỂN</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
+                <span>PHÂN HỆ 3.1 –</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500">
+                  <span className="relative z-10">NGHIÊN CỨU & PHÁT TRIỂN (RDI)</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-emerald-500 opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
+              </h1>
+            </div>
           </div>
-        </div>
 
-        {/* Tab Switcher Integrated Directly in Header */}
-        <div className="flex items-center gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 p-1.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-full md:w-auto">
-          <button
-            onClick={() => setActiveWorkflowTab('4steps')}
-            className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
-              activeWorkflowTab === '4steps'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <ClipboardCheck className="w-3.5 h-3.5" />
-            <span>Quy Trình 4 Bước Đơn Hàng</span>
-          </button>
+          {/* Right: Tab Switcher Integrated Directly in Header */}
+          <div className="flex items-center gap-1.5 bg-slate-100/90 dark:bg-slate-800/90 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 w-full md:w-auto relative z-10 shadow-2xs">
+            <button
+              onClick={() => setActiveWorkflowTab('4steps')}
+              className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activeWorkflowTab === '4steps'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <ClipboardCheck className="w-3.5 h-3.5" />
+              <span>Quy Trình 4 Bước Đơn Hàng</span>
+            </button>
 
-          <button
-            onClick={() => setActiveWorkflowTab('13sop')}
-            className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-lg text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
-              activeWorkflowTab === '13sop'
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Chi Tiết Luồng 13 Bước SOP</span>
-          </button>
+            <button
+              onClick={() => setActiveWorkflowTab('13sop')}
+              className={`flex-1 md:flex-initial px-3.5 py-1.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activeWorkflowTab === '13sop'
+                  ? 'bg-emerald-700 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Chi Tiết Luồng 13 Bước SOP</span>
+            </button>
+          </div>
         </div>
       </div>
 
