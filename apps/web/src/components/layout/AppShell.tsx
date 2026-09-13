@@ -429,41 +429,32 @@ export const AppShell: React.FC<AppShellProps> = ({
             <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
               <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
                 
-                {/* 1. Left: Apps Launcher + Tiêu đề Phân Hệ (3.2 – THIẾT KẾ) */}
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0 select-none">
-                  <button
-                    onClick={() => setShowLauncher(true)}
-                    className="p-2 rounded-xl text-slate-600 hover:text-[#F15A24] dark:text-slate-300 dark:hover:text-orange-400 hover:bg-orange-50/80 dark:hover:bg-orange-950/40 border border-slate-200/60 dark:border-slate-800/80 hover:border-orange-200 dark:hover:border-orange-800/60 transition-all duration-200 flex items-center justify-center cursor-pointer shadow-2xs group"
-                    title="Mở danh mục Tất cả Ứng dụng AVG One"
-                  >
-                    <LayoutGrid className="w-4.5 h-4.5 stroke-[2.2] group-hover:scale-105 transition-transform" />
-                  </button>
-
-                  <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 hidden xs:block" />
-
-                  <button
+                {/* 1. Left: AVG One Official Logo & Sub-module Title (Đồng bộ tuyệt đối theo các phân hệ khác) */}
+                <div className="flex items-center gap-3 select-none shrink-0">
+                  <img
+                    src={avgOfficialLogo}
+                    alt="AVG One Official Logo"
+                    className="h-7 sm:h-8 object-contain cursor-pointer"
                     onClick={() => {
-                      if (activeSubTitle) {
+                      setActiveSubTitle('');
+                      onSelectModule('home');
+                    }}
+                    title="Trang chủ AVG One"
+                  />
+                  <div className="flex items-center gap-2">
+                    <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
+                    <button
+                      onClick={() => {
                         setActiveSubTitle('');
                         window.dispatchEvent(new CustomEvent('submodule_back'));
-                      } else {
-                        onSelectModule('home');
-                      }
-                    }}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all cursor-pointer group"
-                    title="Quay lại danh mục phân hệ"
-                  >
-                    <ChevronLeft className="w-4 h-4 stroke-[2.5] text-slate-400 group-hover:text-[#F15A24] group-hover:-translate-x-0.5 transition-all" />
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-lg bg-[#F15A24]/10 text-[#F15A24] font-mono text-xs font-black tracking-tight border border-[#F15A24]/20 shadow-2xs">
-                        3.2
-                      </span>
-                      <span className="font-black text-slate-900 dark:text-white text-sm sm:text-base tracking-wide uppercase">
-                        THIẾT KẾ
-                      </span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" title="Phân hệ hoạt động bình thường" />
-                    </div>
-                  </button>
+                      }}
+                      className="text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide hover:underline cursor-pointer flex items-center gap-1 group"
+                      title="Quay lại danh mục phân hệ"
+                    >
+                      <ChevronLeft className="w-4 h-4 stroke-[2.5] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform" />
+                      <span>{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* 2. Center: CÁC ĐẦU MỤC CHÍNH CỦA PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn) - Căn giữa cân đối */}
@@ -579,13 +570,21 @@ export const AppShell: React.FC<AppShellProps> = ({
                       )}
                     </>
                   ) : (
-                    <div
+                    <button
                       onClick={() => setIsLoginModalOpen(true)}
-                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-amber-500 to-[#F15A24] hover:from-amber-600 hover:to-[#d94a18] text-white font-black text-xs sm:text-sm flex items-center justify-center cursor-pointer shadow-xs hover:scale-105 hover:ring-2 hover:ring-[#F15A24]/30 transition-all"
-                      title="Đăng nhập tài khoản"
+                      className="btn-speech-bubble px-4 sm:px-5 py-1 sm:py-1.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-sm sm:text-[15px] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] select-none flex items-center justify-center"
+                      style={{
+                        borderTopLeftRadius: '9999px',
+                        borderTopRightRadius: '9999px',
+                        borderBottomRightRadius: '9999px',
+                        borderBottomLeftRadius: '0px'
+                      }}
+                      title="Đăng nhập tài khoản AVG One"
                     >
-                      D
-                    </div>
+                      <span className="font-bold text-[#F15A24] tracking-wide">
+                        Đăng Nhập
+                      </span>
+                    </button>
                   )}
                 </div>
 
