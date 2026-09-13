@@ -9,6 +9,7 @@ import avgOfficialLogo from '../../assets/avg-one-official-logo.png';
 import { useIsMobile } from './useIsMobile';
 import { MobileHeader } from './MobileHeader';
 import { MobileBottomNav } from './MobileBottomNav';
+import { HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader } from './headers';
 
 interface AppShellProps {
   activeModule: AppModuleId;
@@ -40,130 +41,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     }
   });
   const [hrTabState, setHrTabState] = useState<string>('employees');
-  const [calendarTabState, setCalendarTabState] = useState<'talk' | 'work' | 'problem' | 'event'>('talk');
-  const [isCalendarDropdownOpen, setIsCalendarDropdownOpen] = useState(false);
-  const calendarDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Đóng hộp Lịch khi chuyển qua phân hệ khác
-  useEffect(() => {
-    if (activeModule !== 'calendar') {
-      setIsCalendarDropdownOpen(false);
-    }
-  }, [activeModule]);
-
-  // Đóng hộp Lịch khi click ra ngoài
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (calendarDropdownRef.current && !calendarDropdownRef.current.contains(e.target as Node)) {
-        setIsCalendarDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Chọn đầu mục con Lịch: chuyển tab, đồng bộ dữ liệu và ĐÓNG hộp dropdown
-  const handleSelectCalendarSubTab = (tab: 'talk' | 'work' | 'problem' | 'event') => {
-    setCalendarTabState(tab);
-    setIsCalendarDropdownOpen(false);
-    try {
-      localStorage.setItem('avg_calendar_active_subapp', tab);
-    } catch (e) {}
-    onSelectModule('calendar');
-    window.dispatchEvent(new CustomEvent('calendar_subapp_change', { detail: tab }));
-    setTimeout(() => {
-      const btn = document.getElementById(`btn-calendar-subtab-${tab}`);
-      if (btn) btn.click();
-    }, 50);
-  };
-
-  // Click vào nút Lịch: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
-  const handleToggleCalendarModule = () => {
-    setIsSystemDropdownOpen(false);
-    setIsOrdersDropdownOpen(false);
-    setIsCalendarDropdownOpen(prev => !prev);
-  };
-
-  const [systemTabState, setSystemTabState] = useState<'annual-plan' | 'executive-directive'>('annual-plan');
-  const [isSystemDropdownOpen, setIsSystemDropdownOpen] = useState(false);
-  const systemDropdownRef = useRef<HTMLDivElement>(null);
-
-  // Đóng hộp khi chuyển qua phân hệ khác
-  useEffect(() => {
-    if (activeModule !== 'system' && activeModule !== 'admin') {
-      setIsSystemDropdownOpen(false);
-    }
-  }, [activeModule]);
-
-  // Đóng hộp khi click ra ngoài
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (systemDropdownRef.current && !systemDropdownRef.current.contains(e.target as Node)) {
-        setIsSystemDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Chọn đầu mục con: chuyển tab, đồng bộ dữ liệu và ĐÓNG hộp dropdown
-  const handleSelectSystemSubTab = (tab: 'annual-plan' | 'executive-directive') => {
-    setSystemTabState(tab);
-    setIsSystemDropdownOpen(false);
-    onSelectModule('system');
-    window.dispatchEvent(new CustomEvent('system_tab_change', { detail: tab }));
-    const btn = document.getElementById(`btn-system-subtab-${tab}`);
-    if (btn) btn.click();
-  };
-
-  // Click vào nút Hệ thống: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
-  const handleToggleSystemModule = () => {
-    setIsOrdersDropdownOpen(false);
-    setIsCalendarDropdownOpen(false);
-    setIsSystemDropdownOpen(prev => !prev);
-  };
-
-  // Đơn hàng dropdown state & ref
-  const [ordersTabState, setOrdersTabState] = useState<'design' | 'research' | 'sample-h1' | 'legal'>('design');
-  const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
-  const ordersDropdownRef = useRef<HTMLDivElement>(null);
-
-  // Đóng hộp Đơn hàng khi chuyển qua phân hệ khác
-  useEffect(() => {
-    if (activeModule !== 'orders' && activeModule !== 'wework') {
-      setIsOrdersDropdownOpen(false);
-    }
-  }, [activeModule]);
-
-  // Đóng hộp Đơn hàng khi click ra ngoài
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ordersDropdownRef.current && !ordersDropdownRef.current.contains(e.target as Node)) {
-        setIsOrdersDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Chọn đầu mục con Đơn hàng từ Header: chuyển đến phân hệ Đơn hàng để theo dõi tổng quan tiến độ
-  const handleSelectOrdersSubTab = (tab: 'design' | 'research' | 'sample-h1' | 'legal') => {
-    setOrdersTabState(tab);
-    setIsOrdersDropdownOpen(false);
-    onSelectModule('orders');
-    window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: tab }));
-    setTimeout(() => {
-      const btn = document.getElementById(`btn-orders-subtab-${tab}`);
-      if (btn) btn.click();
-    }, 50);
-  };
-
-  // Click vào nút Đơn hàng: mở/đóng danh sách đầu mục, KHÔNG tự động chuyển giao diện khi chưa ấn vào đầu mục
-  const handleToggleOrdersModule = () => {
-    setIsSystemDropdownOpen(false);
-    setIsCalendarDropdownOpen(false);
-    setIsOrdersDropdownOpen(prev => !prev);
-  };
 
   // Lắng nghe sự kiện chuyển sang Không gian làm việc (Hộp Thiết kế) từ màn hình theo dõi tiến độ đơn hàng
   useEffect(() => {
@@ -460,456 +338,61 @@ export const AppShell: React.FC<AppShellProps> = ({
       ) : (
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
-          {isDesignModule ? (
-            /* HEADER CHUYÊN BIỆT CHO PHÂN HỆ THIẾT KẾ: THIẾT KẾ ĐẲNG CẤP, TINH TẾ, ĐỒNG BỘ CHIỀU CAO H-9 */
-            <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800 transition-all shadow-xs">
-              <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
-                
-                {/* Cụm trái: [ < 3.2 – THIẾT KẾ ] + [ 📋 Đơn hàng 3 | 📚 Phẩm 8 | 📦 Tồn 8 ] + [ 🔍 Tìm bản vẽ...  Ctrl K ] */}
-                <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-                  {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp: < 3.2 – THIẾT KẾ */}
-                  <button
-                    onClick={() => {
-                      setActiveSubTitle('');
-                      window.dispatchEvent(new CustomEvent('submodule_back'));
-                    }}
-                    className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
-                    title="Quay lại danh mục phân hệ"
-                  >
-                    <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-                    <span className="whitespace-nowrap font-black">{activeSubTitle || '3.2 – THIẾT KẾ'}</span>
-                  </button>
-
-                  {/* BỘ 3 ĐẦU MỤC CHÍNH DẠNG CAPSULE PILL ĐỒNG BỘ NGUYÊN BẢN (Đơn hàng, Phẩm, Tồn) */}
-                  <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
-                    {[
-                      { id: 'orders' as const, label: 'Đơn hàng', count: designCounts.orders, icon: ClipboardCheck },
-                      { id: 'products' as const, label: 'Phẩm', count: designCounts.products, icon: Layers },
-                      { id: 'inventory' as const, label: 'Tồn', count: designCounts.inventory, icon: Box },
-                    ].map((tab) => {
-                      const isActive = designNavTab === tab.id;
-                      const IconComponent = tab.icon;
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => {
-                            setDesignNavTab(tab.id);
-                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: tab.id }));
-                          }}
-                          className={`h-7 px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                            isActive
-                              ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs font-black'
-                              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60'
-                          }`}
-                        >
-                          <IconComponent className="w-3.5 h-3.5 shrink-0" />
-                          <span>{tab.label}</span>
-                          <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                            isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                          }`}>
-                            {tab.count}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Thanh tìm kiếm nhanh tích hợp chuẩn chiều cao h-9 */}
-                  <div className="relative flex items-center shrink-0">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
-                    <input
-                      id="design-quick-search-input"
-                      type="text"
-                      value={designSearch}
-                      onChange={(e) => {
-                        setDesignSearch(e.target.value);
-                        window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
-                      }}
-                      placeholder="Tìm bản vẽ..."
-                      className="w-36 sm:w-48 focus:w-60 pl-8.5 pr-12 h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
-                    />
-                    <kbd className="absolute right-2 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md pointer-events-none shadow-2xs">
-                      Ctrl K
-                    </kbd>
-                  </div>
-                </div>
-
-                {/* Right: Dark Mode Toggle + Hộp Đăng Nhập / Profile Avatar */}
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                  <button
-                    onClick={onToggleDarkMode}
-                    className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
-                    title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
-                  >
-                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                  </button>
-                  {renderUserAuthButton()}
-                </div>
-
-              </div>
-            </header>
+          {/* HỆ THỐNG HEADER ĐỘC LẬP TÁCH BIỆT CHO TỪNG PHÂN HỆ */}
+          {activeModule === 'home' ? (
+            /* 1. HEADER TRANG CHỦ: BẢO VỆ NGUYÊN VẸN, BỐ CỤC CỐ ĐỊNH CHUẨN MAX-W-7XL MX-AUTO */
+            <HomeHeader
+              onSelectModule={onSelectModule}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : isDesignModule ? (
+            /* 2. HEADER PHÂN HỆ THIẾT KẾ: TABS ĐƠN HÀNG/PHẨM/TỒN, QUICK SEARCH, PILL BACK */
+            <DesignHeader
+              activeSubTitle={activeSubTitle}
+              onBack={() => {
+                setActiveSubTitle('');
+                window.dispatchEvent(new CustomEvent('submodule_back'));
+              }}
+              designNavTab={designNavTab}
+              onSelectDesignTab={(tab) => {
+                setDesignNavTab(tab);
+                window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: tab }));
+              }}
+              designSearch={designSearch}
+              onDesignSearchChange={(val) => {
+                setDesignSearch(val);
+                window.dispatchEvent(new CustomEvent('design_search_change', { detail: val }));
+              }}
+              designCounts={designCounts}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'apps' ? (
+            /* 3. HEADER PHÂN HỆ KHO ỨNG DỤNG & CÁC APP CON (CHUYỂN ĐỔI TRỰC TIẾP, BÁO CÁO, QR...) */
+            <AppsHeader
+              activeSubTitle={activeSubTitle}
+              onBack={() => {
+                setActiveSubTitle('');
+                window.dispatchEvent(new CustomEvent('submodule_back'));
+              }}
+              onSelectModule={onSelectModule}
+              renderUserAuthButton={renderUserAuthButton}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+            />
           ) : (
-            /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
-            <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
-              
-              {/* Left: AVG One Official Logo hoặc Nút quay lại kèm tiêu đề phân hệ con */}
-              <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-                {activeSubTitle && activeModule !== 'home' ? (
-                  <button
-                    onClick={() => {
-                      setActiveSubTitle('');
-                      window.dispatchEvent(new CustomEvent('submodule_back'));
-                    }}
-                    className="group text-xs sm:text-sm font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-wide cursor-pointer flex items-center hover:text-orange-600 dark:hover:text-orange-300 transition-colors select-none shrink-0 py-1"
-                    title="Quay lại danh mục phân hệ"
-                  >
-                    <span className="inline-flex items-center overflow-hidden transition-all duration-200 ease-out w-0 opacity-0 -translate-x-1 group-hover:w-4 group-hover:opacity-100 group-hover:translate-x-0 group-hover:mr-1 group-active:w-4 group-active:opacity-100 group-active:translate-x-0 group-active:mr-1 group-focus-visible:w-4 group-focus-visible:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:mr-1 shrink-0">
-                      <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] dark:text-orange-400 shrink-0" />
-                    </span>
-                    <span className="whitespace-nowrap font-black">{activeSubTitle}</span>
-                  </button>
-                ) : (
-                  <img
-                    src={avgOfficialLogo}
-                    alt="AVG One Official Logo"
-                    className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
-                    onClick={() => {
-                      setActiveSubTitle('');
-                      onSelectModule('home');
-                    }}
-                    title="Trang chủ AVG One"
-                  />
-                )}
-              </div>
-
-              {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
-              <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 shrink-0 whitespace-nowrap">
-                <nav className="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3.5 shrink-0 whitespace-nowrap">
-                  {[
-                    { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
-                    { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
-                    { id: 'inside' as AppModuleId, aliases: ['inside'], label: 'Bảng tin' },
-                    { id: 'calendar' as AppModuleId, aliases: ['calendar'], label: 'Lịch' },
-                    { id: 'orders' as AppModuleId, aliases: ['orders', 'wework', 'workflow', 'rd'], label: 'Đơn hàng' },
-                  ].map((item) => {
-                      const isActive = item.aliases.includes(activeModule);
-
-                      if (item.id === 'system') {
-                        const isHighlighted = isActive || isSystemDropdownOpen;
-                        return (
-                          <div
-                            key={item.id}
-                            ref={systemDropdownRef}
-                            className="relative shrink-0 whitespace-nowrap"
-                          >
-                            <button
-                              onClick={handleToggleSystemModule}
-                              style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                              className={`relative px-2 sm:px-2.5 py-1 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-0.5 whitespace-nowrap shrink-0 ${
-                                isHighlighted
-                                  ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                                  : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
-                              }`}
-                            >
-                              <span className="relative inline-block whitespace-nowrap">
-                                <span
-                                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                  className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap"
-                                >
-                                  {item.label}
-                                </span>
-                                {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
-                                {isHighlighted && (
-                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-4 sm:w-5 h-[2px] bg-[#F15A24] rounded-full" />
-                                )}
-                              </span>
-                              <ChevronDown
-                                style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
-                              />
-                            </button>
-
-                            {/* Dropdown Menu for Hệ thống */}
-                            {isSystemDropdownOpen && (
-                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectSystemSubTab('annual-plan');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && systemTabState === 'annual-plan'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Kế hoạch năm</span>
-                                  {isActive && systemTabState === 'annual-plan' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectSystemSubTab('executive-directive');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && systemTabState === 'executive-directive'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Thông điệp điều hành</span>
-                                  {isActive && systemTabState === 'executive-directive' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-
-                      if (item.id === 'calendar') {
-                        const isHighlighted = isActive || isCalendarDropdownOpen;
-                        return (
-                          <div
-                            key={item.id}
-                            ref={calendarDropdownRef}
-                            className="relative"
-                          >
-                            <button
-                              onClick={handleToggleCalendarModule}
-                              style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
-                                isHighlighted
-                                  ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                                  : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
-                              }`}
-                            >
-                              <span className="relative inline-block">
-                                <span
-                                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                  className="relative z-10 transition-colors duration-150 inline-block"
-                                >
-                                  {item.label}
-                                </span>
-                                {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
-                                {isHighlighted && (
-                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
-                                )}
-                              </span>
-                              <ChevronDown
-                                style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isCalendarDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
-                              />
-                            </button>
-
-                            {/* Dropdown Menu for Lịch */}
-                            {isCalendarDropdownOpen && (
-                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-56 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectCalendarSubTab('talk');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && calendarTabState === 'talk'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Lịch trao đổi</span>
-                                  {isActive && calendarTabState === 'talk' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectCalendarSubTab('work');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && calendarTabState === 'work'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Lịch công tác</span>
-                                  {isActive && calendarTabState === 'work' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectCalendarSubTab('problem');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && calendarTabState === 'problem'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Lịch tháo gỡ vướng mắc</span>
-                                  {isActive && calendarTabState === 'problem' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectCalendarSubTab('event');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && calendarTabState === 'event'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Lịch sự kiện hệ thống</span>
-                                  {isActive && calendarTabState === 'event' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-
-                      if (item.id === 'orders') {
-                        const isHighlighted = isActive || isOrdersDropdownOpen;
-                        return (
-                          <div
-                            key={item.id}
-                            ref={ordersDropdownRef}
-                            className="relative"
-                          >
-                            <button
-                              onClick={handleToggleOrdersModule}
-                              style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                              className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
-                                isHighlighted
-                                  ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                                  : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
-                              }`}
-                            >
-                              <span className="relative inline-block">
-                                <span
-                                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                  className="relative z-10 transition-colors duration-150 inline-block"
-                                >
-                                  {item.label}
-                                </span>
-                                {/* Line ngắn dưới chân chữ (cố định khi active hoặc khi mở dropdown) */}
-                                {isHighlighted && (
-                                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
-                                )}
-                              </span>
-                              <ChevronDown
-                                style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
-                              />
-                            </button>
-
-                            {/* Dropdown Menu for Đơn hàng */}
-                            {isOrdersDropdownOpen && (
-                              <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectOrdersSubTab('design');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    (isActive && ordersTabState === 'design') || activeSubTitle.includes('THIẾT KẾ')
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Thiết kế</span>
-                                  {((isActive && ordersTabState === 'design') || activeSubTitle.includes('THIẾT KẾ')) && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectOrdersSubTab('research');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    (isActive && ordersTabState === 'research') || activeSubTitle.includes('NGHIÊN CỨU')
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Nghiên cứu</span>
-                                  {((isActive && ordersTabState === 'research') || activeSubTitle.includes('NGHIÊN CỨU')) && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSelectOrdersSubTab('legal');
-                                  }}
-                                  className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                                    isActive && ordersTabState === 'legal'
-                                      ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                                      : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  <span className="text-slate-900 dark:text-white font-medium">Pháp lý</span>
-                                  {isActive && ordersTabState === 'legal' && (
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                                  )}
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => {
-                            setIsSystemDropdownOpen(false);
-                            setIsCalendarDropdownOpen(false);
-                            setIsOrdersDropdownOpen(false);
-                            onSelectModule(item.id);
-                          }}
-                          style={{ color: isActive ? '#F15A24' : undefined }}
-                          className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal ${
-                            isActive
-                              ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                              : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
-                          }`}
-                        >
-                          <span className="relative inline-block">
-                            <span
-                              style={{ color: isActive ? '#F15A24' : undefined }}
-                              className="relative z-10 transition-colors duration-150 inline-block"
-                            >
-                              {item.label}
-                            </span>
-                            {/* Line ngắn dưới chân chữ (cố định khi active) */}
-                            {isActive && (
-                              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
-                            )}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </nav>
-
-                  {/* SSO Profile / Login Button */}
-                  {renderUserAuthButton()}
-                </div>
-
-              </div>
-            </header>
+            /* 4. HEADER CÁC PHÂN HỆ VẬN HÀNH KHÁC (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */
+            <StandardModuleHeader
+              activeModule={activeModule}
+              activeSubTitle={activeSubTitle}
+              onBack={() => {
+                setActiveSubTitle('');
+                window.dispatchEvent(new CustomEvent('submodule_back'));
+              }}
+              onSelectModule={onSelectModule}
+              renderUserAuthButton={renderUserAuthButton}
+            />
           )}
 
           {/* Main Content Viewport for Desktop */}
