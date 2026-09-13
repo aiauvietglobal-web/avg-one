@@ -18,51 +18,7 @@ interface AppShellProps {
   children: React.ReactNode;
 }
 
-interface TabItem {
-  id: string;
-  label: string;
-  domId?: string;
-  onClick: () => void;
-}
 
-const AnimatedHeaderTabs: React.FC<{
-  tabs: TabItem[];
-  activeId: string;
-  activeColor?: string;
-}> = ({ tabs, activeId, activeColor = '#F15A24' }) => {
-  return (
-    <div className="relative flex items-center h-full gap-2 sm:gap-3 text-xs sm:text-sm font-medium flex-shrink-0 ml-1 whitespace-nowrap">
-      {tabs.map((tab) => {
-        const isActive = tab.id === activeId;
-        return (
-          <div key={tab.id} className="relative h-full flex items-center shrink-0">
-            <button
-              id={tab.domId}
-              data-tab-id={tab.id}
-              onClick={tab.onClick}
-              style={{ color: isActive ? activeColor : undefined }}
-              className={`h-full flex items-center text-xs sm:text-sm transition-colors duration-200 select-none whitespace-nowrap cursor-pointer shrink-0 ${
-                isActive
-                  ? 'font-black'
-                  : 'text-slate-600 dark:text-slate-300 font-bold hover:opacity-80'
-              }`}
-            >
-              {tab.label}
-            </button>
-
-            {/* Line mỏng 2px xuất hiện dưới chân từng đầu mục khi được chọn */}
-            <span
-              style={{ backgroundColor: activeColor }}
-              className={`absolute bottom-0 left-2 right-2 h-[2px] rounded-full transform origin-center transition-transform duration-300 ease-out pointer-events-none ${
-                isActive ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
-              }`}
-            />
-          </div>
-        );
-      })}
-    </div>
-  );
-};
 
 export const AppShell: React.FC<AppShellProps> = ({
   activeModule,
@@ -272,38 +228,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     };
   }, [activeModule]);
 
-  // Tab đầu mục chính phân hệ Thiết kế (Đơn hàng, Phẩm, Tồn) & Thanh tìm kiếm nhanh
-  const [designNavTab, setDesignNavTab] = useState<'orders' | 'products' | 'inventory'>('orders');
-  const [designSearch, setDesignSearch] = useState('');
 
-  // Lắng nghe sự kiện đồng bộ tab từ submodule
-  useEffect(() => {
-    const handleDesignTabSync = (e: any) => {
-      if (e.detail && ['orders', 'products', 'inventory'].includes(e.detail)) {
-        setDesignNavTab(e.detail);
-      }
-    };
-    window.addEventListener('design_subtab_sync', handleDesignTabSync);
-    return () => window.removeEventListener('design_subtab_sync', handleDesignTabSync);
-  }, []);
-
-  // Shortcut Ctrl + K để focus nhanh vào thanh tìm kiếm trên header
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        const searchInput = document.getElementById('design-quick-search-input');
-        if (searchInput) {
-          e.preventDefault();
-          searchInput.focus();
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  // Chỉ riêng khi đang đứng ở phân hệ Thiết kế (R&D / Workflow) mới hiển thị thanh Header chuyên biệt
-  const isDesignModule = activeModule !== 'home' && (activeModule === 'rd' || activeModule === 'workflow') && activeSubTitle.includes('THIẾT KẾ');
 
   const handleAppTitleClick = () => {
     if (isArrowActive) {
@@ -463,65 +388,6 @@ export const AppShell: React.FC<AppShellProps> = ({
                   </div>
                 )}
 
-                {/* ĐẦU MỤC TÍCH HỢP CHO PHÂN HỆ THIẾT KẾ (Đơn hàng, Phẩm, Tồn, Tìm kiếm nhanh) */}
-                {isDesignModule && (
-                  <div className="flex items-center gap-1.5 sm:gap-2 ml-1 shrink-0 whitespace-nowrap">
-                    <div className="h-4 sm:h-4.5 w-px bg-slate-300 dark:bg-slate-700 flex-shrink-0" />
-                    
-                    <AnimatedHeaderTabs
-                      activeId={designNavTab}
-                      activeColor="#F15A24"
-                      tabs={[
-                        {
-                          id: 'orders',
-                          label: 'Đơn hàng',
-                          domId: 'btn-appshell-design-orders',
-                          onClick: () => {
-                            setDesignNavTab('orders');
-                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: 'orders' }));
-                          }
-                        },
-                        {
-                          id: 'products',
-                          label: 'Phẩm',
-                          domId: 'btn-appshell-design-products',
-                          onClick: () => {
-                            setDesignNavTab('products');
-                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: 'products' }));
-                          }
-                        },
-                        {
-                          id: 'inventory',
-                          label: 'Tồn',
-                          domId: 'btn-appshell-design-inventory',
-                          onClick: () => {
-                            setDesignNavTab('inventory');
-                            window.dispatchEvent(new CustomEvent('design_subtab_change', { detail: 'inventory' }));
-                          }
-                        }
-                      ]}
-                    />
-
-                    {/* Thanh tìm kiếm nhanh tích hợp - Thiết kế co giãn thông minh không đè chữ */}
-                    <div className="relative hidden 2xl:flex items-center ml-1 shrink-0">
-                      <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 pointer-events-none" />
-                      <input
-                        id="design-quick-search-input"
-                        type="text"
-                        value={designSearch}
-                        onChange={(e) => {
-                          setDesignSearch(e.target.value);
-                          window.dispatchEvent(new CustomEvent('design_search_change', { detail: e.target.value }));
-                        }}
-                        placeholder="Tìm bản vẽ..."
-                        className="w-28 focus:w-40 pl-7 pr-8 py-1 h-7 bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-100 focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#F15A24] transition-all duration-200 font-medium shrink-0"
-                      />
-                      <kbd className="absolute right-1.5 px-1 py-0.2 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded pointer-events-none">
-                        Ctrl K
-                      </kbd>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Right: Phân hệ quản lý vận hành (chữ to hơn, nét mảnh thanh thoát, chỉ viết hoa chữ cái đầu tiên, đặt gần hộp Đăng Nhập) + Hộp Đăng Nhập */}
