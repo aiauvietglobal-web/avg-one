@@ -813,35 +813,6 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       )}
 
-      {/* 1. TOP COMMAND BAR: TIÊU ĐỀ PHÂN HỆ (BÓC TÁCH ĐỘC LẬP VỚI THANH HEADER) */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-[#F15A24] to-amber-500 text-white rounded-xl shadow-xs shrink-0">
-            <Compass className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-              <span>Hệ Thống AVG One</span>
-              <span>/</span>
-              <span>3.2 – THIẾT KẾ</span>
-              <span>/</span>
-              <span className="text-[#F15A24] font-black">
-                {currentMainTab === 'orders' ? 'ĐƠN HÀNG' : currentMainTab === 'products' ? 'PHẨM' : 'TỒN'}
-              </span>
-            </div>
-            <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
-              <span>PHÂN HỆ 3.2 – THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Hệ thống sẵn sàng" />
-            </h1>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 text-xs font-bold text-slate-400 dark:text-slate-500">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-          <span>Không gian nghiệp vụ CAD/PCB</span>
-        </div>
-      </div>
-
       {/* ========================================================================= */}
       {/* 🎯 TAB 1: ĐƠN HÀNG (4 BƯỚC ĐƠN HÀNG & 13 BƯỚC SOP KỸ THUẬT) */}
       {/* ========================================================================= */}
