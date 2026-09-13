@@ -255,244 +255,207 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
   };
 
   return (
-    /* MASTER ORDER EXECUTION HUB - UNIFIED INDUSTRIAL WORKSPACE */
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden divide-y divide-slate-100 dark:divide-slate-800">
-      {/* 1. ZONE ĐIỀU HÀNH ĐƠN HÀNG & SLA PIPELINE */}
-      <div className="p-4 sm:p-5 bg-gradient-to-r from-slate-50/70 via-white to-orange-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-orange-950/10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-        {/* Left: Order selector and metadata */}
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-[#F15A24] to-amber-500 text-white rounded-xl shadow-xs shrink-0">
-            <Package className="w-5 h-5 stroke-[2.2]" />
+    /* MASTER ORDER WORKSPACE - CLEAN, MODERN & INTUITIVE */
+    <div className="space-y-4">
+      {/* 1. THANH ĐIỀU HÀNH ĐƠN HÀNG (ORDER CONTROL STRIP) */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5">
+        {/* Left: Order dropdown & badges */}
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="p-2.5 bg-gradient-to-br from-[#F15A24] to-amber-500 text-white rounded-xl shadow-2xs shrink-0">
+            <Package className="w-5 h-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Đơn Hàng R&D Active
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+                Đơn Hàng R&D
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/60 flex items-center gap-1">
-                <Zap className="w-3 h-3 fill-current" />
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 border border-rose-200/70 dark:border-rose-900/50 flex items-center gap-1">
+                <Zap className="w-2.5 h-2.5 fill-current" />
                 {currentOrder.priority}
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                 {currentOrder.project}
               </span>
             </div>
-
-            <div className="flex items-center gap-2">
-              <select
-                value={selectedOrderCode}
-                onChange={(e) => {
-                  setSelectedOrderCode(e.target.value);
-                  const found = ORDERS_LIST.find(o => o.code === e.target.value);
-                  if (found) setActiveOrderStep(found.currentStep);
-                }}
-                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 font-black text-slate-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 cursor-pointer shadow-2xs"
-              >
-                {ORDERS_LIST.map(o => (
-                  <option key={o.code} value={o.code}>
-                    {o.code}: {o.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              value={selectedOrderCode}
+              onChange={(e) => {
+                setSelectedOrderCode(e.target.value);
+                const found = ORDERS_LIST.find(o => o.code === e.target.value);
+                if (found) setActiveOrderStep(found.currentStep);
+              }}
+              className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-xs sm:text-sm font-black text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 cursor-pointer shadow-2xs"
+            >
+              {ORDERS_LIST.map(o => (
+                <option key={o.code} value={o.code}>
+                  {o.code}: {o.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        {/* Right: Progress bar, SLA, and actions */}
-        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-          {/* Progress Bar */}
-          <div className="bg-white dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 px-3.5 py-2 rounded-xl min-w-[180px] space-y-1 shadow-2xs">
-            <div className="flex items-center justify-between text-[11px] font-black">
-              <span className="text-slate-400 uppercase tracking-wider">Tiến Độ Xử Lý</span>
-              <span className="text-[#F15A24]">{overallProgressPercent}% ({completedStepsCount}/4)</span>
-            </div>
-            <div className="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-[#F15A24] via-amber-500 to-emerald-500 rounded-full transition-all duration-500"
-                style={{ width: `${overallProgressPercent}%` }}
-              />
+        {/* Right: Progress bar, SLA, and Actions */}
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end flex-wrap">
+          {/* Progress bar */}
+          <div className="text-left md:text-right">
+            <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Tiến độ quy trình</div>
+            <div className="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-2 mt-0.5">
+              <span>{overallProgressPercent}% ({completedStepsCount}/4 bước)</span>
+              <div className="w-16 bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden inline-block">
+                <div
+                  className="h-full bg-gradient-to-r from-[#F15A24] to-emerald-500 rounded-full transition-all duration-300"
+                  style={{ width: `${overallProgressPercent}%` }}
+                />
+              </div>
             </div>
           </div>
 
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+
           {/* SLA Badge */}
-          <div className="bg-white dark:bg-slate-800/80 border border-orange-200/80 dark:border-orange-800/60 px-3.5 py-2 rounded-xl flex items-center gap-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs">
-            <Clock className="w-4 h-4 text-[#F15A24] shrink-0" />
-            <div>
-              <div className="text-[9px] text-slate-400 font-extrabold uppercase leading-none">SLA Bước {activeOrderStep}</div>
-              <div className="font-black text-slate-900 dark:text-white mt-0.5">
-                {currentOrderStep.sla} <span className="text-slate-400 font-normal">/ Hạn {currentOrder.targetDate}</span>
-              </div>
-            </div>
+          <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
+            <Clock className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
+            <span className="font-bold">Hạn: {currentOrder.targetDate}</span>
+            <span className="text-slate-400 font-medium">({currentOrderStep.sla})</span>
           </div>
 
           {/* Quick Action */}
           <button
             onClick={() => alert(`Đã xuất báo cáo tiến độ chuẩn hóa cho mã đơn ${selectedOrderCode}`)}
-            className="px-3 py-2 bg-slate-900 text-white dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold rounded-xl flex items-center gap-1.5 cursor-pointer transition shadow-2xs hover:bg-slate-800"
+            className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold rounded-lg flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
           >
             <FileText className="w-3.5 h-3.5" /> Xuất Báo Cáo
           </button>
         </div>
       </div>
 
-      {/* 2. ZONE TIẾN TRÌNH 4 BƯỚC LIÊN KẾT (CONNECTED STEPPER TRACK) */}
-      <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-950/40">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          {orderSteps.map((s) => {
-            const isActive = activeOrderStep === s.step;
-            const isDone = s.status === 'COMPLETED';
-            const isInProgress = s.status === 'IN_PROGRESS';
+      {/* 2. THANH TIẾN TRÌNH 4 BƯỚC LIÊN KẾT (CONNECTED STEPPER PIPELINE) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        {orderSteps.map((s) => {
+          const isActive = activeOrderStep === s.step;
+          const isDone = s.status === 'COMPLETED';
+          const isInProgress = s.status === 'IN_PROGRESS';
+          const stepCheckedCount = s.checklists.filter(c => checkedMap[c.id]).length;
+          const stepTotalCount = s.checklists.length;
 
-            const stepCheckedCount = s.checklists.filter(c => checkedMap[c.id]).length;
-            const stepTotalCount = s.checklists.length;
-
-            return (
-              <button
-                key={s.step}
-                onClick={() => setActiveOrderStep(s.step)}
-                className={`p-3 rounded-xl border transition-all text-left flex flex-col justify-between gap-2.5 cursor-pointer relative overflow-hidden group ${
-                  isActive
-                    ? 'bg-white dark:bg-slate-900 border-[#F15A24] ring-2 ring-[#F15A24]/30 shadow-xs scale-[1.01]'
-                    : isDone
-                      ? 'bg-emerald-50/40 dark:bg-slate-900/90 border-emerald-300/80 dark:border-emerald-900/60 hover:border-emerald-400'
-                      : isInProgress
-                        ? 'bg-white dark:bg-slate-900 border-orange-300 dark:border-orange-800/80'
-                        : 'bg-white/80 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800 opacity-85 hover:opacity-100'
-                }`}
-              >
-                {/* Header of Step Card */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center font-black text-[11px] shadow-2xs ${
-                      isDone
-                        ? 'bg-emerald-600 text-white'
-                        : isActive
-                          ? 'bg-[#F15A24] text-white ring-2 ring-[#F15A24]/30'
-                          : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}>
-                      {isDone ? <Check className="w-3 h-3 stroke-[3]" /> : s.step}
-                    </span>
-                    <span className={`text-[10px] font-black uppercase tracking-wider ${
-                      isActive ? 'text-[#F15A24]' : isDone ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500'
-                    }`}>
-                      {s.code}
-                    </span>
-                  </div>
-
-                  {isDone ? (
-                    <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-300/60">
-                      Hoàn Thành
-                    </span>
-                  ) : isInProgress ? (
-                    <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black bg-orange-100 dark:bg-orange-950/70 text-[#F15A24] border border-orange-300/60 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-pulse" /> Đang Xử Lý
-                    </span>
-                  ) : (
-                    <span className="px-1.5 py-0.5 rounded-md text-[9px] font-black bg-slate-100 dark:bg-slate-800 text-slate-400">
-                      Chờ Tiếp Nhận
-                    </span>
-                  )}
-                </div>
-
-                {/* Step Title & Department */}
-                <div>
-                  <h4 className={`text-xs font-black line-clamp-1 leading-tight ${
-                    isActive ? 'text-slate-900 dark:text-white' : 'text-slate-800 dark:text-slate-200'
+          return (
+            <button
+              key={s.step}
+              onClick={() => setActiveOrderStep(s.step)}
+              className={`p-3 rounded-xl border text-left transition cursor-pointer flex flex-col justify-between gap-2 relative overflow-hidden ${
+                isActive
+                  ? 'bg-white dark:bg-slate-900 border-[#F15A24] ring-2 ring-[#F15A24]/20 shadow-xs'
+                  : isDone
+                    ? 'bg-emerald-50/40 dark:bg-slate-900/60 border-emerald-300/70 dark:border-emerald-900/60 hover:border-emerald-400'
+                    : 'bg-white dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+              }`}
+            >
+              {/* Top of Card: Step badge + Status */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center font-black text-[11px] ${
+                    isDone
+                      ? 'bg-emerald-600 text-white'
+                      : isActive
+                        ? 'bg-[#F15A24] text-white'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
                   }`}>
-                    {s.name}
-                  </h4>
-                  <div className="text-[10px] font-bold text-slate-400 mt-0.5 truncate">
-                    {s.dept}
-                  </div>
-                </div>
-
-                {/* Footer of Step Card */}
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px]">
-                  <span className="text-slate-500 font-bold truncate max-w-[100px]">
-                    {s.leadEngineer}
+                    {isDone ? <Check className="w-3 h-3 stroke-[3]" /> : s.step}
                   </span>
-                  <span className={`px-1.5 py-0.5 rounded font-extrabold text-[9px] ${
-                    stepCheckedCount === stepTotalCount
-                      ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                  }`}>
-                    {stepCheckedCount}/{stepTotalCount} Tiêu Chuẩn
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                    {s.code}
                   </span>
                 </div>
-
-                {/* Active Highlight Bar */}
-                {isActive && (
-                  <div className="w-full h-1 bg-gradient-to-r from-[#F15A24] to-amber-500 absolute bottom-0 left-0" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 3. ZONE KHÔNG GIAN LÀM VIỆC CHI TIẾT CỦA BƯỚC (STEP WORKSPACE & DELIVERABLES DOCK) */}
-      <div className="p-5 sm:p-6 space-y-5">
-        {/* Step Header & Toggle Action */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-3">
-            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#F15A24] to-amber-500 text-white flex items-center justify-center font-black text-base shadow-xs shrink-0">
-              {currentOrderStep.step}
-            </span>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] font-black text-[#F15A24] uppercase tracking-wider">
-                  {currentOrderStep.code} • {currentOrderStep.dept}
-                </span>
-                <span className="text-[10px] font-extrabold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
-                  Chủ trì: {currentOrderStep.leadEngineer}
+                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded ${
+                  isDone
+                    ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300'
+                    : isInProgress
+                      ? 'text-orange-700 bg-orange-100 dark:bg-orange-950/60 dark:text-orange-300'
+                      : 'text-slate-400 bg-slate-100 dark:bg-slate-800'
+                }`}>
+                  {isDone ? 'Hoàn thành' : isInProgress ? 'Đang xử lý' : 'Chờ nhận'}
                 </span>
               </div>
-              <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
-                {currentOrderStep.name}
-              </h3>
+
+              {/* Middle: Step name and Assignee */}
+              <div>
+                <div className={`text-xs font-black truncate leading-tight ${isActive ? 'text-[#F15A24]' : 'text-slate-800 dark:text-slate-200'}`}>
+                  {s.name}
+                </div>
+                <div className="text-[10px] font-bold text-slate-400 truncate mt-0.5">
+                  {s.leadEngineer} • {s.dept}
+                </div>
+              </div>
+
+              {/* Footer: SLA & Checklist stats */}
+              <div className="flex items-center justify-between pt-1.5 border-t border-slate-100 dark:border-slate-800/80 text-[10px] text-slate-400">
+                <span>SLA: {s.sla}</span>
+                <span className={`font-extrabold ${stepCheckedCount === stepTotalCount ? 'text-emerald-600' : ''}`}>
+                  {stepCheckedCount}/{stepTotalCount} Tiêu chuẩn
+                </span>
+              </div>
+
+              {/* Bottom active indicator */}
+              {isActive && (
+                <div className="w-full h-1 bg-[#F15A24] absolute bottom-0 left-0" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 3. KHÔNG GIAN LÀM VIỆC CỦA BƯỚC ĐANG CHỌN (FOCUSED STEP WORKSPACE) */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-5">
+        
+        {/* Step Action Header (Direct, No Repeated Titles) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-100 dark:border-slate-800">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-black text-[#F15A24] uppercase tracking-wide flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#F15A24]" />
+                Bước {currentOrderStep.step}: {currentOrderStep.name}
+              </span>
+              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+              <span className="text-xs text-slate-500 font-bold">
+                Chủ trì: <strong className="text-slate-800 dark:text-slate-200">{currentOrderStep.leadEngineer}</strong> ({currentOrderStep.dept})
+              </span>
             </div>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+              💡 <strong>Mục tiêu:</strong> {currentOrderStep.desc}
+            </p>
           </div>
 
           <button
             onClick={() => handleToggleOrderStep(currentOrderStep.step)}
-            className={`px-4 py-2 font-black text-xs rounded-xl transition flex items-center gap-2 shadow-xs cursor-pointer ${
+            className={`px-4 py-2 text-xs font-black rounded-xl transition flex items-center gap-2 cursor-pointer shadow-2xs shrink-0 ${
               currentOrderStep.status === 'COMPLETED'
-                ? 'bg-emerald-600 text-white hover:bg-emerald-700 ring-2 ring-emerald-500/20'
-                : 'bg-[#F15A24] text-white hover:bg-orange-600 ring-2 ring-orange-500/20'
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                : 'bg-[#F15A24] hover:bg-orange-600 text-white'
             }`}
           >
             <CheckCircle2 className="w-4 h-4" />
-            <span>{currentOrderStep.status === 'COMPLETED' ? 'Đã Hoàn Thành Bước Này (Mở Lại)' : 'Xác Nhận Hoàn Thành Bước Xử Lý'}</span>
+            <span>{currentOrderStep.status === 'COMPLETED' ? 'Đã Hoàn Thành (Mở lại)' : `Hoàn Thành Bước ${currentOrderStep.step} →`}</span>
           </button>
         </div>
 
-        {/* Technical Objective Callout */}
-        <div className="bg-slate-50 dark:bg-slate-800/60 p-3.5 sm:p-4 rounded-xl border border-slate-200/80 dark:border-slate-700/80 space-y-1">
-          <div className="text-[10px] font-extrabold text-slate-400 uppercase flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#F15A24]" />
-            <span>Mục Tiêu Kỹ Thuật SOP Bước {currentOrderStep.step}:</span>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-semibold">
-            {currentOrderStep.desc}
-          </p>
-        </div>
-
-        {/* BỐ CỤC 2 CỘT: CHECKLIST KIỂM ĐỊNH (58%) VS HỒ SƠ CAD/PCB (42%) */}
+        {/* 2 COLUMNS: CHECKLIST (60%) & DELIVERABLES (40%) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          
-          {/* CỘT 1: DANH MỤC CHECKLIST BẮT BUỘC (7/12) */}
+          {/* CỘT 1: DANH MỤC TIÊU CHUẨN KIỂM ĐỊNH */}
           <div className="lg:col-span-7 space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <CheckSquare className="w-4 h-4 text-[#F15A24]" />
-                <span>Tiêu Chuẩn Kiểm Định (Verification Checklist):</span>
-              </h4>
-              <span className="text-[11px] font-extrabold text-slate-600 dark:text-slate-300">
+                <h4 className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                  Tiêu Chuẩn Kiểm Định (Checklist)
+                </h4>
+              </div>
+              <span className="text-xs font-extrabold text-slate-600 dark:text-slate-300">
                 {currentStepCheckedCount}/{currentStepTotalCount} Đạt ({currentStepPercent}%)
               </span>
             </div>
 
-            {/* Checklist Progress Bar */}
+            {/* Checklist progress bar */}
             <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 ${
@@ -502,51 +465,48 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
               />
             </div>
 
-            {/* Checklist items */}
-            <div className="space-y-2">
+            {/* Checklist items list */}
+            <div className="space-y-2 pt-0.5">
               {currentOrderStep.checklists.map((chk) => {
                 const isChecked = !!checkedMap[chk.id];
                 return (
                   <div
                     key={chk.id}
                     onClick={() => handleToggleCheckItem(chk.id)}
-                    className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                    className={`p-3 rounded-xl border transition cursor-pointer flex items-start justify-between gap-3 ${
                       isChecked
-                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/80'
-                        : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-orange-300'
+                        ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/60'
+                        : 'bg-slate-50/70 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 hover:border-orange-300'
                     }`}
                   >
-                    <div className="flex items-start gap-2.5">
-                      <button
-                        type="button"
-                        className={`w-4.5 h-4.5 rounded flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                    <div className="flex items-start gap-3 min-w-0">
+                      <div
+                        className={`w-4.5 h-4.5 rounded flex items-center justify-center shrink-0 mt-0.5 transition ${
                           isChecked
                             ? 'bg-emerald-600 text-white'
-                            : 'border-2 border-slate-300 dark:border-slate-600 hover:border-[#F15A24]'
+                            : 'border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700'
                         }`}
                       >
                         {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
-                      </button>
-                      <div className="space-y-0.5">
-                        <span className={`text-xs font-bold leading-tight block ${
-                          isChecked
-                            ? 'text-slate-900 dark:text-slate-100 line-through decoration-emerald-500/50'
-                            : 'text-slate-800 dark:text-slate-200'
+                      </div>
+                      <div className="min-w-0">
+                        <div className={`text-xs font-bold leading-snug ${
+                          isChecked ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-800 dark:text-slate-200'
                         }`}>
                           {chk.text}
-                        </span>
-                        <span className="text-[10px] text-slate-400 block font-semibold">
+                        </div>
+                        <div className="text-[10px] font-semibold text-slate-400 mt-0.5 truncate">
                           Tiêu chuẩn: {chk.standard}
-                        </span>
+                        </div>
                       </div>
                     </div>
 
-                    <span className={`text-[9px] font-black px-1.5 py-0.5 rounded shrink-0 ${
+                    <span className={`text-[9px] font-black px-2 py-0.5 rounded-full shrink-0 ${
                       isChecked
-                        ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60'
-                        : 'text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/60'
+                        ? 'text-emerald-700 bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300'
+                        : 'text-amber-700 bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300'
                     }`}>
-                      {isChecked ? 'Đã duyệt' : 'Cần xử lý'}
+                      {isChecked ? 'Đạt' : 'Cần xử lý'}
                     </span>
                   </div>
                 );
@@ -554,37 +514,39 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
             </div>
           </div>
 
-          {/* CỘT 2: TÀI LIỆU & HỒ SƠ KỸ THUẬT ĐÍNH KÈM (5/12) */}
+          {/* CỘT 2: TÀI LIỆU & HỒ SƠ KỸ THUẬT BÀN GIAO */}
           <div className="lg:col-span-5 space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <Layers className="w-4 h-4 text-cyan-500" />
-                <span>Hồ Sơ Kỹ Thuật Bước {currentOrderStep.step}:</span>
-              </h4>
+                <h4 className="text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+                  Hồ Sơ Kỹ Thuật Bước {currentOrderStep.step}
+                </h4>
+              </div>
               <button
                 onClick={() => alert(`Đính kèm thêm file mới vào Bước ${currentOrderStep.step} (${selectedOrderCode})`)}
-                className="text-[10px] font-black text-[#0088CC] hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-[11px] font-bold text-[#0088CC] hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <Plus className="w-3 h-3 stroke-[3]" /> Đính Kèm File
+                <Plus className="w-3.5 h-3.5 stroke-[3]" /> Đính Kèm File
               </button>
             </div>
 
-            {/* Deliverables list */}
-            <div className="space-y-2">
+            {/* File deliverables list */}
+            <div className="space-y-2 pt-0.5">
               {currentOrderStep.deliverables.map((file) => (
                 <div
                   key={file.id}
-                  className="p-2.5 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2.5 shadow-2xs hover:bg-slate-100/70 dark:hover:bg-slate-800 transition"
+                  className="p-2.5 bg-slate-50/70 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2.5 hover:border-slate-300 transition"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="p-1.5 bg-white dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-600 shrink-0">
+                    <div className="p-2 bg-white dark:bg-slate-700 rounded-lg border border-slate-200/80 dark:border-slate-600 shrink-0 shadow-2xs">
                       {renderFileIcon(file.type)}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate" title={file.name}>
+                      <div className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate" title={file.name}>
                         {file.name}
                       </div>
-                      <div className="text-[10px] text-slate-400 flex items-center gap-1.5 flex-wrap font-medium">
+                      <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5 font-semibold">
                         <span>{file.type}</span>
                         <span>•</span>
                         <span>{file.size}</span>
@@ -595,15 +557,15 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
                   <div className="flex items-center gap-1 shrink-0">
                     <button
                       onClick={() => alert(`Xem trước tài liệu: ${file.name}`)}
-                      className="p-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 text-slate-600 dark:text-slate-200 rounded-lg border border-slate-200 dark:border-slate-600 transition cursor-pointer"
+                      className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-white dark:hover:bg-slate-700 rounded-lg transition cursor-pointer"
                       title="Xem nhanh"
                     >
                       <Eye className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => alert(`Tải xuống tài liệu: ${file.name}`)}
-                      className="p-1.5 bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 text-[#F15A24] rounded-lg border border-orange-200 dark:border-orange-800/60 transition cursor-pointer"
-                      title="Tải về máy"
+                      className="p-1.5 text-[#F15A24] hover:bg-orange-50 dark:hover:bg-orange-950/60 rounded-lg transition cursor-pointer"
+                      title="Tải về"
                     >
                       <Download className="w-3.5 h-3.5" />
                     </button>
@@ -614,23 +576,23 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
           </div>
         </div>
 
-        {/* Step Navigation Bar */}
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+        {/* Footer Navigation */}
+        <div className="pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <button
               disabled={activeOrderStep <= 1}
               onClick={() => setActiveOrderStep(activeOrderStep - 1)}
-              className="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg font-bold disabled:opacity-40 cursor-pointer transition"
+              className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg font-bold disabled:opacity-40 cursor-pointer transition"
             >
               ← Bước Trước
             </button>
-            <span className="font-bold text-slate-400 px-2 whitespace-nowrap">
+            <span className="font-bold text-slate-400 px-2">
               Bước {activeOrderStep} / 4
             </span>
             <button
               disabled={activeOrderStep >= 4}
               onClick={() => setActiveOrderStep(activeOrderStep + 1)}
-              className="px-3.5 py-1.5 bg-[#F15A24] hover:bg-orange-600 text-white rounded-lg font-bold disabled:opacity-40 cursor-pointer transition shadow-xs"
+              className="px-3 py-1.5 bg-[#F15A24] hover:bg-orange-600 text-white rounded-lg font-bold disabled:opacity-40 cursor-pointer transition shadow-2xs"
             >
               Bước Tiếp Theo →
             </button>
@@ -638,7 +600,7 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
 
           <button
             onClick={() => alert(`Đã đồng bộ dữ liệu tiến độ 4 bước của đơn hàng ${selectedOrderCode} vào hệ thống AVG One.`)}
-            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 font-bold rounded-lg flex items-center gap-1.5 cursor-pointer transition"
+            className="px-3 py-1.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-bold rounded-lg flex items-center gap-1.5 cursor-pointer transition"
           >
             <RefreshCw className="w-3 h-3" /> Đồng Bộ Realtime
           </button>
@@ -742,57 +704,57 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </div>
 
-      {/* 2. COMPACT KPI DASHBOARD STRIP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-sky-300 dark:hover:border-sky-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Tổng File CAD/PCB</span>
-            <div className="p-1.5 bg-sky-50 dark:bg-sky-950/60 text-[#0077B6] rounded-lg">
-              <Layers className="w-3.5 h-3.5" />
+      {/* 2. COMPACT KPI METRICS STRIP */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tổng File CAD/PCB</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span>24 Bản vẽ</span>
+              <span className="text-[10px] text-emerald-600 font-bold">(100% Altium)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">24 Bản vẽ</div>
-          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> 100% Đã chuẩn hóa Altium
+          <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-[#0077B6] rounded-lg shrink-0">
+            <Layers className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-cyan-300 dark:hover:border-cyan-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Mẫu In 3D Prototype</span>
-            <div className="p-1.5 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg">
-              <Box className="w-3.5 h-3.5" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Mẫu In 3D Prototype</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span>8 Vỏ hộp</span>
+              <span className="text-[10px] text-cyan-600 font-bold">(IP67)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-cyan-600 tracking-tight">8 Vỏ hộp</div>
-          <div className="text-[10px] text-cyan-600 font-extrabold flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3" /> Chuẩn chống nước IP67
+          <div className="p-2 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg shrink-0">
+            <Box className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-emerald-300 dark:hover:border-emerald-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Tiêu Chuẩn SOP Kỹ Thuật</span>
-            <div className="p-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg">
-              <ClipboardCheck className="w-3.5 h-3.5" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tiêu Chuẩn SOP Kỹ Thuật</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span className="text-emerald-600">95.8% Đạt</span>
+              <span className="text-[10px] text-slate-400 font-bold">(3, 4, 10)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">95.8%</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold flex items-center gap-1">
-            <span>Bước 3, 4, 10 Đạt Duyệt</span>
+          <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg shrink-0">
+            <ClipboardCheck className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-orange-300 dark:hover:border-orange-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Đơn Hàng Active</span>
-            <div className="p-1.5 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-lg">
-              <Package className="w-3.5 h-3.5" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Đơn Hàng Active</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span className="text-[#F15A24]">3 Đơn Hàng</span>
+              <span className="text-[10px] text-slate-400 font-bold">(Active)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-[#F15A24] tracking-tight">3 Đơn hàng</div>
-          <div className="text-[10px] text-orange-600 font-extrabold flex items-center gap-1">
-            <Clock className="w-3 h-3" /> Mã DH-2026-RND-001 (Active)
+          <div className="p-2 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-lg shrink-0">
+            <Package className="w-4 h-4" />
           </div>
         </div>
       </div>
@@ -1169,57 +1131,57 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
         </div>
       </div>
 
-      {/* 2. COMPACT KPI DASHBOARD STRIP */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-emerald-300 dark:hover:border-emerald-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Mã Đơn Hàng DH-2026</span>
-            <div className="p-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg">
-              <Package className="w-3.5 h-3.5" />
+      {/* 2. COMPACT KPI METRICS STRIP */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Mã Đơn R&D</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span>18 Mã Đơn</span>
+              <span className="text-[10px] text-emerald-600 font-bold">(RDI Chuẩn)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">18 Mã Đơn</div>
-          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> Chuẩn hóa hệ thống RDI
+          <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg shrink-0">
+            <Package className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-cyan-300 dark:hover:border-cyan-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Firmware C++ Flasher</span>
-            <div className="p-1.5 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg">
-              <FileCode className="w-3.5 h-3.5" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Firmware C++</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span>v2.4 Active</span>
+              <span className="text-[10px] text-cyan-600 font-bold">(Driver AI)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-cyan-600 tracking-tight">v2.4 Active</div>
-          <div className="text-[10px] text-cyan-600 font-extrabold flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3" /> Driver AI Sensor Telemetry
+          <div className="p-2 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg shrink-0">
+            <FileCode className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-emerald-300 dark:hover:border-emerald-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Test Phòng Lab 72h</span>
-            <div className="p-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg">
-              <Award className="w-3.5 h-3.5" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Test Phòng Lab 72h</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span className="text-emerald-600">100% Đạt</span>
+              <span className="text-[10px] text-slate-400 font-bold">(42°C kín)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">100% Đạt</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold flex items-center gap-1">
-            <span>Ổn định nhiệt 42°C buồng kín</span>
+          <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg shrink-0">
+            <Award className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-2xs space-y-1.5 hover:border-sky-300 dark:hover:border-sky-700 transition">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Supabase Realtime</span>
-            <div className="p-1.5 bg-sky-50 dark:bg-sky-950/60 text-[#00A8E8] rounded-lg">
-              <Activity className="w-3.5 h-3.5" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Supabase Realtime</span>
+            <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              <span className="text-emerald-600">Đã Kết Nối</span>
+              <span className="text-[10px] text-slate-400 font-bold">(115200)</span>
             </div>
           </div>
-          <div className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">Đã Kết Nối</div>
-          <div className="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1">
-            <Zap className="w-3 h-3" /> Baudrate 115200 Synced
+          <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-[#00A8E8] rounded-lg shrink-0">
+            <Activity className="w-4 h-4" />
           </div>
         </div>
       </div>
