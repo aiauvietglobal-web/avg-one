@@ -551,7 +551,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           ) : (
             /* UNIFIED HEADER (Logo Chính Thức AVG One + Các phân hệ trên header + Đăng Nhập) */
             <header className={`flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none ${activeModule === 'home' ? 'border-none' : 'border-b border-slate-200/80 dark:border-slate-800'}`}>
-              <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+              <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
               
               {/* Left: AVG One Official Logo hoặc Nút quay lại kèm tiêu đề phân hệ con */}
               <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
