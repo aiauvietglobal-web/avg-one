@@ -11,10 +11,12 @@ interface SubAppCard {
   id: SubAppId;
   code: string;
   title: string;
-  headerTitle: string; // Tên ngắn hiển thị trên thanh Header chính (VD: CHUYỂN ĐỔI)
+  headerTitle: string; // Tên ngắn hiển thị trên thanh Header chính
   icon: React.ElementType;
   isAvailable: boolean;
   badge?: string;
+  iconColor?: string;
+  bgColor?: string;
 }
 
 const SUB_APPS_GRID: SubAppCard[] = [
@@ -25,7 +27,9 @@ const SUB_APPS_GRID: SubAppCard[] = [
     headerTitle: 'CHUYỂN ĐỔI TRỰC TIẾP',
     icon: Mic,
     isAvailable: true,
-    badge: 'ĐÃ SẴN SÀNG'
+    badge: 'ĐÃ SẴN SÀNG',
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800 shadow-2xs'
   },
   {
     id: 'dashboard',
@@ -34,7 +38,9 @@ const SUB_APPS_GRID: SubAppCard[] = [
     headerTitle: 'BÁO CÁO QUẢN TRỊ',
     icon: BarChart3,
     isAvailable: true,
-    badge: 'ĐÃ SẴN SÀNG'
+    badge: 'ĐÃ SẴN SÀNG',
+    iconColor: 'text-[#F15A24] dark:text-orange-300',
+    bgColor: 'bg-orange-50 dark:bg-orange-950/80 border-orange-200 dark:border-orange-800 shadow-2xs'
   },
   {
     id: 'qr-code',
@@ -43,7 +49,9 @@ const SUB_APPS_GRID: SubAppCard[] = [
     headerTitle: 'TRÌNH TẠO MÃ QR',
     icon: QrCode,
     isAvailable: false,
-    badge: 'SẮP PHÁT HÀNH'
+    badge: 'SẮP PHÁT HÀNH',
+    iconColor: 'text-slate-400 dark:text-slate-500',
+    bgColor: 'bg-white/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700'
   },
   {
     id: 'docs-template',
@@ -52,7 +60,9 @@ const SUB_APPS_GRID: SubAppCard[] = [
     headerTitle: 'MẪU VĂN BẢN',
     icon: FileText,
     isAvailable: false,
-    badge: 'SẮP PHÁT HÀNH'
+    badge: 'SẮP PHÁT HÀNH',
+    iconColor: 'text-slate-400 dark:text-slate-500',
+    bgColor: 'bg-white/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700'
   }
 ];
 
@@ -105,19 +115,41 @@ export const AppsModule: React.FC = () => {
       {/* ========================================================================= */}
       {activeApp === null ? (
         <>
-          {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
+          {/* 🌐 ULTRA-CLEAN GRID LINES & FACETED ANGLED POLYGON PLANES (PHONG CÁCH TRANG CHỦ) */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-50 dark:opacity-25 pointer-events-none -z-0" />
 
-          {/* 🎨 AMBIENT GLOW ORBS */}
-          <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-          <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-          <div className="absolute bottom-10 left-1/3 w-[550px] h-[300px] bg-gradient-to-tr from-sky-400/10 via-amber-400/10 to-orange-400/15 dark:from-sky-600/10 dark:to-orange-600/10 rounded-full blur-[140px] pointer-events-none -z-0" />
+          {/* 🎨 ANGLED FACETED GEOMETRIC PLANES (MẢNG VÁT ĐA GIÁC CHUYỂN ĐỘNG NGHỆ THUẬT) */}
+          <div className="absolute -top-16 -left-20 w-[540px] h-[540px] xl:w-[680px] xl:h-[680px] bg-gradient-to-br from-sky-400/20 via-[#0284C7]/12 to-transparent [clip-path:polygon(0_0,100%_0,65%_100%,0_80%)] pointer-events-none -z-0 animate-facet-left transition-all" />
+          <div className="absolute -top-8 -left-12 w-[380px] h-[380px] xl:w-[480px] xl:h-[480px] bg-gradient-to-br from-sky-300/15 via-transparent to-transparent [clip-path:polygon(0_0,85%_0,50%_100%,0_70%)] pointer-events-none -z-0 animate-pulse" style={{ animationDuration: '6s' }} />
 
-          {/* Synchronized container matching Header alignment (w-full px-3 sm:px-6 lg:px-8) */}
-          <div className="w-full px-3 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-10 sm:gap-14 lg:gap-16 relative z-10 py-8 sm:py-14">
+          <div className="absolute -top-16 -right-20 w-[580px] h-[580px] xl:w-[720px] xl:h-[720px] bg-gradient-to-bl from-orange-400/20 via-[#F15A24]/12 to-transparent [clip-path:polygon(35%_0,100%_0,100%_80%,0_100%)] pointer-events-none -z-0 animate-facet-right transition-all" />
+          <div className="absolute -top-8 -right-12 w-[400px] h-[400px] xl:w-[500px] xl:h-[500px] bg-gradient-to-bl from-orange-300/15 via-transparent to-transparent [clip-path:polygon(45%_0,100%_0,100%_65%,0_90%)] pointer-events-none -z-0 animate-pulse" style={{ animationDuration: '7s' }} />
+
+          <div className="absolute bottom-0 left-1/4 w-[600px] h-[300px] bg-gradient-to-t from-sky-300/10 via-emerald-300/8 to-transparent rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse" style={{ animationDuration: '8s' }} />
+
+          {/* 🪐 VÒNG QUỸ ĐẠO VỆ TINH CHUYỂN ĐỘNG (TOP-RIGHT CORNER) */}
+          <div className="hidden md:block absolute -top-10 -right-8 xl:-right-14 w-64 h-64 xl:w-84 xl:h-84 pointer-events-none overflow-visible z-0 animate-entrance-right" style={{ animationDelay: '200ms' }}>
+            <svg className="w-full h-full" viewBox="0 0 320 320" fill="none">
+              <circle cx="300" cy="20" r="140" stroke="#F15A24" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="6 6" />
+              <circle cx="300" cy="20" r="210" stroke="#F15A24" strokeOpacity="0.35" strokeWidth="2" />
+              <circle cx="300" cy="20" r="280" stroke="#0284C7" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="8 4" />
+              <g className="animate-orbit-satellite-2">
+                <circle cx="160" cy="20" r="7" fill="#F15A24" />
+                <circle cx="160" cy="20" r="3" fill="#FFFFFF" />
+                <circle cx="160" cy="20" r="12" stroke="#F15A24" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.6" />
+              </g>
+              <g className="animate-orbit-satellite-1">
+                <circle cx="90" cy="20" r="6" fill="#0284C7" />
+                <circle cx="90" cy="20" r="2.5" fill="#FFFFFF" />
+              </g>
+            </svg>
+          </div>
+
+          {/* Synchronized container matching Header alignment */}
+          <div className="w-full max-w-[1232px] mx-auto px-3 sm:px-6 flex flex-col items-center justify-center gap-6 sm:gap-8 lg:gap-10 relative z-10 py-6 sm:py-10">
             
             {/* Header Title Section */}
-            <div className="flex flex-col items-center text-center space-y-4 max-w-2xl mx-auto">
+            <div className="flex flex-col items-center text-center space-y-3 max-w-2xl mx-auto">
               <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
                 {/* SVG Clockwise Border Tracing Effect */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
@@ -159,9 +191,9 @@ export const AppsModule: React.FC = () => {
               </h2>
             </div>
 
-            {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP ỨNG DỤNG CON (ĐỒNG BỘ VIỀN NÉT LIỀN CAM & GREY BO GÓC 32PX) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 w-full pb-2">
-              {SUB_APPS_GRID.map((app) => {
+            {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP ỨNG DỤNG CON (ĐỒNG BỘ 100% MÀU SẮC, GRADIENT & CHUYỂN ĐỘNG TRANG CHỦ) */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto pb-2">
+              {SUB_APPS_GRID.map((app, idx) => {
                 const Icon = app.icon;
                 if (app.isAvailable) {
                   return (
@@ -171,16 +203,16 @@ export const AppsModule: React.FC = () => {
                       tabIndex={0}
                       onClick={() => setActiveApp(app.id)}
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveApp(app.id); }}
-                      style={{ borderRadius: '32px' }}
-                      className="group flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-gradient-to-br from-sky-50/90 via-blue-50/70 to-cyan-50/80 dark:from-slate-900 dark:via-sky-950/50 dark:to-blue-950/70 rounded-[32px] border-2 border-sky-200 dark:border-sky-800/80 hover:border-[#0077B6] dark:hover:border-sky-400 hover:from-sky-100/90 hover:via-blue-100/70 hover:to-cyan-100/90 dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-500/20 cursor-pointer select-none"
+                      style={{ borderRadius: '28px', animationDelay: `${idx * 100}ms` }}
+                      className="group flex flex-col items-center justify-center py-3 sm:py-3.5 px-3 min-h-[106px] sm:min-h-[116px] bg-gradient-to-b from-[#BAE6FD] via-[#E2F2FE]/70 to-white dark:from-sky-950/60 dark:via-slate-900/80 dark:to-slate-950 rounded-[28px] border-2 border-[#7DD3FC] dark:border-sky-800/80 hover:border-[#0284C7] dark:hover:border-sky-400 hover:from-[#A5DBFE] hover:via-[#D6EEFE] hover:to-white dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-400/25 cursor-pointer select-none animate-entrance-up"
                     >
-                      {/* Icon Hộp Vuông Bo Tròn Chuẩn Màu Gradient Xanh AVG */}
-                      <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-sky-200/90 dark:border-sky-700/80 flex items-center justify-center text-[#0077B6] dark:text-sky-300 mb-3 group-hover:scale-105 transition-transform shrink-0 shadow-2xs">
-                        <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5" />
+                      {/* Icon Hộp Vuông Bo Tròn Chuẩn Màu Gradient Trang Chủ */}
+                      <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl ${app.bgColor || 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800'} border flex items-center justify-center mb-1.5 group-hover:scale-105 transition-transform shrink-0 shadow-2xs`}>
+                        <Icon className={`w-5 h-5 sm:w-5.5 sm:h-5.5 ${app.iconColor || 'text-[#0284C7] dark:text-sky-300'}`} />
                       </div>
 
-                      {/* Tiêu đề */}
-                      <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0077B6] dark:group-hover:text-sky-300 transition-colors whitespace-normal leading-tight w-full px-0.5">
+                      {/* Tiêu đề ứng dụng */}
+                      <h3 className="text-xs sm:text-[13px] font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-normal leading-tight w-full px-0.5">
                         {app.title}
                       </h3>
                     </div>
@@ -189,17 +221,17 @@ export const AppsModule: React.FC = () => {
                   return (
                     <div
                       key={app.id}
-                      style={{ borderRadius: '32px' }}
+                      style={{ borderRadius: '28px', animationDelay: `${idx * 100}ms` }}
                       onClick={() => alert(`Ứng dụng "${app.title}" sắp được phát hành trong phiên bản đợt tiếp theo!`)}
-                      className="flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[32px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none"
+                      className="flex flex-col items-center justify-center py-3 sm:py-3.5 px-3 min-h-[106px] sm:min-h-[116px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[28px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
                     >
                       {/* Icon Hộp xám */}
-                      <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-3 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                        <Icon className="w-6 h-6 text-slate-400 dark:text-slate-500 opacity-60" />
+                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1.5 bg-white/80 dark:bg-slate-800/40 shrink-0">
+                        <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-slate-400 dark:text-slate-500 opacity-60" />
                       </div>
 
                       {/* Tiêu đề */}
-                      <h3 className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 whitespace-normal leading-tight w-full px-0.5">
+                      <h3 className="text-xs sm:text-[13px] font-normal text-slate-400/70 dark:text-slate-500 whitespace-normal leading-tight w-full px-0.5">
                         {app.title}
                       </h3>
                     </div>
@@ -207,17 +239,17 @@ export const AppsModule: React.FC = () => {
                 }
               })}
 
-              {/* 4 Thẻ Placeholder Sắp phát hành dự phòng đồng bộ 100% */}
+              {/* 4 Thẻ Placeholder Sắp phát hành dự phòng đồng bộ 100% chuẩn Trang chủ */}
               {Array.from({ length: 4 }).map((_, idx) => (
                 <div
                   key={`sub-placeholder-${idx}`}
-                  style={{ borderRadius: '32px' }}
-                  className="flex flex-col items-center justify-center py-5 sm:py-6 px-3 min-h-[150px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[32px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none"
+                  style={{ borderRadius: '28px', animationDelay: `${(idx + 4) * 100}ms` }}
+                  className="flex flex-col items-center justify-center py-3 sm:py-3.5 px-3 min-h-[106px] sm:min-h-[116px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[28px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
                 >
-                  <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-3 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                    <Sparkles className="w-5 h-5 text-slate-400 dark:text-slate-500 opacity-60" />
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1.5 bg-white/80 dark:bg-slate-800/40 shrink-0">
+                    <Sparkles className="w-4 h-4 text-slate-400 dark:text-slate-500 opacity-60" />
                   </div>
-                  <h3 className="text-xs sm:text-sm font-normal text-slate-300/50 dark:text-slate-600/50 whitespace-normal leading-tight w-full px-0.5 opacity-50">
+                  <h3 className="text-xs font-normal text-slate-300/50 dark:text-slate-600/50 whitespace-normal leading-tight w-full px-0.5 opacity-50">
                     + Sắp phát hành
                   </h3>
                 </div>
