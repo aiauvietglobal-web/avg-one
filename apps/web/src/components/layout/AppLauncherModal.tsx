@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   BarChart3, Newspaper, Calendar, FolderKanban, Users, Scale, Wallet, Lightbulb, LayoutGrid,
-  X, Home
+  X, Home, Server, Workflow, ShieldCheck, Zap, Award, Layers
 } from 'lucide-react';
 
 export type AppModuleId =
@@ -15,6 +15,12 @@ export type AppModuleId =
   | 'finance'
   | 'rd'
   | 'apps'
+  | 'infra22'
+  | 'cluster51'
+  | 'security'
+  | 'traffic8'
+  | 'profile9'
+  | 'clusterK'
   // Legacy aliases
   | 'wework'
   | 'request'
@@ -93,6 +99,48 @@ export const APP_MODULES = [
     icon: Lightbulb,
     iconColor: 'text-[#F15A24] dark:text-orange-400',
     bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+  },
+  {
+    id: 'infra22' as AppModuleId,
+    name: 'Hạ tầng 2.2',
+    icon: Server,
+    iconColor: 'text-cyan-600 dark:text-cyan-400',
+    bgColor: 'bg-cyan-50 dark:bg-cyan-950/60 border-cyan-200/80 dark:border-cyan-800/80'
+  },
+  {
+    id: 'cluster51' as AppModuleId,
+    name: 'Cụm 5.1',
+    icon: Workflow,
+    iconColor: 'text-blue-600 dark:text-blue-400',
+    bgColor: 'bg-blue-50 dark:bg-blue-950/60 border-blue-200/80 dark:border-blue-800/80'
+  },
+  {
+    id: 'security' as AppModuleId,
+    name: 'Bảo mật',
+    icon: ShieldCheck,
+    iconColor: 'text-rose-600 dark:text-rose-400',
+    bgColor: 'bg-rose-50 dark:bg-rose-950/60 border-rose-200/80 dark:border-rose-800/80'
+  },
+  {
+    id: 'traffic8' as AppModuleId,
+    name: 'Thông',
+    icon: Zap,
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/60 border-amber-200/80 dark:border-amber-800/80'
+  },
+  {
+    id: 'profile9' as AppModuleId,
+    name: 'Hồ sơ năng lực',
+    icon: Award,
+    iconColor: 'text-teal-600 dark:text-teal-400',
+    bgColor: 'bg-teal-50 dark:bg-teal-950/60 border-teal-200/80 dark:border-teal-800/80'
+  },
+  {
+    id: 'clusterK' as AppModuleId,
+    name: 'Cụm #K',
+    icon: Layers,
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    bgColor: 'bg-purple-50 dark:bg-purple-950/60 border-purple-200/80 dark:border-purple-800/80'
   }
 ];
 

@@ -8,7 +8,7 @@ export interface WorkflowStep {
   icon: string;
 }
 
-export type HubKey = '5.1B' | 'KIEN' | 'HASH' | 'NHASAN_3.1' | 'NHASAN_3.2' | 'NHASAN_6' | 'HUB_1' | '5.1T' | 'HUB_0' | 'HUB_8' | 'HUB_9' | 'HUB_2.2' | 'HUB_2.1' | 'HUB_K2' | 'HUB_K1' | 'ALL';
+export type HubKey = '5.1B' | 'KIEN' | 'HASH' | 'NHASAN_3.1' | 'NHASAN_3.2' | 'NHASAN_6' | 'HUB_1' | '5.1T' | 'HUB_0' | 'HUB_8' | 'HUB_9' | 'HUB_2.2' | 'HUB_2.1' | 'HUB_K2' | 'HUB_K1' | 'HUB_K2T' | 'HUB_K2B' | 'ALL';
 
 export interface HubMeta {
   code: HubKey;
@@ -154,13 +154,13 @@ export const HUB_MAP: Record<HubKey, HubMeta> = {
   },
   '5.1B': {
     code: '5.1B',
-    name: 'Đầu Mối 5.1B (Thí Điểm & Đóng Đơn)',
-    shortName: '5.1B Thí Điểm',
+    name: 'Đầu Mối 5.1B (Đầu Vào - Thí Điểm & Đóng Đơn)',
+    shortName: '5.1B ĐẦU VÀO',
     icon: '📍',
     badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
     leader: 'Phụ trách B5.1 (Bà Bích)',
-    description: 'Đầu mối khởi tạo đề xuất thí điểm (Bước 1) và nghiệm thu kết thúc tổng kết VBKL (Bước 13)',
-    roleIn13Steps: 'Chủ trì Bước 1 & Bước 13'
+    description: 'Đầu mối tiếp nhận đề xuất thí điểm đầu vào (Bước 1) và nghiệm thu kết thúc tổng kết VBKL (Bước 13)',
+    roleIn13Steps: 'Chủ trì Đầu Vào Bước 1 & Bước 13'
   },
   'KIEN': {
     code: 'KIEN',
@@ -224,13 +224,13 @@ export const HUB_MAP: Record<HubKey, HubMeta> = {
   },
   '5.1T': {
     code: '5.1T',
-    name: 'Đầu Mối 5.1T (Triển Khai & Nghiệm Thu)',
-    shortName: '5.1T Triển Khai',
+    name: 'Đầu Mối 5.1T (Đầu Ra - Triển Khai & Nghiệm Thu)',
+    shortName: '5.1T ĐẦU RA',
     icon: '🚀',
     badgeBg: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
     leader: 'Phụ trách Triển khai 5.1T',
-    description: 'Đóng gói vận chuyển (Bước 11) và nghiệm thu thực địa bàn giao vận hành (Bước 12)',
-    roleIn13Steps: 'Chủ trì Bước 11 & Bước 12'
+    description: 'Đóng gói vận chuyển đầu ra (Bước 11) và nghiệm thu thực địa bàn giao vận hành (Bước 12)',
+    roleIn13Steps: 'Chủ trì Đầu Ra Bước 11 & Bước 12'
   },
   'HUB_0': {
     code: 'HUB_0',
@@ -292,14 +292,34 @@ export const HUB_MAP: Record<HubKey, HubMeta> = {
     description: 'Phụ trách trực thuộc Cụm #K điều hành thực thi dự án',
     roleIn13Steps: 'Điều hành trực tiếp Cụm #K2'
   },
+  'HUB_K2T': {
+    code: 'HUB_K2T',
+    name: 'Đầu Mối #K2T (Kỹ Thuật R&D & Thực Nghiệm)',
+    shortName: '#K2T Kỹ Thuật',
+    icon: '🔬',
+    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+    leader: 'Kỹ thuật R&D #K2T',
+    description: 'Phụ trách nghiên cứu thực nghiệm, lập trình vi mạch & đo đạc kỹ thuật thực địa',
+    roleIn13Steps: 'Nghiên cứu & Thử nghiệm Thực địa #K2T'
+  },
+  'HUB_K2B': {
+    code: 'HUB_K2B',
+    name: 'Đầu Mối #K2B (Điều Hành Tác Nghiệp)',
+    shortName: '#K2B Điều Hành',
+    icon: '📦',
+    badgeBg: 'bg-violet-500/20 text-violet-300 border-violet-500/30',
+    leader: 'Điều phối #K2B',
+    description: 'Phụ trách điều phối tác nghiệp, theo dõi tiến độ & nghiệm thu đóng gói bàn giao',
+    roleIn13Steps: 'Điều phối Tác nghiệp & Bàn giao #K2B'
+  },
   'HUB_K1': {
     code: 'HUB_K1',
-    name: 'Cụm #K1 (Điều Hành Thực Thi #K1)',
-    shortName: 'Cụm #K1',
+    name: 'Cụm #K1 (Cố Vấn & Kiểm Chuẩn #K1)',
+    shortName: '#K1 Cố Vấn',
     icon: '🔰',
     badgeBg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
     leader: 'Trưởng ban Cụm #K1',
-    description: 'Phụ trách trực thuộc Cụm #K điều hành thực thi dự án',
-    roleIn13Steps: 'Điều hành trực tiếp Cụm #K1'
+    description: 'Cố vấn chuyên sâu, tư vấn kỹ thuật công nghệ & rà soát tiêu chuẩn',
+    roleIn13Steps: 'Tư vấn kỹ thuật & Kiểm chuẩn giải pháp #K1'
   }
 };

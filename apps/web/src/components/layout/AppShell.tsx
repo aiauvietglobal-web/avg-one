@@ -11,7 +11,7 @@ import { MobileHeader } from './MobileHeader';
 import {
   HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader,
   HRHeader, LegalHeader, FinanceHeader, RDHeader,
-  SpeechToTextHeader, DashboardHeader,
+  SpeechToTextHeader, DashboardHeader, HubDetailHeader,
   HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab, AppsNavTab,
   SpeechNavTab, DashboardNavTab
 } from './headers';
@@ -53,6 +53,17 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [speechNavTab, setSpeechNavTab] = useState<SpeechNavTab>('chat');
   const [dashboardNavTab, setDashboardNavTab] = useState<DashboardNavTab>('overview');
   const [speechIsRecording, setSpeechIsRecording] = useState<boolean>(false);
+  const [hubDetailTab, setHubDetailTab] = useState<string>('pilot51b');
+
+  // Khởi tạo tab mặc định tương ứng khi chuyển sang 1 trong 6 phân hệ mới
+  useEffect(() => {
+    if (activeModule === 'cluster51') setHubDetailTab('pilot51b');
+    else if (activeModule === 'clusterK') setHubDetailTab('kien');
+    else if (activeModule === 'infra22') setHubDetailTab('equipment');
+    else if (activeModule === 'security') setHubDetailTab('monitoring');
+    else if (activeModule === 'traffic8') setHubDetailTab('bottlenecks');
+    else if (activeModule === 'profile9') setHubDetailTab('overview');
+  }, [activeModule]);
 
   // Lắng nghe trạng thái thu âm từ phân hệ Chuyển đổi trực tiếp
   useEffect(() => {
@@ -548,6 +559,23 @@ export const AppShell: React.FC<AppShellProps> = ({
               }}
               onCreateProject={() => {
                 window.dispatchEvent(new CustomEvent('rd_create_project'));
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : ['infra22', 'cluster51', 'security', 'traffic8', 'profile9', 'clusterK'].includes(activeModule) ? (
+            /* 7B. HEADER 6 PHÂN HỆ HẠ TẦNG & ĐẦU MỐI: [ 🏠 TÊN PHÂN HỆ ] + BOX TABS + ACTIONS */
+            <HubDetailHeader
+              activeModule={activeModule}
+              activeTab={hubDetailTab}
+              onSelectTab={(tab) => {
+                setHubDetailTab(tab);
+                window.dispatchEvent(new CustomEvent('hub_tab_change', { detail: { module: activeModule, tab } }));
+              }}
+              onGoHome={() => onSelectModule('home')}
+              onActionClick={() => {
+                window.dispatchEvent(new CustomEvent('hub_action_click', { detail: { module: activeModule, tab: hubDetailTab } }));
               }}
               darkMode={darkMode}
               onToggleDarkMode={onToggleDarkMode}

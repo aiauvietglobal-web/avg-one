@@ -36,6 +36,7 @@ import { LegalModule } from './modules/legal/LegalModule';
 import { FinanceModule } from './modules/finance/FinanceModule';
 import { CalendarModule } from './modules/calendar/CalendarModule';
 import { AppsModule } from './modules/apps/AppsModule';
+import { HubDetailModule } from './modules/hub/HubDetailModule';
 
 interface DiscussionEvent {
   id: string;
@@ -1230,6 +1231,19 @@ export default function App() {
   const [chartRangeLimit, setChartRangeLimit] = useState<number>(0);
   const [chartPageOffset, setChartPageOffset] = useState<number>(0);
 
+  // Hub Module Tab State for 6 new modules
+  const [hubModuleTab, setHubModuleTab] = useState<string>('pilot51b');
+
+  useEffect(() => {
+    const handleHubTabChange = (e: any) => {
+      if (e.detail?.tab) {
+        setHubModuleTab(e.detail.tab);
+      }
+    };
+    window.addEventListener('hub_tab_change', handleHubTabChange);
+    return () => window.removeEventListener('hub_tab_change', handleHubTabChange);
+  }, []);
+
   // Executive Directives & Messages 24/7 State
   const [executiveDirectives, setExecutiveDirectives] = useState<Array<{
     id: string;
@@ -2196,6 +2210,12 @@ export default function App() {
         <AppsModule />
       ) : activeModule === 'dashboard' ? (
         <DashboardModule />
+      ) : ['infra22', 'cluster51', 'security', 'traffic8', 'profile9', 'clusterK'].includes(activeModule) ? (
+        <HubDetailModule
+          activeModule={activeModule}
+          activeTab={hubModuleTab}
+          onSelectTab={setHubModuleTab}
+        />
       ) : (
         <OdooHomeAppGrid onSelectModule={setActiveModule} />
       )}
