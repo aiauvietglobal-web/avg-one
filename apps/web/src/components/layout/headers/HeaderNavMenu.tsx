@@ -128,21 +128,21 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={systemDropdownRef}
-              className="relative shrink-0 whitespace-nowrap"
+              className="relative shrink-0 whitespace-nowrap flex items-center"
             >
               <button
                 onClick={handleToggleSystemModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative px-2 sm:px-2.5 py-1 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-0.5 whitespace-nowrap shrink-0 ${
+                className={`h-8 relative px-2 sm:px-2.5 cursor-pointer select-none tracking-normal flex items-center gap-0.5 whitespace-nowrap shrink-0 ${
                   isHighlighted
                     ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                     : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
-                <span className="relative inline-block whitespace-nowrap">
+                <span className="relative inline-flex items-center whitespace-nowrap leading-none text-sm sm:text-[15px]">
                   <span
                     style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap"
+                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
                   >
                     {item.label}
                   </span>
@@ -202,21 +202,21 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={calendarDropdownRef}
-              className="relative"
+              className="relative shrink-0 whitespace-nowrap flex items-center"
             >
               <button
                 onClick={handleToggleCalendarModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
+                className={`h-8 relative px-2.5 sm:px-3 cursor-pointer select-none tracking-normal flex items-center gap-0.5 whitespace-nowrap shrink-0 ${
                   isHighlighted
                     ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                     : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
-                <span className="relative inline-block">
+                <span className="relative inline-flex items-center whitespace-nowrap leading-none text-sm sm:text-[15px]">
                   <span
                     style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block"
+                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
                   >
                     {item.label}
                   </span>
@@ -308,21 +308,21 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={ordersDropdownRef}
-              className="relative"
+              className="relative shrink-0 whitespace-nowrap flex items-center"
             >
               <button
                 onClick={handleToggleOrdersModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
+                className={`h-8 relative px-2.5 sm:px-3 cursor-pointer select-none tracking-normal flex items-center gap-0.5 whitespace-nowrap shrink-0 ${
                   isHighlighted
                     ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                     : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
-                <span className="relative inline-block">
+                <span className="relative inline-flex items-center whitespace-nowrap leading-none text-sm sm:text-[15px]">
                   <span
                     style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block"
+                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
                   >
                     {item.label}
                   </span>
@@ -402,16 +402,16 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               onSelectModule(item.id);
             }}
             style={{ color: isActive ? '#F15A24' : undefined }}
-            className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal ${
+            className={`h-8 relative px-2.5 sm:px-3 cursor-pointer select-none tracking-normal flex items-center whitespace-nowrap shrink-0 ${
               isActive
                 ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                 : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
             }`}
           >
-            <span className="relative inline-block">
+            <span className="relative inline-flex items-center whitespace-nowrap leading-none text-sm sm:text-[15px]">
               <span
                 style={{ color: isActive ? '#F15A24' : undefined }}
-                className="relative z-10 transition-colors duration-150 inline-block"
+                className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
               >
                 {item.label}
               </span>
