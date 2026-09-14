@@ -246,12 +246,16 @@ interface AiAudioTrackWaveformProps {
   audioVolumeLevel: number;
   livePitchHz: number | null;
   analyserRef: React.MutableRefObject<AnalyserNode | null>;
+  className?: string;
+  isExpanded?: boolean;
 }
 
 export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   micState,
   audioVolumeLevel,
-  analyserRef
+  analyserRef,
+  className,
+  isExpanded = false
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameId = useRef<number | null>(null);
@@ -326,7 +330,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         historyRef.current.push(sample);
         peakHoldRef.current.push(sample);
 
-        const maxBars = Math.floor(w / 3.4);
+        const maxBars = Math.floor(w / (isExpanded ? 4.8 : 3.6));
         while (historyRef.current.length > maxBars) {
           historyRef.current.shift();
         }
@@ -352,8 +356,8 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       ctx.fillRect(0, 0, w, h);
 
       // 4. Dải các vạch sóng tần số với Gradient Cam - Xanh (Cam ở trên đỉnh, Xanh dương / Cyan ở dưới chân)
-      const barWidth = 2.2;
-      const step = 3.8;
+      const barWidth = isExpanded ? 3.2 : 2.5;
+      const step = isExpanded ? 5.2 : 4.0;
       const totalBars = historyRef.current.length;
       const barsStartX = w - totalBars * step;
       const isRec = micState === 'recording';
@@ -451,7 +455,6 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         ctx.stroke();
       }
 
-
       ctx.restore();
       animFrameId.current = requestAnimationFrame(render);
     };
@@ -464,10 +467,10 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         cancelAnimationFrame(animFrameId.current);
       }
     };
-  }, [micState, audioVolumeLevel, analyserRef]);
+  }, [micState, audioVolumeLevel, analyserRef, isExpanded]);
 
   return (
-    <div className="relative h-44 sm:h-52 w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white">
+    <div className={className || "relative h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white transition-all"}>
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
@@ -654,18 +657,20 @@ export const SpeechToTextModule: React.FC = () => {
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
   const [isChatMaximized, setIsChatMaximized] = useState<boolean>(false);
+  const [isWaveformModalOpen, setIsWaveformModalOpen] = useState<boolean>(false);
 
-  // Close maximized conversation modal or expanded response box on ESC key
+  // Close maximized conversation modal, waveform modal, or expanded response box on ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isInputExpanded) setIsInputExpanded(false);
         if (isChatMaximized) setIsChatMaximized(false);
+        if (isWaveformModalOpen) setIsWaveformModalOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isInputExpanded, isChatMaximized]);
+  }, [isInputExpanded, isChatMaximized, isWaveformModalOpen]);
 
   const [fontSize, setFontSize] = useState<'normal' | 'large' | 'xlarge' | 'massive'>('xlarge');
   const [contrastTheme, setContrastTheme] = useState<'standard' | 'high-contrast-dark' | 'yellow-on-black' | 'soft-blue'>('standard');
@@ -2231,7 +2236,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): THANH PANEL UI CONTROLS & QUẢN LÝ NGƯỜI NÓI */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
+          <div className="hidden lg:flex lg:col-span-3 xl:col-span-3 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
             
             {/* CARD: SPEAKER DIARIZATION (MALE & FEMALE ONLY) - ĐỒNG BỘ THEME XANH DƯƠNG / CYAN */}
             <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-2.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2 backdrop-blur-md">
@@ -2295,19 +2300,41 @@ export const SpeechToTextModule: React.FC = () => {
                   <Activity className="w-3.5 h-3.5 text-[#00A8E8] animate-pulse" />
                   <span>Phổ Sóng AI</span>
                 </div>
-                <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                  <span>{micState === 'recording' ? 'LIVE' : 'STANDBY'}</span>
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                    <span>{micState === 'recording' ? 'LIVE' : 'STANDBY'}</span>
+                  </span>
+
+                  {/* Nút Mở rộng phổ sóng toàn màn hình */}
+                  <button
+                    onClick={() => setIsWaveformModalOpen(true)}
+                    className="h-6 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-600 dark:text-slate-300 hover:text-[#00A8E8] dark:hover:text-[#38BDF8] hover:border-sky-300 flex items-center gap-1 text-[10px] font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
+                    title="Mở rộng phổ sóng toàn màn hình"
+                  >
+                    <Maximize2 className="w-3 h-3 stroke-[2.5]" />
+                    <span className="hidden sm:inline">Mở rộng</span>
+                  </button>
+                </div>
               </div>
 
-              {/* Clean DAW Timeline Line Waveform (Expanded Height & Dynamic Motion) */}
-              <AiAudioTrackWaveform
-                micState={micState}
-                audioVolumeLevel={audioVolumeLevel}
-                livePitchHz={livePitchHz}
-                analyserRef={analyserRef}
-              />
+              {/* Clean DAW Timeline Line Waveform (Expanded Height, Dynamic Motion & Interactive Expand) */}
+              <div
+                onClick={() => setIsWaveformModalOpen(true)}
+                className="relative group cursor-pointer"
+                title="Bấm vào để mở rộng phổ sóng toàn màn hình"
+              >
+                <AiAudioTrackWaveform
+                  micState={micState}
+                  audioVolumeLevel={audioVolumeLevel}
+                  livePitchHz={livePitchHz}
+                  analyserRef={analyserRef}
+                />
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 pointer-events-none backdrop-blur-xs shadow-xs">
+                  <Maximize2 className="w-3 h-3 stroke-[2.5]" />
+                  <span>Mở rộng</span>
+                </div>
+              </div>
 
               {/* Telemetry Metrics */}
               <div className="grid grid-cols-2 gap-2 pt-0.5 text-[10px]">
@@ -2367,7 +2394,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT Ở GIỮA (CENTER MAIN HERO PANEL): HỘP HỘI THOẠI CHÍNH & HỘP NHẬP PHẢN HỒI */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
+          <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-between space-y-3 h-full overflow-hidden">
             
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW & REFINED STYLING) */}
             <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-3 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
@@ -3411,6 +3438,131 @@ export const SpeechToTextModule: React.FC = () => {
               >
                 <Send className="w-4 h-4" /> Gửi
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================================================== */}
+      {/* 📊 ROOT LEVEL EXPANDED AI AUDIO WAVEFORM MODAL (PHỔ SÓNG AI MỞ RỘNG TOÀN CẢNH)                  */}
+      {/* ============================================================================================== */}
+      {isWaveformModalOpen && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-lg z-50 p-2 sm:p-6 flex flex-col items-center justify-center animate-in fade-in duration-200">
+          <div className="w-full h-full max-w-6xl bg-white dark:bg-slate-900 border-2 border-[#00A8E8] rounded-2xl shadow-2xl backdrop-blur-2xl p-4 sm:p-6 flex flex-col justify-between overflow-hidden relative animate-in zoom-in-95">
+            {/* Header Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/30 shrink-0 shadow-2xs">
+                  <Activity className="w-4.5 h-4.5 text-[#00A8E8] dark:text-[#38BDF8] animate-pulse" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base sm:text-lg font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                      Phổ Sóng AI Mở Rộng
+                    </h2>
+                    <span className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                      <span>{micState === 'recording' ? 'LIVE AUDIO' : 'STANDBY'}</span>
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Phân tích phổ tần số & dao động âm thanh trực tiếp độ phân giải cao
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* Nút bật/tắt mic nhanh */}
+                {micState === 'idle' ? (
+                  <button
+                    onClick={toggleListening}
+                    className="h-8 px-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm hover:scale-[1.02] active:scale-95 transition-all cursor-pointer leading-none"
+                    title="Bắt đầu thu âm"
+                  >
+                    <Mic className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>BẮT ĐẦU NÓI</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={toggleListening}
+                    className="h-8 px-3 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm active:scale-95 transition-all cursor-pointer leading-none"
+                    title="Tạm dừng / Tiếp tục"
+                  >
+                    <Pause className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>TẠM DỪNG</span>
+                  </button>
+                )}
+
+                {/* Nút đóng / Thu nhỏ */}
+                <button
+                  onClick={() => setIsWaveformModalOpen(false)}
+                  className="h-8 px-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl flex items-center gap-1 text-xs font-bold transition cursor-pointer active:scale-95 border border-slate-200 dark:border-slate-700"
+                  title="Thu nhỏ / Đóng (Esc)"
+                >
+                  <Minimize2 className="w-4 h-4 stroke-[2.5]" />
+                  <span className="hidden sm:inline">Thu nhỏ</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Main Panoramic Waveform Visualizer Canvas */}
+            <div className="flex-1 min-h-0 my-3 flex flex-col justify-center">
+              <AiAudioTrackWaveform
+                micState={micState}
+                audioVolumeLevel={audioVolumeLevel}
+                livePitchHz={livePitchHz}
+                analyserRef={analyserRef}
+                isExpanded={true}
+                className="relative h-full min-h-[280px] sm:min-h-[380px] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-md bg-white"
+              />
+            </div>
+
+            {/* High-tech Telemetry Dashboard Footer */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs shrink-0">
+              {/* Metric 1: Pitch Frequency */}
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between">
+                <span className="text-slate-500 dark:text-slate-400 font-semibold">Tần số chính (Pitch)</span>
+                <span className="text-xl sm:text-2xl font-black text-[#00A8E8] dark:text-[#38BDF8] mt-1">
+                  {livePitchHz ? `${Math.round(livePitchHz)} Hz` : micState === 'recording' ? 'Đang phân tích...' : '-- Hz'}
+                </span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Dải giọng người: 85 - 255 Hz</span>
+              </div>
+
+              {/* Metric 2: Volume Level */}
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 dark:text-slate-400 font-semibold">Cường độ âm thanh</span>
+                  <span className="font-black text-xs text-slate-700 dark:text-slate-200">
+                    {micState === 'recording' ? `${audioVolumeLevel}%` : '0%'}
+                  </span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-2 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-emerald-500 via-sky-500 to-[#00A8E8] rounded-full transition-all duration-150"
+                    style={{ width: `${micState === 'recording' ? audioVolumeLevel : 0}%` }}
+                  />
+                </div>
+                <span className="text-[10px] text-slate-400 mt-1">Tự động chuẩn hóa biên độ</span>
+              </div>
+
+              {/* Metric 3: Voice Type Detection */}
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between">
+                <span className="text-slate-500 dark:text-slate-400 font-semibold">Âm sắc nhận diện</span>
+                <span className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 mt-1 truncate">
+                  {detectedVoiceLabel || 'Chưa nhận diện'}
+                </span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Tự động phân biệt giọng Nam / Nữ</span>
+              </div>
+
+              {/* Metric 4: AI Stream Status */}
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between">
+                <span className="text-slate-500 dark:text-slate-400 font-semibold">Trạng thái luồng AI</span>
+                <span className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  {micState === 'recording' ? 'Đang xử lý trực tiếp' : 'Chế độ chờ'}
+                </span>
+                <span className="text-[10px] text-slate-400 mt-0.5">Độ trễ thấp &lt; 30ms</span>
+              </div>
             </div>
           </div>
         </div>
