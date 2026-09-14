@@ -488,6 +488,7 @@ export const SpeechToTextModule: React.FC = () => {
   const audioChunksRef = useRef<Blob[]>([]);
   const realtimeTimerRef = useRef<any>(null);
   const lastInterimRef = useRef<string>('');
+  const accumulatedInterimRef = useRef<string>('');
   const silenceCommitTimerRef = useRef<any>(null);
   const speakerSwitchCountRef = useRef<number>(0);
   const restartTimeoutRef = useRef<any>(null);
@@ -612,16 +613,22 @@ export const SpeechToTextModule: React.FC = () => {
       const isMobileEnv = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
       if (isMobileEnv || !navigator.mediaDevices?.getUserMedia) return;
 
+      // Nhường quyền ưu tiên cho Web Speech Recognition khởi động micro trước (tránh xung đột driver trên Windows)
+      await new Promise(r => setTimeout(r, 250));
+      if (micStateRef.current !== 'recording') return;
+
       const audioConstraints = {
-        echoCancellation: { ideal: true },
-        noiseSuppression: { ideal: true }, // Enable acoustic noise suppression to eliminate fan and background hum
-        autoGainControl: { ideal: true },
-        channelCount: { ideal: 1 },
-        sampleRate: { ideal: 48000 },
-        sampleSize: { ideal: 16 }
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        channelCount: 1
       };
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints }).catch(err => {
+        console.warn('Audio pitch analyzer getUserMedia notice (non-fatal):', err);
+        return null;
+      });
+      if (!stream) return;
       streamRef.current = stream;
 
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -1327,62 +1334,89 @@ export const SpeechToTextModule: React.FC = () => {
       // AVG enterprise keywords are instead accurately normalized in JS via enhanceVietnameseTranscript.
 
       recognition.onstart = () => {
-        processedFinalIndexRef.current = 0;
         setIsListening(true);
         isListeningRef.current = true;
         setRecognitionError(null);
       };
 
       recognition.onresult = (event: any) => {
-        let currentInterim = '';
         lastTextReceivedTimeRef.current = Date.now();
+        let newFinalTranscript = '';
+        let interimTranscriptText = '';
 
-        for (let i = 0; i < event.results.length; i++) {
+        // Chuẩn W3C: Duyệt từ event.resultIndex để không bao giờ bị lệch vị trí hoặc bỏ sót kết quả
+        const startIndex = typeof event.resultIndex === 'number' ? event.resultIndex : 0;
+
+        for (let i = startIndex; i < event.results.length; ++i) {
           const res = event.results[i];
-          if (!res) continue;
+          if (!res || !res[0]) continue;
 
           // Chọn candidate tối ưu nhất trong các alternatives (ưu tiên từ vựng AVG One)
-          let bestChunk = res[0]?.transcript || '';
+          let bestText = res[0].transcript || '';
           if (res.length > 1) {
             for (let a = 1; a < res.length; a++) {
               const altText = res[a]?.transcript || '';
               if (/B5\.1|5\.1T|#K2T|#K1|#K2B|AC1|AC2|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế|xuất kho|nhập kho|nghiệm thu/i.test(altText)) {
-                bestChunk = altText;
+                bestText = altText;
                 break;
               }
             }
           }
 
           if (res.isFinal) {
-            if (speechSilenceTimerRef.current) clearTimeout(speechSilenceTimerRef.current);
-            // Strictly track processed index to prevent re-reading earlier finalized chunks
-            if (i >= processedFinalIndexRef.current) {
-              processedFinalIndexRef.current = i + 1;
-              const text = bestChunk.trim();
-              if (text) {
-                commitTranscriptToMessage(text, true);
-              }
-            }
+            newFinalTranscript += (newFinalTranscript ? ' ' : '') + bestText.trim();
           } else {
-            currentInterim += bestChunk;
+            interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText.trim();
           }
         }
 
-        // Live real-time preview (0ms latency without premature permanent commits)
-        if (currentInterim.trim()) {
-          const formattedInterim = enhanceVietnameseTranscript(currentInterim.trim(), false, false);
-          setInterimTranscript(formattedInterim);
-          lastInterimRef.current = currentInterim.trim();
-        } else {
-          setInterimTranscript('');
+        // 1. Nếu có kết quả chính thức (isFinal), lưu ngay vào danh sách hội thoại
+        if (newFinalTranscript.trim()) {
+          if (silenceCommitTimerRef.current) {
+            clearTimeout(silenceCommitTimerRef.current);
+            silenceCommitTimerRef.current = null;
+          }
+          accumulatedInterimRef.current = '';
           lastInterimRef.current = '';
+          setInterimTranscript('');
+          commitTranscriptToMessage(newFinalTranscript.trim(), true);
+        }
+
+        // 2. Xử lý văn bản tạm thời (interim): Vừa hiển thị trực tiếp vừa bật bộ đếm tự động lưu
+        if (interimTranscriptText.trim()) {
+          accumulatedInterimRef.current = interimTranscriptText.trim();
+          lastInterimRef.current = interimTranscriptText.trim();
+          const formattedInterim = enhanceVietnameseTranscript(interimTranscriptText.trim(), false, false);
+          setInterimTranscript(formattedInterim);
+
+          // BỘ ĐỆM TỰ ĐỘNG CHỐNG BIẾN MẤT VĂN BẢN (AUTO-COMMIT SAFETY TIMER):
+          // Nếu người dùng dừng nói khoảng 900ms mà trình duyệt chưa kịp trả về isFinal,
+          // tự động chốt và lưu các chữ này vào khung hội thoại để TUYỆT ĐỐI KHÔNG BỊ MẤT CHỮ!
+          if (silenceCommitTimerRef.current) {
+            clearTimeout(silenceCommitTimerRef.current);
+          }
+          silenceCommitTimerRef.current = setTimeout(() => {
+            if (accumulatedInterimRef.current.trim()) {
+              const textToSave = accumulatedInterimRef.current.trim();
+              accumulatedInterimRef.current = '';
+              lastInterimRef.current = '';
+              setInterimTranscript('');
+              commitTranscriptToMessage(textToSave, true);
+            }
+          }, 950);
+        } else if (!newFinalTranscript.trim()) {
+          // Tránh xóa vội preview nếu chưa có nội dung mới
+          if (!accumulatedInterimRef.current) {
+            setInterimTranscript('');
+          }
         }
       };
 
       recognition.onerror = (event: any) => {
-        console.warn('Speech recognition event notice:', event.error);
+        console.warn('Speech recognition notice:', event.error);
 
-        if (event.error === 'not-allowed' || event.error === 'service-not-allowed' || event.error === 'audio-capture') {
+        // CHỈ CÓ lỗi từ chối cấp quyền rõ ràng mới dừng thu âm
+        if (event.error === 'not-allowed') {
           setIsListening(false);
           isListeningRef.current = false;
           setMicState('idle');
@@ -1392,27 +1426,36 @@ export const SpeechToTextModule: React.FC = () => {
           setRecognitionError('Trình duyệt chưa cho phép truy cập Micro (not-allowed). Vui lòng nhấn "Cấp Quyền Micro" để mở lại.');
           setMicPermissionStatus('denied');
           setIsMicPermissionModalOpen(true);
-        } else {
-          // Recoverable temporary browser events -> auto-restart engine if recording
-          if (micStateRef.current === 'recording') {
-            restartSpeechEngine();
-          }
+          return;
+        }
+
+        // Các sự kiện tạm thời khác (audio-capture, no-speech, network, aborted, bad-grammar):
+        // TUYỆT ĐỐI KHÔNG tắt micState về idle! Tự động khôi phục và tiếp tục phiên thu âm liền mạch.
+        if (micStateRef.current === 'recording') {
+          restartSpeechEngine();
         }
       };
 
       recognition.onend = () => {
-        setIsListening(false);
-        isListeningRef.current = false;
-
-        // Auto-commit lingering interim text if browser disconnected unexpectedly
-        if (lastInterimRef.current.trim()) {
-          commitTranscriptToMessage(lastInterimRef.current.trim(), true);
+        // 1. Tự động gom và lưu mọi từ ngữ còn đọng lại trước khi ngắt kết nối
+        if (silenceCommitTimerRef.current) {
+          clearTimeout(silenceCommitTimerRef.current);
+          silenceCommitTimerRef.current = null;
+        }
+        const pendingText = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
+        if (pendingText) {
+          accumulatedInterimRef.current = '';
           lastInterimRef.current = '';
           setInterimTranscript('');
+          commitTranscriptToMessage(pendingText, true);
         }
 
+        // 2. Vòng lặp tái kích hoạt liên tục (Keep-Alive Seamless Loop)
         if (micStateRef.current === 'recording') {
           restartSpeechEngine();
+        } else {
+          setIsListening(false);
+          isListeningRef.current = false;
         }
       };
 
@@ -1437,7 +1480,6 @@ export const SpeechToTextModule: React.FC = () => {
       const attemptStart = (retriesLeft: number, delayMs: number) => {
         if (micStateRef.current !== 'recording') return;
         try {
-          processedFinalIndexRef.current = 0;
           if (!recognitionRef.current) {
             recognitionRef.current = createSpeechRecognitionInstance();
           }
@@ -1452,20 +1494,17 @@ export const SpeechToTextModule: React.FC = () => {
           }
           console.warn(`Speech recognition restart attempt (${retriesLeft} retries remaining):`, err);
           if (retriesLeft > 0) {
-            if (retriesLeft <= 2) {
-              // Re-create a fresh recognition instance on repeated failures
-              try {
-                recognitionRef.current?.stop();
-              } catch (e) {}
-              recognitionRef.current = createSpeechRecognitionInstance();
-            }
-            setTimeout(() => attemptStart(retriesLeft - 1, Math.min(800, Math.round(delayMs * 1.3))), delayMs);
+            try {
+              recognitionRef.current?.stop();
+            } catch (e) {}
+            recognitionRef.current = createSpeechRecognitionInstance();
+            setTimeout(() => attemptStart(retriesLeft - 1, Math.min(600, Math.round(delayMs * 1.2))), delayMs);
           }
         }
       };
 
-      attemptStart(4, 150);
-    }, 120);
+      attemptStart(4, 80);
+    }, 60);
   }, [createSpeechRecognitionInstance]);
 
   // Heartbeat Watchdog Interval: Automatically resurrects recognition if browser silently pauses while micState === 'recording'
@@ -1558,6 +1597,18 @@ export const SpeechToTextModule: React.FC = () => {
       showToast('🔴 Đang thu âm & chuyển đổi giọng nói theo thời gian thực!');
     } else if (micState === 'recording') {
       // Transition from RECORDING (Red) -> PAUSED (Yellow)
+      if (silenceCommitTimerRef.current) {
+        clearTimeout(silenceCommitTimerRef.current);
+        silenceCommitTimerRef.current = null;
+      }
+      const pending = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
+      if (pending) {
+        commitTranscriptToMessage(pending, true);
+        accumulatedInterimRef.current = '';
+        lastInterimRef.current = '';
+        setInterimTranscript('');
+      }
+
       setIsListening(false);
       isListeningRef.current = false;
       setMicState('paused');
@@ -2085,13 +2136,25 @@ export const SpeechToTextModule: React.FC = () => {
                         </button>
                         <button
                           onClick={() => {
+                            if (silenceCommitTimerRef.current) {
+                              clearTimeout(silenceCommitTimerRef.current);
+                              silenceCommitTimerRef.current = null;
+                            }
+                            const pending = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
+                            if (pending) {
+                              commitTranscriptToMessage(pending, true);
+                              accumulatedInterimRef.current = '';
+                              lastInterimRef.current = '';
+                            }
                             if (recognitionRef.current) {
                               try { recognitionRef.current.stop(); } catch (e) {}
                             }
                             setIsListening(false);
+                            isListeningRef.current = false;
                             stopRealtimeSpeechTicker();
                             stopAudioPitchAnalyzer();
                             setMicState('idle');
+                            micStateRef.current = 'idle';
                             setInterimTranscript('');
                             showToast('⏹️ Đã kết thúc phiên thu âm.');
                           }}
@@ -2120,13 +2183,25 @@ export const SpeechToTextModule: React.FC = () => {
                         </button>
                         <button
                           onClick={() => {
+                            if (silenceCommitTimerRef.current) {
+                              clearTimeout(silenceCommitTimerRef.current);
+                              silenceCommitTimerRef.current = null;
+                            }
+                            const pending = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
+                            if (pending) {
+                              commitTranscriptToMessage(pending, true);
+                              accumulatedInterimRef.current = '';
+                              lastInterimRef.current = '';
+                            }
                             if (recognitionRef.current) {
                               try { recognitionRef.current.stop(); } catch (e) {}
                             }
                             setIsListening(false);
+                            isListeningRef.current = false;
                             stopRealtimeSpeechTicker();
                             stopAudioPitchAnalyzer();
                             setMicState('idle');
+                            micStateRef.current = 'idle';
                             setInterimTranscript('');
                             showToast('⏹️ Đã kết thúc phiên thu âm.');
                           }}
