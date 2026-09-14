@@ -2339,28 +2339,26 @@ export const SpeechToTextModule: React.FC = () => {
               
               {/* Speaker Filter Badges Bar & Top Actions */}
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
-                {/* Khung Header Thanh Lịch, Cân Đối & Đậm Đà Màu Sắc (Refined Sky-Cyan Glassmorphism Header) */}
-                <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-100/90 via-cyan-50/80 to-blue-100/80 dark:from-slate-850 dark:via-sky-950/50 dark:to-slate-850 border border-sky-300/80 dark:border-sky-800/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Khung nền màu Xanh Tươi Sáng & Nổi Bật */}
-                  <div className="flex items-center gap-2 sm:gap-2.5 px-3 py-1 rounded-xl bg-gradient-to-r from-cyan-500/15 via-sky-500/15 to-blue-500/15 dark:from-cyan-500/25 dark:via-sky-500/25 dark:to-blue-500/25 border border-cyan-400/60 dark:border-cyan-400/50 shadow-xs shrink-0 h-8.5">
-                    {/* Icon Badge Màu Xanh Tươi Sáng */}
-                    <div className="relative flex items-center justify-center w-6.5 h-6.5 rounded-lg bg-white/90 dark:bg-slate-900/90 border border-cyan-400/60 dark:border-cyan-400/50 text-[#00A8E8] dark:text-[#00E5FF] shrink-0 animate-fresh-badge transition-colors shadow-2xs">
-                      <MessageSquare className="w-3.5 h-3.5 stroke-[2.3]" />
+                {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
+                <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Nền Xanh Dương Đậm Sang Trọng & Chữ Trắng Sắc Nét */}
+                  <div className="flex items-center gap-2 sm:gap-2.5 px-3 py-1 rounded-xl bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#0284C7] dark:from-[#0369A1] dark:via-[#0284C7] dark:to-[#0369A1] border border-sky-400/50 dark:border-cyan-400/40 shadow-xs shadow-sky-500/25 shrink-0 h-8.5">
+                    {/* Icon Badge Màu Trắng Trên Nền Xanh */}
+                    <div className="relative flex items-center justify-center w-6.5 h-6.5 rounded-lg bg-white/20 dark:bg-white/15 border border-white/30 text-white shrink-0 shadow-2xs">
+                      <MessageSquare className="w-3.5 h-3.5 stroke-[2.5]" />
                     </div>
 
-                    {/* Dòng chữ Tiêu Đề Xanh Tươi Sắc Nét Đứng Yên Vững Chãi (Không vệt sáng) */}
-                    <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider shrink-0 leading-none select-none">
-                      <span className="fresh-cyan-text">
-                        Hội Thoại Trực Tiếp
-                      </span>
+                    {/* Dòng chữ Tiêu Đề Trắng Sắc Nét, Nổi Bật & Sang Trọng */}
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-white shrink-0 leading-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]">
+                      Hội Thoại Trực Tiếp
                     </h2>
 
-                    {/* Cụm sóng âm thanh mini dập dìu mềm mại màu xanh ngọc bích */}
-                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/80 dark:bg-slate-900/80 border border-cyan-400/40 dark:border-cyan-400/30 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
-                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-1" />
-                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-2" />
-                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-3" />
-                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-4" />
+                    {/* Cụm sóng âm thanh mini dập dìu mềm mại màu trắng tinh khôi */}
+                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/20 dark:bg-white/15 border border-white/30 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-1 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-2 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-3 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-4 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
                     </div>
                   </div>
 
