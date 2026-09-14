@@ -1849,21 +1849,21 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
             
-            {/* CARD: SPEAKER DIARIZATION (MALE & FEMALE ONLY) */}
+            {/* CARD: SPEAKER DIARIZATION (MALE & FEMALE ONLY) - ĐỒNG BỘ THEME XANH DƯƠNG / CYAN */}
             <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-2.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2 backdrop-blur-md">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#F15A24] dark:text-orange-400">
-                  <Users className="w-4 h-4 text-[#F15A24] dark:text-orange-400" />
+                <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#00A8E8] dark:text-sky-400">
+                  <Users className="w-4 h-4 text-[#00A8E8] dark:text-sky-400" />
                   <span>Phân Biệt Giọng Nói</span>
                 </span>
               </h3>
 
               {/* Live Pitch Frequency Status with Laser Scan Shimmer */}
               {autoDiarization && (
-                <div className="relative overflow-hidden px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-orange-50/90 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-300 border border-orange-200 dark:border-orange-800 flex items-center gap-1.5 shadow-2xs">
+                <div className="relative overflow-hidden px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-sky-50 dark:bg-sky-950/60 text-[#00A8E8] dark:text-sky-300 border border-sky-200 dark:border-sky-800/60 flex items-center gap-1.5 shadow-2xs">
                   {/* Laser scanning beam */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-orange-400/20 to-transparent pointer-events-none animate-laser-sweep" />
-                  <Activity className="w-3.5 h-3.5 text-[#F15A24] shrink-0 animate-pulse relative z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-sky-400/20 to-transparent pointer-events-none animate-laser-sweep" />
+                  <Activity className="w-3.5 h-3.5 text-[#00A8E8] shrink-0 animate-pulse relative z-10" />
                   <span className="truncate relative z-10">{detectedVoiceLabel}</span>
                 </div>
               )}
@@ -1882,8 +1882,8 @@ export const SpeechToTextModule: React.FC = () => {
                       }}
                       className={`px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
                         isSelected
-                          ? 'bg-orange-50/90 dark:bg-orange-950/50 border-[#F15A24] dark:border-orange-500 border-2 text-[#F15A24] dark:text-orange-400 font-extrabold shadow-xs shadow-orange-500/10'
-                          : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#F15A24]/60 hover:scale-[1.02]'
+                          ? 'bg-sky-50 dark:bg-sky-950/50 border-[#00A8E8] dark:border-sky-500 border-2 text-[#00A8E8] dark:text-sky-400 font-extrabold shadow-xs shadow-sky-500/15'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#00A8E8]/60 hover:scale-[1.02]'
                       }`}
                       title={spk.name}
                     >
@@ -1891,13 +1891,13 @@ export const SpeechToTextModule: React.FC = () => {
                         {spk.id === 'spk-male' ? '👨' : '👩'} {spk.name}
                         {isSelected && (
                           <span className="flex items-end gap-0.5 h-2.5 ml-0.5 shrink-0">
-                            <span className="w-0.5 h-1.5 bg-[#F15A24] rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
-                            <span className="w-0.5 h-2.5 bg-[#F15A24] rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
-                            <span className="w-0.5 h-1 bg-[#F15A24] rounded-full animate-audio-wave" style={{ animationDelay: '300ms' }} />
+                            <span className="w-0.5 h-1.5 bg-[#00A8E8] rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
+                            <span className="w-0.5 h-2.5 bg-[#00A8E8] rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
+                            <span className="w-0.5 h-1 bg-[#00A8E8] rounded-full animate-audio-wave" style={{ animationDelay: '300ms' }} />
                           </span>
                         )}
                       </span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#F15A24] dark:text-orange-400 shrink-0 stroke-[3]" />}
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#00A8E8] dark:text-sky-400 shrink-0 stroke-[3]" />}
                     </button>
                   );
                 })}
@@ -2142,7 +2142,7 @@ export const SpeechToTextModule: React.FC = () => {
                     {/* Nút TÙY CHỈNH TÍCH HỢP 1 ICON TRÊN MOBILE */}
                     <button
                       onClick={() => setIsMobileSettingsOpen(true)}
-                      className="lg:hidden text-xs font-black text-white bg-[#F15A24] hover:bg-[#d94e1f] px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
+                      className="lg:hidden text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
                       title="Mở tất cả tùy chỉnh & cài đặt"
                     >
                       <SlidersHorizontal className="w-4 h-4 stroke-[2.5]" />
@@ -2170,18 +2170,18 @@ export const SpeechToTextModule: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Banner hiển thị bộ lọc đang hoạt động (tích hợp từ Tiện ích) */}
+                {/* Banner hiển thị bộ lọc đang hoạt động (tích hợp từ Tiện ích) - ĐỒNG BỘ THEME XANH DƯƠNG */}
                 {filterSpeakerId !== 'all' && (
-                  <div className="flex items-center justify-between px-3 py-1.5 bg-orange-50/90 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/60 rounded-xl text-xs text-orange-800 dark:text-orange-200 shadow-2xs shrink-0">
+                  <div className="flex items-center justify-between px-3 py-1.5 bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60 rounded-xl text-xs text-sky-800 dark:text-sky-200 shadow-2xs shrink-0">
                     <div className="flex items-center gap-1.5">
-                      <Filter className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
+                      <Filter className="w-3.5 h-3.5 text-[#00A8E8] shrink-0" />
                       <span>
                         Đang lọc hội thoại: <strong>{speakers.find(s => s.id === filterSpeakerId)?.name || (filterSpeakerId === 'spk-deaf' ? DEAF_SPEAKER.name : filterSpeakerId === 'spk-male' ? 'Giọng Nam' : filterSpeakerId === 'spk-female' ? 'Giọng Nữ' : filterSpeakerId)}</strong>
                       </span>
                     </div>
                     <button
                       onClick={() => setFilterSpeakerId('all')}
-                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-800 text-[#F15A24] text-[11px] font-bold hover:bg-orange-100 dark:hover:bg-slate-700 transition cursor-pointer flex items-center gap-1 shadow-2xs"
+                      className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-800 text-[#00A8E8] text-[11px] font-bold hover:bg-sky-100 dark:hover:bg-slate-700 transition cursor-pointer flex items-center gap-1 shadow-2xs"
                       title="Hiển thị lại toàn bộ người nói"
                     >
                       <span>Bỏ lọc</span>
@@ -2196,7 +2196,7 @@ export const SpeechToTextModule: React.FC = () => {
                       onClick={() => setFilterSpeakerId('all')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                         filterSpeakerId === 'all'
-                          ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
+                          ? 'bg-[#00A8E8] text-white shadow-2xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                       }`}
                     >
@@ -2211,7 +2211,7 @@ export const SpeechToTextModule: React.FC = () => {
                           onClick={() => setFilterSpeakerId(s.id)}
                           className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                             filterSpeakerId === s.id
-                              ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
+                              ? 'bg-[#00A8E8] text-white shadow-2xs font-extrabold'
                               : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                           }`}
                         >
@@ -2223,7 +2223,7 @@ export const SpeechToTextModule: React.FC = () => {
                       onClick={() => setFilterSpeakerId('spk-deaf')}
                       className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
                         filterSpeakerId === 'spk-deaf'
-                          ? 'bg-[#F15A24] text-white shadow-2xs font-extrabold'
+                          ? 'bg-[#00A8E8] text-white shadow-2xs font-extrabold'
                           : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
                       }`}
                     >
