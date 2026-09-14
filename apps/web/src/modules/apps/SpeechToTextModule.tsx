@@ -397,33 +397,6 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         ctx.stroke();
       }
 
-      // 6. Vạch trỏ thời gian Playhead màu vàng kim rực rỡ (tại vị trí ~78%)
-      const playheadX = Math.round(w * 0.78);
-
-      // Vệt hào quang vàng kim dọc thân kim
-      const playheadGlow = ctx.createLinearGradient(playheadX - 6, 0, playheadX + 6, 0);
-      playheadGlow.addColorStop(0, 'rgba(245, 158, 11, 0)');
-      playheadGlow.addColorStop(0.5, isRec ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.1)');
-      playheadGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
-      ctx.fillStyle = playheadGlow;
-      ctx.fillRect(playheadX - 6, 0, 12, h);
-
-      // Thân kim vàng
-      ctx.strokeStyle = '#F59E0B';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(playheadX, 0);
-      ctx.lineTo(playheadX, h);
-      ctx.stroke();
-
-      // Đầu con trỏ kim hình viên ngọc tam giác vàng ở đỉnh
-      ctx.fillStyle = '#F59E0B';
-      ctx.beginPath();
-      ctx.moveTo(playheadX - 4, 0);
-      ctx.lineTo(playheadX + 4, 0);
-      ctx.lineTo(playheadX, 6);
-      ctx.closePath();
-      ctx.fill();
 
       ctx.restore();
       animFrameId.current = requestAnimationFrame(render);
