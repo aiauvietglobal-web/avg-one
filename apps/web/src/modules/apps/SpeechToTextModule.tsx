@@ -350,26 +350,27 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
 
 
-      // 4. Dải các vạch sóng tần số với Gradient chuyển sắc đa tầng sống động (Royal Blue -> AVG Cyan -> Electric Sky / Violet Glow)
+      // 4. Dải các vạch sóng tần số với Gradient Cam - Xanh (Cam ở trên đỉnh, Xanh dương / Cyan ở dưới chân)
       const barWidth = 2.0;
       const step = 3.6;
       const totalBars = historyRef.current.length;
       const barsStartX = w - totalBars * step;
       const isRec = micState === 'recording';
 
-      // Tạo Gradient đa tầng sắc nét từ chân lên đỉnh vạch sóng
+      // Bar Gradient: 0 là ở đáy (h), 1 là ở đỉnh (0)
+      // Dưới chân là Xanh (Blue / Cyan), trên đỉnh là Cam rực rỡ (Orange / Amber)
       const barGrad = ctx.createLinearGradient(0, h, 0, 0);
       if (isRec) {
-        barGrad.addColorStop(0, '#1D4ED8');    // Deep Royal Blue
-        barGrad.addColorStop(0.35, '#0284C7'); // Ocean Blue
-        barGrad.addColorStop(0.7, '#00A8E8');  // Signature AVG Cyan
-        barGrad.addColorStop(0.92, '#38BDF8'); // Electric Sky
-        barGrad.addColorStop(1, '#818CF8');    // Luminous Violet Glow
+        barGrad.addColorStop(0, '#0284C7');    // Deep Ocean Blue ở chân
+        barGrad.addColorStop(0.35, '#00A8E8'); // AVG Cyan
+        barGrad.addColorStop(0.65, '#F59E0B'); // Vàng cam ấm (Amber)
+        barGrad.addColorStop(0.88, '#F97316'); // Cam tươi rực rỡ (Orange)
+        barGrad.addColorStop(1, '#EA580C');    // Cam đậm ở ngọn đỉnh
       } else {
-        barGrad.addColorStop(0, '#1E40AF');
-        barGrad.addColorStop(0.5, '#0284C7');
-        barGrad.addColorStop(0.85, '#00A8E8');
-        barGrad.addColorStop(1, '#38BDF8');
+        barGrad.addColorStop(0, '#0369A1');
+        barGrad.addColorStop(0.4, '#0284C7');
+        barGrad.addColorStop(0.75, '#F59E0B');
+        barGrad.addColorStop(1, '#F97316');
       }
 
       const points: { x: number; y: number }[] = [];
@@ -393,19 +394,19 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
         points.push({ x: x + barWidth / 2, y });
 
-        // Vạch đỉnh rơi chậm (Peak Hold Cap) với sắc neon nổi bật
+        // Vạch đỉnh rơi chậm (Peak Hold Cap) tone Cam sáng nổi bật
         const peakVal = peakHoldRef.current[i] || val;
         const peakY = h - Math.max(5, Math.min(h * 0.92, peakVal * h)) - 2;
-        ctx.fillStyle = isRec ? '#6366F1' : '#0284C7';
+        ctx.fillStyle = isRec ? '#EA580C' : '#F97316';
         ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.5);
       }
 
       // 5. Vùng phủ Gradient (Translucent Gradient Area Fill) & Đường bao sóng phát sáng (Glow Crest Curve)
       if (points.length > 2) {
-        // Vùng phủ chuyển sắc mờ dưới chân sóng
+        // Vùng phủ chuyển sắc: Cam nhạt ở trên ngọn, xanh dịu ở dưới chân, tan về trong suốt
         const areaGrad = ctx.createLinearGradient(0, 0, 0, h);
-        areaGrad.addColorStop(0, isRec ? 'rgba(0, 168, 232, 0.22)' : 'rgba(2, 132, 199, 0.12)');
-        areaGrad.addColorStop(0.7, isRec ? 'rgba(37, 99, 235, 0.08)' : 'rgba(2, 132, 199, 0.04)');
+        areaGrad.addColorStop(0, isRec ? 'rgba(249, 115, 22, 0.22)' : 'rgba(245, 158, 11, 0.12)');
+        areaGrad.addColorStop(0.5, isRec ? 'rgba(0, 168, 232, 0.10)' : 'rgba(2, 132, 199, 0.06)');
         areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
         ctx.beginPath();
@@ -419,12 +420,11 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         ctx.fillStyle = areaGrad;
         ctx.fill();
 
-        // Đường viền crest curve chạy mềm mại theo ngọn sóng với gradient ngang
+        // Đường viền crest curve chạy mềm mại theo ngọn sóng với sắc cam rực rỡ
         const crestGrad = ctx.createLinearGradient(0, 0, w, 0);
-        crestGrad.addColorStop(0, '#2563EB');
-        crestGrad.addColorStop(0.4, '#00A8E8');
-        crestGrad.addColorStop(0.8, '#38BDF8');
-        crestGrad.addColorStop(1, '#818CF8');
+        crestGrad.addColorStop(0, '#F59E0B');
+        crestGrad.addColorStop(0.5, '#F97316');
+        crestGrad.addColorStop(1, '#EA580C');
 
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
@@ -432,7 +432,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
           ctx.lineTo(points[i].x, points[i].y);
         }
         ctx.strokeStyle = crestGrad;
-        ctx.lineWidth = 1.2;
+        ctx.lineWidth = 1.3;
         ctx.stroke();
       }
 
