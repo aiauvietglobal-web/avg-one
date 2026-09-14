@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  ChevronLeft, BarChart3, TrendingUp, Layers, ShieldCheck, Download, Sun, Moon
+  Home, ChevronLeft, BarChart3, TrendingUp, Layers, ShieldCheck, Download, Sun, Moon
 } from 'lucide-react';
 
 export type DashboardNavTab = 'overview' | 'rnd' | 'departments' | 'infrastructure';
 
 export interface DashboardHeaderProps {
   onBack: () => void;
+  onGoHome?: () => void;
   dashboardNavTab?: DashboardNavTab;
   onSelectDashboardTab?: (tab: DashboardNavTab) => void;
   onExportReport?: () => void;
@@ -17,6 +18,7 @@ export interface DashboardHeaderProps {
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onBack,
+  onGoHome,
   dashboardNavTab = 'overview',
   onSelectDashboardTab,
   onExportReport,
@@ -24,6 +26,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onToggleDarkMode,
   renderUserAuthButton
 }) => {
+  const handleGoHome = () => {
+    if (onGoHome) {
+      onGoHome();
+    } else {
+      window.dispatchEvent(new CustomEvent('go_home'));
+    }
+  };
+
   const handleTabClick = (tab: DashboardNavTab) => {
     if (onSelectDashboardTab) onSelectDashboardTab(tab);
     window.dispatchEvent(new CustomEvent('dashboard_tab_change', { detail: tab }));
@@ -32,16 +42,24 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
-        {/* Cụm trái: [ < BÁO CÁO QUẢN TRỊ ] + [ Tabs nghiệp vụ ] + [ Xuất báo cáo ] */}
-        <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-          {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp */}
+        {/* Cụm trái: [ 🏠 Trang chủ ] + [ BÁO CÁO QUẢN TRỊ (chỉ để chữ) ] + [ Tabs nghiệp vụ ] + [ Xuất báo cáo ] */}
+        <div className="flex items-center gap-2 sm:gap-2.5 select-none shrink-0 whitespace-nowrap">
+          {/* Icon Trang chủ: Bấm để quay về Trang chủ AVG One */}
+          <button
+            onClick={handleGoHome}
+            className="w-8 h-8 sm:w-9 sm:h-9 -ml-1 rounded-xl flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24] hover:bg-orange-50/80 dark:hover:bg-slate-800/80 transition-all cursor-pointer shrink-0"
+            title="Về Trang chủ AVG One"
+          >
+            <Home className="w-5 h-5 stroke-[2.2]" />
+          </button>
+
+          {/* Tên phân hệ: Bỏ hộp chỉ để chữ (bấm quay lại Kho ứng dụng) */}
           <button
             onClick={onBack}
-            className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
+            className="text-sm sm:text-[15px] font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-wide cursor-pointer transition-colors shrink-0 select-none py-1"
             title="Quay lại Kho ứng dụng"
           >
-            <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-            <span className="whitespace-nowrap font-black">BÁO CÁO QUẢN TRỊ</span>
+            BÁO CÁO QUẢN TRỊ
           </button>
 
           {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT CỦA BÁO CÁO QUẢN TRỊ */}

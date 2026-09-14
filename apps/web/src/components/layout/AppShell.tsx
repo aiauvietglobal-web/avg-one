@@ -128,6 +128,16 @@ export const AppShell: React.FC<AppShellProps> = ({
     };
   }, [activeModule]);
 
+  // Lắng nghe sự kiện quay về Trang chủ từ Header phân hệ con
+  useEffect(() => {
+    const handleGoHome = () => {
+      setActiveSubTitle('');
+      onSelectModule('home');
+    };
+    window.addEventListener('go_home', handleGoHome);
+    return () => window.removeEventListener('go_home', handleGoHome);
+  }, [onSelectModule]);
+
   // Tab đầu mục chính phân hệ Thiết kế (Đơn hàng, Phẩm, Tồn) & Thanh tìm kiếm nhanh
   const [designNavTab, setDesignNavTab] = useState<'orders' | 'products' | 'inventory'>('orders');
   const [designSearch, setDesignSearch] = useState('');
@@ -398,6 +408,10 @@ export const AppShell: React.FC<AppShellProps> = ({
                   setActiveSubTitle('');
                   window.dispatchEvent(new CustomEvent('submodule_back'));
                 }}
+                onGoHome={() => {
+                  setActiveSubTitle('');
+                  onSelectModule('home');
+                }}
                 speechNavTab={speechNavTab}
                 onSelectSpeechTab={(tab) => {
                   setSpeechNavTab(tab);
@@ -418,6 +432,10 @@ export const AppShell: React.FC<AppShellProps> = ({
                   setActiveSubTitle('');
                   window.dispatchEvent(new CustomEvent('submodule_back'));
                 }}
+                onGoHome={() => {
+                  setActiveSubTitle('');
+                  onSelectModule('home');
+                }}
                 dashboardNavTab={dashboardNavTab}
                 onSelectDashboardTab={(tab) => {
                   setDashboardNavTab(tab);
@@ -435,6 +453,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               <AppsHeader
                 activeSubTitle={activeSubTitle}
                 onBack={() => onSelectModule('home')}
+                onGoHome={() => {
+                  setActiveSubTitle('');
+                  onSelectModule('home');
+                }}
                 onSelectModule={onSelectModule}
                 appsNavTab={appsNavTab}
                 onSelectAppsTab={(tab) => {
