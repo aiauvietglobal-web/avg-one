@@ -408,10 +408,14 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
-            <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-5 xs:px-8 sm:px-10 py-4 sm:py-6 rounded-3xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/90 shadow-[0_10px_35px_-10px_rgba(0,0,0,0.06)] dark:shadow-[0_10px_35px_-10px_rgba(0,0,0,0.5)] flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
+            <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-4 xs:px-6 sm:px-8 py-2 sm:py-3 flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
               
-              {/* Ambient Glowing Backdrop */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-sky-400/10 via-amber-400/5 to-orange-400/10 rounded-3xl blur-xl pointer-events-none -z-10" />
+              {/* 🎨 LỚP MÀU NỀN TỰ NHIÊN (Không để hộp/viền, chỉ để màu lan tỏa êm dịu) */}
+              {/* Lớp màu phát quang đa sắc dịu nhẹ */}
+              <div className="absolute -inset-x-8 -inset-y-4 sm:-inset-x-12 sm:-inset-y-6 bg-gradient-to-r from-sky-400/25 via-amber-300/20 to-orange-400/25 dark:from-sky-500/20 dark:via-amber-500/15 dark:to-orange-500/20 rounded-full blur-3xl pointer-events-none -z-10" />
+              
+              {/* Lớp nền màu sáng dịu che bớt các đường lưới phía sau chữ */}
+              <div className="absolute -inset-x-4 -inset-y-2 sm:-inset-x-6 sm:-inset-y-3 bg-gradient-to-r from-sky-100/75 via-white/85 to-orange-100/75 dark:from-sky-950/60 dark:via-slate-900/75 dark:to-orange-950/60 rounded-full blur-2xl pointer-events-none -z-10" />
 
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
