@@ -111,10 +111,33 @@ export const ExecutiveDirectiveView: React.FC = () => {
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Title & Animated Slogan Box Badge */}
           <div className="space-y-1.5 text-left flex-shrink-0">
-            {/* Header Tag - Tinh gọn, trực tiếp, không viền hộp */}
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#0284C7] dark:text-sky-400 tracking-wide uppercase">
-              <Megaphone className="w-3.5 h-3.5 text-[#00A8E8]" />
-              <span>AVG EXECUTIVE DIRECTIVE & DISPATCH</span>
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="directive-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="35%" stopColor="#00A8E8" />
+                    <stop offset="70%" stopColor="#FF7043" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#directive-slogan-border-gradient)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Megaphone className="w-3.5 h-3.5 text-[#00A8E8]" />
+                <span>AVG EXECUTIVE DIRECTIVE & DISPATCH</span>
+              </div>
             </div>
 
             <div className="pt-0.5">
