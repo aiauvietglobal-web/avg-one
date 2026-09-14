@@ -3226,145 +3226,110 @@ div.box-speech-bubble {
 }
 
 /* ============================================================ */
-/* 🌊 CHUYỂN ĐỘNG DẬP DÌU & MÀU XANH TƯƠI SÁNG (HỘI THOẠI TRỰC TIẾP) */
-/* (CONTINUOUS UNDULATING WAVE MOTION & RADIANT FRESH CYAN)      */
+/* 🌊 HỘI THOẠI TRỰC TIẾP: MÀU XANH TƯƠI SÁNG & SÓNG DẬP DÌU      */
 /* ============================================================ */
 
-/* 1. Icon Badge dập dìu bồng bềnh liên tục như nhịp sóng nước */
-@keyframes dap-diu-badge {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-    box-shadow: 0 2px 8px rgba(0, 168, 232, 0.18);
-    border-color: rgba(0, 210, 255, 0.45);
+/* 1. Dải sóng âm mini dập dìu mềm mại (Equalizer wave bars) */
+@keyframes dap-diu-wave-1 {
+  0%, 100% { height: 5px; }
+  50% { height: 15px; }
+}
+
+@keyframes dap-diu-wave-2 {
+  0%, 100% { height: 15px; }
+  50% { height: 7px; }
+}
+
+@keyframes dap-diu-wave-3 {
+  0%, 100% { height: 9px; }
+  50% { height: 17px; }
+}
+
+@keyframes dap-diu-wave-4 {
+  0%, 100% { height: 13px; }
+  50% { height: 5px; }
+}
+
+.animate-wave-bar-1 {
+  animation: dap-diu-wave-1 1.6s ease-in-out infinite;
+}
+.animate-wave-bar-2 {
+  animation: dap-diu-wave-2 1.6s ease-in-out infinite 0.25s;
+}
+.animate-wave-bar-3 {
+  animation: dap-diu-wave-3 1.6s ease-in-out infinite 0.5s;
+}
+.animate-wave-bar-4 {
+  animation: dap-diu-wave-4 1.6s ease-in-out infinite 0.75s;
+}
+
+/* 2. Dòng chữ Xanh Tươi Sắc Nét - vệt sáng lướt nhẹ chu kỳ 5s (Không rung lắc, không nghiêng chữ) */
+@keyframes text-fresh-cyan-sweep {
+  0% {
+    background-position: -150% 0;
   }
-  16% {
-    transform: translateY(-3.5px) rotate(-3deg) scale(1.05);
-    box-shadow: 0 7px 20px 3px rgba(0, 210, 255, 0.45), 0 0 10px rgba(0, 168, 232, 0.3);
-    border-color: rgba(0, 229, 255, 0.85);
+  24% {
+    background-position: 150% 0;
   }
-  36% {
-    transform: translateY(1.5px) rotate(1.5deg) scale(0.98);
-    box-shadow: 0 2px 6px rgba(0, 168, 232, 0.15);
-    border-color: rgba(0, 210, 255, 0.4);
-  }
-  56% {
-    transform: translateY(-2.5px) rotate(-1.8deg) scale(1.03);
-    box-shadow: 0 5px 16px 2px rgba(0, 210, 255, 0.35);
-    border-color: rgba(0, 229, 255, 0.75);
-  }
-  76% {
-    transform: translateY(1px) rotate(1deg) scale(0.99);
-    box-shadow: 0 2px 7px rgba(0, 168, 232, 0.16);
-    border-color: rgba(0, 210, 255, 0.45);
-  }
-  90% {
-    transform: translateY(-1px) rotate(-0.5deg) scale(1.01);
-    box-shadow: 0 4px 12px rgba(0, 210, 255, 0.25);
-    border-color: rgba(0, 210, 255, 0.55);
+  100% {
+    background-position: 150% 0;
   }
 }
 
-/* 2. Dòng chữ dập dìu sóng nhịp nhàng, màu xanh tươi rạng rỡ */
-@keyframes dap-diu-text {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-    background-position: -160% 0;
-  }
-  18% {
-    transform: translateY(-2.8px) rotate(-0.8deg);
-  }
-  38% {
-    transform: translateY(1.4px) rotate(0.6deg);
-    background-position: 80% 0;
-  }
-  58% {
-    transform: translateY(-2.2px) rotate(-0.5deg);
-    background-position: 180% 0;
-  }
-  78% {
-    transform: translateY(0.8px) rotate(0.4deg);
-    background-position: 240% 0;
-  }
-  90% {
-    transform: translateY(-0.8px) rotate(-0.2deg);
-    background-position: 240% 0;
-  }
-}
-
-/* 3. Icon bên trong xoay lắc dẻo dai theo nhịp sóng nước */
-@keyframes dap-diu-icon {
-  0%, 100% {
-    transform: scale(1) rotate(0deg);
-  }
-  16% {
-    transform: scale(1.12) rotate(4deg);
-  }
-  36% {
-    transform: scale(0.96) rotate(-2deg);
-  }
-  56% {
-    transform: scale(1.07) rotate(2.5deg);
-  }
-  76% {
-    transform: scale(0.98) rotate(-1deg);
-  }
-  90% {
-    transform: scale(1.03) rotate(1deg);
-  }
-}
-
-.animate-dap-diu-badge {
-  animation: dap-diu-badge 4.8s ease-in-out infinite;
-  will-change: transform, box-shadow;
-}
-
-.animate-dap-diu-text {
+.animate-fresh-cyan-text {
   display: inline-block;
-  /* Xanh tươi rạng rỡ (Fresh Brilliant Cyan/Sky Blue) */
   background: linear-gradient(
     110deg,
     #0284C7 0%,
-    #00A8E8 20%,
-    #00D2FF 36%,
-    #FFFFFF 48%,
-    #E0F2FE 52%,
-    #00D2FF 64%,
-    #00A8E8 80%,
+    #00A8E8 22%,
+    #00D2FF 42%,
+    #FFFFFF 50%,
+    #00D2FF 58%,
+    #00A8E8 78%,
     #0284C7 100%
   );
   background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 3px rgba(0, 168, 232, 0.35));
-  animation: dap-diu-text 4.8s ease-in-out infinite;
-  will-change: transform, background-position;
+  animation: text-fresh-cyan-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-[data-theme="dark"] .animate-dap-diu-text {
+[data-theme="dark"] .animate-fresh-cyan-text {
   display: inline-block;
-  /* Xanh ngọc neon phát sáng tươi rói trong nền tối */
   background: linear-gradient(
     110deg,
     #38BDF8 0%,
-    #00E5FF 20%,
-    #67E8F9 36%,
-    #FFFFFF 48%,
-    #CFFAFE 52%,
-    #67E8F9 64%,
-    #00E5FF 80%,
+    #00E5FF 22%,
+    #7DD3FC 42%,
+    #FFFFFF 50%,
+    #7DD3FC 58%,
+    #00E5FF 78%,
     #38BDF8 100%
   );
   background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 6px rgba(0, 229, 255, 0.45));
-  animation: dap-diu-text 4.8s ease-in-out infinite;
-  will-change: transform, background-position;
+  animation: text-fresh-cyan-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.animate-dap-diu-icon {
-  animation: dap-diu-icon 4.8s ease-in-out infinite;
-  will-change: transform;
+/* 3. Icon Badge quầng sáng xanh ngọc êm dịu chu kỳ 5s */
+@keyframes fresh-badge-glow {
+  0%, 100% {
+    box-shadow: 0 1px 3px rgba(0, 168, 232, 0.12);
+    border-color: rgba(0, 210, 255, 0.35);
+  }
+  14% {
+    box-shadow: 0 0 16px 3px rgba(0, 210, 255, 0.35);
+    border-color: rgba(0, 229, 255, 0.8);
+  }
+  28% {
+    box-shadow: 0 1px 3px rgba(0, 168, 232, 0.12);
+    border-color: rgba(0, 210, 255, 0.35);
+  }
+}
+
+.animate-fresh-badge {
+  animation: fresh-badge-glow 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 
