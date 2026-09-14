@@ -1,17 +1,13 @@
 import React from 'react';
 import { Home } from 'lucide-react';
 
-export type SpeechNavTab = 'chat' | 'history' | 'settings' | 'templates';
+export type SpeechNavTab = 'storage' | 'utilities' | 'settings' | 'chat' | 'history' | 'templates';
 
 export interface SpeechToTextHeaderProps {
   onBack: () => void;
   onGoHome?: () => void;
   speechNavTab?: SpeechNavTab;
   onSelectSpeechTab?: (tab: SpeechNavTab) => void;
-  isRecording?: boolean;
-  onToggleRecording?: () => void;
-  darkMode?: boolean;
-  onToggleDarkMode?: () => void;
   renderUserAuthButton: () => React.ReactNode;
 }
 
@@ -64,12 +60,11 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
           {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT: BỎ HỘP CHỈ ĐỂ CHỮ */}
           <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 select-none shrink-0 whitespace-nowrap">
             {[
-              { id: 'chat' as const, label: 'Hội thoại trực tiếp' },
-              { id: 'history' as const, label: 'Lịch sử' },
-              { id: 'settings' as const, label: 'Tùy chỉnh âm' },
-              { id: 'templates' as const, label: 'Phản hồi nhanh' },
+              { id: 'storage' as const, label: 'Lưu trữ' },
+              { id: 'utilities' as const, label: 'Tiện ích' },
+              { id: 'settings' as const, label: 'Cài đặt' },
             ].map((tab) => {
-              const isActive = speechNavTab === tab.id;
+              const isActive = speechNavTab === tab.id || (tab.id === 'storage' && speechNavTab === 'history') || (tab.id === 'utilities' && speechNavTab === 'templates');
               return (
                 <button
                   key={tab.id}

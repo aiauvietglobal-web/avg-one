@@ -928,18 +928,22 @@ export const SpeechToTextModule: React.FC = () => {
     };
     const handleTabChange = (e: any) => {
       const tab = e.detail;
-      if (tab === 'chat') {
-        setActiveSubTab('direct');
+      if (tab === 'storage' || tab === 'history') {
+        setIsHistoryModalOpen(true);
+        setIsMobileSettingsOpen(false);
+      } else if (tab === 'utilities' || tab === 'templates') {
         setIsHistoryModalOpen(false);
         setIsMobileSettingsOpen(false);
-      } else if (tab === 'history') {
-        setIsHistoryModalOpen(true);
-      } else if (tab === 'settings') {
-        setIsMobileSettingsOpen(true);
-      } else if (tab === 'templates') {
         if (deafInputRef.current) {
           deafInputRef.current.focus();
         }
+      } else if (tab === 'settings') {
+        setIsMobileSettingsOpen(true);
+        setIsHistoryModalOpen(false);
+      } else if (tab === 'chat') {
+        setActiveSubTab('direct');
+        setIsHistoryModalOpen(false);
+        setIsMobileSettingsOpen(false);
       }
     };
     window.addEventListener('speech_tab_sync', handleSync);
