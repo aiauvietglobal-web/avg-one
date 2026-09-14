@@ -216,7 +216,7 @@ export const HRModule: React.FC = () => {
       </div>
 
       {/* MAIN CONTAINER CONTENT */}
-      <div className="max-w-7xl mx-auto w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
+      <div className="w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
 
         {/* 🔮 TOP BANNER EXECUTIVE DASHBOARD WITH SLOGAN BOX BADGE & BRUSH STROKE */}
         <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden">

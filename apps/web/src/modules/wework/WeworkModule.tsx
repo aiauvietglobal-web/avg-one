@@ -54,7 +54,7 @@ export const WeworkModule: React.FC<WeworkModuleProps> = ({ initialSubTab }) => 
       </div>
 
       {/* Main Scrollable Content Container */}
-      <div className="max-w-7xl mx-auto w-full h-full flex-1 overflow-y-auto relative z-10 px-1 space-y-4">
+      <div className="w-full h-full flex-1 overflow-y-auto relative z-10 pr-1 space-y-4">
         {/* Render standalone independent views based on Header selection */}
         {activeSubTab === 'design' && <DesignOrdersView />}
         {activeSubTab === 'research' && <ResearchOrdersView />}

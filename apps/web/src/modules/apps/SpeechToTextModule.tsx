@@ -1732,7 +1732,7 @@ export const SpeechToTextModule: React.FC = () => {
       <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
 
       {/* MAIN CONTAINER CONTENT */}
-      <div className="max-w-7xl mx-auto w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
+      <div className="w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
 
         {/* 🔮 SLEEK COMPACT EXECUTIVE HEADER BAR (HIDDEN ON MOBILE TO MAXIMIZE SPACE, VISIBLE ON DESKTOP) */}
         <div className="hidden lg:flex flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-4 py-2.5 shadow-xs relative overflow-hidden">

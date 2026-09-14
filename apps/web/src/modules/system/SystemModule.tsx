@@ -55,7 +55,7 @@ export const SystemModule: React.FC<SystemModuleProps> = ({ activeTab }) => {
       </div>
 
       {/* Main Scrollable Content Wrapper */}
-      <div className="max-w-7xl mx-auto w-full h-full flex-1 overflow-y-auto relative z-10 px-1 space-y-4">
+      <div className="w-full h-full flex-1 overflow-y-auto relative z-10 pr-1 space-y-4">
         {/* Render standalone management views based on Header selection */}
         {activeMainTab === 'annual-plan' && <AnnualPlanView />}
         {activeMainTab === 'executive-directive' && <ExecutiveDirectiveView />}

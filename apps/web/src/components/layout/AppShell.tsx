@@ -244,7 +244,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* Đã đăng nhập: Chỉ hiển thị Avatar hình tròn */
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
-          className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none shrink-0"
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#F15A24] hover:bg-[#d94e1f] text-white font-black text-xs sm:text-sm flex items-center justify-center transition-transform hover:scale-105 shadow-xs cursor-pointer focus:outline-none"
           title={`${currentUser.name} (${currentUser.role})`}
         >
           {currentUser.name.charAt(0)}
@@ -253,7 +253,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* Chưa đăng nhập: Hộp viền cam, chữ cam, bo tròn 3 góc tối đa */
         <button
           onClick={() => setIsLoginModalOpen(true)}
-          className="btn-speech-bubble px-3.5 sm:px-4.5 h-8 sm:h-8.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-xs sm:text-sm shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] select-none flex items-center justify-center leading-none shrink-0"
+          className="btn-speech-bubble px-4 sm:px-5 py-1 sm:py-1.5 bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] font-bold text-sm sm:text-[15px] shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer border-2 border-[#F15A24] select-none flex items-center justify-center"
           style={{
             borderTopLeftRadius: '9999px',
             borderTopRightRadius: '9999px',
@@ -262,7 +262,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           }}
           title="Đăng nhập tài khoản AVG One"
         >
-          <span className="font-bold text-[#F15A24] tracking-wide leading-none">
+          <span className="font-bold text-[#F15A24] tracking-wide">
             Đăng Nhập
           </span>
         </button>
