@@ -256,7 +256,9 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameId = useRef<number | null>(null);
   const historyRef = useRef<number[]>([]);
+  const peakHoldRef = useRef<number[]>([]);
   const lastSampleTimeRef = useRef<number>(0);
+  const phaseRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -266,7 +268,8 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
     // Khởi tạo danh sách các vạch mẫu ban đầu
     if (historyRef.current.length === 0) {
-      historyRef.current = Array.from({ length: 90 }, () => 0.12 + Math.random() * 0.1);
+      historyRef.current = Array.from({ length: 110 }, () => 0.12 + Math.random() * 0.08);
+      peakHoldRef.current = Array.from({ length: 110 }, () => 0.15);
     }
 
     const render = (timestamp: number) => {
@@ -295,70 +298,162 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       const w = displayWidth;
       const h = displayHeight;
 
-      // Cập nhật mẫu sóng mới mỗi 45ms để dải sóng cuộn mượt mà như bản ghi âm chuyên nghiệp
-      if (timestamp - lastSampleTimeRef.current > 45) {
+      phaseRef.current += micState === 'recording' ? 0.08 : 0.035;
+      const phase = phaseRef.current;
+
+      // Cập nhật mẫu sóng mới mỗi 38ms để dải sóng cuộn mượt mà như bản ghi âm chuyên nghiệp
+      if (timestamp - lastSampleTimeRef.current > 38) {
         lastSampleTimeRef.current = timestamp;
 
-        let sample = 0.12 + Math.random() * 0.08; // Đường nền lúc yên lặng
+        let sample = 0.14 + Math.sin(phase * 1.5) * 0.04;
 
         if (micState === 'recording') {
           if (audioVolumeLevel > 6) {
-            // Khi có giọng nói: các vạch nhảy cao tự nhiên theo âm lượng
-            const normVol = Math.min(1.0, (audioVolumeLevel / 100) * 1.35);
-            sample = Math.max(0.2, normVol * (0.6 + Math.random() * 0.4));
+            // Khi có giọng nói: nhảy cao tự nhiên theo âm lượng & năng lượng âm học
+            const normVol = Math.min(1.0, (audioVolumeLevel / 100) * 1.4);
+            sample = Math.max(0.22, normVol * (0.68 + Math.random() * 0.32));
           } else {
-            sample = 0.13 + Math.random() * 0.1;
+            sample = 0.13 + Math.random() * 0.08;
           }
+        } else {
+          // Khi Standby: sóng thở nhịp nhàng tự nhiên uyển chuyển
+          sample = 0.15 + Math.sin(phase * 1.2) * 0.06 + Math.cos(phase * 0.6) * 0.04;
         }
 
         historyRef.current.push(sample);
+        peakHoldRef.current.push(sample);
+
         const maxBars = Math.floor(w / 3.2);
         while (historyRef.current.length > maxBars) {
           historyRef.current.shift();
         }
+        while (peakHoldRef.current.length > maxBars) {
+          peakHoldRef.current.shift();
+        }
       }
 
-      // 1. Màu nền xanh đậm Navy chuẩn phòng thu (khớp chuẩn ảnh mẫu)
+      // Cập nhật gia tốc rơi chậm của vạch lưu đỉnh (Peak Hold Gravity)
+      for (let i = 0; i < peakHoldRef.current.length; i++) {
+        const cur = historyRef.current[i] || 0.1;
+        let peak = peakHoldRef.current[i] || cur;
+        if (cur >= peak) {
+          peak = cur;
+        } else {
+          peak = Math.max(cur, peak - 0.007); // Rơi từ từ với quán tính mượt
+        }
+        peakHoldRef.current[i] = peak;
+      }
+
+      // 1. Màu nền xanh đậm Navy chuẩn phòng thu âm thanh
       ctx.fillStyle = '#0B1D3A';
       ctx.fillRect(0, 0, w, h);
 
-      // 2. Dải các vạch sóng tần số dạng line thanh mảnh (mọc từ đáy lên)
-      const barWidth = 1.6;
-      const step = 3.2;
-      const totalBars = historyRef.current.length;
-      const barsStartX = w - totalBars * step;
+      // Subtle ambient horizontal gradations
+      ctx.fillStyle = 'rgba(2, 132, 199, 0.04)';
+      ctx.fillRect(0, h * 0.45, w, h * 0.55);
 
-      const isRec = micState === 'recording';
-      ctx.fillStyle = isRec ? '#00A8E8' : '#0284C7';
+      // 2. Đường chuẩn dB phụ (-12dB) ở tầm cao ~38%
+      const upperLineY = Math.round(h * 0.38);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, upperLineY);
+      ctx.lineTo(w, upperLineY);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
-      for (let i = 0; i < totalBars; i++) {
-        const x = barsStartX + i * step;
-        if (x < -barWidth || x > w) continue;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.font = '8px monospace';
+      ctx.fillText('-12dB', 4, upperLineY - 2);
 
-        const val = historyRef.current[i];
-        const barHeight = Math.max(4, Math.min(h * 0.9, val * h));
-        const y = h - barHeight;
-
-        ctx.fillRect(x, y, barWidth, barHeight);
-      }
-
-      // 3. Đường chuẩn ngang màu trắng mờ (nằm ở ~32% tính từ đáy lên)
+      // 3. Đường chuẩn ngang chính (Baseline) ở ~68% chiều cao
       const baselineY = Math.round(h * 0.68);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.38)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, baselineY);
       ctx.lineTo(w, baselineY);
       ctx.stroke();
 
-      // 4. Vạch trỏ thời gian Playhead màu vàng kim (nằm ở khoảng ~78% chiều ngang giống ảnh mẫu)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.font = '8px monospace';
+      ctx.fillText('0dB', 4, baselineY - 2);
+
+      // 4. Dải các vạch sóng tần số dạng line thanh mảnh với Gradient chuyển sắc
+      const barWidth = 1.6;
+      const step = 3.2;
+      const totalBars = historyRef.current.length;
+      const barsStartX = w - totalBars * step;
+      const isRec = micState === 'recording';
+
+      // Bar gradient
+      const barGrad = ctx.createLinearGradient(0, h, 0, 0);
+      barGrad.addColorStop(0, '#0369A1');
+      barGrad.addColorStop(0.5, '#00A8E8');
+      barGrad.addColorStop(1, isRec ? '#38BDF8' : '#00C8FF');
+
+      const points: { x: number; y: number }[] = [];
+
+      for (let i = 0; i < totalBars; i++) {
+        const x = barsStartX + i * step;
+        if (x < -barWidth || x > w) continue;
+
+        const val = historyRef.current[i];
+        const barHeight = Math.max(5, Math.min(h * 0.92, val * h));
+        const y = h - barHeight;
+
+        ctx.fillStyle = barGrad;
+        ctx.fillRect(x, y, barWidth, barHeight);
+
+        points.push({ x: x + barWidth / 2, y });
+
+        // Vạch đỉnh rơi chậm (Peak Hold Cap)
+        const peakVal = peakHoldRef.current[i] || val;
+        const peakY = h - Math.max(5, Math.min(h * 0.92, peakVal * h)) - 1.5;
+        ctx.fillStyle = isRec ? '#FFFFFF' : '#BAE6FD';
+        ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.2);
+      }
+
+      // 5. Đường bao sóng phát sáng (Glow Crest Curve) chạy trên đầu các vạch sóng
+      if (points.length > 2) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.strokeStyle = isRec ? 'rgba(56, 189, 248, 0.5)' : 'rgba(56, 189, 248, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // 6. Vạch trỏ thời gian Playhead màu vàng kim rực rỡ (tại vị trí ~78%)
       const playheadX = Math.round(w * 0.78);
-      ctx.strokeStyle = '#F59E0B'; // Vàng kim rực rỡ
+
+      // Vệt hào quang vàng kim dọc thân kim
+      const playheadGlow = ctx.createLinearGradient(playheadX - 6, 0, playheadX + 6, 0);
+      playheadGlow.addColorStop(0, 'rgba(245, 158, 11, 0)');
+      playheadGlow.addColorStop(0.5, isRec ? 'rgba(245, 158, 11, 0.25)' : 'rgba(245, 158, 11, 0.12)');
+      playheadGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      ctx.fillStyle = playheadGlow;
+      ctx.fillRect(playheadX - 6, 0, 12, h);
+
+      // Thân kim vàng
+      ctx.strokeStyle = '#F59E0B';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(playheadX, 0);
       ctx.lineTo(playheadX, h);
       ctx.stroke();
+
+      // Đầu con trỏ kim hình viên ngọc tam giác vàng ở đỉnh
+      ctx.fillStyle = '#F59E0B';
+      ctx.beginPath();
+      ctx.moveTo(playheadX - 4, 0);
+      ctx.lineTo(playheadX + 4, 0);
+      ctx.lineTo(playheadX, 6);
+      ctx.closePath();
+      ctx.fill();
 
       ctx.restore();
       animFrameId.current = requestAnimationFrame(render);
@@ -375,7 +470,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   }, [micState, audioVolumeLevel, analyserRef]);
 
   return (
-    <div className="relative h-16 w-full rounded-lg overflow-hidden border border-sky-600/30 shadow-inner bg-[#0B1D3A]">
+    <div className="relative h-44 sm:h-52 w-full rounded-xl overflow-hidden border border-sky-600/40 shadow-md shadow-sky-950/20 bg-[#0B1D3A]">
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
@@ -2092,12 +2187,12 @@ export const SpeechToTextModule: React.FC = () => {
             </div>
 
             {/* CARD 3: BRAND NEW HIGH-TECH LIVE AUDIO WAVE VISUALIZER & AI TELEMETRY */}
-            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2.5 relative overflow-hidden backdrop-blur-md transition-all">
+            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3 relative overflow-hidden backdrop-blur-md transition-all flex-1 flex flex-col justify-between">
               {/* Ambient Glow */}
-              <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 rounded-full blur-2xl pointer-events-none" />
 
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                 <div className="flex items-center gap-1.5 text-xs font-black text-[#00A8E8] dark:text-[#38BDF8] uppercase tracking-wider">
                   <Activity className="w-3.5 h-3.5 text-[#00A8E8] animate-pulse" />
                   <span>Phổ Sóng AI</span>
@@ -2108,7 +2203,7 @@ export const SpeechToTextModule: React.FC = () => {
                 </span>
               </div>
 
-              {/* Clean DAW Timeline Line Waveform */}
+              {/* Clean DAW Timeline Line Waveform (Expanded Height & Dynamic Motion) */}
               <AiAudioTrackWaveform
                 micState={micState}
                 audioVolumeLevel={audioVolumeLevel}
@@ -2117,30 +2212,55 @@ export const SpeechToTextModule: React.FC = () => {
               />
 
               {/* Telemetry Metrics */}
-              <div className="grid grid-cols-2 gap-1.5 pt-0.5 text-[10px]">
+              <div className="grid grid-cols-2 gap-2 pt-0.5 text-[10px]">
                 {/* Metric 1: Pitch Frequency */}
-                <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col">
-                  <span className="text-slate-500 dark:text-slate-400 font-medium">Tần số (Hz)</span>
-                  <span className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] text-xs">
+                <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+                  <span className="text-slate-500 dark:text-slate-400 font-semibold">Tần số (Hz)</span>
+                  <span className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] text-sm mt-0.5">
                     {livePitchHz ? `${Math.round(livePitchHz)} Hz` : micState === 'recording' ? 'Đang đo...' : '-- Hz'}
                   </span>
                 </div>
 
                 {/* Metric 2: Volume Level Meter */}
-                <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col">
+                <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 dark:text-slate-400 font-medium">Âm lượng</span>
-                    <span className="font-extrabold text-slate-700 dark:text-slate-200">
+                    <span className="text-slate-500 dark:text-slate-400 font-semibold">Âm lượng</span>
+                    <span className="font-extrabold text-slate-700 dark:text-slate-200 text-xs">
                       {micState === 'recording' ? `${audioVolumeLevel}%` : '0%'}
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-1 overflow-hidden">
+                  <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full mt-1.5 overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-emerald-500 via-sky-500 to-[#00A8E8] rounded-full transition-all duration-150"
                       style={{ width: `${micState === 'recording' ? audioVolumeLevel : 0}%` }}
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Audio Signal Status Bar */}
+              <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/40 text-[10px]">
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Trạng thái tín hiệu</span>
+                <span className="font-bold flex items-center gap-1">
+                  {micState === 'recording' ? (
+                    audioVolumeLevel > 8 ? (
+                      <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-extrabold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Đang nói
+                      </span>
+                    ) : (
+                      <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1 font-extrabold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                        Khoảng lặng
+                      </span>
+                    )
+                  ) : (
+                    <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1 font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                      Sẵn sàng
+                    </span>
+                  )}
+                </span>
               </div>
             </div>
 
