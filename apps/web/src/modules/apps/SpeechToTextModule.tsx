@@ -337,24 +337,16 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
       // 1. Màu nền trắng thanh lịch, hiện đại theo yêu cầu
       ctx.fillStyle = '#FFFFFF';
+      // 1. Nền trắng thanh lịch, sạch sẽ tuyệt đối
+      ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, w, h);
-
-      // Lưới đường đo tần số mờ nhẹ công nghệ cao
-      ctx.strokeStyle = 'rgba(226, 232, 240, 0.6)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 4]);
-      [0.25, 0.5, 0.75].forEach(ratio => {
-        ctx.beginPath();
-        ctx.moveTo(0, h * ratio);
-        ctx.lineTo(w, h * ratio);
-        ctx.stroke();
-      });
-      ctx.setLineDash([]);
 
       const total = historyRef.current.length;
       const points: { x: number; y: number }[] = [];
       const pointsBack: { x: number; y: number }[] = [];
       const isRec = micState === 'recording';
+      let minY = h;
+      let minYBack = h;
 
       for (let i = 0; i < total; i++) {
         const x = (i / (total - 1)) * w;
@@ -366,6 +358,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         const val = Math.max(0.06, Math.min(0.96, baseVal + undulationWave));
         const waveHeight = Math.max(8, Math.min(h * 0.94, val * h));
         const y = h - waveHeight;
+        if (y < minY) minY = y;
         points.push({ x, y });
 
         // 2. Sóng phụ đa tầng phía sau (Layer 2 Background Depth Wave Area)
@@ -374,6 +367,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         const valBack = Math.max(0.04, Math.min(0.90, (baseVal * 0.85) + undulationBack));
         const waveHeightBack = Math.max(6, Math.min(h * 0.88, valBack * h));
         const yBack = h - waveHeightBack;
+        if (yBack < minYBack) minYBack = yBack;
         pointsBack.push({ x, y: yBack });
       }
 
@@ -388,7 +382,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
       };
 
-      // A. MẢNG MÀU PHỤ PHÍA SAU (Background Soft Glow Area)
+      // A. MẢNG MÀU PHỤ PHÍA SAU (Background Wave Area - Không viền)
       if (pointsBack.length > 2) {
         ctx.save();
         ctx.beginPath();
@@ -397,29 +391,23 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         ctx.lineTo(0, h);
         ctx.closePath();
 
-        const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+        const bgGrad = ctx.createLinearGradient(0, minYBack, 0, h);
         if (isRec) {
-          bgGrad.addColorStop(0, 'rgba(245, 158, 11, 0.42)');  // Hổ phách ấm
-          bgGrad.addColorStop(0.45, 'rgba(0, 168, 232, 0.35)'); // AVG Cyan
-          bgGrad.addColorStop(1, 'rgba(2, 132, 199, 0.12)');   // Ocean Blue
+          bgGrad.addColorStop(0, 'rgba(249, 115, 22, 0.45)');  // Cam ấm mềm
+          bgGrad.addColorStop(0.35, 'rgba(245, 158, 11, 0.35)'); // Vàng hổ phách
+          bgGrad.addColorStop(0.65, 'rgba(0, 168, 232, 0.28)'); // AVG Cyan
+          bgGrad.addColorStop(1, 'rgba(2, 132, 199, 0.10)');   // Ocean Blue
         } else {
           bgGrad.addColorStop(0, 'rgba(245, 158, 11, 0.28)');
-          bgGrad.addColorStop(0.5, 'rgba(2, 132, 199, 0.20)');
-          bgGrad.addColorStop(1, 'rgba(3, 105, 161, 0.06)');
+          bgGrad.addColorStop(0.5, 'rgba(2, 132, 199, 0.18)');
+          bgGrad.addColorStop(1, 'rgba(3, 105, 161, 0.05)');
         }
         ctx.fillStyle = bgGrad;
         ctx.fill();
-
-        // Đường viền crest lớp sau
-        ctx.beginPath();
-        drawSpline(pointsBack);
-        ctx.strokeStyle = isRec ? 'rgba(249, 115, 22, 0.55)' : 'rgba(0, 168, 232, 0.40)';
-        ctx.lineWidth = 1.6;
-        ctx.stroke();
         ctx.restore();
       }
 
-      // B. MẢNG MÀU CHÍNH PHÍA TRƯỚC (Hero Solid Gradient Wave Area)
+      // B. MẢNG MÀU CHÍNH PHÍA TRƯỚC (Hero Wave Area - Không viền, Gradient Cam trên - Xanh dưới mượt mà)
       if (points.length > 2) {
         ctx.save();
         ctx.beginPath();
@@ -428,40 +416,26 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         ctx.lineTo(0, h);
         ctx.closePath();
 
-        // Mảng màu Gradient Cam ở trên - Xanh ở dưới chuẩn xác, đậm đà, liền khối
-        const heroGrad = ctx.createLinearGradient(0, 0, 0, h);
+        // Mảng màu Gradient từ đỉnh ngọn (minY) xuống đáy chân (h)
+        const heroGrad = ctx.createLinearGradient(0, minY, 0, h);
         if (isRec) {
-          heroGrad.addColorStop(0, 'rgba(234, 88, 12, 0.94)');   // Cam đậm rực rỡ ở đỉnh
-          heroGrad.addColorStop(0.20, 'rgba(249, 115, 22, 0.92)'); // Cam tươi
-          heroGrad.addColorStop(0.46, 'rgba(245, 158, 11, 0.90)'); // Vàng cam ấm áp (Amber)
-          heroGrad.addColorStop(0.70, 'rgba(0, 168, 232, 0.92)');  // AVG Cyan
-          heroGrad.addColorStop(1, 'rgba(2, 132, 199, 0.98)');    // Deep Ocean Blue ở đáy
+          heroGrad.addColorStop(0, '#EA580C');                  // Cam đậm rực rỡ ở đỉnh
+          heroGrad.addColorStop(0.18, '#F97316');               // Cam tươi
+          heroGrad.addColorStop(0.42, '#F59E0B');               // Vàng cam hổ phách
+          heroGrad.addColorStop(0.70, '#00A8E8');               // AVG Cyan tươi sáng
+          heroGrad.addColorStop(1, '#0284C7');                  // Ocean Blue sâu ở đáy
         } else {
-          heroGrad.addColorStop(0, 'rgba(249, 115, 22, 0.88)');
-          heroGrad.addColorStop(0.26, 'rgba(245, 158, 11, 0.85)');
-          heroGrad.addColorStop(0.65, 'rgba(2, 132, 199, 0.90)');
-          heroGrad.addColorStop(1, 'rgba(3, 105, 161, 0.96)');
+          heroGrad.addColorStop(0, '#F97316');
+          heroGrad.addColorStop(0.24, '#F59E0B');
+          heroGrad.addColorStop(0.65, '#0284C7');
+          heroGrad.addColorStop(1, '#0369A1');
         }
         ctx.fillStyle = heroGrad;
         ctx.fill();
 
-        // C. Đường viền phản quang phát sáng trên đỉnh mảng màu (Glowing Crest Curve)
-        ctx.beginPath();
-        drawSpline(points);
-        const crestGrad = ctx.createLinearGradient(0, 0, w, 0);
-        crestGrad.addColorStop(0, '#FDE68A');
-        crestGrad.addColorStop(0.35, '#F97316');
-        crestGrad.addColorStop(1, '#EA580C');
-
-        ctx.strokeStyle = crestGrad;
-        ctx.lineWidth = 2.6;
-        ctx.shadowColor = 'rgba(249, 115, 22, 0.7)';
-        ctx.shadowBlur = 10;
-        ctx.stroke();
-
-        // D. Lớp vệt sáng bóng gương (Gloss Sheen) trên bề mặt mảng màu
-        const glossGrad = ctx.createLinearGradient(0, 0, 0, h * 0.4);
-        glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
+        // Lớp vệt sáng bóng nhẹ trên bề mặt mảng màu (Không dùng nét viền)
+        const glossGrad = ctx.createLinearGradient(0, minY, 0, minY + (h - minY) * 0.45);
+        glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
         glossGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
         ctx.fillStyle = glossGrad;
         ctx.fill();
@@ -484,7 +458,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   }, [micState, audioVolumeLevel, analyserRef, isExpanded]);
 
   return (
-    <div className={className || "relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white transition-all"}>
+    <div className={className || "relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-white shadow-2xs transition-all"}>
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
@@ -2292,7 +2266,7 @@ export const SpeechToTextModule: React.FC = () => {
                   audioVolumeLevel={audioVolumeLevel}
                   livePitchHz={livePitchHz}
                   analyserRef={analyserRef}
-                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white transition-all"
+                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-white shadow-2xs transition-all"
                 />
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 pointer-events-none backdrop-blur-xs shadow-xs">
                   <Maximize2 className="w-3 h-3 stroke-[2.5]" />
@@ -3477,7 +3451,7 @@ export const SpeechToTextModule: React.FC = () => {
                 livePitchHz={livePitchHz}
                 analyserRef={analyserRef}
                 isExpanded={true}
-                className="relative h-full min-h-[280px] sm:min-h-[380px] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-md bg-white"
+                className="relative h-full min-h-[280px] sm:min-h-[380px] w-full rounded-2xl overflow-hidden bg-white shadow-md"
               />
             </div>
 
