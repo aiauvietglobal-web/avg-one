@@ -410,8 +410,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
             <div className="w-fit mx-auto space-y-2 sm:space-y-2.5 py-0.5 flex flex-col items-center text-center relative">
               
-              {/* Ambient Glowing Backdrop */}
-              <div className="absolute -inset-6 bg-gradient-to-r from-sky-400/10 via-amber-400/5 to-orange-400/10 rounded-3xl blur-2xl pointer-events-none -z-10" />
 
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
@@ -500,7 +498,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     />
                   </svg>
 
-                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-md text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
+                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
                     <span className="font-mono text-slate-400 opacity-60">⟨</span>
                     <span>One Platform</span>
                     <span className="animate-hero-dot-1 w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
