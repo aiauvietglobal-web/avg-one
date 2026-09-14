@@ -66,80 +66,80 @@ export const CORE_APP_MODULES = [
     name: 'Ứng Dụng',
     icon: Cpu,
     iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800 shadow-2xs'
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'hr' as AppModuleId,
     name: 'Nhân Sự',
     icon: Users,
-    iconColor: 'text-blue-600 dark:text-blue-300',
-    bgColor: 'bg-blue-50 dark:bg-blue-950/80 border-blue-200 dark:border-blue-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'legal' as AppModuleId,
     name: 'Pháp Lý',
     icon: Scale,
-    iconColor: 'text-indigo-600 dark:text-indigo-300',
-    bgColor: 'bg-indigo-50 dark:bg-indigo-950/80 border-indigo-200 dark:border-indigo-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'finance' as AppModuleId,
     name: 'Tài Chính',
     icon: Coins,
-    iconColor: 'text-emerald-600 dark:text-emerald-300',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-200 dark:border-emerald-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'rd' as AppModuleId,
     name: 'Nghiên Cứu & Sáng Tạo',
     icon: Sparkles,
-    iconColor: 'text-[#F15A24] dark:text-orange-300',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/80 border-orange-200 dark:border-orange-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
+  },
+  {
+    id: 'profile9' as AppModuleId,
+    name: 'Hồ Sơ Năng Lực',
+    icon: Award,
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   }
 ];
 
 export const EXPANDED_APP_MODULES = [
   {
     id: 'infra22' as AppModuleId,
-    name: 'Hạ tầng 2.2',
+    name: 'Hạ Tầng 2.2',
     icon: Server,
-    iconColor: 'text-cyan-600 dark:text-cyan-300',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-950/80 border-cyan-200 dark:border-cyan-800 shadow-2xs'
-  },
-  {
-    id: 'cluster51' as AppModuleId,
-    name: 'Cụm 5.1',
-    icon: Workflow,
-    iconColor: 'text-blue-600 dark:text-blue-300',
-    bgColor: 'bg-blue-50 dark:bg-blue-950/80 border-blue-200 dark:border-blue-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'security' as AppModuleId,
-    name: 'Bảo mật',
+    name: 'Bảo Mật',
     icon: ShieldCheck,
-    iconColor: 'text-rose-600 dark:text-rose-300',
-    bgColor: 'bg-rose-50 dark:bg-rose-950/80 border-rose-200 dark:border-rose-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'traffic8' as AppModuleId,
     name: 'Thông',
     icon: Zap,
-    iconColor: 'text-amber-600 dark:text-amber-300',
-    bgColor: 'bg-amber-50 dark:bg-amber-950/80 border-amber-200 dark:border-amber-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
-    id: 'profile9' as AppModuleId,
-    name: 'Hồ sơ năng lực',
-    icon: Award,
-    iconColor: 'text-teal-600 dark:text-teal-300',
-    bgColor: 'bg-teal-50 dark:bg-teal-950/80 border-teal-200 dark:border-teal-800 shadow-2xs'
+    id: 'cluster51' as AppModuleId,
+    name: 'Cụm 5.1',
+    icon: Workflow,
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   },
   {
     id: 'clusterK' as AppModuleId,
     name: 'Cụm #K',
     icon: Layers,
-    iconColor: 'text-purple-600 dark:text-purple-300',
-    bgColor: 'bg-purple-50 dark:bg-purple-950/80 border-purple-200 dark:border-purple-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/90 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   }
 ];
 
@@ -530,8 +530,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
         </div>
 
-        {/* Centered Odoo App Grid (Hàng 1: 5 Hộp Phân Hệ Doanh Nghiệp Cốt Lõi) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-2">
+        {/* Centered Odoo App Grid (Hàng 1: 6 Hộp Phân Hệ Doanh Nghiệp & Nghiệp Vụ Cốt Lõi) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-2">
           {CORE_APP_MODULES.map((app, idx) => {
             const Icon = app.icon;
             return (
@@ -541,12 +541,12 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 tabIndex={0}
                 onClick={() => onSelectModule(app.id)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectModule(app.id); }}
-                style={{ borderRadius: '28px', animationDelay: `${(idx + 1) * 80 + 150}ms` }}
+                style={{ borderRadius: '28px', animationDelay: `${(idx + 1) * 70 + 120}ms` }}
                 className="group flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] bg-gradient-to-b from-[#BAE6FD] via-[#E2F2FE]/70 to-white dark:from-sky-950/60 dark:via-slate-900/80 dark:to-slate-950 rounded-[28px] border-2 border-[#7DD3FC] dark:border-sky-800/80 hover:border-[#0284C7] dark:hover:border-sky-400 hover:from-[#A5DBFE] hover:via-[#D6EEFE] hover:to-white dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-400/25 cursor-pointer select-none animate-entrance-up"
               >
-                {/* App Colorful Icon */}
+                {/* App Unified Blue Icon Badge */}
                 <div className={`w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-xl ${app.bgColor} border flex items-center justify-center mb-1 group-hover:scale-105 transition-transform shrink-0`}>
-                  <Icon className={`w-5 h-5 ${app.iconColor}`} />
+                  <Icon className="w-5 h-5 text-[#0284C7] dark:text-sky-300 stroke-[2.2]" />
                 </div>
                 
                 {/* App Title */}
@@ -558,8 +558,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           })}
         </div>
 
-        {/* Centered Odoo App Grid (Hàng 2: 6 Hộp Phân Hệ Hạ Tầng & Đầu Mối Tác Nghiệp Độc Lập) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-1.5">
+        {/* Centered Odoo App Grid (Hàng 2: 5 Hộp Phân Hệ Hạ Tầng & Cụm Tác Nghiệp - Căn Giữa Cùng Kích Thước) */}
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-1.5">
           {EXPANDED_APP_MODULES.map((app, idx) => {
             const Icon = app.icon;
             return (
@@ -569,12 +569,12 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 tabIndex={0}
                 onClick={() => onSelectModule(app.id)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectModule(app.id); }}
-                style={{ borderRadius: '28px', animationDelay: `${(idx + 6) * 80 + 150}ms` }}
-                className="group flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] bg-gradient-to-b from-[#BAE6FD] via-[#E2F2FE]/70 to-white dark:from-sky-950/60 dark:via-slate-900/80 dark:to-slate-950 rounded-[28px] border-2 border-[#7DD3FC] dark:border-sky-800/80 hover:border-[#0284C7] dark:hover:border-sky-400 hover:from-[#A5DBFE] hover:via-[#D6EEFE] hover:to-white dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-400/25 cursor-pointer select-none animate-entrance-up"
+                style={{ borderRadius: '28px', animationDelay: `${(idx + 7) * 70 + 120}ms` }}
+                className="group flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc((100%-80px)/6)] bg-gradient-to-b from-[#BAE6FD] via-[#E2F2FE]/70 to-white dark:from-sky-950/60 dark:via-slate-900/80 dark:to-slate-950 rounded-[28px] border-2 border-[#7DD3FC] dark:border-sky-800/80 hover:border-[#0284C7] dark:hover:border-sky-400 hover:from-[#A5DBFE] hover:via-[#D6EEFE] hover:to-white dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-400/25 cursor-pointer select-none animate-entrance-up shrink-0"
               >
-                {/* App Colorful Icon */}
+                {/* App Unified Blue Icon Badge */}
                 <div className={`w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-xl ${app.bgColor} border flex items-center justify-center mb-1 group-hover:scale-105 transition-transform shrink-0`}>
-                  <Icon className={`w-5 h-5 ${app.iconColor}`} />
+                  <Icon className="w-5 h-5 text-[#0284C7] dark:text-sky-300 stroke-[2.2]" />
                 </div>
                 
                 {/* App Title */}
