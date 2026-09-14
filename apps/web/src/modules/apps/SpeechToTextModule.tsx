@@ -849,7 +849,7 @@ export const SpeechToTextModule: React.FC = () => {
       if (isMobileEnv || !navigator.mediaDevices?.getUserMedia) return;
 
       // Nhường quyền ưu tiên cho Web Speech Recognition khởi động micro trước (tránh xung đột driver trên Windows)
-      await new Promise(r => setTimeout(r, 250));
+      await new Promise(r => setTimeout(r, 450));
       if (micStateRef.current !== 'recording') return;
 
       const audioConstraints = {
@@ -1579,10 +1579,8 @@ export const SpeechToTextModule: React.FC = () => {
         let newFinalTranscript = '';
         let interimTranscriptText = '';
 
-        // Chuẩn W3C: Duyệt từ event.resultIndex để không bao giờ bị lệch vị trí hoặc bỏ sót kết quả
-        const startIndex = typeof event.resultIndex === 'number' ? event.resultIndex : 0;
-
-        for (let i = startIndex; i < event.results.length; ++i) {
+        // Quét kết quả trả về từ Chromium Speech Recognition với tracking chỉ mục chính xác
+        for (let i = 0; i < event.results.length; ++i) {
           const res = event.results[i];
           if (!res || !res[0]) continue;
 
@@ -1599,7 +1597,10 @@ export const SpeechToTextModule: React.FC = () => {
           }
 
           if (res.isFinal) {
-            newFinalTranscript += (newFinalTranscript ? ' ' : '') + bestText.trim();
+            if (i >= processedFinalIndexRef.current) {
+              newFinalTranscript += (newFinalTranscript ? ' ' : '') + bestText.trim();
+              processedFinalIndexRef.current = i + 1;
+            }
           } else {
             interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText.trim();
           }
@@ -1715,10 +1716,24 @@ export const SpeechToTextModule: React.FC = () => {
       const attemptStart = (retriesLeft: number, delayMs: number) => {
         if (micStateRef.current !== 'recording') return;
         try {
-          if (!recognitionRef.current) {
-            recognitionRef.current = createSpeechRecognitionInstance();
+          // Always safely stop and clear listeners of previous instance
+          if (recognitionRef.current) {
+            try {
+              recognitionRef.current.onend = null;
+              recognitionRef.current.onerror = null;
+              recognitionRef.current.onresult = null;
+              recognitionRef.current.stop();
+            } catch (e) {}
+            recognitionRef.current = null;
           }
-          recognitionRef.current?.start();
+          processedFinalIndexRef.current = 0;
+          const freshRec = createSpeechRecognitionInstance();
+          if (!freshRec) {
+            console.warn('SpeechRecognition not supported in browser environment');
+            return;
+          }
+          recognitionRef.current = freshRec;
+          freshRec.start();
           setIsListening(true);
           isListeningRef.current = true;
         } catch (err: any) {
@@ -1729,10 +1744,6 @@ export const SpeechToTextModule: React.FC = () => {
           }
           console.warn(`Speech recognition restart attempt (${retriesLeft} retries remaining):`, err);
           if (retriesLeft > 0) {
-            try {
-              recognitionRef.current?.stop();
-            } catch (e) {}
-            recognitionRef.current = createSpeechRecognitionInstance();
             setTimeout(() => attemptStart(retriesLeft - 1, Math.min(600, Math.round(delayMs * 1.2))), delayMs);
           }
         }
@@ -1750,30 +1761,21 @@ export const SpeechToTextModule: React.FC = () => {
           restartSpeechEngine();
           return;
         }
-        try {
-          recognitionRef.current.start();
-          setIsListening(true);
-          isListeningRef.current = true;
-        } catch (e: any) {
-          // If already started (normal state), ignore error
-        }
       }
     }, 3000);
 
     return () => clearInterval(watchdogInterval);
   }, [restartSpeechEngine]);
 
-  // Initialize Web Speech Recognition with Zero-Delay & High-Accuracy Voice Capture
+  // Check Web Speech Recognition support on mount and cleanup on unmount
   useEffect(() => {
-    const recognition = createSpeechRecognitionInstance();
-    if (!recognition) {
+    const SpeechRecognitionObj = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionObj) {
       setSpeechSupported(false);
       setRecognitionError('Trình duyệt của bạn chưa hỗ trợ trực tiếp Web Speech API. Bạn có thể sử dụng chế độ Nhập liệu Giả lập bên dưới.');
-      return;
+    } else {
+      setSpeechSupported(true);
     }
-
-    setSpeechSupported(true);
-    recognitionRef.current = recognition;
 
     return () => {
       if (restartTimeoutRef.current) {
@@ -1784,11 +1786,15 @@ export const SpeechToTextModule: React.FC = () => {
       }
       if (recognitionRef.current) {
         try {
+          recognitionRef.current.onend = null;
+          recognitionRef.current.onerror = null;
+          recognitionRef.current.onresult = null;
           recognitionRef.current.stop();
         } catch (e) {}
+        recognitionRef.current = null;
       }
     };
-  }, [createSpeechRecognitionInstance]);
+  }, []);
 
   // 3-State Toggle Listening Handler (Green = Bắt đầu | Red = Đang thu âm [Tạm dừng] | Yellow = Tạm dừng [Tiếp tục])
   const toggleListening = async () => {
@@ -1796,9 +1802,11 @@ export const SpeechToTextModule: React.FC = () => {
     const isHTTP = window.location.protocol === 'http:' && window.location.hostname !== 'localhost';
 
     if (micState === 'idle') {
-      // 1. Actively request microphone permission first
-      const hasPerm = await requestMicPermission();
-      if (!hasPerm) return;
+      // 1. Actively request microphone permission if not yet granted
+      if (micPermissionStatus !== 'granted') {
+        const hasPerm = await requestMicPermission();
+        if (!hasPerm) return;
+      }
 
       // 2. Transition from IDLE (Green) -> RECORDING (Red)
       setIsListening(true);
@@ -1819,8 +1827,19 @@ export const SpeechToTextModule: React.FC = () => {
       try {
         setRecognitionError(null);
         if (recognitionRef.current) {
-          recognitionRef.current.lang = currentLanguage;
-          recognitionRef.current.start();
+          try {
+            recognitionRef.current.onend = null;
+            recognitionRef.current.onerror = null;
+            recognitionRef.current.onresult = null;
+            recognitionRef.current.stop();
+          } catch (e) {}
+          recognitionRef.current = null;
+        }
+        processedFinalIndexRef.current = 0;
+        const freshRec = createSpeechRecognitionInstance();
+        if (freshRec) {
+          recognitionRef.current = freshRec;
+          freshRec.start();
         } else {
           startMediaRecorderFallback();
         }
@@ -1852,7 +1871,11 @@ export const SpeechToTextModule: React.FC = () => {
 
       try {
         if (recognitionRef.current) {
+          recognitionRef.current.onend = null;
+          recognitionRef.current.onerror = null;
+          recognitionRef.current.onresult = null;
           recognitionRef.current.stop();
+          recognitionRef.current = null;
         }
       } catch (e) {}
       stopMediaRecorderFallback();
@@ -1875,8 +1898,19 @@ export const SpeechToTextModule: React.FC = () => {
       try {
         setRecognitionError(null);
         if (recognitionRef.current) {
-          recognitionRef.current.lang = currentLanguage;
-          recognitionRef.current.start();
+          try {
+            recognitionRef.current.onend = null;
+            recognitionRef.current.onerror = null;
+            recognitionRef.current.onresult = null;
+            recognitionRef.current.stop();
+          } catch (e) {}
+          recognitionRef.current = null;
+        }
+        processedFinalIndexRef.current = 0;
+        const freshRec = createSpeechRecognitionInstance();
+        if (freshRec) {
+          recognitionRef.current = freshRec;
+          freshRec.start();
         } else {
           startMediaRecorderFallback();
         }
@@ -2355,7 +2389,13 @@ export const SpeechToTextModule: React.FC = () => {
                               lastInterimRef.current = '';
                             }
                             if (recognitionRef.current) {
-                              try { recognitionRef.current.stop(); } catch (e) {}
+                              try {
+                                recognitionRef.current.onend = null;
+                                recognitionRef.current.onerror = null;
+                                recognitionRef.current.onresult = null;
+                                recognitionRef.current.stop();
+                              } catch (e) {}
+                              recognitionRef.current = null;
                             }
                             setIsListening(false);
                             isListeningRef.current = false;
@@ -2402,7 +2442,13 @@ export const SpeechToTextModule: React.FC = () => {
                               lastInterimRef.current = '';
                             }
                             if (recognitionRef.current) {
-                              try { recognitionRef.current.stop(); } catch (e) {}
+                              try {
+                                recognitionRef.current.onend = null;
+                                recognitionRef.current.onerror = null;
+                                recognitionRef.current.onresult = null;
+                                recognitionRef.current.stop();
+                              } catch (e) {}
+                              recognitionRef.current = null;
                             }
                             setIsListening(false);
                             isListeningRef.current = false;
