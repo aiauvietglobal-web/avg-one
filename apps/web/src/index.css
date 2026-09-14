@@ -3179,3 +3179,49 @@ div.box-speech-bubble {
 .glow-orange {
   animation: pulse-glow-orange 2s ease-in-out infinite;
 }
+
+/* Hiệu ứng chuyển động lấp lánh (Shimmer Wave) cho cụm chữ Hội Thoại Trực Tiếp */
+@keyframes text-gradient-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-shimmer-text {
+  background: linear-gradient(90deg, #0284C7 0%, #00A8E8 25%, #38BDF8 50%, #00A8E8 75%, #0284C7 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-gradient-shimmer 4s ease-in-out infinite;
+}
+
+[data-theme="dark"] .animate-shimmer-text {
+  background: linear-gradient(90deg, #38BDF8 0%, #7DD3FC 25%, #E0F2FE 50%, #38BDF8 75%, #0284C7 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-gradient-shimmer 4s ease-in-out infinite;
+}
+
+/* Hiệu ứng sóng lan tỏa dịu mắt cho Badge Icon Tin Nhắn */
+@keyframes icon-soft-breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 168, 232, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 2px rgba(0, 168, 232, 0.35);
+  }
+}
+
+.animate-icon-breathe {
+  animation: icon-soft-breathe 3s ease-in-out infinite;
+}
+

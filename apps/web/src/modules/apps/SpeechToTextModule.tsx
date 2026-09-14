@@ -2376,13 +2376,13 @@ export const SpeechToTextModule: React.FC = () => {
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-sky-50/40 to-blue-50/60 dark:from-slate-800 dark:via-slate-800/80 dark:to-slate-850 border border-sky-200/70 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo */}
+                  {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo với hiệu ứng Shimmer & Pulse Glow */}
                   <div className="flex items-center gap-2.5 shrink-0 h-8.5">
-                    <div className="w-7 h-7 rounded-lg bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/25 shrink-0 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/30 shrink-0 shadow-2xs animate-icon-breathe transition-all">
                       <MessageSquare className="w-4 h-4 text-[#00A8E8] dark:text-[#38BDF8] stroke-[2.5]" />
                     </div>
-                    <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100 flex items-center gap-2 shrink-0 leading-none">
-                      <span>Hội Thoại Trực Tiếp</span>
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider flex items-center gap-2 shrink-0 leading-none">
+                      <span className="animate-shimmer-text select-none drop-shadow-2xs">Hội Thoại Trực Tiếp</span>
                     </h2>
                   </div>
 
