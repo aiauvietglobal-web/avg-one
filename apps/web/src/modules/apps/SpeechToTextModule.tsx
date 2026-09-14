@@ -2370,26 +2370,26 @@ export const SpeechToTextModule: React.FC = () => {
           <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
             
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW) */}
-            <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border-2 border-[#00A8E8]/30 dark:border-[#00A8E8]/40 shadow-lg shadow-[#00A8E8]/5 backdrop-blur-2xl p-4 sm:p-5 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
+            <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border-2 border-[#00A8E8]/30 dark:border-[#00A8E8]/40 shadow-lg shadow-[#00A8E8]/5 backdrop-blur-2xl pt-3.5 pb-4 px-4 sm:pt-3.5 sm:pb-5 sm:px-5 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
               
               {/* Speaker Filter Badges Bar & Top Actions */}
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0">
                 <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Tiêu đề Hộp Thoại */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 shrink-0">
-                      <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-[#00A8E8] stroke-[2.5]" />
+                  {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo với cụm nút bên phải */}
+                  <div className="flex items-center gap-2 shrink-0 h-8.5">
+                    <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2 shrink-0 leading-none">
+                      <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-[#00A8E8] stroke-[2.5] shrink-0" />
                       <span className="text-slate-900 dark:text-white">Hội Thoại Trực Tiếp</span>
                     </h2>
                   </div>
 
-                  {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG */}
-                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto">
+                  {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ chiều cao h-8.5 để thẳng hàng tuyệt đối */}
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto h-8.5">
                     {/* Microphone Permission Action Button if Error/Denied */}
                     {(micPermissionStatus === 'denied' || recognitionError) && (
                       <button
                         onClick={requestMicPermission}
-                        className="px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-extrabold text-[11px] flex items-center gap-1 shadow-xs animate-pulse cursor-pointer shrink-0"
+                        className="h-8 px-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-extrabold text-[11px] flex items-center gap-1 shadow-xs animate-pulse cursor-pointer shrink-0 leading-none"
                         title="Bấm để kiểm tra và cấp quyền kết nối Micro"
                       >
                         <AlertCircle className="w-3.5 h-3.5" />
@@ -2401,7 +2401,7 @@ export const SpeechToTextModule: React.FC = () => {
                     {micState === 'idle' && (
                       <button
                         onClick={toggleListening}
-                        className="relative group overflow-hidden px-3.5 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-[0_0_20px_rgba(16,185,129,0.45)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0"
+                        className="relative group overflow-hidden h-8 px-3.5 sm:px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-[0_0_20px_rgba(16,185,129,0.45)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0 leading-none"
                         title="Bắt đầu thu âm và nhận diện giọng nói trực tiếp"
                       >
                         {/* Subtle shine sweep */}
@@ -2424,9 +2424,9 @@ export const SpeechToTextModule: React.FC = () => {
                     )}
 
                     {micState === 'recording' && (
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/80 rounded-xl text-xs text-red-600 dark:text-red-400 font-extrabold shadow-2xs">
-                          <span className="relative flex h-2.5 w-2.5">
+                      <div className="flex items-center gap-1.5 shrink-0 h-8.5">
+                        <div className="flex items-center gap-1.5 h-8 px-2.5 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/80 rounded-xl text-xs text-red-600 dark:text-red-400 font-extrabold shadow-2xs leading-none">
+                          <span className="relative flex h-2.5 w-2.5 shrink-0">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_8px_#ef4444]" />
                           </span>
@@ -2434,7 +2434,7 @@ export const SpeechToTextModule: React.FC = () => {
                         </div>
                         <button
                           onClick={toggleListening}
-                          className="text-xs font-black text-white bg-amber-500 hover:bg-amber-400 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0"
+                          className="h-8 text-xs font-black text-white bg-amber-500 hover:bg-amber-400 px-3 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                           title="Tạm dừng thu âm"
                         >
                           <Pause className="w-4 h-4 stroke-[2.5]" />
@@ -2470,7 +2470,7 @@ export const SpeechToTextModule: React.FC = () => {
                             setInterimTranscript('');
                             showToast('⏹️ Đã kết thúc phiên thu âm.');
                           }}
-                          className="text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0"
+                          className="h-8 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                           title="Kết thúc phiên thu âm"
                         >
                           <Square className="w-3.5 h-3.5 fill-current" />
@@ -2480,14 +2480,14 @@ export const SpeechToTextModule: React.FC = () => {
                     )}
 
                     {micState === 'paused' && (
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl text-xs text-amber-700 dark:text-amber-400 font-extrabold shadow-2xs">
-                          <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                      <div className="flex items-center gap-1.5 shrink-0 h-8.5">
+                        <div className="flex items-center gap-1.5 h-8 px-2.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl text-xs text-amber-700 dark:text-amber-400 font-extrabold shadow-2xs leading-none">
+                          <span className="h-2.5 w-2.5 rounded-full bg-amber-500 shrink-0" />
                           <span className="hidden sm:inline">Đang tạm dừng</span>
                         </div>
                         <button
                           onClick={toggleListening}
-                          className="text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0"
+                          className="h-8 text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                           title="Tiếp tục thu âm"
                         >
                           <Play className="w-4 h-4 stroke-[2.5] ml-0.5" />
@@ -2523,7 +2523,7 @@ export const SpeechToTextModule: React.FC = () => {
                             setInterimTranscript('');
                             showToast('⏹️ Đã kết thúc phiên thu âm.');
                           }}
-                          className="text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0"
+                          className="h-8 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                           title="Kết thúc phiên thu âm"
                         >
                           <Square className="w-3.5 h-3.5 fill-current" />
@@ -2535,7 +2535,7 @@ export const SpeechToTextModule: React.FC = () => {
                     {/* Nút TÙY CHỈNH TÍCH HỢP 1 ICON TRÊN MOBILE */}
                     <button
                       onClick={() => setIsMobileSettingsOpen(true)}
-                      className="lg:hidden text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
+                      className="lg:hidden h-8 text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                       title="Mở tất cả tùy chỉnh & cài đặt"
                     >
                       <SlidersHorizontal className="w-4 h-4 stroke-[2.5]" />
@@ -2545,7 +2545,7 @@ export const SpeechToTextModule: React.FC = () => {
                     {/* Nút MỚI */}
                     <button
                       onClick={handleCreateNewConversation}
-                      className="text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1.5 sm:py-2 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
+                      className="h-8 text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-3 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                       title="Tạo cuộc hội thoại mới"
                     >
                       <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -2555,7 +2555,7 @@ export const SpeechToTextModule: React.FC = () => {
                     {/* Nút Phóng to toàn màn hình */}
                     <button
                       onClick={() => setIsChatMaximized(true)}
-                      className="hidden sm:flex p-2 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
+                      className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
                       title="Mở rộng hộp thoại toàn màn hình"
                     >
                       <Maximize2 className="w-4 h-4 stroke-[2.5]" />
