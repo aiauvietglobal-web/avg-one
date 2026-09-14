@@ -1838,26 +1838,36 @@ export const SpeechToTextModule: React.FC = () => {
           <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
             
             {/* CARD 1: EXPLICIT 3-STATE VOICE CONTROL PANEL WITH DEDICATED PAUSE & STOP BUTTONS */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col items-center justify-center space-y-2.5">
+            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col items-center justify-center space-y-2.5 backdrop-blur-md transition-all">
               
-              {/* Status Header Badge */}
-              <div className="flex items-center gap-1.5 text-xs font-black">
-                <span
-                  className={`w-2.5 h-2.5 rounded-full transition-all ${
-                    micState === 'idle'
-                      ? 'bg-emerald-500'
-                      : micState === 'recording'
-                      ? 'bg-red-500 animate-ping'
-                      : 'bg-amber-500'
-                  }`}
-                  style={{ borderRadius: '50%' }}
-                />
+              {/* Status Header Badge with Radar Pulse */}
+              <div className="flex items-center gap-2 text-xs font-black">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                      micState === 'idle'
+                        ? 'bg-emerald-400'
+                        : micState === 'recording'
+                        ? 'bg-red-400'
+                        : 'bg-amber-400'
+                    }`}
+                  />
+                  <span
+                    className={`relative inline-flex rounded-full h-2.5 w-2.5 transition-all ${
+                      micState === 'idle'
+                        ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]'
+                        : micState === 'recording'
+                        ? 'bg-red-500 shadow-[0_0_12px_#ef4444]'
+                        : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'
+                    }`}
+                  />
+                </span>
                 <span className={
                   micState === 'idle'
-                    ? 'text-emerald-700 dark:text-emerald-400'
+                    ? 'text-emerald-700 dark:text-emerald-400 font-extrabold'
                     : micState === 'recording'
-                    ? 'text-red-600 dark:text-red-400'
-                    : 'text-amber-700 dark:text-amber-400'
+                    ? 'text-red-600 dark:text-red-400 font-extrabold animate-pulse'
+                    : 'text-amber-700 dark:text-amber-400 font-extrabold'
                 }>
                   {micState === 'idle' && 'Sẵn sàng thu âm'}
                   {micState === 'recording' && 'Đang thu âm trực tiếp...'}
@@ -1865,15 +1875,30 @@ export const SpeechToTextModule: React.FC = () => {
                 </span>
               </div>
 
-              {/* Main Control Action Button Group */}
+              {/* Main Control Action Button Group with Sound Wave Particles */}
               {micState === 'idle' && (
                 <button
                   onClick={toggleListening}
-                  className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all transform active:scale-95 cursor-pointer"
+                  className="relative group overflow-hidden w-full py-3 px-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-[0_0_20px_rgba(16,185,129,0.45)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
                   title="Bắt đầu thu âm và nhận diện giọng nói"
                 >
-                  <Mic className="w-5 h-5 stroke-[2.5]" />
+                  {/* Subtle shine sweep */}
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+                  {/* Left mini soundwave */}
+                  <span className="flex items-end gap-0.5 h-3.5">
+                    <span className="w-0.5 h-2 bg-white/80 rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
+                    <span className="w-0.5 h-3.5 bg-white rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
+                  </span>
+
+                  <Mic className="w-5 h-5 stroke-[2.5] shrink-0" />
                   <span>BẮT ĐẦU NÓI</span>
+
+                  {/* Right mini soundwave */}
+                  <span className="flex items-end gap-0.5 h-3.5">
+                    <span className="w-0.5 h-3.5 bg-white rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
+                    <span className="w-0.5 h-2 bg-white/80 rounded-full animate-audio-wave" style={{ animationDelay: '300ms' }} />
+                  </span>
                 </button>
               )}
 
@@ -1900,7 +1925,7 @@ export const SpeechToTextModule: React.FC = () => {
                       setInterimTranscript('');
                       showToast('⏹️ Đã kết thúc phiên thu âm.');
                     }}
-                    className="py-2.5 px-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md transition-all transform active:scale-95 cursor-pointer"
+                    className="py-2.5 px-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all transform active:scale-95 cursor-pointer"
                     title="Bấm để Kết thúc phiên thu âm"
                   >
                     <Square className="w-3.5 h-3.5 fill-current" />
@@ -1953,8 +1978,9 @@ export const SpeechToTextModule: React.FC = () => {
                 </button>
               )}
             </div>
-            {/* CARD 3: SPEAKER DIARIZATION (MALE & FEMALE ONLY) */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-2.5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-2">
+
+            {/* CARD 2: SPEAKER DIARIZATION (MALE & FEMALE ONLY) */}
+            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-2.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2 backdrop-blur-md">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                 <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#F15A24] dark:text-orange-400">
                   <Users className="w-4 h-4 text-[#F15A24] dark:text-orange-400" />
@@ -1962,15 +1988,17 @@ export const SpeechToTextModule: React.FC = () => {
                 </span>
               </h3>
 
-              {/* Live Pitch Frequency Status */}
+              {/* Live Pitch Frequency Status with Laser Scan Shimmer */}
               {autoDiarization && (
-                <div className="px-2 py-1 rounded-lg text-[10px] font-bold bg-orange-50 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-300 border border-orange-200 dark:border-orange-800 flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
-                  <span className="truncate">{detectedVoiceLabel}</span>
+                <div className="relative overflow-hidden px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-orange-50/90 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-300 border border-orange-200 dark:border-orange-800 flex items-center gap-1.5 shadow-2xs">
+                  {/* Laser scanning beam */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-orange-400/20 to-transparent pointer-events-none animate-laser-sweep" />
+                  <Activity className="w-3.5 h-3.5 text-[#F15A24] shrink-0 animate-pulse relative z-10" />
+                  <span className="truncate relative z-10">{detectedVoiceLabel}</span>
                 </div>
               )}
 
-              {/* Speaker Profile Grid (2 columns: Male & Female) */}
+              {/* Speaker Profile Grid (2 columns: Male & Female) with Live Voice Indicators */}
               <div className="grid grid-cols-2 gap-1.5 pt-0.5">
                 {DEFAULT_SPEAKERS.map((spk) => {
                   const isSelected = activeSpeakerId === spk.id;
@@ -1984,18 +2012,126 @@ export const SpeechToTextModule: React.FC = () => {
                       }}
                       className={`px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
                         isSelected
-                          ? 'bg-orange-50/80 dark:bg-orange-950/40 border-[#F15A24] dark:border-orange-500 border-2 text-[#F15A24] dark:text-orange-400 font-extrabold shadow-xs'
-                          : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#F15A24]/60'
+                          ? 'bg-orange-50/90 dark:bg-orange-950/50 border-[#F15A24] dark:border-orange-500 border-2 text-[#F15A24] dark:text-orange-400 font-extrabold shadow-xs shadow-orange-500/10'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#F15A24]/60 hover:scale-[1.02]'
                       }`}
                       title={spk.name}
                     >
                       <span className="truncate flex items-center gap-1">
                         {spk.id === 'spk-male' ? '👨' : '👩'} {spk.name}
+                        {isSelected && (
+                          <span className="flex items-end gap-0.5 h-2.5 ml-0.5 shrink-0">
+                            <span className="w-0.5 h-1.5 bg-[#F15A24] rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
+                            <span className="w-0.5 h-2.5 bg-[#F15A24] rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
+                            <span className="w-0.5 h-1 bg-[#F15A24] rounded-full animate-audio-wave" style={{ animationDelay: '300ms' }} />
+                          </span>
+                        )}
                       </span>
                       {isSelected && <Check className="w-3.5 h-3.5 text-[#F15A24] dark:text-orange-400 shrink-0 stroke-[3]" />}
                     </button>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* CARD 3: BRAND NEW HIGH-TECH LIVE AUDIO WAVE VISUALIZER & AI TELEMETRY */}
+            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2.5 relative overflow-hidden backdrop-blur-md transition-all">
+              {/* Ambient Glow */}
+              <div className="absolute -top-10 -right-10 w-24 h-24 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 rounded-full blur-2xl pointer-events-none" />
+
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
+                <div className="flex items-center gap-1.5 text-xs font-black text-[#00A8E8] dark:text-[#38BDF8] uppercase tracking-wider">
+                  <Activity className="w-3.5 h-3.5 text-[#00A8E8] animate-pulse" />
+                  <span>Phổ Sóng AI</span>
+                </div>
+                <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  <span>{micState === 'recording' ? 'LIVE' : 'STANDBY'}</span>
+                </span>
+              </div>
+
+              {/* Dynamic Equalizer Bar Spectrum (16 bars) */}
+              <div className="h-14 flex items-end justify-between gap-[3px] px-1 py-1.5 bg-slate-50/80 dark:bg-slate-950/80 rounded-lg border border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
+                {/* Laser scan line effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00A8E8]/15 to-transparent pointer-events-none animate-laser-sweep" />
+
+                {[
+                  0.35, 0.65, 0.45, 0.9, 0.7, 0.4, 0.85, 1.0,
+                  0.8, 0.55, 0.95, 0.6, 0.75, 0.4, 0.65, 0.3
+                ].map((factor, idx) => {
+                  const isRec = micState === 'recording';
+                  const baseHeight = isRec
+                    ? Math.max(15, Math.min(100, Math.round((audioVolumeLevel * 0.8 + 20) * factor)))
+                    : Math.round(18 + Math.sin((idx / 16) * Math.PI * 2) * 10 + factor * 20);
+
+                  return (
+                    <div
+                      key={idx}
+                      className="flex-1 flex flex-col justify-end items-center h-full"
+                    >
+                      <div
+                        className={`w-full rounded-t-sm transition-all duration-150 ${
+                          isRec
+                            ? 'bg-gradient-to-t from-sky-500 via-[#00A8E8] to-[#F15A24]'
+                            : 'bg-gradient-to-t from-slate-300 via-sky-400/60 to-sky-400 dark:from-slate-700 dark:via-sky-600/60 dark:to-sky-500'
+                        }`}
+                        style={{
+                          height: `${baseHeight}%`,
+                          animation: isRec
+                            ? `audio-bar-bounce ${0.35 + (idx % 5) * 0.12}s ease-in-out infinite alternate`
+                            : `audio-sound-wave ${1.2 + (idx % 4) * 0.25}s ease-in-out infinite alternate`
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* High-Tech Oscilloscope Waveform SVG */}
+              <div className="relative h-7 w-full bg-slate-900/90 dark:bg-black/90 rounded-lg overflow-hidden border border-sky-500/20 flex items-center px-1">
+                {/* Grid markings */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#0284c715_1px,transparent_1px),linear-gradient(to_bottom,#0284c715_1px,transparent_1px)] [background-size:8px_8px]" />
+                
+                <svg className="w-full h-full relative z-10" viewBox="0 0 200 30" preserveAspectRatio="none">
+                  <path
+                    d="M0,15 Q25,3 50,15 T100,15 T150,15 T200,15"
+                    fill="none"
+                    stroke={micState === 'recording' ? '#38BDF8' : '#0284C7'}
+                    strokeWidth="1.8"
+                    className="animate-oscilloscope"
+                    style={{
+                      filter: 'drop-shadow(0 0 4px rgba(56, 189, 248, 0.8))'
+                    }}
+                  />
+                </svg>
+              </div>
+
+              {/* Telemetry Metrics */}
+              <div className="grid grid-cols-2 gap-1.5 pt-0.5 text-[10px]">
+                {/* Metric 1: Pitch Frequency */}
+                <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">Tần số (Hz)</span>
+                  <span className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] text-xs">
+                    {livePitchHz ? `${Math.round(livePitchHz)} Hz` : micState === 'recording' ? 'Đang đo...' : '-- Hz'}
+                  </span>
+                </div>
+
+                {/* Metric 2: Volume Level Meter */}
+                <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">Âm lượng</span>
+                    <span className="font-extrabold text-slate-700 dark:text-slate-200">
+                      {micState === 'recording' ? `${audioVolumeLevel}%` : '0%'}
+                    </span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mt-1 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-emerald-500 via-sky-500 to-[#F15A24] rounded-full transition-all duration-150"
+                      style={{ width: `${micState === 'recording' ? audioVolumeLevel : 0}%` }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
