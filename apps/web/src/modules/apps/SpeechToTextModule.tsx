@@ -2061,14 +2061,6 @@ export const SpeechToTextModule: React.FC = () => {
                     <span>MỚI</span>
                   </button>
 
-                  <button
-                    onClick={() => setIsHistoryModalOpen(true)}
-                    className="text-xs font-black text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-2.5 py-1.5 rounded-xl flex items-center gap-1 border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
-                    title="Xem danh sách cuộc hội thoại đã lưu"
-                  >
-                    <History className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span>LỊCH SỬ</span>
-                  </button>
 
                   <button
                     onClick={() => setShowSpeakerFilterBar(!showSpeakerFilterBar)}
