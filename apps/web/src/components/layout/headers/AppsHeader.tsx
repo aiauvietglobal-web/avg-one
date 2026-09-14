@@ -19,7 +19,7 @@ export const AppsHeader: React.FC<AppsHeaderProps> = ({
 }) => {
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
-      <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-11 sm:h-12 flex items-center justify-between gap-4 sm:gap-6">
+      <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
         {/* Left: Chuyển đổi trực tiếp / Phân hệ con (căn lề trái, cân đối, hiện mũi tên khi hover/ấn) hoặc Logo AVG One */}
         <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           {activeSubTitle ? (
@@ -37,7 +37,7 @@ export const AppsHeader: React.FC<AppsHeaderProps> = ({
             <img
               src={avgOfficialLogo}
               alt="AVG One Official Logo"
-              className="h-6.5 sm:h-7.5 object-contain cursor-pointer pointer-events-auto shrink-0"
+              className="h-7 sm:h-8 object-contain cursor-pointer pointer-events-auto shrink-0"
               onClick={() => onSelectModule('home')}
               title="Trang chủ AVG One"
             />
