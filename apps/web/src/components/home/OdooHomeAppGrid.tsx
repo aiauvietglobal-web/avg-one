@@ -410,12 +410,38 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
             <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-4 xs:px-6 sm:px-8 py-2 sm:py-3 flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
               
-              {/* 🎨 LỚP MÀU NỀN TỰ NHIÊN (Không để hộp/viền, chỉ để màu lan tỏa êm dịu) */}
-              {/* Lớp màu phát quang đa sắc dịu nhẹ */}
-              <div className="absolute -inset-x-8 -inset-y-4 sm:-inset-x-12 sm:-inset-y-6 bg-gradient-to-r from-sky-400/25 via-amber-300/20 to-orange-400/25 dark:from-sky-500/20 dark:via-amber-500/15 dark:to-orange-500/20 rounded-full blur-3xl pointer-events-none -z-10" />
-              
-              {/* Lớp nền màu sáng dịu che bớt các đường lưới phía sau chữ */}
-              <div className="absolute -inset-x-4 -inset-y-2 sm:-inset-x-6 sm:-inset-y-3 bg-gradient-to-r from-sky-100/75 via-white/85 to-orange-100/75 dark:from-sky-950/60 dark:via-slate-900/75 dark:to-orange-950/60 rounded-full blur-2xl pointer-events-none -z-10" />
+              {/* 🎨 LỚP MÀU NỀN PHÁ CÁCH & TINH TẾ (Organic Aurora Mesh Glow - Không viền hộp) */}
+              {/* Vệt 1: Ánh xanh thiên thanh công nghệ (Azure/Cyan) phía trên bên trái tạo chiều sâu cho Vững chắc */}
+              <div 
+                className="absolute -top-10 -left-10 sm:-top-14 sm:-left-16 w-56 sm:w-80 h-44 sm:h-60 rounded-full blur-3xl pointer-events-none opacity-75 dark:opacity-55"
+                style={{
+                  background: 'radial-gradient(circle at 35% 35%, rgba(2, 132, 199, 0.45) 0%, rgba(56, 189, 248, 0.25) 55%, transparent 80%)'
+                }}
+              />
+
+              {/* Vệt 2: Ánh hoàng hôn ấm áp & rực rỡ (Coral/Amber/Orange) phía dưới bên phải cho Tươi sáng */}
+              <div 
+                className="absolute -bottom-8 -right-8 sm:-bottom-12 sm:-right-14 w-60 sm:w-88 h-48 sm:h-64 rounded-full blur-3xl pointer-events-none opacity-70 dark:opacity-50"
+                style={{
+                  background: 'radial-gradient(circle at 65% 65%, rgba(241, 90, 36, 0.42) 0%, rgba(251, 146, 60, 0.26) 50%, rgba(245, 158, 11, 0.16) 75%, transparent 90%)'
+                }}
+              />
+
+              {/* Vệt 3: Điểm xuyết giao thoa quang phổ (Violet-Rose/Indigo) tạo nét phá cách nghệ thuật độc đáo ở tâm */}
+              <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-28 sm:h-40 rounded-full blur-[45px] pointer-events-none opacity-45 dark:opacity-35"
+                style={{
+                  background: 'radial-gradient(ellipse at center, rgba(147, 51, 234, 0.22) 0%, rgba(244, 63, 94, 0.16) 40%, rgba(14, 165, 233, 0.18) 70%, transparent 90%)'
+                }}
+              />
+
+              {/* Vệt 4: Lớp tán sắc mềm mượt hòa trộn tinh tế toàn bộ khối trung tâm */}
+              <div 
+                className="absolute inset-0 sm:-inset-4 rounded-full blur-2xl pointer-events-none opacity-70 dark:opacity-40"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(224, 242, 254, 0.4) 0%, rgba(254, 249, 195, 0.25) 50%, rgba(255, 237, 213, 0.35) 100%)'
+                }}
+              />
 
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
@@ -504,7 +530,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                     />
                   </svg>
 
-                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-md text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
+                  <p className="animate-hero-slogan relative z-10 inline-flex items-center gap-1.5 xs:gap-2 sm:gap-3 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-transparent text-[11px] xs:text-xs sm:text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide whitespace-nowrap">
                     <span className="font-mono text-slate-400 opacity-60">⟨</span>
                     <span>One Platform</span>
                     <span className="animate-hero-dot-1 w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0" />
