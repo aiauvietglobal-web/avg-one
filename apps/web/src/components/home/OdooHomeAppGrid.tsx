@@ -413,12 +413,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               {/* Ambient Glowing Backdrop */}
               <div className="absolute -inset-6 bg-gradient-to-r from-sky-400/10 via-amber-400/5 to-orange-400/10 rounded-3xl blur-2xl pointer-events-none -z-10" />
 
-              {/* Top Tech Status Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-sky-200/90 dark:border-sky-800/80 text-[10.5px] font-black text-[#0284C7] dark:text-sky-400 uppercase tracking-widest shadow-2xs mb-0.5">
-                <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse shrink-0" />
-                <span>AVG ONE // HỆ ĐIỀU HÀNH DOANH NGHIỆP THỐNG NHẤT 2026</span>
-              </div>
-
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
                 
