@@ -265,9 +265,9 @@ export const AnnualPlanView: React.FC = () => {
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
           {/* Left: Title & Animated Slogan Box Badge */}
-          <div className="space-y-3 sm:space-y-4 text-left flex-shrink-0">
+          <div className="space-y-1.5 text-left flex-shrink-0">
             {/* Animated Slogan Badge - Hộp vuông bo góc rounded-xl */}
-            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300 mb-2 sm:mb-2.5">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
               <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
                 <defs>
                   <linearGradient id="system-annual-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -296,10 +296,10 @@ export const AnnualPlanView: React.FC = () => {
               </div>
             </div>
 
-            <div className="space-y-1 pt-2 sm:pt-2.5">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#231F20] dark:text-white tracking-tight leading-normal flex items-baseline gap-2.5 flex-wrap">
-                <span className="inline-block py-1">KẾ HOẠCH</span>
-                <span className="relative inline-block px-1 py-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
+            <div className="pt-1">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2.5 flex-wrap">
+                <span>KẾ HOẠCH</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
                   <span className="relative z-10">NĂM 2026</span>
                   <svg className="absolute -bottom-2 left-0 w-full h-3.5 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />

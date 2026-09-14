@@ -134,16 +134,16 @@ export const ExecutiveDirectiveView: React.FC = () => {
                   className="animate-slogan-box-border"
                 />
               </svg>
-              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase mb-2">
+              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
                 <Megaphone className="w-3.5 h-3.5 text-[#00A8E8]" />
                 <span>AVG EXECUTIVE DIRECTIVE & DISPATCH</span>
               </div>
             </div>
 
-            <div className="space-y-1 pt-1.5">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight leading-normal flex items-baseline gap-2 flex-wrap">
-                <span className="inline-block py-0.5">THÔNG ĐIỆP</span>
-                <span className="relative inline-block px-1 py-0.5 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
+            <div className="pt-0.5">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
+                <span>THÔNG ĐIỆP</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
                   <span className="relative z-10">ĐIỀU HÀNH HỆ THỐNG AVG ONE</span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
