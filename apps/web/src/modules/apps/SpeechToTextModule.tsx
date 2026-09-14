@@ -2341,19 +2341,27 @@ export const SpeechToTextModule: React.FC = () => {
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-sky-50/40 to-blue-50/60 dark:from-slate-800 dark:via-slate-800/80 dark:to-slate-850 border border-sky-200/70 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Tiêu đề Hộp Thoại - Màu Xanh Tươi Sáng & Tinh Tế */}
-                  <div className="flex items-center gap-2.5 shrink-0 h-8.5">
+                  {/* Góc Trái: Tiêu đề Hộp Thoại - Dòng chữ đứng yên vững chãi, bên cạnh là dải sóng âm mini dập dìu mềm mại */}
+                  <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 h-8.5">
                     {/* Icon Badge Màu Xanh Tươi Sáng */}
-                    <div className="relative flex items-center justify-center w-7.5 h-7.5 rounded-lg bg-gradient-to-br from-cyan-400/20 via-sky-400/15 to-[#00A8E8]/10 dark:from-cyan-400/25 dark:via-sky-400/20 dark:to-[#00A8E8]/15 border border-cyan-400/50 dark:border-cyan-400/40 text-[#00A8E8] dark:text-[#00E5FF] shrink-0 animate-fresh-badge transition-colors">
+                    <div className="relative flex items-center justify-center w-7.5 h-7.5 rounded-lg bg-gradient-to-br from-cyan-400/20 via-sky-400/15 to-[#00A8E8]/10 dark:from-cyan-400/25 dark:via-sky-400/20 dark:to-[#00A8E8]/15 border border-cyan-400/50 dark:border-cyan-400/40 text-[#00A8E8] dark:text-[#00E5FF] shrink-0 animate-fresh-badge transition-colors shadow-2xs">
                       <MessageSquare className="w-4 h-4 stroke-[2.3]" />
                     </div>
 
-                    {/* Dòng chữ Tiêu Đề Xanh Tươi Sắc Nét */}
+                    {/* Dòng chữ Tiêu Đề Xanh Tươi Sắc Nét Đứng Yên Vững Chãi */}
                     <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider shrink-0 leading-none select-none">
                       <span className="animate-fresh-cyan-text">
                         Hội Thoại Trực Tiếp
                       </span>
                     </h2>
+
+                    {/* Cụm sóng âm thanh mini dập dìu mềm mại màu xanh ngọc bích */}
+                    <div className="flex items-center gap-0.75 h-5 px-1.5 py-0.5 rounded-full bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-400/30 dark:border-cyan-400/25 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
+                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-1" />
+                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-2" />
+                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-3" />
+                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-4" />
+                    </div>
                   </div>
 
                   {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ chiều cao h-8.5 để thẳng hàng tuyệt đối */}
