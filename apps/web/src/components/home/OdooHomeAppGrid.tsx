@@ -485,7 +485,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
         {/* Centered Odoo App Grid (Kiểu dáng hộp bo tròn 28px căn chuẩn mép Logo và Hộp Đăng Nhập) */}
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-2">
-          {HOME_APP_MODULES.map((app) => {
+          {HOME_APP_MODULES.map((app, idx) => {
             const Icon = app.icon;
             return (
               <div
@@ -494,8 +494,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 tabIndex={0}
                 onClick={() => onSelectModule(app.id)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectModule(app.id); }}
-                style={{ borderRadius: '28px' }}
-                className="group flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] bg-gradient-to-b from-[#BAE6FD] via-[#E2F2FE]/70 to-white dark:from-sky-950/60 dark:via-slate-900/80 dark:to-slate-950 rounded-[28px] border-2 border-[#7DD3FC] dark:border-sky-800/80 hover:border-[#0284C7] dark:hover:border-sky-400 hover:from-[#A5DBFE] hover:via-[#D6EEFE] hover:to-white dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-400/25 cursor-pointer select-none"
+                style={{ borderRadius: '28px', animationDelay: `${(idx + 1) * 80 + 150}ms` }}
+                className="group flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] bg-gradient-to-b from-[#BAE6FD] via-[#E2F2FE]/70 to-white dark:from-sky-950/60 dark:via-slate-900/80 dark:to-slate-950 rounded-[28px] border-2 border-[#7DD3FC] dark:border-sky-800/80 hover:border-[#0284C7] dark:hover:border-sky-400 hover:from-[#A5DBFE] hover:via-[#D6EEFE] hover:to-white dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-400/25 cursor-pointer select-none animate-entrance-up"
               >
                 {/* App Colorful Icon */}
                 <div className={`w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-xl ${app.bgColor} border flex items-center justify-center mb-1 group-hover:scale-105 transition-transform shrink-0`}>
@@ -514,8 +514,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           {Array.from({ length: 5 }).map((_, idx) => (
             <div
               key={`placeholder-${idx}`}
-              style={{ borderRadius: '28px' }}
-              className={`flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[28px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none ${idx >= 3 ? 'hidden sm:flex' : ''}`}
+              style={{ borderRadius: '28px', animationDelay: `${(idx + 6) * 80 + 150}ms` }}
+              className={`flex flex-col items-center justify-center py-2.5 sm:py-3 px-2 min-h-[96px] sm:min-h-[106px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[28px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up ${idx >= 3 ? 'hidden sm:flex' : ''}`}
             >
               <div className="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
                 <Sparkles className="w-4 h-4 text-slate-400 dark:text-slate-500 opacity-60" />
