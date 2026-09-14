@@ -3226,107 +3226,127 @@ div.box-speech-bubble {
 }
 
 /* ============================================================ */
-/* 🌟 BỘ HIỆU ỨNG ÁNH SÁNG CÔNG NGHỆ CAO LẶP LẠI MỖI 5 GIÂY      */
-/* (5S REPEATING LUXURY REVEAL & SHIMMER PULSE CYCLE)           */
+/* 🚀 SIÊU HIỆU ỨNG CÔNG NGHỆ CAO CHO HỘI THOẠI TRỰC TIẾP (5S)    */
+/* (ULTRA-IMPRESSIVE CINEMATIC LASER FLARE & HOLOGRAPHIC 5S)     */
 /* ============================================================ */
 
-/* 1. Vệt sáng pha lê quét chéo qua toàn cụm tiêu đề mỗi 5s */
-@keyframes beam-sweep-5s {
+/* 1. Laser Lens Flare quét chói sáng ngang tiêu đề mỗi 5s */
+@keyframes laser-flare-5s {
   0% {
-    transform: translateX(-150%) skewX(-25deg);
+    left: -120%;
     opacity: 0;
   }
-  4% {
+  3% {
+    opacity: 1;
+  }
+  22% {
+    left: 140%;
+    opacity: 1;
+  }
+  26%, 100% {
+    left: 140%;
+    opacity: 0;
+  }
+}
+
+/* 2. Vòng sóng radar xung kích tỏa ra từ Icon mỗi 5s */
+@keyframes shockwave-ring-5s {
+  0%, 100% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  6% {
+    transform: scale(0.95);
     opacity: 0.85;
   }
   24% {
-    transform: translateX(280%) skewX(-25deg);
-    opacity: 0.85;
-  }
-  28%, 100% {
-    transform: translateX(280%) skewX(-25deg);
+    transform: scale(2.4);
     opacity: 0;
   }
 }
 
-/* 2. Badge Icon nở bừng hào quang và đàn hồi mỗi 5s */
-@keyframes icon-bloom-5s {
+/* 3. Icon 3D bùng nổ năng lượng mỗi 5s */
+@keyframes icon-3d-pulse-5s {
   0% {
     transform: scale(1) rotate(0deg);
-    box-shadow: 0 0 0 0 rgba(0, 168, 232, 0);
+    box-shadow: 0 0 10px 2px rgba(0, 168, 232, 0.4), inset 0 0 8px rgba(255, 255, 255, 0.4);
   }
-  6% {
-    transform: scale(0.92) rotate(-6deg);
-    box-shadow: 0 0 8px 1px rgba(0, 168, 232, 0.3);
+  5% {
+    transform: scale(0.88) rotate(-8deg);
   }
   14% {
-    transform: scale(1.18) rotate(4deg);
-    box-shadow: 0 0 22px 6px rgba(0, 168, 232, 0.7), 0 0 35px 10px rgba(56, 189, 248, 0.35);
+    transform: scale(1.22) rotate(6deg);
+    box-shadow: 0 0 28px 8px rgba(0, 229, 255, 0.85), 0 0 45px 15px rgba(241, 90, 36, 0.45), inset 0 0 12px rgba(255, 255, 255, 0.8);
   }
   22% {
-    transform: scale(0.97) rotate(-1deg);
-    box-shadow: 0 0 14px 3px rgba(0, 168, 232, 0.45);
+    transform: scale(0.96) rotate(-2deg);
+    box-shadow: 0 0 18px 4px rgba(0, 168, 232, 0.6);
   }
-  28% {
+  30% {
     transform: scale(1) rotate(0deg);
-    box-shadow: 0 0 6px 1px rgba(0, 168, 232, 0.2);
+    box-shadow: 0 0 12px 2px rgba(0, 168, 232, 0.4);
   }
   50% {
-    transform: scale(1.04);
-    box-shadow: 0 0 10px 2px rgba(0, 168, 232, 0.3);
+    transform: scale(1.06);
+    box-shadow: 0 0 16px 3px rgba(0, 168, 232, 0.5);
   }
   70%, 100% {
     transform: scale(1) rotate(0deg);
-    box-shadow: 0 0 0 0 rgba(0, 168, 232, 0);
+    box-shadow: 0 0 10px 2px rgba(0, 168, 232, 0.4), inset 0 0 8px rgba(255, 255, 255, 0.4);
   }
 }
 
-/* 3. Dòng chữ HỘI THOẠI TRỰC TIẾP phát sáng sóng pha lê mỗi 5s */
-@keyframes text-shimmer-5s {
+/* 4. Dòng chữ Holographic bùng sáng kim cương mỗi 5s */
+@keyframes text-hologram-5s {
   0% {
     background-position: 250% 50%;
-    filter: drop-shadow(0 0 0px rgba(0, 168, 232, 0));
-  }
-  5% {
     filter: drop-shadow(0 0 4px rgba(0, 168, 232, 0.4));
   }
-  14% {
-    filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.8)) drop-shadow(0 0 24px rgba(0, 168, 232, 0.5));
+  5% {
+    filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.7)) drop-shadow(0 0 15px rgba(2, 132, 199, 0.5));
   }
-  26% {
+  14% {
+    background-position: 120% 50%;
+    filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.95)) drop-shadow(0 0 30px rgba(56, 189, 248, 0.8)) drop-shadow(0 0 40px rgba(241, 90, 36, 0.45));
+  }
+  24% {
     background-position: 0% 50%;
-    filter: drop-shadow(0 0 6px rgba(0, 168, 232, 0.3));
+    filter: drop-shadow(0 0 10px rgba(0, 168, 232, 0.6));
   }
   32%, 100% {
     background-position: 0% 50%;
-    filter: drop-shadow(0 0 0px rgba(0, 168, 232, 0));
+    filter: drop-shadow(0 0 4px rgba(0, 168, 232, 0.4));
   }
 }
 
-.animate-icon-5s {
-  animation: icon-bloom-5s 5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+.animate-laser-flare-5s {
+  animation: laser-flare-5s 5s cubic-bezier(0.2, 0, 0.1, 1) infinite;
 }
 
-.animate-text-5s {
+.animate-shockwave-5s {
+  animation: shockwave-ring-5s 5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+.animate-icon-3d-5s {
+  animation: icon-3d-pulse-5s 5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.animate-text-hologram-5s {
   display: inline-block;
-  background: linear-gradient(90deg, #0284C7 0%, #00A8E8 20%, #38BDF8 38%, #FFFFFF 50%, #38BDF8 62%, #00A8E8 80%, #0284C7 100%);
-  background-size: 250% auto;
+  background: linear-gradient(90deg, #0284C7 0%, #00A8E8 18%, #00E5FF 35%, #FFFFFF 50%, #FFB703 65%, #00E5FF 82%, #0284C7 100%);
+  background-size: 260% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: text-shimmer-5s 5s ease-in-out infinite;
+  animation: text-hologram-5s 5s ease-in-out infinite;
 }
 
-[data-theme="dark"] .animate-text-5s {
+[data-theme="dark"] .animate-text-hologram-5s {
   display: inline-block;
-  background: linear-gradient(90deg, #38BDF8 0%, #7DD3FC 20%, #BAE6FD 38%, #FFFFFF 50%, #BAE6FD 62%, #7DD3FC 80%, #38BDF8 100%);
-  background-size: 250% auto;
+  background: linear-gradient(90deg, #38BDF8 0%, #00E5FF 18%, #7DD3FC 35%, #FFFFFF 50%, #FBBF24 65%, #00E5FF 82%, #38BDF8 100%);
+  background-size: 260% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: text-shimmer-5s 5s ease-in-out infinite;
-}
-
-.animate-header-sweep-5s {
-  animation: beam-sweep-5s 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: text-hologram-5s 5s ease-in-out infinite;
 }
 
 

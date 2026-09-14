@@ -2341,20 +2341,43 @@ export const SpeechToTextModule: React.FC = () => {
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-sky-50/40 to-blue-50/60 dark:from-slate-800 dark:via-slate-800/80 dark:to-slate-850 border border-sky-200/70 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Tiêu đề Hộp Thoại - Hiệu ứng xuất hiện pha lê lặp lại đều đặn mỗi 5s */}
-                  <div className="flex items-center gap-2.5 shrink-0 h-8.5 relative overflow-hidden pr-2">
-                    {/* Vệt sáng quét ngang lặp lại mỗi 5s */}
-                    <div className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/50 dark:via-sky-300/35 to-transparent pointer-events-none animate-header-sweep-5s" />
+                  {/* Góc Trái: Tiêu đề Hộp Thoại - Cyber Capsule Công Nghệ Cao Siêu Ấn Tượng Lặp Lại Mỗi 5s */}
+                  <div className="relative group flex items-center gap-2.5 px-3 py-1 rounded-xl bg-white/95 dark:bg-slate-900/95 border border-sky-300/80 dark:border-sky-500/50 shadow-xs shadow-sky-500/15 backdrop-blur-md overflow-hidden shrink-0 h-8.5 transition-all">
+                    
+                    {/* Laser Lens Flare quét chói lọi ngang toàn bộ capsule mỗi 5s */}
+                    <div className="absolute top-0 bottom-0 w-24 bg-gradient-to-r from-transparent via-white/85 dark:via-cyan-300/75 to-transparent pointer-events-none -skew-x-25 blur-xs animate-laser-flare-5s" />
+                    
+                    {/* Hạt quang điểm Lens Flare rực rỡ ở tâm tia laser */}
+                    <div className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-white rounded-full blur-[1.5px] pointer-events-none animate-laser-flare-5s shadow-[0_0_15px_5px_rgba(0,229,255,0.9)]" />
 
-                    {/* Icon Badge nở bừng hào quang và nhịp thở mỗi 5s */}
-                    <div className="w-7 h-7 rounded-lg bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/35 shrink-0 shadow-2xs animate-icon-5s transition-all">
-                      <MessageSquare className="w-4 h-4 text-[#00A8E8] dark:text-[#38BDF8] stroke-[2.5]" />
+                    {/* Vùng hào quang nền mờ (Ambient Glow Orb) */}
+                    <div className="absolute -left-6 -top-6 w-20 h-20 bg-[#00A8E8]/20 rounded-full blur-xl pointer-events-none" />
+
+                    {/* Icon Badge 3D cao cấp với Vòng xung kích Shockwave mỗi 5s */}
+                    <div className="relative flex items-center justify-center shrink-0">
+                      {/* Vòng sóng Shockwave tỏa lan */}
+                      <div className="absolute inset-0 rounded-lg border-2 border-cyan-400 pointer-events-none animate-shockwave-5s" />
+
+                      <div className="w-6.5 h-6.5 rounded-lg bg-gradient-to-br from-[#00A8E8] via-[#0284C7] to-[#EA580C] flex items-center justify-center border border-white/60 shadow-md animate-icon-3d-5s transition-all">
+                        <MessageSquare className="w-3.5 h-3.5 text-white stroke-[2.8] drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
+                      </div>
                     </div>
 
-                    {/* Tiêu đề Chữ phát sóng ánh sáng pha lê mỗi 5s */}
+                    {/* Dòng chữ Tiêu Đề Holographic Kim Cương */}
                     <h2 className="text-sm sm:text-base font-black uppercase tracking-wider flex items-center gap-2 shrink-0 leading-none">
-                      <span className="animate-text-5s select-none font-black tracking-wider">Hội Thoại Trực Tiếp</span>
+                      <span className="animate-text-hologram-5s select-none font-black tracking-wider drop-shadow-xs">
+                        Hội Thoại Trực Tiếp
+                      </span>
                     </h2>
+
+                    {/* Cụm 4 cột sóng Live Audio Equalizer mini siêu sinh động */}
+                    <div className="hidden sm:flex items-end gap-0.75 h-3 px-1.5 py-0.5 rounded-md bg-sky-50 dark:bg-slate-800/80 border border-sky-200/60 dark:border-slate-700/60 shrink-0">
+                      <span className="w-0.75 h-2 bg-gradient-to-t from-[#0284C7] to-[#00E5FF] rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
+                      <span className="w-0.75 h-3 bg-gradient-to-t from-[#0284C7] to-[#00E5FF] rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
+                      <span className="w-0.75 h-2.5 bg-gradient-to-t from-[#00A8E8] to-[#EA580C] rounded-full animate-audio-wave" style={{ animationDelay: '300ms' }} />
+                      <span className="w-0.75 h-3 bg-gradient-to-t from-[#00A8E8] to-[#EA580C] rounded-full animate-audio-wave" style={{ animationDelay: '75ms' }} />
+                    </div>
+
                   </div>
 
                   {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ chiều cao h-8.5 để thẳng hàng tuyệt đối */}
