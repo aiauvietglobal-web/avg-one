@@ -530,9 +530,14 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
     return prev;
   }
 
-  // 2. Nếu văn bản mới là phần mở rộng đầy đủ hơn của câu cũ (trình duyệt gửi lại câu đang nói hoàn chỉnh hơn)
+  // 2. Nếu văn bản mới bao trùm hoặc là phần mở rộng đầy đủ hơn của câu cũ
   if (nextNorm.startsWith(prevNorm)) {
     return next;
+  }
+
+  // 2b. Nếu văn bản cũ đã bao hàm toàn bộ văn bản mới (tránh lặp lại câu vừa nói)
+  if (prevNorm.endsWith(nextNorm) || prevNorm.includes(nextNorm)) {
+    return prev;
   }
 
   // 3. Tìm phần giao thoa (suffix-to-prefix overlap) giữa đuôi của prev và đầu của next
@@ -545,10 +550,13 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   // Chỉ kiểm tra tối đa 15 từ ở đuôi của câu trước
   const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 15);
 
-  for (let k = maxCheck; k >= 1; k--) {
+  // QUY TẮC BẢO TOÀN THÔNG TIN & CHỐNG CẮT MẤT TỪ:
+  // - Nếu chỉ trùng 1 từ: TUYỆT ĐỐI KHÔNG CẮT BỎ (tránh nuốt mất chủ ngữ hoặc từ đầu câu)
+  // - Chỉ coi là overlap khi trùng từ 2 từ trở lên và tổng chiều dài >= 6 ký tự
+  for (let k = maxCheck; k >= 2; k--) {
     const prevSuffix = prevNormWords.slice(prevNormWords.length - k).join(' ');
     const nextPrefix = nextNormWords.slice(0, k).join(' ');
-    if (prevSuffix === nextPrefix && prevSuffix.length > 0) {
+    if (prevSuffix === nextPrefix && prevSuffix.length >= 6) {
       maxOverlap = k;
       break;
     }

@@ -698,6 +698,7 @@ export const SpeechToTextModule: React.FC = () => {
   const speakerSwitchCountRef = useRef<number>(0);
   const restartTimeoutRef = useRef<any>(null);
   const utterancePitchSamplesRef = useRef<number[]>([]);
+  const recentlyCommittedUtterancesRef = useRef<Map<string, number>>(new Map());
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
   const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
@@ -1440,6 +1441,25 @@ export const SpeechToTextModule: React.FC = () => {
     if (!rawText || !rawText.trim()) return;
     const textToCommit = rawText.trim();
 
+    // 1. Chặn tuyệt đối hiện tượng lặp văn bản bằng bộ đệm dấu vân tay âm thanh 6 giây
+    const norm = textToCommit.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!norm) return;
+
+    const now = Date.now();
+    const lastCommittedTime = recentlyCommittedUtterancesRef.current.get(norm);
+    if (lastCommittedTime && now - lastCommittedTime < 6000) {
+      // Đã commit câu y hệt này trong vòng 6 giây trước -> Chặn lặp 100%!
+      return;
+    }
+    recentlyCommittedUtterancesRef.current.set(norm, now);
+
+    // Dọn dẹp cache cũ > 25s
+    if (recentlyCommittedUtterancesRef.current.size > 40) {
+      for (const [k, t] of recentlyCommittedUtterancesRef.current.entries()) {
+        if (now - t > 25000) recentlyCommittedUtterancesRef.current.delete(k);
+      }
+    }
+
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
@@ -1477,6 +1497,25 @@ export const SpeechToTextModule: React.FC = () => {
 
       // Chỉ ngắt đoạn khi ghi nhận các giọng nói khác nhau (khác speakerId hoặc khác sender)
       if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id) {
+        const lastMsgWordCount = (lastMsg.text || '').split(/\s+/).filter(Boolean).length;
+        
+        // Nếu tin nhắn trước đã đủ dài (>= 22 từ) và đã kết thúc câu, tách ra tin nhắn mới
+        if (lastMsgWordCount >= 22 && /[.?!]$/.test((lastMsg.text || '').trim())) {
+          return [
+            ...prev,
+            {
+              id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+              sender: 'HEARING',
+              senderName: currentSpk.name,
+              speakerId: currentSpk.id,
+              text: enhancedText.trim(),
+              translatedText: translateText(enhancedText.trim(), targetLanguage),
+              timestamp: timestampStr,
+              date: dateStr
+            }
+          ];
+        }
+
         // Cùng một người đang nói: khử trùng lặp 100% và nối tiếp văn bản vào đoạn hiện tại
         const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText);
         if (mergedText === lastMsg.text) {
@@ -1623,9 +1662,9 @@ export const SpeechToTextModule: React.FC = () => {
           const formattedInterim = enhanceVietnameseTranscript(interimTranscriptText.trim(), false, false);
           setInterimTranscript(formattedInterim);
 
-          // BỘ ĐỆM TỰ ĐỘNG CHỐNG BIẾN MẤT VĂN BẢN (AUTO-COMMIT SAFETY TIMER):
-          // Nếu người dùng dừng nói khoảng 1400ms mà trình duyệt chưa kịp trả về isFinal,
-          // tự động chốt và lưu các chữ này vào khung hội thoại để TUYỆT ĐỐI KHÔNG BỊ MẤT CHỮ!
+          // BỘ ĐỆM AN TOÀN TRÁNH NGHẼN KẾT NỐI (WATCHDOG SAFETY TIMER):
+          // Chỉ chốt tự động nếu người dùng ngừng nói hoàn toàn sau 2.6 giây mà trình duyệt chưa gửi isFinal
+          // Điều này giúp Chrome gửi isFinal chuẩn xác 100% trước, loại bỏ hoàn toàn tình trạng chạy đua gây lặp từ
           if (silenceCommitTimerRef.current) {
             clearTimeout(silenceCommitTimerRef.current);
           }
@@ -1637,7 +1676,7 @@ export const SpeechToTextModule: React.FC = () => {
               setInterimTranscript('');
               commitTranscriptToMessage(textToSave, true);
             }
-          }, 1400);
+          }, 2600);
         } else if (!newFinalTranscript.trim()) {
           // Tránh xóa vội preview nếu chưa có nội dung mới
           if (!accumulatedInterimRef.current) {
