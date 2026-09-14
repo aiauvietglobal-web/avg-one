@@ -181,7 +181,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   }, []);
 
   // Kiểm tra nếu đang đứng ở phân hệ Thiết kế (R&D / Workflow)
-  const isDesignModule = activeModule !== 'home' && (activeModule === 'rd' || activeModule === 'workflow' || activeModule === 'orders') && activeSubTitle.includes('THIẾT KẾ');
+  const isDesignModule = activeModule !== 'home' && (activeModule === 'rd' || activeModule === 'workflow') && activeSubTitle.includes('THIẾT KẾ');
 
   const handleAppTitleClick = () => {
     if (isArrowActive) {
@@ -371,9 +371,11 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {/* HỆ THỐNG HEADER ĐỘC LẬP TÁCH BIỆT CHO TỪNG PHÂN HỆ */}
-          {activeModule === 'home' ? (
-            /* 1. HEADER TRANG CHỦ: BẢO VỆ NGUYÊN VẸN, BỐ CỤC CỐ ĐỊNH CHUẨN MAX-W-7XL MX-AUTO */
-            <HomeHeader
+          {activeModule === 'home' || activeModule === 'system' || activeModule === 'admin' || activeModule === 'inside' || activeModule === 'calendar' || activeModule === 'orders' ? (
+            /* 1. HEADER CÁC PHÂN HỆ QUẢN TRỊ VẬN HÀNH (TRANG CHỦ, HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG): GIỮ NGUYÊN 100% BỐ CỤC */
+            <StandardModuleHeader
+              activeModule={activeModule}
+              activeSubTitle={activeSubTitle}
               onSelectModule={onSelectModule}
               renderUserAuthButton={renderUserAuthButton}
             />
