@@ -350,18 +350,27 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
 
 
-      // 4. Dải các vạch sóng tần số dạng line thanh mảnh với Gradient chuyển sắc
-      const barWidth = 1.6;
-      const step = 3.2;
+      // 4. Dải các vạch sóng tần số với Gradient chuyển sắc đa tầng sống động (Royal Blue -> AVG Cyan -> Electric Sky / Violet Glow)
+      const barWidth = 2.0;
+      const step = 3.6;
       const totalBars = historyRef.current.length;
       const barsStartX = w - totalBars * step;
       const isRec = micState === 'recording';
 
-      // Bar gradient nổi bật trên nền trắng
+      // Tạo Gradient đa tầng sắc nét từ chân lên đỉnh vạch sóng
       const barGrad = ctx.createLinearGradient(0, h, 0, 0);
-      barGrad.addColorStop(0, '#0284C7');
-      barGrad.addColorStop(0.5, '#00A8E8');
-      barGrad.addColorStop(1, isRec ? '#0ea5e9' : '#0284C7');
+      if (isRec) {
+        barGrad.addColorStop(0, '#1D4ED8');    // Deep Royal Blue
+        barGrad.addColorStop(0.35, '#0284C7'); // Ocean Blue
+        barGrad.addColorStop(0.7, '#00A8E8');  // Signature AVG Cyan
+        barGrad.addColorStop(0.92, '#38BDF8'); // Electric Sky
+        barGrad.addColorStop(1, '#818CF8');    // Luminous Violet Glow
+      } else {
+        barGrad.addColorStop(0, '#1E40AF');
+        barGrad.addColorStop(0.5, '#0284C7');
+        barGrad.addColorStop(0.85, '#00A8E8');
+        barGrad.addColorStop(1, '#38BDF8');
+      }
 
       const points: { x: number; y: number }[] = [];
 
@@ -374,26 +383,56 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         const y = h - barHeight;
 
         ctx.fillStyle = barGrad;
-        ctx.fillRect(x, y, barWidth, barHeight);
+        if (typeof (ctx as any).roundRect === 'function') {
+          ctx.beginPath();
+          (ctx as any).roundRect(x, y, barWidth, barHeight, [1.5, 1.5, 0, 0]);
+          ctx.fill();
+        } else {
+          ctx.fillRect(x, y, barWidth, barHeight);
+        }
 
         points.push({ x: x + barWidth / 2, y });
 
-        // Vạch đỉnh rơi chậm (Peak Hold Cap) sắc nét trên nền trắng
+        // Vạch đỉnh rơi chậm (Peak Hold Cap) với sắc neon nổi bật
         const peakVal = peakHoldRef.current[i] || val;
-        const peakY = h - Math.max(5, Math.min(h * 0.92, peakVal * h)) - 1.5;
-        ctx.fillStyle = isRec ? '#0369A1' : '#0284C7';
-        ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.2);
+        const peakY = h - Math.max(5, Math.min(h * 0.92, peakVal * h)) - 2;
+        ctx.fillStyle = isRec ? '#6366F1' : '#0284C7';
+        ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.5);
       }
 
-      // 5. Đường bao sóng phát sáng (Glow Crest Curve) chạy trên đầu các vạch sóng
+      // 5. Vùng phủ Gradient (Translucent Gradient Area Fill) & Đường bao sóng phát sáng (Glow Crest Curve)
       if (points.length > 2) {
+        // Vùng phủ chuyển sắc mờ dưới chân sóng
+        const areaGrad = ctx.createLinearGradient(0, 0, 0, h);
+        areaGrad.addColorStop(0, isRec ? 'rgba(0, 168, 232, 0.22)' : 'rgba(2, 132, 199, 0.12)');
+        areaGrad.addColorStop(0.7, isRec ? 'rgba(37, 99, 235, 0.08)' : 'rgba(2, 132, 199, 0.04)');
+        areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
         for (let i = 1; i < points.length; i++) {
           ctx.lineTo(points[i].x, points[i].y);
         }
-        ctx.strokeStyle = isRec ? 'rgba(2, 132, 199, 0.6)' : 'rgba(2, 132, 199, 0.35)';
-        ctx.lineWidth = 1;
+        ctx.lineTo(points[points.length - 1].x, h);
+        ctx.lineTo(points[0].x, h);
+        ctx.closePath();
+        ctx.fillStyle = areaGrad;
+        ctx.fill();
+
+        // Đường viền crest curve chạy mềm mại theo ngọn sóng với gradient ngang
+        const crestGrad = ctx.createLinearGradient(0, 0, w, 0);
+        crestGrad.addColorStop(0, '#2563EB');
+        crestGrad.addColorStop(0.4, '#00A8E8');
+        crestGrad.addColorStop(0.8, '#38BDF8');
+        crestGrad.addColorStop(1, '#818CF8');
+
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.strokeStyle = crestGrad;
+        ctx.lineWidth = 1.2;
         ctx.stroke();
       }
 
