@@ -128,31 +128,31 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={systemDropdownRef}
-              className="relative shrink-0 whitespace-nowrap flex items-center"
+              className="relative shrink-0 whitespace-nowrap"
             >
               <button
                 onClick={handleToggleSystemModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative h-8 sm:h-8.5 px-2.5 sm:px-3 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal flex items-center justify-center gap-1 whitespace-nowrap shrink-0 leading-none ${
+                className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 whitespace-nowrap shrink-0 ${
                   isHighlighted
                     ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                     : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
-                <span className="relative inline-block whitespace-nowrap leading-none">
+                <span className="relative inline-block whitespace-nowrap">
                   <span
                     style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
+                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap"
                   >
                     {item.label}
                   </span>
                   {isHighlighted && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 sm:w-5 h-[2px] bg-[#F15A24] rounded-full" />
+                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
                   )}
                 </span>
                 <ChevronDown
                   style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                  className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
                 />
               </button>
 
@@ -202,31 +202,31 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={calendarDropdownRef}
-              className="relative shrink-0 whitespace-nowrap flex items-center"
+              className="relative"
             >
               <button
                 onClick={handleToggleCalendarModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative h-8 sm:h-8.5 px-2.5 sm:px-3 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal flex items-center justify-center gap-1 whitespace-nowrap shrink-0 leading-none ${
+                className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
                   isHighlighted
                     ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                     : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
-                <span className="relative inline-block whitespace-nowrap leading-none">
+                <span className="relative inline-block">
                   <span
                     style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
+                    className="relative z-10 transition-colors duration-150 inline-block"
                   >
                     {item.label}
                   </span>
                   {isHighlighted && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 sm:w-5 h-[2px] bg-[#F15A24] rounded-full" />
+                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
                   )}
                 </span>
                 <ChevronDown
                   style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                  className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isCalendarDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isCalendarDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
                 />
               </button>
 
@@ -308,31 +308,31 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={ordersDropdownRef}
-              className="relative shrink-0 whitespace-nowrap flex items-center"
+              className="relative"
             >
               <button
                 onClick={handleToggleOrdersModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative h-8 sm:h-8.5 px-2.5 sm:px-3 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal flex items-center justify-center gap-1 whitespace-nowrap shrink-0 leading-none ${
+                className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
                   isHighlighted
                     ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                     : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
-                <span className="relative inline-block whitespace-nowrap leading-none">
+                <span className="relative inline-block">
                   <span
                     style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
+                    className="relative z-10 transition-colors duration-150 inline-block"
                   >
                     {item.label}
                   </span>
                   {isHighlighted && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 sm:w-5 h-[2px] bg-[#F15A24] rounded-full" />
+                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
                   )}
                 </span>
                 <ChevronDown
                   style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                  className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
                 />
               </button>
 
@@ -402,21 +402,21 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               onSelectModule(item.id);
             }}
             style={{ color: isActive ? '#F15A24' : undefined }}
-            className={`relative h-8 sm:h-8.5 px-2.5 sm:px-3 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal flex items-center justify-center whitespace-nowrap shrink-0 leading-none ${
+            className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal ${
               isActive
                 ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
                 : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
             }`}
           >
-            <span className="relative inline-block whitespace-nowrap leading-none">
+            <span className="relative inline-block">
               <span
                 style={{ color: isActive ? '#F15A24' : undefined }}
-                className="relative z-10 transition-colors duration-150 inline-block whitespace-nowrap leading-none"
+                className="relative z-10 transition-colors duration-150 inline-block"
               >
                 {item.label}
               </span>
               {isActive && (
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 sm:w-5 h-[2px] bg-[#F15A24] rounded-full" />
+                <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
               )}
             </span>
           </button>
