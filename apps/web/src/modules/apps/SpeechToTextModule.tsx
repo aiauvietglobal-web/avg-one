@@ -2236,61 +2236,10 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): THANH PANEL UI CONTROLS & QUẢN LÝ NGƯỜI NÓI */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
+          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col h-full overflow-hidden pr-0.5 text-xs flex-shrink-0">
             
-            {/* CARD: SPEAKER DIARIZATION (MALE & FEMALE ONLY) - ĐỒNG BỘ THEME XANH DƯƠNG / CYAN */}
-            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-2.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2 backdrop-blur-md">
-              <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
-                <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#00A8E8] dark:text-sky-400">
-                  <Users className="w-4 h-4 text-[#00A8E8] dark:text-sky-400" />
-                  <span>Phân Biệt Giọng Nói</span>
-                </span>
-              </h3>
-
-              {/* Live Pitch Frequency Status with Laser Scan Shimmer */}
-              {autoDiarization && (
-                <div className="relative overflow-hidden px-2.5 py-1.5 rounded-lg text-[10px] font-bold bg-sky-50 dark:bg-sky-950/60 text-[#00A8E8] dark:text-sky-300 border border-sky-200 dark:border-sky-800/60 flex items-center gap-1.5 shadow-2xs">
-                  {/* Laser scanning beam */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-sky-400/20 to-transparent pointer-events-none animate-laser-sweep" />
-                  <Activity className="w-3.5 h-3.5 text-[#00A8E8] shrink-0 animate-pulse relative z-10" />
-                  <span className="truncate relative z-10">{detectedVoiceLabel}</span>
-                </div>
-              )}
-
-              {/* Speaker Profile Grid (2 columns: Male & Female) with Live Voice Indicators */}
-              <div className="grid grid-cols-2 gap-1.5 pt-0.5">
-                {DEFAULT_SPEAKERS.map((spk) => {
-                  const isSelected = activeSpeakerId === spk.id;
-
-                  return (
-                    <button
-                      key={spk.id}
-                      onClick={() => {
-                        setActiveSpeakerId(spk.id);
-                        activeSpeakerRef.current = spk.id;
-                      }}
-                      className={`px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer min-w-0 ${
-                        isSelected
-                          ? 'bg-sky-50 dark:bg-sky-950/50 border-[#00A8E8] dark:border-sky-500 border-2 text-[#00A8E8] dark:text-sky-400 font-extrabold shadow-xs shadow-sky-500/15'
-                          : 'bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-[#00A8E8]/60 hover:scale-[1.02]'
-                      }`}
-                      title={spk.name}
-                    >
-                      <span className="truncate flex items-center gap-1">
-                        {spk.id === 'spk-male' ? '👨' : '👩'} {spk.name}
-                        {isSelected && (
-                          <Waves className="w-3.5 h-3.5 text-[#00A8E8] dark:text-sky-400 animate-pulse shrink-0 ml-0.5" />
-                        )}
-                      </span>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-[#00A8E8] dark:text-sky-400 shrink-0 stroke-[3]" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* CARD 3: BRAND NEW HIGH-TECH LIVE AUDIO WAVE VISUALIZER & AI TELEMETRY */}
-            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3 relative overflow-hidden backdrop-blur-md transition-all flex-1 flex flex-col justify-between">
+            {/* CARD: BRAND NEW HIGH-TECH LIVE AUDIO WAVE VISUALIZER & AI TELEMETRY */}
+            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3 relative overflow-hidden backdrop-blur-md transition-all flex-1 h-full flex flex-col justify-between">
               {/* Ambient Glow */}
               <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 rounded-full blur-2xl pointer-events-none" />
 
