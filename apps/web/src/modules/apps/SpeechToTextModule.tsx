@@ -203,6 +203,7 @@ interface MessageItem {
   text: string;
   translatedText?: string;
   timestamp: string;
+  date?: string;
 }
 
 const QUICK_RESPONSES = [
@@ -260,6 +261,7 @@ export const SpeechToTextModule: React.FC = () => {
     const initialId = `conv-${Date.now()}`;
     const nowStr = new Date().toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const dateShort = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+    const dateFull = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const timeShort = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
     return [
       {
@@ -275,7 +277,8 @@ export const SpeechToTextModule: React.FC = () => {
             speakerId: 'spk-male',
             text: 'Xin chào! Tôi sử dụng tính năng chuyển giọng nói thành văn bản để giao tiếp với bạn.',
             translatedText: 'Hello! I use the voice-to-text feature to communicate with you.',
-            timestamp: timeShort
+            timestamp: timeShort,
+            date: dateFull
           },
           {
             id: `msg-demo-2-${Date.now()}`,
@@ -284,7 +287,8 @@ export const SpeechToTextModule: React.FC = () => {
             speakerId: 'spk-deaf',
             text: 'Rất tốt! Tôi có thể đọc rõ từng câu chữ của bạn trên màn hình.',
             translatedText: 'Great! I can clearly read every word of yours on screen.',
-            timestamp: timeShort
+            timestamp: timeShort,
+            date: dateFull
           }
         ]
       }
@@ -1229,6 +1233,7 @@ export const SpeechToTextModule: React.FC = () => {
 
     const currentSpk = speakers.find(s => s.id === speakerIdToAssign) || DEFAULT_SPEAKERS[0];
     const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
     setMessages(prev => {
       if (prev.length === 0) {
@@ -1239,7 +1244,8 @@ export const SpeechToTextModule: React.FC = () => {
           speakerId: currentSpk.id,
           text: enhancedText,
           translatedText: translateText(enhancedText, targetLanguage),
-          timestamp: timestampStr
+          timestamp: timestampStr,
+          date: dateStr
         }];
       }
 
@@ -1257,7 +1263,8 @@ export const SpeechToTextModule: React.FC = () => {
           ...lastMsg,
           text: mergedText,
           translatedText: translateText(mergedText, targetLanguage),
-          timestamp: timestampStr
+          timestamp: timestampStr,
+          date: lastMsg.date || dateStr
         };
         return updated;
       }
@@ -1273,7 +1280,8 @@ export const SpeechToTextModule: React.FC = () => {
           speakerId: currentSpk.id,
           text: enhancedText.trim(),
           translatedText: translateText(enhancedText.trim(), targetLanguage),
-          timestamp: timestampStr
+          timestamp: timestampStr,
+          date: dateStr
         }
       ];
     });
@@ -1613,7 +1621,8 @@ export const SpeechToTextModule: React.FC = () => {
       speakerId: 'spk-deaf',
       text: enhancedText,
       translatedText: translated,
-      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      date: new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
     };
 
     setMessages(prev => [...prev, newMsg]);
@@ -1641,7 +1650,8 @@ export const SpeechToTextModule: React.FC = () => {
       speakerId: currentSpk.id,
       text: enhancedText,
       translatedText: translated,
-      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      date: new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
     };
 
     setMessages(prev => [...prev, newMsg]);
@@ -2006,10 +2016,6 @@ export const SpeechToTextModule: React.FC = () => {
                     <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-[#00A8E8] stroke-[2.5]" />
                     <span className="text-slate-900 dark:text-white">Hội Thoại Trực Tiếp</span>
                   </h2>
-                  <span className="hidden sm:flex text-xs font-extrabold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-2xs">
-                    <Calendar className="w-4 h-4 text-[#00A8E8] stroke-[2.5]" />
-                    <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
-                  </span>
 
                   {/* Nút Micro & Tạm Dừng nhanh trên Mobile */}
                   {micState === 'idle' && (
@@ -2192,6 +2198,16 @@ export const SpeechToTextModule: React.FC = () => {
                   </div>
                 )}
 
+                {/* Ngày tháng hiển thị trực tiếp trong nội dung hộp thoại */}
+                {messages.length > 0 && (
+                  <div className="flex items-center justify-center my-1.5 select-none shrink-0">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-200/70 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-2xs flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-[#00A8E8] stroke-[2.5]" />
+                      <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                    </span>
+                  </div>
+                )}
+
                 {(filterSpeakerId === 'all'
                   ? messages
                   : messages.filter(m => m.speakerId === filterSpeakerId || (m.sender === 'DEAF' && filterSpeakerId === 'spk-deaf'))
@@ -2231,8 +2247,10 @@ export const SpeechToTextModule: React.FC = () => {
                         </div>
 
                         <div className="mt-1.5 flex items-center justify-between gap-4 text-[11px] pt-0.5">
-                          <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0">
-                            {msg.timestamp}
+                          <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0 flex items-center gap-1.5">
+                            <span>{msg.timestamp}</span>
+                            <span className="opacity-40">•</span>
+                            <span>{msg.date || new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                           </span>
                           {isDeafMsg && (
                             <button
@@ -2665,10 +2683,6 @@ export const SpeechToTextModule: React.FC = () => {
                   <MessageSquare className="w-5 h-5 text-[#00A8E8] stroke-[2.5]" />
                   <span>Hội Thoại Trực Tiếp (Toàn Màn Hình)</span>
                 </h2>
-                <span className="text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-xl flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-2xs">
-                  <Calendar className="w-4 h-4 text-[#00A8E8] stroke-[2.5]" />
-                  <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
-                </span>
 
                 <button
                   onClick={handleCreateNewConversation}
@@ -2764,6 +2778,16 @@ export const SpeechToTextModule: React.FC = () => {
                 </div>
               )}
 
+              {/* Ngày tháng hiển thị trực tiếp trong nội dung hộp thoại */}
+              {messages.length > 0 && (
+                <div className="flex items-center justify-center my-1.5 select-none shrink-0">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-200/70 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-2xs flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-[#00A8E8] stroke-[2.5]" />
+                    <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                  </span>
+                </div>
+              )}
+
               {(filterSpeakerId === 'all'
                 ? messages
                 : messages.filter(m => m.speakerId === filterSpeakerId || (m.sender === 'DEAF' && filterSpeakerId === 'spk-deaf'))
@@ -2792,8 +2816,10 @@ export const SpeechToTextModule: React.FC = () => {
                         {msg.text}
                       </div>
                       <div className="mt-1.5 flex items-center justify-between gap-4 text-xs pt-0.5">
-                        <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0">
-                          {msg.timestamp}
+                        <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0 flex items-center gap-1.5">
+                          <span>{msg.timestamp}</span>
+                          <span className="opacity-40">•</span>
+                          <span>{msg.date || new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                         </span>
                         {isDeafMsg && (
                           <button
