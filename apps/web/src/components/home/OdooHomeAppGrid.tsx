@@ -410,15 +410,15 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
             <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-4 xs:px-6 sm:px-8 py-2 sm:py-3 flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
               
-              {/* 🎨 ÁNH SÁNG GRADIENT XANH - CAM NHẸ NHÀNG (100% không hình hộp, không cạnh viền, tan dần tự nhiên) */}
-              {/* Lớp màu xanh - cam chuyển tiếp nhẹ nhàng, hòa tan 100% ra xung quanh bằng radial mask & blur-3xl */}
+              {/* 🎨 ÁNH SÁNG GRADIENT XANH - CAM (Đậm nét hơn, 100% không hình hộp, hòa tan tự nhiên) */}
+              {/* Lớp màu xanh - cam chuyển tiếp rõ nét, hòa tan 100% ra xung quanh bằng radial mask & blur-3xl */}
               <div className="absolute -inset-x-16 -inset-y-10 sm:-inset-x-28 sm:-inset-y-14 pointer-events-none -z-10 blur-3xl">
                 <div 
-                  className="w-full h-full opacity-65 dark:opacity-40"
+                  className="w-full h-full opacity-85 dark:opacity-60"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.22) 0%, rgba(56, 189, 248, 0.14) 35%, rgba(251, 146, 60, 0.14) 65%, rgba(241, 90, 36, 0.22) 100%)',
-                    maskImage: 'radial-gradient(ellipse 65% 55% at 50% 50%, black 20%, transparent 75%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 65% 55% at 50% 50%, black 20%, transparent 75%)'
+                    background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.4) 0%, rgba(56, 189, 248, 0.28) 35%, rgba(251, 146, 60, 0.28) 65%, rgba(241, 90, 36, 0.4) 100%)',
+                    maskImage: 'radial-gradient(ellipse 65% 55% at 50% 50%, black 25%, transparent 78%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 65% 55% at 50% 50%, black 25%, transparent 78%)'
                   }}
                 />
               </div>
