@@ -264,13 +264,13 @@
   color: #0f172a !important;
 }
 
-/* Đảm bảo Tiêu đề (h1..h6) ngoài calendar module dùng tông màu đen Jet Black khi ở giao diện sáng */
-[data-theme="light"] body:not(.calendar-module-container) h1,
-[data-theme="light"] body:not(.calendar-module-container) h2,
-[data-theme="light"] body:not(.calendar-module-container) h3,
-[data-theme="light"] body:not(.calendar-module-container) h4,
-[data-theme="light"] body:not(.calendar-module-container) h5,
-[data-theme="light"] body:not(.calendar-module-container) h6 {
+/* Đảm bảo Tiêu đề (h1..h6) ngoài calendar module dùng tông màu đen Jet Black khi ở giao diện sáng (trừ khi có class text-white/transparent) */
+[data-theme="light"] body:not(.calendar-module-container) h1:not(.text-white):not([class*="text-white"]):not([class*="text-transparent"]),
+[data-theme="light"] body:not(.calendar-module-container) h2:not(.text-white):not([class*="text-white"]):not([class*="text-transparent"]),
+[data-theme="light"] body:not(.calendar-module-container) h3:not(.text-white):not([class*="text-white"]):not([class*="text-transparent"]),
+[data-theme="light"] body:not(.calendar-module-container) h4:not(.text-white):not([class*="text-white"]):not([class*="text-transparent"]),
+[data-theme="light"] body:not(.calendar-module-container) h5:not(.text-white):not([class*="text-white"]):not([class*="text-transparent"]),
+[data-theme="light"] body:not(.calendar-module-container) h6:not(.text-white):not([class*="text-white"]):not([class*="text-transparent"]) {
   color: #0f172a;
 }
 

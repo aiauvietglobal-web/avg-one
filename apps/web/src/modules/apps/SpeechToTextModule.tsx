@@ -2349,8 +2349,10 @@ export const SpeechToTextModule: React.FC = () => {
                     </div>
 
                     {/* Dòng chữ Tiêu Đề Trắng Sắc Nét, Nổi Bật & Sang Trọng */}
-                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-white shrink-0 leading-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]">
-                      Hội Thoại Trực Tiếp
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+                      <span style={{ color: '#ffffff' }} className="!text-white text-white">
+                        Hội Thoại Trực Tiếp
+                      </span>
                     </h2>
 
                     {/* Cụm sóng âm thanh mini dập dìu mềm mại màu trắng tinh khôi */}
