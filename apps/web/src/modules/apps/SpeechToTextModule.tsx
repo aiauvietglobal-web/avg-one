@@ -2370,21 +2370,21 @@ export const SpeechToTextModule: React.FC = () => {
           <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
             
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW & SOFT SKY TINT) */}
-            <div className="rounded-2xl bg-gradient-to-b from-sky-50/90 via-sky-50/40 to-slate-50/90 dark:from-slate-900/95 dark:via-slate-900/90 dark:to-slate-950/95 border-2 border-[#00A8E8]/60 dark:border-[#00A8E8]/60 shadow-xl shadow-[#00A8E8]/15 backdrop-blur-2xl p-3.5 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
+            <div className="rounded-2xl bg-gradient-to-b from-sky-100/90 via-sky-50/50 to-slate-50/90 dark:from-slate-900/95 dark:via-slate-900/90 dark:to-slate-950/95 border-2 border-[#00A8E8]/70 dark:border-[#00A8E8]/70 shadow-xl shadow-[#00A8E8]/20 backdrop-blur-2xl p-3.5 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
               {/* Subtle Ambient Color Glow Orb at Top */}
-              <div className="absolute -top-16 left-1/4 w-80 h-32 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/20 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -top-16 left-1/4 w-96 h-36 bg-[#00A8E8]/25 dark:bg-[#00A8E8]/30 rounded-full blur-3xl pointer-events-none" />
               
               {/* Speaker Filter Badges Bar & Top Actions */}
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
-                {/* Khung Header Có Màu Nền (Sky/Cyan Gradient Glassmorphism) Nổi Bật & Cân Đối */}
-                <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-100/90 via-sky-50/70 to-blue-50/80 dark:from-sky-950/60 dark:via-slate-850/80 dark:to-slate-900/90 border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                {/* Khung Header Có Màu Nền Gradient Đậm Nổi Bật & Thu Hút (Rich Sky-to-Cyan Gradient Glassmorphism) */}
+                <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#0284C7] dark:from-sky-900 dark:via-[#0284C7] dark:to-blue-950 border border-sky-400/40 dark:border-sky-500/40 shadow-md shadow-sky-500/25 text-white flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
                   {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo */}
                   <div className="flex items-center gap-2 shrink-0 h-8.5">
-                    <div className="w-7 h-7 rounded-lg bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 flex items-center justify-center border border-[#00A8E8]/30 shrink-0 shadow-2xs">
-                      <MessageSquare className="w-4 h-4 text-[#00A8E8] dark:text-[#38BDF8] stroke-[2.5]" />
+                    <div className="w-7 h-7 rounded-lg bg-white/20 dark:bg-white/15 flex items-center justify-center border border-white/30 shrink-0 shadow-xs backdrop-blur-sm">
+                      <MessageSquare className="w-4 h-4 text-white stroke-[2.5]" />
                     </div>
-                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2 shrink-0 leading-none">
-                      <span className="bg-gradient-to-r from-sky-900 to-sky-700 dark:from-sky-200 dark:to-sky-400 bg-clip-text text-transparent">Hội Thoại Trực Tiếp</span>
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-white flex items-center gap-2 shrink-0 leading-none drop-shadow-xs">
+                      <span>Hội Thoại Trực Tiếp</span>
                     </h2>
                   </div>
 
@@ -2540,27 +2540,27 @@ export const SpeechToTextModule: React.FC = () => {
                     {/* Nút TÙY CHỈNH TÍCH HỢP 1 ICON TRÊN MOBILE */}
                     <button
                       onClick={() => setIsMobileSettingsOpen(true)}
-                      className="lg:hidden h-8 text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0 leading-none"
+                      className="lg:hidden h-8 text-xs font-black text-sky-950 bg-white hover:bg-sky-50 px-2.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0 leading-none"
                       title="Mở tất cả tùy chỉnh & cài đặt"
                     >
-                      <SlidersHorizontal className="w-4 h-4 stroke-[2.5]" />
+                      <SlidersHorizontal className="w-4 h-4 stroke-[2.5] text-[#00A8E8]" />
                       <span>TÙY CHỈNH</span>
                     </button>
 
-                    {/* Nút MỚI */}
+                    {/* Nút MỚI - Nền Trắng Tinh Khiết / Hiệu Ứng Nổi Bật Trên Nền Gradient Xanh */}
                     <button
                       onClick={handleCreateNewConversation}
-                      className="h-8 text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-3 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0 leading-none"
+                      className="h-8 text-xs font-black text-[#0284C7] hover:text-[#0369A1] bg-white hover:bg-sky-50 px-3 rounded-xl flex items-center gap-1 shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95 uppercase tracking-wide shrink-0 leading-none border border-white/60"
                       title="Tạo cuộc hội thoại mới"
                     >
-                      <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <PlusCircle className="w-3.5 h-3.5 stroke-[2.5] text-[#00A8E8]" />
                       <span>MỚI</span>
                     </button>
 
                     {/* Nút Phóng to toàn màn hình */}
                     <button
                       onClick={() => setIsChatMaximized(true)}
-                      className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-sky-200 dark:border-slate-700 shrink-0"
+                      className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95 text-white bg-white/20 hover:bg-white/30 border-white/30 shrink-0 backdrop-blur-sm"
                       title="Mở rộng hộp thoại toàn màn hình"
                     >
                       <Maximize2 className="w-4 h-4 stroke-[2.5]" />
