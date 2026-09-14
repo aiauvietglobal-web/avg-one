@@ -330,7 +330,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         historyRef.current.push(sample);
         peakHoldRef.current.push(sample);
 
-        const maxBars = Math.floor(w / (isExpanded ? 4.8 : 3.6));
+        const maxBars = Math.floor(w / (isExpanded ? 4.8 : 3.4));
         while (historyRef.current.length > maxBars) {
           historyRef.current.shift();
         }
@@ -356,8 +356,8 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       ctx.fillRect(0, 0, w, h);
 
       // 4. Dải các vạch sóng tần số với Gradient Cam - Xanh (Cam ở trên đỉnh, Xanh dương / Cyan ở dưới chân)
-      const barWidth = isExpanded ? 3.2 : 2.5;
-      const step = isExpanded ? 5.2 : 4.0;
+      const barWidth = isExpanded ? 3.2 : 2.2;
+      const step = isExpanded ? 5.2 : 3.6;
       const totalBars = historyRef.current.length;
       const barsStartX = w - totalBars * step;
       const isRec = micState === 'recording';
@@ -470,7 +470,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   }, [micState, audioVolumeLevel, analyserRef, isExpanded]);
 
   return (
-    <div className={className || "relative h-56 sm:h-64 w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white transition-all"}>
+    <div className={className || "relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white transition-all"}>
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
@@ -2236,7 +2236,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): THANH PANEL UI CONTROLS & QUẢN LÝ NGƯỜI NÓI */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-3 xl:col-span-3 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
+          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
             
             {/* CARD: SPEAKER DIARIZATION (MALE & FEMALE ONLY) - ĐỒNG BỘ THEME XANH DƯƠNG / CYAN */}
             <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-2.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2 backdrop-blur-md">
@@ -2318,10 +2318,10 @@ export const SpeechToTextModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* Clean DAW Timeline Line Waveform (Expanded Height, Dynamic Motion & Interactive Expand) */}
+              {/* Clean DAW Timeline Line Waveform (Mở rộng theo chiều cao trên dưới: min-h-[340px] sm:min-h-[400px]) */}
               <div
                 onClick={() => setIsWaveformModalOpen(true)}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer flex-1 min-h-[340px] sm:min-h-[400px] flex flex-col"
                 title="Bấm vào để mở rộng phổ sóng toàn màn hình"
               >
                 <AiAudioTrackWaveform
@@ -2329,6 +2329,7 @@ export const SpeechToTextModule: React.FC = () => {
                   audioVolumeLevel={audioVolumeLevel}
                   livePitchHz={livePitchHz}
                   analyserRef={analyserRef}
+                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white transition-all"
                 />
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 pointer-events-none backdrop-blur-xs shadow-xs">
                   <Maximize2 className="w-3 h-3 stroke-[2.5]" />
@@ -2394,7 +2395,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT Ở GIỮA (CENTER MAIN HERO PANEL): HỘP HỘI THOẠI CHÍNH & HỘP NHẬP PHẢN HỒI */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-between space-y-3 h-full overflow-hidden">
+          <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
             
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW & REFINED STYLING) */}
             <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-3 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
