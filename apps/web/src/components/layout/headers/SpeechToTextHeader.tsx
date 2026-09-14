@@ -119,15 +119,16 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
             </button>
           </div>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT: BỎ HỘP CHỈ ĐỂ CHỮ */}
-          <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 select-none shrink-0 whitespace-nowrap">
+          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI */}
+          <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
-              { id: 'storage' as const, label: 'Lưu trữ' },
-              { id: 'utilities' as const, label: 'Tiện ích' },
-              { id: 'settings' as const, label: 'Cài đặt' },
+              { id: 'storage' as const, label: 'Lưu trữ', icon: FolderOpen },
+              { id: 'utilities' as const, label: 'Tiện ích', icon: SlidersHorizontal },
+              { id: 'settings' as const, label: 'Cài đặt', icon: Settings },
             ].map((tab) => {
               const isFilterActive = tab.id === 'utilities' && filterSpeakerId !== 'all';
               const isActive = isUtilitiesOpen || isFilterActive || speechNavTab === tab.id || (tab.id === 'storage' && speechNavTab === 'history') || (tab.id === 'utilities' && speechNavTab === 'templates');
+              const IconComponent = tab.icon;
 
               if (tab.id === 'utilities') {
                 return (
@@ -138,27 +139,23 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                   >
                     <button
                       onClick={() => handleTabClick(tab.id)}
-                      className={`relative px-2 sm:px-2.5 py-1.5 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 flex items-center gap-1 ${
+                      className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
                         isActive
-                          ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                          : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                          ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs shadow-orange-500/25 border border-orange-400/40 font-black'
+                          : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
                       }`}
                     >
-                      <span className="relative inline-block whitespace-nowrap">
-                        <span className="relative z-10 flex items-center gap-1">
-                          {tab.label}
-                          {isFilterActive && (
-                            <span className="w-2 h-2 rounded-full bg-[#F15A24] inline-block animate-pulse" title="Đang kích hoạt bộ lọc hội thoại" />
-                          )}
-                        </span>
-                        {isActive && (
-                          <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                      <IconComponent className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white stroke-[2.5]' : 'text-slate-500 dark:text-slate-400 stroke-[2]'}`} />
+                      <span className="flex items-center gap-1">
+                        {tab.label}
+                        {isFilterActive && (
+                          <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-white' : 'bg-[#F15A24]'} inline-block animate-pulse ml-0.5`} title="Đang kích hoạt bộ lọc hội thoại" />
                         )}
                       </span>
                       <ChevronDown
-                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                        className={`w-3 h-3 transition-transform duration-200 ${
                           isUtilitiesOpen ? 'rotate-180' : ''
-                        } ${isActive ? 'text-[#F15A24]' : 'opacity-60'}`}
+                        } ${isActive ? 'text-white' : 'text-slate-400'}`}
                       />
                     </button>
 
@@ -331,18 +328,14 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`relative px-2 sm:px-2.5 py-1.5 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 ${
+                  className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
                     isActive
-                      ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                      : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                      ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs shadow-orange-500/25 border border-orange-400/40 font-black'
+                      : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
                   }`}
                 >
-                  <span className="relative inline-block whitespace-nowrap">
-                    <span className="relative z-10">{tab.label}</span>
-                    {isActive && (
-                      <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
-                    )}
-                  </span>
+                  <IconComponent className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white stroke-[2.5]' : 'text-slate-500 dark:text-slate-400 stroke-[2]'}`} />
+                  <span>{tab.label}</span>
                 </button>
               );
             })}
