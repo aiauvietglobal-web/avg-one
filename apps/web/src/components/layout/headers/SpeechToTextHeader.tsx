@@ -22,6 +22,21 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
   const [isUtilitiesOpen, setIsUtilitiesOpen] = useState(false);
   const utilitiesDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Đồng bộ tab hiện tại
+  const [currentTab, setCurrentTab] = useState<SpeechNavTab>(speechNavTab);
+
+  useEffect(() => {
+    setCurrentTab(speechNavTab);
+  }, [speechNavTab]);
+
+  useEffect(() => {
+    const handleTabSync = (e: any) => {
+      if (e.detail) setCurrentTab(e.detail);
+    };
+    window.addEventListener('speech_tab_sync', handleTabSync);
+    return () => window.removeEventListener('speech_tab_sync', handleTabSync);
+  }, []);
+
   // Filter state synchronized from SpeechToTextModule
   const [filterSpeakerId, setFilterSpeakerId] = useState<string>('all');
   const [speakers, setSpeakers] = useState<Array<{ id: string; name: string; color?: string }>>([]);
@@ -127,7 +142,12 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
               { id: 'settings' as const, label: 'Cài đặt', icon: Settings },
             ].map((tab) => {
               const isFilterActive = tab.id === 'utilities' && filterSpeakerId !== 'all';
-              const isActive = isUtilitiesOpen || isFilterActive || speechNavTab === tab.id || (tab.id === 'storage' && speechNavTab === 'history') || (tab.id === 'utilities' && speechNavTab === 'templates');
+              const isActive =
+                tab.id === 'utilities'
+                  ? (isUtilitiesOpen || currentTab === 'utilities' || currentTab === 'templates')
+                  : tab.id === 'storage'
+                  ? (currentTab === 'storage' || currentTab === 'history')
+                  : (currentTab === 'settings');
               const IconComponent = tab.icon;
 
               if (tab.id === 'utilities') {

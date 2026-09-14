@@ -165,6 +165,17 @@ export const AppShell: React.FC<AppShellProps> = ({
     return () => window.removeEventListener('design_subtab_sync', handleDesignTabSync);
   }, []);
 
+  // Lắng nghe sự kiện đồng bộ tab từ SpeechToTextModule
+  useEffect(() => {
+    const handleSpeechTabSync = (e: any) => {
+      if (e.detail) {
+        setSpeechNavTab(e.detail);
+      }
+    };
+    window.addEventListener('speech_tab_sync', handleSpeechTabSync);
+    return () => window.removeEventListener('speech_tab_sync', handleSpeechTabSync);
+  }, []);
+
   // Shortcut Ctrl + K để focus nhanh vào thanh tìm kiếm trên header
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -928,7 +928,7 @@ export const SpeechToTextModule: React.FC = () => {
   // Sync subtab clicks from AppShell DOM buttons & SpeechToTextHeader
   useEffect(() => {
     const handleSync = (e: any) => {
-      if (e.detail) setActiveSubTab(e.detail);
+      if (e.detail && ['direct', 'text', 'lang'].includes(e.detail)) setActiveSubTab(e.detail);
     };
     const handleTabChange = (e: any) => {
       const tab = e.detail;
@@ -970,6 +970,17 @@ export const SpeechToTextModule: React.FC = () => {
       window.removeEventListener('speech_toggle_filter_bar', handleToggleFilterBar);
     };
   }, []);
+
+  // Sync header active tab with modals state
+  useEffect(() => {
+    if (isHistoryModalOpen) {
+      window.dispatchEvent(new CustomEvent('speech_tab_sync', { detail: 'storage' }));
+    } else if (isMobileSettingsOpen) {
+      window.dispatchEvent(new CustomEvent('speech_tab_sync', { detail: 'settings' }));
+    } else {
+      window.dispatchEvent(new CustomEvent('speech_tab_sync', { detail: 'chat' }));
+    }
+  }, [isHistoryModalOpen, isMobileSettingsOpen]);
 
   // Sync live filter state & counts up to SpeechToTextHeader
   useEffect(() => {
