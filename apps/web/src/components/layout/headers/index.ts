@@ -7,3 +7,5 @@ export * from './HRHeader';
 export * from './LegalHeader';
 export * from './FinanceHeader';
 export * from './RDHeader';
+export * from './SpeechToTextHeader';
+export * from './DashboardHeader';

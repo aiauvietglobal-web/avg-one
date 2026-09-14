@@ -921,13 +921,33 @@ export const SpeechToTextModule: React.FC = () => {
     showToast(`➕ Đã thêm: "${newSpk.name}" với chấm tròn màu riêng biệt!`);
   };
 
-  // Sync subtab clicks from AppShell DOM buttons
+  // Sync subtab clicks from AppShell DOM buttons & SpeechToTextHeader
   useEffect(() => {
     const handleSync = (e: any) => {
       if (e.detail) setActiveSubTab(e.detail);
     };
+    const handleTabChange = (e: any) => {
+      const tab = e.detail;
+      if (tab === 'chat') {
+        setActiveSubTab('direct');
+        setIsHistoryModalOpen(false);
+        setIsMobileSettingsOpen(false);
+      } else if (tab === 'history') {
+        setIsHistoryModalOpen(true);
+      } else if (tab === 'settings') {
+        setIsMobileSettingsOpen(true);
+      } else if (tab === 'templates') {
+        if (deafInputRef.current) {
+          deafInputRef.current.focus();
+        }
+      }
+    };
     window.addEventListener('speech_tab_sync', handleSync);
-    return () => window.removeEventListener('speech_tab_sync', handleSync);
+    window.addEventListener('speech_tab_change', handleTabChange);
+    return () => {
+      window.removeEventListener('speech_tab_sync', handleSync);
+      window.removeEventListener('speech_tab_change', handleTabChange);
+    };
   }, []);
 
   // Helper to format friendly voice display label with Northern accent indicators
@@ -1516,6 +1536,22 @@ export const SpeechToTextModule: React.FC = () => {
     }
   };
 
+  // Lắng nghe lệnh bật/tắt thu âm từ Header độc lập SpeechToTextHeader
+  useEffect(() => {
+    const handleToggle = () => {
+      toggleListening();
+    };
+    window.addEventListener('speech_toggle_recording', handleToggle);
+    return () => window.removeEventListener('speech_toggle_recording', handleToggle);
+  }, [toggleListening, micState]);
+
+  // Đồng bộ trạng thái thu âm lên SpeechToTextHeader
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('speech_recording_status', {
+      detail: { isRecording: micState === 'recording' }
+    }));
+  }, [micState]);
+
   // Send message from Deaf user
   const handleSendDeafMessage = (textToSend?: string) => {
     const finalMsg = textToSend !== undefined ? textToSend : deafTextInput;
@@ -1734,72 +1770,7 @@ export const SpeechToTextModule: React.FC = () => {
       {/* MAIN CONTAINER CONTENT - FULL WIDTH EXPANDED PX-3 SM:PX-6 LG:PX-8 */}
       <div className="w-full h-full px-3 sm:px-6 lg:px-8 flex flex-col space-y-3 relative z-10 overflow-hidden">
 
-        {/* 🔮 SLEEK COMPACT EXECUTIVE HEADER BAR (HIDDEN ON MOBILE TO MAXIMIZE SPACE, VISIBLE ON DESKTOP) */}
-        <div className="hidden lg:flex flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-4 py-2.5 shadow-xs relative overflow-hidden">
-          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            
-            {/* Left: Title + Slogan Badge in 1 Horizontal Line */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300 shrink-0">
-                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                  <defs>
-                    <linearGradient id="speech-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#0284C7" />
-                      <stop offset="35%" stopColor="#00A8E8" />
-                      <stop offset="70%" stopColor="#FF7043" />
-                      <stop offset="100%" stopColor="#F15A24" />
-                    </linearGradient>
-                  </defs>
-                  <rect
-                    x="1"
-                    y="1"
-                    width="calc(100% - 2px)"
-                    height="calc(100% - 2px)"
-                    rx="8"
-                    ry="8"
-                    fill="none"
-                    stroke="url(#speech-slogan-border-gradient)"
-                    strokeWidth="1.5"
-                    className="animate-slogan-box-border"
-                  />
-                </svg>
-                <div className="relative z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-transparent text-[11px] font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                  <Mic className="w-3.5 h-3.5 text-[#00A8E8]" />
-                  <span>VOICE CONVERSION</span>
-                </div>
-              </div>
 
-              <h1 className="text-base sm:text-lg font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-1.5 flex-wrap">
-                <span>HỆ THỐNG</span>
-                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                  <span className="relative z-10">CHUYỂN ĐỔI GIỌNG NÓI</span>
-                  <svg className="absolute -bottom-1 left-0 w-full h-2.5 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                  </svg>
-                </span>
-                <span>THÀNH VĂN BẢN</span>
-              </h1>
-            </div>
-
-            {/* Right: Quick Live Stats Badges & Status */}
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="hidden xl:flex items-center gap-2 text-[11px] font-bold text-slate-500 dark:text-slate-400 border-r border-slate-200 dark:border-slate-800 pr-3">
-                <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-extrabold">
-                  {messages.length} Lượt nói
-                </span>
-                <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-extrabold">
-                  {speakers.length} Người nói
-                </span>
-              </div>
-
-              <div className="px-3 py-1 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2 shadow-2xs">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Hệ Thống Trực Tuyến</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
 
         {/* WORKSPACE CONTENT AREA (PURE DIRECT SPEECH-TO-TEXT FOCUS) */}
         <div className="flex-1 min-h-0 overflow-hidden">

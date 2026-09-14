@@ -11,7 +11,9 @@ import { MobileHeader } from './MobileHeader';
 import {
   HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader,
   HRHeader, LegalHeader, FinanceHeader, RDHeader,
-  HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab, AppsNavTab
+  SpeechToTextHeader, DashboardHeader,
+  HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab, AppsNavTab,
+  SpeechNavTab, DashboardNavTab
 } from './headers';
 
 interface AppShellProps {
@@ -48,6 +50,20 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [financeNavTab, setFinanceNavTab] = useState<FinanceNavTab>('all');
   const [rdNavTab, setRdNavTab] = useState<RDNavTab>('overview');
   const [appsNavTab, setAppsNavTab] = useState<AppsNavTab>('overview');
+  const [speechNavTab, setSpeechNavTab] = useState<SpeechNavTab>('chat');
+  const [dashboardNavTab, setDashboardNavTab] = useState<DashboardNavTab>('overview');
+  const [speechIsRecording, setSpeechIsRecording] = useState<boolean>(false);
+
+  // Lắng nghe trạng thái thu âm từ phân hệ Chuyển đổi trực tiếp
+  useEffect(() => {
+    const handleSpeechRec = (e: any) => {
+      if (e.detail?.isRecording !== undefined) {
+        setSpeechIsRecording(e.detail.isRecording);
+      }
+    };
+    window.addEventListener('speech_recording_status', handleSpeechRec);
+    return () => window.removeEventListener('speech_recording_status', handleSpeechRec);
+  }, []);
 
   // Lắng nghe sự kiện chuyển sang Không gian làm việc (Hộp Thiết kế) từ màn hình theo dõi tiến độ đơn hàng
   useEffect(() => {
@@ -375,26 +391,61 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'apps' ? (
-            /* 3. HEADER PHÂN HỆ ỨNG DỤNG: TABS KHO ỨNG DỤNG / CHUYỂN ĐỔI / BÁO CÁO */
-            <AppsHeader
-              activeSubTitle={activeSubTitle}
-              onBack={() => {
-                if (activeSubTitle) {
+            activeSubTitle === 'CHUYỂN ĐỔI TRỰC TIẾP' ? (
+              /* 3A. HEADER ĐỘC LẬP CHO PHÂN HỆ CHUYỂN ĐỔI TRỰC TIẾP */
+              <SpeechToTextHeader
+                onBack={() => {
                   setActiveSubTitle('');
                   window.dispatchEvent(new CustomEvent('submodule_back'));
-                } else {
-                  onSelectModule('home');
-                }
-              }}
-              onSelectModule={onSelectModule}
-              appsNavTab={appsNavTab}
-              onSelectAppsTab={(tab) => {
-                setAppsNavTab(tab);
-              }}
-              darkMode={darkMode}
-              onToggleDarkMode={onToggleDarkMode}
-              renderUserAuthButton={renderUserAuthButton}
-            />
+                }}
+                speechNavTab={speechNavTab}
+                onSelectSpeechTab={(tab) => {
+                  setSpeechNavTab(tab);
+                  window.dispatchEvent(new CustomEvent('speech_tab_change', { detail: tab }));
+                }}
+                isRecording={speechIsRecording}
+                onToggleRecording={() => {
+                  window.dispatchEvent(new CustomEvent('speech_toggle_recording'));
+                }}
+                darkMode={darkMode}
+                onToggleDarkMode={onToggleDarkMode}
+                renderUserAuthButton={renderUserAuthButton}
+              />
+            ) : activeSubTitle === 'BÁO CÁO QUẢN TRỊ' ? (
+              /* 3B. HEADER ĐỘC LẬP CHO PHÂN HỆ BÁO CÁO QUẢN TRỊ */
+              <DashboardHeader
+                onBack={() => {
+                  setActiveSubTitle('');
+                  window.dispatchEvent(new CustomEvent('submodule_back'));
+                }}
+                dashboardNavTab={dashboardNavTab}
+                onSelectDashboardTab={(tab) => {
+                  setDashboardNavTab(tab);
+                  window.dispatchEvent(new CustomEvent('dashboard_tab_change', { detail: tab }));
+                }}
+                onExportReport={() => {
+                  window.dispatchEvent(new CustomEvent('dashboard_export_report'));
+                }}
+                darkMode={darkMode}
+                onToggleDarkMode={onToggleDarkMode}
+                renderUserAuthButton={renderUserAuthButton}
+              />
+            ) : (
+              /* 3C. HEADER KHO ỨNG DỤNG TỔNG QUAN: TẤT CẢ / ĐÃ SẴN SÀNG / SẮP PHÁT HÀNH */
+              <AppsHeader
+                activeSubTitle={activeSubTitle}
+                onBack={() => onSelectModule('home')}
+                onSelectModule={onSelectModule}
+                appsNavTab={appsNavTab}
+                onSelectAppsTab={(tab) => {
+                  setAppsNavTab(tab);
+                  window.dispatchEvent(new CustomEvent('apps_nav_tab_change', { detail: tab }));
+                }}
+                darkMode={darkMode}
+                onToggleDarkMode={onToggleDarkMode}
+                renderUserAuthButton={renderUserAuthButton}
+              />
+            )
           ) : activeModule === 'hr' || activeModule === 'goal' ? (
             /* 4. HEADER PHÂN HỆ NHÂN SỰ: < NHÂN SỰ + TABS QUẢN LÝ + THÊM NHÂN SỰ */
             <HRHeader

@@ -1,58 +1,58 @@
 import React from 'react';
 import {
-  ChevronLeft, LayoutGrid, Sparkles, Clock, Sun, Moon
+  ChevronLeft, BarChart3, TrendingUp, Layers, ShieldCheck, Download, Sun, Moon
 } from 'lucide-react';
-import { AppModuleId } from '../AppLauncherModal';
 
-export type AppsOverviewTab = 'all' | 'ready' | 'upcoming';
+export type DashboardNavTab = 'overview' | 'rnd' | 'departments' | 'infrastructure';
 
-export interface AppsHeaderProps {
-  activeSubTitle: string;
+export interface DashboardHeaderProps {
   onBack: () => void;
-  onSelectModule: (module: AppModuleId) => void;
-  appsNavTab?: string;
-  onSelectAppsTab?: (tab: any) => void;
+  dashboardNavTab?: DashboardNavTab;
+  onSelectDashboardTab?: (tab: DashboardNavTab) => void;
+  onExportReport?: () => void;
   darkMode?: boolean;
   onToggleDarkMode?: () => void;
   renderUserAuthButton: () => React.ReactNode;
 }
 
-export const AppsHeader: React.FC<AppsHeaderProps> = ({
+export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onBack,
+  dashboardNavTab = 'overview',
+  onSelectDashboardTab,
+  onExportReport,
   darkMode,
   onToggleDarkMode,
   renderUserAuthButton
 }) => {
-  const [activeTab, setActiveTab] = React.useState<AppsOverviewTab>('all');
-
-  const handleTabClick = (tab: AppsOverviewTab) => {
-    setActiveTab(tab);
-    window.dispatchEvent(new CustomEvent('apps_filter_tab', { detail: tab }));
+  const handleTabClick = (tab: DashboardNavTab) => {
+    if (onSelectDashboardTab) onSelectDashboardTab(tab);
+    window.dispatchEvent(new CustomEvent('dashboard_tab_change', { detail: tab }));
   };
 
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
-        {/* Cụm trái: [ < ỨNG DỤNG ] + [ Tabs đầu mục ] */}
+        {/* Cụm trái: [ < BÁO CÁO QUẢN TRỊ ] + [ Tabs nghiệp vụ ] + [ Xuất báo cáo ] */}
         <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp */}
           <button
             onClick={onBack}
             className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
-            title="Quay lại Trang chủ"
+            title="Quay lại Kho ứng dụng"
           >
             <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-            <span className="whitespace-nowrap font-black">ỨNG DỤNG</span>
+            <span className="whitespace-nowrap font-black">BÁO CÁO QUẢN TRỊ</span>
           </button>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ KHO ỨNG DỤNG (Tất cả, Đã sẵn sàng, Sắp phát hành) */}
+          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT CỦA BÁO CÁO QUẢN TRỊ */}
           <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
             {[
-              { id: 'all' as const, label: 'Tất cả ứng dụng', count: 4, icon: LayoutGrid },
-              { id: 'ready' as const, label: 'Đã sẵn sàng', count: 2, icon: Sparkles },
-              { id: 'upcoming' as const, label: 'Sắp phát hành', count: 2, icon: Clock },
+              { id: 'overview' as const, label: 'Tổng quan C-Suite', icon: BarChart3 },
+              { id: 'rnd' as const, label: 'Tiến độ R&D', icon: TrendingUp },
+              { id: 'departments' as const, label: 'Phòng ban', icon: Layers },
+              { id: 'infrastructure' as const, label: 'Hạ tầng 20 Users', icon: ShieldCheck },
             ].map((tab) => {
-              const isActive = activeTab === tab.id;
+              const isActive = dashboardNavTab === tab.id;
               const IconComponent = tab.icon;
               return (
                 <button
@@ -66,15 +66,23 @@ export const AppsHeader: React.FC<AppsHeaderProps> = ({
                 >
                   <IconComponent className="w-3.5 h-3.5 shrink-0" />
                   <span>{tab.label}</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                    isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}>
-                    {tab.count}
-                  </span>
                 </button>
               );
             })}
           </div>
+
+          {/* Nút Xuất báo cáo nhanh */}
+          <button
+            onClick={() => {
+              if (onExportReport) onExportReport();
+              window.dispatchEvent(new CustomEvent('dashboard_export'));
+            }}
+            className="hidden md:flex h-9 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white font-bold text-xs items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer shrink-0"
+            title="Xuất file báo cáo PDF / Excel"
+          >
+            <Download className="w-3.5 h-3.5 shrink-0" />
+            <span>Xuất báo cáo</span>
+          </button>
         </div>
 
         {/* Right: Dark Mode Toggle + Đăng Nhập */}

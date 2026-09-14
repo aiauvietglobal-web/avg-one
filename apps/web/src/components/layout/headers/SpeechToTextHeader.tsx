@@ -1,58 +1,65 @@
 import React from 'react';
 import {
-  ChevronLeft, LayoutGrid, Sparkles, Clock, Sun, Moon
+  ChevronLeft, Mic, MessageSquare, Clock, SlidersHorizontal, Zap, Sun, Moon, Radio
 } from 'lucide-react';
-import { AppModuleId } from '../AppLauncherModal';
 
-export type AppsOverviewTab = 'all' | 'ready' | 'upcoming';
+export type SpeechNavTab = 'chat' | 'history' | 'settings' | 'templates';
 
-export interface AppsHeaderProps {
-  activeSubTitle: string;
+export interface SpeechToTextHeaderProps {
   onBack: () => void;
-  onSelectModule: (module: AppModuleId) => void;
-  appsNavTab?: string;
-  onSelectAppsTab?: (tab: any) => void;
+  speechNavTab?: SpeechNavTab;
+  onSelectSpeechTab?: (tab: SpeechNavTab) => void;
+  isRecording?: boolean;
+  onToggleRecording?: () => void;
   darkMode?: boolean;
   onToggleDarkMode?: () => void;
   renderUserAuthButton: () => React.ReactNode;
 }
 
-export const AppsHeader: React.FC<AppsHeaderProps> = ({
+export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
   onBack,
+  speechNavTab = 'chat',
+  onSelectSpeechTab,
+  isRecording = false,
+  onToggleRecording,
   darkMode,
   onToggleDarkMode,
   renderUserAuthButton
 }) => {
-  const [activeTab, setActiveTab] = React.useState<AppsOverviewTab>('all');
+  const handleTabClick = (tab: SpeechNavTab) => {
+    if (onSelectSpeechTab) onSelectSpeechTab(tab);
+    window.dispatchEvent(new CustomEvent('speech_tab_change', { detail: tab }));
+  };
 
-  const handleTabClick = (tab: AppsOverviewTab) => {
-    setActiveTab(tab);
-    window.dispatchEvent(new CustomEvent('apps_filter_tab', { detail: tab }));
+  const handleRecordClick = () => {
+    if (onToggleRecording) onToggleRecording();
+    window.dispatchEvent(new CustomEvent('speech_toggle_recording'));
   };
 
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
-        {/* Cụm trái: [ < ỨNG DỤNG ] + [ Tabs đầu mục ] */}
+        {/* Cụm trái: [ < CHUYỂN ĐỔI TRỰC TIẾP ] + [ Tabs đầu mục nghiệp vụ ] + [ Nút Ghi Âm ] */}
         <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-          {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp */}
+          {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp: < CHUYỂN ĐỔI TRỰC TIẾP */}
           <button
             onClick={onBack}
             className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
-            title="Quay lại Trang chủ"
+            title="Quay lại Kho ứng dụng"
           >
             <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-            <span className="whitespace-nowrap font-black">ỨNG DỤNG</span>
+            <span className="whitespace-nowrap font-black">CHUYỂN ĐỔI TRỰC TIẾP</span>
           </button>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ KHO ỨNG DỤNG (Tất cả, Đã sẵn sàng, Sắp phát hành) */}
+          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT CỦA CHUYỂN ĐỔI TRỰC TIẾP */}
           <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
             {[
-              { id: 'all' as const, label: 'Tất cả ứng dụng', count: 4, icon: LayoutGrid },
-              { id: 'ready' as const, label: 'Đã sẵn sàng', count: 2, icon: Sparkles },
-              { id: 'upcoming' as const, label: 'Sắp phát hành', count: 2, icon: Clock },
+              { id: 'chat' as const, label: 'Hội thoại trực tiếp', icon: MessageSquare },
+              { id: 'history' as const, label: 'Lịch sử', icon: Clock },
+              { id: 'settings' as const, label: 'Tùy chỉnh âm', icon: SlidersHorizontal },
+              { id: 'templates' as const, label: 'Phản hồi nhanh', icon: Zap },
             ].map((tab) => {
-              const isActive = activeTab === tab.id;
+              const isActive = speechNavTab === tab.id;
               const IconComponent = tab.icon;
               return (
                 <button
@@ -66,15 +73,29 @@ export const AppsHeader: React.FC<AppsHeaderProps> = ({
                 >
                   <IconComponent className="w-3.5 h-3.5 shrink-0" />
                   <span>{tab.label}</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                    isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}>
-                    {tab.count}
-                  </span>
                 </button>
               );
             })}
           </div>
+
+          {/* Trạng thái hệ thống & Nút Ghi âm nhanh */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+            <Radio className="w-3 h-3 animate-pulse text-emerald-500" />
+            <span>Trực tuyến</span>
+          </div>
+
+          <button
+            onClick={handleRecordClick}
+            className={`hidden md:flex h-9 px-3.5 rounded-xl font-black text-xs items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer shrink-0 ${
+              isRecording
+                ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
+                : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+            }`}
+            title={isRecording ? "Dừng ghi âm" : "Bắt đầu chuyển giọng nói"}
+          >
+            <Mic className="w-3.5 h-3.5 shrink-0" />
+            <span>{isRecording ? "Dừng ghi âm" : "Bắt đầu nói"}</span>
+          </button>
         </div>
 
         {/* Right: Dark Mode Toggle + Đăng Nhập */}
