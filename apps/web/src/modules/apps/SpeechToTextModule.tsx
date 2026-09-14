@@ -2369,11 +2369,13 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
             
-            {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW) */}
-            <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border-2 border-[#00A8E8]/30 dark:border-[#00A8E8]/40 shadow-lg shadow-[#00A8E8]/5 backdrop-blur-2xl p-3 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
+            {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW & SOFT SKY TINT) */}
+            <div className="rounded-2xl bg-gradient-to-b from-sky-50/90 via-sky-50/40 to-slate-50/90 dark:from-slate-900/95 dark:via-slate-900/90 dark:to-slate-950/95 border-2 border-[#00A8E8]/60 dark:border-[#00A8E8]/60 shadow-xl shadow-[#00A8E8]/15 backdrop-blur-2xl p-3.5 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
+              {/* Subtle Ambient Color Glow Orb at Top */}
+              <div className="absolute -top-16 left-1/4 w-80 h-32 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/20 rounded-full blur-3xl pointer-events-none" />
               
               {/* Speaker Filter Badges Bar & Top Actions */}
-              <div className="flex flex-col gap-2 mb-2 flex-shrink-0">
+              <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Có Màu Nền (Sky/Cyan Gradient Glassmorphism) Nổi Bật & Cân Đối */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-100/90 via-sky-50/70 to-blue-50/80 dark:from-sky-950/60 dark:via-slate-850/80 dark:to-slate-900/90 border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
                   {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo */}
