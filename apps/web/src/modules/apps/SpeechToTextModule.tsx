@@ -344,17 +344,17 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         peakHoldRef.current[i] = peak;
       }
 
-      // 1. Màu nền xanh đậm Navy chuẩn phòng thu âm thanh
-      ctx.fillStyle = '#0B1D3A';
+      // 1. Màu nền trắng thanh lịch, hiện đại theo yêu cầu
+      ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, w, h);
 
       // Subtle ambient horizontal gradations
-      ctx.fillStyle = 'rgba(2, 132, 199, 0.04)';
+      ctx.fillStyle = 'rgba(2, 132, 199, 0.03)';
       ctx.fillRect(0, h * 0.45, w, h * 0.55);
 
       // 2. Đường chuẩn dB phụ (-12dB) ở tầm cao ~38%
       const upperLineY = Math.round(h * 0.38);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)'; // Slate-400
       ctx.lineWidth = 1;
       ctx.setLineDash([2, 4]);
       ctx.beginPath();
@@ -363,20 +363,20 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.fillStyle = '#94A3B8'; // Slate-400
       ctx.font = '8px monospace';
       ctx.fillText('-12dB', 4, upperLineY - 2);
 
       // 3. Đường chuẩn ngang chính (Baseline) ở ~68% chiều cao
       const baselineY = Math.round(h * 0.68);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.38)';
+      ctx.strokeStyle = 'rgba(100, 116, 139, 0.45)'; // Slate-500
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, baselineY);
       ctx.lineTo(w, baselineY);
       ctx.stroke();
 
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.fillStyle = '#64748B'; // Slate-500
       ctx.font = '8px monospace';
       ctx.fillText('0dB', 4, baselineY - 2);
 
@@ -387,11 +387,11 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       const barsStartX = w - totalBars * step;
       const isRec = micState === 'recording';
 
-      // Bar gradient
+      // Bar gradient nổi bật trên nền trắng
       const barGrad = ctx.createLinearGradient(0, h, 0, 0);
-      barGrad.addColorStop(0, '#0369A1');
+      barGrad.addColorStop(0, '#0284C7');
       barGrad.addColorStop(0.5, '#00A8E8');
-      barGrad.addColorStop(1, isRec ? '#38BDF8' : '#00C8FF');
+      barGrad.addColorStop(1, isRec ? '#0ea5e9' : '#0284C7');
 
       const points: { x: number; y: number }[] = [];
 
@@ -408,10 +408,10 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
         points.push({ x: x + barWidth / 2, y });
 
-        // Vạch đỉnh rơi chậm (Peak Hold Cap)
+        // Vạch đỉnh rơi chậm (Peak Hold Cap) sắc nét trên nền trắng
         const peakVal = peakHoldRef.current[i] || val;
         const peakY = h - Math.max(5, Math.min(h * 0.92, peakVal * h)) - 1.5;
-        ctx.fillStyle = isRec ? '#FFFFFF' : '#BAE6FD';
+        ctx.fillStyle = isRec ? '#0369A1' : '#0284C7';
         ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.2);
       }
 
@@ -422,7 +422,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         for (let i = 1; i < points.length; i++) {
           ctx.lineTo(points[i].x, points[i].y);
         }
-        ctx.strokeStyle = isRec ? 'rgba(56, 189, 248, 0.5)' : 'rgba(56, 189, 248, 0.25)';
+        ctx.strokeStyle = isRec ? 'rgba(2, 132, 199, 0.6)' : 'rgba(2, 132, 199, 0.35)';
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -433,7 +433,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       // Vệt hào quang vàng kim dọc thân kim
       const playheadGlow = ctx.createLinearGradient(playheadX - 6, 0, playheadX + 6, 0);
       playheadGlow.addColorStop(0, 'rgba(245, 158, 11, 0)');
-      playheadGlow.addColorStop(0.5, isRec ? 'rgba(245, 158, 11, 0.25)' : 'rgba(245, 158, 11, 0.12)');
+      playheadGlow.addColorStop(0.5, isRec ? 'rgba(245, 158, 11, 0.2)' : 'rgba(245, 158, 11, 0.1)');
       playheadGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
       ctx.fillStyle = playheadGlow;
       ctx.fillRect(playheadX - 6, 0, 12, h);
@@ -470,7 +470,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   }, [micState, audioVolumeLevel, analyserRef]);
 
   return (
-    <div className="relative h-44 sm:h-52 w-full rounded-xl overflow-hidden border border-sky-600/40 shadow-md shadow-sky-950/20 bg-[#0B1D3A]">
+    <div className="relative h-44 sm:h-52 w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm bg-white">
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
