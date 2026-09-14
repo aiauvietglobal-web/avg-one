@@ -8,8 +8,11 @@ import { LoginModal, UserProfile } from '../auth/LoginModal';
 import avgOfficialLogo from '../../assets/avg-one-official-logo.png';
 import { useIsMobile } from './useIsMobile';
 import { MobileHeader } from './MobileHeader';
-import { MobileBottomNav } from './MobileBottomNav';
-import { HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader } from './headers';
+import {
+  HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader,
+  HRHeader, LegalHeader, FinanceHeader, RDHeader,
+  HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab, AppsNavTab
+} from './headers';
 
 interface AppShellProps {
   activeModule: AppModuleId;
@@ -40,8 +43,11 @@ export const AppShell: React.FC<AppShellProps> = ({
       return null;
     }
   });
-  const [hrTabState, setHrTabState] = useState<string>('employees');
-
+  const [hrNavTab, setHrNavTab] = useState<HRNavTab>('employees');
+  const [legalNavTab, setLegalNavTab] = useState<LegalNavTab>('all');
+  const [financeNavTab, setFinanceNavTab] = useState<FinanceNavTab>('all');
+  const [rdNavTab, setRdNavTab] = useState<RDNavTab>('overview');
+  const [appsNavTab, setAppsNavTab] = useState<AppsNavTab>('overview');
 
   // Lắng nghe sự kiện chuyển sang Không gian làm việc (Hộp Thiết kế) từ màn hình theo dõi tiến độ đơn hàng
   useEffect(() => {
@@ -369,18 +375,92 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'apps' ? (
-            /* 3. HEADER PHÂN HỆ KHO ỨNG DỤNG & CÁC APP CON (CHUYỂN ĐỔI TRỰC TIẾP, BÁO CÁO, QR...) */
+            /* 3. HEADER PHÂN HỆ ỨNG DỤNG: TABS KHO ỨNG DỤNG / CHUYỂN ĐỔI / BÁO CÁO */
             <AppsHeader
               activeSubTitle={activeSubTitle}
               onBack={() => {
-                setActiveSubTitle('');
-                window.dispatchEvent(new CustomEvent('submodule_back'));
+                if (activeSubTitle) {
+                  setActiveSubTitle('');
+                  window.dispatchEvent(new CustomEvent('submodule_back'));
+                } else {
+                  onSelectModule('home');
+                }
               }}
               onSelectModule={onSelectModule}
+              appsNavTab={appsNavTab}
+              onSelectAppsTab={(tab) => {
+                setAppsNavTab(tab);
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'hr' || activeModule === 'goal' ? (
+            /* 4. HEADER PHÂN HỆ NHÂN SỰ: < NHÂN SỰ + TABS QUẢN LÝ + THÊM NHÂN SỰ */
+            <HRHeader
+              onBack={() => onSelectModule('home')}
+              hrNavTab={hrNavTab}
+              onSelectHRTab={(tab) => {
+                setHrNavTab(tab);
+                window.dispatchEvent(new CustomEvent('hr_tab_change', { detail: tab }));
+              }}
+              onAddEmployee={() => {
+                window.dispatchEvent(new CustomEvent('hr_add_employee'));
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'legal' ? (
+            /* 5. HEADER PHÂN HỆ PHÁP LÝ & SHTT: < PHÁP LÝ + TABS HỒ SƠ SHTT + TẠO HỒ SƠ */
+            <LegalHeader
+              onBack={() => onSelectModule('home')}
+              legalNavTab={legalNavTab}
+              onSelectLegalTab={(tab) => {
+                setLegalNavTab(tab);
+                window.dispatchEvent(new CustomEvent('legal_tab_change', { detail: tab }));
+              }}
+              onCreateOrder={() => {
+                window.dispatchEvent(new CustomEvent('legal_create_order'));
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'finance' || activeModule === 'request' ? (
+            /* 6. HEADER PHÂN HỆ TÀI CHÍNH & PHÊ DUYỆT: < TÀI CHÍNH + TABS ĐỀ XUẤT + TẠO ĐỀ XUẤT */
+            <FinanceHeader
+              onBack={() => onSelectModule('home')}
+              financeNavTab={financeNavTab}
+              onSelectFinanceTab={(tab) => {
+                setFinanceNavTab(tab);
+                window.dispatchEvent(new CustomEvent('finance_tab_change', { detail: tab }));
+              }}
+              onCreateRequest={() => {
+                window.dispatchEvent(new CustomEvent('finance_create_request'));
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'rd' || activeModule === 'workflow' ? (
+            /* 7. HEADER PHÂN HỆ NGHIÊN CỨU & SÁNG TẠO: < R&D + TABS 13 SOP / 3.1 / 3.2 / ĐƠN HÀNG */
+            <RDHeader
+              onBack={() => onSelectModule('home')}
+              rdNavTab={rdNavTab}
+              onSelectRDTab={(tab) => {
+                setRdNavTab(tab);
+                window.dispatchEvent(new CustomEvent('rd_tab_change', { detail: tab }));
+              }}
+              onCreateProject={() => {
+                window.dispatchEvent(new CustomEvent('rd_create_project'));
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : (
-            /* 4. HEADER CÁC PHÂN HỆ VẬN HÀNH KHÁC (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */
+            /* 8. HEADER CÁC PHÂN HỆ VẬN HÀNH KHÁC (HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG) */
             <StandardModuleHeader
               activeModule={activeModule}
               activeSubTitle={activeSubTitle}

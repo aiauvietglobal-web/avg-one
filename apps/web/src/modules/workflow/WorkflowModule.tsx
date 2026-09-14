@@ -2071,18 +2071,22 @@ export const WorkflowModule: React.FC = () => {
     };
   }, []);
 
-  // Lắng nghe sự kiện chọn phân hệ con từ Header Topbar (Thiết kế / Nghiên cứu)
+  // Lắng nghe sự kiện chọn phân hệ con từ Header Topbar (Thiết kế / Nghiên cứu / SOP)
   React.useEffect(() => {
     const handleSelectSub = (e: any) => {
       if (e.detail === 'design' || e.detail === 'research') {
         setSelectedSubModule(e.detail);
+      } else if (e.detail === 'overview' || e.detail === 'sop') {
+        setSelectedSubModule(null);
       }
     };
     window.addEventListener('workflow_submodule_select', handleSelectSub);
     window.addEventListener('orders_tab_change', handleSelectSub);
+    window.addEventListener('rd_tab_change', handleSelectSub);
     return () => {
       window.removeEventListener('workflow_submodule_select', handleSelectSub);
       window.removeEventListener('orders_tab_change', handleSelectSub);
+      window.removeEventListener('rd_tab_change', handleSelectSub);
     };
   }, []);
 

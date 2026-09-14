@@ -75,15 +75,23 @@ export const AppsModule: React.FC = () => {
     }
   }, [activeApp]);
 
-  // Listen for back click from AppShell header
+  // Listen for back click and direct app selection from AppShell header
   useEffect(() => {
     const handleSubBack = () => {
       setActiveApp(null);
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     };
+    const handleOpenSubApp = (e: any) => {
+      if (e.detail && ['speech-to-text', 'dashboard', 'qr-code', 'docs-template'].includes(e.detail)) {
+        setActiveApp(e.detail);
+      }
+    };
+
     window.addEventListener('submodule_back', handleSubBack);
+    window.addEventListener('open_sub_app', handleOpenSubApp);
     return () => {
       window.removeEventListener('submodule_back', handleSubBack);
+      window.removeEventListener('open_sub_app', handleOpenSubApp);
       // Clean up header title on unmount
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     };

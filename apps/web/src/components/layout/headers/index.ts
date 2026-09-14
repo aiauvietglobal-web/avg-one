@@ -3,3 +3,7 @@ export * from './AppsHeader';
 export * from './DesignHeader';
 export * from './StandardModuleHeader';
 export * from './HeaderNavMenu';
+export * from './HRHeader';
+export * from './LegalHeader';
+export * from './FinanceHeader';
+export * from './RDHeader';

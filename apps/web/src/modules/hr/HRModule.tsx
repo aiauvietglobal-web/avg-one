@@ -142,6 +142,29 @@ export const HRModule: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedEmp, setSelectedEmp] = useState<EmployeeProfile | null>(null);
 
+  // Lắng nghe sự kiện từ HRHeader
+  React.useEffect(() => {
+    const handleTabChange = (e: any) => {
+      if (e.detail) {
+        if (e.detail === 'departments') {
+          setActiveSubTab('employees');
+          setViewMode('org');
+        } else if (['employees', 'attendance', 'payroll', 'ownership', 'documents'].includes(e.detail)) {
+          setActiveSubTab(e.detail);
+          if (e.detail === 'employees') setViewMode('kanban');
+        }
+      }
+    };
+    const handleAdd = () => setShowAddModal(true);
+
+    window.addEventListener('hr_tab_change', handleTabChange);
+    window.addEventListener('hr_add_employee', handleAdd);
+    return () => {
+      window.removeEventListener('hr_tab_change', handleTabChange);
+      window.removeEventListener('hr_add_employee', handleAdd);
+    };
+  }, []);
+
   // New Employee Form State
   const [newName, setNewName] = useState('');
   const [newRole, setNewRole] = useState('');
@@ -197,7 +220,7 @@ export const HRModule: React.FC = () => {
   };
 
   return (
-    <div className="hr-module-container w-full h-full flex-1 min-h-0 overflow-hidden bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans p-3 sm:p-4 relative flex flex-col justify-between">
+    <div className="hr-module-container w-full h-full flex-1 min-h-0 overflow-hidden bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans py-2 sm:py-3 relative flex flex-col justify-between">
       
       {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
@@ -206,78 +229,8 @@ export const HRModule: React.FC = () => {
       <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
       <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
 
-      {/* Hidden button targets for Header Sub-tab Integration */}
-      <div className="hidden">
-        <button id="btn-hr-subtab-employees" onClick={() => setActiveSubTab('employees')} />
-        <button id="btn-hr-subtab-attendance" onClick={() => setActiveSubTab('attendance')} />
-        <button id="btn-hr-subtab-payroll" onClick={() => setActiveSubTab('payroll')} />
-        <button id="btn-hr-subtab-ownership" onClick={() => setActiveSubTab('ownership')} />
-        <button id="btn-hr-subtab-documents" onClick={() => setActiveSubTab('documents')} />
-      </div>
-
-      {/* MAIN CONTAINER CONTENT */}
-      <div className="w-full h-full flex flex-col space-y-3 relative z-10 overflow-hidden">
-
-        {/* 🔮 TOP BANNER EXECUTIVE DASHBOARD WITH SLOGAN BOX BADGE & BRUSH STROKE */}
-        <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-[24px] p-4 sm:p-5 shadow-xs relative overflow-hidden">
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            
-            {/* Title & Slogan Badge Box */}
-            <div className="space-y-2 text-left">
-              <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                  <defs>
-                    <linearGradient id="hr-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#0284C7" />
-                      <stop offset="35%" stopColor="#00A8E8" />
-                      <stop offset="70%" stopColor="#FF7043" />
-                      <stop offset="100%" stopColor="#F15A24" />
-                    </linearGradient>
-                  </defs>
-                  <rect
-                    x="1"
-                    y="1"
-                    width="calc(100% - 2px)"
-                    height="calc(100% - 2px)"
-                    rx="8"
-                    ry="8"
-                    fill="none"
-                    stroke="url(#hr-slogan-border-gradient)"
-                    strokeWidth="1.5"
-                    className="animate-slogan-box-border"
-                  />
-                </svg>
-                <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                  <Users className="w-3.5 h-3.5 text-[#00A8E8]" />
-                  <span>AVG HR & CORE TALENT MODULE</span>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-                  <span>QUẢN TRỊ</span>
-                  <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                    <span className="relative z-10">NHÂN SỰ & VĂN HÓA</span>
-                    <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                      <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                    </svg>
-                  </span>
-                </h1>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  Hồ sơ nhân sự, bảng lương, sở hữu cổ phần & hợp đồng Tập đoàn
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="px-4 py-2 bg-[#F15A24] hover:bg-[#ea580c] text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-2"
-            >
-              <UserPlus className="w-4 h-4" /> Thêm Nhân Sự Mới
-            </button>
-
-          </div>
-        </div>
+      {/* MAIN CONTAINER CONTENT - SYNCHRONIZED TO HEADER BOX MAX-W-7XL MX-AUTO PX-3 SM:PX-6 */}
+      <div className="max-w-7xl mx-auto w-full h-full px-3 sm:px-6 flex flex-col space-y-3 relative z-10 overflow-hidden">
 
         {/* Sub-Header Row 2: THANH TÌM KIẾM NHANH (Universal Quick Search & Scope Filter Bar) */}
         <div className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-2xl flex items-center justify-between gap-4 shadow-2xs">
@@ -346,11 +299,10 @@ export const HRModule: React.FC = () => {
             <Plus className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Thêm Nhân Sự</span>
           </button>
         </div>
-
       </div>
 
-      {/* Main Workspace Area (Expanded Full-Width Edge-to-Edge) */}
-      <div className="w-full px-4 sm:px-8 py-6 flex-1">
+      {/* Main Workspace Area (Expanded Full-Width within max-w-7xl) */}
+      <div className="w-full py-2 flex-1 min-h-0 overflow-y-auto">
         
         {/* TAB 1: NHÂN VIÊN (KANBAN / LIST / ORG CHART) */}
         {activeSubTab === 'employees' && (

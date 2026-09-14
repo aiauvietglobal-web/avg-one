@@ -32,6 +32,8 @@ import { WeworkModule } from './modules/wework/WeworkModule';
 import { RequestModule } from './modules/request/RequestModule';
 import { WorkflowModule } from './modules/workflow/WorkflowModule';
 import { HRModule } from './modules/hr/HRModule';
+import { LegalModule } from './modules/legal/LegalModule';
+import { FinanceModule } from './modules/finance/FinanceModule';
 import { CalendarModule } from './modules/calendar/CalendarModule';
 import { AppsModule } from './modules/apps/AppsModule';
 
@@ -2185,9 +2187,9 @@ export default function App() {
       ) : activeModule === 'hr' || activeModule === 'goal' ? (
         <HRModule />
       ) : activeModule === 'legal' ? (
-        <RequestModule />
+        <LegalModule />
       ) : activeModule === 'finance' || activeModule === 'request' ? (
-        <RequestModule />
+        <FinanceModule />
       ) : activeModule === 'rd' || activeModule === 'workflow' ? (
         <WorkflowModule />
       ) : activeModule === 'apps' ? (
