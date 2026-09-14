@@ -1043,8 +1043,8 @@ export const CalendarModule: React.FC = () => {
         <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
         <div className="absolute bottom-10 left-1/3 w-[550px] h-[300px] bg-gradient-to-tr from-sky-400/10 via-amber-400/10 to-orange-400/15 dark:from-sky-600/10 dark:to-orange-600/10 rounded-full blur-[140px] pointer-events-none -z-0" />
 
-        {/* Synchronized container matching Header alignment (max-w-7xl px-4 sm:px-6) */}
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 flex flex-col items-center justify-center gap-10 sm:gap-14 lg:gap-16 relative z-10 py-8 sm:py-14 my-auto">
+        {/* Synchronized container matching Header alignment (w-full px-3 sm:px-6 lg:px-8) */}
+        <div className="w-full px-3 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-10 sm:gap-14 lg:gap-16 relative z-10 py-8 sm:py-14 my-auto">
           
           {/* Header Title Section */}
           <div className="flex flex-col items-center text-center space-y-4 max-w-2xl mx-auto">

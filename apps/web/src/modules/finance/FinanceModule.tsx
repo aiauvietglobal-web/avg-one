@@ -211,8 +211,8 @@ export const FinanceModule: React.FC = () => {
       <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-[130px] pointer-events-none -z-0" />
       <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/10 dark:bg-[#F15A24]/15 rounded-full blur-[130px] pointer-events-none -z-0" />
 
-      {/* Main Container synchronized with max-w-7xl mx-auto px-3 sm:px-6 */}
-      <div className="max-w-7xl mx-auto w-full h-full px-3 sm:px-6 flex flex-col space-y-3 relative z-10 overflow-hidden">
+      {/* Main Container full-width expanded px-3 sm:px-6 lg:px-8 */}
+      <div className="w-full h-full px-3 sm:px-6 lg:px-8 flex flex-col space-y-3 relative z-10 overflow-hidden">
         
         {/* Compact KPI Row */}
         <div className="flex-shrink-0 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">

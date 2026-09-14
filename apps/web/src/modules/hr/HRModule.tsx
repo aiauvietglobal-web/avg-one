@@ -229,8 +229,8 @@ export const HRModule: React.FC = () => {
       <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
       <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
 
-      {/* MAIN CONTAINER CONTENT - SYNCHRONIZED TO HEADER BOX MAX-W-7XL MX-AUTO PX-3 SM:PX-6 */}
-      <div className="max-w-7xl mx-auto w-full h-full px-3 sm:px-6 flex flex-col space-y-3 relative z-10 overflow-hidden">
+      {/* MAIN CONTAINER CONTENT - FULL WIDTH EXPANDED PX-3 SM:PX-6 LG:PX-8 */}
+      <div className="w-full h-full px-3 sm:px-6 lg:px-8 flex flex-col space-y-3 relative z-10 overflow-hidden">
 
         {/* Sub-Header Row 2: THANH TÌM KIẾM NHANH (Universal Quick Search & Scope Filter Bar) */}
         <div className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-2xl flex items-center justify-between gap-4 shadow-2xs">

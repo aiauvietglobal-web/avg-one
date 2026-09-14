@@ -30,7 +30,7 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
 }) => {
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
-      <div className="max-w-7xl w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+      <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
         {/* Cụm trái: [ < 3.2 – THIẾT KẾ ] + [ 📋 Đơn hàng 3 | 📚 Phẩm 8 | 📦 Tồn 8 ] + [ 🔍 Tìm bản vẽ... Ctrl K ] */}
         <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp: < 3.2 – THIẾT KẾ */}
