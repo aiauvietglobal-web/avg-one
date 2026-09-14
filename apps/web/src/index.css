@@ -3226,40 +3226,103 @@ div.box-speech-bubble {
 }
 
 /* ============================================================ */
-/* ✨ HIỆU ỨNG TINH TẾ & SANG TRỌNG CHO HỘI THOẠI TRỰC TIẾP (5S)  */
-/* (ELEGANT SUBTLE SILK SHIMMER & SOFT BADGE AURA - 5S CYCLE)   */
+/* ✨ CHUYỂN ĐỘNG NHẸ NHÀNG & TINH TẾ CHO HỘI THOẠI TRỰC TIẾP   */
+/* (GENTLE SERENE MOTION & SOFT SILK SHIMMER - 5S CYCLE)        */
 /* ============================================================ */
 
-/* Vệt sáng lụa mềm lướt nhẹ qua mặt chữ mỗi 5s (chạy 1.2s, nghỉ 3.8s) */
-@keyframes refined-silk-sweep {
+/* 1. Chuyển động nhẹ nhàng cho Icon Badge (nhấc êm ái, khẽ nghiêng, thở nhẹ) */
+@keyframes gentle-badge-motion {
   0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    box-shadow: 0 1px 3px rgba(0, 168, 232, 0.08);
+    border-color: rgba(56, 189, 248, 0.3);
+  }
+  10% {
+    transform: translateY(-2.5px) scale(1.05) rotate(-2.5deg);
+    box-shadow: 0 5px 16px 2px rgba(0, 168, 232, 0.28);
+    border-color: rgba(56, 189, 248, 0.65);
+  }
+  20% {
+    transform: translateY(-0.5px) scale(1.01) rotate(0.5deg);
+    box-shadow: 0 2px 8px 1px rgba(0, 168, 232, 0.16);
+    border-color: rgba(56, 189, 248, 0.4);
+  }
+  28% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    box-shadow: 0 1px 3px rgba(0, 168, 232, 0.08);
+    border-color: rgba(56, 189, 248, 0.3);
+  }
+  /* Nhịp thở êm đềm lơ lửng tự nhiên ở giữa chu kỳ */
+  55% {
+    transform: translateY(-1.2px) scale(1.02);
+    box-shadow: 0 3px 10px rgba(0, 168, 232, 0.16);
+  }
+  75% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 1px 3px rgba(0, 168, 232, 0.08);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    box-shadow: 0 1px 3px rgba(0, 168, 232, 0.08);
+    border-color: rgba(56, 189, 248, 0.3);
+  }
+}
+
+/* 2. Chuyển động nhẹ nhàng cho Dòng chữ (khẽ bay nhẹ 1.5px đồng điệu với vệt lụa sáng) */
+@keyframes gentle-text-motion {
+  0% {
+    transform: translateY(0);
     background-position: -120% 0;
   }
+  8% {
+    transform: translateY(-1.5px);
+  }
+  16% {
+    transform: translateY(-0.5px);
+  }
   24% {
+    transform: translateY(0);
+    background-position: 120% 0;
+  }
+  55% {
+    transform: translateY(-0.8px);
+    background-position: 120% 0;
+  }
+  75% {
+    transform: translateY(0);
     background-position: 120% 0;
   }
   100% {
+    transform: translateY(0);
     background-position: 120% 0;
   }
 }
 
-/* Hào quang thở nhẹ quanh icon badge đồng bộ chu kỳ 5s */
-@keyframes refined-badge-pulse {
+/* 3. Icon tin nhắn bên trong khẽ xoay góc nhẹ tạo nét sinh động duyên dáng */
+@keyframes gentle-icon-sway {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 168, 232, 0);
-    border-color: rgba(56, 189, 248, 0.25);
+    transform: scale(1) rotate(0deg);
   }
-  8% {
-    box-shadow: 0 0 12px 2px rgba(0, 168, 232, 0.25);
-    border-color: rgba(56, 189, 248, 0.55);
+  10% {
+    transform: scale(1.08) rotate(3deg);
   }
-  22% {
-    box-shadow: 0 0 0 0 rgba(0, 168, 232, 0);
-    border-color: rgba(56, 189, 248, 0.25);
+  20% {
+    transform: scale(1) rotate(0deg);
+  }
+  55% {
+    transform: scale(1.03);
+  }
+  75% {
+    transform: scale(1);
   }
 }
 
-.refined-text-shimmer {
+.gentle-badge-motion {
+  animation: gentle-badge-motion 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, box-shadow;
+}
+
+.gentle-text-motion {
   display: inline-block;
   background: linear-gradient(
     105deg,
@@ -3274,10 +3337,11 @@ div.box-speech-bubble {
   background-size: 220% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: refined-silk-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: gentle-text-motion 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, background-position;
 }
 
-[data-theme="dark"] .refined-text-shimmer {
+[data-theme="dark"] .gentle-text-motion {
   display: inline-block;
   background: linear-gradient(
     105deg,
@@ -3292,11 +3356,13 @@ div.box-speech-bubble {
   background-size: 220% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: refined-silk-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: gentle-text-motion 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, background-position;
 }
 
-.refined-badge-subtle {
-  animation: refined-badge-pulse 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+.gentle-icon-inner {
+  animation: gentle-icon-sway 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
 }
 
 

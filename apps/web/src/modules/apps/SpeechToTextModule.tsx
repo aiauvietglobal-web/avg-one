@@ -2341,16 +2341,16 @@ export const SpeechToTextModule: React.FC = () => {
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-sky-50/40 to-blue-50/60 dark:from-slate-800 dark:via-slate-800/80 dark:to-slate-850 border border-sky-200/70 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Tiêu đề Hộp Thoại - Tinh Tế, Thanh Lịch & Sang Trọng Chu Kỳ 5s */}
+                  {/* Góc Trái: Tiêu đề Hộp Thoại - Chuyển Động Nhẹ Nhàng & Tinh Tế Chu Kỳ 5s */}
                   <div className="flex items-center gap-2.5 shrink-0 h-8.5">
-                    {/* Icon Badge Tinh Tế với quầng sáng mềm 5s */}
-                    <div className="relative flex items-center justify-center w-7.5 h-7.5 rounded-lg bg-sky-500/10 dark:bg-sky-400/10 border border-sky-400/30 dark:border-sky-400/25 text-[#00A8E8] dark:text-[#38BDF8] shrink-0 refined-badge-subtle transition-colors">
-                      <MessageSquare className="w-4 h-4 stroke-[2.2]" />
+                    {/* Icon Badge Chuyển Động Nhẹ Nhàng & Quầng Sáng Mềm */}
+                    <div className="relative flex items-center justify-center w-7.5 h-7.5 rounded-lg bg-sky-500/10 dark:bg-sky-400/10 border border-sky-400/30 dark:border-sky-400/25 text-[#00A8E8] dark:text-[#38BDF8] shrink-0 gentle-badge-motion transition-colors">
+                      <MessageSquare className="w-4 h-4 stroke-[2.2] gentle-icon-inner" />
                     </div>
 
-                    {/* Dòng chữ Tiêu Đề Tinh Tế với vệt lụa sáng lướt nhẹ chu kỳ 5s */}
+                    {/* Dòng chữ Tiêu Đề Chuyển Động Nhẹ Nhàng với vệt lụa sáng lướt êm */}
                     <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider shrink-0 leading-none select-none">
-                      <span className="refined-text-shimmer">
+                      <span className="gentle-text-motion">
                         Hội Thoại Trực Tiếp
                       </span>
                     </h2>
