@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, ChevronDown, Filter, Users, SlidersHorizontal, MessageSquare } from 'lucide-react';
+import { Home, ChevronDown, Filter, Users, SlidersHorizontal, MessageSquare, FolderOpen, Settings } from 'lucide-react';
 
 export type SpeechNavTab = 'storage' | 'utilities' | 'settings' | 'chat' | 'history' | 'templates';
 
