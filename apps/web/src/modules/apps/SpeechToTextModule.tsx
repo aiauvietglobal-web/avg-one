@@ -348,37 +348,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, w, h);
 
-      // Subtle ambient horizontal gradations
-      ctx.fillStyle = 'rgba(2, 132, 199, 0.03)';
-      ctx.fillRect(0, h * 0.45, w, h * 0.55);
 
-      // 2. Đường chuẩn dB phụ (-12dB) ở tầm cao ~38%
-      const upperLineY = Math.round(h * 0.38);
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)'; // Slate-400
-      ctx.lineWidth = 1;
-      ctx.setLineDash([2, 4]);
-      ctx.beginPath();
-      ctx.moveTo(0, upperLineY);
-      ctx.lineTo(w, upperLineY);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      ctx.fillStyle = '#94A3B8'; // Slate-400
-      ctx.font = '8px monospace';
-      ctx.fillText('-12dB', 4, upperLineY - 2);
-
-      // 3. Đường chuẩn ngang chính (Baseline) ở ~68% chiều cao
-      const baselineY = Math.round(h * 0.68);
-      ctx.strokeStyle = 'rgba(100, 116, 139, 0.45)'; // Slate-500
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, baselineY);
-      ctx.lineTo(w, baselineY);
-      ctx.stroke();
-
-      ctx.fillStyle = '#64748B'; // Slate-500
-      ctx.font = '8px monospace';
-      ctx.fillText('0dB', 4, baselineY - 2);
 
       // 4. Dải các vạch sóng tần số dạng line thanh mảnh với Gradient chuyển sắc
       const barWidth = 1.6;
