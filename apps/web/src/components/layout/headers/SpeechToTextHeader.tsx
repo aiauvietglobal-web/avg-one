@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Home, ChevronLeft, Mic, MessageSquare, Clock, SlidersHorizontal, Zap, Sun, Moon, Radio
-} from 'lucide-react';
+import { Home } from 'lucide-react';
 
 export type SpeechNavTab = 'chat' | 'history' | 'settings' | 'templates';
 
@@ -22,10 +20,6 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
   onGoHome,
   speechNavTab = 'chat',
   onSelectSpeechTab,
-  isRecording = false,
-  onToggleRecording,
-  darkMode,
-  onToggleDarkMode,
   renderUserAuthButton
 }) => {
   const handleGoHome = () => {
@@ -41,16 +35,11 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
     window.dispatchEvent(new CustomEvent('speech_tab_change', { detail: tab }));
   };
 
-  const handleRecordClick = () => {
-    if (onToggleRecording) onToggleRecording();
-    window.dispatchEvent(new CustomEvent('speech_toggle_recording'));
-  };
-
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
-        {/* Cụm trái: [ 🏠 Trang chủ ] + [ CHUYỂN ĐỔI TRỰC TIẾP ] + [ Tabs đầu mục nghiệp vụ ] + [ Nút Ghi Âm ] */}
-        <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
+        {/* Cụm trái: [ 🏠 Trang chủ ] + [ CHUYỂN ĐỔI TRỰC TIẾP ] + [ Tabs đầu mục: Bỏ hộp chỉ để chữ ] */}
+        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 select-none shrink-0 whitespace-nowrap">
           {/* Icon Trang chủ: Bấm để quay về Trang chủ AVG One */}
           <button
             onClick={handleGoHome}
@@ -63,70 +52,45 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
           {/* Tên phân hệ: Bỏ hộp chỉ để chữ (chữ to hơn, màu cam, căn thẳng hàng 100%) */}
           <button
             onClick={onBack}
-            className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none"
+            className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none mr-1 sm:mr-2"
             title="Quay lại Kho ứng dụng"
           >
             CHUYỂN ĐỔI TRỰC TIẾP
           </button>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT CỦA CHUYỂN ĐỔI TRỰC TIẾP */}
-          <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
+          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT: BỎ HỘP CHỈ ĐỂ CHỮ */}
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 select-none shrink-0 whitespace-nowrap">
             {[
-              { id: 'chat' as const, label: 'Hội thoại trực tiếp', icon: MessageSquare },
-              { id: 'history' as const, label: 'Lịch sử', icon: Clock },
-              { id: 'settings' as const, label: 'Tùy chỉnh âm', icon: SlidersHorizontal },
-              { id: 'templates' as const, label: 'Phản hồi nhanh', icon: Zap },
+              { id: 'chat' as const, label: 'Hội thoại trực tiếp' },
+              { id: 'history' as const, label: 'Lịch sử' },
+              { id: 'settings' as const, label: 'Tùy chỉnh âm' },
+              { id: 'templates' as const, label: 'Phản hồi nhanh' },
             ].map((tab) => {
               const isActive = speechNavTab === tab.id;
-              const IconComponent = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`h-7 px-2.5 sm:px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                  className={`relative px-2 sm:px-2.5 py-1.5 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs font-black'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60'
+                      ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
+                      : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                   }`}
                 >
-                  <IconComponent className="w-3.5 h-3.5 shrink-0" />
-                  <span>{tab.label}</span>
+                  <span className="relative inline-block whitespace-nowrap">
+                    <span className="relative z-10">{tab.label}</span>
+                    {isActive && (
+                      <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
+                    )}
+                  </span>
                 </button>
               );
             })}
           </div>
-
-          {/* Trạng thái hệ thống & Nút Ghi âm nhanh */}
-          <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-            <Radio className="w-3 h-3 animate-pulse text-emerald-500" />
-            <span>Trực tuyến</span>
-          </div>
-
-          <button
-            onClick={handleRecordClick}
-            className={`hidden md:flex h-9 px-3.5 rounded-xl font-black text-xs items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer shrink-0 ${
-              isRecording
-                ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
-                : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-            }`}
-            title={isRecording ? "Dừng ghi âm" : "Bắt đầu chuyển giọng nói"}
-          >
-            <Mic className="w-3.5 h-3.5 shrink-0" />
-            <span>{isRecording ? "Dừng ghi âm" : "Bắt đầu nói"}</span>
-          </button>
         </div>
 
-        {/* Right: Dark Mode Toggle + Đăng Nhập */}
+        {/* Right: Đăng Nhập / Avatar */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {onToggleDarkMode && (
-            <button
-              onClick={onToggleDarkMode}
-              className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
-              title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
-            >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
-          )}
           {renderUserAuthButton()}
         </div>
       </div>
