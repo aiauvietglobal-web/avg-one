@@ -241,30 +241,22 @@ export const enhanceVietnameseTranscript = (
   return processRealtimeSpeechPunctuation(rawText, isFinal);
 };
 
-export type WaveformLineMode = 'sine' | 'oscilloscope' | 'ribbon';
-
-interface AiWaveformLineCanvasProps {
+interface AiAudioTrackWaveformProps {
   micState: 'idle' | 'recording' | 'paused';
   audioVolumeLevel: number;
   livePitchHz: number | null;
   analyserRef: React.MutableRefObject<AnalyserNode | null>;
-  waveMode: WaveformLineMode;
-  onModeChange: (mode: WaveformLineMode) => void;
 }
 
-export const AiWaveformLineCanvas: React.FC<AiWaveformLineCanvasProps> = ({
+export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   micState,
   audioVolumeLevel,
-  livePitchHz,
-  analyserRef,
-  waveMode,
-  onModeChange
+  analyserRef
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameId = useRef<number | null>(null);
-  const phaseRef = useRef<number>(0);
-  const scanXRef = useRef<number>(0);
-  const timeDomainDataRef = useRef<Uint8Array>(new Uint8Array(128));
+  const historyRef = useRef<number[]>([]);
+  const lastSampleTimeRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -272,7 +264,12 @@ export const AiWaveformLineCanvas: React.FC<AiWaveformLineCanvasProps> = ({
 
     let isDestroyed = false;
 
-    const render = () => {
+    // Khởi tạo danh sách các vạch mẫu ban đầu
+    if (historyRef.current.length === 0) {
+      historyRef.current = Array.from({ length: 90 }, () => 0.12 + Math.random() * 0.1);
+    }
+
+    const render = (timestamp: number) => {
       if (isDestroyed) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -297,265 +294,71 @@ export const AiWaveformLineCanvas: React.FC<AiWaveformLineCanvasProps> = ({
 
       const w = displayWidth;
       const h = displayHeight;
-      const centerY = h / 2;
 
-      // 1. Dark Futuristic Studio Oscilloscope Backdrop
-      ctx.fillStyle = '#050B14';
-      ctx.fillRect(0, 0, w, h);
+      // Cập nhật mẫu sóng mới mỗi 45ms để dải sóng cuộn mượt mà như bản ghi âm chuyên nghiệp
+      if (timestamp - lastSampleTimeRef.current > 45) {
+        lastSampleTimeRef.current = timestamp;
 
-      // Center radial ambient glow
-      const radialGlow = ctx.createRadialGradient(w / 2, centerY, 4, w / 2, centerY, w * 0.55);
-      radialGlow.addColorStop(0, micState === 'recording' ? 'rgba(0, 168, 232, 0.16)' : 'rgba(14, 116, 144, 0.08)');
-      radialGlow.addColorStop(1, 'rgba(5, 11, 20, 0)');
-      ctx.fillStyle = radialGlow;
-      ctx.fillRect(0, 0, w, h);
+        let sample = 0.12 + Math.random() * 0.08; // Đường nền lúc yên lặng
 
-      // 2. Oscilloscope Reticle Grid
-      ctx.lineWidth = 0.7;
-      const dbOffsets = [-0.36, -0.18, 0, 0.18, 0.36];
-      dbOffsets.forEach((offset) => {
-        const y = centerY + offset * h;
-        ctx.beginPath();
-        if (offset === 0) {
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.28)';
-          ctx.setLineDash([3, 4]);
-        } else {
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
-          ctx.setLineDash([]);
-        }
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      });
-
-      // Vertical time division lines
-      ctx.setLineDash([2, 5]);
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.06)';
-      const vDivisions = 8;
-      for (let i = 1; i < vDivisions; i++) {
-        const x = (w / vDivisions) * i;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, h);
-        ctx.stroke();
-      }
-      ctx.setLineDash([]);
-
-      // Laser radar scan sweep beam
-      scanXRef.current = (scanXRef.current + 1.2) % w;
-      const scanBeam = ctx.createLinearGradient(scanXRef.current - 24, 0, scanXRef.current, 0);
-      scanBeam.addColorStop(0, 'rgba(0, 229, 255, 0)');
-      scanBeam.addColorStop(0.85, 'rgba(0, 229, 255, 0.08)');
-      scanBeam.addColorStop(1, 'rgba(0, 229, 255, 0.28)');
-      ctx.fillStyle = scanBeam;
-      ctx.fillRect(scanXRef.current - 24, 0, 24, h);
-
-      // 3. Audio Phase & Dynamics Calculations
-      const isRec = micState === 'recording';
-      const vol = isRec ? Math.max(audioVolumeLevel, 4) : 0;
-      phaseRef.current += isRec ? (0.05 + vol * 0.001) : 0.025;
-      const phase = phaseRef.current;
-      const pitchFreq = livePitchHz ? Math.max(0.012, Math.min(0.038, livePitchHz / 7200)) : 0.02;
-
-      // MODE 1: SÓNG SIN ĐA TẦNG NEON (MULTI-HARMONIC NEON SINE)
-      if (waveMode === 'sine') {
-        const amp = isRec
-          ? Math.max(8, (vol / 100) * (h * 0.38) + 8)
-          : 6 + Math.sin(phase * 0.7) * 3;
-
-        const points: { x: number; y: number }[] = [];
-        const step = 2;
-        for (let x = 0; x <= w; x += step) {
-          const env = Math.sin((x / w) * Math.PI);
-          const y = centerY + (
-            Math.sin(x * pitchFreq + phase) * amp +
-            Math.sin(x * pitchFreq * 1.8 - phase * 0.8) * (amp * 0.4)
-          ) * env;
-          points.push({ x, y });
-        }
-
-        // Draw Area Fill under primary wave
-        const areaGrad = ctx.createLinearGradient(0, centerY - amp, 0, h);
-        areaGrad.addColorStop(0, isRec ? 'rgba(0, 229, 255, 0.24)' : 'rgba(14, 165, 233, 0.12)');
-        areaGrad.addColorStop(0.6, 'rgba(0, 168, 232, 0.06)');
-        areaGrad.addColorStop(1, 'rgba(0, 168, 232, 0)');
-
-        ctx.fillStyle = areaGrad;
-        ctx.beginPath();
-        ctx.moveTo(0, centerY);
-        points.forEach(p => ctx.lineTo(p.x, p.y));
-        ctx.lineTo(w, centerY);
-        ctx.closePath();
-        ctx.fill();
-
-        // Harmonic Wave 2 (Electric Violet 3D Depth Wave)
-        ctx.beginPath();
-        for (let x = 0; x <= w; x += step) {
-          const env = Math.sin((x / w) * Math.PI);
-          const y = centerY + Math.sin(x * pitchFreq * 1.35 - phase * 1.25) * (amp * 0.58) * env;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = isRec ? '#818CF8' : 'rgba(129, 140, 248, 0.4)';
-        ctx.lineWidth = 1.6;
-        ctx.shadowColor = '#818CF8';
-        ctx.shadowBlur = 8;
-        ctx.stroke();
-
-        // Harmonic Wave 3 (Micro-ripple shimmer wave)
-        ctx.beginPath();
-        for (let x = 0; x <= w; x += step) {
-          const env = Math.sin((x / w) * Math.PI);
-          const y = centerY + Math.cos(x * pitchFreq * 2.2 + phase * 1.7) * (amp * 0.28) * env;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = isRec ? 'rgba(56, 189, 248, 0.7)' : 'rgba(56, 189, 248, 0.25)';
-        ctx.lineWidth = 1.1;
-        ctx.shadowBlur = 0;
-        ctx.stroke();
-
-        // Primary Neon Cyan Line (Crisp, High-Glow)
-        ctx.beginPath();
-        points.forEach((p, idx) => {
-          if (idx === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
-        });
-        ctx.strokeStyle = isRec ? '#00F0FF' : '#38BDF8';
-        ctx.lineWidth = 2.4;
-        ctx.shadowColor = isRec ? '#00E5FF' : '#0284C7';
-        ctx.shadowBlur = isRec ? 12 : 6;
-        ctx.stroke();
-
-        // Luminous Peak Orb
-        if (isRec && vol > 10) {
-          let maxPt = points[0];
-          let maxDist = 0;
-          points.forEach(p => {
-            const dist = Math.abs(p.y - centerY);
-            if (dist > maxDist) {
-              maxDist = dist;
-              maxPt = p;
-            }
-          });
-          if (maxPt) {
-            ctx.beginPath();
-            ctx.arc(maxPt.x, maxPt.y, 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = '#FFFFFF';
-            ctx.shadowColor = '#00F0FF';
-            ctx.shadowBlur = 14;
-            ctx.fill();
+        if (micState === 'recording') {
+          if (audioVolumeLevel > 6) {
+            // Khi có giọng nói: các vạch nhảy cao tự nhiên theo âm lượng
+            const normVol = Math.min(1.0, (audioVolumeLevel / 100) * 1.35);
+            sample = Math.max(0.2, normVol * (0.6 + Math.random() * 0.4));
+          } else {
+            sample = 0.13 + Math.random() * 0.1;
           }
         }
+
+        historyRef.current.push(sample);
+        const maxBars = Math.floor(w / 3.2);
+        while (historyRef.current.length > maxBars) {
+          historyRef.current.shift();
+        }
       }
 
-      // MODE 2: DAO ĐỘNG KÝ THỜI GIAN THỰC (REALTIME OSCILLOSCOPE TIME-DOMAIN)
-      else if (waveMode === 'oscilloscope') {
-        const analyser = analyserRef.current;
-        const buffer = timeDomainDataRef.current;
+      // 1. Màu nền xanh đậm Navy chuẩn phòng thu (khớp chuẩn ảnh mẫu)
+      ctx.fillStyle = '#0B1D3A';
+      ctx.fillRect(0, 0, w, h);
 
-        if (isRec && analyser) {
-          analyser.getByteTimeDomainData(buffer);
-        }
+      // 2. Dải các vạch sóng tần số dạng line thanh mảnh (mọc từ đáy lên)
+      const barWidth = 1.6;
+      const step = 3.2;
+      const totalBars = historyRef.current.length;
+      const barsStartX = w - totalBars * step;
 
-        const bufferLength = buffer.length;
-        const sliceWidth = w / (bufferLength - 1);
+      const isRec = micState === 'recording';
+      ctx.fillStyle = isRec ? '#00A8E8' : '#0284C7';
 
-        // Draw Real-time Waveform Path
-        ctx.beginPath();
-        for (let i = 0; i < bufferLength; i++) {
-          const v = isRec && analyser ? buffer[i] / 128.0 : 1.0 + Math.sin(i * 0.12 + phase) * 0.06;
-          const env = Math.sin((i / (bufferLength - 1)) * Math.PI);
-          const y = centerY + (v - 1.0) * (h * 0.45) * env;
+      for (let i = 0; i < totalBars; i++) {
+        const x = barsStartX + i * step;
+        if (x < -barWidth || x > w) continue;
 
-          const x = i * sliceWidth;
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
+        const val = historyRef.current[i];
+        const barHeight = Math.max(4, Math.min(h * 0.9, val * h));
+        const y = h - barHeight;
 
-        // Phosphor Glow Stroke
-        ctx.strokeStyle = isRec ? '#00FFCC' : '#00A8E8';
-        ctx.lineWidth = 2.2;
-        ctx.shadowColor = isRec ? '#00FFCC' : '#00A8E8';
-        ctx.shadowBlur = isRec ? 14 : 6;
-        ctx.stroke();
-
-        // Secondary Phosphor Afterglow Trail
-        ctx.beginPath();
-        for (let i = 0; i < bufferLength; i++) {
-          const v = isRec && analyser ? buffer[i] / 128.0 : 1.0 + Math.sin(i * 0.12 + phase * 0.8) * 0.05;
-          const env = Math.sin((i / (bufferLength - 1)) * Math.PI);
-          const y = centerY - (v - 1.0) * (h * 0.28) * env;
-          const x = i * sliceWidth;
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
-        ctx.lineWidth = 1.4;
-        ctx.shadowColor = '#38BDF8';
-        ctx.shadowBlur = 8;
-        ctx.stroke();
+        ctx.fillRect(x, y, barWidth, barHeight);
       }
 
-      // MODE 3: DẢI SÓNG NĂNG LƯỢNG AI (CYBER RIBBON)
-      else if (waveMode === 'ribbon') {
-        const amp = isRec
-          ? Math.max(10, (vol / 100) * (h * 0.35) + 10)
-          : 8 + Math.sin(phase * 0.6) * 4;
+      // 3. Đường chuẩn ngang màu trắng mờ (nằm ở ~32% tính từ đáy lên)
+      const baselineY = Math.round(h * 0.68);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, baselineY);
+      ctx.lineTo(w, baselineY);
+      ctx.stroke();
 
-        const topPoints: { x: number; y: number }[] = [];
-        const botPoints: { x: number; y: number }[] = [];
-        const step = 2;
-
-        for (let x = 0; x <= w; x += step) {
-          const env = Math.sin((x / w) * Math.PI);
-          const offset = (Math.sin(x * pitchFreq + phase) * amp + Math.sin(x * pitchFreq * 2 - phase) * (amp * 0.3)) * env;
-          topPoints.push({ x, y: centerY - Math.abs(offset) });
-          botPoints.push({ x, y: centerY + Math.abs(offset) });
-        }
-
-        // Fill Between Top and Bottom Waves
-        ctx.beginPath();
-        topPoints.forEach((p, idx) => {
-          if (idx === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
-        });
-        for (let i = botPoints.length - 1; i >= 0; i--) {
-          ctx.lineTo(botPoints[i].x, botPoints[i].y);
-        }
-        ctx.closePath();
-
-        const ribbonGrad = ctx.createLinearGradient(0, centerY - amp, 0, centerY + amp);
-        ribbonGrad.addColorStop(0, 'rgba(0, 229, 255, 0.25)');
-        ribbonGrad.addColorStop(0.5, 'rgba(129, 140, 248, 0.15)');
-        ribbonGrad.addColorStop(1, 'rgba(0, 229, 255, 0.25)');
-        ctx.fillStyle = ribbonGrad;
-        ctx.fill();
-
-        // Top Border Line
-        ctx.beginPath();
-        topPoints.forEach((p, idx) => {
-          if (idx === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
-        });
-        ctx.strokeStyle = '#00F0FF';
-        ctx.lineWidth = 2.0;
-        ctx.shadowColor = '#00E5FF';
-        ctx.shadowBlur = 10;
-        ctx.stroke();
-
-        // Bottom Border Line
-        ctx.beginPath();
-        botPoints.forEach((p, idx) => {
-          if (idx === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
-        });
-        ctx.strokeStyle = '#818CF8';
-        ctx.lineWidth = 1.8;
-        ctx.shadowColor = '#818CF8';
-        ctx.shadowBlur = 8;
-        ctx.stroke();
-      }
+      // 4. Vạch trỏ thời gian Playhead màu vàng kim (nằm ở khoảng ~78% chiều ngang giống ảnh mẫu)
+      const playheadX = Math.round(w * 0.78);
+      ctx.strokeStyle = '#F59E0B'; // Vàng kim rực rỡ
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(playheadX, 0);
+      ctx.lineTo(playheadX, h);
+      ctx.stroke();
 
       ctx.restore();
       animFrameId.current = requestAnimationFrame(render);
@@ -569,95 +372,11 @@ export const AiWaveformLineCanvas: React.FC<AiWaveformLineCanvasProps> = ({
         cancelAnimationFrame(animFrameId.current);
       }
     };
-  }, [micState, audioVolumeLevel, livePitchHz, waveMode, analyserRef]);
+  }, [micState, audioVolumeLevel, analyserRef]);
 
   return (
-    <div className="space-y-2">
-      {/* Wave Style Switcher Tabs */}
-      <div className="flex items-center justify-between gap-1 bg-slate-100/90 dark:bg-slate-800/80 p-0.5 rounded-lg border border-slate-200/80 dark:border-slate-700/80 text-[10px] font-bold">
-        <button
-          type="button"
-          onClick={() => onModeChange('sine')}
-          className={`flex-1 py-1 px-1.5 rounded-md flex items-center justify-center gap-1 transition-all ${
-            waveMode === 'sine'
-              ? 'bg-white dark:bg-slate-900 text-[#00A8E8] dark:text-[#38BDF8] shadow-xs font-black'
-              : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-          }`}
-          title="Sóng Sin AI đa tầng phát sáng neon"
-        >
-          <span>〰️ Sóng Sin</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onModeChange('oscilloscope')}
-          className={`flex-1 py-1 px-1.5 rounded-md flex items-center justify-center gap-1 transition-all ${
-            waveMode === 'oscilloscope'
-              ? 'bg-white dark:bg-slate-900 text-[#00A8E8] dark:text-[#38BDF8] shadow-xs font-black'
-              : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-          }`}
-          title="Dao động ký âm học thời gian thực từ Micro"
-        >
-          <span>⚡ Dao Động</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onModeChange('ribbon')}
-          className={`flex-1 py-1 px-1.5 rounded-md flex items-center justify-center gap-1 transition-all ${
-            waveMode === 'ribbon'
-              ? 'bg-white dark:bg-slate-900 text-[#00A8E8] dark:text-[#38BDF8] shadow-xs font-black'
-              : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-          }`}
-          title="Dải sóng năng lượng đối xứng AI"
-        >
-          <span>✨ Dải Sóng</span>
-        </button>
-      </div>
-
-      {/* Screen Frame with Glass Cyber Effects */}
-      <div className="relative h-28 w-full rounded-xl overflow-hidden border border-[#00A8E8]/35 dark:border-sky-500/35 shadow-[0_0_20px_rgba(0,168,232,0.12)] bg-[#050B14]">
-        {/* HUD Corner Brackets */}
-        <div className="absolute top-1 left-1.5 text-[8px] font-mono font-bold text-[#00A8E8]/50 select-none pointer-events-none">┌</div>
-        <div className="absolute top-1 right-1.5 text-[8px] font-mono font-bold text-[#00A8E8]/50 select-none pointer-events-none">┐</div>
-        <div className="absolute bottom-1 left-1.5 text-[8px] font-mono font-bold text-[#00A8E8]/50 select-none pointer-events-none">└</div>
-        <div className="absolute bottom-1 right-1.5 text-[8px] font-mono font-bold text-[#00A8E8]/50 select-none pointer-events-none">┘</div>
-
-        {/* Live Canvas */}
-        <canvas ref={canvasRef} className="w-full h-full block" />
-
-        {/* HUD Overlay Labels */}
-        <div className="absolute top-1.5 left-3 flex items-center gap-1.5 text-[9px] font-mono font-semibold text-sky-400/80 pointer-events-none">
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
-          <span>{livePitchHz ? `${Math.round(livePitchHz)}Hz` : 'FREQ: STANDBY'}</span>
-        </div>
-
-        <div className="absolute top-1.5 right-3 flex items-center gap-1 text-[9px] font-mono font-bold pointer-events-none">
-          {micState === 'recording' ? (
-            audioVolumeLevel > 12 ? (
-              <span className="text-emerald-400 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                ĐANG NÓI
-              </span>
-            ) : (
-              <span className="text-amber-400/90 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                KHOẢNG LẶNG
-              </span>
-            )
-          ) : (
-            <span className="text-slate-400 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
-              SẴN SÀNG
-            </span>
-          )}
-        </div>
-
-        <div className="absolute bottom-1.5 left-3 text-[8px] font-mono text-slate-500 tracking-wider pointer-events-none">
-          AVG ACOUSTIC DSP v2.4
-        </div>
-        <div className="absolute bottom-1.5 right-3 text-[8px] font-mono text-[#00A8E8]/80 font-bold uppercase tracking-wider pointer-events-none">
-          {waveMode === 'sine' ? 'SÓNG SIN AI' : waveMode === 'oscilloscope' ? 'DAO ĐỘNG KÝ' : 'DẢI SÓNG NĂNG LƯỢNG'}
-        </div>
-      </div>
+    <div className="relative h-16 w-full rounded-lg overflow-hidden border border-sky-600/30 shadow-inner bg-[#0B1D3A]">
+      <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
 };
@@ -861,7 +580,6 @@ export const SpeechToTextModule: React.FC = () => {
   const [isDualFaceToFace, setIsDualFaceToFace] = useState<boolean>(false);
   const [autoTts, setAutoTts] = useState<boolean>(true);
   const [audioVolumeLevel, setAudioVolumeLevel] = useState<number>(0);
-  const [waveformLineMode, setWaveformLineMode] = useState<WaveformLineMode>('sine');
   const [simulatedInputText, setSimulatedInputText] = useState<string>('');
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -2390,14 +2108,12 @@ export const SpeechToTextModule: React.FC = () => {
                 </span>
               </div>
 
-              {/* Impressive Cyber AI Line Waveform Canvas Visualizer */}
-              <AiWaveformLineCanvas
+              {/* Clean DAW Timeline Line Waveform */}
+              <AiAudioTrackWaveform
                 micState={micState}
                 audioVolumeLevel={audioVolumeLevel}
                 livePitchHz={livePitchHz}
                 analyserRef={analyserRef}
-                waveMode={waveformLineMode}
-                onModeChange={setWaveformLineMode}
               />
 
               {/* Telemetry Metrics */}
