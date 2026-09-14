@@ -398,6 +398,10 @@ export const AppShell: React.FC<AppShellProps> = ({
                 setActiveSubTitle('');
                 window.dispatchEvent(new CustomEvent('submodule_back'));
               }}
+              onGoHome={() => {
+                setActiveSubTitle('');
+                onSelectModule('home');
+              }}
               designNavTab={designNavTab}
               onSelectDesignTab={(tab) => {
                 setDesignNavTab(tab);
@@ -482,9 +486,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               />
             )
           ) : activeModule === 'hr' || activeModule === 'goal' ? (
-            /* 4. HEADER PHÂN HỆ NHÂN SỰ: < NHÂN SỰ + TABS QUẢN LÝ + THÊM NHÂN SỰ */
+            /* 4. HEADER PHÂN HỆ NHÂN SỰ: 🏠 NHÂN SỰ + TABS QUẢN LÝ + THÊM NHÂN SỰ */
             <HRHeader
               onBack={() => onSelectModule('home')}
+              onGoHome={() => onSelectModule('home')}
               hrNavTab={hrNavTab}
               onSelectHRTab={(tab) => {
                 setHrNavTab(tab);
@@ -498,9 +503,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'legal' ? (
-            /* 5. HEADER PHÂN HỆ PHÁP LÝ & SHTT: < PHÁP LÝ + TABS HỒ SƠ SHTT + TẠO HỒ SƠ */
+            /* 5. HEADER PHÂN HỆ PHÁP LÝ & SHTT: 🏠 PHÁP LÝ + TABS HỒ SƠ SHTT + TẠO HỒ SƠ */
             <LegalHeader
               onBack={() => onSelectModule('home')}
+              onGoHome={() => onSelectModule('home')}
               legalNavTab={legalNavTab}
               onSelectLegalTab={(tab) => {
                 setLegalNavTab(tab);
@@ -514,9 +520,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'finance' || activeModule === 'request' ? (
-            /* 6. HEADER PHÂN HỆ TÀI CHÍNH & PHÊ DUYỆT: < TÀI CHÍNH + TABS ĐỀ XUẤT + TẠO ĐỀ XUẤT */
+            /* 6. HEADER PHÂN HỆ TÀI CHÍNH & PHÊ DUYỆT: 🏠 TÀI CHÍNH + TABS ĐỀ XUẤT + TẠO ĐỀ XUẤT */
             <FinanceHeader
               onBack={() => onSelectModule('home')}
+              onGoHome={() => onSelectModule('home')}
               financeNavTab={financeNavTab}
               onSelectFinanceTab={(tab) => {
                 setFinanceNavTab(tab);
@@ -530,9 +537,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'rd' || activeModule === 'workflow' ? (
-            /* 7. HEADER PHÂN HỆ NGHIÊN CỨU & SÁNG TẠO: < R&D + TABS 13 SOP / 3.1 / 3.2 / ĐƠN HÀNG */
+            /* 7. HEADER PHÂN HỆ NGHIÊN CỨU & SÁNG TẠO: 🏠 R&D + TABS 13 SOP / 3.1 / 3.2 / ĐƠN HÀNG */
             <RDHeader
               onBack={() => onSelectModule('home')}
+              onGoHome={() => onSelectModule('home')}
               rdNavTab={rdNavTab}
               onSelectRDTab={(tab) => {
                 setRdNavTab(tab);

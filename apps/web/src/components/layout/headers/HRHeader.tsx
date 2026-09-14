@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  ChevronLeft, Users, Building2, Clock, Coins, ShieldCheck, UserPlus, Sun, Moon
+  Home, Users, Building2, Clock, Coins, ShieldCheck, UserPlus, Sun, Moon
 } from 'lucide-react';
 
 export type HRNavTab = 'employees' | 'departments' | 'attendance' | 'payroll' | 'ownership';
 
 export interface HRHeaderProps {
   onBack: () => void;
+  onGoHome?: () => void;
   hrNavTab: HRNavTab;
   onSelectHRTab: (tab: HRNavTab) => void;
   employeesCount?: number;
@@ -18,6 +19,7 @@ export interface HRHeaderProps {
 
 export const HRHeader: React.FC<HRHeaderProps> = ({
   onBack,
+  onGoHome,
   hrNavTab,
   onSelectHRTab,
   employeesCount = 6,
@@ -26,23 +28,42 @@ export const HRHeader: React.FC<HRHeaderProps> = ({
   onToggleDarkMode,
   renderUserAuthButton
 }) => {
+  const handleGoHome = () => {
+    if (onGoHome) {
+      onGoHome();
+    } else {
+      window.dispatchEvent(new CustomEvent('go_home'));
+    }
+  };
+
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4 overflow-x-auto no-scrollbar">
-        {/* Cụm trái: [ < NHÂN SỰ ] + [ Tabs đầu mục ] + [ + Thêm nhân sự ] */}
-        <div className="flex items-center gap-2 sm:gap-3 select-none shrink-0 whitespace-nowrap">
-          {/* Nút quay lại kèm tiêu đề dạng Pill cao cấp: < NHÂN SỰ */}
-          <button
-            onClick={onBack}
-            className="h-9 px-3 rounded-xl bg-orange-50/80 hover:bg-orange-100/90 dark:bg-orange-950/40 dark:hover:bg-orange-900/60 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800/60 font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-1.5 transition-all duration-200 shadow-2xs hover:shadow-xs group cursor-pointer shrink-0"
-            title="Quay lại Trang chủ"
-          >
-            <ChevronLeft className="w-4 h-4 stroke-[2.8] text-[#F15A24] group-hover:-translate-x-0.5 transition-transform shrink-0" />
-            <span className="whitespace-nowrap font-black">NHÂN SỰ</span>
-          </button>
+        {/* Cụm trái: [ Icon Trang chủ + Tên phân hệ ] + [ Các đầu mục nghiệp vụ ] */}
+        <div className="flex items-center select-none shrink-0 whitespace-nowrap">
+          {/* Khối định danh phân hệ: [ 🏠 Trang chủ ] + [ NHÂN SỰ ] - Đồng bộ chuẩn khoảng cách 10px (gap-2.5) */}
+          <div className="flex items-center gap-2.5 shrink-0 mr-4 sm:mr-6 lg:mr-8">
+            {/* Icon Trang chủ: Bấm để quay về Trang chủ AVG One */}
+            <button
+              onClick={handleGoHome}
+              className="h-9 sm:h-10 flex items-center justify-center text-[#F15A24] dark:text-orange-400 hover:opacity-80 active:scale-95 transition-all cursor-pointer shrink-0"
+              title="Về Trang chủ AVG One"
+            >
+              <Home className="w-5.5 h-5.5 sm:w-6 sm:h-6 stroke-[2.4] -translate-y-0.5" />
+            </button>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ NHÂN SỰ (Nhân sự, Phòng ban, Chấm công, Bảng lương, Phân quyền) */}
-          <div className="flex items-center gap-1 bg-slate-100/90 dark:bg-slate-800/90 p-1 h-9 rounded-xl border border-slate-200/70 dark:border-slate-700/70 shadow-2xs shrink-0 select-none">
+            {/* Tên phân hệ: Chữ to hơn, màu cam, căn thẳng hàng 100% */}
+            <button
+              onClick={onBack}
+              className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none"
+              title="Quay lại Trang chủ"
+            >
+              NHÂN SỰ
+            </button>
+          </div>
+
+          {/* BỘ ĐẦU MỤC QUẢN LÝ NHÂN SỰ: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI */}
+          <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
               { id: 'employees' as const, label: 'Nhân sự', count: employeesCount, icon: Users },
               { id: 'departments' as const, label: 'Phòng ban', icon: Building2 },
@@ -56,17 +77,17 @@ export const HRHeader: React.FC<HRHeaderProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => onSelectHRTab(tab.id)}
-                  className={`h-7 px-2.5 sm:px-3 rounded-lg text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                  className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs font-black'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60'
+                      ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
+                      : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
                   }`}
                 >
-                  <IconComponent className="w-3.5 h-3.5 shrink-0" />
+                  <IconComponent className="w-4 h-4 shrink-0 stroke-[2.2]" />
                   <span>{tab.label}</span>
                   {tab.count !== undefined && (
                     <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                      isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      isActive ? 'bg-white/25 text-white' : 'bg-slate-200/90 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}>
                       {tab.count}
                     </span>
@@ -77,14 +98,16 @@ export const HRHeader: React.FC<HRHeaderProps> = ({
           </div>
 
           {/* Nút Thêm nhân sự nhanh ngay trên Header */}
-          <button
-            onClick={onAddEmployee}
-            className="hidden md:flex h-9 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer shrink-0"
-            title="Thêm nhân sự mới"
-          >
-            <UserPlus className="w-3.5 h-3.5 shrink-0" />
-            <span>+ Thêm nhân sự</span>
-          </button>
+          {onAddEmployee && (
+            <button
+              onClick={onAddEmployee}
+              className="hidden lg:flex h-8 sm:h-8.5 px-3 sm:px-3.5 ml-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs sm:text-[13px] items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all cursor-pointer shrink-0 active:scale-95"
+              title="Thêm nhân sự mới"
+            >
+              <UserPlus className="w-3.5 h-3.5 stroke-[2.4] shrink-0" />
+              <span>+ Thêm nhân sự</span>
+            </button>
+          )}
         </div>
 
         {/* Right: Dark Mode Toggle + Đăng Nhập */}
