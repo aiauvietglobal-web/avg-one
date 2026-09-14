@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, ChevronDown, Filter, Users, SlidersHorizontal, MessageSquare, FolderOpen, Settings } from 'lucide-react';
+import { Home, ChevronDown, Filter, Users, SlidersHorizontal, MessageSquare, FolderOpen, Settings, Pin, Sparkles, ChevronRight } from 'lucide-react';
 
 export type SpeechNavTab = 'storage' | 'utilities' | 'settings' | 'chat' | 'history' | 'templates';
 
@@ -181,19 +181,21 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
 
                     {/* DROPDOWN MENU TÍCH HỢP BỘ LỌC VÀ TIỆN ÍCH */}
                     {isUtilitiesOpen && (
-                      <div className="absolute top-full left-0 mt-2 w-72 bg-white/98 dark:bg-[#1F1420]/98 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2.5 z-50 animate-dropdown-slide">
-                        {/* Header của Popover */}
-                        <div className="flex items-center justify-between px-2.5 py-1.5 mb-1.5 border-b border-slate-100 dark:border-slate-800">
-                          <div className="flex items-center gap-1.5">
-                            <Filter className="w-3.5 h-3.5 text-[#F15A24]" />
-                            <span className="text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-                              Bộ lọc hội thoại
+                      <div className="absolute top-full left-0 mt-2.5 w-80 bg-white/98 dark:bg-[#1E121E]/98 backdrop-blur-xl border border-slate-200/90 dark:border-white/10 rounded-3xl shadow-2xl p-3.5 z-50 animate-dropdown-slide ring-1 ring-black/5">
+                        {/* Header của Tiện ích Popover */}
+                        <div className="flex items-center justify-between px-1 pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-[#F15A24] flex items-center justify-center">
+                              <Filter className="w-3.5 h-3.5 stroke-[2.5]" />
+                            </div>
+                            <span className="text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider">
+                              Bộ Lọc Người Nói
                             </span>
                           </div>
                           {filterSpeakerId !== 'all' && (
                             <button
                               onClick={() => handleSelectFilter('all')}
-                              className="text-[11px] font-bold text-[#F15A24] hover:underline cursor-pointer transition-colors"
+                              className="text-[11px] font-bold text-[#F15A24] bg-orange-50 dark:bg-orange-950/60 px-2.5 py-0.5 rounded-full hover:bg-orange-100 transition-colors cursor-pointer"
                             >
                               Đặt lại
                             </button>
@@ -201,22 +203,22 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                         </div>
 
                         {/* Danh sách các tùy chọn lọc người nói */}
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           {/* Tất cả */}
                           <button
                             onClick={() => handleSelectFilter('all')}
-                            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'all'
-                                ? 'bg-orange-500 text-white font-bold shadow-xs'
-                                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 font-medium'
+                                ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white font-black shadow-xs'
+                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
                             }`}
                           >
-                            <div className="flex items-center gap-2">
-                              <Users className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                            <div className="flex items-center gap-2.5">
+                              <Users className={`w-4 h-4 shrink-0 ${filterSpeakerId === 'all' ? 'text-white' : 'text-slate-400'}`} />
                               <span>Tất cả người nói</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                             }`}>
                               {filterCounts.all}
                             </span>
@@ -225,18 +227,18 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           {/* Giọng Nam */}
                           <button
                             onClick={() => handleSelectFilter('spk-male')}
-                            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'spk-male'
-                                ? 'bg-orange-500 text-white font-bold shadow-xs'
-                                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 font-medium'
+                                ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white font-black shadow-xs'
+                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
                             }`}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2.5">
                               <span className="w-2.5 h-2.5 rounded-full bg-sky-500 ring-2 ring-sky-300/60 dark:ring-sky-800 shrink-0" />
-                              <span>Giọng Nam</span>
+                              <span>👨 Giọng Nam</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'spk-male' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'spk-male' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                             }`}>
                               {filterCounts.bySpeaker?.['spk-male'] ?? 0}
                             </span>
@@ -245,18 +247,18 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           {/* Giọng Nữ */}
                           <button
                             onClick={() => handleSelectFilter('spk-female')}
-                            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'spk-female'
-                                ? 'bg-orange-500 text-white font-bold shadow-xs'
-                                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 font-medium'
+                                ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white font-black shadow-xs'
+                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
                             }`}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2.5">
                               <span className="w-2.5 h-2.5 rounded-full bg-pink-500 ring-2 ring-pink-300/60 dark:ring-pink-800 shrink-0" />
-                              <span>Giọng Nữ</span>
+                              <span>👩 Giọng Nữ</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'spk-female' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'spk-female' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                             }`}>
                               {filterCounts.bySpeaker?.['spk-female'] ?? 0}
                             </span>
@@ -265,18 +267,18 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           {/* Tôi (Khiếm thính) */}
                           <button
                             onClick={() => handleSelectFilter('spk-deaf')}
-                            className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'spk-deaf'
-                                ? 'bg-orange-500 text-white font-bold shadow-xs'
-                                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 font-medium'
+                                ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white font-black shadow-xs'
+                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
                             }`}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2.5">
                               <span className="w-2.5 h-2.5 rounded-full bg-[#F15A24] ring-2 ring-orange-300/60 dark:ring-orange-800 shrink-0" />
-                              <span>Tôi (Khiếm thính)</span>
+                              <span>👤 Tôi (Khiếm thính)</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'spk-deaf' ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'spk-deaf' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                             }`}>
                               {filterCounts.deaf}
                             </span>
@@ -287,13 +289,13 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                             <button
                               key={s.id}
                               onClick={() => handleSelectFilter(s.id)}
-                              className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                                 filterSpeakerId === s.id
-                                  ? 'bg-orange-500 text-white font-bold shadow-xs'
-                                  : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80 font-medium'
+                                  ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white font-black shadow-xs'
+                                  : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
                               }`}
                             >
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2.5">
                                 <span
                                   className="w-2.5 h-2.5 rounded-full ring-2 ring-slate-300 dark:ring-slate-700 shrink-0"
                                   style={{ backgroundColor: s.color || '#10B981' }}
@@ -301,7 +303,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                                 <span>{s.name}</span>
                               </div>
                               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                                filterSpeakerId === s.id ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                                filterSpeakerId === s.id ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                               }`}>
                                 {filterCounts.bySpeaker?.[s.id] ?? 0}
                               </span>
@@ -309,33 +311,40 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           ))}
                         </div>
 
-                        {/* Tiện ích mở rộng */}
-                        <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                        {/* Tiện ích mở rộng & Công cụ hỗ trợ */}
+                        <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                          <div className="px-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                            Công Cụ Bổ Trợ
+                          </div>
+
                           {/* Ghim thanh lọc trên khung chat */}
                           <button
                             onClick={handleToggleChatFilterBar}
-                            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors"
                           >
-                            <span className="flex items-center gap-1.5 font-medium">
-                              <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="flex items-center gap-2 font-medium">
+                              <Pin className="w-3.5 h-3.5 text-slate-400" />
                               <span>Ghim thanh lọc ở khung chat</span>
                             </span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                            <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full transition-all ${
                               showChatFilterBar
-                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
-                                : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                                ? 'bg-emerald-500 text-white shadow-xs'
+                                : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
                             }`}>
                               {showChatFilterBar ? 'BẬT' : 'TẮT'}
                             </span>
                           </button>
 
-                          {/* Phản hồi nhanh */}
+                          {/* Mẫu phản hồi nhanh */}
                           <button
                             onClick={handleOpenTemplates}
-                            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer font-medium transition-colors"
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50/80 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors font-medium group"
                           >
-                            <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
-                            <span>Mẫu phản hồi nhanh</span>
+                            <span className="flex items-center gap-2">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                              <span>Mẫu phản hồi nhanh</span>
+                            </span>
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
                       </div>

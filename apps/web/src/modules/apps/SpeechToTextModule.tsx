@@ -3108,58 +3108,69 @@ export const SpeechToTextModule: React.FC = () => {
       )}
 
       {/* ============================================================================================== */}
-      {/* 📱 MOBILE SETTINGS DRAWER MODAL (TÍCH HỢP TOÀN BỘ TÙY CHỈNH VÀO 1 ICON DUY NHẤT)             */}
+      {/* 📱 CÀI ĐẶT & CẤU HÌNH PHÂN HỆ MODAL (TÍCH HỢP TOÀN BỘ TÙY CHỈNH)                               */}
       {/* ============================================================================================== */}
       {isMobileSettingsOpen && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border-t-2 sm:border-2 border-[#F15A24] rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col justify-between p-4 sm:p-6 space-y-4 animate-in slide-in-from-bottom duration-300">
-            
-            {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-950 text-[#F15A24]">
-                  <SlidersHorizontal className="w-5 h-5 stroke-[2.5]" />
+        <div
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200"
+          onClick={() => setIsMobileSettingsOpen(false)}
+        >
+          <div
+            className="bg-white dark:bg-[#1E1420] border border-slate-200/90 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col justify-between animate-in slide-in-from-bottom sm:zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header: Tone cam thương hiệu sang trọng */}
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-[#F15A24] via-[#f56a38] to-[#f97316] text-white flex items-center justify-between flex-shrink-0 relative overflow-hidden shadow-sm">
+              <div className="absolute -right-6 -bottom-6 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/20 shrink-0">
+                  <Settings className="w-5 h-5 text-white stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-wider">
-                    Tùy Chỉnh Voice Conversion
+                  <h3 className="font-black text-base sm:text-lg text-white uppercase tracking-tight">
+                    CÀI ĐẶT & TÙY CHỈNH
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Cấu hình Micro, Người nói, Cỡ chữ & Mẫu phản hồi nhanh
+                  <p className="text-xs text-white/90 font-medium">
+                    Cấu hình Micro, Nhận diện giọng nói, Hiển thị & Mẫu câu
                   </p>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsMobileSettingsOpen(false)}
-                className="p-2 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer relative z-10"
                 title="Đóng bảng tùy chỉnh"
               >
-                <X className="w-5 h-5 stroke-[2.5]" />
+                <X className="w-4.5 h-4.5" />
               </button>
             </div>
 
-            {/* Drawer Scrollable Content Body */}
-            <div className="space-y-4 flex-1 overflow-y-auto pr-1 text-xs">
+            {/* Scrollable Content Body */}
+            <div className="p-4 sm:p-5 space-y-4 flex-1 overflow-y-auto custom-scrollbar text-xs">
               
               {/* SECTION 1: MICROPHONE & THU ÂM */}
-              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-3">
-                <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
-                  <Mic className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span>Bộ Thu Âm & Micro Trực Tiếp</span>
-                </h4>
+              <div className="bg-slate-50 dark:bg-slate-900/90 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 text-xs uppercase tracking-wider">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                      <Mic className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
+                    <span>Bộ Thu Âm & Micro Trực Tiếp</span>
+                  </h4>
+                </div>
 
-                <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-800/80 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-2xs">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={toggleListening}
                       style={{ width: '48px', height: '48px', borderRadius: '50%' }}
-                      className={`w-12 h-12 shrink-0 aspect-square rounded-full flex items-center justify-center transition-all duration-300 transform active:scale-95 cursor-pointer ${
+                      className={`w-12 h-12 shrink-0 aspect-square rounded-full flex items-center justify-center transition-all duration-300 transform active:scale-95 cursor-pointer shadow-sm ${
                         micState === 'idle'
-                          ? 'bg-emerald-600 text-white'
+                          ? 'bg-emerald-600 text-white hover:bg-emerald-500'
                           : micState === 'recording'
                           ? 'bg-red-500 text-white ring-4 ring-red-400/30 animate-pulse'
-                          : 'bg-amber-500 text-white'
+                          : 'bg-amber-500 text-white hover:bg-amber-400'
                       }`}
                     >
                       {micState === 'idle' && <Mic className="w-5 h-5 stroke-[2.2]" />}
@@ -3168,12 +3179,12 @@ export const SpeechToTextModule: React.FC = () => {
                     </button>
 
                     <div className="flex flex-col">
-                      <span className="font-extrabold text-slate-900 dark:text-white text-xs">
+                      <span className="font-black text-slate-900 dark:text-white text-xs">
                         {micState === 'idle' && 'Micro đang tắt'}
                         {micState === 'recording' && 'Đang thu âm trực tiếp...'}
                         {micState === 'paused' && 'Đang tạm dừng thu âm'}
                       </span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">
                         {micState === 'idle' && 'Bấm nút tròn để bắt đầu nói'}
                         {micState === 'recording' && 'Bấm nút để tạm dừng'}
                         {micState === 'paused' && 'Bấm nút vàng để tiếp tục'}
@@ -3193,7 +3204,7 @@ export const SpeechToTextModule: React.FC = () => {
                         setInterimTranscript('');
                         showToast('⏹️ Đã kết thúc phiên thu âm.');
                       }}
-                      className="px-2.5 py-1 bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 rounded-lg text-[10px] font-bold hover:bg-rose-200 transition-colors"
+                      className="px-3 py-1.5 bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 rounded-xl text-xs font-bold hover:bg-rose-200 transition-colors cursor-pointer"
                     >
                       Kết thúc
                     </button>
@@ -3202,26 +3213,28 @@ export const SpeechToTextModule: React.FC = () => {
               </div>
 
               {/* SECTION 2: PHÂN BIỆT GIỌNG NÓI (NAM & NỮ) */}
-              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-2.5">
+              <div className="bg-slate-50 dark:bg-slate-900/90 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
-                    <Users className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                  <h4 className="font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 text-xs uppercase tracking-wider">
+                    <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+                      <Users className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
                     <span>Phân Biệt Giọng Nói</span>
                   </h4>
                   <button
                     onClick={() => setAutoDiarization(!autoDiarization)}
-                    className="flex items-center gap-1 cursor-pointer"
+                    className="flex items-center gap-1.5 cursor-pointer bg-white dark:bg-slate-800 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700"
                   >
                     <span className="text-[10px] font-bold text-slate-500">Tự động:</span>
                     {autoDiarization ? (
-                      <ToggleRight className="w-5 h-5 text-sky-600" />
+                      <ToggleRight className="w-5 h-5 text-[#F15A24]" />
                     ) : (
                       <ToggleLeft className="w-5 h-5 text-slate-400" />
                     )}
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-2 gap-2">
                   {DEFAULT_SPEAKERS.map((spk) => {
                     const isSelected = activeSpeakerId === spk.id;
                     return (
@@ -3231,16 +3244,16 @@ export const SpeechToTextModule: React.FC = () => {
                           setActiveSpeakerId(spk.id);
                           activeSpeakerRef.current = spk.id;
                         }}
-                        className={`px-2.5 py-2 rounded-xl text-[11px] font-extrabold transition-all flex items-center justify-between gap-1 cursor-pointer ${
+                        className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-1.5 cursor-pointer ${
                           isSelected
-                            ? 'bg-sky-600 text-white font-black shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200'
+                            ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs font-black'
+                            : 'bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-orange-300'
                         }`}
                       >
-                        <span className="truncate flex items-center gap-1">
+                        <span className="truncate flex items-center gap-1.5">
                           {spk.id === 'spk-male' ? '👨' : '👩'} {spk.name}
                         </span>
-                        {isSelected && <Check className="w-3.5 h-3.5 shrink-0 stroke-[3]" />}
+                        {isSelected && <Check className="w-4 h-4 shrink-0 stroke-[3]" />}
                       </button>
                     );
                   })}
@@ -3248,26 +3261,28 @@ export const SpeechToTextModule: React.FC = () => {
               </div>
 
               {/* SECTION 3: TÙY CHỈNH HIỂN THỊ & THAO TÁC */}
-              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-3">
-                <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
-                  <Sliders className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+              <div className="bg-slate-50 dark:bg-slate-900/90 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-3.5">
+                <h4 className="font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 text-xs uppercase tracking-wider">
+                  <div className="w-6 h-6 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-[#F15A24] flex items-center justify-center">
+                    <Sliders className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                   <span>Hiển Thị & Thao Tác</span>
                 </h4>
 
                 {/* Cỡ chữ */}
-                <div className="space-y-1">
-                  <span className="text-[11px] font-extrabold text-slate-600 dark:text-slate-400">Cỡ Chữ Hộp Thoại:</span>
-                  <div className="grid grid-cols-3 gap-1 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-black text-slate-600 dark:text-slate-400">Cỡ Chữ Hộp Thoại:</span>
+                  <div className="grid grid-cols-3 gap-1.5 bg-white dark:bg-slate-800/90 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
                     {(['normal', 'xlarge', 'massive'] as const).map((size) => {
                       const isSelected = fontSize === size;
                       return (
                         <button
                           key={size}
                           onClick={() => setFontSize(size)}
-                          className={`py-1.5 text-[11px] font-extrabold rounded-lg transition-all ${
+                          className={`py-2 text-xs font-black rounded-xl transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-[#F15A24] text-white shadow-2xs'
-                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                              ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs'
+                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
                           }`}
                         >
                           {size === 'normal' && 'Vừa'}
@@ -3280,19 +3295,19 @@ export const SpeechToTextModule: React.FC = () => {
                 </div>
 
                 {/* Tốc độ đọc */}
-                <div className="space-y-1">
-                  <span className="text-[11px] font-extrabold text-slate-600 dark:text-slate-400">Tốc Độ Đọc Âm Thanh:</span>
-                  <div className="grid grid-cols-4 gap-1 bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-black text-slate-600 dark:text-slate-400">Tốc Độ Đọc Âm Thanh:</span>
+                  <div className="grid grid-cols-4 gap-1.5 bg-white dark:bg-slate-800/90 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
                     {[0.5, 1.0, 1.5, 2.0].map((rate) => {
                       const isSelected = speechRate === rate;
                       return (
                         <button
                           key={rate}
                           onClick={() => setSpeechRate(rate)}
-                          className={`py-1.5 text-[11px] font-extrabold rounded-lg transition-all ${
+                          className={`py-2 text-xs font-black rounded-xl transition-all cursor-pointer ${
                             isSelected
-                              ? 'bg-[#F15A24] text-white shadow-2xs'
-                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                              ? 'bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white shadow-xs'
+                              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
                           }`}
                         >
                           {rate}x
@@ -3303,38 +3318,40 @@ export const SpeechToTextModule: React.FC = () => {
                 </div>
 
                 {/* Action Row */}
-                <div className="grid grid-cols-3 gap-1.5 pt-1">
+                <div className="grid grid-cols-3 gap-2 pt-1">
                   <button
                     onClick={handleCopyTranscript}
-                    className="py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex flex-col items-center gap-1 text-[10px]"
+                    className="py-2.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-sky-400 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex flex-col items-center gap-1 text-[11px] transition-all cursor-pointer hover:scale-[1.02]"
                   >
-                    <Copy className="w-3.5 h-3.5 text-sky-600" />
+                    <Copy className="w-4 h-4 text-sky-600" />
                     <span>Sao chép</span>
                   </button>
                   <button
                     onClick={handleDownloadTranscript}
-                    className="py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex flex-col items-center gap-1 text-[10px]"
+                    className="py-2.5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex flex-col items-center gap-1 text-[11px] transition-all cursor-pointer hover:scale-[1.02]"
                   >
-                    <Download className="w-3.5 h-3.5 text-emerald-600" />
+                    <Download className="w-4 h-4 text-emerald-600" />
                     <span>Tải file</span>
                   </button>
                   <button
                     onClick={handleClearMessages}
-                    className="py-2 bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 rounded-xl font-bold flex flex-col items-center gap-1 text-[10px]"
+                    className="py-2.5 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 hover:border-rose-400 text-rose-600 dark:text-rose-400 rounded-xl font-bold flex flex-col items-center gap-1 text-[11px] transition-all cursor-pointer hover:scale-[1.02]"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                     <span>Xóa hết</span>
                   </button>
                 </div>
               </div>
 
               {/* SECTION 4: PHẢN HỒI NHANH MẪU */}
-              <div className="bg-slate-50 dark:bg-slate-950/80 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800 space-y-2">
-                <h4 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-xs">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
+              <div className="bg-slate-50 dark:bg-slate-900/90 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-2.5">
+                <h4 className="font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 text-xs uppercase tracking-wider">
+                  <div className="w-6 h-6 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center">
+                    <Sparkles className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                   <span>Mẫu Phản Hồi Nhanh (1 chạm)</span>
                 </h4>
-                <div className="grid grid-cols-1 gap-1.5 max-h-40 overflow-y-auto">
+                <div className="grid grid-cols-1 gap-1.5 max-h-44 overflow-y-auto custom-scrollbar">
                   {QUICK_RESPONSES.map((chipText, idx) => (
                     <button
                       key={idx}
@@ -3343,10 +3360,10 @@ export const SpeechToTextModule: React.FC = () => {
                         setIsMobileSettingsOpen(false);
                         showToast(`✨ Đã điền câu mẫu: "${chipText}"`);
                       }}
-                      className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-sky-50 dark:hover:bg-sky-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 transition-all text-left flex items-center justify-between gap-2"
+                      className="w-full p-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-orange-50/70 dark:hover:bg-orange-950/40 border border-slate-200/80 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 transition-all text-left flex items-center justify-between gap-2 cursor-pointer group hover:border-[#F15A24]/40"
                     >
-                      <span>{chipText}</span>
-                      <Volume2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                      <span className="group-hover:text-[#F15A24] transition-colors">{chipText}</span>
+                      <Volume2 className="w-4 h-4 text-[#F15A24] shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
                     </button>
                   ))}
                 </div>
@@ -3354,13 +3371,13 @@ export const SpeechToTextModule: React.FC = () => {
 
             </div>
 
-            {/* Drawer Footer */}
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 shrink-0">
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
               <button
                 onClick={() => setIsMobileSettingsOpen(false)}
-                className="w-full py-2.5 bg-[#F15A24] hover:bg-[#d94e1f] text-white rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-md transition-transform active:scale-95 cursor-pointer"
+                className="w-full py-3 bg-gradient-to-r from-[#F15A24] to-[#f97316] hover:brightness-110 active:scale-98 text-white rounded-xl font-black text-xs sm:text-sm uppercase tracking-wider shadow-md shadow-orange-500/25 transition-all cursor-pointer"
               >
-                Hoàn Tất Tùy Chỉnh
+                Hoàn Tất Cài Đặt
               </button>
             </div>
 
