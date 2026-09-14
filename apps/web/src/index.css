@@ -3232,7 +3232,7 @@ div.box-speech-bubble {
 /* 1. Dải sóng âm mini dập dìu mềm mại màu xanh ngọc bích (Smooth Audio Wave Undulation) */
 @keyframes dap-diu-wave-1 {
   0%, 100% { height: 4px; opacity: 0.65; }
-  50% { height: 13px; opacity: 1; }
+  50% { height: 14px; opacity: 1; }
 }
 
 @keyframes dap-diu-wave-2 {
@@ -3251,65 +3251,38 @@ div.box-speech-bubble {
 }
 
 .animate-wave-bar-1 {
-  animation: dap-diu-wave-1 1.5s ease-in-out infinite;
+  display: inline-block;
+  width: 2.5px;
+  animation: dap-diu-wave-1 1.4s ease-in-out infinite;
 }
 .animate-wave-bar-2 {
-  animation: dap-diu-wave-2 1.5s ease-in-out infinite 0.2s;
+  display: inline-block;
+  width: 2.5px;
+  animation: dap-diu-wave-2 1.4s ease-in-out infinite 0.2s;
 }
 .animate-wave-bar-3 {
-  animation: dap-diu-wave-3 1.5s ease-in-out infinite 0.4s;
+  display: inline-block;
+  width: 2.5px;
+  animation: dap-diu-wave-3 1.4s ease-in-out infinite 0.4s;
 }
 .animate-wave-bar-4 {
-  animation: dap-diu-wave-4 1.5s ease-in-out infinite 0.6s;
-}
-
-/* 2. Dòng chữ Xanh Tươi Sắc Nét - vệt sáng lướt nhẹ chu kỳ 5s (Không rung lắc, không nghiêng chữ) */
-@keyframes text-fresh-cyan-sweep {
-  0% {
-    background-position: -150% 0;
-  }
-  24% {
-    background-position: 150% 0;
-  }
-  100% {
-    background-position: 150% 0;
-  }
-}
-
-.animate-fresh-cyan-text {
   display: inline-block;
-  background: linear-gradient(
-    110deg,
-    #0284C7 0%,
-    #00A8E8 22%,
-    #00D2FF 42%,
-    #FFFFFF 50%,
-    #00D2FF 58%,
-    #00A8E8 78%,
-    #0284C7 100%
-  );
-  background-size: 240% 100%;
+  width: 2.5px;
+  animation: dap-diu-wave-4 1.4s ease-in-out infinite 0.6s;
+}
+
+/* 2. Dòng chữ Xanh Tươi Sắc Nét & Thuần Khiết (Không vệt sáng, không rung lắc) */
+.fresh-cyan-text {
+  display: inline-block;
+  background: linear-gradient(135deg, #0284C7 0%, #00A8E8 45%, #00C8FF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: text-fresh-cyan-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-[data-theme="dark"] .animate-fresh-cyan-text {
+[data-theme="dark"] .fresh-cyan-text {
   display: inline-block;
-  background: linear-gradient(
-    110deg,
-    #38BDF8 0%,
-    #00E5FF 22%,
-    #7DD3FC 42%,
-    #FFFFFF 50%,
-    #7DD3FC 58%,
-    #00E5FF 78%,
-    #38BDF8 100%
-  );
-  background-size: 240% 100%;
+  background: linear-gradient(135deg, #38BDF8 0%, #00E5FF 50%, #67E8F9 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: text-fresh-cyan-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* 3. Icon Badge quầng sáng xanh ngọc êm dịu chu kỳ 5s */

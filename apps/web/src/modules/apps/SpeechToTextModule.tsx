@@ -2348,19 +2348,19 @@ export const SpeechToTextModule: React.FC = () => {
                       <MessageSquare className="w-4 h-4 stroke-[2.3]" />
                     </div>
 
-                    {/* Dòng chữ Tiêu Đề Xanh Tươi Sắc Nét Đứng Yên Vững Chãi */}
+                    {/* Dòng chữ Tiêu Đề Xanh Tươi Sắc Nét Đứng Yên Vững Chãi (Không vệt sáng) */}
                     <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider shrink-0 leading-none select-none">
-                      <span className="animate-fresh-cyan-text">
+                      <span className="fresh-cyan-text">
                         Hội Thoại Trực Tiếp
                       </span>
                     </h2>
 
                     {/* Cụm sóng âm thanh mini dập dìu mềm mại màu xanh ngọc bích */}
-                    <div className="flex items-center gap-0.75 h-5 px-1.5 py-0.5 rounded-full bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-400/30 dark:border-cyan-400/25 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
-                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-1" />
-                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-2" />
-                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-3" />
-                      <span className="w-0.75 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-4" />
+                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-cyan-500/10 dark:bg-cyan-400/10 border border-cyan-400/30 dark:border-cyan-400/25 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
+                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-1" />
+                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-2" />
+                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-3" />
+                      <span className="w-1 rounded-full bg-gradient-to-t from-[#00A8E8] to-[#00E5FF] animate-wave-bar-4" />
                     </div>
                   </div>
 
