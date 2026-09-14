@@ -4,7 +4,7 @@ import {
   Settings, Type, Sparkles, MessageSquare, FlipVertical, Play, Pause, Send,
   HelpCircle, CheckCircle2, Shield, Languages, RefreshCw, AlertCircle, Eye, EyeOff, Sliders, SlidersHorizontal, Globe, ArrowRightLeft, FileText, Check, Repeat,
   Users, UserPlus, Edit3, Filter, Plus, Activity, Zap, Maximize2, Minimize2, Gauge, X, Calendar, ToggleLeft, ToggleRight, Square,
-  History, FolderOpen, PlusCircle, Clock, Edit2
+  History, FolderOpen, PlusCircle, Clock, Edit2, Search
 } from 'lucide-react';
 import {
   processRealtimeSpeechPunctuation,
@@ -316,6 +316,7 @@ export const SpeechToTextModule: React.FC = () => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [tempTitleInput, setTempTitleInput] = useState<string>('');
+  const [historySearchQuery, setHistorySearchQuery] = useState<string>('');
 
   // Strict Male / Female Speaker Profile State
   const [speakers] = useState<SpeakerProfile[]>(() => {
@@ -2678,146 +2679,229 @@ export const SpeechToTextModule: React.FC = () => {
       </div>
 
       {/* ============================================================================================== */}
-      {/* 🎯 MODAL OVERLAY: LỊCH SỬ CÁC CUỘC HỘI THOẠI ĐÃ LƯU                                           */}
+      {/* 🎯 MODAL OVERLAY: KHO LƯU TRỮ CÁC CUỘC HỘI THOẠI                                                */}
       {/* ============================================================================================== */}
-      {isHistoryModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            
-            {/* Modal Header */}
-            <div className="p-4 bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#38BDF8] text-white flex items-center justify-between flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <History className="w-5 h-5 text-white stroke-[2.5]" />
-                <h3 className="font-extrabold text-base text-white uppercase tracking-wider">LỊCH SỬ CUỘC HỘI THOẠI ({savedConversations.length})</h3>
-              </div>
-              <button
-                onClick={() => setIsHistoryModalOpen(false)}
-                className="p-1 rounded-lg text-white/80 hover:text-white hover:bg-white/20 transition-colors cursor-pointer"
-                title="Đóng"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+      {isHistoryModalOpen && (() => {
+        const filteredConversations = savedConversations.filter(c => {
+          if (!historySearchQuery.trim()) return true;
+          const q = historySearchQuery.toLowerCase();
+          return (
+            c.title.toLowerCase().includes(q) ||
+            c.createdAt.toLowerCase().includes(q) ||
+            (c.messages && c.messages.some(m => m.text?.toLowerCase().includes(q)))
+          );
+        });
 
-            {/* Modal Body: Conversation List */}
-            <div className="p-4 flex-1 overflow-y-auto space-y-2.5">
-              {savedConversations.length === 0 ? (
-                <div className="text-center py-10 text-slate-500 dark:text-slate-400 space-y-2">
-                  <FolderOpen className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto" />
-                  <p className="font-bold text-sm">Chưa có cuộc hội thoại nào được lưu.</p>
-                </div>
-              ) : (
-                savedConversations.map((conv) => {
-                  const isActive = conv.id === currentConversationId;
-                  const isEditing = editingTitleId === conv.id;
-                  const msgCount = conv.messages?.length || 0;
+        return (
+          <div
+            className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
+            onClick={() => setIsHistoryModalOpen(false)}
+          >
+            <div
+              className="bg-white dark:bg-[#1E1420] border border-slate-200/90 dark:border-slate-800 rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header: Tone cam thương hiệu hiện đại */}
+              <div className="p-4 sm:p-5 bg-gradient-to-r from-[#F15A24] via-[#f56a38] to-[#f97316] text-white flex items-center justify-between flex-shrink-0 relative overflow-hidden shadow-sm">
+                <div className="absolute -right-6 -bottom-6 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
-                  return (
-                    <div
-                      key={conv.id}
-                      onClick={() => handleSelectConversation(conv)}
-                      className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer group ${
-                        isActive
-                          ? 'bg-sky-50/90 dark:bg-sky-950/60 border-sky-400 dark:border-sky-600 shadow-sm'
-                          : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <div className="flex-1 min-w-0 space-y-1">
-                        <div className="flex items-center gap-2">
-                          {isEditing ? (
-                            <div className="flex items-center gap-1 flex-1" onClick={(e) => e.stopPropagation()}>
-                              <input
-                                type="text"
-                                value={tempTitleInput}
-                                onChange={(e) => setTempTitleInput(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleSaveTitleEdit(conv.id);
-                                  if (e.key === 'Escape') setEditingTitleId(null);
-                                }}
-                                autoFocus
-                                className="px-2 py-0.5 text-xs font-bold bg-white dark:bg-slate-900 border border-sky-500 rounded outline-none text-slate-900 dark:text-slate-100 flex-1"
-                              />
-                              <button
-                                onClick={() => handleSaveTitleEdit(conv.id)}
-                                className="px-2 py-0.5 bg-sky-600 text-white rounded text-[11px] font-bold"
-                              >
-                                Lưu
-                              </button>
-                            </div>
-                          ) : (
-                            <span className={`font-extrabold text-sm truncate ${isActive ? 'text-sky-700 dark:text-sky-300' : 'text-slate-800 dark:text-slate-200'}`}>
-                              {conv.title}
-                            </span>
-                          )}
-
-                          {isActive && (
-                            <span className="px-2 py-0.5 rounded-full bg-sky-600 text-white text-[10px] font-black shrink-0">
-                              Đang mở
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-slate-400" />
-                            {conv.createdAt}
-                          </span>
-                          <span className="flex items-center gap-1 font-bold text-sky-600 dark:text-sky-400">
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            {msgCount} tin nhắn
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                        {!isEditing && (
-                          <button
-                            onClick={() => {
-                              setEditingTitleId(conv.id);
-                              setTempTitleInput(conv.title);
-                            }}
-                            className="p-1.5 text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                            title="Đổi tên hội thoại"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                        )}
-                        <button
-                          onClick={(e) => handleDeleteConversation(conv.id, conv.title, e)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-lg transition-colors"
-                          title="Xóa cuộc hội thoại"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                <div className="flex items-center gap-3 relative z-10">
+                  <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/20 shrink-0">
+                    <FolderOpen className="w-5 h-5 text-white stroke-[2.5]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-black text-base sm:text-lg text-white uppercase tracking-tight">KHO LƯU TRỮ HỘI THOẠI</h3>
+                      <span className="px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-xs text-white text-xs font-black">
+                        {savedConversations.length}
+                      </span>
                     </div>
-                  );
-                })
-              )}
+                    <p className="text-xs text-white/90 font-medium">Quản lý, tìm kiếm và truy xuất các phiên trò chuyện đã lưu</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setIsHistoryModalOpen(false)}
+                  className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer relative z-10"
+                  title="Đóng cửa sổ"
+                >
+                  <X className="w-4.5 h-4.5" />
+                </button>
+              </div>
+
+              {/* Sub-bar: Thanh tìm kiếm & Thông tin */}
+              <div className="px-4 py-2.5 bg-slate-50 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3 flex-shrink-0">
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={historySearchQuery}
+                    onChange={(e) => setHistorySearchQuery(e.target.value)}
+                    placeholder="Tìm theo tên cuộc hội thoại hoặc nội dung..."
+                    className="w-full pl-9 pr-8 py-1.5 text-xs sm:text-sm bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:border-[#F15A24] focus:ring-1 focus:ring-[#F15A24] transition-all"
+                  />
+                  {historySearchQuery && (
+                    <button
+                      onClick={() => setHistorySearchQuery('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0 hidden sm:block">
+                  Tổng: <span className="text-[#F15A24]">{savedConversations.length}</span> phiên
+                </div>
+              </div>
+
+              {/* Modal Body: Danh sách thẻ cuộc hội thoại */}
+              <div className="p-3 sm:p-5 flex-1 overflow-y-auto space-y-2.5 custom-scrollbar">
+                {filteredConversations.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500 dark:text-slate-400 space-y-3">
+                    <div className="w-14 h-14 mx-auto rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/50 flex items-center justify-center text-[#F15A24]">
+                      <FolderOpen className="w-7 h-7" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-slate-700 dark:text-slate-300">
+                        {historySearchQuery ? 'Không tìm thấy cuộc hội thoại phù hợp.' : 'Chưa có cuộc hội thoại nào được lưu.'}
+                      </p>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {historySearchQuery ? 'Thử tìm kiếm với từ khóa khác' : 'Tạo một phiên hội thoại mới để bắt đầu lưu trữ'}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  filteredConversations.map((conv) => {
+                    const isActive = conv.id === currentConversationId;
+                    const isEditing = editingTitleId === conv.id;
+                    const msgCount = conv.messages?.length || 0;
+
+                    return (
+                      <div
+                        key={conv.id}
+                        onClick={() => handleSelectConversation(conv)}
+                        className={`relative p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 sm:gap-4 cursor-pointer group ${
+                          isActive
+                            ? 'bg-gradient-to-r from-orange-50/90 via-amber-50/30 to-white dark:from-orange-950/40 dark:via-slate-900 dark:to-slate-900 border-2 border-[#F15A24] shadow-sm'
+                            : 'bg-white dark:bg-slate-800/60 border-slate-200/90 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500/50 hover:bg-orange-50/20 dark:hover:bg-slate-800/90'
+                        }`}
+                      >
+                        {/* Left Icon Badge */}
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                          isActive
+                            ? 'bg-[#F15A24] text-white shadow-xs'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-[#F15A24] group-hover:bg-orange-100 dark:group-hover:bg-orange-950/60'
+                        }`}>
+                          <MessageSquare className="w-5 h-5 stroke-[2.2]" />
+                        </div>
+
+                        {/* Thông tin hội thoại */}
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <div className="flex items-center gap-2">
+                            {isEditing ? (
+                              <div className="flex items-center gap-1.5 flex-1" onClick={(e) => e.stopPropagation()}>
+                                <input
+                                  type="text"
+                                  value={tempTitleInput}
+                                  onChange={(e) => setTempTitleInput(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveTitleEdit(conv.id);
+                                    if (e.key === 'Escape') setEditingTitleId(null);
+                                  }}
+                                  autoFocus
+                                  className="px-2.5 py-1 text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-[#F15A24] rounded-lg outline-none text-slate-900 dark:text-slate-100 flex-1 ring-1 ring-[#F15A24]"
+                                />
+                                <button
+                                  onClick={() => handleSaveTitleEdit(conv.id)}
+                                  className="px-2.5 py-1 bg-[#F15A24] text-white rounded-lg text-xs font-bold hover:brightness-110 cursor-pointer"
+                                >
+                                  Lưu
+                                </button>
+                                <button
+                                  onClick={() => setEditingTitleId(null)}
+                                  className="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold cursor-pointer"
+                                >
+                                  Hủy
+                                </button>
+                              </div>
+                            ) : (
+                              <span className={`font-extrabold text-sm sm:text-base truncate transition-colors ${
+                                isActive ? 'text-[#F15A24] dark:text-orange-400' : 'text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24]'
+                              }`}>
+                                {conv.title}
+                              </span>
+                            )}
+
+                            {isActive && (
+                              <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#F15A24] to-[#f97316] text-white text-[10px] font-black shrink-0 flex items-center gap-1 shadow-xs">
+                                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                                Đang mở
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-slate-400" />
+                              {conv.createdAt}
+                            </span>
+                            <span className="flex items-center gap-1 font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                              <MessageSquare className="w-3 h-3 text-[#F15A24]" />
+                              {msgCount} tin nhắn
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Nút thao tác */}
+                        <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          {!isEditing && (
+                            <button
+                              onClick={() => {
+                                setEditingTitleId(conv.id);
+                                setTempTitleInput(conv.title);
+                              }}
+                              className="p-2 text-slate-400 hover:text-[#F15A24] hover:bg-orange-50 dark:hover:bg-orange-950/50 rounded-xl transition-all cursor-pointer"
+                              title="Đổi tên hội thoại"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                          )}
+                          <button
+                            onClick={(e) => handleDeleteConversation(conv.id, conv.title, e)}
+                            className="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/60 rounded-xl transition-all cursor-pointer"
+                            title="Xóa cuộc hội thoại"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 flex-shrink-0">
+                <button
+                  onClick={handleCreateNewConversation}
+                  className="px-4 sm:px-5 py-2.5 bg-gradient-to-r from-[#F15A24] to-[#f97316] hover:brightness-110 active:scale-95 text-white rounded-xl text-xs sm:text-sm font-black transition-all flex items-center gap-2 shadow-md shadow-orange-500/25 cursor-pointer"
+                >
+                  <PlusCircle className="w-4.5 h-4.5" />
+                  <span>Tạo Cuộc Hội Thoại Mới</span>
+                </button>
+
+                <button
+                  onClick={() => setIsHistoryModalOpen(false)}
+                  className="px-4 sm:px-5 py-2.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer"
+                >
+                  Đóng
+                </button>
+              </div>
+
             </div>
-
-            {/* Modal Footer */}
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 flex-shrink-0">
-              <button
-                onClick={handleCreateNewConversation}
-                className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-sm cursor-pointer"
-              >
-                <PlusCircle className="w-4 h-4" />
-                <span>Tạo Cuộc Hội Thoại Mới</span>
-              </button>
-
-              <button
-                onClick={() => setIsHistoryModalOpen(false)}
-                className="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition cursor-pointer"
-              >
-                Đóng
-              </button>
-            </div>
-
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ROOT LEVEL FULLSCREEN MAXIMIZED HERO CONVERSATION MODAL */}
       {isChatMaximized && (
