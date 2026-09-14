@@ -1531,17 +1531,54 @@ export const SpeechToTextModule: React.FC = () => {
       recognition.continuous = !isMobileClient;
       recognition.interimResults = true;
       recognition.lang = currentLanguage;
-      recognition.maxAlternatives = 3;
-
-      // NOTE: We deliberately do NOT set recognition.grammars!
-      // In Chromium, JSGF SpeechGrammarList restricts speech recognition strictly to the listed words,
-      // which causes normal speech to freeze, stall, or get dropped by Google Cloud ASR!
-      // AVG enterprise keywords are instead accurately normalized in JS via enhanceVietnameseTranscript.
+      recognition.maxAlternatives = 5;
 
       recognition.onstart = () => {
         setIsListening(true);
         isListeningRef.current = true;
         setRecognitionError(null);
+      };
+
+      // Thuật toán chấm điểm chọn candidate tối ưu nhất trong các alternatives của Web Speech API
+      const pickOptimalAlternative = (alternatives: any[]): string => {
+        if (!alternatives || alternatives.length === 0) return '';
+        if (alternatives.length === 1) return alternatives[0]?.transcript || '';
+
+        let bestCandidate = alternatives[0]?.transcript || '';
+        let highestScore = -999;
+
+        for (let a = 0; a < alternatives.length; a++) {
+          const candidate = alternatives[a];
+          const text = (candidate?.transcript || '').trim();
+          if (!text) continue;
+
+          let score = (typeof candidate.confidence === 'number' && candidate.confidence > 0)
+            ? candidate.confidence * 10
+            : (10 - a * 1.5); // Thứ tự ưu tiên mặc định của Chromium
+
+          // 1. Điểm cộng cho dấu thanh tiếng Việt đầy đủ và chuẩn xác
+          const toneMatches = text.match(/[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/gi);
+          if (toneMatches) {
+            score += Math.min(5, toneMatches.length * 0.5);
+          }
+
+          // 2. Điểm cộng cao cho các thuật ngữ doanh nghiệp, ERP, kế toán và AVG One
+          if (/AVG|Á Âu Việt|ERP|BOM|CRM|HRM|KPI|OKR|PO|PR|SO|VAT|lệnh sản xuất|xuất kho|nhập kho|nghiệm thu|hóa đơn|công nợ|hợp đồng|thông số|kỹ thuật|kiểm kê|tiêu chuẩn/i.test(text)) {
+            score += 8;
+          }
+
+          // 3. Phạt nếu câu bị cụt 1-2 ký tự rác
+          if (text.length <= 2 && text.length < bestCandidate.length) {
+            score -= 4;
+          }
+
+          if (score > highestScore) {
+            highestScore = score;
+            bestCandidate = text;
+          }
+        }
+
+        return bestCandidate;
       };
 
       recognition.onresult = (event: any) => {
@@ -1554,17 +1591,8 @@ export const SpeechToTextModule: React.FC = () => {
           const res = event.results[i];
           if (!res || !res[0]) continue;
 
-          // Chọn candidate tối ưu nhất trong các alternatives (ưu tiên từ vựng AVG One)
-          let bestText = res[0].transcript || '';
-          if (res.length > 1) {
-            for (let a = 1; a < res.length; a++) {
-              const altText = res[a]?.transcript || '';
-              if (/B5\.1|5\.1T|#K2T|#K1|#K2B|AC1|AC2|2\.1|3\.1|DH|AV|AVG|VBKL|lệnh sản xuất|quản lý thuế|xuất kho|nhập kho|nghiệm thu/i.test(altText)) {
-                bestText = altText;
-                break;
-              }
-            }
-          }
+          // Chọn candidate tối ưu nhất trong các alternatives
+          const bestText = pickOptimalAlternative(Array.from(res));
 
           if (res.isFinal) {
             if (i >= processedFinalIndexRef.current) {
@@ -1596,7 +1624,7 @@ export const SpeechToTextModule: React.FC = () => {
           setInterimTranscript(formattedInterim);
 
           // BỘ ĐỆM TỰ ĐỘNG CHỐNG BIẾN MẤT VĂN BẢN (AUTO-COMMIT SAFETY TIMER):
-          // Nếu người dùng dừng nói khoảng 900ms mà trình duyệt chưa kịp trả về isFinal,
+          // Nếu người dùng dừng nói khoảng 1400ms mà trình duyệt chưa kịp trả về isFinal,
           // tự động chốt và lưu các chữ này vào khung hội thoại để TUYỆT ĐỐI KHÔNG BỊ MẤT CHỮ!
           if (silenceCommitTimerRef.current) {
             clearTimeout(silenceCommitTimerRef.current);
@@ -1609,7 +1637,7 @@ export const SpeechToTextModule: React.FC = () => {
               setInterimTranscript('');
               commitTranscriptToMessage(textToSave, true);
             }
-          }, 950);
+          }, 1400);
         } else if (!newFinalTranscript.trim()) {
           // Tránh xóa vội preview nếu chưa có nội dung mới
           if (!accumulatedInterimRef.current) {

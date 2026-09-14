@@ -53,6 +53,15 @@ const LOANWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\b(pi\s*ô)\b/gi, replacement: 'PO' },
   { pattern: /\b(vát\s*thuế|vê\s*a\s*tê)\b/gi, replacement: 'thuế VAT' },
   { pattern: /\b(phai\s*đính\s*kèm|phay\s*đính\s*kèm)\b/gi, replacement: 'file đính kèm' },
+  { pattern: /\b(phai\s*uốt|phai\s*word|tài\s*liệu\s*uốt)\b/gi, replacement: 'file Word' },
+  { pattern: /\b(phai\s*ích\s*xen|phai\s*excel|bảng\s*ích\s*xen)\b/gi, replacement: 'file Excel' },
+  { pattern: /\b(phai\s*pê\s*đê\s*ép|phai\s*pdf|tài\s*liệu\s*pdf)\b/gi, replacement: 'file PDF' },
+  { pattern: /\b(phai\s*bao\s*vơ\s*poi|powerpoint|bản\s*thuyết\s*trình\s*poi)\b/gi, replacement: 'PowerPoint' },
+  { pattern: /\b(gúc\s*gồ\s*mít|gúc\s*gồ\s*meet)\b/gi, replacement: 'Google Meet' },
+  { pattern: /\b(gúc\s*gồ)\b/gi, replacement: 'Google' },
+  { pattern: /\b(gia\s*lô)\b/gi, replacement: 'Zalo' },
+  { pattern: /\b(phây\s*búc|phây\s*s\s*búc)\b/gi, replacement: 'Facebook' },
+  { pattern: /\b(du\s*túp|diu\s*túp)\b/gi, replacement: 'YouTube' },
   { pattern: /\b(sét\s*tanh|xét\s*ting|xét\s*tinh)\b/gi, replacement: 'setting' },
   { pattern: /\b(xíp\s*hàng|xíp\s*pinh)\b/gi, replacement: 'ship hàng' },
   { pattern: /\b(con\s*phơm|công\s*phơm)\b/gi, replacement: 'confirm' },
@@ -68,10 +77,50 @@ const LOANWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\b(xơ\s*vơ|xét\s*vơ)\b/gi, replacement: 'server' },
   { pattern: /\b(đa\s*ta\s*bây|đê\s*ta\s*bét)\b/gi, replacement: 'database' },
   { pattern: /\b(giao\s*diện\s*du\s*ai|du\s*ai)\b/gi, replacement: 'giao diện UI' },
-  { pattern: /\b(du\s*ích)\b/gi, replacement: 'UX' }
+  { pattern: /\b(du\s*ích)\b/gi, replacement: 'UX' },
+  { pattern: /\b(pờ\s*ro\s*dếch|dự\s*án\s*dếch)\b/gi, replacement: 'project' },
+  { pattern: /\b(sờ\s*mát\s*phôn)\b/gi, replacement: 'smartphone' },
+  { pattern: /\b(láp\s*tóp)\b/gi, replacement: 'laptop' }
 ];
 
-// 3. Chuẩn hóa số đếm, phần trăm, tiền tệ & thời gian theo chuẩn hành chính (ITN)
+// 3. Chuẩn hóa thuật ngữ đặc thù doanh nghiệp & hệ thống AVG One
+const ENTERPRISE_TERMS_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  { pattern: /\b(a\s*vê\s*gờ\s*oăn|avg\s*oăn|a\s*v\s*g\s*one)\b/gi, replacement: 'AVG One' },
+  { pattern: /\b(a\s*vê\s*gờ|a\s*v\s*g|á\s*âu\s*việt|á\s*âu\s*việt\s*gờ\s*lô\s*bồ)\b/gi, replacement: 'Á Âu Việt Global' },
+  { pattern: /\b(e\s*rờ\s*pê|e\s*r\s*p)\b/gi, replacement: 'ERP' },
+  { pattern: /\b(xê\s*rờ\s*mờ|c\s*r\s*m)\b/gi, replacement: 'CRM' },
+  { pattern: /\b(hát\s*rờ\s*mờ|h\s*r\s*m)\b/gi, replacement: 'HRM' },
+  { pattern: /\b(bê\s*ô\s*em|b\s*o\s*m)\b/gi, replacement: 'BOM' },
+  { pattern: /\b(p\s*o|pi\s*ô)\b/gi, replacement: 'PO' },
+  { pattern: /\b(p\s*r|pi\s*rờ)\b/gi, replacement: 'PR' },
+  { pattern: /\b(s\s*o|ét\s*ô)\b/gi, replacement: 'SO' },
+  { pattern: /\b(ét\s*ô\s*pi|s\s*o\s*p)\b/gi, replacement: 'SOP' },
+  { pattern: /\b(ai\s*ét\s*ô|i\s*s\s*o)\b/gi, replacement: 'ISO' },
+  { pattern: /\b(quy\s*a\s*quy\s*xê|k\s*c\s*s|qa\s*qc)\b/gi, replacement: 'QA/QC' },
+  { pattern: /\b(u\s*n\s*c|ủy\s*nhiệm\s*chi)\b/gi, replacement: 'ủy nhiệm chi' },
+  { pattern: /\b(b\s*2\s*b)\b/gi, replacement: 'B2B' },
+  { pattern: /\b(b\s*2\s*c)\b/gi, replacement: 'B2C' },
+  { pattern: /\b(c\s*e\s*o|xi\s*i\s*ô)\b/gi, replacement: 'CEO' },
+  { pattern: /\b(c\s*f\s*o|xi\s*ép\s*ô)\b/gi, replacement: 'CFO' },
+  { pattern: /\b(c\s*o\s*o|xi\s*ô\s*ô)\b/gi, replacement: 'COO' },
+
+  // Văn bản & nghiệp vụ sản xuất - kho - kế toán
+  { pattern: /\b(lệnh\s*sản\s*xuất|lệnh\s*xản\s*xuất)\b/gi, replacement: 'lệnh sản xuất' },
+  { pattern: /\b(kế\s*hoạch\s*sản\s*xuất)\b/gi, replacement: 'kế hoạch sản xuất' },
+  { pattern: /\b(phiếu\s*xuất\s*kho)\b/gi, replacement: 'phiếu xuất kho' },
+  { pattern: /\b(phiếu\s*nhập\s*kho)\b/gi, replacement: 'phiếu nhập kho' },
+  { pattern: /\b(biên\s*bản\s*bàn\s*giao)\b/gi, replacement: 'biên bản bàn giao' },
+  { pattern: /\b(biên\s*bản\s*nghiệm\s*thu|nghiệm\s*thu\s*công\s*trình)\b/gi, replacement: 'biên bản nghiệm thu' },
+  { pattern: /\b(hóa\s*đơn\s*điện\s*tử)\b/gi, replacement: 'hóa đơn điện tử' },
+  { pattern: /\b(hóa\s*đơn\s*đỏ|hóa\s*đơn\s*vat)\b/gi, replacement: 'hóa đơn VAT' },
+  { pattern: /\b(báo\s*cáo\s*tài\s*chính)\b/gi, replacement: 'báo cáo tài chính' },
+  { pattern: /\b(quản\s*lý\s*thuế)\b/gi, replacement: 'quản lý thuế' },
+  { pattern: /\b(đối\s*soát\s*công\s*nợ|đối\s*chiếu\s*công\s*nợ)\b/gi, replacement: 'đối soát công nợ' },
+  { pattern: /\b(tiêu\s*chuẩn\s*chất\s*lượng)\b/gi, replacement: 'tiêu chuẩn chất lượng' },
+  { pattern: /\b(thông\s*số\s*kỹ\s*thuật)\b/gi, replacement: 'thông số kỹ thuật' }
+];
+
+// 4. Chuẩn hóa số đếm, phần trăm, tiền tệ, ngày giờ & đo lường theo chuẩn hành chính (ITN)
 const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]) => string) }> = [
   // Phần trăm
   { pattern: /\b(một\s*trăm|100)\s*phần\s*trăm\b/gi, replacement: '100%' },
@@ -92,6 +141,36 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   // Số thập phân tiếng Việt (phẩy -> dấu phẩy thập phân)
   { pattern: /\b(\d+)\s*phẩy\s*(\d+)\b/gi, replacement: '$1,$2' },
   { pattern: /\b(không|0)\s*phẩy\s*năm\b/gi, replacement: '0,5' },
+  { pattern: /\b(một|1)\s*phẩy\s*năm\b/gi, replacement: '1,5' },
+  { pattern: /\b(hai|2)\s*phẩy\s*năm\b/gi, replacement: '2,5' },
+
+  // Tiền tệ & Đơn vị tài chính
+  { pattern: /\b(\d+)\s*(?:triệu|tr)\s*(?:đồng|đ|vnd|vnđ)?\b/gi, replacement: '$1 triệu đồng' },
+  { pattern: /\b(\d+)\s*(?:tỷ|tiền\s*tỷ)\s*(?:đồng|đ|vnd|vnđ)?\b/gi, replacement: '$1 tỷ đồng' },
+  { pattern: /\b(\d+)\s*(?:nghìn|ngàn|k)\s*(?:đồng|đ|vnd|vnđ)\b/gi, replacement: '$1.000 đ' },
+  { pattern: /\bmột\s*triệu(?:\s*đồng)?\b/gi, replacement: '1.000.000 đ' },
+  { pattern: /\bhai\s*triệu(?:\s*đồng)?\b/gi, replacement: '2.000.000 đ' },
+  { pattern: /\bba\s*triệu(?:\s*đồng)?\b/gi, replacement: '3.000.000 đ' },
+  { pattern: /\bnăm\s*triệu(?:\s*đồng)?\b/gi, replacement: '5.000.000 đ' },
+  { pattern: /\bmười\s*triệu(?:\s*đồng)?\b/gi, replacement: '10.000.000 đ' },
+  { pattern: /\bnăm\s*trăm\s*nghìn(?:\s*đồng)?\b/gi, replacement: '500.000 đ' },
+  { pattern: /\bhai\s*trăm\s*nghìn(?:\s*đồng)?\b/gi, replacement: '200.000 đ' },
+  { pattern: /\bmột\s*trăm\s*nghìn(?:\s*đồng)?\b/gi, replacement: '100.000 đ' },
+  { pattern: /\bnăm\s*mươi\s*nghìn(?:\s*đồng)?\b/gi, replacement: '50.000 đ' },
+
+  // Đơn vị đo lường kỹ thuật
+  { pattern: /\b(\d+)\s*(?:mét\s*vuông|m\s*vuông)\b/gi, replacement: '$1 m²' },
+  { pattern: /\b(\d+)\s*(?:mét\s*khối|m\s*khối)\b/gi, replacement: '$1 m³' },
+  { pattern: /\b(\d+)\s*(?:ki\s*lô\s*gam|ki\s*lô|kí|cân)\b/gi, replacement: '$1 kg' },
+  { pattern: /\b(\d+)\s*(?:ki\s*lô\s*mét|cây\s*số)\b/gi, replacement: '$1 km' },
+  { pattern: /\b(\d+)\s*(?:mi\s*li\s*mét)\b/gi, replacement: '$1 mm' },
+  { pattern: /\b(\d+)\s*(?:xen\s*ti\s*mét|phân)\b/gi, replacement: '$1 cm' },
+  { pattern: /\b(\d+)\s*(tấn|tạ|yến|lít)\b/gi, replacement: '$1 $2' },
+
+  // Năm
+  { pattern: /\bnăm\s*(?:hai\s*nghìn\s*không\s*trăm\s*hai\s*mươi\s*sáu|hai\s*không\s*hai\s*sáu|hai\s*mươi\s*hai\s*sáu)\b/gi, replacement: 'năm 2026' },
+  { pattern: /\bnăm\s*(?:hai\s*nghìn\s*không\s*trăm\s*hai\s*mươi\s*lăm|hai\s*không\s*hai\s*lăm)\b/gi, replacement: 'năm 2025' },
+  { pattern: /\bnăm\s*(?:hai\s*nghìn\s*không\s*trăm\s*hai\s*mươi\s*bốn|hai\s*không\s*hai\s*bốn)\b/gi, replacement: 'năm 2024' },
 
   // Thời gian giờ phút
   { pattern: /\b(0?[1-9]|1[0-9]|2[0-3])\s*giờ\s*(?:rưỡi|30|ba\s*mươi)\s*(?:phút)?\b/gi, 
@@ -128,7 +207,7 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\bbước\s*(?:mười|10)\b/gi, replacement: 'Bước 10' }
 ];
 
-// 4. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế
+// 5. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế
 const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Lỗi l/n miền Bắc
   { pattern: /\b(thế\s*này\s*này|thế\s*lày)\b/gi, replacement: 'thế này' },
@@ -164,6 +243,11 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
   { pattern: /\b(chi\s*mô)\b/gi, replacement: 'gì đâu' },
   { pattern: /\b(thiệt\s*tình)\b/gi, replacement: 'thật tình' },
   { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' }
+];
+
+// 6. Lọc từ đệm thừa thãi khi ngập ngừng (Speech Fillers)
+const SPEECH_FILLER_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  { pattern: /(?:^|\s)(?:ừm|à\s*ừm|ờ\s*thì|uhm|uh|thì\s*là\s*mà)(?=\s|$)/gi, replacement: ' ' }
 ];
 
 // 5. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
@@ -276,10 +360,37 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // Tuyệt đối không tự ý thêm bớt từ ngữ, sửa lời thoại hay suy đoán từ của người nói.
-  // Giữ đúng nguyên văn 100% những gì thu âm được.
+  // 3. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn l/n, phụ âm đầu, phương ngữ
+  for (const rule of SPOKEN_COLLOQUIAL_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
 
-  // 7. Chuẩn hóa khoảng cách quanh dấu câu:
+  // 4. Chuẩn hóa từ mượn tiếng Anh công sở / công nghệ
+  for (const rule of LOANWORD_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
+
+  // 5. Chuẩn hóa thuật ngữ chuyên ngành sản xuất, kho vận, tài chính AVG One
+  for (const rule of ENTERPRISE_TERMS_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
+
+  // 6. Chuẩn hóa số đếm, phần trăm, tiền tệ, ngày giờ, đơn vị đo lường (ITN)
+  for (const rule of ITN_RULES) {
+    text = typeof rule.replacement === 'function'
+      ? text.replace(rule.pattern, rule.replacement as any)
+      : text.replace(rule.pattern, rule.replacement);
+  }
+
+  // 7. Lọc các từ đệm ngập ngừng thừa thãi
+  for (const rule of SPEECH_FILLER_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
+
+  // 8. Tự động chèn dấu phẩy hợp lý sau liên từ và trạng ngữ chuyển tiếp
+  text = insertSmartDiscourseCommas(text);
+
+  // 9. Chuẩn hóa khoảng cách quanh dấu câu:
   // Không để khoảng trắng trước dấu câu: "xin chào ," -> "xin chào,"
   text = text.replace(/\s+([,.?!:;%])/g, '$1');
   // Phải có đúng 1 khoảng trắng sau dấu câu (nếu không phải là cuối chuỗi hoặc xuống dòng)
@@ -287,8 +398,9 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
   // Xử lý khoảng cách quanh dấu mở đóng ngoặc
   text = text.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
   text = text.replace(/"\s+/g, '"').replace(/\s+"/g, '"');
+  text = text.replace(/\s{2,}/g, ' ');
 
-  // 8. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
+  // 10. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
   if (isFinal) {
     const trimmed = text.trim();
     // Nếu chưa có dấu kết thúc câu (. ? ! ...)
@@ -311,7 +423,7 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     }
   }
 
-  // 9. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
+  // 11. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
   text = autoCapitalizeSentences(text);
 
   return text.trim();
