@@ -1849,149 +1849,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col space-y-2.5 overflow-y-auto pr-0.5 text-xs flex-shrink-0">
             
-            {/* CARD 1: EXPLICIT 3-STATE VOICE CONTROL PANEL WITH DEDICATED PAUSE & STOP BUTTONS */}
-            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col items-center justify-center space-y-2.5 backdrop-blur-md transition-all">
-              
-              {/* Status Header Badge with Radar Pulse */}
-              <div className="flex items-center gap-2 text-xs font-black">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                      micState === 'idle'
-                        ? 'bg-emerald-400'
-                        : micState === 'recording'
-                        ? 'bg-red-400'
-                        : 'bg-amber-400'
-                    }`}
-                  />
-                  <span
-                    className={`relative inline-flex rounded-full h-2.5 w-2.5 transition-all ${
-                      micState === 'idle'
-                        ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]'
-                        : micState === 'recording'
-                        ? 'bg-red-500 shadow-[0_0_12px_#ef4444]'
-                        : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'
-                    }`}
-                  />
-                </span>
-                <span className={
-                  micState === 'idle'
-                    ? 'text-emerald-700 dark:text-emerald-400 font-extrabold'
-                    : micState === 'recording'
-                    ? 'text-red-600 dark:text-red-400 font-extrabold animate-pulse'
-                    : 'text-amber-700 dark:text-amber-400 font-extrabold'
-                }>
-                  {micState === 'idle' && 'Sẵn sàng thu âm'}
-                  {micState === 'recording' && 'Đang thu âm trực tiếp...'}
-                  {micState === 'paused' && 'Đang tạm dừng thu âm'}
-                </span>
-              </div>
-
-              {/* Main Control Action Button Group with Sound Wave Particles */}
-              {micState === 'idle' && (
-                <button
-                  onClick={toggleListening}
-                  className="relative group overflow-hidden w-full py-3 px-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md hover:shadow-[0_0_20px_rgba(16,185,129,0.45)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
-                  title="Bắt đầu thu âm và nhận diện giọng nói"
-                >
-                  {/* Subtle shine sweep */}
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-
-                  {/* Left mini soundwave */}
-                  <span className="flex items-end gap-0.5 h-3.5">
-                    <span className="w-0.5 h-2 bg-white/80 rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
-                    <span className="w-0.5 h-3.5 bg-white rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
-                  </span>
-
-                  <Mic className="w-5 h-5 stroke-[2.5] shrink-0" />
-                  <span>BẮT ĐẦU NÓI</span>
-
-                  {/* Right mini soundwave */}
-                  <span className="flex items-end gap-0.5 h-3.5">
-                    <span className="w-0.5 h-3.5 bg-white rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
-                    <span className="w-0.5 h-2 bg-white/80 rounded-full animate-audio-wave" style={{ animationDelay: '300ms' }} />
-                  </span>
-                </button>
-              )}
-
-              {micState === 'recording' && (
-                <div className="grid grid-cols-2 gap-2 w-full">
-                  <button
-                    onClick={toggleListening}
-                    className="py-2.5 px-2.5 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md transition-all transform active:scale-95 cursor-pointer"
-                    title="Bấm để Tạm dừng thu âm"
-                  >
-                    <Pause className="w-4 h-4 stroke-[2.5]" />
-                    <span>TẠM DỪNG</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (recognitionRef.current) {
-                        try { recognitionRef.current.stop(); } catch (e) {}
-                      }
-                      setIsListening(false);
-                      stopRealtimeSpeechTicker();
-                      stopAudioPitchAnalyzer();
-                      setMicState('idle');
-                      setInterimTranscript('');
-                      showToast('⏹️ Đã kết thúc phiên thu âm.');
-                    }}
-                    className="py-2.5 px-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all transform active:scale-95 cursor-pointer"
-                    title="Bấm để Kết thúc phiên thu âm"
-                  >
-                    <Square className="w-3.5 h-3.5 fill-current" />
-                    <span>KẾT THÚC</span>
-                  </button>
-                </div>
-              )}
-
-              {micState === 'paused' && (
-                <div className="grid grid-cols-2 gap-2 w-full">
-                  <button
-                    onClick={toggleListening}
-                    className="py-2.5 px-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md transition-all transform active:scale-95 cursor-pointer"
-                    title="Bấm để Tiếp tục thu âm"
-                  >
-                    <Play className="w-4 h-4 stroke-[2.5] ml-0.5" />
-                    <span>TIẾP TỤC</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (recognitionRef.current) {
-                        try { recognitionRef.current.stop(); } catch (e) {}
-                      }
-                      setIsListening(false);
-                      stopRealtimeSpeechTicker();
-                      stopAudioPitchAnalyzer();
-                      setMicState('idle');
-                      setInterimTranscript('');
-                      showToast('⏹️ Đã kết thúc phiên thu âm.');
-                    }}
-                    className="py-2.5 px-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md transition-all transform active:scale-95 cursor-pointer"
-                    title="Bấm để Kết thúc phiên thu âm"
-                  >
-                    <Square className="w-3.5 h-3.5 fill-current" />
-                    <span>KẾT THÚC</span>
-                  </button>
-                </div>
-              )}
-
-              {/* Microphone Permission Action Button if Error/Denied */}
-              {(micPermissionStatus === 'denied' || recognitionError) && (
-                <button
-                  onClick={requestMicPermission}
-                  className="mt-1 w-full px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-extrabold text-[10px] flex items-center justify-center gap-1 shadow-xs animate-pulse cursor-pointer"
-                  title="Bấm để kiểm tra và cấp quyền kết nối Micro"
-                >
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  <span>Cấp Quyền Micro</span>
-                </button>
-              )}
-            </div>
-
-            {/* CARD 2: SPEAKER DIARIZATION (MALE & FEMALE ONLY) */}
+            {/* CARD: SPEAKER DIARIZATION (MALE & FEMALE ONLY) */}
             <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-2.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2 backdrop-blur-md">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                 <span className="flex items-center gap-1.5 text-xs font-extrabold text-[#F15A24] dark:text-orange-400">
@@ -2165,23 +2023,44 @@ export const SpeechToTextModule: React.FC = () => {
                     <span className="text-slate-900 dark:text-white">Hội Thoại Trực Tiếp</span>
                   </h2>
 
-                  {/* Nút Micro & Tạm Dừng nhanh trên Mobile */}
+                  {/* Nút BẮT ĐẦU NÓI & Điều Khiển Thu Âm Trực Tiếp Trong Hộp Thoại */}
                   {micState === 'idle' && (
                     <button
                       onClick={toggleListening}
-                      className="lg:hidden text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0"
-                      title="Bắt đầu thu âm giọng nói trực tiếp"
+                      className="relative group overflow-hidden px-3.5 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-[0_0_20px_rgba(16,185,129,0.45)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0"
+                      title="Bắt đầu thu âm và nhận diện giọng nói trực tiếp"
                     >
-                      <Mic className="w-4 h-4 stroke-[2.5]" />
-                      <span>BẮT ĐẦU NÓI</span>
+                      {/* Subtle shine sweep */}
+                      <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white" />
+                      </span>
+
+                      <Mic className="w-4 h-4 stroke-[2.5] shrink-0" />
+                      <span className="font-extrabold">BẮT ĐẦU NÓI</span>
+
+                      {/* Soundwave animation */}
+                      <span className="hidden sm:flex items-end gap-0.5 h-3">
+                        <span className="w-0.5 h-2 bg-white/80 rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
+                        <span className="w-0.5 h-3 bg-white rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
+                      </span>
                     </button>
                   )}
 
                   {micState === 'recording' && (
-                    <div className="lg:hidden flex items-center gap-1 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/80 rounded-xl text-xs text-red-600 dark:text-red-400 font-extrabold shadow-2xs">
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_8px_#ef4444]" />
+                        </span>
+                        <span className="hidden sm:inline">Đang thu âm...</span>
+                      </div>
                       <button
                         onClick={toggleListening}
-                        className="text-xs font-black text-white bg-amber-500 hover:bg-amber-400 px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide"
+                        className="text-xs font-black text-white bg-amber-500 hover:bg-amber-400 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0"
                         title="Tạm dừng thu âm"
                       >
                         <Pause className="w-4 h-4 stroke-[2.5]" />
@@ -2199,23 +2078,27 @@ export const SpeechToTextModule: React.FC = () => {
                           setInterimTranscript('');
                           showToast('⏹️ Đã kết thúc phiên thu âm.');
                         }}
-                        className="text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-2 py-1.5 rounded-xl flex items-center gap-1 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide"
+                        className="text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0"
                         title="Kết thúc phiên thu âm"
                       >
                         <Square className="w-3.5 h-3.5 fill-current" />
-                        <span>DỪNG</span>
+                        <span>KẾT THÚC</span>
                       </button>
                     </div>
                   )}
 
                   {micState === 'paused' && (
-                    <div className="lg:hidden flex items-center gap-1 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/80 rounded-xl text-xs text-amber-700 dark:text-amber-400 font-extrabold shadow-2xs">
+                        <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                        <span className="hidden sm:inline">Đang tạm dừng</span>
+                      </div>
                       <button
                         onClick={toggleListening}
-                        className="text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide"
+                        className="text-xs font-black text-white bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide shrink-0"
                         title="Tiếp tục thu âm"
                       >
-                        <Play className="w-4 h-4 stroke-[2.5]" />
+                        <Play className="w-4 h-4 stroke-[2.5] ml-0.5" />
                         <span>TIẾP TỤC</span>
                       </button>
                       <button
@@ -2230,13 +2113,25 @@ export const SpeechToTextModule: React.FC = () => {
                           setInterimTranscript('');
                           showToast('⏹️ Đã kết thúc phiên thu âm.');
                         }}
-                        className="text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-2 py-1.5 rounded-xl flex items-center gap-1 shadow-md cursor-pointer transition-all active:scale-95 uppercase tracking-wide"
+                        className="text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 py-1.5 sm:py-2 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0"
                         title="Kết thúc phiên thu âm"
                       >
                         <Square className="w-3.5 h-3.5 fill-current" />
-                        <span>DỪNG</span>
+                        <span>KẾT THÚC</span>
                       </button>
                     </div>
+                  )}
+
+                  {/* Microphone Permission Action Button if Error/Denied */}
+                  {(micPermissionStatus === 'denied' || recognitionError) && (
+                    <button
+                      onClick={requestMicPermission}
+                      className="px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-extrabold text-[11px] flex items-center gap-1 shadow-xs animate-pulse cursor-pointer shrink-0"
+                      title="Bấm để kiểm tra và cấp quyền kết nối Micro"
+                    >
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      <span>Cấp Quyền Micro</span>
+                    </button>
                   )}
 
                   {/* Nút TÙY CHỈNH TÍCH HỢP 1 ICON TRÊN MOBILE */}
@@ -2251,7 +2146,7 @@ export const SpeechToTextModule: React.FC = () => {
 
                   <button
                     onClick={handleCreateNewConversation}
-                    className="text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
+                    className="text-xs font-black text-white bg-[#0284C7] hover:bg-[#00A8E8] px-2.5 py-1.5 sm:py-2 rounded-xl flex items-center gap-1 shadow-2xs cursor-pointer transition-transform active:scale-95 uppercase tracking-wide shrink-0"
                     title="Tạo cuộc hội thoại mới"
                   >
                     <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -2260,7 +2155,7 @@ export const SpeechToTextModule: React.FC = () => {
 
                   <button
                     onClick={() => setIsChatMaximized(true)}
-                    className="hidden sm:flex p-1.5 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
+                    className="hidden sm:flex p-2 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
                     title="Mở rộng hộp thoại toàn màn hình"
                   >
                     <Maximize2 className="w-4 h-4 stroke-[2.5]" />
@@ -2333,16 +2228,26 @@ export const SpeechToTextModule: React.FC = () => {
               {/* Recessed Live Conversation Transcript Feed Cavity (WITH UNIFIED 1PX BORDER) */}
               <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                 {messages.length === 0 && !interimTranscript && (
-                  <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-10 my-auto">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20">
+                  <div className="h-full flex flex-col items-center justify-center text-center space-y-3.5 py-10 my-auto">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20 shadow-inner">
                       <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-[#00A8E8] dark:text-[#38BDF8]" />
                     </div>
                     <div className="space-y-1">
                       <p className="font-black text-base text-slate-800 dark:text-slate-100">Sẵn Sàng Nhận Diện Giọng Nói</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                        Bấm nút <strong className="text-emerald-600 dark:text-emerald-400">"BẮT ĐẦU NÓI"</strong> ở thanh phía trên để nhận diện chữ trực tiếp.
+                        Bấm nút <strong className="text-emerald-600 dark:text-emerald-400">"BẮT ĐẦU NÓI"</strong> ở thanh phía trên hoặc bấm nút bên dưới để bắt đầu nhận diện hội thoại trực tiếp.
                       </p>
                     </div>
+                    {micState === 'idle' && (
+                      <button
+                        onClick={toggleListening}
+                        className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                        title="Bắt đầu thu âm ngay"
+                      >
+                        <Mic className="w-4 h-4 stroke-[2.5]" />
+                        <span>BẮT ĐẦU NÓI NGAY</span>
+                      </button>
+                    )}
                   </div>
                 )}
 
