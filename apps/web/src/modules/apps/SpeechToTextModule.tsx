@@ -2370,16 +2370,19 @@ export const SpeechToTextModule: React.FC = () => {
           <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
             
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW) */}
-            <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border-2 border-[#00A8E8]/30 dark:border-[#00A8E8]/40 shadow-lg shadow-[#00A8E8]/5 backdrop-blur-2xl pt-3.5 pb-4 px-4 sm:pt-3.5 sm:pb-5 sm:px-5 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
+            <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border-2 border-[#00A8E8]/30 dark:border-[#00A8E8]/40 shadow-lg shadow-[#00A8E8]/5 backdrop-blur-2xl p-3 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
               
               {/* Speaker Filter Badges Bar & Top Actions */}
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0">
-                <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo với cụm nút bên phải */}
+                {/* Khung Header Có Màu Nền (Sky/Cyan Gradient Glassmorphism) Nổi Bật & Cân Đối */}
+                <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-100/90 via-sky-50/70 to-blue-50/80 dark:from-sky-950/60 dark:via-slate-850/80 dark:to-slate-900/90 border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                  {/* Góc Trái: Tiêu đề Hộp Thoại - Căn thẳng hàng hoàn hảo */}
                   <div className="flex items-center gap-2 shrink-0 h-8.5">
-                    <h2 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2 shrink-0 leading-none">
-                      <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-[#00A8E8] stroke-[2.5] shrink-0" />
-                      <span className="text-slate-900 dark:text-white">Hội Thoại Trực Tiếp</span>
+                    <div className="w-7 h-7 rounded-lg bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 flex items-center justify-center border border-[#00A8E8]/30 shrink-0 shadow-2xs">
+                      <MessageSquare className="w-4 h-4 text-[#00A8E8] dark:text-[#38BDF8] stroke-[2.5]" />
+                    </div>
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2 shrink-0 leading-none">
+                      <span className="bg-gradient-to-r from-sky-900 to-sky-700 dark:from-sky-200 dark:to-sky-400 bg-clip-text text-transparent">Hội Thoại Trực Tiếp</span>
                     </h2>
                   </div>
 
@@ -2555,7 +2558,7 @@ export const SpeechToTextModule: React.FC = () => {
                     {/* Nút Phóng to toàn màn hình */}
                     <button
                       onClick={() => setIsChatMaximized(true)}
-                      className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-slate-200 dark:border-slate-700 shrink-0"
+                      className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border shadow-2xs cursor-pointer transition-all active:scale-95 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-[#00A8E8] hover:text-white border-sky-200 dark:border-slate-700 shrink-0"
                       title="Mở rộng hộp thoại toàn màn hình"
                     >
                       <Maximize2 className="w-4 h-4 stroke-[2.5]" />
