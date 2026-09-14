@@ -543,7 +543,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
         </div>
 
         {/* Centered Odoo App Grid (Hàng 1: 6 Hộp Phân Hệ Doanh Nghiệp & Nghiệp Vụ Cốt Lõi) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3.5 w-full max-w-[1240px] mx-auto shrink-0 mt-2 sm:mt-3">
           {CORE_APP_MODULES.map((app, idx) => {
             const Icon = app.icon;
             return (
@@ -553,23 +553,23 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 tabIndex={0}
                 onClick={() => onSelectModule(app.id)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectModule(app.id); }}
-                style={{ borderRadius: '26px', animationDelay: `${(idx + 1) * 70 + 100}ms` }}
-                className="group flex flex-col items-center justify-between py-3 sm:py-3.5 px-2 min-h-[102px] sm:min-h-[112px] bg-white/95 dark:bg-slate-900/90 hover:bg-gradient-to-b hover:from-sky-50/60 hover:via-white hover:to-white dark:hover:from-sky-950/40 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-slate-200/90 dark:border-slate-800/90 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_12px_-2px_rgba(15,23,42,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
+                style={{ animationDelay: `${(idx + 1) * 60 + 80}ms` }}
+                className="group relative flex flex-col items-center justify-between py-2.5 sm:py-3 px-2 h-[100px] sm:h-[108px] bg-white/90 dark:bg-slate-900/90 hover:bg-gradient-to-b hover:from-sky-50/80 hover:via-white hover:to-white dark:hover:from-sky-950/40 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-2xl border border-slate-200/90 dark:border-slate-800/90 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_24px_-4px_rgba(2,132,199,0.22),0_4px_10px_-2px_rgba(2,132,199,0.12)] hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 text-center overflow-hidden cursor-pointer select-none animate-entrance-up"
               >
                 {/* Hairline top glow on hover */}
                 <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                {/* App Unified Blue Icon Badge */}
-                <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-0.5 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
-                  <Icon className="w-5.5 h-5.5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
+                {/* App Unified Blue Icon Badge with interactive hover state */}
+                <div className="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-xl bg-sky-50/90 dark:bg-sky-950/70 border border-sky-200/80 dark:border-sky-800/60 flex items-center justify-center shrink-0 group-hover:bg-[#0284C7] dark:group-hover:bg-[#0284C7] group-hover:border-[#0284C7] group-hover:shadow-[0_4px_12px_rgba(2,132,199,0.35)] group-hover:scale-105 transition-all duration-300">
+                  <Icon className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#0284C7] dark:text-sky-300 group-hover:text-white dark:group-hover:text-white stroke-[2.2] transition-colors duration-300" />
                 </div>
                 
                 {/* App Title & Micro Tag */}
-                <div className="flex flex-col items-center w-full space-y-0.5">
-                  <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
+                <div className="flex flex-col items-center w-full space-y-0.5 mt-auto">
+                  <h3 className="text-xs sm:text-[13px] font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
                     {app.name}
                   </h3>
-                  <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
+                  <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors uppercase tracking-wider whitespace-nowrap">
                     {app.tag}
                   </span>
                 </div>
@@ -578,10 +578,11 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           })}
         </div>
 
-        {/* Centered Odoo App Grid (Hàng 2: 5 Hộp Phân Hệ Hạ Tầng & Cụm Tác Nghiệp - Căn Giữa Cùng Kích Thước) */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-1.5">
+        {/* Centered Odoo App Grid (Hàng 2: 5 Hộp Phân Hệ Hạ Tầng & Cụm Tác Nghiệp - Trải Đều Thẳng Hàng 2 Đầu) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5 w-full max-w-[1240px] mx-auto shrink-0 mt-2.5 sm:mt-3">
           {EXPANDED_APP_MODULES.map((app, idx) => {
             const Icon = app.icon;
+            const isLast = idx === EXPANDED_APP_MODULES.length - 1;
             return (
               <div
                 key={app.id}
@@ -589,23 +590,25 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 tabIndex={0}
                 onClick={() => onSelectModule(app.id)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelectModule(app.id); }}
-                style={{ borderRadius: '26px', animationDelay: `${(idx + 7) * 70 + 100}ms` }}
-                className="group flex flex-col items-center justify-between py-3 sm:py-3.5 px-2 min-h-[102px] sm:min-h-[112px] w-[calc(50%-6px)] sm:w-[calc(33.333%-11px)] lg:w-[calc((100%-80px)/6)] bg-white/95 dark:bg-slate-900/90 hover:bg-gradient-to-b hover:from-sky-50/60 hover:via-white hover:to-white dark:hover:from-sky-950/40 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-slate-200/90 dark:border-slate-800/90 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_12px_-2px_rgba(15,23,42,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_12px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up shrink-0"
+                style={{ animationDelay: `${(idx + 7) * 60 + 80}ms` }}
+                className={`group relative flex flex-col items-center justify-between py-2.5 sm:py-3 px-2 h-[100px] sm:h-[108px] bg-white/90 dark:bg-slate-900/90 hover:bg-gradient-to-b hover:from-sky-50/80 hover:via-white hover:to-white dark:hover:from-sky-950/40 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-2xl border border-slate-200/90 dark:border-slate-800/90 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_24px_-4px_rgba(2,132,199,0.22),0_4px_10px_-2px_rgba(2,132,199,0.12)] hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 text-center overflow-hidden cursor-pointer select-none animate-entrance-up ${
+                  isLast ? 'col-span-2 sm:col-span-1 lg:col-span-1' : ''
+                }`}
               >
                 {/* Hairline top glow on hover */}
                 <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                {/* App Unified Blue Icon Badge */}
-                <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-800 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-0.5 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
-                  <Icon className="w-5.5 h-5.5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
+                {/* App Unified Blue Icon Badge with interactive hover state */}
+                <div className="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-xl bg-sky-50/90 dark:bg-sky-950/70 border border-sky-200/80 dark:border-sky-800/60 flex items-center justify-center shrink-0 group-hover:bg-[#0284C7] dark:group-hover:bg-[#0284C7] group-hover:border-[#0284C7] group-hover:shadow-[0_4px_12px_rgba(2,132,199,0.35)] group-hover:scale-105 transition-all duration-300">
+                  <Icon className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#0284C7] dark:text-sky-300 group-hover:text-white dark:group-hover:text-white stroke-[2.2] transition-colors duration-300" />
                 </div>
                 
                 {/* App Title & Micro Tag */}
-                <div className="flex flex-col items-center w-full space-y-0.5">
-                  <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
+                <div className="flex flex-col items-center w-full space-y-0.5 mt-auto">
+                  <h3 className="text-xs sm:text-[13px] font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
                     {app.name}
                   </h3>
-                  <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
+                  <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors uppercase tracking-wider whitespace-nowrap">
                     {app.tag}
                   </span>
                 </div>
