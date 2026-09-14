@@ -1281,10 +1281,10 @@ export const CalendarModule: React.FC = () => {
           
           {/* 🎯 HỘP 1: NÚT THÊM MỚI & TÌM KIẾM NHANH */}
           <div className="space-y-2.5">
-            {/* Primary Action Button - Primary Orange #F15A24 Gradient */}
+            {/* Primary Action Button - Primary Blue #0284C7 Gradient */}
             <button
               onClick={() => setShowAddModal(true)}
-              className="w-full py-3 px-4 bg-gradient-to-r from-[#F15A24] via-[#FF7043] to-[#F15A24] hover:from-[#d94e1f] hover:to-[#f15a24] text-white font-black text-xs sm:text-sm rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-[#F15A24]/30 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-4 bg-gradient-to-r from-[#0077B6] via-[#0284C7] to-[#00A8E8] hover:from-[#005f92] hover:to-[#0284C7] text-white font-black text-xs sm:text-sm rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-[#0284C7]/30 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>Thêm Lịch Họp Mới</span>
