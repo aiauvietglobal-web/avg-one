@@ -410,20 +410,20 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
             <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-4 xs:px-6 sm:px-8 py-2 sm:py-3 flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
               
-              {/* 🎨 ÁNH SÁNG GRADIENT XANH - CAM (Đậm nét hơn, 100% không hình hộp, hòa tan tự nhiên) */}
-              {/* Lớp màu xanh - cam chuyển tiếp rõ nét, hòa tan 100% ra xung quanh bằng radial mask & blur-3xl */}
-              <div className="absolute -inset-x-16 -inset-y-10 sm:-inset-x-28 sm:-inset-y-14 pointer-events-none -z-10 blur-3xl">
+              {/* 🎨 ÁNH SÁNG GRADIENT XANH - CAM (Hiệu ứng thở ẩn hiện êm ái - 100% không hình hộp) */}
+              {/* Lớp màu xanh - cam chuyển tiếp rõ nét, thở ẩn hiện mềm mại với animate-halo-breathe */}
+              <div className="absolute -inset-x-16 -inset-y-10 sm:-inset-x-28 sm:-inset-y-14 pointer-events-none -z-10 blur-3xl animate-halo-breathe">
                 <div 
-                  className="w-full h-full opacity-85 dark:opacity-60"
+                  className="w-full h-full opacity-90 dark:opacity-65"
                   style={{
-                    background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.4) 0%, rgba(56, 189, 248, 0.28) 35%, rgba(251, 146, 60, 0.28) 65%, rgba(241, 90, 36, 0.4) 100%)',
+                    background: 'linear-gradient(90deg, rgba(2, 132, 199, 0.45) 0%, rgba(56, 189, 248, 0.3) 35%, rgba(251, 146, 60, 0.3) 65%, rgba(241, 90, 36, 0.45) 100%)',
                     maskImage: 'radial-gradient(ellipse 65% 55% at 50% 50%, black 25%, transparent 78%)',
                     WebkitMaskImage: 'radial-gradient(ellipse 65% 55% at 50% 50%, black 25%, transparent 78%)'
                   }}
                 />
               </div>
 
-              {/* Lớp làm mờ lưới cực nhẹ ngay sau chữ - tan biến hình elip, tuyệt đối không tạo viền hộp */}
+              {/* Lớp làm mờ lưới cực nhẹ ngay sau chữ - tan biến hình elip, giữ chữ sắc nét liên tục */}
               <div className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-8 rounded-full pointer-events-none -z-10 blur-xl bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.85)_0%,transparent_75%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(15,23,42,0.85)_0%,transparent_75%)]" />
 
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}

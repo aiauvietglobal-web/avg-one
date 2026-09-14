@@ -2668,6 +2668,22 @@ div.box-speech-bubble {
   }
 }
 
+@keyframes halo-ambient-breathe {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+}
+
+.animate-halo-breathe {
+  animation: halo-ambient-breathe 5.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
 .animate-kinetic-float-1 {
   animation: kinetic-float-1 4.5s ease-in-out infinite;
   will-change: transform;
