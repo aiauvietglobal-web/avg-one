@@ -179,9 +179,9 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                       />
                     </button>
 
-                    {/* DROPDOWN MENU TÍCH HỢP BỘ LỌC VÀ TIỆN ÍCH - ĐỒNG BỘ THEME XANH */}
+                    {/* DROPDOWN MENU TÍCH HỢP BỘ LỌC VÀ TIỆN ÍCH - NỀN TRẮNG ĐẶC (SOLID WHITE) CHỐNG XUYÊN THẤU */}
                     {isUtilitiesOpen && (
-                      <div className="absolute top-full left-0 mt-2.5 w-80 bg-white/98 dark:bg-[#1E1420]/98 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-2xl p-3 z-50 animate-dropdown-slide ring-1 ring-black/5">
+                      <div className="absolute top-full left-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-2xl p-3 z-50 animate-dropdown-slide ring-1 ring-black/5">
                         {/* Header của Tiện ích Popover: Đồng bộ Gradient Xanh */}
                         <div className="p-3.5 bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#38BDF8] text-white rounded-2xl flex items-center justify-between mb-2.5 shadow-sm relative overflow-hidden">
                           <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl pointer-events-none" />
@@ -212,7 +212,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'all'
                                 ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
+                                : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
@@ -220,7 +220,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                               <span>Tất cả người nói</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                             }`}>
                               {filterCounts.all}
                             </span>
@@ -232,7 +232,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'spk-male'
                                 ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
+                                : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
@@ -240,7 +240,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                               <span>👨 Giọng Nam</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'spk-male' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'spk-male' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                             }`}>
                               {filterCounts.bySpeaker?.['spk-male'] ?? 0}
                             </span>
@@ -252,7 +252,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'spk-female'
                                 ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
+                                : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
@@ -260,7 +260,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                               <span>👩 Giọng Nữ</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'spk-female' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'spk-female' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                             }`}>
                               {filterCounts.bySpeaker?.['spk-female'] ?? 0}
                             </span>
@@ -272,7 +272,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                             className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                               filterSpeakerId === 'spk-deaf'
                                 ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                                : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
+                                : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
@@ -280,7 +280,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                               <span>👤 Tôi (Khiếm thính)</span>
                             </div>
                             <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                              filterSpeakerId === 'spk-deaf' ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                              filterSpeakerId === 'spk-deaf' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                             }`}>
                               {filterCounts.deaf}
                             </span>
@@ -294,7 +294,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                                 filterSpeakerId === s.id
                                   ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                                  : 'bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium'
+                                  : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
                               }`}
                             >
                               <div className="flex items-center gap-2.5">
@@ -305,7 +305,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                                 <span>{s.name}</span>
                               </div>
                               <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                                filterSpeakerId === s.id ? 'bg-white/20 text-white' : 'bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+                                filterSpeakerId === s.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                               }`}>
                                 {filterCounts.bySpeaker?.[s.id] ?? 0}
                               </span>
@@ -322,7 +322,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           {/* Ghim thanh lọc trên khung chat */}
                           <button
                             onClick={handleToggleChatFilterBar}
-                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors"
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800"
                           >
                             <span className="flex items-center gap-2 font-medium">
                               <Pin className="w-3.5 h-3.5 text-slate-400" />
@@ -340,7 +340,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           {/* Mẫu phản hồi nhanh */}
                           <button
                             onClick={handleOpenTemplates}
-                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50/80 dark:bg-slate-800/60 hover:bg-sky-50/50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors font-medium group"
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors font-medium group border border-slate-100 dark:border-slate-800"
                           >
                             <span className="flex items-center gap-2">
                               <Sparkles className="w-3.5 h-3.5 text-sky-500" />
