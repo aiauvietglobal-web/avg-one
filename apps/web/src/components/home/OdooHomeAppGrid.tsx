@@ -410,12 +410,12 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
             <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-4 xs:px-6 sm:px-8 py-2 sm:py-3 flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
               
-              {/* ✨ VẦNG SÁNG HALO CHUYỂN SẮC TINH TẾ (Tâm sáng thanh khiết che mờ lưới, lan tỏa ánh Cyan - Cam êm ái) */}
-              {/* 1. Lớp tâm sáng thanh khiết (che mờ lưới phía sau chữ, chuyển mờ tự nhiên, không lộ viền) */}
-              <div className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-10 rounded-full pointer-events-none -z-10 blur-xl bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.95)_0%,rgba(255,255,255,0.75)_50%,transparent_85%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(15,23,42,0.95)_0%,rgba(15,23,42,0.7)_50%,transparent_85%)]" />
+              {/* 🎨 NỀN GRADIENT XANH - CAM NHẸ NHÀNG (Dịu mát, thanh khiết, che mờ lưới tự nhiên) */}
+              {/* Lớp 1: Nền Gradient Xanh - Cam pastel dịu nhẹ, che mờ lưới phía sau chữ */}
+              <div className="absolute -inset-x-6 -inset-y-4 sm:-inset-x-12 sm:-inset-y-6 rounded-[2.5rem] pointer-events-none -z-10 bg-gradient-to-br from-sky-100/70 via-white/80 to-orange-100/65 dark:from-sky-950/50 dark:via-slate-900/60 dark:to-orange-950/45 backdrop-blur-lg" />
 
-              {/* 2. Vầng hào quang Cyan - Cam thương hiệu lan tỏa mượt mà, sang trọng, không lem loang màu */}
-              <div className="absolute -inset-x-12 -inset-y-10 sm:-inset-x-24 sm:-inset-y-14 rounded-full pointer-events-none -z-20 blur-3xl bg-[radial-gradient(ellipse_at_center,rgba(2,132,199,0.18)_0%,rgba(56,189,248,0.1)_40%,rgba(251,146,60,0.1)_70%,rgba(241,90,36,0.15)_85%,transparent_100%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.2)_0%,rgba(14,165,233,0.12)_40%,rgba(251,146,60,0.12)_70%,rgba(241,90,36,0.18)_85%,transparent_100%)]" />
+              {/* Lớp 2: Vầng sáng xanh cam lan tỏa mềm mại, chuyển tiếp êm ái không lộ viền cứng */}
+              <div className="absolute -inset-x-10 -inset-y-8 sm:-inset-x-18 sm:-inset-y-10 rounded-full pointer-events-none -z-20 blur-2xl bg-gradient-to-br from-sky-300/30 via-transparent to-orange-300/25 dark:from-sky-500/20 dark:via-transparent dark:to-orange-500/20" />
 
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
