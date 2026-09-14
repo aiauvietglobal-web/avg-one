@@ -298,32 +298,35 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       const w = displayWidth;
       const h = displayHeight;
 
-      phaseRef.current += micState === 'recording' ? 0.08 : 0.035;
+      phaseRef.current += micState === 'recording' ? 0.065 : 0.038;
       const phase = phaseRef.current;
 
-      // Cập nhật mẫu sóng mới mỗi 38ms để dải sóng cuộn mượt mà như bản ghi âm chuyên nghiệp
-      if (timestamp - lastSampleTimeRef.current > 38) {
+      // Cập nhật mẫu sóng mới mỗi 32ms để dải sóng cuộn mượt mà, dập dìu tự nhiên
+      if (timestamp - lastSampleTimeRef.current > 32) {
         lastSampleTimeRef.current = timestamp;
 
-        let sample = 0.14 + Math.sin(phase * 1.5) * 0.04;
+        let sample = 0.15;
 
         if (micState === 'recording') {
-          if (audioVolumeLevel > 6) {
-            // Khi có giọng nói: nhảy cao tự nhiên theo âm lượng & năng lượng âm học
-            const normVol = Math.min(1.0, (audioVolumeLevel / 100) * 1.4);
-            sample = Math.max(0.22, normVol * (0.68 + Math.random() * 0.32));
+          if (audioVolumeLevel > 5) {
+            // Khi có giọng nói: kết hợp biên độ âm thanh thực tế với sóng điều hòa dập dìu
+            const normVol = Math.min(1.0, (audioVolumeLevel / 100) * 1.5);
+            // Sóng điều hòa tạo nhịp dập dìu tự nhiên giữa các dải tần
+            const waveMod = 0.78 + Math.sin(phase * 2.4) * 0.16 + Math.cos(phase * 1.2) * 0.08;
+            sample = Math.max(0.20, normVol * waveMod);
           } else {
-            sample = 0.13 + Math.random() * 0.08;
+            // Khi đang bật mic nhưng chưa nói: sóng thở dập dìu êm ái
+            sample = 0.13 + Math.sin(phase * 2.0) * 0.07 + Math.cos(phase * 1.1) * 0.04;
           }
         } else {
-          // Khi Standby: sóng thở nhịp nhàng tự nhiên uyển chuyển
-          sample = 0.15 + Math.sin(phase * 1.2) * 0.06 + Math.cos(phase * 0.6) * 0.04;
+          // Khi Standby: sóng nhấp nhô dập dìu mềm mại dạng đại dương
+          sample = 0.14 + Math.sin(phase * 1.6) * 0.08 + Math.cos(phase * 0.8) * 0.05;
         }
 
         historyRef.current.push(sample);
         peakHoldRef.current.push(sample);
 
-        const maxBars = Math.floor(w / 3.2);
+        const maxBars = Math.floor(w / 3.4);
         while (historyRef.current.length > maxBars) {
           historyRef.current.shift();
         }
@@ -339,7 +342,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         if (cur >= peak) {
           peak = cur;
         } else {
-          peak = Math.max(cur, peak - 0.007); // Rơi từ từ với quán tính mượt
+          peak = Math.max(cur, peak - 0.006); // Rơi từ từ với quán tính mượt
         }
         peakHoldRef.current[i] = peak;
       }
@@ -348,11 +351,9 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, w, h);
 
-
-
       // 4. Dải các vạch sóng tần số với Gradient Cam - Xanh (Cam ở trên đỉnh, Xanh dương / Cyan ở dưới chân)
-      const barWidth = 2.0;
-      const step = 3.6;
+      const barWidth = 2.2;
+      const step = 3.8;
       const totalBars = historyRef.current.length;
       const barsStartX = w - totalBars * step;
       const isRec = micState === 'recording';
@@ -379,14 +380,20 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         const x = barsStartX + i * step;
         if (x < -barWidth || x > w) continue;
 
-        const val = historyRef.current[i];
-        const barHeight = Math.max(5, Math.min(h * 0.92, val * h));
+        const baseVal = historyRef.current[i];
+
+        // Tạo hiệu ứng sóng lan truyền dập dìu chạy dọc toàn dải sóng (Travelling undulating wave)
+        const undulationWave = Math.sin(phase * 2.2 - (i * 0.18)) * 0.075 
+                             + Math.cos(phase * 1.1 + (i * 0.09)) * 0.035;
+        const val = Math.max(0.06, Math.min(0.96, baseVal + undulationWave));
+
+        const barHeight = Math.max(6, Math.min(h * 0.92, val * h));
         const y = h - barHeight;
 
         ctx.fillStyle = barGrad;
         if (typeof (ctx as any).roundRect === 'function') {
           ctx.beginPath();
-          (ctx as any).roundRect(x, y, barWidth, barHeight, [1.5, 1.5, 0, 0]);
+          (ctx as any).roundRect(x, y, barWidth, barHeight, [2, 2, 0, 0]);
           ctx.fill();
         } else {
           ctx.fillRect(x, y, barWidth, barHeight);
@@ -395,32 +402,37 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         points.push({ x: x + barWidth / 2, y });
 
         // Vạch đỉnh rơi chậm (Peak Hold Cap) tone Cam sáng nổi bật
-        const peakVal = peakHoldRef.current[i] || val;
-        const peakY = h - Math.max(5, Math.min(h * 0.92, peakVal * h)) - 2;
+        const peakBase = peakHoldRef.current[i] || baseVal;
+        const peakVal = Math.max(val, peakBase + undulationWave * 0.6);
+        const peakY = h - Math.max(6, Math.min(h * 0.92, peakVal * h)) - 2.5;
         ctx.fillStyle = isRec ? '#EA580C' : '#F97316';
-        ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.5);
+        ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.8);
       }
 
-      // 5. Vùng phủ Gradient (Translucent Gradient Area Fill) & Đường bao sóng phát sáng (Glow Crest Curve)
+      // 5. Vùng phủ Gradient (Translucent Gradient Area Fill) & Đường bao sóng phát sáng uốn lượn mềm mại
       if (points.length > 2) {
         // Vùng phủ chuyển sắc: Cam nhạt ở trên ngọn, xanh dịu ở dưới chân, tan về trong suốt
         const areaGrad = ctx.createLinearGradient(0, 0, 0, h);
-        areaGrad.addColorStop(0, isRec ? 'rgba(249, 115, 22, 0.22)' : 'rgba(245, 158, 11, 0.12)');
-        areaGrad.addColorStop(0.5, isRec ? 'rgba(0, 168, 232, 0.10)' : 'rgba(2, 132, 199, 0.06)');
+        areaGrad.addColorStop(0, isRec ? 'rgba(249, 115, 22, 0.24)' : 'rgba(245, 158, 11, 0.14)');
+        areaGrad.addColorStop(0.45, isRec ? 'rgba(0, 168, 232, 0.12)' : 'rgba(2, 132, 199, 0.07)');
         areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
+        // Dựng đường bao uốn lượn mượt mà theo thuật toán Bezier spline
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 1; i < points.length; i++) {
-          ctx.lineTo(points[i].x, points[i].y);
+        for (let i = 0; i < points.length - 1; i++) {
+          const xc = (points[i].x + points[i + 1].x) / 2;
+          const yc = (points[i].y + points[i + 1].y) / 2;
+          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
         }
+        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
         ctx.lineTo(points[points.length - 1].x, h);
         ctx.lineTo(points[0].x, h);
         ctx.closePath();
         ctx.fillStyle = areaGrad;
         ctx.fill();
 
-        // Đường viền crest curve chạy mềm mại theo ngọn sóng với sắc cam rực rỡ
+        // Đường viền crest curve chạy uốn lượn mềm mại theo ngọn sóng với sắc cam rực rỡ
         const crestGrad = ctx.createLinearGradient(0, 0, w, 0);
         crestGrad.addColorStop(0, '#F59E0B');
         crestGrad.addColorStop(0.5, '#F97316');
@@ -428,11 +440,14 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 1; i < points.length; i++) {
-          ctx.lineTo(points[i].x, points[i].y);
+        for (let i = 0; i < points.length - 1; i++) {
+          const xc = (points[i].x + points[i + 1].x) / 2;
+          const yc = (points[i].y + points[i + 1].y) / 2;
+          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
         }
+        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
         ctx.strokeStyle = crestGrad;
-        ctx.lineWidth = 1.3;
+        ctx.lineWidth = 1.6;
         ctx.stroke();
       }
 
