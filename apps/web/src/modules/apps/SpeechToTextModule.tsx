@@ -328,131 +328,145 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
         }
 
         historyRef.current.push(sample);
-        peakHoldRef.current.push(sample);
 
-        const maxBars = Math.floor(w / (isExpanded ? 4.8 : 3.4));
-        while (historyRef.current.length > maxBars) {
+        const targetCount = 64;
+        while (historyRef.current.length > targetCount) {
           historyRef.current.shift();
         }
-        while (peakHoldRef.current.length > maxBars) {
-          peakHoldRef.current.shift();
-        }
-      }
-
-      // Cập nhật gia tốc rơi chậm của vạch lưu đỉnh (Peak Hold Gravity)
-      for (let i = 0; i < peakHoldRef.current.length; i++) {
-        const cur = historyRef.current[i] || 0.1;
-        let peak = peakHoldRef.current[i] || cur;
-        if (cur >= peak) {
-          peak = cur;
-        } else {
-          peak = Math.max(cur, peak - 0.006); // Rơi từ từ với quán tính mượt
-        }
-        peakHoldRef.current[i] = peak;
       }
 
       // 1. Màu nền trắng thanh lịch, hiện đại theo yêu cầu
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, w, h);
 
-      // 4. Dải các vạch sóng tần số với Gradient Cam - Xanh (Cam ở trên đỉnh, Xanh dương / Cyan ở dưới chân)
-      const barWidth = isExpanded ? 3.2 : 2.2;
-      const step = isExpanded ? 5.2 : 3.6;
-      const totalBars = historyRef.current.length;
-      const barsStartX = w - totalBars * step;
+      // Lưới đường đo tần số mờ nhẹ công nghệ cao
+      ctx.strokeStyle = 'rgba(226, 232, 240, 0.6)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      [0.25, 0.5, 0.75].forEach(ratio => {
+        ctx.beginPath();
+        ctx.moveTo(0, h * ratio);
+        ctx.lineTo(w, h * ratio);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+
+      const total = historyRef.current.length;
+      const points: { x: number; y: number }[] = [];
+      const pointsBack: { x: number; y: number }[] = [];
       const isRec = micState === 'recording';
 
-      // Bar Gradient: 0 là ở đáy (h), 1 là ở đỉnh (0)
-      // Dưới chân là Xanh (Blue / Cyan), trên đỉnh là Cam rực rỡ (Orange / Amber)
-      const barGrad = ctx.createLinearGradient(0, h, 0, 0);
-      if (isRec) {
-        barGrad.addColorStop(0, '#0284C7');    // Deep Ocean Blue ở chân
-        barGrad.addColorStop(0.35, '#00A8E8'); // AVG Cyan
-        barGrad.addColorStop(0.65, '#F59E0B'); // Vàng cam ấm (Amber)
-        barGrad.addColorStop(0.88, '#F97316'); // Cam tươi rực rỡ (Orange)
-        barGrad.addColorStop(1, '#EA580C');    // Cam đậm ở ngọn đỉnh
-      } else {
-        barGrad.addColorStop(0, '#0369A1');
-        barGrad.addColorStop(0.4, '#0284C7');
-        barGrad.addColorStop(0.75, '#F59E0B');
-        barGrad.addColorStop(1, '#F97316');
-      }
+      for (let i = 0; i < total; i++) {
+        const x = (i / (total - 1)) * w;
+        const baseVal = historyRef.current[i] || 0.14;
 
-      const points: { x: number; y: number }[] = [];
-
-      for (let i = 0; i < totalBars; i++) {
-        const x = barsStartX + i * step;
-        if (x < -barWidth || x > w) continue;
-
-        const baseVal = historyRef.current[i];
-
-        // Tạo hiệu ứng sóng lan truyền dập dìu chạy dọc toàn dải sóng (Travelling undulating wave)
+        // 1. Sóng chính phía trước (Hero Wave Area)
         const undulationWave = Math.sin(phase * 2.2 - (i * 0.18)) * 0.075 
                              + Math.cos(phase * 1.1 + (i * 0.09)) * 0.035;
         const val = Math.max(0.06, Math.min(0.96, baseVal + undulationWave));
+        const waveHeight = Math.max(8, Math.min(h * 0.94, val * h));
+        const y = h - waveHeight;
+        points.push({ x, y });
 
-        const barHeight = Math.max(6, Math.min(h * 0.92, val * h));
-        const y = h - barHeight;
-
-        ctx.fillStyle = barGrad;
-        if (typeof (ctx as any).roundRect === 'function') {
-          ctx.beginPath();
-          (ctx as any).roundRect(x, y, barWidth, barHeight, [2, 2, 0, 0]);
-          ctx.fill();
-        } else {
-          ctx.fillRect(x, y, barWidth, barHeight);
-        }
-
-        points.push({ x: x + barWidth / 2, y });
-
-        // Vạch đỉnh rơi chậm (Peak Hold Cap) tone Cam sáng nổi bật
-        const peakBase = peakHoldRef.current[i] || baseVal;
-        const peakVal = Math.max(val, peakBase + undulationWave * 0.6);
-        const peakY = h - Math.max(6, Math.min(h * 0.92, peakVal * h)) - 2.5;
-        ctx.fillStyle = isRec ? '#EA580C' : '#F97316';
-        ctx.fillRect(x, Math.max(1, peakY), barWidth, 1.8);
+        // 2. Sóng phụ đa tầng phía sau (Layer 2 Background Depth Wave Area)
+        const undulationBack = Math.sin(phase * 1.65 + (i * 0.14)) * 0.085 
+                             + Math.cos(phase * 0.85 - (i * 0.07)) * 0.045;
+        const valBack = Math.max(0.04, Math.min(0.90, (baseVal * 0.85) + undulationBack));
+        const waveHeightBack = Math.max(6, Math.min(h * 0.88, valBack * h));
+        const yBack = h - waveHeightBack;
+        pointsBack.push({ x, y: yBack });
       }
 
-      // 5. Vùng phủ Gradient (Translucent Gradient Area Fill) & Đường bao sóng phát sáng uốn lượn mềm mại
-      if (points.length > 2) {
-        // Vùng phủ chuyển sắc: Cam nhạt ở trên ngọn, xanh dịu ở dưới chân, tan về trong suốt
-        const areaGrad = ctx.createLinearGradient(0, 0, 0, h);
-        areaGrad.addColorStop(0, isRec ? 'rgba(249, 115, 22, 0.24)' : 'rgba(245, 158, 11, 0.14)');
-        areaGrad.addColorStop(0.45, isRec ? 'rgba(0, 168, 232, 0.12)' : 'rgba(2, 132, 199, 0.07)');
-        areaGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-        // Dựng đường bao uốn lượn mượt mà theo thuật toán Bezier spline
-        ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 0; i < points.length - 1; i++) {
-          const xc = (points[i].x + points[i + 1].x) / 2;
-          const yc = (points[i].y + points[i + 1].y) / 2;
-          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      // Hàm vẽ spline mượt qua các điểm
+      const drawSpline = (pts: { x: number; y: number }[]) => {
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (let i = 0; i < pts.length - 1; i++) {
+          const xc = (pts[i].x + pts[i + 1].x) / 2;
+          const yc = (pts[i].y + pts[i + 1].y) / 2;
+          ctx.quadraticCurveTo(pts[i].x, pts[i].y, xc, yc);
         }
-        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
-        ctx.lineTo(points[points.length - 1].x, h);
-        ctx.lineTo(points[0].x, h);
+        ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      };
+
+      // A. MẢNG MÀU PHỤ PHÍA SAU (Background Soft Glow Area)
+      if (pointsBack.length > 2) {
+        ctx.save();
+        ctx.beginPath();
+        drawSpline(pointsBack);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
         ctx.closePath();
-        ctx.fillStyle = areaGrad;
+
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+        if (isRec) {
+          bgGrad.addColorStop(0, 'rgba(245, 158, 11, 0.42)');  // Hổ phách ấm
+          bgGrad.addColorStop(0.45, 'rgba(0, 168, 232, 0.35)'); // AVG Cyan
+          bgGrad.addColorStop(1, 'rgba(2, 132, 199, 0.12)');   // Ocean Blue
+        } else {
+          bgGrad.addColorStop(0, 'rgba(245, 158, 11, 0.28)');
+          bgGrad.addColorStop(0.5, 'rgba(2, 132, 199, 0.20)');
+          bgGrad.addColorStop(1, 'rgba(3, 105, 161, 0.06)');
+        }
+        ctx.fillStyle = bgGrad;
         ctx.fill();
 
-        // Đường viền crest curve chạy uốn lượn mềm mại theo ngọn sóng với sắc cam rực rỡ
-        const crestGrad = ctx.createLinearGradient(0, 0, w, 0);
-        crestGrad.addColorStop(0, '#F59E0B');
-        crestGrad.addColorStop(0.5, '#F97316');
-        crestGrad.addColorStop(1, '#EA580C');
-
+        // Đường viền crest lớp sau
         ctx.beginPath();
-        ctx.moveTo(points[0].x, points[0].y);
-        for (let i = 0; i < points.length - 1; i++) {
-          const xc = (points[i].x + points[i + 1].x) / 2;
-          const yc = (points[i].y + points[i + 1].y) / 2;
-          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-        }
-        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
-        ctx.strokeStyle = crestGrad;
+        drawSpline(pointsBack);
+        ctx.strokeStyle = isRec ? 'rgba(249, 115, 22, 0.55)' : 'rgba(0, 168, 232, 0.40)';
         ctx.lineWidth = 1.6;
         ctx.stroke();
+        ctx.restore();
+      }
+
+      // B. MẢNG MÀU CHÍNH PHÍA TRƯỚC (Hero Solid Gradient Wave Area)
+      if (points.length > 2) {
+        ctx.save();
+        ctx.beginPath();
+        drawSpline(points);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+
+        // Mảng màu Gradient Cam ở trên - Xanh ở dưới chuẩn xác, đậm đà, liền khối
+        const heroGrad = ctx.createLinearGradient(0, 0, 0, h);
+        if (isRec) {
+          heroGrad.addColorStop(0, 'rgba(234, 88, 12, 0.94)');   // Cam đậm rực rỡ ở đỉnh
+          heroGrad.addColorStop(0.20, 'rgba(249, 115, 22, 0.92)'); // Cam tươi
+          heroGrad.addColorStop(0.46, 'rgba(245, 158, 11, 0.90)'); // Vàng cam ấm áp (Amber)
+          heroGrad.addColorStop(0.70, 'rgba(0, 168, 232, 0.92)');  // AVG Cyan
+          heroGrad.addColorStop(1, 'rgba(2, 132, 199, 0.98)');    // Deep Ocean Blue ở đáy
+        } else {
+          heroGrad.addColorStop(0, 'rgba(249, 115, 22, 0.88)');
+          heroGrad.addColorStop(0.26, 'rgba(245, 158, 11, 0.85)');
+          heroGrad.addColorStop(0.65, 'rgba(2, 132, 199, 0.90)');
+          heroGrad.addColorStop(1, 'rgba(3, 105, 161, 0.96)');
+        }
+        ctx.fillStyle = heroGrad;
+        ctx.fill();
+
+        // C. Đường viền phản quang phát sáng trên đỉnh mảng màu (Glowing Crest Curve)
+        ctx.beginPath();
+        drawSpline(points);
+        const crestGrad = ctx.createLinearGradient(0, 0, w, 0);
+        crestGrad.addColorStop(0, '#FDE68A');
+        crestGrad.addColorStop(0.35, '#F97316');
+        crestGrad.addColorStop(1, '#EA580C');
+
+        ctx.strokeStyle = crestGrad;
+        ctx.lineWidth = 2.6;
+        ctx.shadowColor = 'rgba(249, 115, 22, 0.7)';
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+
+        // D. Lớp vệt sáng bóng gương (Gloss Sheen) trên bề mặt mảng màu
+        const glossGrad = ctx.createLinearGradient(0, 0, 0, h * 0.4);
+        glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
+        glossGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = glossGrad;
+        ctx.fill();
+
+        ctx.restore();
       }
 
       ctx.restore();
