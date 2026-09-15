@@ -9,6 +9,7 @@ import {
   Boxes, Users, Plus
 } from 'lucide-react';
 import { AppModuleId } from '../../components/layout/AppLauncherModal';
+import { ClusterKModule } from './ClusterKModule';
 
 interface HubDetailModuleProps {
   activeModule: AppModuleId;
@@ -189,167 +190,14 @@ export const HubDetailModule: React.FC<HubDetailModuleProps> = ({
   }
 
   /* ========================================================================= */
-  /* 💠 2. PHÂN HỆ CỤM #K (5 GIAO DIỆN / ĐẦU MỐI ĐỘC LẬP: Kiến, #, #K2T, #K2B, #K1) */
+  /* 💠 2. PHÂN HỆ CỤM #K (5 HỘP ĐỘC LẬP & GIAO DIỆN NGHIỆP VỤ ĐỘC LẬP 100%) */
   /* ========================================================================= */
   if (activeModule === 'clusterK') {
-    const kHubs: Record<string, { code: string; title: string; leader: string; role: string; desc: string; color: string }> = {
-      kien: {
-        code: 'KIẾN',
-        title: 'ĐẦU MỐI KIẾN (Điều Hành Chủ Trương & Duyệt Ngân Sách)',
-        leader: 'Trưởng ban Kiên',
-        role: 'Chủ trì Bước 2 & Bước 7 trong chuỗi 13 SOP',
-        desc: 'Đánh giá tính khả thi, phân bổ đầu mối chủ trì và cấp hạn mức ngân sách thực thi; chốt mẫu chi phí sản xuất.',
-        color: 'from-amber-900/90 via-slate-900 to-yellow-950 border-amber-500/30 text-amber-400'
-      },
-      hash: {
-        code: '# (HASH)',
-        title: 'ĐẦU MỐI # (Khảo Sát Kỹ Thuật & Đo Đạc QA/QC)',
-        leader: 'Phụ trách Kỹ Thuật #',
-        role: 'Chủ trì Bước 3 & Bước 10 trong chuỗi 13 SOP',
-        desc: 'Khảo sát lập thông số kỹ thuật, đo đạc kiểm định QA/QC chất lượng trước khi nghiệm thu xuất xưởng.',
-        color: 'from-purple-900/90 via-slate-900 to-indigo-950 border-purple-500/30 text-purple-400'
-      },
-      k2t: {
-        code: '#K2T',
-        title: 'ĐẦU MỐI #K2T (Kỹ Thuật R&D & Thực Nghiệm)',
-        leader: 'Kỹ sư Trưởng #K2T',
-        role: 'Nghiên cứu nguyên lý vi mạch, lập trình nhúng & đo đạc thực địa',
-        desc: 'Đầu mối trực tiếp nghiên cứu kỹ thuật, lập trình firmware vi xử lý và đo lường ổn định hệ thống trong phòng Lab.',
-        color: 'from-cyan-900/90 via-slate-900 to-blue-950 border-cyan-500/30 text-cyan-400'
-      },
-      k2b: {
-        code: '#K2B',
-        title: 'ĐẦU MỐI #K2B (Điều Hành Tác Nghiệp Dự Án)',
-        leader: 'Điều phối viên #K2B',
-        role: 'Điều phối tiến độ, tổng hợp nhật ký & đóng gói bàn giao',
-        desc: 'Đầu mối điều phối thực thi các tiểu dự án thuộc Cụm #K, bám sát tiến độ SLA và liên thông các đầu mối liên quan.',
-        color: 'from-violet-900/90 via-slate-900 to-purple-950 border-violet-500/30 text-violet-400'
-      },
-      k1: {
-        code: '#K1',
-        title: 'ĐẦU MỐI #K1 (Cố Vấn & Kiểm Chuẩn Công Nghệ)',
-        leader: 'Trưởng ban Cụm #K1',
-        role: 'Tư vấn kỹ thuật chuyên sâu & rà soát tiêu chuẩn',
-        desc: 'Cố vấn chuyên sâu về giải pháp công nghệ, rà soát tính hợp chuẩn, tối ưu hóa kiến trúc bo mạch & kiểu dáng.',
-        color: 'from-indigo-900/90 via-slate-900 to-slate-950 border-indigo-500/30 text-indigo-400'
-      }
-    };
-
-    const currentK = kHubs[activeTab] || kHubs.kien;
-
     return (
-      <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 p-3 sm:p-5 space-y-4">
-        
-        {/* Banner Định Danh Đầu Mối Cụm #K */}
-        <div className={`p-4 sm:p-6 rounded-2xl border shadow-sm bg-gradient-to-r ${currentK.color} text-white`}>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 bg-white/10 border border-white/20">
-                <Hash className="w-7 h-7" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  <h1 className="text-xl sm:text-2xl font-black tracking-tight">
-                    {currentK.title}
-                  </h1>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-white/20 text-white border border-white/30">
-                    {currentK.code}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                  {currentK.desc}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              <div className="bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 rounded-xl border border-white/10 text-center">
-                <div className="text-[10px] sm:text-xs text-slate-300 font-bold uppercase">Cán bộ chủ trì</div>
-                <div className="text-xs sm:text-sm font-extrabold text-amber-300 mt-0.5">{currentK.leader}</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-md px-3 sm:px-4 py-2 rounded-xl border border-white/10 text-center">
-                <div className="text-[10px] sm:text-xs text-slate-300 font-bold uppercase">Vai trò</div>
-                <div className="text-xs sm:text-sm font-extrabold text-white mt-0.5">{currentK.role}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Thẻ Nhiệm vụ Trọng tâm của Đầu Mối */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-            <div className="flex items-center gap-2 text-xs font-black text-[#0284C7] dark:text-sky-400 uppercase">
-              <Activity className="w-4 h-4" /> Tiểu Dự Án Đang Thực Thi
-            </div>
-            <div className="text-2xl font-black text-slate-800 dark:text-white mt-2">5 Dự Án</div>
-            <p className="text-xs text-slate-500 mt-1">Đang triển khai bám sát chỉ đạo C-Suite</p>
-          </div>
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-            <div className="flex items-center gap-2 text-xs font-black text-amber-500 uppercase">
-              <Clock className="w-4 h-4" /> Thời Gian Xử Lý Trung Bình
-            </div>
-            <div className="text-2xl font-black text-slate-800 dark:text-white mt-2">48 Giờ</div>
-            <p className="text-xs text-slate-500 mt-1">Chuẩn SLA phản hồi liên thông 24/7</p>
-          </div>
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-            <div className="flex items-center gap-2 text-xs font-black text-emerald-500 uppercase">
-              <ShieldCheck className="w-4 h-4" /> Kiểm Chuẩn Chất Lượng
-            </div>
-            <div className="text-2xl font-black text-slate-800 dark:text-white mt-2">100% Đạt</div>
-            <p className="text-xs text-slate-500 mt-1">Đầy đủ chữ ký số & biên bản kiểm tra</p>
-          </div>
-        </div>
-
-        {/* Không gian Bảng Kanban Tiểu Dự Án của Đầu Mối */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-4 shadow-2xs space-y-3">
-          <h2 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight flex items-center gap-2">
-            <FolderKanban className="w-4 h-4 text-[#F15A24]" />
-            Bảng Điều Phối Tiến Độ Công Việc ({currentK.code})
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
-              <div className="text-xs font-black text-slate-600 dark:text-slate-300 mb-2 flex items-center justify-between">
-                <span>CẦN LÀM (TODO)</span>
-                <span className="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[10px]">2</span>
-              </div>
-              <div className="space-y-2">
-                <div className="bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 text-xs shadow-2xs">
-                  <div className="font-bold text-slate-800 dark:text-slate-200">Rà soát thông số kỹ thuật bộ lọc nhiễu RF</div>
-                  <div className="text-[10px] text-slate-400 mt-1">Hạn: Hôm nay • Ưu tiên P1</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-sky-50/50 dark:bg-sky-950/30 p-3 rounded-xl border border-sky-200/60 dark:border-sky-800/60">
-              <div className="text-xs font-black text-[#0284C7] dark:text-sky-400 mb-2 flex items-center justify-between">
-                <span>ĐANG XỬ LÝ (IN PROGRESS)</span>
-                <span className="px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-900/60 text-[10px]">3</span>
-              </div>
-              <div className="space-y-2">
-                <div className="bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-sky-200 dark:border-sky-800/60 text-xs shadow-2xs">
-                  <div className="font-bold text-slate-800 dark:text-slate-200">Đo đạc kiểm chuẩn vi mạch bo mẫu Telemetry</div>
-                  <div className="text-[10px] text-slate-400 mt-1">Phụ trách: Kỹ thuật • 80% Hoàn thành</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-emerald-50/50 dark:bg-emerald-950/30 p-3 rounded-xl border border-emerald-200/60 dark:border-emerald-800/60">
-              <div className="text-xs font-black text-emerald-600 dark:text-emerald-400 mb-2 flex items-center justify-between">
-                <span>HOÀN TẤT (DONE)</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-[10px]">5</span>
-              </div>
-              <div className="space-y-2">
-                <div className="bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-800/60 text-xs shadow-2xs">
-                  <div className="font-bold text-slate-800 dark:text-slate-200">Phê duyệt ngân sách dự toán linh kiện Q3/2026</div>
-                  <div className="text-[10px] text-emerald-600 mt-1">Đã ký duyệt điện tử 1-click</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <ClusterKModule
+        activeTab={activeTab}
+        onSelectTab={onSelectTab}
+      />
     );
   }
 
