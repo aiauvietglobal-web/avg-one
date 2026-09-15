@@ -1058,9 +1058,9 @@ export default function App() {
     };
     const modTitle = MODULE_TITLES[activeModule];
     if (modTitle && activeModule !== 'home') {
-      document.title = `${modTitle} | AVG ONE - Âu Việt Global`;
+      document.title = `${modTitle} | AVG One`;
     } else {
-      document.title = 'AVG ONE - Âu Việt Global';
+      document.title = 'AVG One';
     }
   }, [activeModule]);
 
