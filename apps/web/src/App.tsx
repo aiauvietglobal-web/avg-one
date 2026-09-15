@@ -1036,6 +1036,34 @@ export default function App() {
   }, [theme]);
 
   const [activeModule, setActiveModule] = useState<AppModuleId>('home');
+
+  // Cập nhật tiêu đề tab trình duyệt theo từng phân hệ đang chọn
+  useEffect(() => {
+    const MODULE_TITLES: Record<string, string> = {
+      home: 'Trang Chủ',
+      apps: 'Phân Hệ Vận Hành',
+      system: 'Kế Hoạch Hệ Thống',
+      inside: 'Thông Điệp Điều Hành',
+      calendar: 'Lịch Họp Điều Hành',
+      orders: 'Quyết Định & Mệnh Lệnh',
+      hr: 'Quản Trị Nhân Sự',
+      legal: 'Pháp Chế & Hồ Sơ Pháp Lý',
+      finance: 'Tài Chính & Kế Toán',
+      rd: 'Nghiên Cứu & Phát Triển R&D',
+      workflow: 'Quy Trình 13 Bước',
+      wework: 'Không Gian WeWork',
+      request: 'Đề Xuất & Phê Duyệt',
+      dashboard: 'Báo Cáo & Phân Tích',
+      admin: 'Quản Trị Hệ Thống',
+    };
+    const modTitle = MODULE_TITLES[activeModule];
+    if (modTitle && activeModule !== 'home') {
+      document.title = `${modTitle} | AVG ONE - Âu Việt Global`;
+    } else {
+      document.title = 'AVG ONE - Âu Việt Global';
+    }
+  }, [activeModule]);
+
   const [activeTab, setActiveTab] = useState<string>('calendar-talk');
   const [orgViewMode, setOrgViewMode] = useState<'modern-departments' | '5-levels'>('modern-departments');
   const [chatInput, setChatInput] = useState<string>('');
