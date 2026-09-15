@@ -216,11 +216,7 @@ export const DesignOrdersView: React.FC = () => {
 
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
-      const matchStage = activeStageFilter === 'ALL' ||
-        (activeStageFilter === '3D' && (o.stage === 'MODELING_3D' || o.stage === 'CONCEPT')) ||
-        (activeStageFilter === 'CMF' && (o.stage === 'APPROVAL_RENDER' || o.stage === 'CMF_COLOR')) ||
-        (activeStageFilter === 'COMPLETED' && (o.stage === 'RELEASE_CAD' || o.progress === 100)) ||
-        o.stage === activeStageFilter;
+      const matchStage = activeStageFilter === 'ALL' || o.stage === activeStageFilter;
       const matchCategory = filterCategory === 'ALL' || o.category === filterCategory;
       const matchPriority = filterPriority === 'ALL' || o.priority === filterPriority;
       const q = searchQuery.toLowerCase().trim();
@@ -338,47 +334,70 @@ export const DesignOrdersView: React.FC = () => {
         <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#0284C7]/10 dark:bg-[#0284C7]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#F15A24]/10 dark:bg-[#F15A24]/15 rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse duration-1000" />
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Title & Brand Context Hierarchy */}
-          <div className="space-y-1.5 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 text-[11px] font-black text-slate-700 dark:text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-[#F15A24]" />
-              <span>AVG WEWORK · QUY TRÌNH 13 BƯỚC · HỘP 3.2</span>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Title & Animated Slogan Box Badge */}
+          <div className="space-y-2 text-left">
+            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                <defs>
+                  <linearGradient id="design-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="35%" stopColor="#00A8E8" />
+                    <stop offset="70%" stopColor="#FF7043" />
+                    <stop offset="100%" stopColor="#F15A24" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  x="1"
+                  y="1"
+                  width="calc(100% - 2px)"
+                  height="calc(100% - 2px)"
+                  rx="8"
+                  ry="8"
+                  fill="none"
+                  stroke="url(#design-slogan-border-gradient)"
+                  strokeWidth="1.5"
+                  className="animate-slogan-box-border"
+                />
+              </svg>
+              <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                <Palette className="w-3.5 h-3.5 text-[#F15A24]" />
+                <span>THEO DÕI TỔNG QUAN TIẾN ĐỘ ĐƠN HÀNG</span>
+              </div>
             </div>
 
-            <div>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-                <span>TIẾN ĐỘ ĐƠN HÀNG THIẾT KẾ</span>
-                <span className="text-sm sm:text-base font-bold text-slate-400 dark:text-slate-500 font-mono">(HỘP 3.2)</span>
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
+                <span>TỔNG QUAN TIẾN ĐỘ</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
+                  <span className="relative z-10">ĐƠN HÀNG THIẾT KẾ (3.2)</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-2xl mt-0.5">
-                Theo dõi phân kỳ thực hiện, thời hạn bàn giao (SLA) và kiểm duyệt kỹ thuật mô hình 3D/CAD & mẫu CMF.
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Theo dõi tiến độ, phân kỳ thực hiện, thời hạn bàn giao (SLA) và tình trạng kiểm duyệt toàn bộ đơn hàng thiết kế của AVG One.
               </p>
             </div>
           </div>
 
-          {/* Action Toolbar on Right */}
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/60 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Live Sync</span>
-            </div>
+          <div className="flex items-center gap-2.5 flex-wrap">
             <button
               onClick={() => {
                 window.dispatchEvent(new CustomEvent('open_design_workspace'));
               }}
-              className="px-4 py-2 bg-gradient-to-r from-[#0077B6] via-[#0284C7] to-[#00A8E8] hover:from-[#005f92] hover:to-[#0284C7] text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-xs hover:shadow-md cursor-pointer active:scale-95"
+              className="px-4 py-2 bg-gradient-to-r from-[#F15A24] to-amber-500 hover:from-[#d94e1f] hover:to-amber-600 text-white rounded-xl text-xs font-black transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-orange-500/20 hover:-translate-y-0.5 cursor-pointer"
               title="Mở Không gian làm việc chi tiết nghiệp vụ Hộp 3.2 – Thiết Kế"
             >
               <Box className="w-3.5 h-3.5" />
-              <span>Không Gian Nghiệp Vụ (3.2)</span>
+              <span>Mở Không Gian Làm Việc Nghiệp Vụ (Hộp 3.2)</span>
             </button>
             <a
               href="https://drive.google.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer border border-slate-200/60 dark:border-slate-700/60"
-              title="Kho Lưu Trữ Drive Thiết Kế"
+              className="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Kho Drive</span>
@@ -386,152 +405,35 @@ export const DesignOrdersView: React.FC = () => {
           </div>
         </div>
 
-        {/* 📊 Executive Pipeline & Metrics Grid - Bố cục Chuẩn Khoa Học Công Nghiệp */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 pt-1 relative z-10">
-          {/* Card 1: Tổng Đơn Hàng (Portfolio Master Card) */}
-          <div
-            onClick={() => setActiveStageFilter('ALL')}
-            className={`rounded-2xl p-4 transition-all duration-200 cursor-pointer text-left relative overflow-hidden group ${
-              activeStageFilter === 'ALL'
-                ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-md ring-2 ring-[#0284C7]/50'
-                : 'bg-slate-900/90 dark:bg-slate-800 hover:bg-slate-900 text-white shadow-2xs hover:shadow-md'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-black tracking-wider uppercase text-slate-300 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-                Tổng Danh Mục
-              </span>
-              <Layers className="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform" />
+        {/* Stats Counter Cards - Các hộp sáng màu có nhịp đập & animation hover */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-1 relative z-10">
+          <div className="bg-orange-50/70 hover:bg-orange-50 dark:bg-orange-950/30 dark:hover:bg-orange-950/50 border border-orange-200/80 dark:border-orange-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-orange-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-orange-800 dark:text-orange-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#F15A24] animate-pulse" />
+              <span>Tổng Đơn Thiết Kế</span>
             </div>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-2xl sm:text-3xl font-black text-white">{stats.total}</span>
-              <span className="text-xs font-bold text-slate-400">Đơn thiết kế</span>
-            </div>
-            <div className="mt-3 pt-2.5 border-t border-slate-700/60 flex items-center justify-between text-[11px] text-slate-300">
-              <span className="font-semibold">Toàn bộ phân kỳ</span>
-              <span className="px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 text-[10px] font-black">100% Khối lượng</span>
-            </div>
+            <div className="text-2xl sm:text-3xl font-black text-[#F15A24] dark:text-orange-300 mt-1">{stats.total}</div>
           </div>
-
-          {/* Card 2: Bước 1 - Dựng 3D / CAD */}
-          <div
-            onClick={() => setActiveStageFilter(activeStageFilter === '3D' ? 'ALL' : '3D')}
-            className={`bg-white dark:bg-slate-800/90 rounded-2xl p-4 border transition-all duration-200 cursor-pointer text-left group hover:-translate-y-0.5 ${
-              activeStageFilter === '3D'
-                ? 'border-[#0284C7] ring-2 ring-[#0284C7]/40 shadow-md bg-sky-50/40 dark:bg-sky-950/20'
-                : 'border-slate-200/90 dark:border-slate-700/80 hover:border-sky-300 shadow-2xs hover:shadow-md'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-sky-100 dark:bg-sky-950/60 text-[#0284C7]">
-                  BƯỚC 1
-                </span>
-                <span className="text-[10px] sm:text-[11px] font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
-                  Dựng 3D / CAD
-                </span>
-              </div>
-              <Cpu className="w-4 h-4 text-[#0284C7] group-hover:scale-110 transition-transform" />
+          <div className="bg-sky-50/70 hover:bg-sky-50 dark:bg-sky-950/30 dark:hover:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-sky-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-sky-800 dark:text-sky-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-[#0284C7] animate-pulse" />
+              <span>Dựng 3D / CAD</span>
             </div>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-2xl sm:text-3xl font-black text-[#0284C7] dark:text-sky-300">{stats.in3D}</span>
-              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                ({Math.round((stats.in3D / (stats.total || 1)) * 100)}%)
-              </span>
-            </div>
-            <div className="mt-3 space-y-1.5">
-              <div className="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#0284C7] h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.round((stats.in3D / (stats.total || 1)) * 100)}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                <span>Concept & Tạo hình 3D</span>
-                <span className="font-bold text-[#0284C7]">{stats.in3D} đơn</span>
-              </div>
-            </div>
+            <div className="text-2xl sm:text-3xl font-black text-sky-900 dark:text-sky-100 mt-1">{stats.in3D}</div>
           </div>
-
-          {/* Card 3: Bước 2 - Duyệt Mẫu CMF */}
-          <div
-            onClick={() => setActiveStageFilter(activeStageFilter === 'CMF' ? 'ALL' : 'CMF')}
-            className={`bg-white dark:bg-slate-800/90 rounded-2xl p-4 border transition-all duration-200 cursor-pointer text-left group hover:-translate-y-0.5 ${
-              activeStageFilter === 'CMF'
-                ? 'border-purple-500 ring-2 ring-purple-500/40 shadow-md bg-purple-50/40 dark:bg-purple-950/20'
-                : 'border-slate-200/90 dark:border-slate-700/80 hover:border-purple-300 shadow-2xs hover:shadow-md'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300">
-                  BƯỚC 2
-                </span>
-                <span className="text-[10px] sm:text-[11px] font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
-                  Duyệt Mẫu CMF
-                </span>
-              </div>
-              <Palette className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
+          <div className="bg-purple-50/70 hover:bg-purple-50 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 border border-purple-200/80 dark:border-purple-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-purple-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-purple-800 dark:text-purple-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+              <span>Duyệt Mẫu CMF</span>
             </div>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-2xl sm:text-3xl font-black text-purple-700 dark:text-purple-300">{stats.inReview}</span>
-              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                ({Math.round((stats.inReview / (stats.total || 1)) * 100)}%)
-              </span>
-            </div>
-            <div className="mt-3 space-y-1.5">
-              <div className="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-purple-600 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.round((stats.inReview / (stats.total || 1)) * 100)}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                <span>Màu sắc & Render vật liệu</span>
-                <span className="font-bold text-purple-600">{stats.inReview} đơn</span>
-              </div>
-            </div>
+            <div className="text-2xl sm:text-3xl font-black text-purple-900 dark:text-purple-100 mt-1">{stats.inReview}</div>
           </div>
-
-          {/* Card 4: Bước 3 - Đã Bàn Giao CAD */}
-          <div
-            onClick={() => setActiveStageFilter(activeStageFilter === 'COMPLETED' ? 'ALL' : 'COMPLETED')}
-            className={`bg-white dark:bg-slate-800/90 rounded-2xl p-4 border transition-all duration-200 cursor-pointer text-left group hover:-translate-y-0.5 ${
-              activeStageFilter === 'COMPLETED'
-                ? 'border-emerald-500 ring-2 ring-emerald-500/40 shadow-md bg-emerald-50/40 dark:bg-emerald-950/20'
-                : 'border-slate-200/90 dark:border-slate-700/80 hover:border-emerald-300 shadow-2xs hover:shadow-md'
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
-                  HOÀN THÀNH
-                </span>
-                <span className="text-[10px] sm:text-[11px] font-black tracking-wider uppercase text-slate-700 dark:text-slate-200">
-                  Đã Bàn Giao CAD
-                </span>
-              </div>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+          <div className="bg-emerald-50/70 hover:bg-emerald-50 dark:bg-emerald-950/30 dark:hover:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800/60 rounded-2xl p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:shadow-emerald-500/10">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Đã Bàn Giao CAD</span>
             </div>
-            <div className="flex items-baseline gap-2 mt-2">
-              <span className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-300">{stats.completed}</span>
-              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                ({Math.round((stats.completed / (stats.total || 1)) * 100)}%)
-              </span>
-            </div>
-            <div className="mt-3 space-y-1.5">
-              <div className="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-emerald-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.round((stats.completed / (stats.total || 1)) * 100)}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                <span>Nghiệm thu sẵn sàng SX</span>
-                <span className="font-bold text-emerald-600">{stats.completed} đơn</span>
-              </div>
-            </div>
+            <div className="text-2xl sm:text-3xl font-black text-emerald-900 dark:text-emerald-100 mt-1">{stats.completed}</div>
           </div>
         </div>
       </div>
