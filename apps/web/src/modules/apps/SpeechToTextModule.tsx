@@ -10,7 +10,8 @@ import {
   processRealtimeSpeechPunctuation,
   splitIntoReadableSpeechSegments,
   mergeSpeechWithoutOverlap,
-  stripPrefixOverlap
+  stripPrefixOverlap,
+  isNearDuplicateUtterance
 } from '../../services/speechPunctuationEngine';
 
 // Web Speech API Types declaration for TypeScript compatibility
@@ -719,6 +720,8 @@ export const SpeechToTextModule: React.FC = () => {
   const restartTimeoutRef = useRef<any>(null);
   const utterancePitchSamplesRef = useRef<number[]>([]);
   const recentlyCommittedUtterancesRef = useRef<Map<string, number>>(new Map());
+  const isRestartingRef = useRef<boolean>(false);
+  const lastAutoCommittedTextRef = useRef<string>('');
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
   const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
@@ -844,10 +847,12 @@ export const SpeechToTextModule: React.FC = () => {
       if (micStateRef.current !== 'recording') return;
 
       const audioConstraints = {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
-        channelCount: 1
+        echoCancellation: { ideal: true },
+        noiseSuppression: { ideal: true },
+        autoGainControl: { ideal: true },
+        channelCount: { ideal: 1 },
+        sampleRate: { ideal: 48000 },
+        sampleSize: { ideal: 16 }
       };
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints }).catch(err => {
@@ -865,10 +870,10 @@ export const SpeechToTextModule: React.FC = () => {
 
       const source = ctx.createMediaStreamSource(stream);
 
-      // DSP 1: Gentle Sub-bass High-pass filter at 40Hz (preserves 100% of human voice fundamental frequencies down to 50Hz)
+      // DSP 1: Human Voice High-pass filter at 60Hz (removes low-frequency rumble & fan noise)
       const highpassFilter = ctx.createBiquadFilter();
       highpassFilter.type = 'highpass';
-      highpassFilter.frequency.setValueAtTime(40, ctx.currentTime);
+      highpassFilter.frequency.setValueAtTime(60, ctx.currentTime);
 
       // DSP 2: Precise 50Hz Electrical Hum Notch Filter (removes AC power line hum)
       const notch50 = ctx.createBiquadFilter();
@@ -888,16 +893,16 @@ export const SpeechToTextModule: React.FC = () => {
       notchRF.frequency.setValueAtTime(14000, ctx.currentTime);
       notchRF.gain.setValueAtTime(-6, ctx.currentTime);
 
-      // DSP 5: Peaking Equalizer (+4.0dB at 2.4kHz) to enhance Vietnamese vocal clarity and tone accents
+      // DSP 5: Peaking Equalizer (+3.5dB at 2.4kHz) to enhance Vietnamese vocal clarity and tone accents
       const presenceEq = ctx.createBiquadFilter();
       presenceEq.type = 'peaking';
       presenceEq.frequency.setValueAtTime(2400, ctx.currentTime);
-      presenceEq.gain.setValueAtTime(4.0, ctx.currentTime);
+      presenceEq.gain.setValueAtTime(3.5, ctx.currentTime);
       presenceEq.Q.setValueAtTime(1.0, ctx.currentTime);
 
-      // DSP 6: Pre-Amplifier Gain Boost Node (5.0x / +14dB) to capture even faint, quiet, or whispered speech
+      // DSP 6: Pre-Amplifier Gain Boost Node (1.8x / +5dB) balanced for vocal clarity without distortion or clipping
       const gainNode = ctx.createGain();
-      gainNode.gain.setValueAtTime(5.0, ctx.currentTime);
+      gainNode.gain.setValueAtTime(1.8, ctx.currentTime);
 
       // DSP 7: Peak Limiter Compressor (prevents clipping/distortion when speaking loudly)
       const compressor = ctx.createDynamicsCompressor();
@@ -956,12 +961,20 @@ export const SpeechToTextModule: React.FC = () => {
             const avgPitch = Math.round(pitchSamples.reduce((a, b) => a + b, 0) / pitchSamples.length);
 
             if (autoDiarizationRef.current) {
-              const detectedSpkId = avgPitch < 160 ? 'spk-male' : 'spk-female';
-              const targetSpk = speakers.find(s => s.id === detectedSpkId) || DEFAULT_SPEAKERS[0];
-              const icon = detectedSpkId === 'spk-male' ? '👨' : '👩';
+              // Hysteresis deadband: Nam (<145Hz), Nữ (>175Hz), giữ nguyên khi ở vùng 145-175Hz
+              let nextSpkId = activeSpeakerRef.current;
+              if (avgPitch < 145) {
+                nextSpkId = 'spk-male';
+              } else if (avgPitch > 175) {
+                nextSpkId = 'spk-female';
+              }
+              const targetSpk = speakers.find(s => s.id === nextSpkId) || DEFAULT_SPEAKERS[0];
+              const icon = nextSpkId === 'spk-male' ? '👨' : '👩';
               setDetectedVoiceLabel(`${icon} ${targetSpk.name} (~${avgPitch}Hz)`);
-              activeSpeakerRef.current = detectedSpkId;
-              setActiveSpeakerId(detectedSpkId);
+              if (activeSpeakerRef.current !== nextSpkId) {
+                activeSpeakerRef.current = nextSpkId;
+                setActiveSpeakerId(nextSpkId);
+              }
             } else {
               setDetectedVoiceLabel(`Tần số giọng: ${avgPitch}Hz (Chế độ thủ công)`);
             }
@@ -1461,15 +1474,17 @@ export const SpeechToTextModule: React.FC = () => {
     if (!rawText || !rawText.trim()) return;
     const textToCommit = rawText.trim();
 
-    // 1. Chặn tuyệt đối hiện tượng lặp văn bản bằng bộ đệm dấu vân tay âm thanh 6 giây
+    // 1. Chặn tuyệt đối hiện tượng lặp văn bản bằng bộ đệm dấu vân tay âm thanh 8 giây
     const norm = textToCommit.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
     if (!norm) return;
 
     const now = Date.now();
-    const lastCommittedTime = recentlyCommittedUtterancesRef.current.get(norm);
-    if (lastCommittedTime && now - lastCommittedTime < 6000) {
-      // Đã commit câu y hệt này trong vòng 6 giây trước -> Chặn lặp 100%!
-      return;
+    for (const [pastNorm, pastTime] of recentlyCommittedUtterancesRef.current.entries()) {
+      if (now - pastTime < 8000) {
+        if (pastNorm === norm || pastNorm.endsWith(norm) || norm.endsWith(pastNorm) || isNearDuplicateUtterance(pastNorm, norm)) {
+          return;
+        }
+      }
     }
     recentlyCommittedUtterancesRef.current.set(norm, now);
 
@@ -1483,15 +1498,21 @@ export const SpeechToTextModule: React.FC = () => {
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
-    // Xác định người nói dựa trên tần số trung bình của câu nói vừa kết thúc
+    // Xác định người nói dựa trên tần số trung bình với bộ lọc Hysteresis chống nhảy giọng
     let speakerIdToAssign = activeSpeakerRef.current;
-    if (autoDiarizationRef.current && utterancePitchSamplesRef.current.length > 0) {
+    if (autoDiarizationRef.current && utterancePitchSamplesRef.current.length >= 6) {
       const utteranceAvg = Math.round(
         utterancePitchSamplesRef.current.reduce((a, b) => a + b, 0) / utterancePitchSamplesRef.current.length
       );
-      speakerIdToAssign = utteranceAvg < 160 ? 'spk-male' : 'spk-female';
-      activeSpeakerRef.current = speakerIdToAssign;
-      setActiveSpeakerId(speakerIdToAssign);
+      if (utteranceAvg < 145) {
+        speakerIdToAssign = 'spk-male';
+      } else if (utteranceAvg > 175) {
+        speakerIdToAssign = 'spk-female';
+      }
+      if (activeSpeakerRef.current !== speakerIdToAssign) {
+        activeSpeakerRef.current = speakerIdToAssign;
+        setActiveSpeakerId(speakerIdToAssign);
+      }
       utterancePitchSamplesRef.current = [];
     }
 
@@ -1515,12 +1536,36 @@ export const SpeechToTextModule: React.FC = () => {
 
       const lastMsg = prev[prev.length - 1];
 
-      // Chỉ ngắt đoạn khi ghi nhận các giọng nói khác nhau (khác speakerId hoặc khác sender)
+      // Deep containment check on lastMsg:
+      const lastNorm = (lastMsg.text || '').toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+      if (lastNorm === norm || lastNorm.endsWith(norm) || (norm.length < lastNorm.length && lastNorm.includes(norm))) {
+        return prev;
+      }
+
+      // Nếu tin nhắn cuối là bản tiền thân của câu mới (ví dụ do interim timer hoặc bổ sung từ mới)
+      if (lastMsg.sender === 'HEARING' && norm.startsWith(lastNorm) && lastNorm.length >= 5) {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          ...lastMsg,
+          text: enhancedText.trim(),
+          translatedText: translateText(enhancedText.trim(), targetLanguage),
+          timestamp: timestampStr,
+          date: lastMsg.date || dateStr
+        };
+        return updated;
+      }
+
+      // Cùng một người đang nói:
       if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id) {
         const lastMsgWordCount = (lastMsg.text || '').split(/\s+/).filter(Boolean).length;
         
-        // Nếu tin nhắn trước đã đủ dài (>= 22 từ) và đã kết thúc câu, tách ra tin nhắn mới
-        if (lastMsgWordCount >= 22 && /[.?!]$/.test((lastMsg.text || '').trim())) {
+        // Nếu tin nhắn trước đã đủ dài (>= 28 từ) và đã kết thúc câu, tách ra tin nhắn mới
+        if (lastMsgWordCount >= 28 && /[.?!]$/.test((lastMsg.text || '').trim())) {
+          // BẮT BUỘC lọc sạch phần trùng lặp ở đầu câu mới trước khi tách
+          const stripped = stripPrefixOverlap(lastMsg.text, enhancedText.trim());
+          if (!stripped || stripped.length < 2) {
+            return prev;
+          }
           return [
             ...prev,
             {
@@ -1528,16 +1573,16 @@ export const SpeechToTextModule: React.FC = () => {
               sender: 'HEARING',
               senderName: currentSpk.name,
               speakerId: currentSpk.id,
-              text: enhancedText.trim(),
-              translatedText: translateText(enhancedText.trim(), targetLanguage),
+              text: stripped,
+              translatedText: translateText(stripped, targetLanguage),
               timestamp: timestampStr,
               date: dateStr
             }
           ];
         }
 
-        // Cùng một người đang nói: khử trùng lặp 100% và nối tiếp văn bản vào đoạn hiện tại
-        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText);
+        // Khử trùng lặp 100% và nối tiếp văn bản vào đoạn hiện tại
+        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText.trim());
         if (mergedText === lastMsg.text) {
           return prev;
         }
@@ -1552,8 +1597,11 @@ export const SpeechToTextModule: React.FC = () => {
         return updated;
       }
 
-      // Khác người nói: tạo phân đoạn/tin nhắn mới để phân biệt rõ từng người giao tiếp
-      // Giữ đúng nguyên văn 100% câu từ của người nói mới, tuyệt đối không thêm bớt lời thoại
+      // Khác người nói: tạo phân đoạn/tin nhắn mới, LUÔN khử phần trùng lặp đầu câu
+      const stripped = stripPrefixOverlap(lastMsg.text, enhancedText.trim());
+      if (!stripped || stripped.length < 2) {
+        return prev;
+      }
       return [
         ...prev,
         {
@@ -1561,8 +1609,8 @@ export const SpeechToTextModule: React.FC = () => {
           sender: 'HEARING',
           senderName: currentSpk.name,
           speakerId: currentSpk.id,
-          text: enhancedText.trim(),
-          translatedText: translateText(enhancedText.trim(), targetLanguage),
+          text: stripped,
+          translatedText: translateText(stripped, targetLanguage),
           timestamp: timestampStr,
           date: dateStr
         }
@@ -1683,8 +1731,7 @@ export const SpeechToTextModule: React.FC = () => {
           setInterimTranscript(formattedInterim);
 
           // BỘ ĐỆM AN TOÀN TRÁNH NGHẼN KẾT NỐI (WATCHDOG SAFETY TIMER):
-          // Chỉ chốt tự động nếu người dùng ngừng nói hoàn toàn sau 2.6 giây mà trình duyệt chưa gửi isFinal
-          // Điều này giúp Chrome gửi isFinal chuẩn xác 100% trước, loại bỏ hoàn toàn tình trạng chạy đua gây lặp từ
+          // Chỉ chốt tự động nếu người dùng ngừng nói hoàn toàn sau 3.5 giây mà trình duyệt chưa gửi isFinal
           if (silenceCommitTimerRef.current) {
             clearTimeout(silenceCommitTimerRef.current);
           }
@@ -1694,9 +1741,11 @@ export const SpeechToTextModule: React.FC = () => {
               accumulatedInterimRef.current = '';
               lastInterimRef.current = '';
               setInterimTranscript('');
+              // Đánh dấu chỉ mục để tránh finalize lại đoạn này khi Chromium gửi sau
+              processedFinalIndexRef.current = event.results.length;
               commitTranscriptToMessage(textToSave, true);
             }
-          }, 2600);
+          }, 3500);
         } else if (!newFinalTranscript.trim()) {
           // Tránh xóa vội preview nếu chưa có nội dung mới
           if (!accumulatedInterimRef.current) {
@@ -1722,10 +1771,14 @@ export const SpeechToTextModule: React.FC = () => {
           return;
         }
 
-        // Các sự kiện tạm thời khác (audio-capture, no-speech, network, aborted, bad-grammar):
-        // TUYỆT ĐỐI KHÔNG tắt micState về idle! Tự động khôi phục và tiếp tục phiên thu âm liền mạch.
-        if (micStateRef.current === 'recording') {
-          restartSpeechEngine();
+        // Lỗi no-speech hoặc aborted: Trình duyệt tự động gọi onend ngay sau đó.
+        // Tuyệt đối KHÔNG gọi restartSpeechEngine ở đây để tránh xung đột hai tiến trình start cùng lúc.
+        if (event.error === 'network' || event.error === 'audio-capture') {
+          setTimeout(() => {
+            if (micStateRef.current === 'recording' && !isListeningRef.current && !isRestartingRef.current) {
+              restartSpeechEngine(true);
+            }
+          }, 300);
         }
       };
 
@@ -1735,7 +1788,7 @@ export const SpeechToTextModule: React.FC = () => {
           clearTimeout(silenceCommitTimerRef.current);
           silenceCommitTimerRef.current = null;
         }
-        const pendingText = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
+        const pendingText = accumulatedInterimRef.current.trim();
         if (pendingText) {
           accumulatedInterimRef.current = '';
           lastInterimRef.current = '';
@@ -1743,9 +1796,9 @@ export const SpeechToTextModule: React.FC = () => {
           commitTranscriptToMessage(pendingText, true);
         }
 
-        // 2. Vòng lặp tái kích hoạt liên tục (Keep-Alive Seamless Loop)
+        // 2. Vòng lặp tái kích hoạt liên tục siêu tốc (Immediate Seamless Loop - 0ms gap)
         if (micStateRef.current === 'recording') {
-          restartSpeechEngine();
+          restartSpeechEngine(true);
         } else {
           setIsListening(false);
           isListeningRef.current = false;
@@ -1759,67 +1812,78 @@ export const SpeechToTextModule: React.FC = () => {
     }
   }, [currentLanguage, targetLanguage]);
 
-  // Helper to restart speech recognition engine aggressively with retry backoff & instance recreation
-  const restartSpeechEngine = useCallback(() => {
+  // Helper to restart speech recognition engine smoothly without gap or collision
+  const restartSpeechEngine = useCallback((immediate: boolean = false) => {
     if (micStateRef.current !== 'recording') return;
 
     if (restartTimeoutRef.current) {
       clearTimeout(restartTimeoutRef.current);
+      restartTimeoutRef.current = null;
     }
 
-    restartTimeoutRef.current = setTimeout(() => {
+    const doRestart = () => {
       if (micStateRef.current !== 'recording') return;
+      if (isRestartingRef.current) return;
+      isRestartingRef.current = true;
 
-      const attemptStart = (retriesLeft: number, delayMs: number) => {
-        if (micStateRef.current !== 'recording') return;
-        try {
-          // Always safely stop and clear listeners of previous instance
-          if (recognitionRef.current) {
-            try {
-              recognitionRef.current.onend = null;
-              recognitionRef.current.onerror = null;
-              recognitionRef.current.onresult = null;
-              recognitionRef.current.stop();
-            } catch (e) {}
-            recognitionRef.current = null;
-          }
-          processedFinalIndexRef.current = 0;
-          const freshRec = createSpeechRecognitionInstance();
-          if (!freshRec) {
-            console.warn('SpeechRecognition not supported in browser environment');
-            return;
-          }
-          recognitionRef.current = freshRec;
-          freshRec.start();
+      try {
+        // Always safely stop and clear listeners of previous instance
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.onend = null;
+            recognitionRef.current.onerror = null;
+            recognitionRef.current.onresult = null;
+            recognitionRef.current.stop();
+          } catch (e) {}
+          recognitionRef.current = null;
+        }
+        processedFinalIndexRef.current = 0;
+        const freshRec = createSpeechRecognitionInstance();
+        if (!freshRec) {
+          console.warn('SpeechRecognition not supported in browser environment');
+          isRestartingRef.current = false;
+          return;
+        }
+        recognitionRef.current = freshRec;
+        freshRec.start();
+        setIsListening(true);
+        isListeningRef.current = true;
+      } catch (err: any) {
+        if (err?.message?.includes('already started')) {
           setIsListening(true);
           isListeningRef.current = true;
-        } catch (err: any) {
-          if (err?.message?.includes('already started')) {
-            setIsListening(true);
-            isListeningRef.current = true;
-            return;
-          }
-          console.warn(`Speech recognition restart attempt (${retriesLeft} retries remaining):`, err);
-          if (retriesLeft > 0) {
-            setTimeout(() => attemptStart(retriesLeft - 1, Math.min(600, Math.round(delayMs * 1.2))), delayMs);
-          }
+        } else {
+          console.warn('Speech recognition restart attempt:', err);
+          setTimeout(() => {
+            if (micStateRef.current === 'recording') {
+              isRestartingRef.current = false;
+              restartSpeechEngine(true);
+            }
+          }, 150);
         }
-      };
+      } finally {
+        setTimeout(() => {
+          isRestartingRef.current = false;
+        }, 80);
+      }
+    };
 
-      attemptStart(4, 80);
-    }, 60);
+    if (immediate) {
+      doRestart();
+    } else {
+      restartTimeoutRef.current = setTimeout(doRestart, 30);
+    }
   }, [createSpeechRecognitionInstance]);
 
-  // Heartbeat Watchdog Interval: Automatically resurrects recognition if browser silently pauses while micState === 'recording'
+  // Heartbeat Watchdog Interval: Tự động khôi phục nếu trình duyệt bị ngưng trệ bất thường
   useEffect(() => {
     const watchdogInterval = setInterval(() => {
       if (micStateRef.current === 'recording') {
-        if (!recognitionRef.current || !isListeningRef.current) {
-          restartSpeechEngine();
-          return;
+        if ((!recognitionRef.current || !isListeningRef.current) && !isRestartingRef.current) {
+          restartSpeechEngine(true);
         }
       }
-    }, 3000);
+    }, 4000);
 
     return () => clearInterval(watchdogInterval);
   }, [restartSpeechEngine]);

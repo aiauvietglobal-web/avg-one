@@ -510,8 +510,10 @@ export function splitIntoReadableSpeechSegments(text: string, maxWords: number =
 
 /**
  * Ghép nối hai đoạn văn bản liên tiếp mà không bị lặp từ / lặp câu (Deduplication & Overlap Merging)
- * Chỉ loại bỏ khi câu mới là bản sửa lại của câu cũ (extension) hoặc có phần giao thoa đuôi-đầu (suffix-to-prefix overlap).
- * Tuyệt đối không nuốt lời nói hay xóa bỏ các câu từ hợp lệ.
+ * - Tự động phát hiện khi câu mới là bản chỉnh sửa/mở rộng hoàn thiện hơn của câu trước
+ * - Hỗ trợ đối soát câu dài lên tới 60 từ (chuẩn câu tiếng Việt)
+ * - Tự động phát hiện và thay thế câu cuối cùng nếu câu mới là bản hoàn thiện của câu đó
+ * - Tuyệt đối không nuốt lời nói hay xóa bỏ các câu từ hợp lệ
  */
 export function mergeSpeechWithoutOverlap(prevText: string, newText: string): string {
   const prev = prevText.trim();
@@ -530,7 +532,7 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
     return prev;
   }
 
-  // 2. Nếu văn bản mới bao trùm hoặc là phần mở rộng đầy đủ hơn của câu cũ
+  // 2. Nếu văn bản mới bao trùm hoặc là phần mở rộng đầy đủ hơn của toàn bộ văn bản cũ
   if (nextNorm.startsWith(prevNorm)) {
     return next;
   }
@@ -540,6 +542,21 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
     return prev;
   }
 
+  // 2c. Kiểm tra câu cuối cùng trong văn bản cũ:
+  // Nếu prev gồm nhiều câu, và câu mới là bản hoàn thiện/mở rộng của câu cuối cùng
+  const sentences = prev.split(/(?<=[.?!…\n])\s+/).filter(Boolean);
+  if (sentences.length > 1) {
+    const lastSentence = sentences[sentences.length - 1].trim();
+    const lastSentNorm = stripPunct(lastSentence);
+
+    if (lastSentNorm && (nextNorm.startsWith(lastSentNorm) || nextNorm === lastSentNorm)) {
+      // Thay thế câu cuối cùng cũ bằng câu mới hoàn thiện hơn
+      const allPrevSentences = sentences.slice(0, sentences.length - 1).join(' ');
+      const separator = allPrevSentences.endsWith('\n') ? '' : ' ';
+      return `${allPrevSentences}${separator}${next}`;
+    }
+  }
+
   // 3. Tìm phần giao thoa (suffix-to-prefix overlap) giữa đuôi của prev và đầu của next
   const prevWords = prev.split(/\s+/);
   const nextWords = next.split(/\s+/);
@@ -547,8 +564,8 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   const nextNormWords = nextWords.map(w => stripPunct(w)).filter(Boolean);
 
   let maxOverlap = 0;
-  // Chỉ kiểm tra tối đa 15 từ ở đuôi của câu trước
-  const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 15);
+  // Hỗ trợ kiểm tra tới 60 từ (toàn bộ dung lượng câu tiếng Việt thông thường)
+  const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 60);
 
   // QUY TẮC BẢO TOÀN THÔNG TIN & CHỐNG CẮT MẤT TỪ:
   // - Nếu chỉ trùng 1 từ: TUYỆT ĐỐI KHÔNG CẮT BỎ (tránh nuốt mất chủ ngữ hoặc từ đầu câu)
@@ -576,7 +593,7 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
 }
 
 /**
- * Khử phần tiền tố bị trùng lặp của câu mới nếu đầu câu mới trùng với đuôi câu trước (ví dụ khi chuyển người nói)
+ * Khử phần tiền tố bị trùng lặp của câu mới nếu đầu câu mới trùng với đuôi câu trước (ví dụ khi chuyển người nói hoặc chia đoạn)
  */
 export function stripPrefixOverlap(existingText: string, incomingText: string): string {
   const exist = existingText.trim();
@@ -590,21 +607,57 @@ export function stripPrefixOverlap(existingText: string, incomingText: string): 
   const incomingNormWords = incomingWords.map(w => stripPunct(w)).filter(Boolean);
 
   let maxOverlap = 0;
-  const maxCheck = Math.min(existWords.length, incomingNormWords.length, 15);
+  const maxCheck = Math.min(existWords.length, incomingNormWords.length, 60);
 
-  for (let k = maxCheck; k >= 1; k--) {
+  for (let k = maxCheck; k >= 2; k--) {
     const existSuffix = existWords.slice(existWords.length - k).join(' ');
     const incomingPrefix = incomingNormWords.slice(0, k).join(' ');
-    if (existSuffix === incomingPrefix && existSuffix.length > 0) {
+    if (existSuffix === incomingPrefix && existSuffix.length >= 5) {
       maxOverlap = k;
       break;
     }
   }
 
+  // Nếu trùng 1 từ nhưng từ đó dài >= 5 ký tự (ví dụ: "chúng tôi")
+  if (maxOverlap === 0 && maxCheck >= 1) {
+    const lastExistWord = existWords[existWords.length - 1];
+    const firstIncWord = incomingNormWords[0];
+    if (lastExistWord === firstIncWord && lastExistWord.length >= 6) {
+      maxOverlap = 1;
+    }
+  }
+
   if (maxOverlap > 0) {
     const remaining = incomingWords.slice(maxOverlap).join(' ').trim();
-    return remaining ? autoCapitalizeSentences(remaining) : incoming;
+    return remaining ? autoCapitalizeSentences(remaining) : '';
   }
 
   return incoming;
+}
+
+/**
+ * Kiểm tra xem 2 câu có phải gần như trùng lặp (Near-Duplicate) hay không (độ tương đồng từ >= 85%)
+ */
+export function isNearDuplicateUtterance(textA: string, textB: string): boolean {
+  if (!textA || !textB) return false;
+  const clean = (s: string) => s.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const normA = clean(textA);
+  const normB = clean(textB);
+  if (!normA || !normB) return false;
+
+  if (normA === normB) return true;
+  if (normA.includes(normB) || normB.includes(normA)) return true;
+
+  const wordsA = normA.split(' ').filter(Boolean);
+  const wordsB = normB.split(' ').filter(Boolean);
+  if (wordsA.length === 0 || wordsB.length === 0) return false;
+
+  const setA = new Set(wordsA);
+  let common = 0;
+  for (const w of wordsB) {
+    if (setA.has(w)) common++;
+  }
+
+  const similarity = (2 * common) / (wordsA.length + wordsB.length);
+  return similarity >= 0.85;
 }
