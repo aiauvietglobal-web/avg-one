@@ -58,7 +58,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   // Khởi tạo tab mặc định tương ứng khi chuyển sang 1 trong 6 phân hệ mới
   useEffect(() => {
     if (activeModule === 'cluster51') setHubDetailTab('pilot51b');
-    else if (activeModule === 'clusterK') setHubDetailTab('kien');
+    else if (activeModule === 'clusterK') setHubDetailTab('home');
     else if (activeModule === 'infra22') setHubDetailTab('equipment');
     else if (activeModule === 'security') setHubDetailTab('monitoring');
     else if (activeModule === 'traffic8') setHubDetailTab('bottlenecks');

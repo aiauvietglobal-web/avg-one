@@ -79,6 +79,7 @@ export const HUB_MODULE_CONFIGS: Record<string, HubModuleMeta> = {
   clusterK: {
     title: 'CỤM #K',
     tabs: [
+      { id: 'home', label: 'Trang Chủ #K', icon: Home },
       { id: 'kien', label: 'Kiến', icon: Building2 },
       { id: 'hash', label: '#', icon: Hash },
       { id: 'k2t', label: '#K2T', icon: Cpu },
