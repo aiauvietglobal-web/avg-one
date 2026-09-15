@@ -1094,8 +1094,8 @@ export const CalendarModule: React.FC = () => {
           </div>
 
           {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP PHÂN HỆ LỊCH (BỐ CỤC 2 HÀNG x 2 CỘT, BO GÓC 32PX) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto w-full pb-2">
-            {CALENDAR_SUB_APPS.map((app) => {
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-[1100px] mx-auto w-full pb-2">
+            {CALENDAR_SUB_APPS.map((app, idx) => {
               const Icon = app.icon;
               if (app.isAvailable) {
                 return (
@@ -1105,37 +1105,50 @@ export const CalendarModule: React.FC = () => {
                     tabIndex={0}
                     onClick={() => setActiveSubApp(app.id)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveSubApp(app.id); }}
-                    style={{ borderRadius: '32px' }}
-                    className="group flex flex-col items-center justify-center py-5 sm:py-6 px-4 min-h-[150px] bg-gradient-to-br from-sky-50/90 via-blue-50/70 to-cyan-50/80 dark:from-slate-900 dark:via-sky-950/50 dark:to-blue-950/70 rounded-[32px] border-2 border-sky-200 dark:border-sky-800/80 hover:border-[#0077B6] dark:hover:border-sky-400 hover:from-sky-100/90 hover:via-blue-100/70 hover:to-cyan-100/90 dark:hover:from-sky-900/60 dark:hover:to-blue-900/60 hover:-translate-y-0.5 transition-all duration-200 text-center relative overflow-hidden shadow-xs hover:shadow-md hover:shadow-sky-500/20 cursor-pointer select-none"
+                    style={{ borderRadius: '26px', animationDelay: `${idx * 100}ms` }}
+                    className="group flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
                   >
-                    {/* Icon Hộp Vuông Bo Tròn Chuẩn Màu Gradient Xanh AVG */}
-                    <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-sky-200/90 dark:border-sky-700/80 flex items-center justify-center text-[#0077B6] dark:text-sky-300 mb-3 group-hover:scale-105 transition-transform shrink-0 shadow-2xs">
-                      <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5" />
+                    {/* Hairline top glow on hover */}
+                    <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                    {/* Unified Blue Icon Badge */}
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+                      <Icon className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                     </div>
 
-                    {/* Tiêu đề */}
-                    <h3 className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 group-hover:text-[#0077B6] dark:group-hover:text-sky-300 transition-colors whitespace-normal leading-tight w-full px-0.5">
-                      {app.title}
-                    </h3>
+                    {/* Tiêu đề & Micro Tag */}
+                    <div className="flex flex-col items-center w-full space-y-0.5">
+                      <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
+                        {app.title}
+                      </h3>
+                      <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
+                        {app.badge} • {app.code}
+                      </span>
+                    </div>
                   </div>
                 );
               } else {
                 return (
                   <div
                     key={app.id}
-                    style={{ borderRadius: '32px' }}
+                    style={{ borderRadius: '26px', animationDelay: `${idx * 100}ms` }}
                     onClick={() => setToastMessage(`🚀 "${app.title}" sắp được phát hành trong phiên bản đợt tiếp theo!`)}
-                    className="flex flex-col items-center justify-center py-5 sm:py-6 px-4 min-h-[150px] bg-slate-50/70 dark:bg-slate-900/30 rounded-[32px] border-2 border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none"
+                    className="flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-slate-50/60 dark:bg-slate-900/30 rounded-[26px] border border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
                   >
                     {/* Icon Hộp xám */}
-                    <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-3 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                      <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5 text-slate-400 opacity-60" />
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
+                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 dark:text-slate-500 opacity-60" />
                     </div>
 
                     {/* Tiêu đề */}
-                    <h3 className="text-xs sm:text-sm font-normal text-slate-400 dark:text-slate-500 whitespace-normal leading-tight w-full px-0.5 opacity-60">
-                      {app.title}
-                    </h3>
+                    <div className="flex flex-col items-center w-full space-y-0.5">
+                      <h3 className="text-xs sm:text-[13px] font-bold text-slate-400/80 dark:text-slate-500 whitespace-nowrap leading-tight">
+                        {app.title}
+                      </h3>
+                      <span className="text-[9px] sm:text-[9.5px] font-semibold text-slate-400/60 uppercase tracking-wider">
+                        {app.badge}
+                      </span>
+                    </div>
                   </div>
                 );
               }

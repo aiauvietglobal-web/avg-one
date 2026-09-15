@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  BarChart3, Newspaper, Calendar, FolderKanban, Users, Scale, Wallet, Lightbulb, LayoutGrid,
-  X, Home, Server, Workflow, ShieldCheck, Zap, Award, Layers
+  BarChart3, Newspaper, Calendar, FolderKanban, Users, Scale, LayoutGrid,
+  X, Home, Server, Workflow, ShieldCheck, Zap, Award, Layers, Cpu, Coins, Sparkles
 } from 'lucide-react';
 
 export type AppModuleId =
@@ -36,111 +36,103 @@ interface AppLauncherModalProps {
   onSelectModule: (module: AppModuleId) => void;
 }
 
-export const APP_MODULES = [
+export interface AppModuleItem {
+  id: AppModuleId;
+  name: string;
+  tag: string;
+  icon: React.ElementType;
+}
+
+export const APP_MODULES: AppModuleItem[] = [
   {
-    id: 'apps' as AppModuleId,
+    id: 'apps',
     name: 'Ứng Dụng',
-    icon: LayoutGrid,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    tag: 'Hệ Sinh Thái',
+    icon: Cpu,
   },
   {
-    id: 'system' as AppModuleId,
-    name: 'Hệ Thống',
-    icon: BarChart3,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
-  },
-  {
-    id: 'inside' as AppModuleId,
-    name: 'Bảng Tin Nội Bộ',
-    icon: Newspaper,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
-  },
-  {
-    id: 'calendar' as AppModuleId,
-    name: 'Lịch',
-    icon: Calendar,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
-  },
-  {
-    id: 'orders' as AppModuleId,
-    name: 'Đơn Hàng',
-    icon: FolderKanban,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
-  },
-  {
-    id: 'hr' as AppModuleId,
+    id: 'hr',
     name: 'Nhân Sự',
+    tag: '20 Nhân Sự Lõi',
     icon: Users,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
-    id: 'legal' as AppModuleId,
+    id: 'legal',
     name: 'Pháp Lý',
+    tag: 'Bản Quyền & SHTT',
     icon: Scale,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
   },
   {
-    id: 'finance' as AppModuleId,
+    id: 'finance',
     name: 'Tài Chính',
-    icon: Wallet,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    tag: 'Duyệt Chi & Ngân Sách',
+    icon: Coins,
   },
   {
-    id: 'rd' as AppModuleId,
+    id: 'rd',
     name: 'Nghiên Cứu & Sáng Tạo',
-    icon: Lightbulb,
-    iconColor: 'text-[#F15A24] dark:text-orange-400',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/60 border-orange-200/80 dark:border-orange-800/80'
+    tag: '13 Bước SOP R&D',
+    icon: Sparkles,
   },
   {
-    id: 'infra22' as AppModuleId,
-    name: 'Hạ tầng 2.2',
-    icon: Server,
-    iconColor: 'text-cyan-600 dark:text-cyan-400',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-950/60 border-cyan-200/80 dark:border-cyan-800/80'
-  },
-  {
-    id: 'cluster51' as AppModuleId,
-    name: 'Cụm 5.1',
-    icon: Workflow,
-    iconColor: 'text-blue-600 dark:text-blue-400',
-    bgColor: 'bg-blue-50 dark:bg-blue-950/60 border-blue-200/80 dark:border-blue-800/80'
-  },
-  {
-    id: 'security' as AppModuleId,
-    name: 'Bảo mật',
-    icon: ShieldCheck,
-    iconColor: 'text-rose-600 dark:text-rose-400',
-    bgColor: 'bg-rose-50 dark:bg-rose-950/60 border-rose-200/80 dark:border-rose-800/80'
-  },
-  {
-    id: 'traffic8' as AppModuleId,
-    name: 'Thông',
-    icon: Zap,
-    iconColor: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-amber-50 dark:bg-amber-950/60 border-amber-200/80 dark:border-amber-800/80'
-  },
-  {
-    id: 'profile9' as AppModuleId,
-    name: 'Hồ sơ năng lực',
+    id: 'profile9',
+    name: 'Hồ Sơ Năng Lực',
+    tag: 'Tổng Thể Doanh Nghiệp',
     icon: Award,
-    iconColor: 'text-teal-600 dark:text-teal-400',
-    bgColor: 'bg-teal-50 dark:bg-teal-950/60 border-teal-200/80 dark:border-teal-800/80'
   },
   {
-    id: 'clusterK' as AppModuleId,
+    id: 'infra22',
+    name: 'Hạ Tầng 2.2',
+    tag: 'Máy Móc & Thiết Bị',
+    icon: Server,
+  },
+  {
+    id: 'security',
+    name: 'Bảo Mật',
+    tag: 'ISO 27001 • Audit',
+    icon: ShieldCheck,
+  },
+  {
+    id: 'traffic8',
+    name: 'Thông',
+    tag: 'Gỡ Nghẽn & Thương Mại',
+    icon: Zap,
+  },
+  {
+    id: 'cluster51',
+    name: 'Cụm 5.1',
+    tag: '5.1B Vào • 5.1T Ra',
+    icon: Workflow,
+  },
+  {
+    id: 'clusterK',
     name: 'Cụm #K',
+    tag: '5 Đầu Mối Thực Thi',
     icon: Layers,
-    iconColor: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-50 dark:bg-purple-950/60 border-purple-200/80 dark:border-purple-800/80'
+  },
+  {
+    id: 'system',
+    name: 'Hệ Thống',
+    tag: 'Kế Hoạch & Điều Hành',
+    icon: BarChart3,
+  },
+  {
+    id: 'inside',
+    name: 'Bảng Tin Nội Bộ',
+    tag: 'Truyền Thông AVG',
+    icon: Newspaper,
+  },
+  {
+    id: 'calendar',
+    name: 'Lịch',
+    tag: 'Lịch Họp & Tác Nghiệp',
+    icon: Calendar,
+  },
+  {
+    id: 'orders',
+    name: 'Đơn Hàng',
+    tag: 'Quản Lý Đơn Hàng',
+    icon: FolderKanban,
   }
 ];
 
@@ -154,7 +146,7 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-start justify-center sm:pt-16 bg-slate-950/60 backdrop-blur-xs p-2 sm:p-4 transition-opacity">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 w-full max-w-4xl max-h-[85vh] sm:max-h-none overflow-y-auto shadow-2xl space-y-4 sm:space-y-6 animate-scale-up relative overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 w-full max-w-5xl max-h-[85vh] sm:max-h-none overflow-y-auto shadow-2xl space-y-4 sm:space-y-6 animate-scale-up relative overflow-hidden">
         {/* Top Multi-color Rainbow Gradient Bar */}
         <div className="h-1.5 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] bg-gradient-to-r from-[#0284C7] via-[#00A8E8] via-amber-500 to-[#F15A24] -mt-4 -mx-4 sm:-mt-6 sm:-mx-6 mb-2" />
 
@@ -172,7 +164,7 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                 onSelectModule('home');
                 onClose();
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl bg-gradient-to-r from-orange-50 via-amber-50 to-orange-100 hover:from-orange-100 hover:to-amber-100 dark:from-orange-950/60 dark:to-amber-950/40 text-[#F15A24] dark:text-orange-400 border border-orange-200/80 dark:border-orange-800 font-extrabold text-xs sm:text-sm transition shadow-xs cursor-pointer hover:scale-105"
+              className="flex items-center gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl bg-gradient-to-r from-sky-50 via-blue-50 to-sky-100 hover:from-sky-100 hover:to-blue-100 dark:from-sky-950/60 dark:to-blue-950/40 text-[#0077B6] dark:text-sky-300 border border-sky-200/80 dark:border-sky-800 font-extrabold text-xs sm:text-sm transition shadow-xs cursor-pointer hover:scale-105"
               title="Quay về Trang Chủ Tổng"
             >
               <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -189,8 +181,8 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
           </div>
         </div>
 
-        {/* Modules Grid */}
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-2.5 sm:gap-4">
+        {/* Modules Grid - Đồng bộ 100% thiết kế phong cách mảng kính Gradient xanh AVG One */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-3.5">
           {APP_MODULES.map((mod) => {
             const Icon = mod.icon;
             const isModuleActive = (modId: AppModuleId) => {
@@ -205,28 +197,40 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
             const isActive = isModuleActive(mod.id);
 
             return (
-              <button
+              <div
                 key={mod.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   onSelectModule(mod.id);
                   onClose();
                 }}
-                style={{ borderRadius: '28px' }}
-                className={`flex flex-col items-center justify-center py-3.5 sm:py-5 px-2.5 sm:px-3 min-h-[102px] sm:min-h-[125px] border-2 transition-all duration-200 text-center group cursor-pointer relative overflow-hidden select-none ${
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { onSelectModule(mod.id); onClose(); } }}
+                style={{ borderRadius: '24px' }}
+                className={`group flex flex-col items-center justify-between py-3 sm:py-3.5 px-2 min-h-[104px] sm:min-h-[114px] backdrop-blur-xl rounded-[24px] border transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none ${
                   isActive
-                    ? 'border-[#F15A24] bg-gradient-to-br from-orange-50/90 via-amber-50/60 to-orange-100/70 dark:from-orange-950/70 dark:to-amber-950/50 shadow-md ring-2 ring-[#F15A24]/20'
-                    : 'border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#F15A24] hover:bg-gradient-to-br hover:from-white hover:via-orange-50/30 hover:to-amber-50/20 dark:hover:from-slate-900 dark:hover:to-orange-950/30 hover:-translate-y-0.5 hover:shadow-md'
+                    ? 'border-[#0284C7] ring-2 ring-[#0284C7]/30 bg-gradient-to-b from-sky-200/80 via-sky-100/50 to-white dark:from-sky-900/70 dark:via-sky-950/60 dark:to-slate-900 shadow-md shadow-sky-500/20'
+                    : 'border-sky-200/80 dark:border-sky-800/60 bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1 active:scale-[0.98]'
                 }`}
               >
-                <div className={`w-10 h-10 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl ${mod.bgColor} border flex items-center justify-center mb-1.5 sm:mb-2 group-hover:scale-110 transition-transform shrink-0 shadow-2xs`}>
-                  <Icon className={`w-5 h-5 sm:w-6.5 sm:h-6.5 ${mod.iconColor}`} />
+                {/* Hairline top glow on hover */}
+                <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                {/* App Unified Blue Icon Badge */}
+                <div className="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+                  <Icon className="w-5 h-5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                 </div>
-                <h3 className={`font-extrabold text-xs sm:text-sm leading-tight transition-colors px-1 w-full text-center ${
-                  isActive ? 'text-[#F15A24] dark:text-orange-400 font-black' : 'text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24]'
-                }`}>
-                  {mod.name}
-                </h3>
-              </button>
+
+                {/* App Title & Micro Tag */}
+                <div className="flex flex-col items-center w-full space-y-0.5">
+                  <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
+                    {mod.name}
+                  </h3>
+                  <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
+                    {mod.tag}
+                  </span>
+                </div>
+              </div>
             );
           })}
         </div>
