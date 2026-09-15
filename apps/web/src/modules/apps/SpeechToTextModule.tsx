@@ -2341,14 +2341,22 @@ export const SpeechToTextModule: React.FC = () => {
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Nền Xanh Dương Đơn Sắc 1 Màu, Không Icon, Không Shadow */}
-                  <div className="flex items-center px-3.5 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
+                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Nền Xanh Đơn Sắc 1 Màu, Không Icon Trái, Giữ Icon Sóng Âm Bên Phải, Không Shadow */}
+                  <div className="flex items-center gap-2 px-3.5 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
                     {/* Dòng chữ Tiêu Đề Trắng Sắc Nét, Nổi Bật & Phẳng (Không Shadow) */}
                     <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
                       <span style={{ color: '#ffffff' }} className="!text-white text-white font-black">
                         Hội Thoại Trực Tiếp
                       </span>
                     </h2>
+
+                    {/* Giữ lại icon/cụm sóng âm thanh mini bên phải, phẳng hoàn toàn không shadow */}
+                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/20 border border-white/30 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-1" />
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-2" />
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-3" />
+                      <span className="w-1 rounded-full bg-white animate-wave-bar-4" />
+                    </div>
                   </div>
 
                   {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ chiều cao h-8.5 để thẳng hàng tuyệt đối */}
