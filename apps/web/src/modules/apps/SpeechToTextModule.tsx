@@ -2341,27 +2341,14 @@ export const SpeechToTextModule: React.FC = () => {
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
                 {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
                 <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Nền Xanh Dương Đơn Sắc 1 Màu & Chữ Trắng Nổi Bật Tuyệt Đối */}
-                  <div className="flex items-center gap-2 sm:gap-2.5 px-3 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shadow-xs shadow-sky-600/30 shrink-0 h-8.5">
-                    {/* Icon Badge Màu Trắng Trên Nền Xanh */}
-                    <div className="relative flex items-center justify-center w-6.5 h-6.5 rounded-lg bg-white/20 border border-white/30 text-white shrink-0 shadow-2xs">
-                      <MessageSquare className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </div>
-
-                    {/* Dòng chữ Tiêu Đề Trắng Sắc Nét, Nổi Bật & Sang Trọng */}
-                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]">
+                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Nền Xanh Dương Đơn Sắc 1 Màu, Không Icon, Không Shadow */}
+                  <div className="flex items-center px-3.5 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
+                    {/* Dòng chữ Tiêu Đề Trắng Sắc Nét, Nổi Bật & Phẳng (Không Shadow) */}
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
                       <span style={{ color: '#ffffff' }} className="!text-white text-white font-black">
                         Hội Thoại Trực Tiếp
                       </span>
                     </h2>
-
-                    {/* Cụm sóng âm thanh mini dập dìu mềm mại màu trắng tinh khôi */}
-                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/20 border border-white/30 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-1 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-2 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-3 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-4 shadow-[0_0_4px_rgba(255,255,255,0.8)]" />
-                    </div>
                   </div>
 
                   {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ chiều cao h-8.5 để thẳng hàng tuyệt đối */}
