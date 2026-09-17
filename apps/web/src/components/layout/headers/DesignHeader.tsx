@@ -42,7 +42,7 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
       <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6 overflow-x-auto no-scrollbar">
         {/* Cụm trái: [ Icon Trang chủ + Tên phân hệ ] + [ Các đầu mục nghiệp vụ ] + [ 🔍 Tìm bản vẽ ] */}
-        <div className="flex items-center select-none shrink-0 whitespace-nowrap">
+        <div className="flex items-center select-none flex-1 min-w-0 mr-4 whitespace-nowrap">
           {/* Khối định danh phân hệ: [ 🏠 Trang chủ ] + [ 3.2 – THIẾT KẾ ] - Đồng bộ chuẩn khoảng cách 10px (gap-2.5) */}
           <div className="flex items-center gap-2.5 shrink-0 mr-4 sm:mr-6 lg:mr-8">
             {/* Icon Trang chủ: Bấm để quay về Trang chủ AVG One */}
@@ -65,7 +65,7 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
           </div>
 
           {/* BỘ ĐẦU MỤC QUẢN LÝ THIẾT KẾ: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI */}
-          <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap mr-3 sm:mr-4">
+          <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap mr-3 sm:mr-5">
             {[
               { id: 'orders' as const, label: 'Kho đầu vào', count: designCounts.orders, icon: ClipboardCheck },
               { id: 'products' as const, label: 'Kho thành phẩm', count: designCounts.products, icon: Layers },
@@ -95,18 +95,18 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
             })}
           </div>
 
-          {/* Thanh tìm kiếm nhanh tích hợp chuẩn chiều cao */}
-          <div className="relative flex items-center shrink-0">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
+          {/* Thanh tìm kiếm nhanh: Dạng bo tròn 2 đầu (rounded-full) & Dài hơn */}
+          <div className="relative flex items-center flex-1 max-w-[620px] min-w-[260px] mr-2">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
             <input
               id="design-quick-search-input"
               type="text"
               value={designSearch}
               onChange={(e) => onDesignSearchChange(e.target.value)}
-              placeholder="Tìm bản vẽ..."
-              className="w-40 sm:w-52 focus:w-64 pl-9 pr-14 h-8 sm:h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
+              placeholder="Tìm kiếm bản vẽ CAD, Gerber, PCB, linh kiện..."
+              className="w-full pl-10 pr-16 h-8 sm:h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-full text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
             />
-            <kbd className="absolute right-2.5 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md pointer-events-none shadow-2xs">
+            <kbd className="absolute right-3 px-2 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full pointer-events-none shadow-2xs">
               Ctrl K
             </kbd>
           </div>
