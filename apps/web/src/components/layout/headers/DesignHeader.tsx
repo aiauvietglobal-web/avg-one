@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Home, ClipboardCheck, Layers, Box, Search, Sun, Moon
+  Home, ClipboardCheck, Layers, Box, Search
 } from 'lucide-react';
 
 export interface DesignHeaderProps {
@@ -109,15 +109,8 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right: Dark Mode Toggle + Hộp Đăng Nhập / Profile Avatar */}
+        {/* Right: Hộp Đăng Nhập / Profile Avatar */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <button
-            onClick={onToggleDarkMode}
-            className="w-9 h-9 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 border border-slate-200/70 dark:border-slate-700/70 flex items-center justify-center text-slate-600 dark:text-amber-400 transition-colors shadow-2xs cursor-pointer"
-            title={darkMode ? 'Chuyển giao diện sáng' : 'Chuyển giao diện tối'}
-          >
-            {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
           {renderUserAuthButton()}
         </div>
       </div>
