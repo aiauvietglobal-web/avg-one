@@ -121,6 +121,24 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
 
   const ActionIcon = config.actionIcon;
 
+  // Tiêu đề động hiển thị theo không gian nghiệp vụ đang chọn (ví dụ: 5.1B ĐẦU VÀO khi ở tab 5.1B)
+  const displayTitle = React.useMemo(() => {
+    if (activeModule === 'cluster51') {
+      if (activeTab === 'pilot51b') return '5.1B ĐẦU VÀO';
+      if (activeTab === 'acceptance51t') return '5.1T ĐẦU RA';
+      return 'CỤM 5.1';
+    }
+    if (activeModule === 'clusterK') {
+      if (activeTab === 'kien') return 'HỘP KIẾN';
+      if (activeTab === 'hash') return 'HỘP # (HASH)';
+      if (activeTab === 'k2t') return 'HỘP #K2T';
+      if (activeTab === 'k2b') return 'HỘP #K2B';
+      if (activeTab === 'k1') return 'HỘP #K1';
+      return 'CỤM #K';
+    }
+    return config.title;
+  }, [activeModule, activeTab, config.title]);
+
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-200/90 dark:border-slate-800 shadow-2xs z-30 shrink-0 transition-colors duration-200">
       <div className="w-full px-3 sm:px-5 lg:px-6 h-14 sm:h-15 flex items-center justify-between gap-2 sm:gap-4">
@@ -128,7 +146,7 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
         {/* LEFT & CENTER NAVIGATION: [ 🏠 TÊN PHÂN HỆ ] + Modern Box Tabs */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 overflow-x-auto no-scrollbar py-1">
           
-          {/* Module Identity: [ 🏠 ] + [ TÊN PHÂN HỆ ] in Brand Orange */}
+          {/* Module Identity: [ 🏠 ] + [ TÊN PHÂN HỆ / ĐẦU MỐI ĐANG CHỌN ] in Brand Orange */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 mr-2 sm:mr-4 lg:mr-6">
             <button
               onClick={onGoHome}
@@ -148,7 +166,7 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
               title={['cluster51', 'clusterK'].includes(activeModule) ? `Về Trang Chủ ${config.title}` : "Nhấn để quay về Trang Chủ"}
               className="text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight whitespace-nowrap cursor-pointer transition-colors leading-none"
             >
-              {config.title}
+              {displayTitle}
             </button>
           </div>
 
