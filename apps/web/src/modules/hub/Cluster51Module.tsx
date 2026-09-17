@@ -434,14 +434,11 @@ export const Cluster51Module: React.FC<Cluster51ModuleProps> = ({
                       <IconComponent className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                     </div>
 
-                    {/* Tiêu đề & Subtitle */}
+                    {/* Tiêu đề */}
                     <div className="flex flex-col items-center w-full">
                       <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
                         {box.name}
                       </h3>
-                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-0.5 whitespace-nowrap">
-                        {box.subTitle}
-                      </span>
                     </div>
                   </div>
                 );
