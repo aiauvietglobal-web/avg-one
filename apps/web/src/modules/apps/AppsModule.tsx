@@ -214,14 +214,11 @@ export const AppsModule: React.FC = () => {
                         <Icon className="w-5.5 h-5.5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                       </div>
 
-                      {/* App Title & Micro Tag */}
-                      <div className="flex flex-col items-center w-full space-y-0.5">
+                      {/* App Title */}
+                      <div className="flex flex-col items-center w-full">
                         <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
                           {app.title}
                         </h3>
-                        <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
-                          {app.badge} • {app.code}
-                        </span>
                       </div>
                     </div>
                   );
