@@ -77,7 +77,7 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => onSelectDesignTab(tab.id)}
-                  className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+                  className={`h-8 sm:h-9 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
                       : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
@@ -95,18 +95,18 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
             })}
           </div>
 
-          {/* Thanh tìm kiếm nhanh tích hợp chuẩn chiều cao h-8 sm:h-8.5 */}
+          {/* Thanh tìm kiếm nhanh tích hợp chuẩn chiều cao */}
           <div className="relative flex items-center shrink-0">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 pointer-events-none" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
             <input
               id="design-quick-search-input"
               type="text"
               value={designSearch}
               onChange={(e) => onDesignSearchChange(e.target.value)}
               placeholder="Tìm bản vẽ..."
-              className="w-36 sm:w-48 focus:w-60 pl-8.5 pr-12 h-8 sm:h-8.5 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
+              className="w-40 sm:w-52 focus:w-64 pl-9 pr-14 h-8 sm:h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/80 dark:border-slate-700/80 rounded-xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200 shrink-0"
             />
-            <kbd className="absolute right-2 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md pointer-events-none shadow-2xs">
+            <kbd className="absolute right-2.5 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md pointer-events-none shadow-2xs">
               Ctrl K
             </kbd>
           </div>
