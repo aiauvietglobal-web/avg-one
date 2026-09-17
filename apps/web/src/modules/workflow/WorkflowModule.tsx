@@ -859,7 +859,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <span>3.2 – THIẾT KẾ</span>
                 <span>/</span>
                 <span className="text-[#F15A24] font-black">
-                  {currentMainTab === 'orders' ? 'ĐƠN HÀNG' : currentMainTab === 'products' ? 'PHẨM' : 'TỒN'}
+                  {currentMainTab === 'orders' ? 'KHO ĐẦU VÀO' : currentMainTab === 'products' ? 'KHO THÀNH PHẨM' : 'KHO LƯU CHUYỂN'}
                 </span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">

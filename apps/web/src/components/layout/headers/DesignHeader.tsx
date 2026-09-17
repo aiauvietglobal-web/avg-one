@@ -67,9 +67,9 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
           {/* BỘ ĐẦU MỤC QUẢN LÝ THIẾT KẾ: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI */}
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap mr-3 sm:mr-4">
             {[
-              { id: 'orders' as const, label: 'Đơn hàng', count: designCounts.orders, icon: ClipboardCheck },
-              { id: 'products' as const, label: 'Phẩm', count: designCounts.products, icon: Layers },
-              { id: 'inventory' as const, label: 'Tồn', count: designCounts.inventory, icon: Box },
+              { id: 'orders' as const, label: 'Kho đầu vào', count: designCounts.orders, icon: ClipboardCheck },
+              { id: 'products' as const, label: 'Kho thành phẩm', count: designCounts.products, icon: Layers },
+              { id: 'inventory' as const, label: 'Kho lưu chuyển', count: designCounts.inventory, icon: Box },
             ].map((tab) => {
               const isActive = designNavTab === tab.id;
               const IconComponent = tab.icon;
