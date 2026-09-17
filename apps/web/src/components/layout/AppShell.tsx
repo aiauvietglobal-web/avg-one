@@ -65,6 +65,17 @@ export const AppShell: React.FC<AppShellProps> = ({
     else if (activeModule === 'profile9') setHubDetailTab('overview');
   }, [activeModule]);
 
+  // Lắng nghe sự kiện chuyển đổi tab nội bộ từ các phân hệ (Cụm 5.1, Cụm #K,...)
+  useEffect(() => {
+    const handleHubTabChange = (e: any) => {
+      if (e.detail?.tab) {
+        setHubDetailTab(e.detail.tab);
+      }
+    };
+    window.addEventListener('hub_tab_change', handleHubTabChange);
+    return () => window.removeEventListener('hub_tab_change', handleHubTabChange);
+  }, []);
+
   // Lắng nghe trạng thái thu âm từ phân hệ Chuyển đổi trực tiếp
   useEffect(() => {
     const handleSpeechRec = (e: any) => {

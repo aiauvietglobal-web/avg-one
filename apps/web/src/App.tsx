@@ -1260,7 +1260,22 @@ export default function App() {
   const [chartPageOffset, setChartPageOffset] = useState<number>(0);
 
   // Hub Module Tab State for 6 new modules
-  const [hubModuleTab, setHubModuleTab] = useState<string>('pilot51b');
+  const [hubModuleTab, setHubModuleTab] = useState<string>('home');
+
+  // Luôn chuyển về trang chủ (home) khi người dùng nhấp vào Cụm 5.1 hoặc Cụm #K từ cổng AVG One
+  useEffect(() => {
+    if (activeModule === 'cluster51' || activeModule === 'clusterK') {
+      setHubModuleTab('home');
+    } else if (activeModule === 'infra22') {
+      setHubModuleTab('equipment');
+    } else if (activeModule === 'security') {
+      setHubModuleTab('monitoring');
+    } else if (activeModule === 'traffic8') {
+      setHubModuleTab('bottlenecks');
+    } else if (activeModule === 'profile9') {
+      setHubModuleTab('overview');
+    }
+  }, [activeModule]);
 
   useEffect(() => {
     const handleHubTabChange = (e: any) => {
