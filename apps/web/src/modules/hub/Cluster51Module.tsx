@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Inbox, Rocket, Home, Lightbulb, Sparkles, Search, Filter, Plus,
   CheckCircle2, Clock, FileText, ArrowRight, ShieldCheck, Activity,
@@ -40,6 +40,39 @@ export const Cluster51Module: React.FC<Cluster51ModuleProps> = ({
   // Search state
   const [search51B, setSearch51B] = useState('');
   const [search51T, setSearch51T] = useState('');
+
+  // Lắng nghe sự kiện chuyển 3 Kho và Tìm kiếm từ Header
+  useEffect(() => {
+    const handleSubtabChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const tab = customEvent.detail;
+      if (tab === 'orders') {
+        setSubTab51B('requests');
+        setSubTab51T('dispatch');
+      } else if (tab === 'products') {
+        setSubTab51B('vbkl');
+        setSubTab51T('acceptance');
+      } else if (tab === 'inventory') {
+        setSubTab51B('market');
+        setSubTab51T('qr_logs');
+      }
+    };
+
+    const handleSearchChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const query = customEvent.detail || '';
+      setSearch51B(query);
+      setSearch51T(query);
+    };
+
+    window.addEventListener('cluster51_subtab_change', handleSubtabChange);
+    window.addEventListener('cluster51_search', handleSearchChange);
+
+    return () => {
+      window.removeEventListener('cluster51_subtab_change', handleSubtabChange);
+      window.removeEventListener('cluster51_search', handleSearchChange);
+    };
+  }, []);
 
   // Modals
   const [showAddPilotModal, setShowAddPilotModal] = useState(false);
@@ -302,6 +335,41 @@ export const Cluster51Module: React.FC<Cluster51ModuleProps> = ({
     setNewDispatchLot('');
     showToast(`✨ ĐÃ TẠO LỆNH XUẤT KHO: Lô hàng ${newLotId} đã vào hàng đợi đóng gói giao vận!`);
   };
+
+  // Đồng bộ hóa trạng thái hiện tại (subtab & số lượng 3 Kho) lên Header
+  useEffect(() => {
+    let currentWarehouseTab: 'orders' | 'products' | 'inventory' = 'orders';
+    let currentCounts = { orders: 4, products: 3, inventory: 6 };
+
+    if (currentKey === 'pilot51b') {
+      if (subTab51B === 'requests') currentWarehouseTab = 'orders';
+      else if (subTab51B === 'vbkl') currentWarehouseTab = 'products';
+      else if (subTab51B === 'market') currentWarehouseTab = 'inventory';
+
+      currentCounts = {
+        orders: pilotRequests.length,
+        products: vbklRecords.length,
+        inventory: 6,
+      };
+    } else if (currentKey === 'acceptance51t') {
+      if (subTab51T === 'dispatch') currentWarehouseTab = 'orders';
+      else if (subTab51T === 'acceptance') currentWarehouseTab = 'products';
+      else if (subTab51T === 'qr_logs') currentWarehouseTab = 'inventory';
+
+      currentCounts = {
+        orders: dispatchLots.length,
+        products: acceptanceRecords.length,
+        inventory: 6,
+      };
+    }
+
+    window.dispatchEvent(new CustomEvent('cluster51_state_sync', {
+      detail: {
+        subTab: currentWarehouseTab,
+        counts: currentCounts,
+      }
+    }));
+  }, [currentKey, subTab51B, subTab51T, pilotRequests.length, vbklRecords.length, dispatchLots.length, acceptanceRecords.length]);
 
   /* ========================================================================= */
   /* 📦 CẤU HÌNH THẺ HỘP TRUY CẬP CỤM 5.1 (Chuẩn kích thước rounded-[26px])     */
@@ -720,7 +788,14 @@ export const Cluster51Module: React.FC<Cluster51ModuleProps> = ({
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold">
-                          {vbklRecords.map((vbkl) => (
+                          {vbklRecords
+                            .filter(vbkl =>
+                              !search51B.trim() ||
+                              vbkl.projectName.toLowerCase().includes(search51B.toLowerCase()) ||
+                              vbkl.id.toLowerCase().includes(search51B.toLowerCase()) ||
+                              vbkl.orderId.toLowerCase().includes(search51B.toLowerCase())
+                            )
+                            .map((vbkl) => (
                             <tr key={vbkl.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                               <td className="py-3 px-3 font-mono font-bold text-purple-600 dark:text-purple-400">{vbkl.id}</td>
                               <td className="py-3 px-3 font-mono text-slate-500">{vbkl.orderId}</td>
@@ -1008,7 +1083,15 @@ export const Cluster51Module: React.FC<Cluster51ModuleProps> = ({
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      {acceptanceRecords.map((acc) => (
+                      {acceptanceRecords
+                        .filter(acc =>
+                          !search51T.trim() ||
+                          acc.projectName.toLowerCase().includes(search51T.toLowerCase()) ||
+                          acc.id.toLowerCase().includes(search51T.toLowerCase()) ||
+                          acc.location.toLowerCase().includes(search51T.toLowerCase()) ||
+                          acc.clientRep.toLowerCase().includes(search51T.toLowerCase())
+                        )
+                        .map((acc) => (
                         <div key={acc.id} className="bg-slate-50/80 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                           <div className="flex items-start justify-between gap-3">
                             <div>

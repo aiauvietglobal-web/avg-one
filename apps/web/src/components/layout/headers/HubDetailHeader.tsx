@@ -4,7 +4,7 @@ import {
   Workflow, Target, CheckCircle2, FileText, ShieldCheck, Key, Database,
   AlertTriangle, Zap, Globe, GitBranch, BarChart3, Award, Building2,
   BadgeCheck, FolderKanban, Layers, Hash, Sparkles, Download, Inbox, Rocket,
-  Package, Cpu
+  Package, Cpu, ClipboardCheck, Box, Search
 } from 'lucide-react';
 import { AppModuleId } from '../AppLauncherModal';
 
@@ -139,11 +139,46 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
     return config.title;
   }, [activeModule, activeTab, config.title]);
 
+  // Sub-tabs nội bộ & Search cho Cụm 5.1 (3 Kho + Thanh tìm kiếm)
+  const [cluster51SubTab, setCluster51SubTab] = React.useState<'orders' | 'products' | 'inventory'>('orders');
+  const [cluster51Search, setCluster51Search] = React.useState('');
+  const [cluster51Counts, setCluster51Counts] = React.useState({
+    orders: 4,
+    products: 3,
+    inventory: 6,
+  });
+
+  React.useEffect(() => {
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        if (customEvent.detail.subTab) {
+          setCluster51SubTab(customEvent.detail.subTab);
+        }
+        if (customEvent.detail.counts) {
+          setCluster51Counts(customEvent.detail.counts);
+        }
+      }
+    };
+    window.addEventListener('cluster51_state_sync', handleSync);
+    return () => window.removeEventListener('cluster51_state_sync', handleSync);
+  }, []);
+
+  const handleSelectCluster51Tab = (tabId: 'orders' | 'products' | 'inventory') => {
+    setCluster51SubTab(tabId);
+    window.dispatchEvent(new CustomEvent('cluster51_subtab_change', { detail: tabId }));
+  };
+
+  const handleCluster51SearchChange = (val: string) => {
+    setCluster51Search(val);
+    window.dispatchEvent(new CustomEvent('cluster51_search', { detail: val }));
+  };
+
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-200/90 dark:border-slate-800 shadow-2xs z-30 shrink-0 transition-colors duration-200">
       <div className="w-full px-3 sm:px-5 lg:px-6 h-14 sm:h-15 flex items-center justify-between gap-2 sm:gap-4">
         
-        {/* LEFT & CENTER NAVIGATION: [ 🏠 TÊN PHÂN HỆ ] + Modern Box Tabs */}
+        {/* LEFT & CENTER NAVIGATION: [ 🏠 TÊN PHÂN HỆ ] + Modern Box Tabs / 3 Kho & Search Bar */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 overflow-x-auto no-scrollbar py-1">
           
           {/* Module Identity: [ 🏠 ] + [ TÊN PHÂN HỆ / ĐẦU MỐI ĐANG CHỌN ] in Brand Orange */}
@@ -170,33 +205,82 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
             </button>
           </div>
 
-          {/* Module Tab Box Buttons (Only shown when inside sub-modules, hidden on Home like other modules) */}
+          {/* Module Tab Box Buttons / 3 Kho & Search Bar */}
           {activeTab !== 'home' && (
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              {config.tabs.filter(tab => tab.id !== 'home').map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => onSelectTab(tab.id)}
-                    className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
-                      isActive
-                        ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                        : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
-                    }`}
-                  >
-                    <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2] ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
-                    <span className="whitespace-nowrap">{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+            activeModule === 'cluster51' ? (
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                {/* BỘ 3 KHO: Kho đầu vào, Kho thành phẩm, Kho lưu chuyển */}
+                <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap mr-2 sm:mr-4">
+                  {[
+                    { id: 'orders' as const, label: 'Kho đầu vào', count: cluster51Counts.orders, icon: ClipboardCheck },
+                    { id: 'products' as const, label: 'Kho thành phẩm', count: cluster51Counts.products, icon: Layers },
+                    { id: 'inventory' as const, label: 'Kho lưu chuyển', count: cluster51Counts.inventory, icon: Box },
+                  ].map((tab) => {
+                    const isActive = cluster51SubTab === tab.id;
+                    const IconComponent = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => handleSelectCluster51Tab(tab.id)}
+                        className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+                          isActive
+                            ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
+                            : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                        }`}
+                      >
+                        <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 stroke-[2.2]" />
+                        <span>{tab.label}</span>
+                        <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                          isActive ? 'bg-white/25 text-white' : 'bg-slate-200/90 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        }`}>
+                          {tab.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Thanh tìm kiếm nhanh: Dạng hộp chữ nhật bo tròn 2 đầu (rounded-2xl) & dài hơn */}
+                <div className="relative flex items-center flex-1 max-w-[580px] min-w-[200px] mr-2">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+                  <input
+                    id="cluster51-quick-search-input"
+                    type="text"
+                    value={cluster51Search}
+                    onChange={(e) => handleCluster51SearchChange(e.target.value)}
+                    placeholder="Tìm kiếm..."
+                    className="w-full pl-10 pr-4 h-8 sm:h-8.5 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-2xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                {config.tabs.filter(tab => tab.id !== 'home').map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => onSelectTab(tab.id)}
+                      className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
+                          : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                      }`}
+                    >
+                      <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2] ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
+                      <span className="whitespace-nowrap">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )
           )}
 
         </div>
 
-        {/* RIGHT ACTIONS: + Action Button + Dark Mode Toggle + User Profile */}
+        {/* RIGHT ACTIONS: + Action Button + Dark Mode Toggle (hidden for cluster51) + User Profile */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {config.actionLabel && (
             <button
@@ -208,14 +292,16 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
             </button>
           )}
 
-          {/* Theme Toggle Button */}
-          <button
-            onClick={onToggleDarkMode}
-            title={darkMode ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
-            className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer"
-          >
-            {darkMode ? <Sun className="w-4 h-4 text-amber-400 stroke-[2.2]" /> : <Moon className="w-4 h-4 text-slate-600 stroke-[2.2]" />}
-          </button>
+          {/* Theme Toggle Button: Ẩn hoàn toàn cho Cụm 5.1 theo yêu cầu người dùng */}
+          {activeModule !== 'cluster51' && (
+            <button
+              onClick={onToggleDarkMode}
+              title={darkMode ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+              className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer"
+            >
+              {darkMode ? <Sun className="w-4 h-4 text-amber-400 stroke-[2.2]" /> : <Moon className="w-4 h-4 text-slate-600 stroke-[2.2]" />}
+            </button>
+          )}
 
           {/* User Account Button */}
           {renderUserAuthButton()}
