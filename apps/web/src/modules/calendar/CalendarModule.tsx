@@ -753,9 +753,9 @@ export const CalendarModule: React.FC = () => {
         return {
           code: 'COMPLETED',
           label: 'Đã diễn ra',
-          dotColor: 'bg-red-500',
-          pillBg: 'bg-gradient-to-r from-[#0077B6] to-[#DC2626] text-white border border-red-400/60 shadow-[0_0_10px_rgba(220,38,38,0.35)]',
-          borderLeft: 'border-l-4 border-l-red-500'
+          dotColor: 'bg-slate-400',
+          pillBg: 'bg-slate-700 dark:bg-slate-800 text-slate-100 dark:text-slate-200 border border-slate-600',
+          borderLeft: 'border-l-4 border-l-slate-600'
         };
       }
       if (s.includes('hoãn') || s.includes('hủy')) {
@@ -801,9 +801,9 @@ export const CalendarModule: React.FC = () => {
       return {
         code: 'COMPLETED',
         label: 'Đã diễn ra',
-        dotColor: 'bg-red-500',
-        pillBg: 'bg-gradient-to-r from-[#0077B6] to-[#DC2626] text-white border border-red-400/60 shadow-[0_0_10px_rgba(220,38,38,0.35)]',
-        borderLeft: 'border-l-4 border-l-red-500'
+        dotColor: 'bg-slate-400',
+        pillBg: 'bg-slate-700 dark:bg-slate-800 text-slate-100 dark:text-slate-200 border border-slate-600',
+        borderLeft: 'border-l-4 border-l-slate-600'
       };
     }
 
@@ -839,9 +839,9 @@ export const CalendarModule: React.FC = () => {
         return {
           code: 'COMPLETED',
           label: 'Đã diễn ra',
-          dotColor: 'bg-red-500',
-          pillBg: 'bg-gradient-to-r from-[#0077B6] to-[#DC2626] text-white border border-red-400/60 shadow-[0_0_10px_rgba(220,38,38,0.35)]',
-          borderLeft: 'border-l-4 border-l-red-500'
+          dotColor: 'bg-slate-400',
+          pillBg: 'bg-slate-700 dark:bg-slate-800 text-slate-100 dark:text-slate-200 border border-slate-600',
+          borderLeft: 'border-l-4 border-l-slate-600'
         };
       }
 
@@ -1726,7 +1726,7 @@ export const CalendarModule: React.FC = () => {
                             const borderLeftClass = isOngoing
                               ? 'border-l-[5px] border-l-emerald-500'
                               : isCompleted
-                                ? 'border-l-[5px] border-l-[#00A8E8]'
+                                ? 'border-l-[5px] border-l-slate-600 dark:border-l-slate-500'
                                 : isCancelled
                                   ? 'border-l-[5px] border-l-slate-400'
                                   : 'border-l-[5px] border-l-amber-500';
@@ -1734,7 +1734,7 @@ export const CalendarModule: React.FC = () => {
                             const badgeClass = isOngoing
                               ? 'bg-emerald-600 text-white'
                               : isCompleted
-                                ? 'bg-[#00A8E8] text-white'
+                                ? 'bg-slate-700 dark:bg-slate-800 text-slate-100 dark:text-slate-200 border border-slate-600'
                                 : isCancelled
                                   ? 'bg-slate-600 text-white'
                                   : 'bg-amber-500 text-white';
@@ -1742,7 +1742,7 @@ export const CalendarModule: React.FC = () => {
                             const headerBgClass = isOngoing
                               ? 'bg-emerald-500/15 dark:bg-emerald-950/50 border-b border-emerald-500/30 dark:border-emerald-800'
                               : isCompleted
-                                ? 'bg-sky-500/15 dark:bg-sky-950/50 border-b border-sky-500/30 dark:border-sky-800'
+                                ? 'bg-slate-200/90 dark:bg-slate-800/90 border-b border-slate-300 dark:border-slate-700'
                                 : isCancelled
                                   ? 'bg-slate-500/15 dark:bg-slate-900/60 border-b border-slate-500/30 dark:border-slate-800'
                                   : 'bg-amber-500/15 dark:bg-amber-950/50 border-b border-amber-500/30 dark:border-amber-800';
@@ -1750,13 +1750,13 @@ export const CalendarModule: React.FC = () => {
                             const headerLabelClass = isOngoing
                               ? 'text-emerald-700 dark:text-emerald-400'
                               : isCompleted
-                                ? 'text-[#0284C7] dark:text-[#38BDF8]'
+                                ? 'text-slate-700 dark:text-slate-300'
                                 : isCancelled
                                   ? 'text-slate-600 dark:text-slate-400'
                                   : 'text-amber-700 dark:text-amber-400';
 
                             return (
-                               <div key={evt.id} className={`w-full bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200/90 dark:border-slate-800 ${borderLeftClass} overflow-hidden transition-all hover:shadow-md relative group/card shadow-2xs space-y-0`}>
+                               <div key={evt.id} className={`w-full ${isCompleted ? 'bg-slate-50/90 dark:bg-slate-900/95 border-slate-300/90 dark:border-slate-700/80' : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800'} rounded-xl sm:rounded-2xl border ${borderLeftClass} overflow-hidden transition-all hover:shadow-md relative group/card shadow-2xs space-y-0`}>
                                  
                                  {/* HÀNG 1: THỜI GIAN VÀ TRẠNG THÁI (HEADER NỀN MÀU THEO TRẠNG THÁI) */}
                                  <div className={`px-3 sm:px-4 py-2 sm:py-2.5 ${headerBgClass} flex flex-wrap items-center justify-between gap-1.5`}>
@@ -1767,7 +1767,7 @@ export const CalendarModule: React.FC = () => {
                                    </div>
 
                                    <span className={`px-2.5 py-1 rounded-xl font-bold text-[11px] sm:text-xs ${badgeClass} shadow-2xs inline-flex items-center gap-1.5 shrink-0`}>
-                                     <span className={isOngoing ? "w-1.5 h-1.5 rounded-full bg-white animate-pulse flex-shrink-0" : "w-1.5 h-1.5 rounded-full bg-white flex-shrink-0"} />
+                                     <span className={isOngoing ? "w-1.5 h-1.5 rounded-full bg-white animate-pulse flex-shrink-0" : isCompleted ? "w-1.5 h-1.5 rounded-full bg-slate-300 flex-shrink-0" : "w-1.5 h-1.5 rounded-full bg-white flex-shrink-0"} />
                                      <span>{evtStInfo.label}</span>
                                    </span>
                                  </div>
@@ -1778,9 +1778,9 @@ export const CalendarModule: React.FC = () => {
                                    {/* HÀNG 2: NỘI DUNG / CHỦ ĐỀ CUỘC HỌP */}
                                    <div className="space-y-1">
                                      <div className={`${headerLabelClass} font-bold text-xs`}>Nội dung:</div>
-                                     <div className="w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/50 border border-slate-200/90 dark:border-slate-700/60 hover:border-[#0284C7]/40 transition shadow-2xs">
+                                     <div className={`w-full p-2.5 sm:p-3.5 rounded-xl bg-slate-50/90 dark:bg-slate-800/50 border border-slate-200/90 dark:border-slate-700/60 ${isCompleted ? 'hover:border-slate-400 dark:hover:border-slate-600' : 'hover:border-[#0284C7]/40'} transition shadow-2xs`}>
                                        <h3
-                                         className="text-xs sm:text-base font-extrabold text-slate-900 dark:text-white leading-snug cursor-pointer hover:text-[#0284C7] transition whitespace-pre-line"
+                                         className={`text-xs sm:text-base font-extrabold text-slate-900 dark:text-white leading-snug cursor-pointer ${isCompleted ? 'hover:text-slate-600 dark:hover:text-slate-300' : 'hover:text-[#0284C7]'} transition whitespace-pre-line`}
                                          onClick={() => setSelectedEventDetail(evt)}
                                        >
                                          {evt.title}
@@ -2178,10 +2178,15 @@ export const CalendarModule: React.FC = () => {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 w-full max-w-lg space-y-3">
             
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
-              <span className={`px-2.5 py-1 rounded-xl text-xs font-bold ${getStatusInfo(selectedEventDetail, vnNow).pillBg} inline-flex items-center gap-1.5`}>
-                <span className="w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />
-                <span>{getStatusInfo(selectedEventDetail, vnNow).label}</span>
-              </span>
+              {(() => {
+                const modalStInfo = getStatusInfo(selectedEventDetail, vnNow);
+                return (
+                  <span className={`px-2.5 py-1 rounded-xl text-xs font-bold ${modalStInfo.pillBg} inline-flex items-center gap-1.5`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${modalStInfo.dotColor} flex-shrink-0`} />
+                    <span>{modalStInfo.label}</span>
+                  </span>
+                );
+              })()}
               <button onClick={() => setSelectedEventDetail(null)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">
                 ✕
               </button>
