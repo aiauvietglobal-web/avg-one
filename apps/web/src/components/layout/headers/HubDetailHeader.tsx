@@ -37,7 +37,6 @@ export const HUB_MODULE_CONFIGS: Record<string, HubModuleMeta> = {
   cluster51: {
     title: 'CỤM 5.1',
     tabs: [
-      { id: 'home', label: 'Trang Chủ 5.1', icon: Home },
       { id: 'pilot51b', label: '5.1B ĐẦU VÀO', icon: Inbox },
       { id: 'acceptance51t', label: '5.1T ĐẦU RA', icon: Rocket }
     ],
@@ -129,22 +128,34 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
         {/* LEFT & CENTER NAVIGATION: [ 🏠 TÊN PHÂN HỆ ] + Modern Box Tabs */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 overflow-x-auto no-scrollbar py-1">
           
-          {/* Module Identity Button: [ 🏠 TÊN PHÂN HỆ ] in Brand Orange */}
-          <button
-            onClick={onGoHome}
-            title="Nhấn để quay về Trang Chủ"
-            className="flex items-center gap-1.5 sm:gap-2 px-1 py-1 rounded-xl text-left shrink-0 mr-2 sm:mr-4 lg:mr-6 transition-all group hover:opacity-90 active:scale-95 cursor-pointer"
-          >
-            <Home className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#F15A24] dark:text-orange-400 stroke-[2.4] -translate-y-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 uppercase tracking-tight whitespace-nowrap">
+          {/* Module Identity: [ 🏠 ] + [ TÊN PHÂN HỆ ] in Brand Orange */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 mr-2 sm:mr-4 lg:mr-6">
+            <button
+              onClick={onGoHome}
+              title="Về Trang chủ AVG One"
+              className="p-1 text-[#F15A24] dark:text-orange-400 hover:opacity-80 active:scale-95 transition-all cursor-pointer shrink-0"
+            >
+              <Home className="w-5.5 h-5.5 sm:w-6 sm:h-6 stroke-[2.4] -translate-y-0.5 group-hover:scale-110 transition-transform" />
+            </button>
+            <button
+              onClick={() => {
+                if (['cluster51', 'clusterK'].includes(activeModule)) {
+                  onSelectTab('home');
+                } else {
+                  onGoHome();
+                }
+              }}
+              title={['cluster51', 'clusterK'].includes(activeModule) ? `Về Trang Chủ ${config.title}` : "Nhấn để quay về Trang Chủ"}
+              className="text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight whitespace-nowrap cursor-pointer transition-colors leading-none"
+            >
               {config.title}
-            </span>
-          </button>
+            </button>
+          </div>
 
           {/* Module Tab Box Buttons (Only shown when inside sub-modules, hidden on Home like other modules) */}
           {activeTab !== 'home' && (
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              {config.tabs.map((tab) => {
+              {config.tabs.filter(tab => tab.id !== 'home').map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
                 return (
