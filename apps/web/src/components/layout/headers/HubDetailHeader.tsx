@@ -140,27 +140,29 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
             </span>
           </button>
 
-          {/* Module Tab Box Buttons */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {config.tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => onSelectTab(tab.id)}
-                  className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                      : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
-                  }`}
-                >
-                  <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2] ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
-                  <span className="whitespace-nowrap">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          {/* Module Tab Box Buttons (Only shown when inside sub-modules, hidden on Home like other modules) */}
+          {activeTab !== 'home' && (
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              {config.tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => onSelectTab(tab.id)}
+                    className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
+                        : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2] ${isActive ? 'text-white' : 'text-slate-600 dark:text-slate-400'}`} />
+                    <span className="whitespace-nowrap">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
         </div>
 
@@ -176,16 +178,14 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
             </button>
           )}
 
-          {/* Theme Toggle Button (hidden for clusterK) */}
-          {activeModule !== 'clusterK' && (
-            <button
-              onClick={onToggleDarkMode}
-              title={darkMode ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
-              className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer"
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-amber-400 stroke-[2.2]" /> : <Moon className="w-4 h-4 text-slate-600 stroke-[2.2]" />}
-            </button>
-          )}
+          {/* Theme Toggle Button */}
+          <button
+            onClick={onToggleDarkMode}
+            title={darkMode ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+            className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer"
+          >
+            {darkMode ? <Sun className="w-4 h-4 text-amber-400 stroke-[2.2]" /> : <Moon className="w-4 h-4 text-slate-600 stroke-[2.2]" />}
+          </button>
 
           {/* User Account Button */}
           {renderUserAuthButton()}

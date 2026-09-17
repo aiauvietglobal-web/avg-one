@@ -5,7 +5,7 @@ import {
   ExternalLink, Sparkles, Filter, Search, Plus, Radio, Zap, Sliders,
   RefreshCw, Layers, ArrowRight, Eye, FileCheck, Coins, BookOpen, Send,
   Home, ChevronRight, Workflow, Target, BarChart3, Users, CheckCircle,
-  HelpCircle, ArrowUpRight
+  HelpCircle, ArrowUpRight, Lightbulb
 } from 'lucide-react';
 
 interface ClusterKModuleProps {
@@ -320,7 +320,7 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
   const currentBox = BOXES_CONFIG.find(b => b.id === currentKey) || BOXES_CONFIG[0];
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 overflow-y-auto bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 p-3 sm:p-5 space-y-4">
+    <div className={`w-full h-full flex-1 min-h-0 ${currentKey === 'home' ? 'bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-hidden flex flex-col items-center justify-center' : 'overflow-y-auto bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 p-3 sm:p-5 space-y-4'}`}>
 
       {/* Toast thông báo nhanh */}
       {toastMsg && (
@@ -334,12 +334,65 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
       {/* 🏠 NẾU ĐANG Ở TRANG CHỦ CỤM #K (currentKey === 'home')                     */}
       {/* ========================================================================= */}
       {currentKey === 'home' ? (
-        <div className="space-y-5 animate-fade-in">
-          {/* 📦 BỘ 5 HỘP ĐỘC LẬP PHÂN HỆ CỤM #K */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-            {BOXES_CONFIG.map((box) => {
-              const IconComponent = box.icon;
+        <>
+          {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
 
+          {/* 🎨 AMBIENT GLOW ORBS */}
+          <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
+          <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
+          <div className="absolute bottom-10 left-1/3 w-[550px] h-[300px] bg-gradient-to-tr from-sky-400/10 via-amber-400/10 to-orange-400/15 dark:from-sky-600/10 dark:to-orange-600/10 rounded-full blur-[140px] pointer-events-none -z-0" />
+
+          {/* Synchronized container matching Header alignment */}
+          <div className="w-full px-3 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-10 sm:gap-14 lg:gap-16 relative z-10 py-8 sm:py-14">
+            
+            {/* Header Title Section */}
+            <div className="flex flex-col items-center text-center space-y-4 max-w-2xl mx-auto">
+              <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
+                {/* SVG Clockwise Border Tracing Effect */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                  <defs>
+                    <linearGradient id="clusterk-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#0284C7" />
+                      <stop offset="35%" stopColor="#00A8E8" />
+                      <stop offset="70%" stopColor="#FF7043" />
+                      <stop offset="100%" stopColor="#F15A24" />
+                    </linearGradient>
+                  </defs>
+                  <rect
+                    x="1"
+                    y="1"
+                    width="calc(100% - 2px)"
+                    height="calc(100% - 2px)"
+                    rx="8"
+                    ry="8"
+                    fill="none"
+                    stroke="url(#clusterk-slogan-border-gradient)"
+                    strokeWidth="1.5"
+                    className="animate-slogan-box-border"
+                  />
+                </svg>
+
+                <div className="relative z-10 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-xl bg-transparent text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
+                  <Lightbulb className="w-4 h-4 text-[#00A8E8]" />
+                  <span>TRUNG TÂM ĐIỀU HÀNH & KỸ THUẬT CỤM #K</span>
+                </div>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline justify-center gap-2">
+                <span>Điều Hành &</span>
+                <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
+                  <span className="relative z-10">Thực Thi</span>
+                  <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
+                    <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
+                  </svg>
+                </span>
+              </h2>
+            </div>
+
+            {/* 📦 BỘ 5 HỘP THẺ TRUY CẬP CỤM #K (ĐỒNG BỘ 100% PHONG CÁCH RDI) */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-[1100px] mx-auto w-full pb-2">
+              {BOXES_CONFIG.map((box) => {
+                const IconComponent = box.icon;
                 return (
                   <div
                     key={`home-box-${box.id}`}
@@ -348,100 +401,29 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
                     onClick={() => handleBoxSelect(box.id)}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleBoxSelect(box.id); }}
                     style={{ borderRadius: '26px' }}
-                    className="group flex flex-col justify-between p-4 min-h-[190px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 relative overflow-hidden cursor-pointer select-none text-left"
+                    className="group flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
                   >
                     {/* Hairline top glow on hover */}
                     <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                    {/* Top Row: Icon Badge + Counter Badge */}
-                    <div className="flex items-center justify-between w-full mb-2">
-                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center text-[#0284C7] dark:text-sky-400 group-hover:scale-110 shadow-2xs transition-transform shrink-0">
-                        <IconComponent className="w-5.5 h-5.5 stroke-[2.2]" />
-                      </div>
-                      <span className={`text-[9.5px] font-black px-2 py-0.5 rounded-full border ${box.badgeColor}`}>
-                        {box.badge}
-                      </span>
+                    {/* Unified Blue Icon Badge */}
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+                      <IconComponent className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                     </div>
 
-                    {/* Middle: Title, Subtitle, Description */}
-                    <div className="space-y-1 my-1">
-                      <h3 className="text-sm font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors leading-tight">
+                    {/* Tiêu đề */}
+                    <div className="flex flex-col items-center w-full">
+                      <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
                         {box.name}
                       </h3>
-                      <div className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
-                        {box.tag}
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mt-1">
-                        {box.subTitle}
-                      </p>
-                    </div>
-
-                    {/* Bottom: Leader + Enter Action */}
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 mt-2">
-                      <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 truncate max-w-[100px]">
-                        {box.leader}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-xs font-black text-[#0284C7] dark:text-sky-400 group-hover:translate-x-0.5 transition-transform">
-                        Vào Hộp <ArrowRight className="w-3.5 h-3.5" />
-                      </span>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-
-          {/* NHẬT KÝ HOẠT ĐỘNG LIÊN THÔNG TOÀN CỤM #K */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-sky-100 dark:border-slate-800 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-emerald-500" />
-                <h3 className="text-sm sm:text-base font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-                  NHẬT KÝ ĐIỀU HÀNH THỜI GIAN THỰC (REALTIME CỤM #K)
-                </h3>
-              </div>
-              <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                Đang trực tuyến 24/7
-              </span>
-            </div>
-
-            <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-              <div className="py-2.5 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">Trưởng ban Kiến</span>
-                  <span className="text-slate-500">vừa ký duyệt 1-click Tờ trình dự toán linh kiện TT-2026-K00 (120 tr ₫)</span>
-                </div>
-                <span className="text-[10px] text-slate-400 shrink-0">10 phút trước</span>
-              </div>
-              <div className="py-2.5 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-cyan-500 shrink-0" />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">Kỹ sư Trưởng #K2T</span>
-                  <span className="text-slate-500">đã nạp thành công bản build Firmware v2.4.1 lên 50 bo mạch Telemetry</span>
-                </div>
-                <span className="text-[10px] text-slate-400 shrink-0">25 phút trước</span>
-              </div>
-              <div className="py-2.5 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">Kỹ thuật #</span>
-                  <span className="text-slate-500">hoàn tất đo kiểm định QA/QC lô 50 thiết bị, đạt chuẩn suy hao -0.8 dB</span>
-                </div>
-                <span className="text-[10px] text-slate-400 shrink-0">1 giờ trước</span>
-              </div>
-              <div className="py-2.5 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-violet-500 shrink-0" />
-                  <span className="font-bold text-slate-800 dark:text-slate-200">Điều phối #K2B</span>
-                  <span className="text-slate-500">ký bàn giao biên bản đóng gói BB-2026-BG01 cho đầu mối 5.1T</span>
-                </div>
-                <span className="text-[10px] text-slate-400 shrink-0">2 giờ trước</span>
-              </div>
-            </div>
           </div>
-        </div>
+        </>
       ) : (
         /* ========================================================================= */
         /* 📁 NẾU ĐANG Ở TRONG GIAO DIỆN CỦA TỪNG HỘP (currentKey !== 'home')          */
