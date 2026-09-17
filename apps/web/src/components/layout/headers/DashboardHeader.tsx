@@ -64,7 +64,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
               { id: 'overview' as const, label: 'Tổng quan C-Suite', icon: BarChart3 },
-              { id: 'rnd' as const, label: 'Tiến độ R&D', icon: Sparkles },
+              { id: 'rnd' as const, label: 'Tiến độ RDI', icon: Sparkles },
               { id: 'departments' as const, label: 'Phòng ban', icon: Building2 },
               { id: 'infrastructure' as const, label: 'Hạ tầng 20 Users', icon: Server },
             ].map((tab) => {

@@ -548,18 +548,10 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'rd' || activeModule === 'workflow' ? (
-            /* 7. HEADER PHÂN HỆ NGHIÊN CỨU & SÁNG TẠO: 🏠 R&D + TABS 13 SOP / 3.1 / 3.2 / ĐƠN HÀNG */
+            /* 7. HEADER PHÂN HỆ RDI: 🏠 RDI */
             <RDHeader
               onBack={() => onSelectModule('home')}
               onGoHome={() => onSelectModule('home')}
-              rdNavTab={rdNavTab}
-              onSelectRDTab={(tab) => {
-                setRdNavTab(tab);
-                window.dispatchEvent(new CustomEvent('rd_tab_change', { detail: tab }));
-              }}
-              onCreateProject={() => {
-                window.dispatchEvent(new CustomEvent('rd_create_project'));
-              }}
               darkMode={darkMode}
               onToggleDarkMode={onToggleDarkMode}
               renderUserAuthButton={renderUserAuthButton}
