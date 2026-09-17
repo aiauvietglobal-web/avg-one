@@ -260,9 +260,11 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameId = useRef<number | null>(null);
-  const historyRef = useRef<number[]>([]);
-  const peakHoldRef = useRef<number[]>([]);
-  const lastSampleTimeRef = useRef<number>(0);
+  const freqDataRef = useRef<Uint8Array | null>(null);
+  const timeDataRef = useRef<Uint8Array | null>(null);
+  const smoothBarsRef = useRef<number[]>([]);
+  const peakBarsRef = useRef<number[]>([]);
+  const peakDropSpeedRef = useRef<number[]>([]);
   const phaseRef = useRef<number>(0);
 
   useEffect(() => {
@@ -271,13 +273,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
     let isDestroyed = false;
 
-    // Khởi tạo danh sách các vạch mẫu ban đầu
-    if (historyRef.current.length === 0) {
-      historyRef.current = Array.from({ length: 110 }, () => 0.12 + Math.random() * 0.08);
-      peakHoldRef.current = Array.from({ length: 110 }, () => 0.15);
-    }
-
-    const render = (timestamp: number) => {
+    const render = (_timestamp: number) => {
       if (isDestroyed) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -302,147 +298,257 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
       const w = displayWidth;
       const h = displayHeight;
+      const isRec = micState === 'recording';
 
-      phaseRef.current += micState === 'recording' ? 0.065 : 0.038;
+      phaseRef.current += isRec ? 0.045 : 0.022;
       const phase = phaseRef.current;
 
-      // Cập nhật mẫu sóng mới mỗi 32ms để dải sóng cuộn mượt mà, dập dìu tự nhiên
-      if (timestamp - lastSampleTimeRef.current > 32) {
-        lastSampleTimeRef.current = timestamp;
-
-        let sample = 0.15;
-
-        if (micState === 'recording') {
-          if (audioVolumeLevel > 5) {
-            // Khi có giọng nói: kết hợp biên độ âm thanh thực tế với sóng điều hòa dập dìu
-            const normVol = Math.min(1.0, (audioVolumeLevel / 100) * 1.5);
-            // Sóng điều hòa tạo nhịp dập dìu tự nhiên giữa các dải tần
-            const waveMod = 0.78 + Math.sin(phase * 2.4) * 0.16 + Math.cos(phase * 1.2) * 0.08;
-            sample = Math.max(0.20, normVol * waveMod);
-          } else {
-            // Khi đang bật mic nhưng chưa nói: sóng thở dập dìu êm ái
-            sample = 0.13 + Math.sin(phase * 2.0) * 0.07 + Math.cos(phase * 1.1) * 0.04;
-          }
-        } else {
-          // Khi Standby: sóng nhấp nhô dập dìu mềm mại dạng đại dương
-          sample = 0.14 + Math.sin(phase * 1.6) * 0.08 + Math.cos(phase * 0.8) * 0.05;
-        }
-
-        historyRef.current.push(sample);
-
-        const targetCount = 64;
-        while (historyRef.current.length > targetCount) {
-          historyRef.current.shift();
-        }
-      }
-
-      // 1. Màu nền trắng thanh lịch, hiện đại theo yêu cầu
-      ctx.fillStyle = '#FFFFFF';
-      // 1. Nền trắng thanh lịch, sạch sẽ tuyệt đối
-      ctx.fillStyle = '#FFFFFF';
+      // 1. HIGH-TECH CYBER OBSERVATION DECK BACKGROUND (Deep Obsidian Glass)
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+      bgGrad.addColorStop(0, '#070B16');
+      bgGrad.addColorStop(0.5, '#0B1326');
+      bgGrad.addColorStop(1, '#060913');
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
-      const total = historyRef.current.length;
-      const points: { x: number; y: number }[] = [];
-      const pointsBack: { x: number; y: number }[] = [];
-      const isRec = micState === 'recording';
-      let minY = h;
-      let minYBack = h;
+      // 2. SUBTLE HIGH-TECH GRID & TELEMETRY GUIDELINES
+      ctx.save();
+      ctx.lineWidth = 1;
 
-      for (let i = 0; i < total; i++) {
-        const x = (i / (total - 1)) * w;
-        const baseVal = historyRef.current[i] || 0.14;
+      // Horizontal dB Reference Grid Lines
+      const dbLines = [
+        { label: '0 dB', yPct: 0.16 },
+        { label: '-12 dB', yPct: 0.36 },
+        { label: '-24 dB', yPct: 0.56 },
+        { label: '-48 dB', yPct: 0.76 }
+      ];
 
-        // 1. Sóng chính phía trước (Hero Wave Area)
-        const undulationWave = Math.sin(phase * 2.2 - (i * 0.18)) * 0.075 
-                             + Math.cos(phase * 1.1 + (i * 0.09)) * 0.035;
-        const val = Math.max(0.06, Math.min(0.96, baseVal + undulationWave));
-        const waveHeight = Math.max(8, Math.min(h * 0.94, val * h));
-        const y = h - waveHeight;
-        if (y < minY) minY = y;
-        points.push({ x, y });
+      ctx.font = '8px "JetBrains Mono", Consolas, Menlo, monospace';
+      ctx.textAlign = 'right';
 
-        // 2. Sóng phụ đa tầng phía sau (Layer 2 Background Depth Wave Area)
-        const undulationBack = Math.sin(phase * 1.65 + (i * 0.14)) * 0.085 
-                             + Math.cos(phase * 0.85 - (i * 0.07)) * 0.045;
-        const valBack = Math.max(0.04, Math.min(0.90, (baseVal * 0.85) + undulationBack));
-        const waveHeightBack = Math.max(6, Math.min(h * 0.88, valBack * h));
-        const yBack = h - waveHeightBack;
-        if (yBack < minYBack) minYBack = yBack;
-        pointsBack.push({ x, y: yBack });
+      dbLines.forEach(line => {
+        const yPos = Math.round(h * line.yPct);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.07)';
+        ctx.setLineDash([3, 5]);
+        ctx.beginPath();
+        ctx.moveTo(12, yPos);
+        ctx.lineTo(w - 12, yPos);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
+        ctx.fillText(line.label, w - 14, yPos - 3);
+      });
+      ctx.setLineDash([]); // Reset line dash
+
+      // Tech HUD Reticles at 4 corners
+      ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
+      ctx.lineWidth = 1.5;
+      const cornerLen = 7;
+      // Top-left
+      ctx.beginPath();
+      ctx.moveTo(8, 8 + cornerLen);
+      ctx.lineTo(8, 8);
+      ctx.lineTo(8 + cornerLen, 8);
+      ctx.stroke();
+      // Top-right
+      ctx.beginPath();
+      ctx.moveTo(w - 8 - cornerLen, 8);
+      ctx.lineTo(w - 8, 8);
+      ctx.lineTo(w - 8, 8 + cornerLen);
+      ctx.stroke();
+      // Bottom-left
+      ctx.beginPath();
+      ctx.moveTo(8, h - 8 - cornerLen);
+      ctx.lineTo(8, h - 8);
+      ctx.lineTo(8 + cornerLen, h - 8);
+      ctx.stroke();
+      // Bottom-right
+      ctx.beginPath();
+      ctx.moveTo(w - 8 - cornerLen, h - 8);
+      ctx.lineTo(w - 8, h - 8);
+      ctx.lineTo(w - 8, h - 8 - cornerLen);
+      ctx.stroke();
+
+      // Top HUD Status Bar
+      ctx.font = '9px "JetBrains Mono", Consolas, Menlo, monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = isRec ? '#00E5FF' : '#94A3B8';
+      ctx.fillText(isRec ? '● DSP LIVE // FFT 2048' : '○ DSP STANDBY // READY', 18, 18);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.65)';
+      ctx.fillText('48kHz • 24-BIT', w - 18, 18);
+      ctx.restore();
+
+      // 3. READ REAL AUDIO FREQUENCY & TIME DOMAIN DATA
+      let freqData: Uint8Array | null = null;
+      let timeData: Uint8Array | null = null;
+
+      if (analyserRef.current) {
+        const binCount = analyserRef.current.frequencyBinCount;
+        if (!freqDataRef.current || freqDataRef.current.length !== binCount) {
+          freqDataRef.current = new Uint8Array(binCount);
+        }
+        analyserRef.current.getByteFrequencyData(freqDataRef.current);
+        freqData = freqDataRef.current;
+
+        const fftSize = analyserRef.current.fftSize;
+        if (!timeDataRef.current || timeDataRef.current.length !== fftSize) {
+          timeDataRef.current = new Uint8Array(fftSize);
+        }
+        analyserRef.current.getByteTimeDomainData(timeDataRef.current);
+        timeData = timeDataRef.current;
       }
 
-      // Hàm vẽ spline mượt qua các điểm
-      const drawSpline = (pts: { x: number; y: number }[]) => {
-        ctx.moveTo(pts[0].x, pts[0].y);
-        for (let i = 0; i < pts.length - 1; i++) {
-          const xc = (pts[i].x + pts[i + 1].x) / 2;
-          const yc = (pts[i].y + pts[i + 1].y) / 2;
-          ctx.quadraticCurveTo(pts[i].x, pts[i].y, xc, yc);
-        }
-        ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
-      };
+      // 4. HIGH-TECH SPECTRUM ANALYZER BARS (DIGITAL LED MATRIX EQ)
+      const bottomPadding = 24;
+      const topPadding = 28;
+      const usableH = h - topPadding - bottomPadding;
+      const usableW = w - 28;
+      const barCount = Math.max(24, Math.min(48, Math.floor(usableW / 6.5)));
+      const barWidth = Math.max(3, Math.floor((usableW / barCount) * 0.72));
+      const barSpacing = (usableW - barCount * barWidth) / Math.max(1, barCount - 1);
 
-      // A. MẢNG MÀU PHỤ PHÍA SAU (Background Wave Area - Không viền)
-      if (pointsBack.length > 2) {
-        ctx.save();
-        ctx.beginPath();
-        drawSpline(pointsBack);
-        ctx.lineTo(w, h);
-        ctx.lineTo(0, h);
-        ctx.closePath();
+      if (smoothBarsRef.current.length !== barCount) {
+        smoothBarsRef.current = Array.from({ length: barCount }, () => 0.05);
+        peakBarsRef.current = Array.from({ length: barCount }, () => 0.08);
+        peakDropSpeedRef.current = Array.from({ length: barCount }, () => 0.0);
+      }
 
-        const bgGrad = ctx.createLinearGradient(0, minYBack, 0, h);
-        if (isRec) {
-          bgGrad.addColorStop(0, 'rgba(249, 115, 22, 0.45)');  // Cam ấm mềm
-          bgGrad.addColorStop(0.35, 'rgba(245, 158, 11, 0.35)'); // Vàng hổ phách
-          bgGrad.addColorStop(0.65, 'rgba(0, 168, 232, 0.28)'); // AVG Cyan
-          bgGrad.addColorStop(1, 'rgba(2, 132, 199, 0.10)');   // Ocean Blue
+      const smoothBars = smoothBarsRef.current;
+      const peakBars = peakBarsRef.current;
+      const peakDrop = peakDropSpeedRef.current;
+
+      const segmentHeight = 4;
+      const segmentGap = 1.5;
+      const totalSegments = Math.floor(usableH / (segmentHeight + segmentGap));
+
+      // Draw each spectrum bar
+      for (let i = 0; i < barCount; i++) {
+        let rawNorm = 0.05;
+
+        if (isRec && freqData) {
+          // Logarithmic bin mapping for human acoustic perception (more resolution in 80Hz - 4kHz speech range)
+          const normIdx = Math.pow(i / barCount, 1.6);
+          const binIdx = Math.min(freqData.length - 1, Math.max(1, Math.floor(normIdx * (freqData.length * 0.55))));
+          const amp = freqData[binIdx] / 255;
+          const boost = audioVolumeLevel > 3 ? Math.min(1.8, 1 + (audioVolumeLevel / 60)) : 0.85;
+          rawNorm = Math.min(0.98, amp * boost);
+        } else if (isRec) {
+          // Recording but no stream/voice yet: subtle digital ambient floor
+          rawNorm = 0.04 + Math.sin(phase * 3 + i * 0.3) * 0.025;
         } else {
-          bgGrad.addColorStop(0, 'rgba(245, 158, 11, 0.28)');
-          bgGrad.addColorStop(0.5, 'rgba(2, 132, 199, 0.18)');
-          bgGrad.addColorStop(1, 'rgba(3, 105, 161, 0.05)');
+          // Standby: High-tech rhythmic digital scanning radar pulse
+          const scanPos = (Math.sin(phase * 1.8) * 0.5 + 0.5) * barCount;
+          const dist = Math.abs(i - scanPos);
+          const pulse = Math.max(0, 1 - dist / 5);
+          rawNorm = 0.04 + pulse * 0.16 + Math.sin(phase * 1.2 + i * 0.15) * 0.02;
         }
-        ctx.fillStyle = bgGrad;
-        ctx.fill();
+
+        // Smooth physics: instantaneous attack, smooth digital decay
+        if (rawNorm > smoothBars[i]) {
+          smoothBars[i] = smoothBars[i] * 0.4 + rawNorm * 0.6;
+        } else {
+          smoothBars[i] = smoothBars[i] * 0.82 + rawNorm * 0.18;
+        }
+        const barVal = Math.max(0.02, Math.min(1, smoothBars[i]));
+
+        // Peak hold physics
+        if (barVal >= peakBars[i]) {
+          peakBars[i] = barVal;
+          peakDrop[i] = 0;
+        } else {
+          peakDrop[i] += 0.0016;
+          peakBars[i] = Math.max(0, peakBars[i] - peakDrop[i]);
+        }
+
+        const barX = Math.round(14 + i * (barWidth + barSpacing));
+        const activeSegs = Math.round(barVal * totalSegments);
+
+        // Render LED matrix segments
+        for (let s = 0; s < totalSegments; s++) {
+          const segY = Math.round(h - bottomPadding - (s + 1) * (segmentHeight + segmentGap));
+          const segRatio = s / totalSegments;
+
+          if (s < activeSegs) {
+            // Lit segment: Neon color gradient based on signal intensity
+            if (segRatio > 0.85) {
+              ctx.fillStyle = '#EF4444'; // Overdrive Red
+            } else if (segRatio > 0.65) {
+              ctx.fillStyle = '#F59E0B'; // High Amber
+            } else if (segRatio > 0.35) {
+              ctx.fillStyle = '#00E5FF'; // Electric Cyan
+            } else {
+              ctx.fillStyle = '#0284C7'; // Deep Cyber Blue
+            }
+          } else {
+            // Unlit segment: Faint dark high-tech background grid slot
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.30)';
+          }
+
+          ctx.fillRect(barX, segY, barWidth, segmentHeight);
+        }
+
+        // Floating Peak-Hold Cap Indicator
+        const peakSeg = Math.min(totalSegments - 1, Math.round(peakBars[i] * totalSegments));
+        const peakY = Math.round(h - bottomPadding - (peakSeg + 1) * (segmentHeight + segmentGap));
+        ctx.fillStyle = peakBars[i] > 0.75 ? '#FBBF24' : '#00F0FF';
+        ctx.fillRect(barX, peakY - 1, barWidth, 2);
+      }
+
+      // 5. REAL-TIME OSCILLOSCOPE LASER BEAM (VOICE WAVEFORM TRACE)
+      if (timeData && isRec && audioVolumeLevel > 3) {
+        ctx.save();
+        ctx.strokeStyle = '#00F0FF';
+        ctx.lineWidth = 1.75;
+        ctx.shadowColor = '#00E5FF';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+
+        const sliceW = w / (timeData.length * 0.5);
+        const oscCenterY = h * 0.52;
+
+        for (let t = 0; t < timeData.length * 0.5; t++) {
+          const v = (timeData[t] / 128.0) - 1.0;
+          const oscY = oscCenterY + v * (usableH * 0.35);
+          const oscX = t * sliceW;
+          if (t === 0) {
+            ctx.moveTo(oscX, oscY);
+          } else {
+            ctx.lineTo(oscX, oscY);
+          }
+        }
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        // Idle/Standby Cyber Baseline Scan Line
+        ctx.save();
+        ctx.strokeStyle = isRec ? 'rgba(0, 229, 255, 0.40)' : 'rgba(56, 189, 248, 0.20)';
+        ctx.lineWidth = 1;
+        ctx.shadowColor = '#00E5FF';
+        ctx.shadowBlur = isRec ? 4 : 0;
+        ctx.beginPath();
+        const midY = h * 0.52;
+        ctx.moveTo(14, midY);
+        for (let x = 14; x < w - 14; x += 4) {
+          const pulse = Math.sin(phase * 4 + x * 0.08) * (isRec ? 3.5 : 1.5);
+          ctx.lineTo(x, midY + pulse);
+        }
+        ctx.stroke();
         ctx.restore();
       }
 
-      // B. MẢNG MÀU CHÍNH PHÍA TRƯỚC (Hero Wave Area - Không viền, Gradient Cam trên - Xanh dưới mượt mà)
-      if (points.length > 2) {
-        ctx.save();
-        ctx.beginPath();
-        drawSpline(points);
-        ctx.lineTo(w, h);
-        ctx.lineTo(0, h);
-        ctx.closePath();
-
-        // Mảng màu Gradient từ đỉnh ngọn (minY) xuống đáy chân (h)
-        const heroGrad = ctx.createLinearGradient(0, minY, 0, h);
-        if (isRec) {
-          heroGrad.addColorStop(0, '#EA580C');                  // Cam đậm rực rỡ ở đỉnh
-          heroGrad.addColorStop(0.18, '#F97316');               // Cam tươi
-          heroGrad.addColorStop(0.42, '#F59E0B');               // Vàng cam hổ phách
-          heroGrad.addColorStop(0.70, '#00A8E8');               // AVG Cyan tươi sáng
-          heroGrad.addColorStop(1, '#0284C7');                  // Ocean Blue sâu ở đáy
-        } else {
-          heroGrad.addColorStop(0, '#F97316');
-          heroGrad.addColorStop(0.24, '#F59E0B');
-          heroGrad.addColorStop(0.65, '#0284C7');
-          heroGrad.addColorStop(1, '#0369A1');
-        }
-        ctx.fillStyle = heroGrad;
-        ctx.fill();
-
-        // Lớp vệt sáng bóng nhẹ trên bề mặt mảng màu (Không dùng nét viền)
-        const glossGrad = ctx.createLinearGradient(0, minY, 0, minY + (h - minY) * 0.45);
-        glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
-        glossGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = glossGrad;
-        ctx.fill();
-
-        ctx.restore();
-      }
+      // 6. BOTTOM FREQUENCY SCALE LEGEND (High-tech Monospace Markings)
+      ctx.save();
+      ctx.font = '8px "JetBrains Mono", Consolas, Menlo, monospace';
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.55)';
+      ctx.textAlign = 'center';
+      const freqMarkers = ['60Hz', '250Hz', '1kHz', '4kHz', '16kHz'];
+      freqMarkers.forEach((lbl, idx) => {
+        const markerX = 16 + (idx / (freqMarkers.length - 1)) * (w - 32);
+        ctx.fillText(lbl, markerX, h - 8);
+      });
+      ctx.restore();
 
       ctx.restore();
       animFrameId.current = requestAnimationFrame(render);
@@ -459,7 +565,7 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
   }, [micState, audioVolumeLevel, analyserRef, isExpanded]);
 
   return (
-    <div className={className || "relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-white shadow-2xs transition-all"}>
+    <div className={className || "relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-[#070B16] shadow-inner border border-slate-800/80 transition-all"}>
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
   );
@@ -2330,7 +2436,7 @@ export const SpeechToTextModule: React.FC = () => {
                   audioVolumeLevel={audioVolumeLevel}
                   livePitchHz={livePitchHz}
                   analyserRef={analyserRef}
-                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-white shadow-2xs transition-all"
+                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-[#070B16] shadow-inner border border-slate-800/90 transition-all"
                 />
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 pointer-events-none backdrop-blur-xs shadow-xs">
                   <Maximize2 className="w-3 h-3 stroke-[2.5]" />
@@ -3523,7 +3629,7 @@ export const SpeechToTextModule: React.FC = () => {
                 livePitchHz={livePitchHz}
                 analyserRef={analyserRef}
                 isExpanded={true}
-                className="relative h-full min-h-[280px] sm:min-h-[380px] w-full rounded-2xl overflow-hidden bg-white shadow-md"
+                className="relative h-full min-h-[280px] sm:min-h-[380px] w-full rounded-2xl overflow-hidden bg-[#070B16] shadow-2xl border border-slate-800/90"
               />
             </div>
 
