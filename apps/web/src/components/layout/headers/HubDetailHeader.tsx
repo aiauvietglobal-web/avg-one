@@ -37,10 +37,11 @@ export const HUB_MODULE_CONFIGS: Record<string, HubModuleMeta> = {
   cluster51: {
     title: 'CỤM 5.1',
     tabs: [
+      { id: 'home', label: 'Trang Chủ 5.1', icon: Home },
       { id: 'pilot51b', label: '5.1B ĐẦU VÀO', icon: Inbox },
       { id: 'acceptance51t', label: '5.1T ĐẦU RA', icon: Rocket }
     ],
-    actionLabel: '+ Đơn Thí Điểm 5.1B',
+    actionLabel: '',
     actionIcon: Plus
   },
   security: {

@@ -53,11 +53,11 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [speechNavTab, setSpeechNavTab] = useState<SpeechNavTab>('chat');
   const [dashboardNavTab, setDashboardNavTab] = useState<DashboardNavTab>('overview');
   const [speechIsRecording, setSpeechIsRecording] = useState<boolean>(false);
-  const [hubDetailTab, setHubDetailTab] = useState<string>('pilot51b');
+  const [hubDetailTab, setHubDetailTab] = useState<string>('home');
 
   // Khởi tạo tab mặc định tương ứng khi chuyển sang 1 trong 6 phân hệ mới
   useEffect(() => {
-    if (activeModule === 'cluster51') setHubDetailTab('pilot51b');
+    if (activeModule === 'cluster51') setHubDetailTab('home');
     else if (activeModule === 'clusterK') setHubDetailTab('home');
     else if (activeModule === 'infra22') setHubDetailTab('equipment');
     else if (activeModule === 'security') setHubDetailTab('monitoring');
