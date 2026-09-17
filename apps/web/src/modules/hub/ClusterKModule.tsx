@@ -335,98 +335,10 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
       {/* ========================================================================= */}
       {currentKey === 'home' ? (
         <div className="space-y-5 animate-fade-in">
-          {/* HERO BANNER TRANG CHỦ CỤM #K */}
-          <div className="relative overflow-hidden rounded-3xl border border-sky-200/80 dark:border-sky-800/60 bg-gradient-to-br from-sky-900 via-slate-900 to-blue-950 text-white p-5 sm:p-7 shadow-lg">
-            {/* Background Glow */}
-            <div className="absolute -right-16 -top-16 w-80 h-80 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute right-1/3 -bottom-20 w-64 h-64 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-              <div className="space-y-2.5 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-black uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-                  <span>TRUNG TÂM ĐIỀU HÀNH & KỸ THUẬT CỤM #K • AVG ONE</span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
-                  Phân Hệ <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-400">CỤM #K</span>: Điều Hành Thực Thi, R&D & Kiểm Chuẩn
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-                  Không gian điều phối thống nhất liên thông 5 đầu mối độc lập: <strong className="text-amber-300">Kiến</strong> (Chủ trương & Ngân sách), <strong className="text-purple-300">#</strong> (Khảo sát & QA/QC), <strong className="text-cyan-300">#K2T</strong> (Vi mạch & Firmware Lab), <strong className="text-violet-300">#K2B</strong> (Tác nghiệp SLA & Đóng gói) và <strong className="text-indigo-300">#K1</strong> (Cố vấn & Kiểm chuẩn) bám sát chuỗi 13 SOP.
-                </p>
-              </div>
-
-              {/* Action Buttons & Fast Stats */}
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => showToast('📢 Đã kích hoạt cổng giao việc nhanh liên thông cho Cụm #K!')}
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#0284C7] to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-black text-xs sm:text-sm shadow-md hover:shadow-sky-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" /> + Giao Việc Cụm #K
-                </button>
-                <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
-                    <div className="text-[10px] text-slate-300 uppercase font-bold">Tiểu dự án</div>
-                    <div className="text-sm font-black text-sky-300 mt-0.5">18 Đang Chạy</div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
-                    <div className="text-[10px] text-slate-300 uppercase font-bold">Cam kết SLA</div>
-                    <div className="text-sm font-black text-emerald-400 mt-0.5">97.6% Đúng Hạn</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* BẢNG CHỈ SỐ ĐIỀU HÀNH TỔNG QUAN CỤM #K */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-sky-100 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-black text-[#0284C7] dark:text-sky-400 uppercase">
-                <FolderKanban className="w-4 h-4" /> Tổng Dự Án Thực Thi
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mt-2">18 Dự Án</div>
-              <p className="text-[11px] text-slate-500 mt-1">Trực thuộc 5 đầu mối Cụm #K</p>
-            </div>
-            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-sky-100 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-black text-amber-500 uppercase">
-                <Coins className="w-4 h-4" /> Ngân Sách Phân Bổ
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mt-2">2.45 Tỷ ₫</div>
-              <p className="text-[11px] text-slate-500 mt-1">Đã giải ngân 65% theo tiến độ</p>
-            </div>
-            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-sky-100 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-black text-emerald-500 uppercase">
-                <Clock className="w-4 h-4" /> Tuân Thủ SLA
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mt-2">97.6%</div>
-              <p className="text-[11px] text-slate-500 mt-1">Phản hồi liên thông 24/7</p>
-            </div>
-            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-sky-100 dark:border-slate-800 shadow-xs">
-              <div className="flex items-center gap-2 text-xs font-black text-purple-500 uppercase">
-                <ShieldCheck className="w-4 h-4" /> Kiểm Chuẩn QA/QC
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mt-2">100% Đạt</div>
-              <p className="text-[11px] text-slate-500 mt-1">Chuẩn an toàn điện & sóng RF</p>
-            </div>
-          </div>
-
-          {/* 📦 BỘ 5 HỘP ĐỘC LẬP PHÂN HỆ CỤM #K - BỐ CỤC LỚN ẤN TƯỢNG */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] animate-pulse" />
-                <h2 className="text-sm sm:text-base font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-                  5 HỘP PHÂN HỆ ĐỘC LẬP TRỰC THUỘC CỤM #K
-                </h2>
-              </div>
-              <span className="text-xs font-semibold text-slate-500 hidden sm:inline">
-                Nhấp vào từng hộp để kích hoạt giao diện tác nghiệp chuyên sâu
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-              {BOXES_CONFIG.map((box) => {
-                const IconComponent = box.icon;
+          {/* 📦 BỘ 5 HỘP ĐỘC LẬP PHÂN HỆ CỤM #K */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            {BOXES_CONFIG.map((box) => {
+              const IconComponent = box.icon;
 
                 return (
                   <div
@@ -477,48 +389,7 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
                 );
               })}
             </div>
-          </div>
 
-          {/* SƠ ĐỒ MA TRẬN LIÊN THÔNG 5 HỘP TRONG CHUỖI 13 SOP */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-sky-100 dark:border-slate-800 p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Workflow className="w-5 h-5 text-[#0284C7]" />
-                <h3 className="text-sm sm:text-base font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">
-                  MA TRẬN PHỐI HỢP LIÊN THÔNG 5 HỘP TRONG CHUỖI 13 SOP
-                </h3>
-              </div>
-              <span className="text-xs font-bold text-slate-400">Luồng công việc khép kín</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
-              <div className="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/60 space-y-1">
-                <div className="text-[10px] font-black text-amber-700 uppercase">Bước 2 & Bước 7</div>
-                <div className="font-bold text-slate-800 dark:text-slate-100">1. HỘP KIẾN</div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Phê duyệt chủ trương, thẩm định khả thi & cấp hạn mức ngân sách.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200/80 dark:border-purple-800/60 space-y-1">
-                <div className="text-[10px] font-black text-purple-700 uppercase">Bước 3 & Bước 10</div>
-                <div className="font-bold text-slate-800 dark:text-slate-100">2. HỘP # (HASH)</div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Khảo sát thông số hiện trường & đo kiểm định QA/QC xuất xưởng.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-cyan-50/70 dark:bg-cyan-950/30 border border-cyan-200/80 dark:border-cyan-800/60 space-y-1">
-                <div className="text-[10px] font-black text-cyan-700 uppercase">Bước 4 (R&D Lab)</div>
-                <div className="font-bold text-slate-800 dark:text-slate-100">3. HỘP #K2T</div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Thiết kế vi mạch phần cứng, nạp firmware & thực nghiệm Lab.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-violet-50/70 dark:bg-violet-950/30 border border-violet-200/80 dark:border-violet-800/60 space-y-1">
-                <div className="text-[10px] font-black text-violet-700 uppercase">Bước 11 & 12</div>
-                <div className="font-bold text-slate-800 dark:text-slate-100">4. HỘP #K2B</div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Điều phối tiến độ SLA, đóng gói quy chuẩn & bàn giao cho 5.1T.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 space-y-1">
-                <div className="text-[10px] font-black text-indigo-700 uppercase">Xuyên Suốt 13 Bước</div>
-                <div className="font-bold text-slate-800 dark:text-slate-100">5. HỘP #K1</div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Cố vấn giải pháp kỹ thuật, phản biện & kiểm chuẩn hợp chuẩn.</p>
-              </div>
-            </div>
-          </div>
 
           {/* NHẬT KÝ HOẠT ĐỘNG LIÊN THÔNG TOÀN CỤM #K */}
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-sky-100 dark:border-slate-800 p-5 shadow-xs space-y-3">
