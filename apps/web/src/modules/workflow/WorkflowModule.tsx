@@ -617,9 +617,6 @@ const Order4StepFlowView: React.FC<{ themeColor: string; defaultStep?: number; s
 const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   // 3 đầu mục chính của phân hệ Thiết kế: Đơn hàng, Phẩm, Tồn
   const [currentMainTab, setCurrentMainTab] = useState<'orders' | 'products' | 'inventory'>('orders');
-  const [activeWorkflowTab, setActiveWorkflowTab] = useState<'4steps' | '13sop'>('4steps');
-  const [steps, setSteps] = useState<StepDetail[]>(SOP_13_STEPS);
-  const [activeStep, setActiveStep] = useState<number>(3);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>(null);
@@ -725,18 +722,6 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     { id: 'TON-JIG-07', name: 'Bộ Đồ Gá Kim Pogo Pin Nạp Firmware & Test Mạch', category: 'JIG', qty: 2, unit: 'Bộ đồ gá', minQty: 1, location: 'Bàn Lập Trình Lab 03', status: 'IN_USE', note: 'Đồ gá nạp code tự động không cần hàn header kết nối' },
     { id: 'TON-CAB-08', name: 'Dây Cáp FPC Mềm 24-Pin Bước 0.5mm Nối Màn Hình', category: 'ACCESSORY', qty: 45, unit: 'Sợi', minQty: 10, location: 'Hộp Phụ Kiện Kệ B3', status: 'IN_STOCK', note: 'Cáp kết nối tín hiệu SPI/I2C từ bo chính sang cụm hiển thị' }
   ]);
-
-  const currentStepInfo = steps.find(s => s.step === activeStep) || steps[2];
-
-  const handleToggleStep = (stepNum: number) => {
-    setSteps(steps.map(s => {
-      if (s.step === stepNum) {
-        const nextStatus = s.status === 'COMPLETED' ? 'PENDING' : 'COMPLETED';
-        return { ...s, status: nextStatus };
-      }
-      return s;
-    }));
-  };
 
   const handleAddNewDesign = (e: React.FormEvent) => {
     e.preventDefault();
@@ -853,17 +838,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             </div>
 
             <div className="space-y-1">
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                <span>HỆ THỐNG AVG ONE</span>
-                <span>/</span>
-                <span>3.2 – THIẾT KẾ</span>
-                <span>/</span>
-                <span className="text-[#F15A24] font-black">
-                  {currentMainTab === 'orders' ? 'KHO ĐẦU VÀO' : currentMainTab === 'products' ? 'KHO THÀNH PHẨM' : 'KHO LƯU CHUYỂN'}
-                </span>
-              </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
-                <span>PHÂN HỆ 3.2 –</span>
                 <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
                   <span className="relative z-10">THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -871,14 +846,6 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   </svg>
                 </span>
               </h1>
-            </div>
-          </div>
-
-          {/* Right: Status Pill */}
-          <div className="flex items-center gap-3 relative z-10">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Không gian nghiệp vụ CAD/PCB</span>
             </div>
           </div>
         </div>
@@ -889,295 +856,76 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       {/* ========================================================================= */}
       {currentMainTab === 'orders' && (
         <div className="space-y-6">
-          {/* KPI METRICS STRIP */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tổng Đơn Thiết Kế</span>
-                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[#F15A24]">{designOrders.length} Đơn Hàng</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">(Đang Chạy)</span>
-                </div>
+          <Order4StepFlowView themeColor="#F15A24" defaultStep={2} />
+
+          {/* DANH SÁCH ĐƠN HÀNG THIẾT KẾ ĐANG CHẠY */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Package className="w-5 h-5 text-[#F15A24]" />
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                  Danh Sách Đơn Hàng Thiết Kế Đang Thực Hiện
+                </h3>
               </div>
-              <div className="p-2 bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] rounded-lg shrink-0">
-                <Package className="w-4 h-4" />
-              </div>
+              <span className="text-xs font-bold text-slate-400">
+                Hiển thị {filteredOrders.length} đơn hàng
+              </span>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Bản Vẽ CAD / PCB</span>
-                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-                  <span>{designFiles.length} Bản vẽ</span>
-                  <span className="text-[10px] text-emerald-600 font-bold">(Altium & 3D)</span>
-                </div>
-              </div>
-              <div className="p-2 bg-sky-50 dark:bg-sky-950/60 text-[#0077B6] rounded-lg shrink-0">
-                <Layers className="w-4 h-4" />
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Mẫu In 3D Prototype</span>
-                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-                  <span>8 Vỏ hộp</span>
-                  <span className="text-[10px] text-cyan-600 font-bold">(IP67)</span>
-                </div>
-              </div>
-              <div className="p-2 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 rounded-lg shrink-0">
-                <Box className="w-4 h-4" />
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl px-3.5 py-2.5 shadow-2xs flex items-center justify-between">
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tiêu Chuẩn SOP Kỹ Thuật</span>
-                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-                  <span className="text-emerald-600">95.8% Đạt</span>
-                  <span className="text-[10px] text-slate-400 font-bold">(Chuẩn Hóa)</span>
-                </div>
-              </div>
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-lg shrink-0">
-                <ClipboardCheck className="w-4 h-4" />
-              </div>
-            </div>
-          </div>
-
-          {/* WORKFLOW SUB-SWITCHER: 4 BƯỚC ĐƠN HÀNG VS 13 BƯỚC SOP */}
-          <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-3 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-2xs">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Tiến Trình Xử Lý:</span>
-            </div>
-            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-              <button
-                onClick={() => setActiveWorkflowTab('4steps')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  activeWorkflowTab === '4steps'
-                    ? 'bg-[#F15A24] text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
-                }`}
-              >
-                <ClipboardCheck className="w-3.5 h-3.5" />
-                <span>Quy Trình 4 Bước Đơn Hàng</span>
-              </button>
-              <button
-                onClick={() => setActiveWorkflowTab('13sop')}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                  activeWorkflowTab === '13sop'
-                    ? 'bg-[#0088CC] text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5" />
-                <span>Chi Tiết Luồng 13 Bước SOP</span>
-              </button>
-            </div>
-          </div>
-
-          {/* CONDITIONAL CONTENT: 4 BƯỚC VS 13 BƯỚC SOP */}
-          {activeWorkflowTab === '4steps' ? (
-            <div className="space-y-6">
-              <Order4StepFlowView themeColor="#F15A24" defaultStep={2} />
-
-              {/* DANH SÁCH ĐƠN HÀNG THIẾT KẾ ĐANG CHẠY */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Package className="w-5 h-5 text-[#F15A24]" />
-                    <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                      Danh Sách Đơn Hàng Thiết Kế Đang Thực Hiện
-                    </h3>
-                  </div>
-                  <span className="text-xs font-bold text-slate-400">
-                    Hiển thị {filteredOrders.length} đơn hàng
-                  </span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs border-collapse">
-                    <thead>
-                      <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-extrabold uppercase text-[10px]">
-                        <th className="py-2.5 px-3">Mã Đơn</th>
-                        <th className="py-2.5 px-3">Tên Yêu Cầu Thiết Kế</th>
-                        <th className="py-2.5 px-3">Kỹ Sư Phụ Trách</th>
-                        <th className="py-2.5 px-3">Phân Loại</th>
-                        <th className="py-2.5 px-3">Ưu Tiên</th>
-                        <th className="py-2.5 px-3">Hạn Chót</th>
-                        <th className="py-2.5 px-3 text-center">Tiến Độ</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-200">
-                      {filteredOrders.map((order) => (
-                        <tr key={order.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
-                          <td className="py-3 px-3 font-mono font-black text-[#F15A24]">{order.code}</td>
-                          <td className="py-3 px-3">
-                            <div className="font-bold text-slate-900 dark:text-slate-100">{order.title}</div>
-                            <div className="text-[10px] text-slate-400 mt-0.5">{order.specs}</div>
-                          </td>
-                          <td className="py-3 px-3 text-slate-600 dark:text-slate-300 font-bold">{order.designer}</td>
-                          <td className="py-3 px-3">
-                            <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-[10px]">
-                              {order.category}
-                            </span>
-                          </td>
-                          <td className="py-3 px-3">
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
-                              order.priority.includes('P1') ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400' :
-                              order.priority.includes('P2') ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400' :
-                              'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400'
-                            }`}>
-                              {order.priority}
-                            </span>
-                          </td>
-                          <td className="py-3 px-3 font-mono text-slate-500">{order.dueDate}</td>
-                          <td className="py-3 px-3 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <div className="w-16 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-[#F15A24] rounded-full transition-all"
-                                  style={{ width: `${order.progress}%` }}
-                                />
-                              </div>
-                              <span className="font-mono font-black text-[11px] text-[#F15A24]">{order.progress}%</span>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* 13 BƯỚC SOP VIEW */
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left: 13-Steps SOP Tracker */}
-              <div className="lg:col-span-1 bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 max-h-[720px] overflow-y-auto">
-                <div className="flex items-center justify-between px-1">
-                  <h2 className="text-xs font-black text-slate-400 uppercase tracking-wider">
-                    Luồng 13 Bước SOP (Ưu Tiên 3.2):
-                  </h2>
-                  <span className="px-2.5 py-0.5 bg-cyan-100 dark:bg-cyan-950/60 text-[#0077B6] dark:text-cyan-300 text-[10px] font-black rounded-md">
-                    3.2 - THIẾT KẾ
-                  </span>
-                </div>
-
-                {steps.map((s) => {
-                  const isDesignStep = s.department === '3.2 - THIẾT KẾ';
-                  return (
-                    <button
-                      key={s.step}
-                      onClick={() => setActiveStep(s.step)}
-                      className={`w-full text-left p-3 rounded-xl border transition flex items-center justify-between gap-3 cursor-pointer ${
-                        activeStep === s.step
-                          ? 'bg-cyan-50 dark:bg-cyan-950/80 border-[#0088CC] text-slate-900 dark:text-white shadow-xs font-black'
-                          : isDesignStep
-                            ? 'bg-sky-50/60 dark:bg-slate-800/80 border-cyan-200 dark:border-slate-700 text-slate-900 dark:text-white font-extrabold'
-                            : 'bg-slate-50/60 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800 opacity-70 text-slate-600 dark:text-slate-400'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className={`w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-xs shadow-xs flex-shrink-0 ${
-                          s.status === 'COMPLETED' ? 'bg-emerald-600 text-white' :
-                          s.step === activeStep ? 'bg-[#0088CC] text-white' :
-                          isDesignStep ? 'bg-[#0077B6] text-white' :
-                          'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-extrabold uppercase text-[10px]">
+                    <th className="py-2.5 px-3">Mã Đơn</th>
+                    <th className="py-2.5 px-3">Tên Yêu Cầu Thiết Kế</th>
+                    <th className="py-2.5 px-3">Kỹ Sư Phụ Trách</th>
+                    <th className="py-2.5 px-3">Phân Loại</th>
+                    <th className="py-2.5 px-3">Ưu Tiên</th>
+                    <th className="py-2.5 px-3">Hạn Chót</th>
+                    <th className="py-2.5 px-3 text-center">Tiến Độ</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-semibold text-slate-700 dark:text-slate-200">
+                  {filteredOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                      <td className="py-3 px-3 font-mono font-black text-[#F15A24]">{order.code}</td>
+                      <td className="py-3 px-3">
+                        <div className="font-bold text-slate-900 dark:text-slate-100">{order.title}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">{order.specs}</div>
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300 font-bold">{order.designer}</td>
+                      <td className="py-3 px-3">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-[10px]">
+                          {order.category}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          order.priority.includes('P1') ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400' :
+                          order.priority.includes('P2') ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400' :
+                          'bg-sky-100 text-sky-700 dark:bg-sky-950/60 dark:text-sky-400'
                         }`}>
-                          {s.step}
+                          {order.priority}
                         </span>
-                        <div className="min-w-0 flex-1">
-                          <div className="font-bold text-xs line-clamp-1">{s.title}</div>
-                          <div className={`text-[10px] font-bold ${isDesignStep ? 'text-[#0077B6] dark:text-cyan-400' : 'text-slate-400'}`}>
-                            {s.department}
+                      </td>
+                      <td className="py-3 px-3 font-mono text-slate-500">{order.dueDate}</td>
+                      <td className="py-3 px-3 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="w-16 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-[#F15A24] rounded-full transition-all"
+                              style={{ width: `${order.progress}%` }}
+                            />
                           </div>
+                          <span className="font-mono font-black text-[11px] text-[#F15A24]">{order.progress}%</span>
                         </div>
-                      </div>
-
-                      {s.status === 'COMPLETED' ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                      ) : (
-                        <ArrowRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Right: Active Step Workspace */}
-              <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="px-3.5 py-1 bg-[#0088CC] text-white font-black text-sm rounded-xl shadow-xs">
-                        Bước {currentStepInfo.step}
-                      </span>
-                      <div>
-                        <span className="text-xs font-black text-[#0077B6] dark:text-cyan-400 uppercase tracking-wider block">
-                          {currentStepInfo.department}
-                        </span>
-                        <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100">
-                          {currentStepInfo.title}
-                        </h2>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleToggleStep(currentStepInfo.step)}
-                      className={`px-4 py-2 font-bold text-xs rounded-xl transition flex items-center gap-2 shadow cursor-pointer ${
-                        currentStepInfo.status === 'COMPLETED'
-                          ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                          : 'bg-[#0088CC] text-white hover:bg-[#0077B6]'
-                      }`}
-                    >
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>{currentStepInfo.status === 'COMPLETED' ? 'Đã Hoàn Thành' : 'Đánh Dấu Hoàn Thành'}</span>
-                    </button>
-                  </div>
-
-                  <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
-                    <h3 className="text-xs font-bold text-slate-500 uppercase">Mô tả Chi tiết Quy trình Thiết Kế:</h3>
-                    <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
-                      {currentStepInfo.description}
-                    </p>
-                  </div>
-
-                  {/* Checklist */}
-                  <div className="space-y-2.5">
-                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider">Danh Mục Checklist Bắt Buộc:</h3>
-                    {[
-                      'Đã hoàn tất bản vẽ Sơ đồ nguyên lý & phác thảo 3D kiểu dáng công nghiệp',
-                      'Đã xuất file Gerber PCB và tài liệu đính kèm (Google Drive / CAD / Gerber)',
-                      'Đã được Trưởng phòng 3.2 duyệt xác nhận chất lượng kỹ thuật'
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200">
-                        <CheckSquare className="w-4 h-4 text-[#0088CC] flex-shrink-0" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
-                    <button
-                      disabled={activeStep <= 1}
-                      onClick={() => setActiveStep(activeStep - 1)}
-                      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-xl font-bold disabled:opacity-40 cursor-pointer"
-                    >
-                      ← Bước Trước
-                    </button>
-                    <span className="font-bold text-slate-400">Bước {activeStep} trên 13</span>
-                    <button
-                      disabled={activeStep >= 13}
-                      onClick={() => setActiveStep(activeStep + 1)}
-                      className="px-4 py-2 bg-[#0088CC] hover:bg-[#0077B6] text-white rounded-xl font-bold disabled:opacity-40 cursor-pointer"
-                    >
-                      Bước Tiếp Theo →
-                    </button>
-                  </div>
-                </div>
-              </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
         </div>
       )}
 
