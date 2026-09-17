@@ -2178,14 +2178,11 @@ export const WorkflowModule: React.FC = () => {
               <Compass className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
             </div>
 
-            {/* Tiêu đề & Micro Tag */}
-            <div className="flex flex-col items-center w-full space-y-0.5">
+            {/* Tiêu đề */}
+            <div className="flex flex-col items-center w-full">
               <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
-                HỘP 3.2 – THIẾT KẾ
+                3.2 – THIẾT KẾ
               </h3>
-              <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
-                ĐƠN HÀNG • PHẨM • TỒN
-              </span>
             </div>
           </div>
 
@@ -2206,14 +2203,11 @@ export const WorkflowModule: React.FC = () => {
               <Cpu className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
             </div>
 
-            {/* Tiêu đề & Micro Tag */}
-            <div className="flex flex-col items-center w-full space-y-0.5">
+            {/* Tiêu đề */}
+            <div className="flex flex-col items-center w-full">
               <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
-                HỘP 3.1 – NGHIÊN CỨU
+                3.1 – NGHIÊN CỨU
               </h3>
-              <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
-                RDI • LAB • THỬ NGHIỆM
-              </span>
             </div>
           </div>
 
@@ -2227,13 +2221,10 @@ export const WorkflowModule: React.FC = () => {
               <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
                 <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 dark:text-slate-500 opacity-60" />
               </div>
-              <div className="flex flex-col items-center w-full space-y-0.5">
+              <div className="flex flex-col items-center w-full">
                 <h3 className="text-xs sm:text-[13px] font-bold text-slate-400/80 dark:text-slate-500 whitespace-nowrap leading-tight">
                   + Sắp phát hành
                 </h3>
-                <span className="text-[9px] sm:text-[9.5px] font-semibold text-slate-400/60 uppercase tracking-wider">
-                  AVG R&D LAB
-                </span>
               </div>
             </div>
           ))}
