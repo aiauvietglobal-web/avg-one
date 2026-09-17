@@ -1913,10 +1913,10 @@ export const CalendarModule: React.FC = () => {
                                        <button
                                          type="button"
                                          onClick={() => handleOpenTranscribe(evt)}
-                                         className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg border border-slate-600 dark:border-slate-600 bg-slate-700 dark:bg-slate-800 text-slate-100 dark:text-slate-200 hover:bg-slate-800 dark:hover:bg-slate-900 hover:text-white font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs group/mic"
+                                         className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-[#0284C7] hover:text-[#0284C7] font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs group/mic"
                                          title="Bật Thư ký Trực tiếp chuyển giọng nói thành văn bản & trích xuất VBKL"
                                        >
-                                         <Mic className="w-3.5 h-3.5 group-hover/mic:animate-bounce text-slate-300 group-hover/mic:text-white" />
+                                         <Mic className="w-3.5 h-3.5 text-slate-400 group-hover/mic:text-[#0284C7]" />
                                          <span>Thư ký Trực tiếp</span>
                                        </button>
 
@@ -2236,9 +2236,9 @@ export const CalendarModule: React.FC = () => {
                     handleOpenTranscribe(selectedEventDetail);
                     setSelectedEventDetail(null);
                   }}
-                  className="px-3 py-1.5 bg-slate-700 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-900 text-slate-100 dark:text-slate-200 hover:text-white border border-slate-600 dark:border-slate-600 font-bold text-xs rounded-lg flex items-center gap-1.5 transition cursor-pointer shadow-2xs group/mic"
+                  className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-[#0284C7] hover:text-[#0284C7] border border-slate-200 dark:border-slate-700 font-semibold text-xs rounded-lg flex items-center gap-1.5 transition cursor-pointer shadow-2xs group/mic"
                 >
-                  <Mic className="w-3.5 h-3.5 text-slate-300 group-hover/mic:text-white" />
+                  <Mic className="w-3.5 h-3.5 text-slate-400 group-hover/mic:text-[#0284C7]" />
                   <span>Thư ký Trực tiếp</span>
                 </button>
                 <button
