@@ -103,12 +103,9 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
               type="text"
               value={designSearch}
               onChange={(e) => onDesignSearchChange(e.target.value)}
-              placeholder="Tìm kiếm bản vẽ CAD, Gerber, PCB, linh kiện..."
-              className="w-full pl-10 pr-16 h-8 sm:h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-2xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
+              placeholder="Tìm kiếm..."
+              className="w-full pl-10 pr-4 h-8 sm:h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-2xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
             />
-            <kbd className="absolute right-3 px-2 py-0.5 text-[9px] font-mono font-bold text-slate-400 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg pointer-events-none shadow-2xs">
-              Ctrl K
-            </kbd>
           </div>
         </div>
 
