@@ -2144,13 +2144,13 @@ export const WorkflowModule: React.FC = () => {
 
             <div className="relative z-10 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-xl bg-transparent text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
               <Lightbulb className="w-4 h-4 text-[#00A8E8]" />
-              <span>TRUNG TÂM NGHIÊN CỨU & PHÁT TRIỂN</span>
+              <span>TRUNG TÂM NGHIÊN CỨU & SÁNG TẠO</span>
             </div>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline justify-center gap-2">
             <span>Nghiên Cứu &</span>
             <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-              <span className="relative z-10">Phát Triển</span>
+              <span className="relative z-10">Sáng Tạo</span>
               <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                 <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
               </svg>

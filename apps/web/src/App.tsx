@@ -1049,7 +1049,7 @@ export default function App() {
       hr: 'Quản Trị Nhân Sự',
       legal: 'Pháp Chế & Hồ Sơ Pháp Lý',
       finance: 'Tài Chính & Kế Toán',
-      rd: 'Nghiên Cứu & Phát Triển R&D',
+      rd: 'Nghiên Cứu & Sáng Tạo RDI',
       workflow: 'Quy Trình 13 Bước',
       wework: 'Không Gian WeWork',
       request: 'Đề Xuất & Phê Duyệt',
