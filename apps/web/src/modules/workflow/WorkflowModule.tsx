@@ -939,7 +939,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   </svg>
                 </span>
                 <span className="text-[#231F20] dark:text-white font-extrabold">
-                  Bao bì sản phẩm
+                  Bao Bì Sản Phẩm
                 </span>
               </h1>
             </div>
