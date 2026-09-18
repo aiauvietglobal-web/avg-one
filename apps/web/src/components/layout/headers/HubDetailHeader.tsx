@@ -139,40 +139,68 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
     return config.title;
   }, [activeModule, activeTab, config.title]);
 
-  // Sub-tabs nội bộ & Search cho Cụm 5.1 (3 Kho + Thanh tìm kiếm)
-  const [cluster51SubTab, setCluster51SubTab] = React.useState<'orders' | 'products' | 'inventory'>('orders');
-  const [cluster51Search, setCluster51Search] = React.useState('');
+  // Sub-tabs nội bộ & Search cho Cụm 5.1 và Cụm #K (3 Kho + Thanh tìm kiếm)
+  const isWarehouseCluster = ['cluster51', 'clusterK'].includes(activeModule);
+  const [warehouseSubTab, setWarehouseSubTab] = React.useState<'orders' | 'products' | 'inventory'>('orders');
+  const [quickSearch, setQuickSearch] = React.useState('');
   const [cluster51Counts, setCluster51Counts] = React.useState({
     orders: 4,
     products: 3,
     inventory: 6,
   });
+  const [clusterKCounts, setClusterKCounts] = React.useState({
+    orders: 3,
+    products: 4,
+    inventory: 6,
+  });
 
   React.useEffect(() => {
-    const handleSync = (e: Event) => {
+    const handleSync51 = (e: Event) => {
       const customEvent = e as CustomEvent;
       if (customEvent.detail) {
-        if (customEvent.detail.subTab) {
-          setCluster51SubTab(customEvent.detail.subTab);
-        }
-        if (customEvent.detail.counts) {
-          setCluster51Counts(customEvent.detail.counts);
-        }
+        if (customEvent.detail.subTab) setWarehouseSubTab(customEvent.detail.subTab);
+        if (customEvent.detail.counts) setCluster51Counts(customEvent.detail.counts);
       }
     };
-    window.addEventListener('cluster51_state_sync', handleSync);
-    return () => window.removeEventListener('cluster51_state_sync', handleSync);
+    const handleSyncK = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        if (customEvent.detail.subTab) setWarehouseSubTab(customEvent.detail.subTab);
+        if (customEvent.detail.counts) setClusterKCounts(customEvent.detail.counts);
+      }
+    };
+    window.addEventListener('cluster51_state_sync', handleSync51);
+    window.addEventListener('clusterK_state_sync', handleSyncK);
+    return () => {
+      window.removeEventListener('cluster51_state_sync', handleSync51);
+      window.removeEventListener('clusterK_state_sync', handleSyncK);
+    };
   }, []);
 
-  const handleSelectCluster51Tab = (tabId: 'orders' | 'products' | 'inventory') => {
-    setCluster51SubTab(tabId);
-    window.dispatchEvent(new CustomEvent('cluster51_subtab_change', { detail: tabId }));
+  // Khi chuyển module hoặc tab, reset thanh tìm kiếm
+  React.useEffect(() => {
+    setQuickSearch('');
+  }, [activeModule, activeTab]);
+
+  const handleSelectWarehouseTab = (tabId: 'orders' | 'products' | 'inventory') => {
+    setWarehouseSubTab(tabId);
+    if (activeModule === 'cluster51') {
+      window.dispatchEvent(new CustomEvent('cluster51_subtab_change', { detail: tabId }));
+    } else if (activeModule === 'clusterK') {
+      window.dispatchEvent(new CustomEvent('clusterK_subtab_change', { detail: tabId }));
+    }
   };
 
-  const handleCluster51SearchChange = (val: string) => {
-    setCluster51Search(val);
-    window.dispatchEvent(new CustomEvent('cluster51_search', { detail: val }));
+  const handleQuickSearchChange = (val: string) => {
+    setQuickSearch(val);
+    if (activeModule === 'cluster51') {
+      window.dispatchEvent(new CustomEvent('cluster51_search', { detail: val }));
+    } else if (activeModule === 'clusterK') {
+      window.dispatchEvent(new CustomEvent('clusterK_search', { detail: val }));
+    }
   };
+
+  const currentCounts = activeModule === 'clusterK' ? clusterKCounts : cluster51Counts;
 
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-200/90 dark:border-slate-800 shadow-2xs z-30 shrink-0 transition-colors duration-200">
@@ -207,22 +235,22 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
 
           {/* Module Tab Box Buttons / 3 Kho & Search Bar */}
           {activeTab !== 'home' && (
-            activeModule === 'cluster51' ? (
+            isWarehouseCluster ? (
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                 {/* BỘ 3 KHO: Kho đầu vào, Kho thành phẩm, Kho lưu chuyển */}
                 <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap mr-2 sm:mr-4">
                   {[
-                    { id: 'orders' as const, label: 'Kho đầu vào', count: cluster51Counts.orders, icon: ClipboardCheck },
-                    { id: 'products' as const, label: 'Kho thành phẩm', count: cluster51Counts.products, icon: Layers },
-                    { id: 'inventory' as const, label: 'Kho lưu chuyển', count: cluster51Counts.inventory, icon: Box },
+                    { id: 'orders' as const, label: 'Kho đầu vào', count: currentCounts.orders, icon: ClipboardCheck },
+                    { id: 'products' as const, label: 'Kho thành phẩm', count: currentCounts.products, icon: Layers },
+                    { id: 'inventory' as const, label: 'Kho lưu chuyển', count: currentCounts.inventory, icon: Box },
                   ].map((tab) => {
-                    const isActive = cluster51SubTab === tab.id;
+                    const isActive = warehouseSubTab === tab.id;
                     const IconComponent = tab.icon;
                     return (
                       <button
                         key={tab.id}
                         type="button"
-                        onClick={() => handleSelectCluster51Tab(tab.id)}
+                        onClick={() => handleSelectWarehouseTab(tab.id)}
                         className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
                           isActive
                             ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
@@ -245,10 +273,10 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
                 <div className="relative flex items-center flex-1 max-w-[580px] min-w-[200px] mr-2">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
                   <input
-                    id="cluster51-quick-search-input"
+                    id="cluster-quick-search-input"
                     type="text"
-                    value={cluster51Search}
-                    onChange={(e) => handleCluster51SearchChange(e.target.value)}
+                    value={quickSearch}
+                    onChange={(e) => handleQuickSearchChange(e.target.value)}
                     placeholder="Tìm kiếm..."
                     className="w-full pl-10 pr-4 h-8 sm:h-8.5 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-2xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
                   />

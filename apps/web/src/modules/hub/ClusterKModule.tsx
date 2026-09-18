@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Building2, Hash, Cpu, Package, Award, Activity, Clock, ShieldCheck,
   CheckCircle2, FolderKanban, Check, AlertCircle, FileText, Download,
@@ -40,6 +40,62 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
   const [k2tSubTab, setK2tSubTab] = useState<'pcb_firmware' | 'lab_telemetry'>('pcb_firmware');
   const [k2bSubTab, setK2bSubTab] = useState<'kanban' | 'shipping'>('kanban');
   const [k1SubTab, setK1SubTab] = useState<'advisory' | 'standards'>('advisory');
+
+  // Quản lý 3 Kho & Tìm kiếm nhanh được đồng bộ từ Header
+  const [warehouseTab, setWarehouseTab] = useState<'orders' | 'products' | 'inventory'>('orders');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleSubtabChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const tab = customEvent.detail;
+      setWarehouseTab(tab);
+      if (tab === 'orders') {
+        setKienSubTab('proposals');
+        setHashSubTab('surveys');
+        setK2tSubTab('pcb_firmware');
+        setK2bSubTab('kanban');
+        setK1SubTab('advisory');
+      } else if (tab === 'products') {
+        setKienSubTab('proposals');
+        setHashSubTab('qa_logs');
+        setK2tSubTab('pcb_firmware');
+        setK2bSubTab('shipping');
+        setK1SubTab('standards');
+      } else if (tab === 'inventory') {
+        setKienSubTab('budget');
+        setHashSubTab('qa_logs');
+        setK2tSubTab('lab_telemetry');
+        setK2bSubTab('kanban');
+        setK1SubTab('advisory');
+      }
+    };
+
+    const handleSearchChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setSearchQuery(customEvent.detail || '');
+    };
+
+    window.addEventListener('clusterK_subtab_change', handleSubtabChange);
+    window.addEventListener('clusterK_search', handleSearchChange);
+
+    // Đồng bộ số lượng 3 Kho cho Cụm #K về Header
+    window.dispatchEvent(new CustomEvent('clusterK_state_sync', {
+      detail: {
+        subTab: 'orders',
+        counts: {
+          orders: 3,
+          products: 4,
+          inventory: 6,
+        }
+      }
+    }));
+
+    return () => {
+      window.removeEventListener('clusterK_subtab_change', handleSubtabChange);
+      window.removeEventListener('clusterK_search', handleSearchChange);
+    };
+  }, []);
 
   /* ========================================================================= */
   /* 📦 1. DỮ LIỆU ĐỘC LẬP CHO HỘP KIẾN (Chủ Trương & Duyệt Ngân Sách) */
@@ -465,6 +521,26 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
             </div>
           </div>
 
+          {/* BANNER TÌM KIẾM NHANH NẾU ĐANG CÓ TỪ KHÓA TÌM KIẾM */}
+          {searchQuery && (
+            <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 text-sky-800 dark:text-sky-200 text-xs font-semibold">
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0" />
+                <span>Đang lọc dữ liệu theo từ khóa: <strong className="font-black text-sky-900 dark:text-white">"{searchQuery}"</strong></span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('');
+                  window.dispatchEvent(new CustomEvent('clusterK_search', { detail: '' }));
+                }}
+                className="text-[11px] font-bold text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-white underline cursor-pointer"
+              >
+                Xóa bộ lọc
+              </button>
+            </div>
+          )}
+
           {/* GIAO DIỆN 1: HỘP KIẾN */}
           {currentKey === 'kien' && (
             <div className="space-y-4 animate-fade-in">
@@ -545,7 +621,20 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {proposals.map(item => (
+                        {proposals
+                          .filter(item => {
+                            if (warehouseTab === 'orders' && item.status !== 'PENDING') return false;
+                            if (warehouseTab === 'products' && item.status !== 'APPROVED') return false;
+                            if (!searchQuery) return true;
+                            const q = searchQuery.toLowerCase();
+                            return (
+                              item.id.toLowerCase().includes(q) ||
+                              item.title.toLowerCase().includes(q) ||
+                              item.creator.toLowerCase().includes(q) ||
+                              item.category.toLowerCase().includes(q)
+                            );
+                          })
+                          .map(item => (
                           <tr key={item.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                             <td className="py-3 px-3 font-mono font-black text-amber-600 dark:text-amber-400">{item.id}</td>
                             <td className="py-3 px-3">
@@ -698,7 +787,20 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {qaRecords.map(item => (
+                        {qaRecords
+                          .filter(item => {
+                            if (warehouseTab === 'products' && item.status !== 'PASS') return false;
+                            if (warehouseTab === 'inventory' && item.status !== 'TESTING') return false;
+                            if (!searchQuery) return true;
+                            const q = searchQuery.toLowerCase();
+                            return (
+                              item.id.toLowerCase().includes(q) ||
+                              item.device.toLowerCase().includes(q) ||
+                              item.tester.toLowerCase().includes(q) ||
+                              item.note.toLowerCase().includes(q)
+                            );
+                          })
+                          .map(item => (
                           <tr key={item.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                             <td className="py-3 px-3 font-mono font-black text-purple-600 dark:text-purple-400">{item.id}</td>
                             <td className="py-3 px-3 font-bold text-slate-800 dark:text-slate-200">
@@ -832,7 +934,20 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {pcbBoards.map(item => (
+                        {pcbBoards
+                          .filter(item => {
+                            if (warehouseTab === 'products' && item.status !== 'STABLE') return false;
+                            if (warehouseTab === 'inventory' && item.status !== 'TESTING') return false;
+                            if (!searchQuery) return true;
+                            const q = searchQuery.toLowerCase();
+                            return (
+                              item.id.toLowerCase().includes(q) ||
+                              item.name.toLowerCase().includes(q) ||
+                              item.mcu.toLowerCase().includes(q) ||
+                              item.firmware.toLowerCase().includes(q)
+                            );
+                          })
+                          .map(item => (
                           <tr key={item.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                             <td className="py-3 px-3 font-mono font-black text-cyan-600 dark:text-cyan-400">{item.id}</td>
                             <td className="py-3 px-3 font-bold text-slate-800 dark:text-slate-200">
@@ -1135,7 +1250,18 @@ export const ClusterKModule: React.FC<ClusterKModuleProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {advisoryMemos.map(item => (
+                        {advisoryMemos
+                          .filter(item => {
+                            if (!searchQuery) return true;
+                            const q = searchQuery.toLowerCase();
+                            return (
+                              item.id.toLowerCase().includes(q) ||
+                              item.title.toLowerCase().includes(q) ||
+                              item.expert.toLowerCase().includes(q) ||
+                              item.solution.toLowerCase().includes(q)
+                            );
+                          })
+                          .map(item => (
                           <tr key={item.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
                             <td className="py-3 px-3 font-mono font-black text-indigo-600 dark:text-indigo-400">{item.id}</td>
                             <td className="py-3 px-3 font-bold text-slate-800 dark:text-slate-200">{item.title}</td>
