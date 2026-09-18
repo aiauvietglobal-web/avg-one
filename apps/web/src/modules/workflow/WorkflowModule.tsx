@@ -925,15 +925,15 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 />
               </svg>
               <div className="relative z-10 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-transparent text-xs font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                <Compass className="w-3.5 h-3.5 text-[#00A8E8]" />
-                <span>AVG ENGINEERING & CAD/PCB DESIGN SYSTEM</span>
+                <Package className="w-3.5 h-3.5 text-[#00A8E8]" />
+                <span>AVG PACKAGING & PRODUCT DESIGN SYSTEM</span>
               </div>
             </div>
 
             <div className="space-y-1">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-2 flex-wrap">
                 <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                  <span className="relative z-10">THIẾT KẾ KỸ THUẬT & CAD/PCB</span>
+                  <span className="relative z-10">THIẾT KẾ BAO BÌ SẢN PHẨM</span>
                   <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                     <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
                   </svg>
@@ -950,7 +950,7 @@ const DesignSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               </div>
               <div className="text-left">
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Tiêu Chuẩn RDI</span>
-                <span className="text-xs font-black text-slate-800 dark:text-slate-100">ISO-2026 / IPC-2221</span>
+                <span className="text-xs font-black text-slate-800 dark:text-slate-100">ISO-2026 / TIÊU CHUẨN BAO BÌ</span>
               </div>
             </div>
 
@@ -1916,7 +1916,7 @@ export const WorkflowModule: React.FC = () => {
   React.useEffect(() => {
     if (selectedSubModule === 'design') {
       try { localStorage.setItem('avg_workflow_submodule', 'design'); } catch (e) {}
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.2 – THIẾT KẾ' }));
+      window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM' }));
     } else if (selectedSubModule === 'research') {
       try { localStorage.setItem('avg_workflow_submodule', 'research'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.1 – NGHIÊN CỨU' }));
@@ -2042,13 +2042,13 @@ export const WorkflowModule: React.FC = () => {
 
             {/* Unified Blue Icon Badge */}
             <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
-              <Compass className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
+              <Package className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
             </div>
 
             {/* Tiêu đề */}
             <div className="flex flex-col items-center w-full">
               <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
-                3.2 – THIẾT KẾ
+                3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM
               </h3>
             </div>
           </div>

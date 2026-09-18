@@ -93,7 +93,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       try {
         localStorage.setItem('avg_workflow_submodule', 'design');
       } catch (e) {}
-      setActiveSubTitle('3.2 – THIẾT KẾ');
+      setActiveSubTitle('3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM');
       onSelectModule('rd');
       window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: 'design' }));
     };
@@ -108,7 +108,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     try {
       if (activeModule === 'rd' || activeModule === 'workflow') {
         const saved = localStorage.getItem('avg_workflow_submodule');
-        if (saved === 'design') return '3.2 – THIẾT KẾ';
+        if (saved === 'design') return '3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM';
         if (saved === 'research') return '3.1 – NGHIÊN CỨU';
       }
     } catch (e) {}
@@ -123,7 +123,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       try {
         const saved = localStorage.getItem('avg_workflow_submodule');
         if (saved === 'design') {
-          setActiveSubTitle('3.2 – THIẾT KẾ');
+          setActiveSubTitle('3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM');
         } else if (saved === 'research') {
           setActiveSubTitle('3.1 – NGHIÊN CỨU');
         } else {

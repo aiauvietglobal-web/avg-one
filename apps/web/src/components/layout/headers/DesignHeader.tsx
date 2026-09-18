@@ -18,7 +18,7 @@ export interface DesignHeaderProps {
 }
 
 export const DesignHeader: React.FC<DesignHeaderProps> = ({
-  activeSubTitle = '3.2 – THIẾT KẾ',
+  activeSubTitle = '3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM',
   onBack,
   onGoHome,
   designNavTab,
@@ -60,7 +60,7 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
               className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none"
               title="Quay lại danh mục phân hệ"
             >
-              {activeSubTitle || '3.2 – THIẾT KẾ'}
+              {activeSubTitle || '3.2 – THIẾT KẾ BAO BÌ SẢN PHẨM'}
             </button>
           </div>
 
