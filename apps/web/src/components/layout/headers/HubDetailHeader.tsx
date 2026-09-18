@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Home, Moon, Sun, Plus, Server, Wrench, Activity, SlidersHorizontal,
+  Home, Plus, Server, Wrench, Activity, SlidersHorizontal,
   Workflow, Target, CheckCircle2, FileText, ShieldCheck, Key, Database,
   AlertTriangle, Zap, Globe, GitBranch, BarChart3, Award, Building2,
   BadgeCheck, FolderKanban, Layers, Hash, Sparkles, Download, Inbox, Rocket,
@@ -292,16 +292,7 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
             </button>
           )}
 
-          {/* Theme Toggle Button: Ẩn hoàn toàn cho Cụm 5.1 theo yêu cầu người dùng */}
-          {activeModule !== 'cluster51' && (
-            <button
-              onClick={onToggleDarkMode}
-              title={darkMode ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
-              className="w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80 transition-all cursor-pointer"
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-amber-400 stroke-[2.2]" /> : <Moon className="w-4 h-4 text-slate-600 stroke-[2.2]" />}
-            </button>
-          )}
+
 
           {/* User Account Button */}
           {renderUserAuthButton()}
