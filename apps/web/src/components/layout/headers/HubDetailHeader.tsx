@@ -129,11 +129,11 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
       return 'CỤM 5.1';
     }
     if (activeModule === 'clusterK') {
-      if (activeTab === 'kien') return 'HỘP KIẾN';
-      if (activeTab === 'hash') return 'HỘP # (HASH)';
-      if (activeTab === 'k2t') return 'HỘP #K2T';
-      if (activeTab === 'k2b') return 'HỘP #K2B';
-      if (activeTab === 'k1') return 'HỘP #K1';
+      if (activeTab === 'kien') return 'KIẾN';
+      if (activeTab === 'hash') return '# (HASH)';
+      if (activeTab === 'k2t') return '#K2T';
+      if (activeTab === 'k2b') return '#K2B';
+      if (activeTab === 'k1') return '#K1';
       return 'CỤM #K';
     }
     return config.title;
