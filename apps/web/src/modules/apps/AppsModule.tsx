@@ -34,8 +34,8 @@ const SUB_APPS_GRID: SubAppCard[] = [
   {
     id: 'dashboard',
     code: 'APP-02',
-    title: 'CHUYỂN ĐỔI FILE SANG VĂN BẢN',
-    headerTitle: 'CHUYỂN ĐỔI FILE SANG VĂN BẢN',
+    title: 'CHUYỂN ĐỔI VĂN BẢN',
+    headerTitle: 'CHUYỂN ĐỔI VĂN BẢN',
     icon: FileAudio,
     isAvailable: true,
     badge: 'ĐÃ SẴN SÀNG',
@@ -75,7 +75,7 @@ export const AppsModule: React.FC = () => {
     if (activeApp === 'speech-to-text') {
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'CHUYỂN ĐỔI TRỰC TIẾP' }));
     } else if (activeApp === 'dashboard') {
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'CHUYỂN ĐỔI FILE SANG VĂN BẢN' }));
+      window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'CHUYỂN ĐỔI VĂN BẢN' }));
     } else if (activeApp === 'qr-code') {
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'TRÌNH TẠO MÃ QR' }));
     } else if (activeApp === 'docs-template') {

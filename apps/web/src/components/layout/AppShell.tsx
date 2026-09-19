@@ -464,8 +464,8 @@ export const AppShell: React.FC<AppShellProps> = ({
                 onToggleDarkMode={onToggleDarkMode}
                 renderUserAuthButton={renderUserAuthButton}
               />
-            ) : (activeSubTitle === 'CHUYỂN ĐỔI FILE SANG VĂN BẢN' || activeSubTitle === 'BÁO CÁO QUẢN TRỊ') ? (
-              /* 3B. HEADER ĐỘC LẬP CHO PHÂN HỆ CHUYỂN ĐỔI FILE SANG VĂN BẢN */
+            ) : (activeSubTitle === 'CHUYỂN ĐỔI VĂN BẢN' || activeSubTitle === 'CHUYỂN ĐỔI FILE SANG VĂN BẢN' || activeSubTitle === 'BÁO CÁO QUẢN TRỊ') ? (
+              /* 3B. HEADER ĐỘC LẬP CHO PHÂN HỆ CHUYỂN ĐỔI VĂN BẢN */
               <DashboardHeader
                 onBack={() => {
                   setActiveSubTitle('');

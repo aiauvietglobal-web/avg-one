@@ -56,7 +56,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none"
               title="Quay lại Kho ứng dụng"
             >
-              CHUYỂN ĐỔI FILE SANG VĂN BẢN
+              CHUYỂN ĐỔI VĂN BẢN
             </button>
           </div>
 
