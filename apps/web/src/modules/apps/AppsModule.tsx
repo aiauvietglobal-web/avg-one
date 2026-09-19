@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Mic, BarChart3, QrCode, FileText, LayoutGrid, Sparkles
+  Mic, FileAudio, QrCode, FileText, LayoutGrid, Sparkles
 } from 'lucide-react';
 import { SpeechToTextModule } from './SpeechToTextModule';
 import { DashboardModule } from '../dashboard/DashboardModule';
@@ -34,13 +34,13 @@ const SUB_APPS_GRID: SubAppCard[] = [
   {
     id: 'dashboard',
     code: 'APP-02',
-    title: 'BÁO CÁO QUẢN TRỊ',
-    headerTitle: 'BÁO CÁO QUẢN TRỊ',
-    icon: BarChart3,
+    title: 'CHUYỂN ĐỔI FILE SANG VĂN BẢN',
+    headerTitle: 'CHUYỂN ĐỔI FILE SANG VĂN BẢN',
+    icon: FileAudio,
     isAvailable: true,
     badge: 'ĐÃ SẴN SÀNG',
-    iconColor: 'text-[#F15A24] dark:text-orange-300',
-    bgColor: 'bg-orange-50 dark:bg-orange-950/80 border-orange-200 dark:border-orange-800 shadow-2xs'
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800 shadow-2xs'
   },
   {
     id: 'qr-code',
@@ -75,7 +75,7 @@ export const AppsModule: React.FC = () => {
     if (activeApp === 'speech-to-text') {
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'CHUYỂN ĐỔI TRỰC TIẾP' }));
     } else if (activeApp === 'dashboard') {
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'BÁO CÁO QUẢN TRỊ' }));
+      window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'CHUYỂN ĐỔI FILE SANG VĂN BẢN' }));
     } else if (activeApp === 'qr-code') {
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'TRÌNH TẠO MÃ QR' }));
     } else if (activeApp === 'docs-template') {

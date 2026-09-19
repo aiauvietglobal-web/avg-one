@@ -464,8 +464,8 @@ export const AppShell: React.FC<AppShellProps> = ({
                 onToggleDarkMode={onToggleDarkMode}
                 renderUserAuthButton={renderUserAuthButton}
               />
-            ) : activeSubTitle === 'BÁO CÁO QUẢN TRỊ' ? (
-              /* 3B. HEADER ĐỘC LẬP CHO PHÂN HỆ BÁO CÁO QUẢN TRỊ */
+            ) : (activeSubTitle === 'CHUYỂN ĐỔI FILE SANG VĂN BẢN' || activeSubTitle === 'BÁO CÁO QUẢN TRỊ') ? (
+              /* 3B. HEADER ĐỘC LẬP CHO PHÂN HỆ CHUYỂN ĐỔI FILE SANG VĂN BẢN */
               <DashboardHeader
                 onBack={() => {
                   setActiveSubTitle('');

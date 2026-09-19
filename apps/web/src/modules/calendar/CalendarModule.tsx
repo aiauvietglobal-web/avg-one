@@ -5,7 +5,7 @@ import {
   Search, RefreshCw, BarChart3, CheckCircle2, AlertCircle, XCircle, LayoutGrid, Table, FileSpreadsheet, Home,
   Upload, Paperclip, Image as ImageIcon, File, Download, Eye, ExternalLink,
   Sparkles, Flame, Compass, ArrowRight, ArrowLeft, ShieldCheck, CheckSquare, Building2, Car, Plane, AlertTriangle,
-  Mic, TrendingUp, TrendingDown, Layers, Filter
+  Mic, TrendingUp, TrendingDown, Layers, Filter, Target, Award, Zap, Activity
 } from 'lucide-react';
 import {
   DiscussionEvent, EventAttachment, GOOGLE_SHEET_EDIT_URL, fetchDiscussionEventsFromGoogleSheet,
@@ -1089,6 +1089,9 @@ export const CalendarModule: React.FC = () => {
     let underTimeCount = 0;
     let completedCount = 0;
     let ongoingOrUpcoming = 0;
+    let maxInflationMinutes = 0;
+    let mildOverrunCount = 0;   // 1 - 25m
+    let severeOverrunCount = 0; // > 25m
 
     const eventInflationList: Array<{
       id: string;
@@ -1117,6 +1120,14 @@ export const CalendarModule: React.FC = () => {
       if (dur.inflationMinutes > 0) {
         totalInflationMinutes += dur.inflationMinutes;
         inflatedCount++;
+        if (dur.inflationMinutes > maxInflationMinutes) {
+          maxInflationMinutes = dur.inflationMinutes;
+        }
+        if (dur.inflationMinutes > 25) {
+          severeOverrunCount++;
+        } else {
+          mildOverrunCount++;
+        }
       } else if (dur.inflationMinutes === 0) {
         onTimeCount++;
       } else {
@@ -1127,6 +1138,14 @@ export const CalendarModule: React.FC = () => {
         ? Math.round((dur.inflationMinutes / dur.plannedMinutes) * 100)
         : 0;
 
+      const plannedTimeStr = `${e.plannedStartTime || '--:--'} - ${e.plannedEndTime || '--:--'}`;
+      let actualTimeStr = plannedTimeStr;
+      if (e.actualStartTime && e.actualEndTime && (e.actualStartTime !== e.plannedStartTime || e.actualEndTime !== e.plannedEndTime)) {
+        actualTimeStr = `${e.actualStartTime} - ${e.actualEndTime}`;
+      } else if (dur.inflationMinutes > 0) {
+        actualTimeStr = `Kéo dài ~${dur.actualMinutes}p`;
+      }
+
       eventInflationList.push({
         id: e.id,
         title: e.title,
@@ -1136,8 +1155,8 @@ export const CalendarModule: React.FC = () => {
         actualMinutes: dur.actualMinutes,
         inflationMinutes: dur.inflationMinutes,
         inflationPercent,
-        plannedTime: `${e.plannedStartTime || '--:--'} - ${e.plannedEndTime || '--:--'}`,
-        actualTime: `${e.actualStartTime || e.plannedStartTime || '--:--'} - ${e.actualEndTime || e.plannedEndTime || '--:--'}`,
+        plannedTime: plannedTimeStr,
+        actualTime: actualTimeStr,
         status: e.status || st.label,
         rawEvent: e
       });
@@ -1148,6 +1167,12 @@ export const CalendarModule: React.FC = () => {
       .sort((a, b) => b.inflationMinutes - a.inflationMinutes)
       .slice(0, 5);
 
+    const totalEvents = statsEvents.length;
+    const onTimeTotal = onTimeCount + underTimeCount;
+    const onTimeRate = totalEvents > 0
+      ? Math.round((onTimeTotal / totalEvents) * 100)
+      : 100;
+
     const overallInflationPercent = totalPlannedMinutes > 0
       ? Math.round((totalInflationMinutes / totalPlannedMinutes) * 100)
       : 0;
@@ -1156,12 +1181,12 @@ export const CalendarModule: React.FC = () => {
       ? Math.round(totalInflationMinutes / inflatedCount)
       : 0;
 
-    const inflationRate = statsEvents.length > 0
-      ? Math.round((inflatedCount / statsEvents.length) * 100)
+    const inflationRate = totalEvents > 0
+      ? Math.round((inflatedCount / totalEvents) * 100)
       : 0;
 
     return {
-      totalEvents: statsEvents.length,
+      totalEvents,
       completedCount,
       ongoingOrUpcoming,
       totalPlannedMinutes,
@@ -1169,9 +1194,14 @@ export const CalendarModule: React.FC = () => {
       totalInflationMinutes,
       overallInflationPercent,
       avgInflationMinutes,
+      maxInflationMinutes,
       inflatedCount,
       onTimeCount,
       underTimeCount,
+      onTimeTotal,
+      onTimeRate,
+      mildOverrunCount,
+      severeOverrunCount,
       inflationRate,
       topInflatedEvents
     };
@@ -1904,7 +1934,7 @@ export const CalendarModule: React.FC = () => {
               className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-xl bg-[#F15A24]/10 border border-[#F15A24]/30 flex items-center justify-center text-[#F15A24] shrink-0">
+                <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-xl bg-[#F15A24]/10 border border-[#F15A24]/30 flex items-center justify-center text-[#F15A24] shrink-0 shadow-2xs">
                   <BarChart3 className="w-4 h-4" />
                 </div>
                 <div className="text-left min-w-0">
@@ -1913,17 +1943,21 @@ export const CalendarModule: React.FC = () => {
                       THỐNG KÊ DỮ LIỆU TRAO ĐỔI
                     </span>
                     <span className="px-2 py-0.5 rounded-full bg-[#0284C7]/10 text-[#0284C7] dark:text-sky-400 font-extrabold text-[10px] border border-[#0284C7]/20">
-                      {statsPeriodType === 'month' ? `Tháng ${statsMonth}/${statsYear}` : statsPeriodType === 'quarter' ? `Quý ${statsQuarter}/${statsYear}` : statsPeriodType === 'year' ? `Năm ${statsYear}` : 'Toàn thời gian'}
+                      {statsPeriodType === 'month' ? `Tháng ${statsMonth}/${statsYear}` : statsPeriodType === 'quarter' ? `Quý ${statsQuarter}/${statsYear}` : statsPeriodType === 'year' ? `Năm ${statsYear}` : 'Toàn bộ'}
                     </span>
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                {/* Summary badges on header */}
+                {/* Executive Summary chips on header */}
                 <div className="hidden sm:flex items-center gap-2">
                   <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-700 text-[10.5px] font-black text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600">
                     {inflationStats.totalEvents} Cuộc họp
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-[10.5px] font-black text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                    <span>Đúng giờ: {inflationStats.onTimeRate}%</span>
                   </span>
                   <span className={`px-2.5 py-1 rounded-lg text-[10.5px] font-black border flex items-center gap-1 ${
                     inflationStats.totalInflationMinutes > 0
@@ -1931,7 +1965,7 @@ export const CalendarModule: React.FC = () => {
                       : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
                   }`}>
                     <Clock className="w-3 h-3" />
-                    <span>Lạm phát: {inflationStats.totalInflationMinutes > 0 ? `+${formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)} (+${inflationStats.overallInflationPercent}%)` : '0 phút (Chuẩn)'}</span>
+                    <span>Lạm phát: {inflationStats.totalInflationMinutes > 0 ? `+${formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)} (+${inflationStats.overallInflationPercent}%)` : '0p (Chuẩn)'}</span>
                   </span>
                 </div>
 
@@ -1945,19 +1979,17 @@ export const CalendarModule: React.FC = () => {
             {showStatsAccordion && (
               <div className="p-3 sm:p-4 border-t border-slate-200/80 dark:border-slate-700/80 bg-white/70 dark:bg-slate-900/70 space-y-3 sm:space-y-4">
                 
-                {/* 1. THANH ĐIỀU KHIỂN KỲ BÁO CÁO (THÁNG, QUÝ, NĂM) */}
-                <div className="bg-slate-100/80 dark:bg-slate-800/80 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-slate-200/70 dark:border-slate-700/70 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mr-1 flex items-center gap-1">
-                      <Filter className="w-3.5 h-3.5" /> Kỳ thống kê:
-                    </span>
+                {/* 1. THANH ĐIỀU KHIỂN KỲ BÁO CÁO (SEGMENTED TABS & FILTERS) */}
+                <div className="bg-slate-100/90 dark:bg-slate-800/90 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+                  {/* Segmented Control Buttons */}
+                  <div className="flex items-center gap-1 bg-slate-200/70 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-300/60 dark:border-slate-700/60">
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('month')}
-                      className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                         statsPeriodType === 'month'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200/80 border border-slate-200 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
                       }`}
                     >
                       Theo Tháng
@@ -1965,10 +1997,10 @@ export const CalendarModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('quarter')}
-                      className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                         statsPeriodType === 'quarter'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200/80 border border-slate-200 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
                       }`}
                     >
                       Theo Quý
@@ -1976,10 +2008,10 @@ export const CalendarModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('year')}
-                      className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                         statsPeriodType === 'year'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200/80 border border-slate-200 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
                       }`}
                     >
                       Theo Năm
@@ -1987,10 +2019,10 @@ export const CalendarModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('all')}
-                      className={`px-3 py-1 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                         statsPeriodType === 'all'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200/80 border border-slate-200 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
                       }`}
                     >
                       Toàn Bộ
@@ -1999,13 +2031,17 @@ export const CalendarModule: React.FC = () => {
 
                   {/* Dropdowns chọn năm & tháng/quý */}
                   <div className="flex items-center gap-2 flex-wrap">
+                    <span className="hidden xl:inline text-[11px] font-bold text-slate-400 mr-1">
+                      {statsEvents.length} cuộc họp phân tích
+                    </span>
+
                     {/* Chọn Năm */}
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                       <span className="text-[11px] font-bold text-slate-500">Năm:</span>
                       <select
                         value={statsYear}
                         onChange={(e) => setStatsYear(e.target.value)}
-                        className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-black text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#F15A24]"
+                        className="bg-transparent text-xs font-black text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
                       >
                         <option value="2026">2026</option>
                         <option value="2025">2025</option>
@@ -2015,12 +2051,12 @@ export const CalendarModule: React.FC = () => {
 
                     {/* Chọn chi tiết Tháng nếu đang ở mode month */}
                     {statsPeriodType === 'month' && (
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                         <span className="text-[11px] font-bold text-slate-500">Tháng:</span>
                         <select
                           value={statsMonth}
                           onChange={(e) => setStatsMonth(parseInt(e.target.value, 10))}
-                          className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-black text-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#F15A24]"
+                          className="bg-transparent text-xs font-black text-[#0284C7] focus:outline-none cursor-pointer"
                         >
                           {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                             <option key={m} value={m}>Tháng {m}</option>
@@ -2031,12 +2067,12 @@ export const CalendarModule: React.FC = () => {
 
                     {/* Chọn chi tiết Quý nếu đang ở mode quarter */}
                     {statsPeriodType === 'quarter' && (
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
                         <span className="text-[11px] font-bold text-slate-500">Quý:</span>
                         <select
                           value={statsQuarter}
                           onChange={(e) => setStatsQuarter(parseInt(e.target.value, 10))}
-                          className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-black text-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#F15A24]"
+                          className="bg-transparent text-xs font-black text-[#0284C7] focus:outline-none cursor-pointer"
                         >
                           <option value={1}>Quý 1 (T1 - T3)</option>
                           <option value={2}>Quý 2 (T4 - T6)</option>
@@ -2048,289 +2084,473 @@ export const CalendarModule: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 2. HÀNG 4 THẺ KPI CHỈ SỐ CỐT LÕI (BỔ SUNG THỜI GIAN LẠM PHÁT) */}
+                {/* 2. BỘ 4 THẺ KPI CHỈ SỐ CỐT LÕI (THIẾT KẾ KHOA HỌC & TRỰC QUAN HÓA) */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 text-xs">
-                  {/* Thẻ 1: Tổng số cuộc trao đổi */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase">
-                      <span>Tổng số cuộc trao đổi</span>
-                      <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
-                    </div>
-                    <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                      {inflationStats.totalEvents}
-                    </div>
-                    <div className="text-[10px] font-semibold text-slate-500 flex items-center gap-1">
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">{inflationStats.completedCount} đã xong</span>
-                      <span>•</span>
-                      <span className="font-bold text-amber-600 dark:text-amber-400">{inflationStats.ongoingOrUpcoming} sắp tới</span>
-                    </div>
-                  </div>
-
-                  {/* Thẻ 2: Tỷ lệ hoàn thành thực tế */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase">
-                      <span>Tỷ lệ hoàn thành thực tế</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                    </div>
-                    <div className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">
-                      {inflationStats.totalEvents > 0 ? Math.round((inflationStats.completedCount / inflationStats.totalEvents) * 100) : 0}%
-                    </div>
-                    <div className="text-[10px] font-semibold text-slate-500 truncate">
-                      Đạt chuẩn quy trình giao ban AVG
-                    </div>
-                  </div>
-
-                  {/* Thẻ 3: Thời gian lạm phát thực tế (Vượt so với kế hoạch) */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-rose-200/80 dark:border-rose-900/60 shadow-2xs space-y-1 bg-gradient-to-b from-rose-50/30 to-transparent">
-                    <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase">
-                      <span className="text-rose-600 dark:text-rose-400">Thời gian lạm phát</span>
-                      <TrendingUp className="w-3.5 h-3.5 text-rose-500" />
-                    </div>
-                    <div className="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400">
-                      {inflationStats.totalInflationMinutes > 0 ? `+${formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)}` : '0 phút'}
-                    </div>
-                    <div className="text-[10px] font-semibold text-slate-500 truncate">
-                      {inflationStats.totalInflationMinutes > 0 ? (
-                        <span className="text-rose-600 dark:text-rose-400 font-bold">
-                          +{inflationStats.overallInflationPercent}% so với dự kiến ({formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)})
-                        </span>
-                      ) : (
-                        <span className="text-emerald-600 font-bold">100% đúng tiến độ dự kiến</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Thẻ 4: Tỷ lệ cuộc họp bị quá giờ (Lạm phát) */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-1">
-                    <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase">
-                      <span>Tỷ lệ cuộc bị quá giờ</span>
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
-                    </div>
-                    <div className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400">
-                      {inflationStats.inflationRate}%
-                    </div>
-                    <div className="text-[10px] font-semibold text-slate-500 truncate">
-                      {inflationStats.inflatedCount > 0 ? (
-                        <span>{inflationStats.inflatedCount} cuộc • TB vượt +{inflationStats.avgInflationMinutes}p / cuộc</span>
-                      ) : (
-                        <span>0 cuộc bị kéo dài quá giờ</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. KHU VỰC PHÂN TÍCH CHI TIẾT 2 CỘT: (A) PHÂN BỔ THÁNG/QUÝ/NĂM + (B) PHÂN TÍCH LẠM PHÁT THỰC TẾ */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 pt-1">
-                  
-                  {/* CỘT A: PHÂN BỔ SỐ LƯỢNG CUỘC TRAO ĐỔI (THEO THÁNG / THEO QUÝ / THEO NĂM) */}
-                  <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-[#0284C7]" />
-                        <span className="font-black text-xs uppercase text-slate-800 dark:text-slate-100">
-                          {statsPeriodType === 'month' ? `Phân bố 12 Tháng (${statsYear})` : statsPeriodType === 'quarter' ? `Phân bố 4 Quý (${statsYear})` : 'Tổng hợp theo Năm'}
-                        </span>
-                      </div>
-                      <span className="text-[11px] font-bold text-slate-400">
-                        {statsEvents.length} cuộc trong kỳ
-                      </span>
-                    </div>
-
-                    {/* Phân bố 12 tháng */}
-                    {statsPeriodType === 'month' && (
-                      <div className="space-y-2">
-                        <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
-                          {monthlyBreakdown.map((m) => {
-                            const isSelected = statsMonth === m.month;
-                            return (
-                              <button
-                                key={m.month}
-                                type="button"
-                                onClick={() => setStatsMonth(m.month)}
-                                className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
-                                  isSelected
-                                    ? 'bg-[#F15A24]/10 border-[#F15A24] text-[#F15A24] font-black shadow-xs'
-                                    : m.total > 0
-                                      ? 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400'
-                                      : 'bg-slate-50/40 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 text-slate-400 opacity-60'
-                                }`}
-                              >
-                                <div className="text-[10px] font-bold">{m.label}</div>
-                                <div className={`text-sm font-black mt-0.5 ${isSelected ? 'text-[#F15A24]' : 'text-slate-800 dark:text-slate-100'}`}>
-                                  {m.total}
-                                </div>
-                                {m.inflationMinutes > 0 && (
-                                  <div className="text-[9px] font-extrabold text-rose-500 mt-0.5">
-                                    +{formatMinutesToHoursAndMins(m.inflationMinutes)}
-                                  </div>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        <div className="text-[10.5px] font-medium text-slate-400 text-center pt-1">
-                          💡 Nhấp vào ô Tháng để xem dữ liệu chi tiết của tháng đó
+                  {/* Thẻ 1: Tổng số cuộc trao đổi & Tỷ lệ hoàn tất */}
+                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs flex flex-col justify-between space-y-2">
+                    <div>
+                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
+                        <span>Tổng số cuộc</span>
+                        <div className="w-6 h-6 rounded-lg bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-[#0284C7]">
+                          <MessageSquare className="w-3.5 h-3.5" />
                         </div>
                       </div>
-                    )}
-
-                    {/* Phân bố 4 quý */}
-                    {statsPeriodType === 'quarter' && (
-                      <div className="grid grid-cols-2 gap-2">
-                        {quarterlyBreakdown.map((q) => {
-                          const isSelected = statsQuarter === q.quarter;
-                          const maxQuarterCount = Math.max(...quarterlyBreakdown.map(item => item.total), 1);
-                          const percent = Math.round((q.total / maxQuarterCount) * 100);
-                          return (
-                            <button
-                              key={q.quarter}
-                              type="button"
-                              onClick={() => setStatsQuarter(q.quarter)}
-                              className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                                isSelected
-                                  ? 'bg-[#F15A24]/10 border-[#F15A24] text-[#F15A24] shadow-xs'
-                                  : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="font-black text-xs">{q.name}</span>
-                                <span className="text-[10px] font-semibold text-slate-400">{q.sub}</span>
-                              </div>
-                              <div className="text-xl font-black mt-1 text-slate-900 dark:text-white">
-                                {q.total} <span className="text-xs font-bold text-slate-500">cuộc</span>
-                              </div>
-                              <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
-                                <div
-                                  className={`h-full rounded-full ${isSelected ? 'bg-[#F15A24]' : 'bg-[#0284C7]'}`}
-                                  style={{ width: `${percent}%` }}
-                                />
-                              </div>
-                              <div className="flex items-center justify-between text-[10px] font-bold mt-1.5 text-slate-500">
-                                <span>{q.completed} hoàn thành</span>
-                                {q.inflationMinutes > 0 ? (
-                                  <span className="text-rose-500 font-extrabold">+{formatMinutesToHoursAndMins(q.inflationMinutes)} lạm phát</span>
-                                ) : (
-                                  <span className="text-emerald-600 font-bold">0p lạm phát</span>
-                                )}
-                              </div>
-                            </button>
-                          );
-                        })}
+                      <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
+                        {inflationStats.totalEvents} <span className="text-xs font-semibold text-slate-400">cuộc</span>
                       </div>
-                    )}
-
-                    {/* Phân bố theo Năm */}
-                    {(statsPeriodType === 'year' || statsPeriodType === 'all') && (
-                      <div className="space-y-2">
-                        {yearlyBreakdown.map((y) => (
-                          <div
-                            key={y.year}
-                            className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between"
-                          >
-                            <div>
-                              <div className="font-black text-sm text-slate-900 dark:text-white">Năm {y.year}</div>
-                              <div className="text-[10.5px] font-medium text-slate-500">
-                                {y.completed} cuộc hoàn tất • {y.total - y.completed} đang/chưa thực hiện
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <div className="text-lg font-black text-[#0284C7] dark:text-sky-400">{y.total} cuộc</div>
-                              <div className="text-[10.5px] font-extrabold text-rose-500">
-                                +{formatMinutesToHoursAndMins(y.inflationMinutes)} lạm phát
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* CỘT B: PHÂN TÍCH THỜI GIAN LẠM PHÁT THỰC TẾ (SO VỚI KẾ HOẠCH DỰ KIẾN) */}
-                  <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-rose-500" />
-                        <span className="font-black text-xs uppercase text-slate-800 dark:text-slate-100">
-                          Thời Gian Lạm Phát (Thực Tế vs Dự Kiến)
-                        </span>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-50 text-rose-600 border border-rose-200">
-                        {inflationStats.inflatedCount} cuộc quá giờ
-                      </span>
                     </div>
-
-                    {/* Thanh So Sánh Kép Trực Quan: Dự Kiến vs Thực Tế */}
-                    <div className="space-y-1.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
-                      <div className="flex items-center justify-between text-[11px] font-bold">
-                        <span className="text-slate-600 dark:text-slate-300">Thời gian kế hoạch dự kiến:</span>
-                        <span className="font-black text-slate-900 dark:text-white">
-                          {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)}
-                        </span>
-                      </div>
-                      <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                        <div className="bg-[#0284C7] h-full rounded-full" style={{ width: '100%' }} />
-                      </div>
-
-                      <div className="flex items-center justify-between text-[11px] font-bold pt-1">
-                        <span className="text-rose-600 dark:text-rose-400 font-extrabold">Thời gian diễn ra thực tế:</span>
-                        <span className="font-black text-rose-600 dark:text-rose-400">
-                          {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
-                        </span>
-                      </div>
-                      <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                    <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
                         <div
-                          className="bg-gradient-to-r from-[#0284C7] via-amber-500 to-rose-500 h-full rounded-full"
-                          style={{
-                            width: `${Math.min(100, Math.round((inflationStats.totalActualMinutes / Math.max(1, inflationStats.totalPlannedMinutes)) * 100))}%`
-                          }}
+                          className="bg-emerald-500 h-full transition-all"
+                          style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.completedCount / inflationStats.totalEvents) * 100 : 0}%` }}
+                          title={`${inflationStats.completedCount} đã hoàn tất`}
+                        />
+                        <div
+                          className="bg-amber-500 h-full transition-all"
+                          style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.ongoingOrUpcoming / inflationStats.totalEvents) * 100 : 0}%` }}
+                          title={`${inflationStats.ongoingOrUpcoming} sắp tới/đang diễn ra`}
                         />
                       </div>
+                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">{inflationStats.completedCount} hoàn tất</span>
+                        <span className="font-bold text-amber-600 dark:text-amber-400">{inflationStats.ongoingOrUpcoming} sắp tới</span>
+                      </div>
+                    </div>
+                  </div>
 
-                      <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <span>Độ chênh lệch lạm phát:</span>
-                        <span className="font-black text-rose-600 dark:text-rose-400">
+                  {/* Thẻ 2: Tỷ lệ đúng kế hoạch (Kỷ luật giờ giấc) */}
+                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs flex flex-col justify-between space-y-2">
+                    <div>
+                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
+                        <span>Tỷ lệ đúng kế hoạch</span>
+                        <div className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 flex items-baseline gap-1.5">
+                        {inflationStats.onTimeRate}%
+                        <span className="text-[11px] font-bold text-slate-400">({inflationStats.onTimeTotal}/{inflationStats.totalEvents})</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
+                        <div
+                          className="bg-emerald-500 h-full"
+                          style={{ width: `${inflationStats.onTimeRate}%` }}
+                        />
+                        <div
+                          className="bg-rose-500 h-full"
+                          style={{ width: `${100 - inflationStats.onTimeRate}%` }}
+                        />
+                      </div>
+                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
+                        <span className="font-bold text-emerald-600">{inflationStats.onTimeTotal} đúng hạn</span>
+                        <span className="font-bold text-rose-500">{inflationStats.inflatedCount} quá giờ ({inflationStats.inflationRate}%)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Thẻ 3: Tổng thời gian thực tế & Mức lạm phát */}
+                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-rose-200/80 dark:border-rose-900/60 shadow-2xs flex flex-col justify-between space-y-2 bg-gradient-to-b from-rose-50/25 to-transparent">
+                    <div>
+                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
+                        <span className="text-rose-600 dark:text-rose-400">Thời gian thực tế</span>
+                        <div className="w-6 h-6 rounded-lg bg-rose-50 dark:bg-rose-950/50 flex items-center justify-center text-rose-500">
+                          <Clock className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">
+                        {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 pt-1 border-t border-rose-100 dark:border-rose-950/50">
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
+                        <div
+                          className="bg-[#0284C7] h-full"
+                          style={{ width: `${Math.min(100, Math.round((inflationStats.totalPlannedMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%` }}
+                        />
+                        <div
+                          className="bg-rose-500 h-full"
+                          style={{ width: `${Math.min(100, Math.round((inflationStats.totalInflationMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%` }}
+                        />
+                      </div>
+                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
+                        <span>Dự kiến: {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)}</span>
+                        <span className="font-bold text-rose-600 dark:text-rose-400">
                           +{formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)} (+{inflationStats.overallInflationPercent}%)
                         </span>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Top các cuộc họp bị lạm phát thời gian nhiều nhất */}
-                    <div className="space-y-1.5">
-                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">
-                        Cuộc trao đổi lạm phát thời gian nhiều nhất:
+                  {/* Thẻ 4: Cường độ quá giờ & Đỉnh điểm vượt */}
+                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs flex flex-col justify-between space-y-2">
+                    <div>
+                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
+                        <span>Cường độ quá giờ</span>
+                        <div className="w-6 h-6 rounded-lg bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-amber-500">
+                          <TrendingUp className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 mt-1 flex items-baseline gap-1.5">
+                        {inflationStats.inflatedCount > 0 ? `+${inflationStats.avgInflationMinutes}p` : '0p'}
+                        <span className="text-xs font-semibold text-slate-400">/ cuộc</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
+                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
+                        <span>Đỉnh điểm: <strong className="text-rose-600 font-black">+{inflationStats.maxInflationMinutes}p</strong></span>
+                        <span className="font-bold text-amber-600">{inflationStats.inflatedCount} cuộc ({inflationStats.inflationRate}%)</span>
+                      </div>
+                      <div className="text-[9.5px] font-semibold text-slate-400 truncate">
+                        {inflationStats.severeOverrunCount > 0
+                          ? `⚠️ ${inflationStats.severeOverrunCount} cuộc vượt >25p cần rút gọn`
+                          : '✅ Trong ngưỡng kiểm soát tốt'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. KHU VỰC PHÂN TÍCH CHUYÊN SÂU 2 CỘT */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 pt-1">
+                  
+                  {/* CỘT A: PHÂN BỔ & NHỊP ĐỘ THEO CHU KỲ (THÁNG / QUÝ / MA TRẬN NĂM) */}
+                  <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-[#0284C7]" />
+                          <span className="font-black text-xs uppercase text-slate-800 dark:text-slate-100">
+                            {statsPeriodType === 'month' ? `Biểu Đồ 12 Tháng (${statsYear})` : statsPeriodType === 'quarter' ? `Phân Bố 4 Quý (${statsYear})` : `Ma Trận Kỷ Luật Thời Gian (${statsYear})`}
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-400">
+                          {statsEvents.length} cuộc trong kỳ
+                        </span>
                       </div>
 
-                      {inflationStats.topInflatedEvents.length === 0 ? (
-                        <div className="py-4 text-center text-xs font-semibold text-emerald-600 bg-emerald-50/50 rounded-xl border border-emerald-200">
-                          ✨ Không có cuộc trao đổi nào bị lạm phát thời gian trong kỳ này!
-                        </div>
-                      ) : (
-                        <div className="space-y-1.5 max-h-[160px] overflow-y-auto scrollbar-thin pr-1">
-                          {inflationStats.topInflatedEvents.map((item) => (
-                            <div
-                              key={item.id}
-                              onClick={() => setSelectedEventDetail(item.rawEvent)}
-                              className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 hover:border-rose-300 dark:hover:border-rose-700 transition cursor-pointer flex items-center justify-between gap-2 text-xs"
-                            >
-                              <div className="min-w-0 flex-1">
-                                <div className="font-bold text-slate-800 dark:text-slate-200 truncate" title={item.title}>
-                                  {item.title}
-                                </div>
-                                <div className="text-[10px] text-slate-400 font-medium">
-                                  {item.date} • Kế hoạch: {item.plannedTime} ({item.plannedMinutes}p)
-                                </div>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-800">
-                                  +{item.inflationMinutes}p (+{item.inflationPercent}%)
-                                </span>
-                              </div>
+                      {/* Phân bố 12 tháng: Hiển thị biểu đồ cột Histogram tương tác khoa học */}
+                      {statsPeriodType === 'month' && (
+                        <div className="space-y-3 pt-2">
+                          {/* Mini Bar Chart Histogram */}
+                          <div className="h-32 flex items-end justify-between gap-1 sm:gap-1.5 pt-4 pb-1 border-b border-slate-100 dark:border-slate-800">
+                            {(() => {
+                              const maxTotal = Math.max(...monthlyBreakdown.map(m => m.total), 1);
+                              return monthlyBreakdown.map(m => {
+                                const isSelected = statsMonth === m.month;
+                                const heightPercent = m.total > 0
+                                  ? Math.max(16, Math.round((m.total / maxTotal) * 100))
+                                  : 8;
+                                const hasInflation = m.inflationMinutes > 0;
+
+                                return (
+                                  <button
+                                    key={m.month}
+                                    type="button"
+                                    onClick={() => setStatsMonth(m.month)}
+                                    className={`flex-1 flex flex-col items-center justify-end h-full group transition cursor-pointer p-0.5 rounded-lg ${
+                                      isSelected ? 'bg-orange-50/80 dark:bg-orange-950/40 ring-1 ring-[#F15A24]' : 'hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                                    }`}
+                                    title={`Tháng ${m.month}: ${m.total} cuộc họp (${m.completed} hoàn tất, ${hasInflation ? `+${formatMinutesToHoursAndMins(m.inflationMinutes)} lạm phát` : 'chuẩn giờ'})`}
+                                  >
+                                    <div className={`text-[9px] font-bold mb-1 transition ${isSelected ? 'text-[#F15A24] font-black scale-110' : 'text-slate-400 group-hover:text-slate-700'}`}>
+                                      {m.total > 0 ? m.total : ''}
+                                    </div>
+                                    <div className="w-full max-w-[22px] bg-slate-100 dark:bg-slate-800 rounded-t-md overflow-hidden flex flex-col justify-end" style={{ height: `${heightPercent}%` }}>
+                                      <div
+                                        className={`w-full rounded-t-md transition-all ${
+                                          isSelected
+                                            ? 'bg-gradient-to-t from-[#F15A24] to-amber-500'
+                                            : hasInflation
+                                            ? 'bg-gradient-to-t from-[#0284C7] via-[#0284C7] to-rose-500'
+                                            : m.total > 0
+                                            ? 'bg-[#0284C7]'
+                                            : 'bg-slate-200 dark:bg-slate-700'
+                                        }`}
+                                        style={{ height: '100%' }}
+                                      />
+                                    </div>
+                                    <div className={`text-[9.5px] mt-1 font-bold ${isSelected ? 'text-[#F15A24] font-black' : 'text-slate-500 dark:text-slate-400'}`}>
+                                      T{m.month}
+                                    </div>
+                                  </button>
+                                );
+                              });
+                            })()}
+                          </div>
+
+                          {/* Interactive Summary Pill */}
+                          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-[#F15A24]"></span>
+                              <span className="font-bold text-slate-700 dark:text-slate-200">
+                                Chi tiết Tháng {statsMonth}/{statsYear}:
+                              </span>
                             </div>
-                          ))}
+                            <div className="flex items-center gap-2 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                              <span><strong>{monthlyBreakdown[statsMonth - 1]?.total || 0}</strong> cuộc ({monthlyBreakdown[statsMonth - 1]?.completed || 0} xong)</span>
+                              <span>•</span>
+                              {(monthlyBreakdown[statsMonth - 1]?.inflationMinutes || 0) > 0 ? (
+                                <span className="text-rose-600 dark:text-rose-400 font-extrabold">+{formatMinutesToHoursAndMins(monthlyBreakdown[statsMonth - 1]?.inflationMinutes || 0)} lạm phát</span>
+                              ) : (
+                                <span className="text-emerald-600 font-bold">100% đúng tiến độ</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Phân bố 4 quý */}
+                      {statsPeriodType === 'quarter' && (
+                        <div className="grid grid-cols-2 gap-2 pt-2">
+                          {quarterlyBreakdown.map((q) => {
+                            const isSelected = statsQuarter === q.quarter;
+                            const maxQuarterCount = Math.max(...quarterlyBreakdown.map(item => item.total), 1);
+                            const percent = Math.round((q.total / maxQuarterCount) * 100);
+                            return (
+                              <button
+                                key={q.quarter}
+                                type="button"
+                                onClick={() => setStatsQuarter(q.quarter)}
+                                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-[#F15A24]/10 border-[#F15A24] text-[#F15A24] shadow-xs'
+                                    : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="font-black text-xs">{q.name}</span>
+                                  <span className="text-[10px] font-semibold text-slate-400">{q.sub}</span>
+                                </div>
+                                <div className="text-xl font-black mt-1 text-slate-900 dark:text-white">
+                                  {q.total} <span className="text-xs font-bold text-slate-500">cuộc</span>
+                                </div>
+                                <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full ${isSelected ? 'bg-[#F15A24]' : 'bg-[#0284C7]'}`}
+                                    style={{ width: `${percent}%` }}
+                                  />
+                                </div>
+                                <div className="flex items-center justify-between text-[10px] font-bold mt-1.5 text-slate-500">
+                                  <span>{q.completed} hoàn thành</span>
+                                  {q.inflationMinutes > 0 ? (
+                                    <span className="text-rose-500 font-extrabold">+{formatMinutesToHoursAndMins(q.inflationMinutes)}</span>
+                                  ) : (
+                                    <span className="text-emerald-600 font-bold">0p lạm phát</span>
+                                  )}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* Phân bố theo Năm / Toàn Bộ: MA TRẬN KỶ LUẬT THỜI GIAN KHOA HỌC */}
+                      {(statsPeriodType === 'year' || statsPeriodType === 'all') && (
+                        <div className="space-y-2.5 pt-2">
+                          <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                            Phân loại mức độ tuân thủ khung giờ ({statsEvents.length} cuộc):
+                          </div>
+
+                          {/* Nhóm 1: Đúng giờ / Tiết kiệm */}
+                          <div className="p-2.5 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/60 space-y-1">
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-1.5 font-extrabold text-emerald-700 dark:text-emerald-300">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                <span>Chuẩn hoặc Tiết kiệm thời gian (≤ 0p)</span>
+                              </div>
+                              <span className="font-black text-emerald-700 dark:text-emerald-300">
+                                {inflationStats.onTimeTotal} cuộc ({inflationStats.onTimeRate}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-emerald-200/60 dark:bg-emerald-900/50 h-1.5 rounded-full overflow-hidden">
+                              <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${inflationStats.onTimeRate}%` }} />
+                            </div>
+                            <div className="text-[9.5px] text-slate-500 font-medium">
+                              Đảm bảo tiến độ công việc, đạt chuẩn quy trình giao ban điều hành AVG.
+                            </div>
+                          </div>
+
+                          {/* Nhóm 2: Vượt nhẹ 1 - 25p */}
+                          <div className="p-2.5 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/60 space-y-1">
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-1.5 font-extrabold text-amber-700 dark:text-amber-300">
+                                <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
+                                <span>Phát sinh nhẹ trong thảo luận (1 - 25p)</span>
+                              </div>
+                              <span className="font-black text-amber-700 dark:text-amber-300">
+                                {inflationStats.mildOverrunCount} cuộc ({inflationStats.totalEvents > 0 ? Math.round((inflationStats.mildOverrunCount / inflationStats.totalEvents) * 100) : 0}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-amber-200/60 dark:bg-amber-900/50 h-1.5 rounded-full overflow-hidden">
+                              <div className="bg-amber-500 h-full rounded-full" style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.mildOverrunCount / inflationStats.totalEvents) * 100 : 0}%` }} />
+                            </div>
+                            <div className="text-[9.5px] text-slate-500 font-medium">
+                              Các phát sinh kỹ thuật cần làm rõ thêm, nằm trong dung sai cho phép.
+                            </div>
+                          </div>
+
+                          {/* Nhóm 3: Lạm phát nghiêm trọng > 25p */}
+                          <div className="p-2.5 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/80 dark:border-rose-900/60 space-y-1">
+                            <div className="flex items-center justify-between text-xs">
+                              <div className="flex items-center gap-1.5 font-extrabold text-rose-700 dark:text-rose-300">
+                                <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
+                                <span>Lạm phát thời gian đáng kể (&gt; 25p)</span>
+                              </div>
+                              <span className="font-black text-rose-700 dark:text-rose-300">
+                                {inflationStats.severeOverrunCount} cuộc ({inflationStats.totalEvents > 0 ? Math.round((inflationStats.severeOverrunCount / inflationStats.totalEvents) * 100) : 0}%)
+                              </span>
+                            </div>
+                            <div className="w-full bg-rose-200/60 dark:bg-rose-900/50 h-1.5 rounded-full overflow-hidden">
+                              <div className="bg-rose-500 h-full rounded-full" style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.severeOverrunCount / inflationStats.totalEvents) * 100 : 0}%` }} />
+                            </div>
+                            <div className="text-[9.5px] text-slate-500 font-medium">
+                              Cần siết chặt nghị trình cuộc họp và nâng cao vai trò chủ tọa điều phối.
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
 
+                    <div className="text-[10px] text-slate-400 font-medium pt-1 text-center border-t border-slate-100 dark:border-slate-800">
+                      💡 Nhấp vào các mốc thời gian để lọc và phân tích dữ liệu chuyên sâu
+                    </div>
+                  </div>
+
+                  {/* CỘT B: ĐỐI SOÁNH THỜI GIAN & TOP CUỘC HỌP CẦN TỐI ƯU */}
+                  <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-rose-500" />
+                          <span className="font-black text-xs uppercase text-slate-800 dark:text-slate-100">
+                            Đối Soánh Thời Gian & Lạm Phát
+                          </span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-400 dark:border-rose-800">
+                          {inflationStats.inflatedCount} cuộc quá giờ
+                        </span>
+                      </div>
+
+                      {/* Thanh So Sánh Kép Trực Quan: Kế Hoạch vs Thực Tế */}
+                      <div className="mt-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-2">
+                        {/* Dòng 1: Kế hoạch */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between text-[11px] font-bold">
+                            <span className="text-slate-600 dark:text-slate-300">Kế hoạch dự kiến:</span>
+                            <span className="font-black text-slate-900 dark:text-white">
+                              {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)} (100% chuẩn)
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div className="bg-[#0284C7] h-full rounded-full" style={{ width: '100%' }} />
+                          </div>
+                        </div>
+
+                        {/* Dòng 2: Thực tế với đoạn dôi dư lạm phát */}
+                        <div className="space-y-1 pt-1">
+                          <div className="flex items-center justify-between text-[11px] font-bold">
+                            <span className="text-rose-600 dark:text-rose-400 font-extrabold">Thực tế diễn ra:</span>
+                            <span className="font-black text-rose-600 dark:text-rose-400">
+                              {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
+                              <span className="text-[10px] font-bold text-rose-500 ml-1">
+                                (+{inflationStats.overallInflationPercent}% lạm phát)
+                              </span>
+                            </span>
+                          </div>
+                          <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden flex">
+                            <div
+                              className="bg-[#0284C7] h-full"
+                              style={{
+                                width: `${Math.min(100, Math.round((inflationStats.totalPlannedMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%`
+                              }}
+                              title="Thời gian chuẩn trong kế hoạch"
+                            />
+                            <div
+                              className="bg-gradient-to-r from-amber-500 to-rose-600 h-full animate-pulse"
+                              style={{
+                                width: `${Math.min(100, Math.round((inflationStats.totalInflationMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%`
+                              }}
+                              title="Thời gian lạm phát phát sinh vượt kế hoạch"
+                            />
+                          </div>
+                        </div>
+
+                        {/* 3 Ô Mini Metric Đối Soánh */}
+                        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 text-center">
+                          <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70">
+                            <div className="text-[9.5px] font-bold text-slate-400">Kế Hoạch</div>
+                            <div className="text-xs font-black text-slate-800 dark:text-slate-200">
+                              {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)}
+                            </div>
+                          </div>
+                          <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70">
+                            <div className="text-[9.5px] font-bold text-slate-400">Thực Tế</div>
+                            <div className="text-xs font-black text-slate-900 dark:text-white">
+                              {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
+                            </div>
+                          </div>
+                          <div className="p-1.5 rounded-lg bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/70 dark:border-rose-900/60">
+                            <div className="text-[9.5px] font-bold text-rose-500">Chênh Lệch</div>
+                            <div className="text-xs font-black text-rose-600 dark:text-rose-400">
+                              +{formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Top các cuộc họp bị lạm phát thời gian nhiều nhất */}
+                      <div className="space-y-1.5 pt-2">
+                        <div className="flex items-center justify-between text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">
+                          <span>Cuộc trao đổi vượt giờ nhiều nhất:</span>
+                          <span className="text-[10px] text-slate-400 font-normal">Nhấp để xem biên bản</span>
+                        </div>
+
+                        {inflationStats.topInflatedEvents.length === 0 ? (
+                          <div className="py-4 text-center text-xs font-semibold text-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                            ✨ Tuyệt vời! 100% cuộc trao đổi trong kỳ diễn ra chuẩn hoặc sớm hơn dự kiến.
+                          </div>
+                        ) : (
+                          <div className="space-y-1.5 max-h-[160px] overflow-y-auto scrollbar-thin pr-1">
+                            {inflationStats.topInflatedEvents.map((item, idx) => (
+                              <div
+                                key={item.id}
+                                onClick={() => setSelectedEventDetail(item.rawEvent)}
+                                className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 hover:border-rose-300 dark:hover:border-rose-700 hover:bg-rose-50/30 transition cursor-pointer flex items-center justify-between gap-2 text-xs"
+                              >
+                                <div className="flex items-center gap-2 min-w-0 flex-1">
+                                  <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-black text-[10px] flex items-center justify-center shrink-0">
+                                    #{idx + 1}
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="font-bold text-slate-800 dark:text-slate-200 truncate" title={item.title}>
+                                      {item.title}
+                                    </div>
+                                    <div className="text-[10px] text-slate-400 font-medium">
+                                      {item.date} • Kế hoạch: {item.plannedTime} ({item.plannedMinutes}p) → {item.actualTime}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="text-right shrink-0">
+                                  <span className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-black border ${
+                                    item.inflationMinutes > 30
+                                      ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border-rose-300 dark:border-rose-800'
+                                      : 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800'
+                                  }`}>
+                                    +{item.inflationMinutes}p (+{item.inflationPercent}%)
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-[10px] text-slate-400 font-medium pt-1 text-center border-t border-slate-100 dark:border-slate-800">
+                      ⚡ Gợi ý: Bấm vào cuộc họp để rà soát kết luận & biên bản làm việc
+                    </div>
                   </div>
 
                 </div>

@@ -56,11 +56,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none"
               title="Quay lại Kho ứng dụng"
             >
-              BÁO CÁO QUẢN TRỊ
+              CHUYỂN ĐỔI FILE SANG VĂN BẢN
             </button>
           </div>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ BÁO CÁO QUẢN TRỊ: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI */}
+          {/* BỘ ĐẦU MỤC QUẢN LÝ: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI */}
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
               { id: 'overview' as const, label: 'Tổng quan C-Suite', icon: BarChart3 },
