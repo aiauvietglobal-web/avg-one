@@ -9,4 +9,5 @@ export * from './FinanceHeader';
 export * from './RDHeader';
 export * from './SpeechToTextHeader';
 export * from './DashboardHeader';
+export * from './FileTranscribeHeader';
 export * from './HubDetailHeader';

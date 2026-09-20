@@ -3,6 +3,7 @@ import {
   Mic, FileAudio, QrCode, FileText, LayoutGrid, Sparkles
 } from 'lucide-react';
 import { SpeechToTextModule } from './SpeechToTextModule';
+import { FileTranscribeModule } from './FileTranscribeModule';
 import { DashboardModule } from '../dashboard/DashboardModule';
 
 export type SubAppId = 'speech-to-text' | 'dashboard' | 'qr-code' | 'docs-template';
@@ -277,7 +278,7 @@ export const AppsModule: React.FC = () => {
         /* ========================================================================= */
         <div className="w-full h-full max-w-full">
           {activeApp === 'speech-to-text' && <SpeechToTextModule />}
-          {activeApp === 'dashboard' && <DashboardModule />}
+          {activeApp === 'dashboard' && <FileTranscribeModule />}
         </div>
       )}
 
