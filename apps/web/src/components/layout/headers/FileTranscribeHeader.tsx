@@ -114,13 +114,8 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
           </div>
         </div>
 
-        {/* Cụm phải: Nút Đăng nhập / Tài khoản */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-sky-50/80 dark:bg-sky-950/40 border border-sky-200/80 dark:border-sky-800/80 text-[11px] font-bold text-[#0284C7] dark:text-sky-300">
-            <Activity className="w-3.5 h-3.5 text-[#0284C7] animate-pulse" />
-            <span>AVG Neural ASR v2.4</span>
-          </div>
-          {renderUserAuthButton()}
+        {/* Cụm phải: Đã lược bỏ theo yêu cầu */}
+        <div className="hidden">
         </div>
       </div>
     </header>
