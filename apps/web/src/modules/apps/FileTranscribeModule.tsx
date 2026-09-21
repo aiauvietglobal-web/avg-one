@@ -890,7 +890,7 @@ export const FileTranscribeModule: React.FC = () => {
                       {/* Left: Title Badge */}
                       <div className="flex items-center gap-2 px-3.5 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
                         <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
-                          Hội Thoại Trực Tiếp
+                          Chuyển Đổi Sang Văn Bản
                         </h2>
                         <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/20 border border-white/30 shrink-0 ml-0.5" title="Sóng âm thoại">
                           <span className="w-1 rounded-full bg-white animate-wave-bar-1" />
@@ -1041,8 +1041,8 @@ export const FileTranscribeModule: React.FC = () => {
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 space-y-2.5 shrink-0 shadow-md">
                   <div className="flex items-center justify-between text-xs">
                     <h2 className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] flex items-center gap-1.5">
-                      <MessageSquare className="w-4 h-4 text-[#00A8E8]" />
-                      <span>Trò chuyện</span>
+                      <FileText className="w-4 h-4 text-[#00A8E8]" />
+                      <span>Ghi Chú & Biên Soạn Văn Bản</span>
                     </h2>
 
                     <div className="flex items-center gap-3">
@@ -1060,7 +1060,7 @@ export const FileTranscribeModule: React.FC = () => {
                     <textarea
                       value={deafTextInput}
                       onChange={(e) => setDeafTextInput(e.target.value)}
-                      placeholder="Nhập câu phản hồi của bạn vào đây..."
+                      placeholder="Nhập ghi chú hoặc nội dung phản hồi văn bản tại đây..."
                       rows={2}
                       className="w-full pt-3 pb-3 pl-3.5 pr-14 bg-slate-50 dark:bg-slate-950 rounded-lg text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-[#00A8E8] resize-none transition-all"
                     />
