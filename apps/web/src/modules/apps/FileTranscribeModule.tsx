@@ -1064,43 +1064,36 @@ export const FileTranscribeModule: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Right: Action Buttons */}
+                      {/* Right: Header Toolbar Actions */}
                       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto h-8.5">
                         <button
                           type="button"
-                          onClick={() => {
-                            if (isRecording) handleStopRecordingAndProcess();
-                            else setIsRecording(true);
-                          }}
-                          className={`h-8 px-3.5 sm:px-4 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm cursor-pointer transition-all ${
-                            isRecording
-                              ? 'bg-rose-600 hover:bg-rose-500 text-white animate-pulse'
-                              : 'bg-emerald-600 hover:bg-emerald-500 text-white'
-                          }`}
+                          onClick={handleCopyFullText}
+                          className="h-8 px-3 rounded-xl font-bold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          title="Sao chép toàn bộ văn bản"
                         >
-                          <span className="relative flex h-2.5 w-2.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white" />
-                          </span>
-                          <Mic className="w-4 h-4 stroke-[2.5]" />
-                          <span>{isRecording ? 'DỪNG & DỊCH' : 'BẮT ĐẦU NÓI'}</span>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Sao chép</span>
                         </button>
 
                         <button
-                          onClick={() => fileInputRef.current?.click()}
-                          className="h-8 text-xs font-extrabold text-white bg-[#0284C7] hover:bg-[#00A8E8] px-3 rounded-xl flex items-center gap-1.5 shadow-xs cursor-pointer transition-all uppercase tracking-wide shrink-0"
-                          title="Nạp tệp mới"
+                          type="button"
+                          onClick={() => handleExportTxt()}
+                          className="h-8 px-3 rounded-xl font-bold text-xs bg-[#0284C7] hover:bg-[#00A8E8] text-white flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          title="Xuất file văn bản TXT"
                         >
-                          <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
-                          <span>MỚI</span>
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Xuất TXT</span>
                         </button>
 
                         <button
+                          type="button"
                           onClick={() => setActiveTab('editor')}
-                          className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-sky-50 hover:text-[#00A8E8] shrink-0"
-                          title="Mở rộng toàn màn hình"
+                          className="h-8 px-3 rounded-xl font-extrabold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-700 dark:text-slate-200 hover:text-[#0284C7] border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          title="Mở rộng trình biên soạn toàn màn hình"
                         >
-                          <Maximize2 className="w-4 h-4 stroke-[2.5]" />
+                          <Maximize2 className="w-3.5 h-3.5 stroke-[2.5]" />
+                          <span className="hidden sm:inline">Mở rộng</span>
                         </button>
                       </div>
                     </div>
@@ -1111,69 +1104,57 @@ export const FileTranscribeModule: React.FC = () => {
                     
                     {/* Transcript Message Feed Bubbles */}
                     {currentFile && currentFile.segments && currentFile.segments.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {currentFile.segments.map((seg, idx) => (
                           <div key={seg.id || idx} className="flex flex-col items-start w-full">
-                            <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full shadow-xs space-y-1.5">
-                              <div className="flex items-center justify-between text-xs font-bold pb-1 border-b border-slate-100 dark:border-slate-800">
-                                <span className="text-[#F15A24] dark:text-orange-400 font-black">
-                                  {seg.speakerName} ({seg.speakerRole})
+                            <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full shadow-xs space-y-2 hover:border-[#0284C7]/50 transition-all">
+                              <div className="flex items-center justify-between text-xs font-bold pb-1.5 border-b border-slate-100 dark:border-slate-800">
+                                <span className="text-[#F15A24] dark:text-orange-400 font-black flex items-center gap-1.5">
+                                  <User className="w-3.5 h-3.5 text-[#F15A24]" />
+                                  <span>{seg.speakerName} ({seg.speakerRole})</span>
                                 </span>
-                                <span className="text-[10.5px] font-mono text-slate-400">
+                                <span className="text-[10.5px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
                                   {formatTime(seg.startTime)} - {formatTime(seg.endTime)}
                                 </span>
                               </div>
+
                               <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
                                 {seg.text}
                               </p>
+
+                              {/* Segment Actions Footer Toolbar */}
+                              <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-100 dark:border-slate-800/60">
+                                <button
+                                  type="button"
+                                  onClick={() => handleJumpToSegment(seg)}
+                                  className="flex items-center gap-1 text-[#0284C7] hover:text-[#00A8E8] font-bold cursor-pointer"
+                                >
+                                  <Play className="w-3.5 h-3.5 fill-current" />
+                                  <span>Phát đoạn thoại</span>
+                                </button>
+
+                                <div className="flex items-center gap-3 text-slate-400">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(seg.text);
+                                      setCopiedToast('Đã sao chép đoạn thoại này!');
+                                      setTimeout(() => setCopiedToast(null), 2000);
+                                    }}
+                                    className="hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 font-medium cursor-pointer"
+                                    title="Sao chép đoạn này"
+                                  >
+                                    <Copy className="w-3.5 h-3.5" />
+                                    <span>Sao chép</span>
+                                  </button>
+                                  <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60">
+                                    {Math.round((seg.confidence || 0.98) * 100)}% Accurate
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         ))}
-
-                        {/* Quick user response bubble sample on right */}
-                        <div className="flex flex-col items-end w-full">
-                          <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-800 text-slate-900 dark:text-white w-fit max-w-[85%] shadow-xs space-y-1">
-                            <div className="flex items-center justify-between gap-3 text-[11px] font-extrabold text-[#00A8E8]">
-                              <span>3.1 - Ngọc Anh</span>
-                              <button onClick={() => {
-                                if ('speechSynthesis' in window) {
-                                  window.speechSynthesis.cancel();
-                                  const u = new SpeechSynthesisUtterance('Cảm ơn bạn rất nhiều!');
-                                  u.lang = 'vi-VN';
-                                  window.speechSynthesis.speak(u);
-                                }
-                              }} className="p-1 hover:text-sky-600">
-                                <Volume2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                              Cảm ơn bạn rất nhiều!
-                            </p>
-                            <span className="text-[10px] text-slate-400 block text-right font-mono">22:12 • 21/09/2026</span>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-end w-full">
-                          <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50 dark:bg-sky-950/80 border border-sky-300 dark:border-sky-800 text-slate-900 dark:text-white w-fit max-w-[85%] shadow-xs space-y-1">
-                            <div className="flex items-center justify-between gap-3 text-[11px] font-extrabold text-[#00A8E8]">
-                              <span>3.1 - Ngọc Anh</span>
-                              <button onClick={() => {
-                                if ('speechSynthesis' in window) {
-                                  window.speechSynthesis.cancel();
-                                  const u = new SpeechSynthesisUtterance('Tôi hoàn toàn đồng ý với ý kiến này.');
-                                  u.lang = 'vi-VN';
-                                  window.speechSynthesis.speak(u);
-                                }
-                              }} className="p-1 hover:text-sky-600">
-                                <Volume2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
-                              Tôi hoàn toàn đồng ý với ý kiến này.
-                            </p>
-                            <span className="text-[10px] text-slate-400 block text-right font-mono">22:12 • 21/09/2026</span>
-                          </div>
-                        </div>
                       </div>
                     ) : (
                       /* Dropzone Drop Area if empty */
