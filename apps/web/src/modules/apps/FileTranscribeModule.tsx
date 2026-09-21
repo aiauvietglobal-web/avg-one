@@ -5,7 +5,9 @@ import {
   Settings, Sliders, ChevronRight, Edit3, User, Clock, CheckCircle2,
   AlertCircle, ArrowRight, Share2, FastForward, Rewind, Eye,
   FolderOpen, Plus, RefreshCw, Activity, ShieldCheck, Zap, Layers,
-  ListFilter, ExternalLink, Printer, FileDown
+  ListFilter, ExternalLink, Printer, FileDown, SlidersHorizontal,
+  Wand2, Mic, Volume1, Cpu, Database, Link2, Radio, FileSpreadsheet,
+  ArrowLeft, FileCode, CheckSquare
 } from 'lucide-react';
 import { processRealtimeSpeechPunctuation } from '../../services/speechPunctuationEngine';
 import { FileTranscribeNavTab } from '../../components/layout/headers/FileTranscribeHeader';
@@ -30,6 +32,7 @@ export interface TranscribedFile {
   format: string;
   uploadedAt: string;
   modelUsed: string;
+  category?: string;
   segments: AudioSegment[];
   summary: {
     executive: string;
@@ -56,6 +59,7 @@ const SAMPLE_FILES: TranscribedFile[] = [
     format: 'MP3 (Stereo, 44.1kHz)',
     uploadedAt: 'Hôm nay lúc 09:15',
     modelUsed: 'AVG Neural ASR v2.4 (Khuyên dùng)',
+    category: 'Giao ban BĐH',
     summary: {
       executive: 'Cuộc họp rà soát tiến độ tích hợp vi mạch cảm biến quang học thế hệ mới AVG-X. Ban Lãnh Đạo đã thống nhất chỉ đạo phòng R&D hoàn thiện firmware phiên bản RC2 trước thứ Năm để nộp hồ sơ bảo hộ sáng chế SHTT.',
       keyDecisions: [
@@ -135,6 +139,7 @@ const SAMPLE_FILES: TranscribedFile[] = [
     format: 'M4A (AAC, 48kHz)',
     uploadedAt: 'Hôm qua lúc 15:30',
     modelUsed: 'AVG Neural ASR v2.4 (Khuyên dùng)',
+    category: 'Phỏng vấn nhân sự',
     summary: {
       executive: 'Phỏng vấn chuyên sâu ứng viên Senior AI Speech Engineer cho bài toán nhận dạng giọng nói tiếng Việt đa phương ngữ và tối ưu mô hình trên máy chủ cục bộ AVG Edge.',
       keyDecisions: [
@@ -189,6 +194,7 @@ const SAMPLE_FILES: TranscribedFile[] = [
     format: 'WAV (PCM 16-bit, 44.1kHz)',
     uploadedAt: '18/09/2026',
     modelUsed: 'Whisper Large v3 Enterprise',
+    category: 'Pháp chế & Hợp đồng',
     summary: {
       executive: 'Rà soát các điều khoản thanh toán thư tín dụng L/C và cam kết bảo hành thiết bị trong hợp đồng nhập khẩu dây chuyền sản xuất tự động.',
       keyDecisions: [
@@ -238,8 +244,8 @@ const SAMPLE_FILES: TranscribedFile[] = [
 ];
 
 export const FileTranscribeModule: React.FC = () => {
-  // Navigation tab state: 'upload' | 'editor' | 'library' | 'settings'
-  const [activeTab, setActiveTab] = useState<FileTranscribeNavTab>('upload');
+  // Navigation tab state: 'library' | 'utilities' | 'settings' | 'upload' | 'editor'
+  const [activeTab, setActiveTab] = useState<FileTranscribeNavTab>('library');
   
   // Current working file
   const [currentFile, setCurrentFile] = useState<TranscribedFile>(SAMPLE_FILES[0]);
@@ -253,6 +259,7 @@ export const FileTranscribeModule: React.FC = () => {
   const [enableDiarization, setEnableDiarization] = useState<boolean>(true);
   const [enablePunctuation, setEnablePunctuation] = useState<boolean>(true);
   const [enableDenoise, setEnableDenoise] = useState<boolean>(true);
+  const [enableAccentBoost, setEnableAccentBoost] = useState<boolean>(true);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
   // Audio Playback & Waveform State
@@ -260,12 +267,11 @@ export const FileTranscribeModule: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(SAMPLE_FILES[0].duration);
   const [playbackRate, setPlaybackRate] = useState<number>(1.0);
-  const [volume, setVolume] = useState<number>(1.0);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
   
   // Editor view modes: 'dialogue' | 'document' | 'summary'
   const [editorViewMode, setEditorViewMode] = useState<'dialogue' | 'document' | 'summary'>('dialogue');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
   const [copiedToast, setCopiedToast] = useState<string | null>(null);
   const [editingSegmentId, setEditingSegmentId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState<string>('');
@@ -274,9 +280,11 @@ export const FileTranscribeModule: React.FC = () => {
   const [renamingSpeakerId, setRenamingSpeakerId] = useState<string | null>(null);
   const [newSpeakerName, setNewSpeakerName] = useState<string>('');
 
+  // Settings view sub-tab
+  const [settingsSubTab, setSettingsSubTab] = useState<'vocab' | 'params' | 'export' | 'logs'>('vocab');
+
   // Waveform canvas ref
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
   const playIntervalRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -291,11 +299,7 @@ export const FileTranscribeModule: React.FC = () => {
   useEffect(() => {
     const handleTabChange = (e: any) => {
       if (e.detail && ['upload', 'editor', 'library', 'utilities', 'settings'].includes(e.detail)) {
-        if (e.detail === 'utilities') {
-          setActiveTab('upload');
-        } else {
-          setActiveTab(e.detail);
-        }
+        setActiveTab(e.detail);
       }
     };
     window.addEventListener('file_transcribe_tab_change', handleTabChange);
@@ -307,7 +311,7 @@ export const FileTranscribeModule: React.FC = () => {
     window.dispatchEvent(new CustomEvent('file_transcribe_tab_sync', { detail: activeTab }));
   }, [activeTab]);
 
-  // Audio Playback simulation / Web Audio synthesis
+  // Audio Playback simulation
   useEffect(() => {
     if (isPlaying) {
       playIntervalRef.current = setInterval(() => {
@@ -355,27 +359,21 @@ export const FileTranscribeModule: React.FC = () => {
     const progressPercent = duration > 0 ? currentTime / duration : 0;
     const activeBarIndex = Math.floor(progressPercent * numBars);
 
-    // Create pseudo-random visual waveform bars based on current file ID
     for (let i = 0; i < numBars; i++) {
       const seed = Math.sin((i + 1) * 12.9898 + (currentFile.name.length * 7)) * 43758.5453;
-      const normalizedHeight = (Math.abs(seed) % 0.8) + 0.2; // 20% to 100% height
+      const normalizedHeight = (Math.abs(seed) % 0.8) + 0.2;
       const barHeight = Math.max(8, normalizedHeight * (height - 12));
       const x = i * (barWidth + 2);
       const y = (height - barHeight) / 2;
 
-      // Color based on active / past / future playhead
       if (i < activeBarIndex) {
-        // Played: Orange / Sky gradient
         ctx.fillStyle = '#0284C7';
       } else if (i === activeBarIndex) {
-        // Current playhead
         ctx.fillStyle = '#F15A24';
       } else {
-        // Unplayed
         ctx.fillStyle = '#cbd5e1';
       }
 
-      // Rounded rect bar
       ctx.beginPath();
       ctx.roundRect(x, y, Math.max(2, barWidth), barHeight, 2);
       ctx.fill();
@@ -388,7 +386,7 @@ export const FileTranscribeModule: React.FC = () => {
     startTranscriptionProcess(file.name, `${(file.size / (1024 * 1024)).toFixed(1)} MB`, file.type || 'Audio file');
   };
 
-  // Start conversion pipeline simulation with realistic stages
+  // Start conversion pipeline simulation
   const startTranscriptionProcess = (fileName: string, sizeStr: string, formatStr: string) => {
     setIsProcessing(true);
     setProcessingProgress(5);
@@ -408,15 +406,15 @@ export const FileTranscribeModule: React.FC = () => {
         setProcessingStage(s.stage);
         if (s.p === 100) {
           setTimeout(() => {
-            // Create newly transcribed file object
             const newFile: TranscribedFile = {
               id: `file-${Date.now()}`,
               name: fileName,
               sizeStr: sizeStr,
-              duration: 215, // ~3m 35s
+              duration: 215,
               format: formatStr,
               uploadedAt: 'Vừa xong',
               modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
+              category: 'Chưa phân loại',
               summary: {
                 executive: `Biên bản chuyển đổi tự động từ tệp ghi âm "${fileName}". Cuộc họp tập trung thảo luận các nhiệm vụ trọng tâm, tiến độ triển khai và phân bổ trách nhiệm các phòng ban.`,
                 keyDecisions: [
@@ -462,17 +460,6 @@ export const FileTranscribeModule: React.FC = () => {
                   speakerRole: 'Thư ký',
                   text: processRealtimeSpeechPunctuation('Em xin phép ghi nhận và đưa toàn bộ các kết luận này vào biên bản chính thức để các bên cùng theo dõi và thực hiện đúng thời hạn quy định.'),
                   confidence: 0.99
-                },
-                {
-                  id: `seg-new-4`,
-                  startTime: 161,
-                  endTime: 215,
-                  speakerId: 'spk-1',
-                  speakerName: '1 - Người phát biểu chính',
-                  speakerColor: 'spk-1',
-                  speakerRole: 'Chủ trì',
-                  text: processRealtimeSpeechPunctuation('Cảm ơn mọi người. Chúng ta kết thúc phiên thảo luận tại đây và bắt tay vào triển khai ngay trong hôm nay.'),
-                  confidence: 0.98
                 }
               ]
             };
@@ -519,6 +506,14 @@ export const FileTranscribeModule: React.FC = () => {
     setNewSpeakerName('');
   };
 
+  // Delete file from library
+  const handleDeleteFile = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSavedLibrary(prev => prev.filter(f => f.id !== id));
+    setCopiedToast('Đã xóa tệp khỏi thư viện lưu trữ');
+    setTimeout(() => setCopiedToast(null), 2500);
+  };
+
   // Copy full transcript text to clipboard
   const handleCopyFullText = () => {
     const fullText = currentFile.segments.map(s => `[${formatTime(s.startTime)} - ${formatTime(s.endTime)}] ${s.speakerName}:\n${s.text}`).join('\n\n');
@@ -528,25 +523,25 @@ export const FileTranscribeModule: React.FC = () => {
   };
 
   // Export TXT file
-  const handleExportTxt = () => {
+  const handleExportTxt = (fileToExport = currentFile) => {
     const header = `TẬP ĐOÀN AVG ONE - BIÊN BẢN CHUYỂN ĐỔI GHI ÂM\n` +
-      `Tệp nguồn: ${currentFile.name}\n` +
-      `Thời lượng: ${formatTime(currentFile.duration)}\n` +
-      `Ngày xử lý: ${currentFile.uploadedAt}\n` +
-      `Mô hình AI: ${currentFile.modelUsed}\n` +
+      `Tệp nguồn: ${fileToExport.name}\n` +
+      `Thời lượng: ${formatTime(fileToExport.duration)}\n` +
+      `Ngày xử lý: ${fileToExport.uploadedAt}\n` +
+      `Mô hình AI: ${fileToExport.modelUsed}\n` +
       `======================================================================\n\n`;
-    const body = currentFile.segments.map(s => `[${formatTime(s.startTime)} - ${formatTime(s.endTime)}] ${s.speakerName} (${s.speakerRole}):\n${s.text}\n`).join('\n');
+    const body = fileToExport.segments.map(s => `[${formatTime(s.startTime)} - ${formatTime(s.endTime)}] ${s.speakerName} (${s.speakerRole}):\n${s.text}\n`).join('\n');
     const blob = new Blob([header + body], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentFile.name.replace(/\.[^/.]+$/, "")}_VanBan.txt`;
+    a.download = `${fileToExport.name.replace(/\.[^/.]+$/, "")}_VanBan.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
   // Export SRT Subtitle file
-  const handleExportSrt = () => {
+  const handleExportSrt = (fileToExport = currentFile) => {
     const toSrtTime = (seconds: number) => {
       const h = Math.floor(seconds / 3600);
       const m = Math.floor((seconds % 3600) / 60);
@@ -556,7 +551,7 @@ export const FileTranscribeModule: React.FC = () => {
     };
 
     let srtContent = '';
-    currentFile.segments.forEach((s, idx) => {
+    fileToExport.segments.forEach((s, idx) => {
       srtContent += `${idx + 1}\n`;
       srtContent += `${toSrtTime(s.startTime)} --> ${toSrtTime(s.endTime)}\n`;
       srtContent += `<font color="#F15A24">${s.speakerName}:</font> ${s.text}\n\n`;
@@ -566,17 +561,26 @@ export const FileTranscribeModule: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentFile.name.replace(/\.[^/.]+$/, "")}.srt`;
+    a.download = `${fileToExport.name.replace(/\.[^/.]+$/, "")}.srt`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  // Filtered segments for search query
+  // Filtered segments for search query in editor
   const displayedSegments = useMemo(() => {
     if (!searchQuery.trim()) return currentFile.segments;
     const q = searchQuery.toLowerCase();
     return currentFile.segments.filter(s => s.text.toLowerCase().includes(q) || s.speakerName.toLowerCase().includes(q));
   }, [currentFile, searchQuery]);
+
+  // Filtered files in Kho phẩm (Library)
+  const filteredLibrary = useMemo(() => {
+    return savedLibrary.filter(f => {
+      const matchesCategory = selectedCategory === 'Tất cả' || f.category === selectedCategory;
+      const matchesQuery = !searchQuery.trim() || f.name.toLowerCase().includes(searchQuery.toLowerCase()) || f.summary.executive.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesQuery;
+    });
+  }, [savedLibrary, selectedCategory, searchQuery]);
 
   // Determine currently active segment for karaoke playhead highlight
   const activeSegmentId = useMemo(() => {
@@ -585,14 +589,14 @@ export const FileTranscribeModule: React.FC = () => {
   }, [currentFile, currentTime]);
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 bg-slate-50/70 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden relative font-sans select-none">
+    <div className="w-full h-full flex-1 min-h-0 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden relative font-sans select-none">
       
-      {/* 🌐 GRID LINES PATTERN BACKGROUND (ĐỒNG BỘ PHONG CÁCH AVG ONE) */}
+      {/* 🌐 GRID LINES PATTERN BACKGROUND */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-40 pointer-events-none -z-0" />
 
       {/* 🎨 AMBIENT GLOW ORBS */}
-      <div className="absolute -top-20 -left-20 w-[400px] h-[400px] bg-[#0284C7]/12 dark:bg-[#0284C7]/15 rounded-full blur-[120px] pointer-events-none -z-0" />
-      <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-[#F15A24]/12 dark:bg-[#F15A24]/15 rounded-full blur-[120px] pointer-events-none -z-0" />
+      <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/12 dark:bg-[#0284C7]/15 rounded-full blur-[120px] pointer-events-none -z-0" />
+      <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/12 dark:bg-[#F15A24]/15 rounded-full blur-[120px] pointer-events-none -z-0" />
 
       {/* Toast Notification */}
       {copiedToast && (
@@ -603,23 +607,223 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 1: TẢI FILE GHI ÂM & THIẾT LẬP CHUYỂN ĐỔI (UPLOAD & ASR PIPELINE) */}
+      {/* 📁 ĐẦU MỤC 1: KHO PHẨM (DOCUMENT LIBRARY & MEDIA REPOSITORY) */}
       {/* ========================================================================= */}
-      {(activeTab === 'upload' || activeTab === 'utilities') && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 relative z-10 max-w-6xl mx-auto">
+      {activeTab === 'library' && (
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
           
-          {/* Top Hero Banner Card */}
-          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Top Metric / KPI Summary Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4 shrink-0">
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0">
+                <FolderOpen className="w-5.5 h-5.5" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Tệp Ghi Âm</div>
+                <div className="text-xl font-black text-slate-900 dark:text-white">{savedLibrary.length} tệp</div>
+              </div>
+            </div>
+
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-orange-100 dark:bg-orange-950/80 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] shrink-0">
+                <Clock className="w-5.5 h-5.5" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Thời Lượng</div>
+                <div className="text-xl font-black text-slate-900 dark:text-white">
+                  {formatTime(savedLibrary.reduce((acc, curr) => acc + curr.duration, 0))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 shrink-0">
+                <ShieldCheck className="w-5.5 h-5.5" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Độ Chính Xác AI</div>
+                <div className="text-xl font-black text-emerald-600 dark:text-emerald-400">98.6% WER</div>
+              </div>
+            </div>
+
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800 flex items-center justify-center text-purple-600 shrink-0">
+                <Sparkles className="w-5.5 h-5.5" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Lưu Trữ An Toàn</div>
+                <div className="text-xl font-black text-slate-900 dark:text-white">AES-256</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Filter & Action Toolbar */}
+          <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
+            {/* Search and Categories */}
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Tìm kiếm tệp theo tên hoặc nội dung tóm tắt..."
+                  className="pl-9 pr-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#0284C7] w-64 sm:w-80"
+                />
+              </div>
+
+              {/* Category Filter Chips */}
+              <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+                {['Tất cả', 'Giao ban BĐH', 'Pháp chế & Hợp đồng', 'Phỏng vấn nhân sự'].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-3 py-1 rounded-lg text-xs font-black transition cursor-pointer shrink-0 ${
+                      selectedCategory === cat
+                        ? 'bg-[#0284C7] text-white shadow-xs'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Action button: Chuyển đổi tệp mới */}
+            <button
+              onClick={() => setActiveTab('utilities')}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#F15A24] to-amber-500 hover:opacity-90 text-white text-xs font-black shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition shrink-0 self-start md:self-auto"
+            >
+              <Plus className="w-4 h-4 stroke-[3]" />
+              <span>Chuyển đổi tệp mới</span>
+            </button>
+          </div>
+
+          {/* Documents Grid Feed */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredLibrary.length === 0 ? (
+              <div className="col-span-full bg-white dark:bg-slate-900 rounded-3xl p-12 border border-slate-200 dark:border-slate-800 text-center space-y-3">
+                <FolderOpen className="w-12 h-12 text-slate-300 mx-auto" />
+                <div className="text-sm font-black text-slate-700 dark:text-slate-300">Không tìm thấy tệp ghi âm nào khớp với tìm kiếm</div>
+                <p className="text-xs text-slate-400">Thử thay đổi từ khóa hoặc bộ lọc danh mục phía trên.</p>
+              </div>
+            ) : (
+              filteredLibrary.map((file) => (
+                <div
+                  key={file.id}
+                  onClick={() => {
+                    setCurrentFile(file);
+                    setDuration(file.duration);
+                    setCurrentTime(0);
+                    setIsPlaying(false);
+                    setActiveTab('editor');
+                  }}
+                  className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-md hover:border-[#0284C7] dark:hover:border-sky-500 transition-all cursor-pointer group flex flex-col justify-between space-y-4 relative"
+                >
+                  <div className="space-y-3">
+                    {/* Header line */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-sky-50 dark:from-sky-950 dark:to-slate-800 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0 group-hover:scale-110 transition-transform">
+                        <FileAudio className="w-5 h-5" />
+                      </div>
+                      
+                      <div className="flex items-center gap-1.5">
+                        {file.category && (
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-sky-50 text-[#0284C7] dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">
+                            {file.category}
+                          </span>
+                        )}
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                          {formatTime(file.duration)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Title & Metadata */}
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-[#0284C7] transition" title={file.name}>
+                        {file.name}
+                      </h3>
+                      <div className="text-[10.5px] text-slate-400 font-medium mt-0.5 flex items-center gap-2">
+                        <span>{file.uploadedAt}</span>
+                        <span>•</span>
+                        <span>{file.sizeStr}</span>
+                      </div>
+                    </div>
+
+                    {/* Executive Summary Snippet */}
+                    <p className="text-[11.5px] text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed font-medium bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+                      {file.summary.executive}
+                    </p>
+                  </div>
+
+                  {/* Card Footer Actions */}
+                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                    <span className="text-[10.5px] font-extrabold text-slate-400">
+                      {file.segments.length} lượt thoại
+                    </span>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleExportTxt(file); }}
+                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition"
+                        title="Tải văn bản (.txt)"
+                      >
+                        <FileDown className="w-3.5 h-3.5 text-emerald-600" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleExportSrt(file); }}
+                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition"
+                        title="Tải phụ đề (.srt)"
+                      >
+                        <Clock className="w-3.5 h-3.5 text-amber-600" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => handleDeleteFile(file.id, e)}
+                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-100 hover:text-rose-600 text-slate-400 transition"
+                        title="Xóa tệp khỏi kho"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+
+                      <span className="px-3 py-1 rounded-xl bg-[#0284C7] text-white text-xs font-black shadow-xs flex items-center gap-1 group-hover:bg-[#F15A24] transition">
+                        <span>Mở</span>
+                        <ChevronRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 🛠️ ĐẦU MỤC 2: TIỆN ÍCH (AI AUDIO UTILITIES STUDIO & ASR PIPELINE SUITE) */}
+      {/* ========================================================================= */}
+      {(activeTab === 'utilities' || activeTab === 'upload') && (
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto">
+          
+          {/* Header Banner */}
+          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-slate-900/80 border border-sky-200 dark:border-sky-800 text-xs font-black text-[#0284C7] dark:text-sky-400">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 border border-sky-200 dark:border-sky-800 text-xs font-black text-[#0284C7] dark:text-sky-400">
                 <Sparkles className="w-3.5 h-3.5 text-[#F15A24]" />
-                <span>AI TRANSCRIPTION ENGINE v2.4</span>
+                <span>AVG AI AUDIO UTILITIES STUDIO</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                Chuyển Đổi File Ghi Âm Sang Văn Bản Chuẩn Xác
+                Bộ Tiện Ích Chuyển Đổi Voice-to-Text & Xử Lý Âm Thanh
               </h1>
               <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 max-w-2xl font-medium">
-                Hệ thống nhận diện giọng nói tiếng Việt chuyên sâu AVG One: Tự động phân tách người nói (Diarization), chèn dấu câu thông minh, chuẩn hóa từ mượn công sở và xuất văn bản hành chính tức thì.
+                Tải tệp ghi âm cuộc họp, trích xuất âm thanh từ video, khử ồn phòng họp và phân tách người nói chuẩn xác với các mô hình AI tiếng Việt chuyên sâu.
               </p>
             </div>
 
@@ -630,174 +834,234 @@ export const FileTranscribeModule: React.FC = () => {
                 className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-[#0284C7] shadow-xs flex items-center gap-2 transition-all cursor-pointer active:scale-95"
               >
                 <FolderOpen className="w-4 h-4 text-[#0284C7]" />
-                <span>Mở tệp mẫu vừa họp</span>
+                <span>Mở mẫu họp BĐH</span>
               </button>
             </div>
           </div>
 
-          {/* Main Dropzone & Upload Box */}
-          <div
-            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                handleFileSelect(e.dataTransfer.files[0]);
-              }
-            }}
-            className="p-8 sm:p-12 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/80 dark:bg-slate-900/60 transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-sm hover:shadow-md group cursor-pointer relative"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  handleFileSelect(e.target.files[0]);
-                }
-              }}
-              accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.mp4,.webm"
-              className="hidden"
-            />
-
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
-              <UploadCloud className="w-8 h-8 sm:w-10 sm:h-10 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
-            </div>
-
-            <div className="space-y-1">
-              <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
-                Kéo & thả file ghi âm vào đây, hoặc <span className="text-[#F15A24] underline decoration-wavy">chọn từ máy tính</span>
-              </h3>
-              <p className="text-xs text-slate-400 font-medium">
-                Hỗ trợ MP3, M4A, WAV, AAC, FLAC, OGG, MP4, WebM (Dung lượng tối đa 2GB mỗi tệp)
-              </p>
-            </div>
-
-            {/* Format badges */}
-            <div className="flex items-center gap-1.5 flex-wrap justify-center pt-2">
-              {['MP3', 'WAV', 'M4A', 'AAC', 'FLAC', 'MP4 Video'].map(fmt => (
-                <span key={fmt} className="px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10.5px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                  {fmt}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* AI Pre-processing Options Configuration Box */}
-          <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-[#0284C7]" />
-                <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
-                  Thiết Lập Mô Hình & Tiêu Chuẩn Xử Lý AI
-                </span>
-              </div>
-              <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Chuẩn Tiếng Việt AVG
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {/* Option 1: AI Model */}
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2">
-                <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Mô hình nhận dạng (ASR)</span>
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-[#0284C7]"
-                >
-                  <option value="neural-v2">AVG Neural ASR v2.4 (Khuyên dùng)</option>
-                  <option value="whisper-v3">Whisper Large v3 (Đa ngôn ngữ)</option>
-                  <option value="gemini-flash">Gemini 2.5 Flash Audio (Siêu tốc)</option>
-                </select>
-                <div className="text-[10px] text-slate-400">Độ chính xác tiếng Việt & từ mượn đạt 98.6%</div>
-              </div>
-
-              {/* Option 2: Speaker Diarization */}
+          {/* 2-Column Full-screen Studio Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            {/* Left Column (7 cols): Dropzone & Pipeline Options */}
+            <div className="lg:col-span-7 space-y-6">
+              
+              {/* Dropzone */}
               <div
-                onClick={() => setEnableDiarization(!enableDiarization)}
-                className={`p-3 rounded-xl border transition cursor-pointer flex flex-col justify-between ${
-                  enableDiarization
-                    ? 'bg-sky-50/60 dark:bg-sky-950/30 border-[#0284C7]/50'
-                    : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
-                }`}
+                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                  }
+                }}
+                className="p-8 sm:p-10 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/90 dark:bg-slate-900/90 transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-sm hover:shadow-md group cursor-pointer relative"
+                onClick={() => fileInputRef.current?.click()}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black text-slate-700 dark:text-slate-300">Phân tách người nói (Diarization)</span>
-                  <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enableDiarization ? 'bg-[#0284C7] text-white' : 'border border-slate-400'}`}>
-                    {enableDiarization && <Check className="w-3 h-3 stroke-[3]" />}
-                  </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      handleFileSelect(e.target.files[0]);
+                    }
+                  }}
+                  accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.mp4,.webm"
+                  className="hidden"
+                />
+
+                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
+                  <UploadCloud className="w-8 h-8 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
                 </div>
-                <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
-                  Tự động phân biệt giọng Chủ tọa, Thư ký và các thành viên tham gia.
+
+                <div className="space-y-1">
+                  <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
+                    Kéo & thả file ghi âm vào đây, hoặc <span className="text-[#F15A24] underline decoration-wavy">chọn từ máy tính</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 font-medium">
+                    Hỗ trợ MP3, M4A, WAV, AAC, FLAC, OGG, MP4, WebM (Dung lượng tối đa 2GB)
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap justify-center pt-1">
+                  {['MP3 Audio', 'WAV Studio', 'M4A Voice', 'MP4 Video', 'AAC', 'FLAC 24bit'].map(fmt => (
+                    <span key={fmt} className="px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10.5px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                      {fmt}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              {/* Option 3: Punctuation & ITN */}
-              <div
-                onClick={() => setEnablePunctuation(!enablePunctuation)}
-                className={`p-3 rounded-xl border transition cursor-pointer flex flex-col justify-between ${
-                  enablePunctuation
-                    ? 'bg-orange-50/60 dark:bg-orange-950/30 border-[#F15A24]/50'
-                    : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black text-slate-700 dark:text-slate-300">Chuẩn hóa dấu câu & Ngữ pháp</span>
-                  <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enablePunctuation ? 'bg-[#F15A24] text-white' : 'border border-slate-400'}`}>
-                    {enablePunctuation && <Check className="w-3 h-3 stroke-[3]" />}
+              {/* Model & Processing Pipeline Settings Card */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-4 h-4 text-[#0284C7]" />
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                      Cấu Hình Thuật Toán ASR & Tiêu Chuẩn Đầu Ra
+                    </span>
                   </div>
+                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Chuẩn Giọng 63 Tỉnh Thành
+                  </span>
                 </div>
-                <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
-                  Tự động chấm phẩy, chuyển đổi thuật ngữ công sở (KPI, OKR, PO, deadline...).
-                </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Quick Sample Audios for Instant Test */}
-          <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                Hoặc trải nghiệm ngay với 3 File ghi âm mẫu cuộc họp AVG:
-              </span>
-              <span className="text-[11px] font-bold text-[#0284C7]">Không cần tải file</span>
-            </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Select ASR Model */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 col-span-full">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Mô hình nhận dạng giọng nói (ASR Model)</span>
+                    <select
+                      value={selectedModel}
+                      onChange={(e) => setSelectedModel(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-[#0284C7]"
+                    >
+                      <option value="neural-v2">AVG Neural ASR v2.4 (Khuyên dùng - Chuẩn giọng tiếng Việt)</option>
+                      <option value="whisper-v3">Whisper Large v3 Enterprise (Đa ngôn ngữ & Dịch thuật)</option>
+                      <option value="gemini-flash">Gemini 2.5 Flash Audio (Siêu tốc & Tóm tắt trực tiếp)</option>
+                    </select>
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {SAMPLE_FILES.map(sample => (
-                <div
-                  key={sample.id}
-                  onClick={() => handleLoadSample(sample)}
-                  className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] dark:hover:border-sky-400 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between space-y-2.5"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="w-9 h-9 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0 group-hover:scale-105 transition-transform">
-                      <FileAudio className="w-5 h-5" />
+                  {/* Diarization toggle */}
+                  <div
+                    onClick={() => setEnableDiarization(!enableDiarization)}
+                    className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
+                      enableDiarization
+                        ? 'bg-sky-50/70 dark:bg-sky-950/30 border-[#0284C7]/50'
+                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-black text-slate-800 dark:text-slate-200">Phân tách người nói (Diarization)</span>
+                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enableDiarization ? 'bg-[#0284C7] text-white' : 'border border-slate-400'}`}>
+                        {enableDiarization && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
                     </div>
-                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-extrabold bg-slate-200/80 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                      {formatTime(sample.duration)}
-                    </span>
+                    <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
+                      Tự động gán nhãn giọng Chủ tọa, Thư ký và từng đại biểu.
+                    </div>
                   </div>
 
-                  <div>
-                    <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 group-hover:text-[#0284C7] line-clamp-1">
-                      {sample.name}
-                    </h4>
-                    <p className="text-[10.5px] text-slate-400 line-clamp-2 mt-0.5 font-medium">
-                      {sample.summary.executive}
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[10px] font-bold text-slate-500">
-                    <span>{sample.segments.length} lượt thoại</span>
-                    <span className="text-[#0284C7] font-black group-hover:underline flex items-center gap-0.5">
-                      Xem biên bản <ChevronRight className="w-3 h-3" />
-                    </span>
+                  {/* Punctuation toggle */}
+                  <div
+                    onClick={() => setEnablePunctuation(!enablePunctuation)}
+                    className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
+                      enablePunctuation
+                        ? 'bg-orange-50/70 dark:bg-orange-950/30 border-[#F15A24]/50'
+                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-black text-slate-800 dark:text-slate-200">Chuẩn hóa Dấu câu & Ngữ pháp</span>
+                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enablePunctuation ? 'bg-[#F15A24] text-white' : 'border border-slate-400'}`}>
+                        {enablePunctuation && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+                    </div>
+                    <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
+                      Chấm phẩy chính xác, tự chuẩn hóa từ viết tắt công sở.
+                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
+
             </div>
+
+            {/* Right Column (5 cols): AI Audio Utilities Tools & Sample Test Gallery */}
+            <div className="lg:col-span-5 space-y-6">
+              
+              {/* Utility Tools Grid */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <Wand2 className="w-4 h-4 text-[#F15A24]" />
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                    Công Cụ Xử Lý Âm Thanh Chuyên Sâu
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-orange-100 text-[#F15A24] flex items-center justify-center font-bold text-xs shrink-0">
+                        📹
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-black text-slate-800 dark:text-slate-200">Tách Âm Thanh từ Video</h4>
+                        <p className="text-[10px] text-slate-400">Trích xuất MP3 chất lượng cao từ tệp MP4, WebM</p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-emerald-100 text-emerald-700">Tự động</span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-sky-100 text-[#0284C7] flex items-center justify-center font-bold text-xs shrink-0">
+                        🔊
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-black text-slate-800 dark:text-slate-200">Khử Tiếng Ồn Phòng Họp</h4>
+                        <p className="text-[10px] text-slate-400">Lọc tiếng gió, tiếng vang hội trường & gõ phím</p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-sky-100 text-sky-700">75% Noise Filter</span>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs shrink-0">
+                        🎙️
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-black text-slate-800 dark:text-slate-200">Tăng Cường Giọng Vùng Miền</h4>
+                        <p className="text-[10px] text-slate-400">Tăng nhận diện giọng Bắc, Trung, Nam</p>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-purple-100 text-purple-700">Multi-Accent</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sample Audios Gallery for 1-Click Test */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Trải nghiệm tức thì với 3 Ghi âm mẫu AVG:
+                  </span>
+                  <span className="text-[10.5px] font-bold text-[#0284C7]">1-Click load</span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {SAMPLE_FILES.map(sample => (
+                    <div
+                      key={sample.id}
+                      onClick={() => handleLoadSample(sample)}
+                      className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] dark:hover:border-sky-400 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0 group-hover:scale-105 transition-transform">
+                          <FileAudio className="w-4.5 h-4.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 group-hover:text-[#0284C7] truncate">
+                            {sample.name}
+                          </h4>
+                          <p className="text-[10.5px] text-slate-400 truncate">
+                            {sample.summary.executive}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                          {formatTime(sample.duration)}
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#0284C7]" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
           {/* Processing Progress Modal */}
@@ -819,7 +1083,6 @@ export const FileTranscribeModule: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Progress bar */}
                 <div className="space-y-1.5">
                   <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
                     <div
@@ -840,17 +1103,27 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 2: TRÌNH BIÊN SOẠN & ĐỒNG BỘ THỜI GIAN (WAVEFORM & RICH WORKSPACE) */}
+      {/* 🎵 TRÌNH BIÊN SOẠN KARAOKE AUDIO WORKSPACE ('editor') */}
       {/* ========================================================================= */}
       {activeTab === 'editor' && (
         <div className="w-full h-full flex-1 flex flex-col min-h-0 overflow-hidden relative z-10">
           
           {/* TOP AUDIO WAVEFORM PLAYER TOOLBAR */}
-          <div className="bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-3 shrink-0 shadow-2xs space-y-2.5">
+          <div className="bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 shrink-0 shadow-2xs space-y-2.5">
             
-            {/* Top row: File details & Mode selector */}
+            {/* Top row: Back button, File details & View mode selector */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('library')}
+                  className="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 cursor-pointer transition shrink-0 flex items-center gap-1 text-xs font-bold"
+                  title="Quay lại Kho phẩm"
+                >
+                  <ArrowLeft className="w-4 h-4 text-[#0284C7]" />
+                  <span className="hidden sm:inline">Kho phẩm</span>
+                </button>
+
                 <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/80 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] shrink-0">
                   <FileAudio className="w-4 h-4" />
                 </div>
@@ -923,14 +1196,13 @@ export const FileTranscribeModule: React.FC = () => {
               />
               <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-500 pt-1">
                 <span className="text-[#0284C7] font-black">{formatTime(currentTime)}</span>
-                <span className="text-slate-400">Nhấp vào sóng âm để tua nhanh</span>
+                <span className="text-slate-400">Nhấp vào sóng âm để tua nhanh phát đúng đoạn phát biểu</span>
                 <span>{formatTime(duration)}</span>
               </div>
             </div>
 
             {/* Bottom row: Player Controls & Actions */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-              
               {/* Playback Controls */}
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
@@ -960,7 +1232,7 @@ export const FileTranscribeModule: React.FC = () => {
                   <FastForward className="w-4 h-4" />
                 </button>
 
-                {/* Playback Speed selector */}
+                {/* Speed selector */}
                 <div className="flex items-center gap-1 ml-1 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300">
                   <span>Tốc độ:</span>
                   <select
@@ -977,9 +1249,8 @@ export const FileTranscribeModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* Action Buttons: Search, Copy, Export */}
+              {/* Actions */}
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                {/* Search in transcript */}
                 <div className="relative">
                   <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                   <input
@@ -995,7 +1266,6 @@ export const FileTranscribeModule: React.FC = () => {
                   type="button"
                   onClick={handleCopyFullText}
                   className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center gap-1 cursor-pointer transition"
-                  title="Sao chép toàn bộ văn bản"
                 >
                   <Copy className="w-3.5 h-3.5 text-[#0284C7]" />
                   <span>Sao chép</span>
@@ -1003,9 +1273,8 @@ export const FileTranscribeModule: React.FC = () => {
 
                 <button
                   type="button"
-                  onClick={handleExportTxt}
+                  onClick={() => handleExportTxt()}
                   className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center gap-1 cursor-pointer transition"
-                  title="Xuất file văn bản (.txt)"
                 >
                   <FileDown className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Xuất TXT</span>
@@ -1013,23 +1282,18 @@ export const FileTranscribeModule: React.FC = () => {
 
                 <button
                   type="button"
-                  onClick={handleExportSrt}
+                  onClick={() => handleExportSrt()}
                   className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold flex items-center gap-1 cursor-pointer transition"
-                  title="Xuất phụ đề mốc thời gian (.srt)"
                 >
                   <Clock className="w-3.5 h-3.5 text-amber-600" />
                   <span>Xuất SRT</span>
                 </button>
               </div>
-
             </div>
-
           </div>
 
           {/* MAIN TRANSCRIPT CONTENT FEED */}
-          <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 max-w-5xl mx-auto w-full">
-            
-            {/* VIEW MODE 1: DIALOGUE (HỘI THOẠI PHÂN VAI) */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 max-w-5xl mx-auto w-full">
             {editorViewMode === 'dialogue' && (
               <div className="space-y-3">
                 {displayedSegments.length === 0 ? (
@@ -1050,10 +1314,8 @@ export const FileTranscribeModule: React.FC = () => {
                             : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
                         }`}
                       >
-                        {/* Speaker & Timestamp header */}
                         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 gap-2">
                           <div className="flex items-center gap-2 flex-wrap">
-                            {/* Speaker avatar tag */}
                             <div
                               onClick={() => {
                                 setRenamingSpeakerId(seg.speakerId);
@@ -1076,25 +1338,20 @@ export const FileTranscribeModule: React.FC = () => {
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 shrink-0">
-                            {/* Interactive Timestamp button */}
-                            <button
-                              type="button"
-                              onClick={() => handleJumpToSegment(seg)}
-                              className={`px-2 py-0.5 rounded-lg text-[10.5px] font-mono font-black flex items-center gap-1 transition cursor-pointer ${
-                                isCurrentPlaying
-                                  ? 'bg-[#F15A24] text-white shadow-xs animate-pulse'
-                                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300'
-                              }`}
-                              title="Bấm để phát đúng đoạn này"
-                            >
-                              <Play className="w-2.5 h-2.5 fill-current" />
-                              <span>{formatTime(seg.startTime)} - {formatTime(seg.endTime)}</span>
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleJumpToSegment(seg)}
+                            className={`px-2 py-0.5 rounded-lg text-[10.5px] font-mono font-black flex items-center gap-1 transition cursor-pointer ${
+                              isCurrentPlaying
+                                ? 'bg-[#F15A24] text-white shadow-xs animate-pulse'
+                                : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300'
+                            }`}
+                          >
+                            <Play className="w-2.5 h-2.5 fill-current" />
+                            <span>{formatTime(seg.startTime)} - {formatTime(seg.endTime)}</span>
+                          </button>
                         </div>
 
-                        {/* Dialogue text / Editing area */}
                         <div className="pt-2.5">
                           {editingSegmentId === seg.id ? (
                             <div className="space-y-2">
@@ -1102,20 +1359,20 @@ export const FileTranscribeModule: React.FC = () => {
                                 value={editingText}
                                 onChange={(e) => setEditingText(e.target.value)}
                                 rows={3}
-                                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-sky-400 text-xs sm:text-sm font-medium focus:outline-none focus:ring-1 focus:ring-sky-500"
+                                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-sky-400 text-xs sm:text-sm font-medium focus:outline-none"
                               />
                               <div className="flex items-center justify-end gap-2">
                                 <button
                                   type="button"
                                   onClick={() => setEditingSegmentId(null)}
-                                  className="px-3 py-1 rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-100 cursor-pointer"
+                                  className="px-3 py-1 rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-100"
                                 >
                                   Hủy
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleSaveSegmentText(seg.id)}
-                                  className="px-3 py-1 rounded-lg bg-[#0284C7] text-white text-xs font-black shadow-xs cursor-pointer"
+                                  className="px-3 py-1 rounded-lg bg-[#0284C7] text-white text-xs font-black shadow-xs"
                                 >
                                   Lưu thay đổi
                                 </button>
@@ -1141,7 +1398,6 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
             )}
 
-            {/* VIEW MODE 2: CLEAN DOCUMENT (VĂN BẢN HÀNH CHÍNH LIỀN MẠCH) */}
             {editorViewMode === 'document' && (
               <div className="bg-white dark:bg-slate-900 p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
                 <div className="text-center pb-4 border-b border-slate-200 dark:border-slate-800 space-y-1">
@@ -1155,7 +1411,7 @@ export const FileTranscribeModule: React.FC = () => {
                 </div>
 
                 <div className="space-y-4 text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
-                  {currentFile.segments.map((seg, idx) => (
+                  {currentFile.segments.map((seg) => (
                     <div key={seg.id} className="space-y-1">
                       <div className="font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
@@ -1167,18 +1423,11 @@ export const FileTranscribeModule: React.FC = () => {
                     </div>
                   ))}
                 </div>
-
-                <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400 font-semibold">
-                  <span>Hệ thống chuyển đổi giọng nói AVG Neural Speech Engine</span>
-                  <span>Trang 1 / 1</span>
-                </div>
               </div>
             )}
 
-            {/* VIEW MODE 3: AI EXECUTIVE SUMMARY & ACTION ITEMS */}
             {editorViewMode === 'summary' && (
               <div className="space-y-4">
-                {/* Summary Card */}
                 <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#0284C7]">
                     <Sparkles className="w-4 h-4 text-[#F15A24]" />
@@ -1189,7 +1438,6 @@ export const FileTranscribeModule: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Key Decisions */}
                 <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -1207,7 +1455,6 @@ export const FileTranscribeModule: React.FC = () => {
                   </ul>
                 </div>
 
-                {/* Action items table */}
                 <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#F15A24]">
                     <Zap className="w-4 h-4 text-[#F15A24]" />
@@ -1247,7 +1494,6 @@ export const FileTranscribeModule: React.FC = () => {
                 </div>
               </div>
             )}
-
           </div>
 
           {/* Bulk Rename Speaker Modal */}
@@ -1265,20 +1511,20 @@ export const FileTranscribeModule: React.FC = () => {
                     value={newSpeakerName}
                     onChange={(e) => setNewSpeakerName(e.target.value)}
                     placeholder="Nhập tên nhân sự hoặc chức danh..."
-                    className="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#F15A24]"
+                    className="w-full p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none"
                   />
                   <div className="text-[10px] text-slate-400">Tên mới sẽ tự động cập nhật cho toàn bộ các đoạn phát biểu của người này trong tệp.</div>
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-2">
                   <button
                     onClick={() => setRenamingSpeakerId(null)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-100 cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-100"
                   >
                     Hủy
                   </button>
                   <button
                     onClick={handleRenameSpeaker}
-                    className="px-4 py-1.5 rounded-lg bg-[#F15A24] text-white text-xs font-black shadow-xs cursor-pointer active:scale-95 transition"
+                    className="px-4 py-1.5 rounded-lg bg-[#F15A24] text-white text-xs font-black shadow-xs"
                   >
                     Cập nhật toàn bài
                   </button>
@@ -1291,138 +1537,234 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 3: THƯ VIỆN TỆP ĐÃ DỊCH (LIBRARY & HISTORY) */}
+      {/* ⚙️ ĐẦU MỤC 3: CÀI ĐẶT (SYSTEM CONFIGURATION & MODEL PARAMETERS WORKSPACE) */}
       {/* ========================================================================= */}
-      {activeTab === 'library' && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 relative z-10 max-w-6xl mx-auto">
-          <div className="flex items-center justify-between">
+      {activeTab === 'settings' && (
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+          
+          {/* Header Banner */}
+          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-                Thư Viện Tệp Ghi Âm Đã Chuyển Đổi
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Toàn bộ các tệp ghi âm, biên bản cuộc họp và phụ đề đã được lưu trữ an toàn.
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                Cấu Hình Mô Hình & Tùy Chỉnh Thuật Toán ASR
+              </h1>
+              <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                Quản lý từ điển từ mượn công sở, thông số bộ lọc âm thanh và quy chuẩn xuất báo cáo tự động của Tập đoàn AVG.
               </p>
             </div>
             <button
-              onClick={() => setActiveTab('upload')}
-              className="px-3.5 py-2 rounded-xl bg-[#0284C7] hover:bg-sky-600 text-white text-xs font-black shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95 transition"
+              type="button"
+              onClick={() => {
+                setCopiedToast('Đã lưu cấu hình hệ thống thành công!');
+                setTimeout(() => setCopiedToast(null), 3000);
+              }}
+              className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#F15A24] to-amber-500 hover:opacity-90 text-white font-black text-xs shadow-xs cursor-pointer active:scale-95 transition shrink-0"
             >
-              <Plus className="w-4 h-4" />
-              <span>Chuyển đổi tệp mới</span>
+              Lưu cấu hình hệ thống
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {savedLibrary.map(item => (
-              <div
-                key={item.id}
-                className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-3 flex flex-col justify-between hover:border-[#0284C7] transition"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7]">
-                      <FileAudio className="w-5 h-5" />
-                    </div>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-500">
-                      {formatTime(item.duration)}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xs sm:text-[13px] font-black text-slate-900 dark:text-white line-clamp-1" title={item.name}>
-                      {item.name}
-                    </h3>
-                    <div className="text-[10.5px] text-slate-400 mt-0.5">
-                      {item.uploadedAt} • {item.sizeStr}
-                    </div>
-                  </div>
-
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 font-medium">
-                    {item.summary.executive}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-bold text-slate-400">{item.segments.length} đoạn hội thoại</span>
+          {/* 2-Column Full-screen Settings Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+            
+            {/* Left Sidebar Navigation (3 cols) */}
+            <div className="lg:col-span-3 bg-white/95 dark:bg-slate-900/95 p-3 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1">
+              {[
+                { id: 'vocab' as const, label: 'Từ điển Chuyên ngành', desc: 'Custom Vocabulary Boosting', icon: Database },
+                { id: 'params' as const, label: 'Thông số Thuật toán', desc: 'Acoustic & Model Tuning', icon: Cpu },
+                { id: 'export' as const, label: 'Quy chuẩn Webhook', desc: 'Cloud Integration & Export', icon: Link2 },
+                { id: 'logs' as const, label: 'Nhật ký Hệ thống', desc: 'API Audit Logs & Activity', icon: Activity },
+              ].map((item) => {
+                const isActive = settingsSubTab === item.id;
+                const IconComp = item.icon;
+                return (
                   <button
-                    type="button"
-                    onClick={() => {
-                      setCurrentFile(item);
-                      setDuration(item.duration);
-                      setCurrentTime(0);
-                      setIsPlaying(false);
-                      setActiveTab('editor');
-                    }}
-                    className="px-3 py-1 rounded-lg bg-[#0284C7]/10 hover:bg-[#0284C7] text-[#0284C7] hover:text-white text-xs font-black transition cursor-pointer"
+                    key={item.id}
+                    onClick={() => setSettingsSubTab(item.id)}
+                    className={`w-full p-3 rounded-2xl text-left transition-all cursor-pointer flex items-center gap-3 ${
+                      isActive
+                        ? 'bg-[#0284C7] text-white shadow-xs font-black'
+                        : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold'
+                    }`}
                   >
-                    Mở biên bản
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                      <IconComp className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs truncate">{item.label}</div>
+                      <div className={`text-[10px] truncate ${isActive ? 'text-white/80' : 'text-slate-400'}`}>{item.desc}</div>
+                    </div>
                   </button>
+                );
+              })}
+            </div>
+
+            {/* Right Main Content (9 cols) */}
+            <div className="lg:col-span-9 bg-white/95 dark:bg-slate-900/95 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
+              
+              {/* SUB-TAB 1: CUSTOM VOCABULARY BOOSTING */}
+              {settingsSubTab === 'vocab' && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Database className="w-4.5 h-4.5 text-[#0284C7]" />
+                      <span>Từ Điển Chuyên Ngành & Thuật Ngữ Viết Tắt AVG (Vocabulary Boosting)</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                      Các thuật ngữ bên dưới sẽ được AI ưu tiên gán trọng số nhận diện cao nhất khi người phát biểu nói nhanh hoặc nói chêm tiếng Anh.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <label className="text-xs font-black text-slate-700 dark:text-slate-300">
+                      Danh mục từ khóa ưu tiên (Phân cách bằng dấu phẩy):
+                    </label>
+                    <textarea
+                      defaultValue="PO, VAT, OKR, KPI, Firmware, Sensor, Modbus, BLE, SHTT, Bản quyền, Nghiệm thu, LC, B/L, RC2, CAD, CNC, PCB, RDI, AVG One, CTC Decoder, Quantization, Edge AI"
+                      rows={5}
+                      className="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono leading-relaxed text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+                    />
+                  </div>
+
+                  {/* Preset chips */}
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-bold text-slate-400">Gợi ý từ khóa mẫu theo phòng ban:</span>
+                    <div className="flex flex-wrap gap-2">
+                      {['R&D & Kỹ thuật vi mạch', 'Tài chính - Kế toán & Ngân hàng', 'Pháp lý & Sở hữu trí tuệ', 'Quản trị Ban Điều Hành'].map((chip) => (
+                        <span key={chip} className="px-3 py-1 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 text-xs font-bold border border-sky-200 dark:border-sky-800 cursor-pointer hover:bg-sky-100">
+                          + {chip}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              )}
 
-      {/* ========================================================================= */}
-      {/* TAB 4: CẤU HÌNH MÔ HÌNH AI & TỪ ĐIỂN CHUYÊN NGÀNH (SETTINGS) */}
-      {/* ========================================================================= */}
-      {activeTab === 'settings' && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 relative z-10 max-w-4xl mx-auto">
-          <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-              Cấu Hình Mô Hình & Từ Điển Chuyên Ngành AVG
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Tùy chỉnh thông số thuật toán ASR, độ nhạy khử nhiễu và danh mục từ khóa ưu tiên nhận diện.
-            </p>
-          </div>
+              {/* SUB-TAB 2: ACOUSTIC PARAMETERS & MODEL TUNING */}
+              {settingsSubTab === 'params' && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Cpu className="w-4.5 h-4.5 text-[#F15A24]" />
+                      <span>Thông Số Thuật Toán & Xử Lý Âm Thanh</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                      Tinh chỉnh ngưỡng nhạy lọc nhiễu, phân tách người nói và quy tắc chấm dấu câu tự động.
+                    </p>
+                  </div>
 
-          <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-5">
-            {/* Setting 1 */}
-            <div className="space-y-1.5 pb-4 border-b border-slate-100 dark:border-slate-800">
-              <label className="text-xs font-black text-slate-800 dark:text-slate-200">
-                Từ Điển Thuật Ngữ & Viết Tắt Công Sở AVG (Custom Vocabulary Boosting)
-              </label>
-              <textarea
-                defaultValue="PO, VAT, OKR, KPI, Firmware, Sensor, Modbus, BLE, SHTT, Bản quyền, Nghiệm thu, LC, B/L, RC2, CAD, CNC, PCB, RDI"
-                rows={3}
-                className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
-              />
-              <div className="text-[10.5px] text-slate-400">
-                Các từ khóa trên sẽ được AI ưu tiên nhận diện chính xác 100% khi phát âm bồi hoặc nói nhanh trong cuộc họp.
-              </div>
+                  <div className="space-y-5">
+                    {/* Noise suppression */}
+                    <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                      <div className="flex items-center justify-between text-xs font-black">
+                        <span className="text-slate-800 dark:text-slate-200">Độ nhạy khử ồn môi trường (Noise Suppression)</span>
+                        <span className="text-[#0284C7]">75% (Khuyên dùng)</span>
+                      </div>
+                      <input type="range" min="0" max="100" defaultValue="75" className="w-full accent-[#0284C7] cursor-pointer" />
+                      <div className="text-[10.5px] text-slate-400">Tự động lọc tiếng gió quạt, bàn phím và tiếng vọng phòng hội trường.</div>
+                    </div>
+
+                    {/* Diarization threshold */}
+                    <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                      <div className="flex items-center justify-between text-xs font-black">
+                        <span className="text-slate-800 dark:text-slate-200">Độ nhạy phân biệt giọng người nói (Speaker Diarization)</span>
+                        <span className="text-[#F15A24]">85% High Precision</span>
+                      </div>
+                      <input type="range" min="0" max="100" defaultValue="85" className="w-full accent-[#F15A24] cursor-pointer" />
+                      <div className="text-[10.5px] text-slate-400">Phân biệt chính xác giữa các giọng nói có âm sắc tương đồng trong cùng một cuộc họp.</div>
+                    </div>
+
+                    {/* Max speakers limit */}
+                    <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                      <div className="flex items-center justify-between text-xs font-black">
+                        <span className="text-slate-800 dark:text-slate-200">Số lượng người phát biểu tối đa dự kiến</span>
+                        <span className="text-emerald-600">Tối đa 6 người</span>
+                      </div>
+                      <select className="w-full p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                        <option>2 người (Phỏng vấn 1-on-1)</option>
+                        <option selected>4-6 người (Giao ban phòng ban)</option>
+                        <option>10+ người (Hội thảo / Họp cổ đông)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SUB-TAB 3: EXPORT & WEBHOOK CLOUD SYNC */}
+              {settingsSubTab === 'export' && (
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Link2 className="w-4.5 h-4.5 text-emerald-600" />
+                      <span>Quy Chuẩn Webhook & Tự Động Hóa Đồng Bộ Cloud</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                      Tự động gửi biên bản sau khi chuyển đổi thành công lên Google Sheets, Microsoft Teams hoặc Email ban quản trị.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-black text-slate-700 dark:text-slate-300">Webhook URL nhận dữ liệu tự động:</label>
+                      <input
+                        type="url"
+                        defaultValue="https://one.auvietglobal.com/api/v1/transcribe/webhook-receiver"
+                        className="w-full p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200 focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs font-black text-slate-700 dark:text-slate-300">Định dạng file xuất mặc định:</label>
+                      <div className="flex items-center gap-3">
+                        {['TXT Text', 'SRT Subtitle', 'DOCX Word', 'JSON Raw'].map((fmt, i) => (
+                          <label key={fmt} className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                            <input type="checkbox" defaultChecked={i < 2} className="rounded text-[#0284C7]" />
+                            <span>{fmt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SUB-TAB 4: SYSTEM LOGS */}
+              {settingsSubTab === 'logs' && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Activity className="w-4.5 h-4.5 text-purple-600" />
+                      <span>Nhật Ký Chuyển Đổi & Lịch Sử API</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 font-medium mt-1">
+                      Theo dõi tiến trình xử lý, thời gian biên dịch và dung lượng tệp ghi âm gần đây.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2 font-mono text-[11px]">
+                    {[
+                      { time: '09:15:22', status: 'SUCCESS 200', file: 'Giao_ban_dieu_hanh_Sensor_AI_Tuan38.mp3', duration: '3m05s', model: 'AVG Neural ASR v2.4' },
+                      { time: '15:30:10', status: 'SUCCESS 200', file: 'Phong_van_chuyen_gia_AI_Engine.m4a', duration: '2m22s', model: 'AVG Neural ASR v2.4' },
+                      { time: '10:45:00', status: 'SUCCESS 200', file: 'Hop_tham_dinh_phap_ly_hop_dong_quoc_te.wav', duration: '2m40s', model: 'Whisper Large v3' },
+                    ].map((log, i) => (
+                      <div key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-400">{log.time}</span>
+                          <span className="px-2 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold">{log.status}</span>
+                          <span className="text-slate-800 dark:text-slate-200 font-bold">{log.file}</span>
+                        </div>
+                        <div className="text-slate-400">
+                          <span>{log.duration}</span> • <span>{log.model}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </div>
-
-            {/* Setting 2 */}
-            <div className="space-y-1.5 pb-4 border-b border-slate-100 dark:border-slate-800">
-              <label className="text-xs font-black text-slate-800 dark:text-slate-200">
-                Độ nhạy khử ồn môi trường (Acoustic Noise Suppression Threshold)
-              </label>
-              <div className="flex items-center gap-3">
-                <input type="range" min="0" max="100" defaultValue="75" className="w-full accent-[#0284C7] cursor-pointer" />
-                <span className="text-xs font-black text-[#0284C7] w-10 text-right">75%</span>
-              </div>
-              <div className="text-[10.5px] text-slate-400">
-                Tự động lọc tiếng quạt gió, tiếng gõ phím và tiếng vang trong phòng họp hội trường.
-              </div>
-            </div>
-
-            {/* Save button */}
-            <div className="flex items-center justify-end">
-              <button
-                type="button"
-                onClick={() => {
-                  setCopiedToast('Đã lưu cấu hình mô hình AI thành công!');
-                  setTimeout(() => setCopiedToast(null), 3000);
-                }}
-                className="px-5 py-2.5 rounded-xl bg-[#F15A24] text-white text-xs font-black shadow-xs cursor-pointer active:scale-95 transition"
-              >
-                Lưu cấu hình hệ thống
-              </button>
-            </div>
           </div>
+
         </div>
       )}
 
