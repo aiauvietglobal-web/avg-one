@@ -290,8 +290,12 @@ export const FileTranscribeModule: React.FC = () => {
   // Sync tab with header events
   useEffect(() => {
     const handleTabChange = (e: any) => {
-      if (e.detail && ['upload', 'editor', 'library', 'settings'].includes(e.detail)) {
-        setActiveTab(e.detail);
+      if (e.detail && ['upload', 'editor', 'library', 'utilities', 'settings'].includes(e.detail)) {
+        if (e.detail === 'utilities') {
+          setActiveTab('upload');
+        } else {
+          setActiveTab(e.detail);
+        }
       }
     };
     window.addEventListener('file_transcribe_tab_change', handleTabChange);
@@ -601,7 +605,7 @@ export const FileTranscribeModule: React.FC = () => {
       {/* ========================================================================= */}
       {/* TAB 1: TẢI FILE GHI ÂM & THIẾT LẬP CHUYỂN ĐỔI (UPLOAD & ASR PIPELINE) */}
       {/* ========================================================================= */}
-      {activeTab === 'upload' && (
+      {(activeTab === 'upload' || activeTab === 'utilities') && (
         <div className="w-full h-full flex-1 overflow-y-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6 relative z-10 max-w-6xl mx-auto">
           
           {/* Top Hero Banner Card */}

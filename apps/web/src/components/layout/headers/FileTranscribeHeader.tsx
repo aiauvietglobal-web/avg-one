@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   Home, UploadCloud, FileText, FolderOpen, Settings,
-  Sparkles, CheckCircle2, ChevronRight, Music, Activity
+  Sparkles, CheckCircle2, ChevronRight, Music, Activity, SlidersHorizontal
 } from 'lucide-react';
 
-export type FileTranscribeNavTab = 'upload' | 'editor' | 'library' | 'settings';
+export type FileTranscribeNavTab = 'library' | 'utilities' | 'settings' | 'upload' | 'editor';
 
 export interface FileTranscribeHeaderProps {
   onBack: () => void;
@@ -18,7 +18,7 @@ export interface FileTranscribeHeaderProps {
 export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
   onBack,
   onGoHome,
-  activeNavTab = 'upload',
+  activeNavTab = 'library',
   onSelectNavTab,
   renderUserAuthButton,
   hasActiveFile = false
@@ -80,12 +80,16 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
           {/* BỘ ĐẦU MỤC QUẢN LÝ CHUYỂN ĐỔI FILE GHI ÂM: THIẾT KẾ DẠNG HỘP HIỆN ĐẠI */}
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
-              { id: 'upload' as const, label: 'Tải File & Xử Lý', icon: UploadCloud },
-              { id: 'editor' as const, label: 'Biên Soạn & Phân Vai', icon: FileText, badge: hasActiveFile ? 'Đang mở' : undefined },
-              { id: 'library' as const, label: 'Thư Viện Tệp', icon: FolderOpen },
-              { id: 'settings' as const, label: 'Cấu Hình AI', icon: Settings },
+              { id: 'library' as const, label: 'Kho phẩm', icon: FolderOpen, badge: hasActiveFile ? 'Đang mở' : undefined },
+              { id: 'utilities' as const, label: 'Tiện ích', icon: SlidersHorizontal },
+              { id: 'settings' as const, label: 'Cài đặt', icon: Settings },
             ].map((tab) => {
-              const isActive = currentTab === tab.id;
+              const isActive =
+                tab.id === 'library'
+                  ? (currentTab === 'library' || currentTab === 'editor')
+                  : tab.id === 'utilities'
+                  ? (currentTab === 'utilities' || currentTab === 'upload')
+                  : (currentTab === 'settings');
               const IconComponent = tab.icon;
               return (
                 <button
