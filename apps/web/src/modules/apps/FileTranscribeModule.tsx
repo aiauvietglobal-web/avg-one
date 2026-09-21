@@ -1087,6 +1087,25 @@ export const FileTranscribeModule: React.FC = () => {
                   {/* Recessed Live Conversation Transcript Feed Cavity */}
                   <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                     
+                    {/* Inline Non-blocking Live Conversion Status Banner */}
+                    {isProcessing && (
+                      <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800/80 shadow-xs space-y-2 mb-3">
+                        <div className="flex items-center justify-between text-xs font-extrabold text-[#0284C7] dark:text-sky-300">
+                          <span className="flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-[#F15A24] animate-spin" />
+                            <span>{processingStage || 'Đang thực thi chuyển đổi âm thanh...'}</span>
+                          </span>
+                          <span className="font-mono text-[#F15A24] font-black">{processingProgress}%</span>
+                        </div>
+                        <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-[#0284C7] via-sky-400 to-[#F15A24] h-full rounded-full transition-all duration-300"
+                            style={{ width: `${processingProgress}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     {/* Transcript Message Feed Bubbles */}
                     {currentFile && currentFile.segments && currentFile.segments.length > 0 ? (
                       <div className="space-y-3">
@@ -1336,41 +1355,6 @@ export const FileTranscribeModule: React.FC = () => {
           </div>
         </div>
       )}
-
-          {/* Processing Progress Modal */}
-          {isProcessing && (
-            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 text-center">
-                <div className="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-[#0284C7] to-[#F15A24] p-0.5 shadow-lg animate-pulse">
-                  <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[22px] flex items-center justify-center">
-                    <Activity className="w-8 h-8 text-[#F15A24] animate-pulse" />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                    Đang Chuyển Đổi Thành Văn Bản...
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    {processingStage}
-                  </p>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-[#0284C7] to-[#F15A24] h-full rounded-full transition-all duration-300"
-                      style={{ width: `${processingProgress}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
-                    <span>Mô hình: {selectedModel}</span>
-                    <span className="font-black text-[#F15A24]">{processingProgress}%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
       {/* ========================================================================= */}
       {/* 📁 MỞ RỘNG TOÀN MÀN HÌNH (FULL-BLEED) - ĐẦU MỤC KHO PHẨM */}
