@@ -788,91 +788,97 @@ export const FileTranscribeModule: React.FC = () => {
             <div className="h-full grid grid-cols-1 lg:grid-cols-12 gap-3 overflow-hidden">
               
               {/* ========================================================================= */}
-              {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): PHỔ SÓNG AI & TELEMETRY                      */}
+              {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): HỘP NẠP TỆP GHI ÂM (UPLOAD BOX)              */}
               {/* ========================================================================= */}
               <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col h-full overflow-hidden text-xs shrink-0">
-                <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3 relative overflow-hidden backdrop-blur-md transition-all flex-1 h-full flex flex-col justify-between">
+                <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs relative overflow-hidden backdrop-blur-md transition-all flex-1 h-full flex flex-col justify-between space-y-3">
+                  
                   {/* Ambient Glow */}
-                  <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 rounded-full blur-2xl pointer-events-none" />
+                  <div className="absolute -top-10 -left-10 w-28 h-28 bg-[#0284C7]/15 dark:bg-[#0284C7]/25 rounded-full blur-2xl pointer-events-none" />
 
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 shrink-0">
-                    <div className="flex items-center gap-1.5 text-xs font-black text-[#00A8E8] dark:text-[#38BDF8] uppercase tracking-wider">
-                      <Activity className="w-3.5 h-3.5 text-[#00A8E8] animate-pulse" />
-                      <span>Phổ Sóng AI</span>
+                    <div className="flex items-center gap-1.5 text-xs font-black text-[#0284C7] dark:text-[#38BDF8] uppercase tracking-wider">
+                      <UploadCloud className="w-4 h-4 text-[#0284C7]" />
+                      <span>Nạp Tệp Ghi Âm</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                        <span>{isRecording ? 'LIVE' : 'STANDBY'}</span>
-                      </span>
-
-                      <button
-                        onClick={() => setActiveTab('editor')}
-                        className="h-6 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-600 dark:text-slate-300 hover:text-[#00A8E8] flex items-center gap-1 text-[10px] font-bold transition-all cursor-pointer shadow-2xs"
-                        title="Mở rộng toàn màn hình"
-                      >
-                        <Maximize2 className="w-3 h-3 stroke-[2.5]" />
-                        <span className="hidden sm:inline">Mở rộng</span>
-                      </button>
-                    </div>
+                    <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-[#0284C7] dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
+                      <span>SẴN SÀNG</span>
+                    </span>
                   </div>
 
-                  {/* Tall Visualizer Canvas Box */}
-                  <div className="relative group cursor-pointer flex-1 min-h-[340px] sm:min-h-[380px] flex flex-col">
-                    <CyberAudioStudioCanvas
-                      isRecording={isRecording}
-                      recordingSeconds={recordingSeconds}
-                      className="relative flex-1 h-full min-h-[340px] sm:min-h-[380px] w-full rounded-xl overflow-hidden bg-[#070B16] shadow-inner border border-slate-800/90"
+                  {/* Drag & Drop Upload Zone Area */}
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
+                    }}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex-1 min-h-[260px] rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-800/80 bg-slate-50/80 dark:bg-slate-950/60 hover:border-[#F15A24] dark:hover:border-[#F15A24] hover:bg-sky-50/50 dark:hover:bg-slate-900/80 transition-all cursor-pointer p-4 flex flex-col items-center justify-center text-center space-y-3 group relative overflow-hidden"
+                  >
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])}
+                      accept="audio/*,video/*"
+                      className="hidden"
                     />
+
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0284C7]/20 to-[#F15A24]/20 text-[#0284C7] dark:text-sky-400 flex items-center justify-center border border-sky-300/40 dark:border-sky-700/50 group-hover:scale-110 transition-transform shadow-sm">
+                      <FileAudio className="w-7 h-7 text-[#0284C7] dark:text-[#38BDF8]" />
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="font-extrabold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
+                        Kéo & thả tệp vào đây
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        Hoặc bấm để tải từ máy tính
+                      </p>
+                    </div>
+
+                    <div className="px-3.5 py-1.5 rounded-xl bg-[#0284C7] hover:bg-[#00A8E8] text-white text-xs font-black shadow-2xs flex items-center gap-1.5 transition cursor-pointer uppercase tracking-wider">
+                      <UploadCloud className="w-3.5 h-3.5" />
+                      <span>Chọn Tệp Âm Thanh</span>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 text-[10px] text-slate-400 font-mono space-y-0.5 w-full">
+                      <div>MP3, M4A, WAV, AAC, FLAC</div>
+                      <div>MP4, WebM (Max 2GB)</div>
+                    </div>
                   </div>
 
-                  {/* Telemetry Metrics Footer */}
-                  <div className="space-y-2 shrink-0">
-                    <div className="grid grid-cols-2 gap-2 text-[10px]">
-                      {/* Metric 1: Pitch Frequency */}
-                      <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
-                        <span className="text-slate-500 dark:text-slate-400 font-semibold">Tần số (Hz)</span>
-                        <span className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] text-sm mt-0.5">
-                          {isRecording ? `${Math.round(180 + Math.random() * 60)} Hz` : '-- Hz'}
+                  {/* Currently Selected File Info Box */}
+                  {currentFile && (
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 shrink-0">
+                      <div className="flex items-center justify-between text-[11px] font-bold">
+                        <span className="text-slate-500 dark:text-slate-400">Tệp hiện tại:</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-[10px] px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60">
+                          {currentFile.format.split(' ')[0]}
                         </span>
                       </div>
-
-                      {/* Metric 2: Volume Level Meter */}
-                      <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 flex flex-col justify-between">
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-500 dark:text-slate-400 font-semibold">Âm lượng</span>
-                          <span className="font-extrabold text-slate-700 dark:text-slate-200 text-xs">
-                            {isRecording ? '68%' : '0%'}
-                          </span>
-                        </div>
-                        <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full mt-1.5 overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-emerald-500 via-sky-500 to-[#00A8E8] rounded-full transition-all duration-150"
-                            style={{ width: `${isRecording ? 68 : 0}%` }}
-                          />
-                        </div>
+                      <div className="font-extrabold text-xs text-slate-800 dark:text-slate-200 truncate" title={currentFile.name}>
+                        {currentFile.name}
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                        <span>Thời lượng: {formatTime(currentFile.duration)}</span>
+                        <span>{currentFile.sizeStr}</span>
                       </div>
                     </div>
+                  )}
 
-                    {/* Audio Signal Status Bar */}
-                    <div className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/40 text-[10px]">
-                      <span className="text-slate-500 dark:text-slate-400 font-medium">Trạng thái tín hiệu</span>
-                      <span className="font-bold flex items-center gap-1">
-                        {isRecording ? (
-                          <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-extrabold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            Đang thu âm
-                          </span>
-                        ) : (
-                          <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1 font-semibold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                            Sẵn sàng
-                          </span>
-                        )}
-                      </span>
-                    </div>
+                  {/* Telemetry Footer Info */}
+                  <div className="p-2 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/40 text-[10px] shrink-0 flex items-center justify-between">
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">Trạng thái Audio Engine:</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      16kHz Mono Ready
+                    </span>
                   </div>
+
                 </div>
               </div>
 
