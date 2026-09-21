@@ -80,15 +80,12 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
           {/* BỘ ĐẦU MỤC QUẢN LÝ CHUYỂN ĐỔI FILE GHI ÂM */}
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
-              { id: 'home' as const, label: 'Trang chủ', icon: LayoutDashboard },
               { id: 'library' as const, label: 'Kho phẩm', icon: FolderOpen, badge: hasActiveFile ? 'Đang mở' : undefined },
               { id: 'utilities' as const, label: 'Tiện ích', icon: SlidersHorizontal },
               { id: 'settings' as const, label: 'Cài đặt', icon: Settings },
             ].map((tab) => {
               const isActive =
-                tab.id === 'home'
-                  ? (currentTab === 'home')
-                  : tab.id === 'library'
+                tab.id === 'library'
                   ? (currentTab === 'library' || currentTab === 'editor')
                   : tab.id === 'utilities'
                   ? (currentTab === 'utilities' || currentTab === 'upload')

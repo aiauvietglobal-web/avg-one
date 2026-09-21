@@ -1028,15 +1028,6 @@ export const FileTranscribeModule: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Telemetry Footer Info */}
-                  <div className="p-1.5 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/40 text-[10px] shrink-0 flex items-center justify-between">
-                    <span className="text-slate-500 dark:text-slate-400 font-medium">Trạng thái Engine:</span>
-                    <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      16kHz Mono Ready
-                    </span>
-                  </div>
-
                 </div>
               </div>
 
@@ -1056,12 +1047,6 @@ export const FileTranscribeModule: React.FC = () => {
                         <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
                           Chuyển Đổi Sang Văn Bản
                         </h2>
-                        <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/20 border border-white/30 shrink-0 ml-0.5" title="Sóng âm thoại">
-                          <span className="w-1 rounded-full bg-white animate-wave-bar-1" />
-                          <span className="w-1 rounded-full bg-white animate-wave-bar-2" />
-                          <span className="w-1 rounded-full bg-white animate-wave-bar-3" />
-                          <span className="w-1 rounded-full bg-white animate-wave-bar-4" />
-                        </div>
                       </div>
 
                       {/* Right: Header Toolbar Actions */}
@@ -1109,9 +1094,8 @@ export const FileTranscribeModule: React.FC = () => {
                           <div key={seg.id || idx} className="flex flex-col items-start w-full">
                             <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full shadow-xs space-y-2 hover:border-[#0284C7]/50 transition-all">
                               <div className="flex items-center justify-between text-xs font-bold pb-1.5 border-b border-slate-100 dark:border-slate-800">
-                                <span className="text-[#F15A24] dark:text-orange-400 font-black flex items-center gap-1.5">
-                                  <User className="w-3.5 h-3.5 text-[#F15A24]" />
-                                  <span>{seg.speakerName} ({seg.speakerRole})</span>
+                                <span className="text-[#F15A24] dark:text-orange-400 font-black">
+                                  {seg.speakerName} ({seg.speakerRole})
                                 </span>
                                 <span className="text-[10.5px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
                                   {formatTime(seg.startTime)} - {formatTime(seg.endTime)}
@@ -1179,55 +1163,6 @@ export const FileTranscribeModule: React.FC = () => {
                       </div>
                     )}
 
-                  </div>
-                </div>
-
-                {/* HERO CARD 2: QUICK CHAT / RESPONSE INPUT BOX */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 space-y-2.5 shrink-0 shadow-md">
-                  <div className="flex items-center justify-between text-xs">
-                    <h2 className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] flex items-center gap-1.5">
-                      <FileText className="w-4 h-4 text-[#00A8E8]" />
-                      <span>Ghi Chú & Biên Soạn Văn Bản</span>
-                    </h2>
-
-                    <div className="flex items-center gap-3">
-                      <label className="flex items-center gap-1.5 text-[11px] font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
-                        <input type="checkbox" defaultChecked className="w-3.5 h-3.5 rounded text-[#00A8E8]" />
-                        <span>Tự động đọc</span>
-                      </label>
-                      <button onClick={() => setActiveTab('editor')} className="p-1 text-slate-400 hover:text-slate-700">
-                        <Maximize2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="relative w-full">
-                    <textarea
-                      value={deafTextInput}
-                      onChange={(e) => setDeafTextInput(e.target.value)}
-                      placeholder="Nhập ghi chú hoặc nội dung phản hồi văn bản tại đây..."
-                      rows={2}
-                      className="w-full pt-3 pb-3 pl-3.5 pr-14 bg-slate-50 dark:bg-slate-950 rounded-lg text-xs sm:text-sm font-medium text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-[#00A8E8] resize-none transition-all"
-                    />
-
-                    <div className="absolute right-2.5 bottom-2.5 flex items-center gap-1 z-10">
-                      <button
-                        onClick={() => {
-                          if (deafTextInput.trim()) {
-                            setCopiedToast(`💬 Đã gửi: "${deafTextInput}"`);
-                            setTimeout(() => setCopiedToast(null), 2500);
-                            setDeafTextInput('');
-                          }
-                        }}
-                        disabled={!deafTextInput.trim()}
-                        className={`p-1.5 transition-all cursor-pointer ${
-                          deafTextInput.trim() ? 'text-[#00A8E8] hover:scale-110' : 'text-slate-300 dark:text-slate-700 cursor-not-allowed'
-                        }`}
-                        title="Gửi phản hồi"
-                      >
-                        <Send className="w-5 h-5 fill-current" />
-                      </button>
-                    </div>
                   </div>
                 </div>
 
@@ -1391,46 +1326,6 @@ export const FileTranscribeModule: React.FC = () => {
                         </span>
                         <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                       </button>
-                    </div>
-                  </div>
-
-                  {/* BLOCK 4: DIRECT EXPORT & TELEMETRY METRICS */}
-                  <div className="space-y-2 pt-1 mt-auto">
-                    <div className="grid grid-cols-2 gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handleExportTxt()}
-                        className="px-2.5 py-2 rounded-xl bg-[#0284C7] hover:bg-[#00A8E8] text-white text-[11px] font-black shadow-2xs flex items-center justify-center gap-1.5 transition cursor-pointer"
-                      >
-                        <FileDown className="w-3.5 h-3.5" />
-                        <span>Xuất TXT</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleExportSrt()}
-                        className="px-2.5 py-2 rounded-xl bg-[#F15A24] hover:bg-amber-600 text-white text-[11px] font-black shadow-2xs flex items-center justify-center gap-1.5 transition cursor-pointer"
-                      >
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>Xuất SRT</span>
-                      </button>
-                    </div>
-
-                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-[10px] space-y-1">
-                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-semibold">
-                        <span className="flex items-center gap-1">
-                          <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                          Bảo mật:
-                        </span>
-                        <span className="font-extrabold text-slate-700 dark:text-slate-200">AES-256 Encrypted</span>
-                      </div>
-                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-semibold">
-                        <span className="flex items-center gap-1">
-                          <Sparkles className="w-3 h-3 text-amber-500" />
-                          Độ chính xác:
-                        </span>
-                        <span className="font-black text-emerald-600 dark:text-emerald-400">98.6% WER</span>
-                      </div>
                     </div>
                   </div>
 
