@@ -7,7 +7,7 @@ import {
   FolderOpen, Plus, RefreshCw, Activity, ShieldCheck, Zap, Layers,
   ListFilter, ExternalLink, Printer, FileDown, SlidersHorizontal,
   Wand2, Mic, Volume1, Cpu, Database, Link2, Radio, FileSpreadsheet,
-  ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square
+  ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square, Waves
 } from 'lucide-react';
 import { processRealtimeSpeechPunctuation } from '../../services/speechPunctuationEngine';
 import { FileTranscribeNavTab } from '../../components/layout/headers/FileTranscribeHeader';
@@ -371,7 +371,7 @@ export const FileTranscribeModule: React.FC = () => {
     const height = canvas.height;
     ctx.clearRect(0, 0, width, height);
 
-    const numBars = 75;
+    const numBars = 95;
     const barWidth = width / numBars - 2;
     const progressPercent = duration > 0 ? currentTime / duration : 0;
     const activeBarIndex = Math.floor(progressPercent * numBars);
@@ -612,14 +612,14 @@ export const FileTranscribeModule: React.FC = () => {
   }, [currentFile, currentTime]);
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden relative font-sans select-none">
+    <div className="w-full h-full flex-1 min-h-0 bg-slate-50 dark:bg-[#070B16] text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden relative font-sans select-none">
       
-      {/* 🌐 GRID LINES PATTERN BACKGROUND */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-40 pointer-events-none -z-0" />
+      {/* 🌐 HIGH-TECH CYBER GRID PATTERN BACKGROUND */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-35 pointer-events-none -z-0" />
 
       {/* 🎨 AMBIENT GLOW ORBS */}
-      <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/12 dark:bg-[#0284C7]/15 rounded-full blur-[120px] pointer-events-none -z-0" />
-      <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/12 dark:bg-[#F15A24]/15 rounded-full blur-[120px] pointer-events-none -z-0" />
+      <div className="absolute -top-30 -left-30 w-[600px] h-[600px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[140px] pointer-events-none -z-0" />
+      <div className="absolute -top-30 -right-30 w-[600px] h-[600px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[140px] pointer-events-none -z-0" />
 
       {/* Toast Notification */}
       {copiedToast && (
@@ -630,21 +630,21 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 🏠 GIAO DIỆN TRANG CHỦ & KHÔNG GIAN THAO TÁC THỰC HIỆN CHUYỂN ĐỔI VOICE-TO-TEXT */}
+      {/* 🏠 MỞ RỘNG TOÀN MÀN HÌNH (FULL-BLEED 100% WIDTH) - TRANG CHỦ & CONVERSION WORKSPACE */}
       {/* ========================================================================= */}
       {(activeTab === 'home' || activeTab === 'upload') && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 flex flex-col">
           
-          {/* 2-COLUMN MAIN CONVERSION WORKSPACE STUDIO (GIỐNG 100% ẢNH KHOANH ĐỎ MEDIA_1790002801469.PNG) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* 2-COLUMN FULL-BLEED CYBER STUDIO GRID (EXPANDS 100% WIDTH) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
             
-            {/* LEFT COLUMN (7 COLS): KHÔNG GIAN THAO TÁC CHÍNH (KHU VỰC KHOANH ĐỎ TRONG ẢNH) */}
-            <div className="lg:col-span-7 space-y-5">
+            {/* LEFT COLUMN (7 COLS): KHÔNG GIAN THAO TÁC THỰC HIỆN CHUYỂN ĐỔI (VÙNG KHOANH ĐỎ) */}
+            <div className="lg:col-span-7 space-y-5 w-full">
               
-              {/* HEADER BANNER CARD: KHÔNG GIAN THAO TÁC THỰC HIỆN CHUYỂN ĐỔI VOICE-TO-TEXT */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/80 shadow-xs space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-950/80 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[11px] font-black uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5 text-[#F15A24]" />
+              {/* HEADER BANNER CARD */}
+              <div className="bg-white/95 dark:bg-[#0B1120]/95 p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/80 shadow-md backdrop-blur-md space-y-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-50 dark:bg-sky-950/80 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[11px] font-black uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-[#F15A24] animate-pulse" />
                   <span>AVG CONVERSION STUDIO & LIVE RECORDER</span>
                 </div>
 
@@ -657,17 +657,17 @@ export const FileTranscribeModule: React.FC = () => {
                 </p>
               </div>
 
-              {/* CARD 1: GHI ÂM TRỰC TIẾP QUA MICROPHONE */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4 text-center">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              {/* CARD 1: GHI ÂM TRỰC TIẾP QUA MICROPHONE (CYBER STUDIO STYLE) */}
+              <div className="bg-white/95 dark:bg-[#0B1120]/95 p-6 sm:p-7 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md space-y-4 text-center relative overflow-hidden">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#F15A24]">
                     <Radio className="w-4 h-4 text-[#F15A24] animate-pulse" />
                     <span>Ghi Âm Trực Tiếp Qua Microphone</span>
                   </div>
-                  <span className="text-[10.5px] font-bold text-slate-400">Băng thông 16kHz PCM</span>
+                  <span className="text-[10.5px] font-bold text-slate-400 font-mono">Băng thông 16kHz PCM</span>
                 </div>
 
-                <div className="py-2 space-y-4 flex flex-col items-center justify-center">
+                <div className="py-3 space-y-4 flex flex-col items-center justify-center">
                   <button
                     type="button"
                     onClick={() => {
@@ -677,20 +677,20 @@ export const FileTranscribeModule: React.FC = () => {
                         setIsRecording(true);
                       }
                     }}
-                    className={`w-24 h-24 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-lg cursor-pointer ${
+                    className={`w-24 h-24 sm:w-26 sm:h-26 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-xl cursor-pointer ${
                       isRecording
                         ? 'bg-rose-500 hover:bg-rose-600 text-white animate-pulse ring-8 ring-rose-500/20'
-                        : 'bg-gradient-to-tr from-[#0284C7] to-sky-400 hover:scale-105 text-white ring-8 ring-sky-500/10'
+                        : 'bg-gradient-to-tr from-[#0284C7] via-sky-400 to-[#00A8E8] hover:scale-105 text-white ring-8 ring-sky-500/10 shadow-sky-500/20'
                     }`}
                   >
                     {isRecording ? (
                       <>
-                        <Square className="w-8 h-8 fill-current" />
+                        <Square className="w-9 h-9 fill-current" />
                         <span className="text-[10px] font-black uppercase mt-1">Dừng & Dịch</span>
                       </>
                     ) : (
                       <>
-                        <Mic className="w-8 h-8" />
+                        <Mic className="w-9 h-9 stroke-[2.2]" />
                         <span className="text-[10px] font-black uppercase mt-1">Bấm Ghi Âm</span>
                       </>
                     )}
@@ -698,11 +698,11 @@ export const FileTranscribeModule: React.FC = () => {
 
                   {isRecording ? (
                     <div className="space-y-1">
-                      <div className="text-xl font-mono font-black text-rose-500 animate-pulse">
+                      <div className="text-2xl font-mono font-black text-rose-500 animate-pulse tracking-widest">
                         {formatTime(recordingSeconds)}
                       </div>
-                      <div className="text-xs font-bold text-slate-500 flex items-center justify-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                      <div className="text-xs font-bold text-slate-500 flex items-center justify-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
                         <span>Đang thu âm trực tiếp... Bấm nút trên để dừng & chuyển đổi văn bản</span>
                       </div>
                     </div>
@@ -714,7 +714,7 @@ export const FileTranscribeModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* CARD 2: KÉO & THẢ FILE GHI ÂM VÀO ĐÂY */}
+              {/* CARD 2: KÉO & THẢ FILE GHI ÂM VÀO ĐÂY (FULL COL DROPZONE) */}
               <div
                 onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 onDrop={(e) => {
@@ -724,7 +724,7 @@ export const FileTranscribeModule: React.FC = () => {
                     handleFileSelect(e.dataTransfer.files[0]);
                   }
                 }}
-                className="p-8 sm:p-10 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/90 dark:bg-slate-900/90 transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-sm hover:shadow-md group cursor-pointer relative"
+                className="p-8 sm:p-12 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700/80 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-md group cursor-pointer relative"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <input
@@ -739,8 +739,8 @@ export const FileTranscribeModule: React.FC = () => {
                   className="hidden"
                 />
 
-                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
-                  <UploadCloud className="w-8 h-8 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950/80 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
+                  <UploadCloud className="w-8 h-8 sm:w-10 sm:h-10 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
                 </div>
 
                 <div className="space-y-1">
@@ -754,7 +754,7 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
 
               {/* CARD 3: THIẾT LẬP MÔ HÌNH AI & CÔNG NGHỆ LỌC ÂM */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+              <div className="bg-white/95 dark:bg-[#0B1120]/95 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
                     <SlidersHorizontal className="w-4 h-4 text-[#0284C7]" />
@@ -821,11 +821,11 @@ export const FileTranscribeModule: React.FC = () => {
 
             </div>
 
-            {/* RIGHT COLUMN (5 COLS): SAMPLES & AUDIO TOOLS SUITE (CỘT PHẢI TRONG ẢNH) */}
-            <div className="lg:col-span-5 space-y-5">
+            {/* RIGHT COLUMN (5 COLS): THỬ NGHIỆM MẪU & BỘ TIỆN ÍCH (CỘT PHẢI THÔNG THOÁNG) */}
+            <div className="lg:col-span-5 space-y-5 w-full">
               
               {/* THỬ NGHIỆM NGAY VỚI 3 FILE GHI ÂM MẪU AVG */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+              <div className="bg-white/95 dark:bg-[#0B1120]/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     Thử nghiệm ngay với 3 File ghi âm mẫu AVG:
@@ -866,7 +866,7 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
 
               {/* BỘ TIỆN ÍCH ÂM THANH NÂNG CAO */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+              <div className="bg-white/95 dark:bg-[#0B1120]/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md space-y-3">
                 <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
                   <Wand2 className="w-4 h-4 text-[#F15A24]" />
                   <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
@@ -892,7 +892,7 @@ export const FileTranscribeModule: React.FC = () => {
 
               {/* THỐNG KÊ & CHỈ SỐ BẢO MẬT */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white/95 dark:bg-slate-900/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center gap-3">
+                <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-600 shrink-0">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
@@ -902,7 +902,7 @@ export const FileTranscribeModule: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="bg-white/95 dark:bg-slate-900/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center gap-3">
+                <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-950/80 flex items-center justify-center text-purple-600 shrink-0">
                     <Sparkles className="w-5 h-5" />
                   </div>
@@ -956,14 +956,14 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 📁 ĐẦU MỤC: KHO PHẨM (DOCUMENT LIBRARY & MEDIA REPOSITORY) */}
+      {/* 📁 MỞ RỘNG TOÀN MÀN HÌNH (FULL-BLEED) - ĐẦU MỤC KHO PHẨM */}
       {/* ========================================================================= */}
       {activeTab === 'library' && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 flex flex-col">
           
           {/* Top Metric / KPI Summary Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4 shrink-0">
-            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4 shrink-0 w-full">
+            <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0">
                 <FolderOpen className="w-5.5 h-5.5" />
               </div>
@@ -973,7 +973,7 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+            <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-orange-100 dark:bg-orange-950/80 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] shrink-0">
                 <Clock className="w-5.5 h-5.5" />
               </div>
@@ -985,7 +985,7 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+            <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 shrink-0">
                 <ShieldCheck className="w-5.5 h-5.5" />
               </div>
@@ -995,7 +995,7 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex items-center gap-3">
+            <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800 flex items-center justify-center text-purple-600 shrink-0">
                 <Sparkles className="w-5.5 h-5.5" />
               </div>
@@ -1007,7 +1007,7 @@ export const FileTranscribeModule: React.FC = () => {
           </div>
 
           {/* Filter & Action Toolbar */}
-          <div className="bg-white/90 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0">
+          <div className="bg-white/95 dark:bg-[#0B1120]/95 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0 w-full">
             <div className="flex flex-wrap items-center gap-2.5">
               <div className="relative">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -1046,10 +1046,10 @@ export const FileTranscribeModule: React.FC = () => {
             </button>
           </div>
 
-          {/* Documents Grid Feed */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Documents Grid Feed (Full Width Grid) */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
             {filteredLibrary.length === 0 ? (
-              <div className="col-span-full bg-white dark:bg-slate-900 rounded-3xl p-12 border border-slate-200 dark:border-slate-800 text-center space-y-3">
+              <div className="col-span-full bg-white dark:bg-[#0B1120] rounded-3xl p-12 border border-slate-200 dark:border-slate-800 text-center space-y-3">
                 <FolderOpen className="w-12 h-12 text-slate-300 mx-auto" />
                 <div className="text-sm font-black text-slate-700 dark:text-slate-300">Không tìm thấy tệp ghi âm nào khớp với tìm kiếm</div>
                 <p className="text-xs text-slate-400">Thử thay đổi từ khóa hoặc bộ lọc danh mục phía trên.</p>
@@ -1065,7 +1065,7 @@ export const FileTranscribeModule: React.FC = () => {
                     setIsPlaying(false);
                     setActiveTab('editor');
                   }}
-                  className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-md hover:border-[#0284C7] dark:hover:border-sky-500 transition-all cursor-pointer group flex flex-col justify-between space-y-4 relative"
+                  className="bg-white/95 dark:bg-[#0B1120]/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-2xs hover:shadow-md hover:border-[#0284C7] dark:hover:border-sky-500 transition-all cursor-pointer group flex flex-col justify-between space-y-4 relative"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
@@ -1149,12 +1149,12 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 🛠️ ĐẦU MỤC: TIỆN ÍCH (AI AUDIO UTILITIES STUDIO SUITE) */}
+      {/* 🛠️ MỞ RỘNG TOÀN MÀN HÌNH - TIỆN ÍCH */}
       {/* ========================================================================= */}
       {activeTab === 'utilities' && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 flex flex-col">
           
-          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0 w-full">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 border border-sky-200 dark:border-sky-800 text-xs font-black text-[#0284C7] dark:text-sky-400">
                 <Wand2 className="w-3.5 h-3.5 text-[#F15A24]" />
@@ -1163,14 +1163,14 @@ export const FileTranscribeModule: React.FC = () => {
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                 Bộ Tiện Ích Xử Lý Âm Thanh Chuyên Sâu
               </h1>
-              <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 max-w-2xl font-medium">
+              <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 font-medium">
                 Trích xuất âm thanh từ video MP4/WebM, lọc khử nhiễu phòng họp hội trường và nhận diện chính xác tiếng địa phương 3 miền.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            <div className="p-6 rounded-3xl bg-white/95 dark:bg-[#0B1120]/95 border border-slate-200 dark:border-slate-800 space-y-3 shadow-md">
               <div className="w-12 h-12 rounded-2xl bg-orange-100 text-[#F15A24] flex items-center justify-center font-bold text-xl">
                 📹
               </div>
@@ -1183,7 +1183,7 @@ export const FileTranscribeModule: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+            <div className="p-6 rounded-3xl bg-white/95 dark:bg-[#0B1120]/95 border border-slate-200 dark:border-slate-800 space-y-3 shadow-md">
               <div className="w-12 h-12 rounded-2xl bg-sky-100 text-[#0284C7] flex items-center justify-center font-bold text-xl">
                 🔊
               </div>
@@ -1196,7 +1196,7 @@ export const FileTranscribeModule: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+            <div className="p-6 rounded-3xl bg-white/95 dark:bg-[#0B1120]/95 border border-slate-200 dark:border-slate-800 space-y-3 shadow-md">
               <div className="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl">
                 🎙️
               </div>
@@ -1219,7 +1219,7 @@ export const FileTranscribeModule: React.FC = () => {
       {activeTab === 'editor' && (
         <div className="w-full h-full flex-1 flex flex-col min-h-0 overflow-hidden relative z-10">
           
-          <div className="bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 shrink-0 shadow-2xs space-y-2.5">
+          <div className="bg-white/95 dark:bg-[#0B1120]/95 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 shrink-0 shadow-2xs space-y-2.5">
             
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5 min-w-0">
@@ -1291,7 +1291,7 @@ export const FileTranscribeModule: React.FC = () => {
             <div className="relative bg-slate-100/90 dark:bg-slate-800/80 rounded-xl p-2 border border-slate-200/80 dark:border-slate-700/80">
               <canvas
                 ref={canvasRef}
-                width={800}
+                width={1000}
                 height={42}
                 onClick={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -1395,11 +1395,11 @@ export const FileTranscribeModule: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 max-w-5xl mx-auto w-full">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 w-full">
             {editorViewMode === 'dialogue' && (
               <div className="space-y-3">
                 {displayedSegments.length === 0 ? (
-                  <div className="p-8 text-center text-xs font-semibold text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
+                  <div className="p-8 text-center text-xs font-semibold text-slate-400 bg-white dark:bg-[#0B1120] rounded-2xl border border-slate-200 dark:border-slate-800">
                     Không tìm thấy đoạn văn bản nào khớp với từ khóa "{searchQuery}"
                   </div>
                 ) : (
@@ -1413,7 +1413,7 @@ export const FileTranscribeModule: React.FC = () => {
                         className={`p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 ${
                           isCurrentPlaying
                             ? 'bg-orange-50/80 dark:bg-orange-950/30 border-[#F15A24] shadow-md ring-1 ring-[#F15A24]/40'
-                            : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
+                            : 'bg-white/95 dark:bg-[#0B1120]/95 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
                         }`}
                       >
                         <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 gap-2">
@@ -1501,7 +1501,7 @@ export const FileTranscribeModule: React.FC = () => {
             )}
 
             {editorViewMode === 'document' && (
-              <div className="bg-white dark:bg-slate-900 p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
+              <div className="bg-white/95 dark:bg-[#0B1120]/95 p-6 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-md space-y-6 w-full">
                 <div className="text-center pb-4 border-b border-slate-200 dark:border-slate-800 space-y-1">
                   <div className="text-[11px] font-black uppercase text-slate-400 tracking-wider">TẬP ĐOÀN AVG ONE • BIÊN BẢN GHI ÂM CHÍNH THỨC</div>
                   <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white uppercase">
@@ -1529,8 +1529,8 @@ export const FileTranscribeModule: React.FC = () => {
             )}
 
             {editorViewMode === 'summary' && (
-              <div className="space-y-4">
-                <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+              <div className="space-y-4 w-full">
+                <div className="bg-white/95 dark:bg-[#0B1120]/95 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md space-y-3">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#0284C7]">
                     <Sparkles className="w-4 h-4 text-[#F15A24]" />
                     <span>Tóm Tắt Điều Hành Cuộc Họp (Executive Summary)</span>
@@ -1540,7 +1540,7 @@ export const FileTranscribeModule: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div className="bg-white/95 dark:bg-[#0B1120]/95 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md space-y-3">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                     <span>Các Quyết Định Then Chốt Đã Thống Nhất</span>
@@ -1557,7 +1557,7 @@ export const FileTranscribeModule: React.FC = () => {
                   </ul>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+                <div className="bg-white/95 dark:bg-[#0B1120]/95 p-5 sm:p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md space-y-3">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#F15A24]">
                     <Zap className="w-4 h-4 text-[#F15A24]" />
                     <span>Đầu Việc Cần Thực Hiện & Phân Công (Action Items)</span>
@@ -1600,7 +1600,7 @@ export const FileTranscribeModule: React.FC = () => {
 
           {renamingSpeakerId && (
             <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+              <div className="w-full max-w-sm bg-white dark:bg-[#0B1120] rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-black uppercase text-slate-800 dark:text-slate-100">Đổi Tên Người Phát Biểu</span>
                   <button onClick={() => setRenamingSpeakerId(null)} className="text-slate-400 hover:text-slate-600 text-xs font-bold">Đóng</button>
@@ -1638,12 +1638,12 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* ⚙️ ĐẦU MỤC: CÀI ĐẶT (SYSTEM CONFIGURATION & MODEL PARAMETERS WORKSPACE) */}
+      {/* ⚙️ MỞ RỘNG TOÀN MÀN HÌNH - CÀI ĐẶT */}
       {/* ========================================================================= */}
       {activeTab === 'settings' && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 flex flex-col">
           
-          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                 Cấu Hình Mô Hình & Tùy Chỉnh Thuật Toán ASR
@@ -1664,9 +1664,9 @@ export const FileTranscribeModule: React.FC = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1 w-full">
             
-            <div className="lg:col-span-3 bg-white/95 dark:bg-slate-900/95 p-3 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-1">
+            <div className="lg:col-span-3 bg-white/95 dark:bg-[#0B1120]/95 p-3 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-md space-y-1">
               {[
                 { id: 'vocab' as const, label: 'Từ điển Chuyên ngành', desc: 'Custom Vocabulary Boosting', icon: Database },
                 { id: 'params' as const, label: 'Thông số Thuật toán', desc: 'Acoustic & Model Tuning', icon: Cpu },
@@ -1697,7 +1697,7 @@ export const FileTranscribeModule: React.FC = () => {
               })}
             </div>
 
-            <div className="lg:col-span-9 bg-white/95 dark:bg-slate-900/95 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
+            <div className="lg:col-span-9 bg-white/95 dark:bg-[#0B1120]/95 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-md space-y-6">
               
               {settingsSubTab === 'vocab' && (
                 <div className="space-y-6">
