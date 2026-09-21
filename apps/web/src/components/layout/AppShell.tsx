@@ -105,34 +105,17 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [workflowTabState, setWorkflowTabState] = useState<string>('design');
   const [speechTabState, setSpeechTabState] = useState<string>('direct');
   const [isArrowActive, setIsArrowActive] = useState(false);
-  const [activeSubTitle, setActiveSubTitle] = useState<string>(() => {
-    try {
-      if (activeModule === 'rd' || activeModule === 'workflow') {
-        const saved = localStorage.getItem('avg_workflow_submodule');
-        if (saved === 'design') return '3.2 – THIẾT KẾ';
-        if (saved === 'research') return '3.1 – NGHIÊN CỨU';
-      }
-    } catch (e) {}
-    return '';
-  });
+  const [activeSubTitle, setActiveSubTitle] = useState<string>('');
 
   useEffect(() => {
     if (activeModule === 'home') {
       setActiveSubTitle('');
       setIsArrowActive(false);
+      try { localStorage.removeItem('avg_workflow_submodule'); } catch (e) {}
     } else if (activeModule === 'rd' || activeModule === 'workflow') {
-      try {
-        const saved = localStorage.getItem('avg_workflow_submodule');
-        if (saved === 'design') {
-          setActiveSubTitle('3.2 – THIẾT KẾ');
-        } else if (saved === 'research') {
-          setActiveSubTitle('3.1 – NGHIÊN CỨU');
-        } else {
-          setActiveSubTitle('');
-        }
-      } catch (e) {
-        setActiveSubTitle('');
-      }
+      // Mặc định xóa sạch activeSubTitle để luôn hiển thị Trang chủ phân hệ R&D trước tiên
+      setActiveSubTitle('');
+      try { localStorage.removeItem('avg_workflow_submodule'); } catch (e) {}
     } else {
       setActiveSubTitle('');
       setIsArrowActive(false);
@@ -566,10 +549,17 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'rd' || activeModule === 'workflow' ? (
-            /* 7. HEADER PHÂN HỆ RDI: 🏠 RDI */
+            /* 7. HEADER PHÂN HỆ RDI (TRANG CHỦ R&D HOẶC 3.1 NGHIÊN CỨU) */
             <RDHeader
-              onBack={() => onSelectModule('home')}
-              onGoHome={() => onSelectModule('home')}
+              activeSubTitle={activeSubTitle}
+              onBack={() => {
+                setActiveSubTitle('');
+                window.dispatchEvent(new CustomEvent('submodule_back'));
+              }}
+              onGoHome={() => {
+                setActiveSubTitle('');
+                onSelectModule('home');
+              }}
               darkMode={darkMode}
               onToggleDarkMode={onToggleDarkMode}
               renderUserAuthButton={renderUserAuthButton}

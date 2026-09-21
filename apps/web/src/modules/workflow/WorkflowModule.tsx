@@ -1474,6 +1474,22 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
 
+  // Lắng nghe đổi tab từ Header Topbar
+  useEffect(() => {
+    const handleTabChange = (e: any) => {
+      if (e.detail && (e.detail === '4steps' || e.detail === '13sop')) {
+        setActiveWorkflowTab(e.detail);
+      }
+    };
+    window.addEventListener('research_workflow_tab_change', handleTabChange);
+    return () => window.removeEventListener('research_workflow_tab_change', handleTabChange);
+  }, []);
+
+  // Đồng bộ tab ra ngoài Header Topbar
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('research_workflow_tab_sync', { detail: activeWorkflowTab }));
+  }, [activeWorkflowTab]);
+
   const [researchProjects, setResearchProjects] = useState([
     { id: 'DH-2026-RND-001', title: 'Nghiên cứu Mô-đun AI Sensor Cảnh báo Nhiệt', lead: 'Hoàng Đức Anh (Embedded Dev)', firmware: 'v2.4 C++', labTest: '100% Đạt 72h', status: 'IN_PROGRESS' },
     { id: 'DH-2026-RND-002', title: 'Thiết kế Mạch Nhúng Đo Áp Nguồn SMT 3.3V', lead: 'Lê Văn Nhân Viên (R&D Lead)', firmware: 'v1.8 C++', labTest: 'Đã hoàn tất', status: 'COMPLETED' },
@@ -1517,6 +1533,29 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Left: Animated Slogan Box Badge & Dynamic Title with Brush Stroke */}
           <div className="space-y-2 text-left">
+            {/* Top Navigation Row: Back to Landing & Switch to 3.2 */}
+            <div className="flex items-center gap-2 pb-1">
+              <button
+                onClick={onBack}
+                className="h-7.5 px-3 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+                title="Quay lại Trung tâm Nghiên cứu & Sáng tạo"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Quay lại Trang chủ Phân hệ</span>
+              </button>
+              <button
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: 'design' }));
+                }}
+                className="h-7.5 px-3 rounded-xl bg-sky-50 dark:bg-sky-950/60 hover:bg-[#0284C7] hover:text-white text-[#0284C7] dark:text-sky-300 text-xs font-extrabold border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer"
+                title="Chuyển sang 3.2 – THIẾT KẾ"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Sang 3.2 – Thiết Kế</span>
+                <ArrowRight className="w-3 h-3 ml-0.5" />
+              </button>
+            </div>
+
             <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
               <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
                 <defs>
@@ -1904,27 +1943,16 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
 /* 🌟 COMPONENT CHÍNH: MÀN HÌNH TỔNG QUAN CHỈ HIỂN THỊ 2 HỘP LỰA CHỌN PHÂN HỆ CON */
 /* ========================================================================= */
 export const WorkflowModule: React.FC = () => {
-  const [selectedSubModule, setSelectedSubModule] = useState<'design' | 'research' | null>(() => {
-    try {
-      const saved = localStorage.getItem('avg_workflow_submodule');
-      if (saved === 'design') return 'design';
-      if (saved === 'research') return 'research';
-      return null;
-    } catch (e) {
-      return null;
-    }
-  });
+  // Mặc định luôn là null để hiển thị Trang chủ phân hệ (Landing view với 2 hộp 3.1 & 3.2)
+  const [selectedSubModule, setSelectedSubModule] = useState<'design' | 'research' | null>(null);
 
   // Đồng bộ tên phân hệ con lên thanh Header Topbar
   React.useEffect(() => {
     if (selectedSubModule === 'design') {
-      try { localStorage.setItem('avg_workflow_submodule', 'design'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.2 – THIẾT KẾ' }));
     } else if (selectedSubModule === 'research') {
-      try { localStorage.setItem('avg_workflow_submodule', 'research'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '3.1 – NGHIÊN CỨU' }));
     } else {
-      try { localStorage.setItem('avg_workflow_submodule', 'overview'); } catch (e) {}
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     }
   }, [selectedSubModule]);
@@ -1933,11 +1961,12 @@ export const WorkflowModule: React.FC = () => {
   React.useEffect(() => {
     const handleSubModuleBack = () => {
       setSelectedSubModule(null);
-      try { localStorage.setItem('avg_workflow_submodule', 'overview'); } catch (e) {}
     };
     window.addEventListener('submodule_back', handleSubModuleBack);
+    window.addEventListener('go_home_rdi', handleSubModuleBack);
     return () => {
       window.removeEventListener('submodule_back', handleSubModuleBack);
+      window.removeEventListener('go_home_rdi', handleSubModuleBack);
     };
   }, []);
 
