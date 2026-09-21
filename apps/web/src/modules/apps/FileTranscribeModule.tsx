@@ -4,7 +4,7 @@ import {
   Volume2, VolumeX, Copy, Download, Trash2, Search, Check, Sparkles,
   Settings, Sliders, ChevronRight, Edit3, User, Clock, CheckCircle2,
   AlertCircle, ArrowRight, Share2, FastForward, Rewind, Eye,
-  FolderOpen, Plus, RefreshCw, Activity, ShieldCheck, Zap, Layers,
+  FolderOpen, Plus, PlusCircle, MessageSquare, Send, RefreshCw, Activity, ShieldCheck, Zap, Layers,
   ListFilter, ExternalLink, Printer, FileDown, SlidersHorizontal,
   Wand2, Mic, Volume1, Cpu, Database, Link2, Radio, FileSpreadsheet,
   ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square, Waves, Maximize2
