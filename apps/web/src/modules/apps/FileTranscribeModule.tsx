@@ -406,6 +406,7 @@ export const FileTranscribeModule: React.FC = () => {
   // Upload & processing state
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [hasConvertedCurrentFile, setHasConvertedCurrentFile] = useState<boolean>(true);
   const [processingProgress, setProcessingProgress] = useState<number>(0);
   const [processingStage, setProcessingStage] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('neural-v2');
@@ -553,16 +554,57 @@ export const FileTranscribeModule: React.FC = () => {
     }
   }, [currentTime, duration, currentFile]);
 
-  // Handle local audio file upload
+  // Handle local audio file upload (Pending state, do NOT auto-start)
   const handleFileSelect = (file: File) => {
-    startTranscriptionProcess(file.name, `${(file.size / (1024 * 1024)).toFixed(1)} MB`, file.type || 'Audio file');
+    const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+    const pendingFile: TranscribedFile = {
+      id: `file-${Date.now()}`,
+      name: file.name,
+      sizeStr: `${sizeMb} MB`,
+      duration: 180,
+      format: file.type || 'Audio file',
+      uploadedAt: 'Vừa nạp (Sẵn sàng)',
+      modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
+      category: 'Giao ban BĐH',
+      summary: {
+        executive: `Tệp âm thanh "${file.name}" đã được nạp lên hệ thống thành công. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để trích xuất văn bản cuộc họp.`,
+        keyDecisions: [],
+        actionItems: []
+      },
+      segments: []
+    };
+    setCurrentFile(pendingFile);
+    setHasConvertedCurrentFile(false);
+    setProcessingProgress(0);
+    setProcessingStage('Tệp đã nạp thành công. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để bắt đầu.');
+    setCopiedToast(`📁 Đã nạp tệp "${file.name}". Sẵn sàng chuyển đổi!`);
+    setTimeout(() => setCopiedToast(null), 3000);
   };
 
   // Finish Recording & Process Live Audio
   const handleStopRecordingAndProcess = () => {
     setIsRecording(false);
     const recName = `Ghi_am_truc_tiep_${new Date().toLocaleTimeString('vi-VN').replace(/:/g, '-')}.wav`;
-    startTranscriptionProcess(recName, '4.5 MB', 'Microphone 16kHz PCM');
+    const pendingFile: TranscribedFile = {
+      id: `file-${Date.now()}`,
+      name: recName,
+      sizeStr: '4.5 MB',
+      duration: recordingSeconds || 45,
+      format: 'Microphone 16kHz PCM',
+      uploadedAt: 'Vừa ghi âm (Sẵn sàng)',
+      modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
+      category: 'Ghi âm trực tiếp',
+      summary: {
+        executive: `Đã hoàn tất ghi âm từ micro. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để trích xuất văn bản.`,
+        keyDecisions: [],
+        actionItems: []
+      },
+      segments: []
+    };
+    setCurrentFile(pendingFile);
+    setHasConvertedCurrentFile(false);
+    setProcessingProgress(0);
+    setProcessingStage('Ghi âm hoàn tất. Bấm "BẮT ĐẦU CHUYỂN ĐỔI" để trích xuất.');
   };
 
   // Start conversion pipeline simulation
@@ -650,12 +692,12 @@ export const FileTranscribeModule: React.FC = () => {
             };
 
             setCurrentFile(newFile);
+            setHasConvertedCurrentFile(true);
             setDuration(newFile.duration);
             setCurrentTime(0);
             setIsProcessing(false);
             setIsPaused(false);
             setSavedLibrary(prev => [newFile, ...prev]);
-            setActiveTab('editor');
           }, 300);
           return 100;
         }
@@ -702,10 +744,10 @@ export const FileTranscribeModule: React.FC = () => {
   // Select a sample file to load directly
   const handleLoadSample = (sample: TranscribedFile) => {
     setCurrentFile(sample);
+    setHasConvertedCurrentFile(true);
     setDuration(sample.duration);
     setCurrentTime(0);
     setIsPlaying(false);
-    setActiveTab('editor');
   };
 
   // Inline edit segment text
@@ -919,11 +961,17 @@ export const FileTranscribeModule: React.FC = () => {
 
                   {/* Currently Selected File Info Box */}
                   {currentFile && (
-                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 space-y-1 shrink-0">
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 shrink-0">
                       <div className="flex items-center justify-between text-[10.5px] font-bold">
                         <span className="text-slate-500 dark:text-slate-400">Tệp hiện tại:</span>
-                        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-[9.5px] px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60">
-                          {currentFile.format.split(' ')[0]}
+                        <span className={`font-extrabold text-[9.5px] px-1.5 py-0.2 rounded border ${
+                          isProcessing
+                            ? 'bg-amber-50 dark:bg-amber-950/60 border-amber-200 text-amber-600'
+                            : hasConvertedCurrentFile
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 text-emerald-600'
+                            : 'bg-sky-50 dark:bg-sky-950/60 border-sky-200 text-[#0284C7]'
+                        }`}>
+                          {isProcessing ? '⚡ ĐANG XỬ LÝ' : hasConvertedCurrentFile ? '✅ HOÀN THÀNH' : '🟢 SẴN SÀNG'}
                         </span>
                       </div>
                       <div className="font-extrabold text-xs text-slate-800 dark:text-slate-200 truncate" title={currentFile.name}>
@@ -1106,8 +1154,43 @@ export const FileTranscribeModule: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Transcript Message Feed Bubbles */}
-                    {currentFile && currentFile.segments && currentFile.segments.length > 0 ? (
+                    {/* Conditional Panel Rendering */}
+                    {!hasConvertedCurrentFile && !isProcessing && currentFile ? (
+                      /* Uploaded file ready card (Before starting conversion) */
+                      <div className="h-full min-h-[260px] flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-sky-200 dark:border-sky-800/80 bg-white dark:bg-slate-900 shadow-xs space-y-4 my-auto">
+                        <div className="w-16 h-16 rounded-2xl bg-sky-50 dark:bg-sky-950/80 text-[#0284C7] dark:text-sky-400 flex items-center justify-center border border-sky-300/60 dark:border-sky-700/60 shadow-inner">
+                          <FileAudio className="w-8 h-8 text-[#0284C7] dark:text-[#38BDF8]" />
+                        </div>
+
+                        <div className="space-y-1.5 max-w-md">
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span>TỆP ĐÃ NẠP THÀNH CÔNG - SẴN SÀNG CHUYỂN ĐỔI</span>
+                          </div>
+                          <h3 className="font-extrabold text-base text-slate-800 dark:text-slate-100 truncate max-w-lg">
+                            {currentFile.name}
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                            Dung lượng: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{currentFile.sizeStr}</span> | Định dạng: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{currentFile.format}</span>
+                          </p>
+                        </div>
+
+                        <div className="pt-2 w-full max-w-sm space-y-2">
+                          <button
+                            type="button"
+                            onClick={handleStartConversion}
+                            className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#F15A24] hover:opacity-95 text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 cursor-pointer transition-all active:scale-95"
+                          >
+                            <Zap className="w-5 h-5 fill-current text-amber-300" />
+                            <span>BẮT ĐẦU CHUYỂN ĐỔI SANG VĂN BẢN</span>
+                          </button>
+                          <p className="text-[11px] text-slate-400 italic">
+                            Bấm nút phía trên để bắt đầu quá trình trích xuất văn bản từ tệp ghi âm.
+                          </p>
+                        </div>
+                      </div>
+                    ) : currentFile && currentFile.segments && currentFile.segments.length > 0 ? (
+                      /* Transcript Message Feed Bubbles */
                       <div className="space-y-3">
                         {currentFile.segments.map((seg, idx) => (
                           <div key={seg.id || idx} className="flex flex-col items-start w-full">
