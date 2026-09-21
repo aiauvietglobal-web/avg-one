@@ -405,11 +405,19 @@ export const FileTranscribeModule: React.FC = () => {
 
   // Upload & processing state
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [processingProgress, setProcessingProgress] = useState<number>(0);
   const [processingStage, setProcessingStage] = useState<string>('');
   const [selectedModel, setSelectedModel] = useState<string>('neural-v2');
   const [enableDiarization, setEnableDiarization] = useState<boolean>(true);
   const [enablePunctuation, setEnablePunctuation] = useState<boolean>(true);
+
+  const processingTimerRef = useRef<any>(null);
+  const isPausedRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   // Audio Playback & Waveform State
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -559,23 +567,29 @@ export const FileTranscribeModule: React.FC = () => {
 
   // Start conversion pipeline simulation
   const startTranscriptionProcess = (fileName: string, sizeStr: string, formatStr: string) => {
+    if (processingTimerRef.current) clearInterval(processingTimerRef.current);
+
     setIsProcessing(true);
+    setIsPaused(false);
+    isPausedRef.current = false;
     setProcessingProgress(5);
     setProcessingStage('Đang đọc tệp âm thanh và nạp vào bộ đệm AudioContext...');
 
     const stages = [
-      { p: 20, stage: 'Đang trích xuất sóng âm & phân tích phổ tần số (FFT 16kHz)...', delay: 600 },
-      { p: 45, stage: 'Đang chạy mô hình AVG Neural ASR: Chuyển đổi giọng nói thành ngữ âm...', delay: 1200 },
-      { p: 70, stage: 'Đang phân đoạn người nói (Speaker Diarization) & lọc tạp âm...', delay: 1800 },
-      { p: 88, stage: 'Đang chuẩn hóa dấu câu hành chính & chuyển đổi thuật ngữ công sở...', delay: 2400 },
-      { p: 100, stage: 'Hoàn tất biên dịch! Đang xuất bản sang Trình biên soạn...', delay: 2900 }
+      { p: 15, msg: 'Đang đọc tệp âm thanh & nạp vào bộ đệm AudioContext...' },
+      { p: 35, msg: 'Đang trích xuất sóng âm & phân tích phổ tần số (FFT 16kHz)...' },
+      { p: 60, msg: 'Đang chạy mô hình AVG Neural ASR: Chuyển đổi giọng nói thành ngữ âm...' },
+      { p: 80, msg: 'Đang phân đoạn người nói (Speaker Diarization) & lọc tạp âm...' },
+      { p: 95, msg: 'Đang chuẩn hóa dấu câu hành chính & chuyển đổi thuật ngữ công sở...' },
+      { p: 100, msg: 'Hoàn tất biên dịch! Đang xuất bản sang Trình biên soạn...' }
     ];
 
-    stages.forEach(s => {
-      setTimeout(() => {
-        setProcessingProgress(s.p);
-        setProcessingStage(s.stage);
-        if (s.p === 100) {
+    processingTimerRef.current = setInterval(() => {
+      if (isPausedRef.current) return;
+
+      setProcessingProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(processingTimerRef.current);
           setTimeout(() => {
             const newFile: TranscribedFile = {
               id: `file-${Date.now()}`,
@@ -639,12 +653,50 @@ export const FileTranscribeModule: React.FC = () => {
             setDuration(newFile.duration);
             setCurrentTime(0);
             setIsProcessing(false);
+            setIsPaused(false);
             setSavedLibrary(prev => [newFile, ...prev]);
             setActiveTab('editor');
-          }, 400);
+          }, 300);
+          return 100;
         }
-      }, s.delay);
-    });
+
+        const nextP = prev + 5;
+        const matched = stages.slice().reverse().find(st => nextP >= st.p);
+        if (matched) {
+          setProcessingStage(matched.msg);
+        }
+        return nextP;
+      });
+    }, 250);
+  };
+
+  const handleStartConversion = () => {
+    if (isPaused) {
+      setIsPaused(false);
+      setCopiedToast('▶️ Đã tiếp tục chuyển đổi');
+      setTimeout(() => setCopiedToast(null), 2000);
+      return;
+    }
+    const currentName = currentFile?.name || 'Giao_ban_dieu_hanh.mp3';
+    const currentSize = currentFile?.sizeStr || '14.2 MB';
+    const currentFmt = currentFile?.format || 'MP3 (Stereo)';
+    startTranscriptionProcess(currentName, currentSize, currentFmt);
+  };
+
+  const handlePauseConversion = () => {
+    setIsPaused(true);
+    setCopiedToast('⏸️ Đã tạm dừng chuyển đổi');
+    setTimeout(() => setCopiedToast(null), 2000);
+  };
+
+  const handleStopConversion = () => {
+    if (processingTimerRef.current) clearInterval(processingTimerRef.current);
+    setIsProcessing(false);
+    setIsPaused(false);
+    setProcessingProgress(0);
+    setProcessingStage('Đã dừng xử lý tệp');
+    setCopiedToast('⏹️ Đã hủy tiến trình chuyển đổi');
+    setTimeout(() => setCopiedToast(null), 2000);
   };
 
   // Select a sample file to load directly
@@ -788,10 +840,10 @@ export const FileTranscribeModule: React.FC = () => {
             <div className="h-full grid grid-cols-1 lg:grid-cols-12 gap-3 overflow-hidden">
               
               {/* ========================================================================= */}
-              {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): HỘP NẠP TỆP GHI ÂM (UPLOAD BOX)              */}
+              {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): HỘP NẠP TỆP GHI ÂM (UPLOAD & PROGRESS PANEL) */}
               {/* ========================================================================= */}
               <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col h-full overflow-hidden text-xs shrink-0">
-                <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs relative overflow-hidden backdrop-blur-md transition-all flex-1 h-full flex flex-col justify-between space-y-3">
+                <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs relative overflow-hidden backdrop-blur-md transition-all flex-1 h-full flex flex-col justify-between space-y-2.5">
                   
                   {/* Ambient Glow */}
                   <div className="absolute -top-10 -left-10 w-28 h-28 bg-[#0284C7]/15 dark:bg-[#0284C7]/25 rounded-full blur-2xl pointer-events-none" />
@@ -802,10 +854,24 @@ export const FileTranscribeModule: React.FC = () => {
                       <UploadCloud className="w-4 h-4 text-[#0284C7]" />
                       <span>Nạp Tệp Ghi Âm</span>
                     </div>
-                    <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-[#0284C7] dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-pulse" />
-                      <span>SẴN SÀNG</span>
-                    </span>
+                    {isProcessing ? (
+                      isPaused ? (
+                        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/60">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          <span>TẠM DỪNG</span>
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-50 text-[#0284C7] dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] animate-ping" />
+                          <span>ĐANG DỊCH</span>
+                        </span>
+                      )
+                    ) : (
+                      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span>SẴN SÀNG</span>
+                      </span>
+                    )}
                   </div>
 
                   {/* Drag & Drop Upload Zone Area */}
@@ -817,7 +883,7 @@ export const FileTranscribeModule: React.FC = () => {
                       if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
                     }}
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 min-h-[260px] rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-800/80 bg-slate-50/80 dark:bg-slate-950/60 hover:border-[#F15A24] dark:hover:border-[#F15A24] hover:bg-sky-50/50 dark:hover:bg-slate-900/80 transition-all cursor-pointer p-4 flex flex-col items-center justify-center text-center space-y-3 group relative overflow-hidden"
+                    className="flex-1 min-h-[160px] sm:min-h-[180px] rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-800/80 bg-slate-50/80 dark:bg-slate-950/60 hover:border-[#F15A24] dark:hover:border-[#F15A24] hover:bg-sky-50/50 dark:hover:bg-slate-900/80 transition-all cursor-pointer p-3 flex flex-col items-center justify-center text-center space-y-2 group relative overflow-hidden"
                   >
                     <input
                       type="file"
@@ -827,25 +893,25 @@ export const FileTranscribeModule: React.FC = () => {
                       className="hidden"
                     />
 
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0284C7]/20 to-[#F15A24]/20 text-[#0284C7] dark:text-sky-400 flex items-center justify-center border border-sky-300/40 dark:border-sky-700/50 group-hover:scale-110 transition-transform shadow-sm">
-                      <FileAudio className="w-7 h-7 text-[#0284C7] dark:text-[#38BDF8]" />
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0284C7]/20 to-[#F15A24]/20 text-[#0284C7] dark:text-sky-400 flex items-center justify-center border border-sky-300/40 dark:border-sky-700/50 group-hover:scale-110 transition-transform shadow-sm">
+                      <FileAudio className="w-6 h-6 text-[#0284C7] dark:text-[#38BDF8]" />
                     </div>
 
-                    <div className="space-y-1">
-                      <p className="font-extrabold text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
+                    <div className="space-y-0.5">
+                      <p className="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
                         Kéo & thả tệp vào đây
                       </p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      <p className="text-[10.5px] text-slate-500 dark:text-slate-400 font-medium">
                         Hoặc bấm để tải từ máy tính
                       </p>
                     </div>
 
-                    <div className="px-3.5 py-1.5 rounded-xl bg-[#0284C7] hover:bg-[#00A8E8] text-white text-xs font-black shadow-2xs flex items-center gap-1.5 transition cursor-pointer uppercase tracking-wider">
+                    <div className="px-3 py-1 rounded-xl bg-[#0284C7] hover:bg-[#00A8E8] text-white text-[11px] font-black shadow-2xs flex items-center gap-1.5 transition cursor-pointer uppercase tracking-wider">
                       <UploadCloud className="w-3.5 h-3.5" />
-                      <span>Chọn Tệp Âm Thanh</span>
+                      <span>CHỌN TỆP ÂM THANH</span>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 text-[10px] text-slate-400 font-mono space-y-0.5 w-full">
+                    <div className="pt-1.5 border-t border-slate-200/60 dark:border-slate-800/60 text-[9.5px] text-slate-400 font-mono space-y-0.5 w-full">
                       <div>MP3, M4A, WAV, AAC, FLAC</div>
                       <div>MP4, WebM (Max 2GB)</div>
                     </div>
@@ -853,10 +919,10 @@ export const FileTranscribeModule: React.FC = () => {
 
                   {/* Currently Selected File Info Box */}
                   {currentFile && (
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 shrink-0">
-                      <div className="flex items-center justify-between text-[11px] font-bold">
+                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 space-y-1 shrink-0">
+                      <div className="flex items-center justify-between text-[10.5px] font-bold">
                         <span className="text-slate-500 dark:text-slate-400">Tệp hiện tại:</span>
-                        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-[10px] px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60">
+                        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-[9.5px] px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/60">
                           {currentFile.format.split(' ')[0]}
                         </span>
                       </div>
@@ -870,9 +936,101 @@ export const FileTranscribeModule: React.FC = () => {
                     </div>
                   )}
 
+                  {/* CONTROL BUTTONS: START / PAUSE / RESUME / STOP */}
+                  <div className="shrink-0 space-y-2">
+                    {!isProcessing ? (
+                      <button
+                        type="button"
+                        onClick={handleStartConversion}
+                        className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#F15A24] hover:opacity-95 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-95"
+                      >
+                        <Zap className="w-4 h-4 fill-current text-amber-300" />
+                        <span>BẮT ĐẦU CHUYỂN ĐỔI</span>
+                      </button>
+                    ) : !isPaused ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={handlePauseConversion}
+                          className="py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all active:scale-95"
+                        >
+                          <Pause className="w-3.5 h-3.5 fill-current" />
+                          <span>TẠM DỪNG</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleStopConversion}
+                          className="py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all active:scale-95"
+                        >
+                          <Square className="w-3.5 h-3.5 fill-current" />
+                          <span>DỪNG</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={handleStartConversion}
+                          className="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all active:scale-95"
+                        >
+                          <Play className="w-3.5 h-3.5 fill-current" />
+                          <span>TIẾP TỤC</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleStopConversion}
+                          className="py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm cursor-pointer transition-all active:scale-95"
+                        >
+                          <Square className="w-3.5 h-3.5 fill-current" />
+                          <span>DỪNG</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* CONVERSION PROGRESS STATUS BOX */}
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-1.5">
+                      <div className="flex items-center justify-between text-[10.5px]">
+                        <span className="font-extrabold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                          <Activity className={`w-3.5 h-3.5 ${isProcessing && !isPaused ? 'text-[#F15A24] animate-spin' : 'text-slate-400'}`} />
+                          <span>Tiến độ chuyển đổi</span>
+                        </span>
+                        <span className="font-black text-[#F15A24] text-xs">
+                          {processingProgress}%
+                        </span>
+                      </div>
+
+                      {/* Progress Bar Track */}
+                      <div className="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            isPaused
+                              ? 'bg-amber-500'
+                              : 'bg-gradient-to-r from-[#0284C7] via-sky-400 to-[#F15A24]'
+                          }`}
+                          style={{ width: `${processingProgress}%` }}
+                        />
+                      </div>
+
+                      {/* Stage description */}
+                      <div className="text-[10px] font-medium text-slate-600 dark:text-slate-300 leading-snug truncate">
+                        {isProcessing ? (
+                          isPaused ? (
+                            <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1">
+                              <Pause className="w-3 h-3" /> Đã tạm dừng tiến trình...
+                            </span>
+                          ) : (
+                            <span>{processingStage}</span>
+                          )
+                        ) : (
+                          <span className="text-slate-400 italic">Sẵn sàng chuyển đổi tệp</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Telemetry Footer Info */}
-                  <div className="p-2 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/40 text-[10px] shrink-0 flex items-center justify-between">
-                    <span className="text-slate-500 dark:text-slate-400 font-medium">Trạng thái Audio Engine:</span>
+                  <div className="p-1.5 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/40 text-[10px] shrink-0 flex items-center justify-between">
+                    <span className="text-slate-500 dark:text-slate-400 font-medium">Trạng thái Engine:</span>
                     <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       16kHz Mono Ready
