@@ -7,7 +7,7 @@ import {
   FolderOpen, Plus, RefreshCw, Activity, ShieldCheck, Zap, Layers,
   ListFilter, ExternalLink, Printer, FileDown, SlidersHorizontal,
   Wand2, Mic, Volume1, Cpu, Database, Link2, Radio, FileSpreadsheet,
-  ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square, Waves
+  ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square, Waves, Maximize2
 } from 'lucide-react';
 import { processRealtimeSpeechPunctuation } from '../../services/speechPunctuationEngine';
 import { FileTranscribeNavTab } from '../../components/layout/headers/FileTranscribeHeader';
@@ -242,6 +242,123 @@ const SAMPLE_FILES: TranscribedFile[] = [
     ]
   }
 ];
+
+// 🎛️ REALTIME CYBER DAW AUDIO SPECTRUM & OSCILLOSCOPE CANVAS (ĐỒNG BỘ 100% VỚI SPEECH-TO-TEXT)
+interface CyberAudioStudioCanvasProps {
+  isRecording: boolean;
+  recordingSeconds: number;
+}
+
+const CyberAudioStudioCanvas: React.FC<CyberAudioStudioCanvasProps> = ({ isRecording, recordingSeconds }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animFrameId = useRef<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let phase = 0;
+
+    const render = () => {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      // Background Cyber space
+      ctx.fillStyle = '#070B16';
+      ctx.fillRect(0, 0, w, h);
+
+      // Render LED Ma Trận Tần Số (Audio Spectrum Bar Matrix)
+      const numBars = 45;
+      const barWidth = 6;
+      const barSpacing = (w - 28 - numBars * barWidth) / (numBars - 1);
+      const totalSegments = 16;
+      const segmentHeight = 4;
+      const segmentGap = 2;
+      const bottomPadding = 18;
+
+      phase += 0.08;
+
+      for (let i = 0; i < numBars; i++) {
+        const rawNorm = isRecording
+          ? Math.max(0.1, Math.sin(phase + i * 0.25) * 0.45 + Math.cos(phase * 1.5 + i * 0.15) * 0.45 + 0.1)
+          : Math.max(0.04, Math.sin(phase * 0.5 + i * 0.3) * 0.08 + 0.06);
+
+        const barX = Math.round(14 + i * (barWidth + barSpacing));
+        const activeSegs = Math.round(rawNorm * totalSegments);
+
+        for (let s = 0; s < totalSegments; s++) {
+          const segY = Math.round(h - bottomPadding - (s + 1) * (segmentHeight + segmentGap));
+          const segRatio = s / totalSegments;
+
+          if (s < activeSegs) {
+            if (segRatio > 0.85) {
+              ctx.fillStyle = '#EF4444'; // Red peak
+            } else if (segRatio > 0.65) {
+              ctx.fillStyle = '#F59E0B'; // Amber
+            } else if (segRatio > 0.35) {
+              ctx.fillStyle = '#00E5FF'; // Cyan Neon
+            } else {
+              ctx.fillStyle = '#0284C7'; // Cyber Blue
+            }
+          } else {
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.35)';
+          }
+
+          ctx.fillRect(barX, segY, barWidth, segmentHeight);
+        }
+      }
+
+      // Laser Waveform Trace Center Beam
+      ctx.save();
+      ctx.strokeStyle = isRecording ? '#00F0FF' : 'rgba(0, 229, 255, 0.30)';
+      ctx.lineWidth = isRecording ? 2 : 1;
+      ctx.shadowColor = '#00E5FF';
+      ctx.shadowBlur = isRecording ? 8 : 2;
+      ctx.beginPath();
+      const midY = h * 0.45;
+      ctx.moveTo(14, midY);
+
+      for (let x = 14; x < w - 14; x += 4) {
+        const pulse = isRecording
+          ? Math.sin(phase * 5 + x * 0.05) * 14 * Math.cos(phase * 2 + x * 0.02)
+          : Math.sin(phase * 2 + x * 0.05) * 2;
+        ctx.lineTo(x, midY + pulse);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      // Frequency markings legend
+      ctx.save();
+      ctx.font = '8px "JetBrains Mono", Consolas, monospace';
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
+      ctx.textAlign = 'center';
+      const freqMarkers = ['60Hz', '250Hz', '1kHz', '4kHz', '16kHz'];
+      freqMarkers.forEach((lbl, idx) => {
+        const markerX = 16 + (idx / (freqMarkers.length - 1)) * (w - 32);
+        ctx.fillText(lbl, markerX, h - 4);
+      });
+      ctx.restore();
+
+      animFrameId.current = requestAnimationFrame(render);
+    };
+
+    animFrameId.current = requestAnimationFrame(render);
+
+    return () => {
+      if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
+    };
+  }, [isRecording]);
+
+  return (
+    <div className="relative w-full h-[180px] rounded-2xl overflow-hidden bg-[#070B16] border border-slate-800 shadow-inner">
+      <canvas ref={canvasRef} width={650} height={180} className="w-full h-full block" />
+    </div>
+  );
+};
+
 
 export const FileTranscribeModule: React.FC = () => {
   // Navigation tab state: 'home' | 'library' | 'utilities' | 'settings' | 'upload' | 'editor'
@@ -638,7 +755,7 @@ export const FileTranscribeModule: React.FC = () => {
           {/* 2-COLUMN FULL-BLEED CYBER STUDIO GRID (EXPANDS 100% WIDTH) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
             
-            {/* LEFT COLUMN (7 COLS): KHÔNG GIAN THAO TÁC THỰC HIỆN CHUYỂN ĐỔI (VÙNG KHOANH ĐỎ) */}
+            {/* LEFT COLUMN (7 COLS): KHÔNG GIAN THAO TÁC CHÍNH (CHUẨN 100% PHONG CÁCH CYBER STUDIO) */}
             <div className="lg:col-span-7 space-y-5 w-full">
               
               {/* HEADER BANNER CARD */}
@@ -657,7 +774,7 @@ export const FileTranscribeModule: React.FC = () => {
                 </p>
               </div>
 
-              {/* CARD 1: GHI ÂM TRỰC TIẾP QUA MICROPHONE (CYBER STUDIO STYLE) */}
+              {/* CARD 1: GHI ÂM TRỰC TIẾP QUA MICROPHONE (CYBER STUDIO DAW STYLE NỀN TỐI #070B16 VỚI MA TRẬN LED SÓNG ÂM TẦN SỐ) */}
               <div className="bg-white/95 dark:bg-[#0B1120]/95 p-6 sm:p-7 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-md space-y-4 text-center relative overflow-hidden">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
                   <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#F15A24]">
@@ -667,7 +784,11 @@ export const FileTranscribeModule: React.FC = () => {
                   <span className="text-[10.5px] font-bold text-slate-400 font-mono">Băng thông 16kHz PCM</span>
                 </div>
 
-                <div className="py-3 space-y-4 flex flex-col items-center justify-center">
+                {/* 🎛️ CYBER DAW AUDIO SPECTRUM VISUALIZER (NỀN TỐI #070B16 & MA TRẬN LED TẦN SỐ) */}
+                <CyberAudioStudioCanvas isRecording={isRecording} recordingSeconds={recordingSeconds} />
+
+                {/* TELEMETRY METRICS & CONTROL MIC BUTTON */}
+                <div className="py-2 space-y-4 flex flex-col items-center justify-center">
                   <button
                     type="button"
                     onClick={() => {
@@ -680,7 +801,7 @@ export const FileTranscribeModule: React.FC = () => {
                     className={`w-24 h-24 sm:w-26 sm:h-26 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-xl cursor-pointer ${
                       isRecording
                         ? 'bg-rose-500 hover:bg-rose-600 text-white animate-pulse ring-8 ring-rose-500/20'
-                        : 'bg-gradient-to-tr from-[#0284C7] via-sky-400 to-[#00A8E8] hover:scale-105 text-white ring-8 ring-sky-500/10 shadow-sky-500/20'
+                        : 'bg-gradient-to-tr from-[#0284C7] via-sky-400 to-[#00A8E8] hover:scale-105 text-white ring-8 ring-sky-500/15 shadow-sky-500/20'
                     }`}
                   >
                     {isRecording ? (
@@ -714,7 +835,7 @@ export const FileTranscribeModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* CARD 2: KÉO & THẢ FILE GHI ÂM VÀO ĐÂY (FULL COL DROPZONE) */}
+              {/* CARD 2: KÉO & THẢ FILE GHI ÂM VÀO ĐÂY (CYBER DROPZONE STYLE) */}
               <div
                 onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 onDrop={(e) => {
@@ -724,7 +845,7 @@ export const FileTranscribeModule: React.FC = () => {
                     handleFileSelect(e.dataTransfer.files[0]);
                   }
                 }}
-                className="p-8 sm:p-12 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700/80 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-md group cursor-pointer relative"
+                className="p-8 sm:p-12 rounded-3xl border-2 border-dashed border-sky-400/60 dark:border-sky-600/60 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-md group cursor-pointer relative"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <input
@@ -739,7 +860,7 @@ export const FileTranscribeModule: React.FC = () => {
                   className="hidden"
                 />
 
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950/80 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950/80 to-[#F15A24]/20 border border-sky-300 dark:border-sky-700 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
                   <UploadCloud className="w-8 h-8 sm:w-10 sm:h-10 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
                 </div>
 
@@ -821,7 +942,7 @@ export const FileTranscribeModule: React.FC = () => {
 
             </div>
 
-            {/* RIGHT COLUMN (5 COLS): THỬ NGHIỆM MẪU & BỘ TIỆN ÍCH (CỘT PHẢI THÔNG THOÁNG) */}
+            {/* RIGHT COLUMN (5 COLS): THỬ NGHIỆM MẪU & BỘ TIỆN ÍCH */}
             <div className="lg:col-span-5 space-y-5 w-full">
               
               {/* THỬ NGHIỆM NGAY VỚI 3 FILE GHI ÂM MẪU AVG */}
