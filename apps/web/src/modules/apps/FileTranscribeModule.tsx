@@ -429,6 +429,7 @@ export const FileTranscribeModule: React.FC = () => {
   // Editor view modes: 'dialogue' | 'document' | 'summary'
   const [editorViewMode, setEditorViewMode] = useState<'dialogue' | 'document' | 'summary'>('dialogue');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedSpeakerFilter, setSelectedSpeakerFilter] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('Tất cả');
   const [copiedToast, setCopiedToast] = useState<string | null>(null);
   const [editingSegmentId, setEditingSegmentId] = useState<string | null>(null);
@@ -831,12 +832,46 @@ export const FileTranscribeModule: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Filtered segments for search query in editor
+  // Export DOCX (Word format) file
+  const handleExportDocx = (fileToExport = currentFile) => {
+    const header = `TẬP ĐOÀN AVG ONE - BÁO CÁO BIÊN BẢN CHUYỂN ĐỔI GHI ÂM\n` +
+      `Tệp nguồn: ${fileToExport.name}\n` +
+      `Thời lượng: ${formatTime(fileToExport.duration)}\n` +
+      `Ngày xử lý: ${fileToExport.uploadedAt}\n` +
+      `Mô hình AI: ${fileToExport.modelUsed}\n` +
+      `======================================================================\n\n`;
+    const body = fileToExport.segments.map(s => `[${formatTime(s.startTime)} - ${formatTime(s.endTime)}] ${s.speakerName} (${s.speakerRole}):\n${s.text}\n`).join('\n');
+    const blob = new Blob([header + body], { type: 'application/msword;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fileToExport.name.replace(/\.[^/.]+$/, "")}_BienBan_AVG.doc`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setCopiedToast('📄 Đã xuất file Word (.doc) thành công!');
+    setTimeout(() => setCopiedToast(null), 2500);
+  };
+
+  // Unique list of speakers in current file
+  const uniqueSpeakers = useMemo(() => {
+    if (!currentFile?.segments) return [];
+    const map = new Map<string, string>();
+    currentFile.segments.forEach(s => {
+      if (s.speakerId) map.set(s.speakerId, s.speakerName);
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [currentFile]);
+
+  // Filtered segments for search query & speaker filter in editor
   const displayedSegments = useMemo(() => {
-    if (!searchQuery.trim()) return currentFile.segments;
-    const q = searchQuery.toLowerCase();
-    return currentFile.segments.filter(s => s.text.toLowerCase().includes(q) || s.speakerName.toLowerCase().includes(q));
-  }, [currentFile, searchQuery]);
+    if (!currentFile?.segments) return [];
+    return currentFile.segments.filter(s => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesQuery = !q || s.text.toLowerCase().includes(q) || s.speakerName.toLowerCase().includes(q) || s.speakerRole.toLowerCase().includes(q);
+      const matchesSpeaker = selectedSpeakerFilter === 'all' || s.speakerId === selectedSpeakerFilter || s.speakerName === selectedSpeakerFilter;
+      return matchesQuery && matchesSpeaker;
+    });
+  }, [currentFile, searchQuery, selectedSpeakerFilter]);
 
   // Filtered files in Kho phẩm (Library)
   const filteredLibrary = useMemo(() => {
@@ -1090,15 +1125,93 @@ export const FileTranscribeModule: React.FC = () => {
                   {/* Speaker Filter Badges Bar & Top Header Actions */}
                   <div className="flex flex-col gap-2 mb-2 shrink-0 relative z-10">
                     <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                      {/* Left: Title Badge */}
-                      <div className="flex items-center gap-2 px-3.5 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
-                        <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
-                          Chuyển Đổi Sang Văn Bản
-                        </h2>
+                      
+                      {/* Left: Title Badge & View Switcher Pills */}
+                      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
+                          <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
+                            Chuyển Đổi Sang Văn Bản
+                          </h2>
+                        </div>
+
+                        {/* View Mode Switcher Pills */}
+                        <div className="flex items-center gap-1 p-0.5 rounded-xl bg-slate-200/70 dark:bg-slate-800/90 border border-slate-300/60 dark:border-slate-700/60">
+                          <button
+                            type="button"
+                            onClick={() => setEditorViewMode('dialogue')}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition flex items-center gap-1 ${
+                              editorViewMode === 'dialogue'
+                                ? 'bg-[#0284C7] text-white shadow-2xs'
+                                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                            }`}
+                          >
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <span>Hội thoại</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditorViewMode('document')}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition flex items-center gap-1 ${
+                              editorViewMode === 'document'
+                                ? 'bg-[#0284C7] text-white shadow-2xs'
+                                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                            }`}
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                            <span>Văn bản</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditorViewMode('summary')}
+                            className={`px-2.5 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition flex items-center gap-1 ${
+                              editorViewMode === 'summary'
+                                ? 'bg-[#0284C7] text-white shadow-2xs'
+                                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                            }`}
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                            <span>Tóm tắt AI</span>
+                          </button>
+                        </div>
                       </div>
 
-                      {/* Right: Header Toolbar Actions */}
-                      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto h-8.5">
+                      {/* Middle & Right: Search, Speaker Filter & Action Toolbar */}
+                      <div className="flex items-center gap-2 shrink-0 ml-auto h-8.5">
+                        {/* Search Input Box */}
+                        <div className="relative hidden md:block w-44 lg:w-52">
+                          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                          <input
+                            type="text"
+                            placeholder="Tìm từ khóa..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-8 pr-7 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+                          />
+                          {searchQuery && (
+                            <button
+                              type="button"
+                              onClick={() => setSearchQuery('')}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Speaker Filter Dropdown */}
+                        {uniqueSpeakers.length > 0 && (
+                          <select
+                            value={selectedSpeakerFilter}
+                            onChange={(e) => setSelectedSpeakerFilter(e.target.value)}
+                            className="hidden lg:block px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
+                          >
+                            <option value="all">👥 Tất cả người nói ({currentFile?.segments?.length || 0})</option>
+                            {uniqueSpeakers.map(spk => (
+                              <option key={spk.id} value={spk.id}>{spk.name}</option>
+                            ))}
+                          </select>
+                        )}
+
                         <button
                           type="button"
                           onClick={handleCopyFullText}
@@ -1121,6 +1234,16 @@ export const FileTranscribeModule: React.FC = () => {
 
                         <button
                           type="button"
+                          onClick={() => handleExportDocx()}
+                          className="h-8 px-3 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          title="Xuất file Word DOCX"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Xuất Word</span>
+                        </button>
+
+                        <button
+                          type="button"
                           onClick={() => setActiveTab('editor')}
                           className="h-8 px-3 rounded-xl font-extrabold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-700 dark:text-slate-200 hover:text-[#0284C7] border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
                           title="Mở rộng trình biên soạn toàn màn hình"
@@ -1135,6 +1258,78 @@ export const FileTranscribeModule: React.FC = () => {
                   {/* Recessed Live Conversation Transcript Feed Cavity */}
                   <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                     
+                    {/* Inline Interactive Audio Player Scrubber Bar */}
+                    {hasConvertedCurrentFile && currentFile && currentFile.segments && currentFile.segments.length > 0 && (
+                      <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs mb-3 space-y-2 shrink-0">
+                        <div className="flex items-center justify-between gap-3 text-xs">
+                          {/* Play / Pause / Skip Controls */}
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => handleSeek(currentTime - 5)}
+                              className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition cursor-pointer"
+                              title="Lùi 5 giây"
+                            >
+                              <Rewind className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setIsPlaying(!isPlaying)}
+                              className="h-8 px-3.5 rounded-xl bg-[#0284C7] hover:bg-[#00A8E8] text-white font-extrabold text-xs flex items-center gap-1.5 shadow-sm cursor-pointer transition active:scale-95"
+                            >
+                              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                              <span>{isPlaying ? 'Tạm dừng' : 'Phát audio'}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSeek(currentTime + 5)}
+                              className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition cursor-pointer"
+                              title="Tới 5 giây"
+                            >
+                              <FastForward className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {/* Time Progress Scrubber Slider */}
+                          <div className="flex-1 flex items-center gap-2">
+                            <span className="font-mono font-extrabold text-[11px] text-[#0284C7] dark:text-sky-400 w-10 text-right">
+                              {formatTime(currentTime)}
+                            </span>
+                            <input
+                              type="range"
+                              min={0}
+                              max={duration || 1}
+                              step={0.5}
+                              value={currentTime}
+                              onChange={(e) => handleSeek(Number(e.target.value))}
+                              className="flex-1 h-2 rounded-lg bg-slate-200 dark:bg-slate-800 accent-[#0284C7] cursor-pointer"
+                            />
+                            <span className="font-mono font-bold text-[11px] text-slate-400 w-10">
+                              {formatTime(duration)}
+                            </span>
+                          </div>
+
+                          {/* Playback Speed Selectors */}
+                          <div className="flex items-center gap-1 shrink-0">
+                            {[0.75, 1.0, 1.25, 1.5, 2.0].map((rate) => (
+                              <button
+                                key={rate}
+                                type="button"
+                                onClick={() => setPlaybackRate(rate)}
+                                className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
+                                  playbackRate === rate
+                                    ? 'bg-[#0284C7] text-white'
+                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                                }`}
+                              >
+                                {rate}x
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Inline Non-blocking Live Conversion Status Banner */}
                     {isProcessing && (
                       <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800/80 shadow-xs space-y-2 mb-3">
@@ -1189,58 +1384,204 @@ export const FileTranscribeModule: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                    ) : currentFile && currentFile.segments && currentFile.segments.length > 0 ? (
+                    ) : currentFile && editorViewMode === 'summary' ? (
+                      /* AI Summary Executive Report View */
+                      <div className="space-y-4">
+                        <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-sky-200 dark:border-sky-800 space-y-2 shadow-xs">
+                          <h3 className="font-black text-xs uppercase tracking-wider text-[#0284C7] dark:text-sky-300 flex items-center gap-1.5">
+                            <Sparkles className="w-4 h-4 text-amber-400" />
+                            <span>Tóm Tắt Điều Hành Cuộc Họp</span>
+                          </h3>
+                          <p className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
+                            {currentFile.summary?.executive}
+                          </p>
+                        </div>
+
+                        {currentFile.summary?.keyDecisions && (
+                          <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                            <h3 className="font-black text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                              <span>Các Kết Luận Chốt</span>
+                            </h3>
+                            <ul className="space-y-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                              {currentFile.summary.keyDecisions.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {currentFile.summary?.actionItems && (
+                          <div className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+                            <h3 className="font-black text-xs uppercase tracking-wider text-[#F15A24] dark:text-orange-400 flex items-center gap-1.5">
+                              <CheckSquare className="w-4 h-4 text-[#F15A24]" />
+                              <span>Danh Sách Phân Công Công Việc</span>
+                            </h3>
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-left text-xs border-collapse">
+                                <thead>
+                                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400">
+                                    <th className="py-1.5 font-bold">Nhiệm vụ</th>
+                                    <th className="py-1.5 font-bold">Người thực hiện</th>
+                                    <th className="py-1.5 font-bold">Hạn chót</th>
+                                    <th className="py-1.5 font-bold">Mức ưu tiên</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {currentFile.summary.actionItems.map((item, idx) => (
+                                    <tr key={idx} className="border-b border-slate-100 dark:border-slate-800/60 font-medium">
+                                      <td className="py-2 pr-2 text-slate-800 dark:text-slate-200 font-semibold">{item.task}</td>
+                                      <td className="py-2 px-2 text-[#0284C7] dark:text-sky-400 font-bold">{item.assignee}</td>
+                                      <td className="py-2 px-2 font-mono text-slate-500">{item.deadline}</td>
+                                      <td className="py-2 pl-2">
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                          item.priority === 'Cao' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400' : 'bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400'
+                                        }`}>
+                                          {item.priority}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : currentFile && editorViewMode === 'document' ? (
+                      /* Document Continuous Text View */
+                      <div className="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 shadow-xs">
+                        <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                          <h2 className="font-black text-base uppercase text-[#0284C7]">BIÊN BẢN CHUYỂN ĐỔI GHI ÂM CHÍNH THỨC</h2>
+                          <p className="text-xs text-slate-400">Tệp nguồn: {currentFile.name} | Thời lượng: {formatTime(currentFile.duration)}</p>
+                        </div>
+                        <div className="space-y-4 text-xs sm:text-sm font-medium leading-relaxed text-slate-800 dark:text-slate-200">
+                          {displayedSegments.map((s, idx) => (
+                            <p key={s.id || idx}>
+                              <strong className="text-[#F15A24] dark:text-orange-400">[{formatTime(s.startTime)} - {formatTime(s.endTime)}] {s.speakerName}: </strong>
+                              <span>{s.text}</span>
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    ) : currentFile && displayedSegments.length > 0 ? (
                       /* Transcript Message Feed Bubbles */
                       <div className="space-y-3">
-                        {currentFile.segments.map((seg, idx) => (
-                          <div key={seg.id || idx} className="flex flex-col items-start w-full">
-                            <div className="p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white w-full shadow-xs space-y-2 hover:border-[#0284C7]/50 transition-all">
-                              <div className="flex items-center justify-between text-xs font-bold pb-1.5 border-b border-slate-100 dark:border-slate-800">
-                                <span className="text-[#F15A24] dark:text-orange-400 font-black">
-                                  {seg.speakerName} ({seg.speakerRole})
-                                </span>
-                                <span className="text-[10.5px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
-                                  {formatTime(seg.startTime)} - {formatTime(seg.endTime)}
-                                </span>
-                              </div>
-
-                              <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
-                                {seg.text}
-                              </p>
-
-                              {/* Segment Actions Footer Toolbar */}
-                              <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-100 dark:border-slate-800/60">
-                                <button
-                                  type="button"
-                                  onClick={() => handleJumpToSegment(seg)}
-                                  className="flex items-center gap-1 text-[#0284C7] hover:text-[#00A8E8] font-bold cursor-pointer"
-                                >
-                                  <Play className="w-3.5 h-3.5 fill-current" />
-                                  <span>Phát đoạn thoại</span>
-                                </button>
-
-                                <div className="flex items-center gap-3 text-slate-400">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      navigator.clipboard.writeText(seg.text);
-                                      setCopiedToast('Đã sao chép đoạn thoại này!');
-                                      setTimeout(() => setCopiedToast(null), 2000);
-                                    }}
-                                    className="hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 font-medium cursor-pointer"
-                                    title="Sao chép đoạn này"
-                                  >
-                                    <Copy className="w-3.5 h-3.5" />
-                                    <span>Sao chép</span>
-                                  </button>
-                                  <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60">
-                                    {Math.round((seg.confidence || 0.98) * 100)}% Accurate
+                        {displayedSegments.map((seg, idx) => {
+                          const isActiveSeg = activeSegmentId === seg.id;
+                          return (
+                            <div key={seg.id || idx} className="flex flex-col items-start w-full">
+                              <div className={`p-3.5 sm:p-4 rounded-xl bg-white dark:bg-slate-900 border transition-all text-slate-900 dark:text-white w-full shadow-xs space-y-2 ${
+                                isActiveSeg
+                                  ? 'border-[#0284C7] ring-2 ring-[#0284C7]/30 bg-sky-50/50 dark:bg-sky-950/40'
+                                  : 'border-slate-200 dark:border-slate-800 hover:border-[#0284C7]/50'
+                              }`}>
+                                <div className="flex items-center justify-between text-xs font-bold pb-1.5 border-b border-slate-100 dark:border-slate-800">
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setRenamingSpeakerId(seg.speakerId);
+                                        setNewSpeakerName(seg.speakerName);
+                                      }}
+                                      className="text-[#F15A24] dark:text-orange-400 font-black hover:underline cursor-pointer flex items-center gap-1"
+                                      title="Bấm để đổi tên người phát biểu"
+                                    >
+                                      <span>{seg.speakerName} ({seg.speakerRole})</span>
+                                      <Edit3 className="w-3 h-3 opacity-60 hover:opacity-100" />
+                                    </button>
+                                    {isActiveSeg && (
+                                      <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded bg-[#0284C7] text-white animate-pulse">
+                                        ▶ ĐANG PHÁT
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="text-[10.5px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
+                                    {formatTime(seg.startTime)} - {formatTime(seg.endTime)}
                                   </span>
+                                </div>
+
+                                {editingSegmentId === seg.id ? (
+                                  <div className="space-y-2 pt-1">
+                                    <textarea
+                                      value={editingText}
+                                      onChange={(e) => setEditingText(e.target.value)}
+                                      className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-[#0284C7] text-xs sm:text-sm font-medium focus:outline-none"
+                                      rows={3}
+                                    />
+                                    <div className="flex justify-end gap-2">
+                                      <button
+                                        type="button"
+                                        onClick={() => setEditingSegmentId(null)}
+                                        className="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600"
+                                      >
+                                        Hủy
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleSaveSegmentText(seg.id)}
+                                        className="px-3 py-1 rounded-lg text-xs font-bold bg-[#0284C7] text-white"
+                                      >
+                                        Lưu thay đổi
+                                      </button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
+                                    {seg.text}
+                                  </p>
+                                )}
+
+                                {/* Segment Actions Footer Toolbar */}
+                                <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-100 dark:border-slate-800/60">
+                                  <div className="flex items-center gap-3">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleJumpToSegment(seg)}
+                                      className="flex items-center gap-1 text-[#0284C7] hover:text-[#00A8E8] font-bold cursor-pointer"
+                                    >
+                                      <Play className="w-3.5 h-3.5 fill-current" />
+                                      <span>Phát đoạn thoại</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setEditingSegmentId(seg.id);
+                                        setEditingText(seg.text);
+                                      }}
+                                      className="flex items-center gap-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-bold cursor-pointer"
+                                    >
+                                      <Edit3 className="w-3.5 h-3.5" />
+                                      <span>Sửa</span>
+                                    </button>
+                                  </div>
+
+                                  <div className="flex items-center gap-3 text-slate-400">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(seg.text);
+                                        setCopiedToast('Đã sao chép đoạn thoại này!');
+                                        setTimeout(() => setCopiedToast(null), 2000);
+                                      }}
+                                      className="hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 font-medium cursor-pointer"
+                                      title="Sao chép đoạn này"
+                                    >
+                                      <Copy className="w-3.5 h-3.5" />
+                                      <span>Sao chép</span>
+                                    </button>
+                                    <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/60">
+                                      {Math.round((seg.confidence || 0.98) * 100)}% Accurate
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     ) : (
                       /* Dropzone Drop Area if empty */
