@@ -424,6 +424,7 @@ export const FileTranscribeModule: React.FC = () => {
   const [copiedToast, setCopiedToast] = useState<string | null>(null);
   const [editingSegmentId, setEditingSegmentId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState<string>('');
+  const [deafTextInput, setDeafTextInput] = useState<string>('');
 
   // Speaker Renaming Modal State
   const [renamingSpeakerId, setRenamingSpeakerId] = useState<string | null>(null);
