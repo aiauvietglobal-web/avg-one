@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   Home, UploadCloud, FileText, FolderOpen, Settings,
-  Sparkles, CheckCircle2, ChevronRight, Music, Activity, SlidersHorizontal
+  Sparkles, CheckCircle2, ChevronRight, Music, Activity, SlidersHorizontal, LayoutDashboard
 } from 'lucide-react';
 
-export type FileTranscribeNavTab = 'library' | 'utilities' | 'settings' | 'upload' | 'editor';
+export type FileTranscribeNavTab = 'home' | 'library' | 'utilities' | 'settings' | 'upload' | 'editor';
 
 export interface FileTranscribeHeaderProps {
   onBack: () => void;
@@ -18,7 +18,7 @@ export interface FileTranscribeHeaderProps {
 export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
   onBack,
   onGoHome,
-  activeNavTab = 'library',
+  activeNavTab = 'home',
   onSelectNavTab,
   renderUserAuthButton,
   hasActiveFile = false
@@ -57,7 +57,7 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
         {/* Cụm trái: [ Icon Trang chủ + Tên phân hệ ] + [ Các đầu mục nghiệp vụ ] */}
         <div className="flex items-center select-none shrink-0 whitespace-nowrap">
           {/* Khối định danh phân hệ: [ 🏠 Trang chủ ] + [ CHUYỂN ĐỔI VĂN BẢN ] */}
-          <div className="flex items-center gap-2.5 shrink-0 mr-4 sm:mr-6 lg:mr-8">
+          <div className="flex items-center gap-2.5 shrink-0 mr-3 sm:mr-5 lg:mr-6">
             {/* Icon Trang chủ: Bấm để quay về Trang chủ AVG One */}
             <button
               onClick={handleGoHome}
@@ -77,15 +77,18 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
             </button>
           </div>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ CHUYỂN ĐỔI FILE GHI ÂM: THIẾT KẾ DẠNG HỘP HIỆN ĐẠI */}
+          {/* BỘ ĐẦU MỤC QUẢN LÝ CHUYỂN ĐỔI FILE GHI ÂM */}
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
+              { id: 'home' as const, label: 'Trang chủ', icon: LayoutDashboard },
               { id: 'library' as const, label: 'Kho phẩm', icon: FolderOpen, badge: hasActiveFile ? 'Đang mở' : undefined },
               { id: 'utilities' as const, label: 'Tiện ích', icon: SlidersHorizontal },
               { id: 'settings' as const, label: 'Cài đặt', icon: Settings },
             ].map((tab) => {
               const isActive =
-                tab.id === 'library'
+                tab.id === 'home'
+                  ? (currentTab === 'home')
+                  : tab.id === 'library'
                   ? (currentTab === 'library' || currentTab === 'editor')
                   : tab.id === 'utilities'
                   ? (currentTab === 'utilities' || currentTab === 'upload')

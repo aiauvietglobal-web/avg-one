@@ -7,7 +7,7 @@ import {
   FolderOpen, Plus, RefreshCw, Activity, ShieldCheck, Zap, Layers,
   ListFilter, ExternalLink, Printer, FileDown, SlidersHorizontal,
   Wand2, Mic, Volume1, Cpu, Database, Link2, Radio, FileSpreadsheet,
-  ArrowLeft, FileCode, CheckSquare
+  ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square
 } from 'lucide-react';
 import { processRealtimeSpeechPunctuation } from '../../services/speechPunctuationEngine';
 import { FileTranscribeNavTab } from '../../components/layout/headers/FileTranscribeHeader';
@@ -244,12 +244,17 @@ const SAMPLE_FILES: TranscribedFile[] = [
 ];
 
 export const FileTranscribeModule: React.FC = () => {
-  // Navigation tab state: 'library' | 'utilities' | 'settings' | 'upload' | 'editor'
-  const [activeTab, setActiveTab] = useState<FileTranscribeNavTab>('library');
+  // Navigation tab state: 'home' | 'library' | 'utilities' | 'settings' | 'upload' | 'editor'
+  const [activeTab, setActiveTab] = useState<FileTranscribeNavTab>('home');
   
   // Current working file
   const [currentFile, setCurrentFile] = useState<TranscribedFile>(SAMPLE_FILES[0]);
   const [savedLibrary, setSavedLibrary] = useState<TranscribedFile[]>(SAMPLE_FILES);
+
+  // Live Microphone Recording state
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [recordingSeconds, setRecordingSeconds] = useState<number>(0);
+  const recordingTimerRef = useRef<any>(null);
 
   // Upload & processing state
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
@@ -260,7 +265,6 @@ export const FileTranscribeModule: React.FC = () => {
   const [enablePunctuation, setEnablePunctuation] = useState<boolean>(true);
   const [enableDenoise, setEnableDenoise] = useState<boolean>(true);
   const [enableAccentBoost, setEnableAccentBoost] = useState<boolean>(true);
-  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
 
   // Audio Playback & Waveform State
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -298,7 +302,7 @@ export const FileTranscribeModule: React.FC = () => {
   // Sync tab with header events
   useEffect(() => {
     const handleTabChange = (e: any) => {
-      if (e.detail && ['upload', 'editor', 'library', 'utilities', 'settings'].includes(e.detail)) {
+      if (e.detail && ['home', 'upload', 'editor', 'library', 'utilities', 'settings'].includes(e.detail)) {
         setActiveTab(e.detail);
       }
     };
@@ -310,6 +314,21 @@ export const FileTranscribeModule: React.FC = () => {
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('file_transcribe_tab_sync', { detail: activeTab }));
   }, [activeTab]);
+
+  // Handle Microphone Recording Timer Simulation
+  useEffect(() => {
+    if (isRecording) {
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingSeconds(prev => prev + 1);
+      }, 1000);
+    } else {
+      if (recordingTimerRef.current) clearInterval(recordingTimerRef.current);
+      setRecordingSeconds(0);
+    }
+    return () => {
+      if (recordingTimerRef.current) clearInterval(recordingTimerRef.current);
+    };
+  }, [isRecording]);
 
   // Audio Playback simulation
   useEffect(() => {
@@ -382,8 +401,14 @@ export const FileTranscribeModule: React.FC = () => {
 
   // Handle local audio file upload
   const handleFileSelect = (file: File) => {
-    setUploadedFileName(file.name);
     startTranscriptionProcess(file.name, `${(file.size / (1024 * 1024)).toFixed(1)} MB`, file.type || 'Audio file');
+  };
+
+  // Finish Recording & Process Live Audio
+  const handleStopRecordingAndProcess = () => {
+    setIsRecording(false);
+    const recName = `Ghi_am_truc_tiep_${new Date().toLocaleTimeString('vi-VN').replace(/:/g, '-')}.wav`;
+    startTranscriptionProcess(recName, '4.5 MB', 'Microphone 16kHz PCM');
   };
 
   // Start conversion pipeline simulation
@@ -414,7 +439,7 @@ export const FileTranscribeModule: React.FC = () => {
               format: formatStr,
               uploadedAt: 'Vừa xong',
               modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
-              category: 'Chưa phân loại',
+              category: 'Giao ban BĐH',
               summary: {
                 executive: `Biên bản chuyển đổi tự động từ tệp ghi âm "${fileName}". Cuộc họp tập trung thảo luận các nhiệm vụ trọng tâm, tiến độ triển khai và phân bổ trách nhiệm các phòng ban.`,
                 keyDecisions: [
@@ -607,7 +632,548 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 📁 ĐẦU MỤC 1: KHO PHẨM (DOCUMENT LIBRARY & MEDIA REPOSITORY) */}
+      {/* 🏠 GIAO DIỆN TRANG CHỦ (MODULE HOME LANDING PORTAL) */}
+      {/* ========================================================================= */}
+      {activeTab === 'home' && (
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+          
+          {/* HERO BANNER PORTAL */}
+          <div className="bg-gradient-to-r from-sky-600 via-sky-500 to-[#F15A24] p-6 sm:p-10 rounded-3xl text-white shadow-xl relative overflow-hidden flex flex-col justify-between gap-6 shrink-0">
+            {/* Background decorative elements */}
+            <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute right-30 top-4 w-40 h-40 bg-amber-400/20 rounded-full blur-xl pointer-events-none" />
+
+            <div className="space-y-3 relative z-10 max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-black uppercase tracking-wider text-white border border-white/30">
+                <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                <span>AVG ONE VOICE-TO-TEXT ENGINE v2.4</span>
+              </div>
+              <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+                Chuyển Đổi Voice-to-Text & Quản Lý Biên Bản Cuộc Họp Thông Minh
+              </h1>
+              <p className="text-xs sm:text-sm text-sky-100 font-medium leading-relaxed max-w-2xl">
+                Hệ thống nhận diện giọng nói tiếng Việt chuyên sâu cho Tập đoàn AVG One: Phân tách người nói (Diarization), chấm phẩy tự động, chuẩn hóa từ viết tắt công sở và xuất báo cáo hành chính tức thì.
+              </p>
+            </div>
+
+            {/* Quick Action Launcher Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 relative z-10 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab('upload')}
+                className="p-3.5 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-left transition-all cursor-pointer group flex flex-col justify-between space-y-3 active:scale-95"
+              >
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                  <Mic className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-black text-white">Chuyển Đổi Mới</div>
+                  <div className="text-[10.5px] text-sky-100">Upload tệp hoặc Mic thu âm</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('library')}
+                className="p-3.5 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-left transition-all cursor-pointer group flex flex-col justify-between space-y-3 active:scale-95"
+              >
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-emerald-300 group-hover:scale-110 transition-transform">
+                  <FolderOpen className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-black text-white">Kho Phẩm Ghi Âm</div>
+                  <div className="text-[10.5px] text-sky-100">{savedLibrary.length} tệp đã biên soạn</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('utilities')}
+                className="p-3.5 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-left transition-all cursor-pointer group flex flex-col justify-between space-y-3 active:scale-95"
+              >
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform">
+                  <Wand2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-black text-white">Bộ Tiện Ích Studio</div>
+                  <div className="text-[10.5px] text-sky-100">Tách audio video, lọc khử ồn</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('settings')}
+                className="p-3.5 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-left transition-all cursor-pointer group flex flex-col justify-between space-y-3 active:scale-95"
+              >
+                <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-rose-300 group-hover:scale-110 transition-transform">
+                  <Settings className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-black text-white">Cài Đặt Mô Hình</div>
+                  <div className="text-[10.5px] text-sky-100">Từ điển từ mượn công sở</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* PERFORMANCE METRICS & SYSTEM HIGHLIGHTS */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0">
+                <FileAudio className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Tệp Xử Lý</div>
+                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">{savedLibrary.length} tệp</div>
+              </div>
+            </div>
+
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-orange-100 dark:bg-orange-950/80 border border-orange-200 dark:border-orange-800 flex items-center justify-center text-[#F15A24] shrink-0">
+                <Clock className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thời Lượng Tích Lũy</div>
+                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                  {formatTime(savedLibrary.reduce((acc, curr) => acc + curr.duration, 0))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 shrink-0">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Độ Chính Xác ASR</div>
+                <div className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">98.6% WER</div>
+              </div>
+            </div>
+
+            <div className="bg-white/90 dark:bg-slate-900/90 p-4 sm:p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800 flex items-center justify-center text-purple-600 shrink-0">
+                <User className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tách Người Nói</div>
+                <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">Diarization v2</div>
+              </div>
+            </div>
+          </div>
+
+          {/* RECENT ACTIVITY CAROUSEL & QUICK ACCESS */}
+          <div className="bg-white/95 dark:bg-slate-900/95 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4.5 h-4.5 text-[#0284C7]" />
+                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
+                  Tệp Ghi Âm Vừa Chuyển Đổi Gần Đây
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('library')}
+                className="text-xs font-black text-[#0284C7] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>Xem toàn bộ Kho phẩm ({savedLibrary.length})</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {savedLibrary.slice(0, 3).map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => handleLoadSample(item)}
+                  className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 hover:border-[#0284C7] hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between space-y-3"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-sky-100 dark:bg-sky-950 text-[#0284C7]">
+                        {item.category || 'Cuộc họp'}
+                      </span>
+                      <span className="text-[10.5px] font-mono font-bold text-slate-400">
+                        {formatTime(item.duration)}
+                      </span>
+                    </div>
+                    <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 group-hover:text-[#0284C7] line-clamp-1">
+                      {item.name}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
+                      {item.summary.executive}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[10.5px] font-bold text-slate-400">
+                    <span>{item.segments.length} lượt thoại</span>
+                    <span className="text-[#F15A24] font-black group-hover:underline flex items-center gap-0.5">
+                      Mở biên bản Karaoke <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CORE TECHNOLOGY FEATURES GRID */}
+          <div className="bg-white/95 dark:bg-slate-900/95 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+            <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+              <Zap className="w-4.5 h-4.5 text-[#F15A24]" />
+              <span>Các Tính Năng Công Nghệ Lõi Nổi Bật</span>
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-2xl bg-sky-50/60 dark:bg-sky-950/30 border border-sky-200/60 dark:border-sky-800/60 space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-[#0284C7] text-white flex items-center justify-center font-bold">
+                  👥
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white">Phân Tách Giọng Người Nói (Diarization)</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                  Tự động nhận diện và gán nhãn chính xác Chủ tọa, Thư ký và từng thành viên tham gia thảo luận.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-orange-50/60 dark:bg-orange-950/30 border border-orange-200/60 dark:border-orange-800/60 space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-[#F15A24] text-white flex items-center justify-center font-bold">
+                  ✍️
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white">Dấu Câu & Văn Bản Hành Chính</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                  Tự động ngắt câu, chèn phẩy và chuẩn hóa từ mượn công sở tiếng Anh (PO, VAT, OKR, KPI...).
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/60 space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+                  ⚡
+                </div>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white">Xuất Báo Cáo & Tóm Tắt AI</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                  Trích xuất Tóm tắt điều hành, Các quyết định đã chốt và Bảng phân công đầu việc Action Items.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 🎙️ KHÔNG GIAN THAO TÁC THỰC HIỆN CHUYỂN ĐỔI (CONVERSION WORKSPACE STUDIO) */}
+      {/* ========================================================================= */}
+      {(activeTab === 'upload' || activeTab === 'utilities') && (
+        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
+          
+          {/* Header Banner */}
+          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 border border-sky-200 dark:border-sky-800 text-xs font-black text-[#0284C7] dark:text-sky-400">
+                <Sparkles className="w-3.5 h-3.5 text-[#F15A24]" />
+                <span>AVG CONVERSION STUDIO & LIVE RECORDER</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                Không Gian Thao Tác Thực Hiện Chuyển Đổi Voice-to-Text
+              </h1>
+              <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 max-w-2xl font-medium">
+                Nạp tệp ghi âm sẵn có hoặc thực hiện thu âm trực tiếp qua Microphone. Hệ thống sẽ tự động lọc ồn, phân tách giọng người nói và dịch sang văn bản chính xác.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => handleLoadSample(SAMPLE_FILES[0])}
+                className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-[#0284C7] shadow-xs flex items-center gap-2 transition-all cursor-pointer active:scale-95"
+              >
+                <FolderOpen className="w-4 h-4 text-[#0284C7]" />
+                <span>Mở mẫu họp BĐH</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 2-Column Full-screen Studio Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+            
+            {/* Left Column (7 cols): Microphone Recorder & Dropzone */}
+            <div className="lg:col-span-7 space-y-6">
+              
+              {/* LIVE MICROPHONE RECORDER WORKSPACE */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4 text-center">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase text-slate-800 dark:text-slate-200">
+                    <Radio className="w-4 h-4 text-[#F15A24] animate-pulse" />
+                    <span>Ghi Âm Trực Tiếp Qua Microphone</span>
+                  </div>
+                  <span className="text-[10.5px] font-bold text-slate-400">Băng thông 16kHz PCM</span>
+                </div>
+
+                <div className="py-4 space-y-4 flex flex-col items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (isRecording) {
+                        handleStopRecordingAndProcess();
+                      } else {
+                        setIsRecording(true);
+                      }
+                    }}
+                    className={`w-24 h-24 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-lg cursor-pointer ${
+                      isRecording
+                        ? 'bg-rose-500 hover:bg-rose-600 text-white animate-pulse ring-8 ring-rose-500/20'
+                        : 'bg-gradient-to-tr from-[#0284C7] to-sky-400 hover:scale-105 text-white ring-8 ring-sky-500/10'
+                    }`}
+                  >
+                    {isRecording ? (
+                      <>
+                        <Square className="w-8 h-8 fill-current" />
+                        <span className="text-[10px] font-black uppercase mt-1">Dừng & Dịch</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mic className="w-8 h-8" />
+                        <span className="text-[10px] font-black uppercase mt-1">Bấm Ghi Âm</span>
+                      </>
+                    )}
+                  </button>
+
+                  {isRecording ? (
+                    <div className="space-y-1">
+                      <div className="text-xl font-mono font-black text-rose-500 animate-pulse">
+                        {formatTime(recordingSeconds)}
+                      </div>
+                      <div className="text-xs font-bold text-slate-500 flex items-center justify-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                        <span>Đang thu âm trực tiếp... Bấm nút trên để hoàn tất & dịch ngay</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-xs font-semibold text-slate-400">
+                      Nhấp vào biểu tượng Micro để ghi âm trực tiếp cuộc họp phòng họp
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* FILE DROPZONE */}
+              <div
+                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleFileSelect(e.dataTransfer.files[0]);
+                  }
+                }}
+                className="p-8 sm:p-10 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/90 dark:bg-slate-900/90 transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-sm hover:shadow-md group cursor-pointer relative"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      handleFileSelect(e.target.files[0]);
+                    }
+                  }}
+                  accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.mp4,.webm"
+                  className="hidden"
+                />
+
+                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
+                  <UploadCloud className="w-8 h-8 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
+                    Hoặc kéo & thả file ghi âm vào đây, hay <span className="text-[#F15A24] underline decoration-wavy">chọn từ máy tính</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 font-medium">
+                    Hỗ trợ MP3, M4A, WAV, AAC, FLAC, OGG, MP4, WebM (Tối đa 2GB)
+                  </p>
+                </div>
+              </div>
+
+              {/* ASR MODEL CONFIGURATION */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2 text-xs font-black uppercase text-slate-800 dark:text-slate-200">
+                    <SlidersHorizontal className="w-4 h-4 text-[#0284C7]" />
+                    <span>Thiết Lập Mô Hình AI & Công Nghệ Lọc Âm</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Chuẩn Tiếng Việt AVG
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 col-span-full">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Mô hình nhận dạng giọng nói (ASR Model)</span>
+                    <select
+                      value={selectedModel}
+                      onChange={(e) => setSelectedModel(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-[#0284C7]"
+                    >
+                      <option value="neural-v2">AVG Neural ASR v2.4 (Khuyên dùng - Chuẩn giọng 63 tỉnh thành)</option>
+                      <option value="whisper-v3">Whisper Large v3 Enterprise (Đa ngôn ngữ & Dịch thuật)</option>
+                      <option value="gemini-flash">Gemini 2.5 Flash Audio (Siêu tốc & Tóm tắt trực tiếp)</option>
+                    </select>
+                  </div>
+
+                  <div
+                    onClick={() => setEnableDiarization(!enableDiarization)}
+                    className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
+                      enableDiarization
+                        ? 'bg-sky-50/70 dark:bg-sky-950/30 border-[#0284C7]/50'
+                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-black text-slate-800 dark:text-slate-200">Phân tách người nói (Diarization)</span>
+                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enableDiarization ? 'bg-[#0284C7] text-white' : 'border border-slate-400'}`}>
+                        {enableDiarization && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+                    </div>
+                    <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
+                      Tự động phân biệt giọng Chủ tọa, Thư ký và các đại biểu.
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setEnablePunctuation(!enablePunctuation)}
+                    className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
+                      enablePunctuation
+                        ? 'bg-orange-50/70 dark:bg-orange-950/30 border-[#F15A24]/50'
+                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-black text-slate-800 dark:text-slate-200">Chuẩn hóa Dấu câu & Ngữ pháp</span>
+                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enablePunctuation ? 'bg-[#F15A24] text-white' : 'border border-slate-400'}`}>
+                        {enablePunctuation && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+                    </div>
+                    <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
+                      Tự động ngắt câu, chèn phẩy và chuẩn hóa từ mượn.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Column (5 cols): AI Audio Tools & Quick Test Gallery */}
+            <div className="lg:col-span-5 space-y-6">
+              
+              {/* Quick Sample Audios for 1-Click Instant Test */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Thử nghiệm ngay với 3 File ghi âm mẫu AVG:
+                  </span>
+                  <span className="text-[10.5px] font-bold text-[#0284C7]">1-Click load</span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {SAMPLE_FILES.map(sample => (
+                    <div
+                      key={sample.id}
+                      onClick={() => handleLoadSample(sample)}
+                      className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] dark:hover:border-sky-400 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9.5 h-9.5 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0 group-hover:scale-105 transition-transform">
+                          <FileAudio className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 group-hover:text-[#0284C7] truncate">
+                            {sample.name}
+                          </h4>
+                          <p className="text-[10.5px] text-slate-400 truncate mt-0.5 font-medium">
+                            {sample.summary.executive}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                          {formatTime(sample.duration)}
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#0284C7]" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Utility Tools Summary Card */}
+              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <Wand2 className="w-4 h-4 text-[#F15A24]" />
+                  <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                    Bộ Tiện Ích Âm Thanh Nâng Cao
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">📹 Tách âm thanh từ MP4/WebM</span>
+                    <span className="text-[10px] font-black text-[#0284C7]">Tự động</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">🔊 Khử tiếng ồn phòng họp (75%)</span>
+                    <span className="text-[10px] font-black text-emerald-600">Active</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">🎙️ Tăng cường giọng vùng miền</span>
+                    <span className="text-[10px] font-black text-purple-600">Bắc-Trung-Nam</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Processing Progress Modal */}
+          {isProcessing && (
+            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 text-center">
+                <div className="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-[#0284C7] to-[#F15A24] p-0.5 shadow-lg animate-pulse">
+                  <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[22px] flex items-center justify-center">
+                    <Activity className="w-8 h-8 text-[#F15A24] animate-pulse" />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    Đang Chuyển Đổi Thành Văn Bản...
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    {processingStage}
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-[#0284C7] to-[#F15A24] h-full rounded-full transition-all duration-300"
+                      style={{ width: `${processingProgress}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
+                    <span>Mô hình: {selectedModel}</span>
+                    <span className="font-black text-[#F15A24]">{processingProgress}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 📁 ĐẦU MỤC: KHO PHẨM (DOCUMENT LIBRARY & MEDIA REPOSITORY) */}
       {/* ========================================================================= */}
       {activeTab === 'library' && (
         <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
@@ -692,7 +1258,7 @@ export const FileTranscribeModule: React.FC = () => {
 
             {/* Action button: Chuyển đổi tệp mới */}
             <button
-              onClick={() => setActiveTab('utilities')}
+              onClick={() => setActiveTab('upload')}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#F15A24] to-amber-500 hover:opacity-90 text-white text-xs font-black shadow-xs flex items-center gap-2 cursor-pointer active:scale-95 transition shrink-0 self-start md:self-auto"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
@@ -722,7 +1288,6 @@ export const FileTranscribeModule: React.FC = () => {
                   className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-md hover:border-[#0284C7] dark:hover:border-sky-500 transition-all cursor-pointer group flex flex-col justify-between space-y-4 relative"
                 >
                   <div className="space-y-3">
-                    {/* Header line */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-100 to-sky-50 dark:from-sky-950 dark:to-slate-800 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0 group-hover:scale-110 transition-transform">
                         <FileAudio className="w-5 h-5" />
@@ -740,7 +1305,6 @@ export const FileTranscribeModule: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Title & Metadata */}
                     <div>
                       <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-[#0284C7] transition" title={file.name}>
                         {file.name}
@@ -752,13 +1316,11 @@ export const FileTranscribeModule: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Executive Summary Snippet */}
                     <p className="text-[11.5px] text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed font-medium bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
                       {file.summary.executive}
                     </p>
                   </div>
 
-                  {/* Card Footer Actions */}
                   <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
                     <span className="text-[10.5px] font-extrabold text-slate-400">
                       {file.segments.length} lượt thoại
@@ -807,302 +1369,6 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 🛠️ ĐẦU MỤC 2: TIỆN ÍCH (AI AUDIO UTILITIES STUDIO & ASR PIPELINE SUITE) */}
-      {/* ========================================================================= */}
-      {(activeTab === 'utilities' || activeTab === 'upload') && (
-        <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto">
-          
-          {/* Header Banner */}
-          <div className="bg-gradient-to-r from-sky-500/10 via-orange-500/10 to-transparent p-5 sm:p-6 rounded-3xl border border-sky-200/80 dark:border-sky-800/60 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 border border-sky-200 dark:border-sky-800 text-xs font-black text-[#0284C7] dark:text-sky-400">
-                <Sparkles className="w-3.5 h-3.5 text-[#F15A24]" />
-                <span>AVG AI AUDIO UTILITIES STUDIO</span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                Bộ Tiện Ích Chuyển Đổi Voice-to-Text & Xử Lý Âm Thanh
-              </h1>
-              <p className="text-xs sm:text-[13px] text-slate-500 dark:text-slate-400 max-w-2xl font-medium">
-                Tải tệp ghi âm cuộc họp, trích xuất âm thanh từ video, khử ồn phòng họp và phân tách người nói chuẩn xác với các mô hình AI tiếng Việt chuyên sâu.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={() => handleLoadSample(SAMPLE_FILES[0])}
-                className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-[#0284C7] shadow-xs flex items-center gap-2 transition-all cursor-pointer active:scale-95"
-              >
-                <FolderOpen className="w-4 h-4 text-[#0284C7]" />
-                <span>Mở mẫu họp BĐH</span>
-              </button>
-            </div>
-          </div>
-
-          {/* 2-Column Full-screen Studio Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            {/* Left Column (7 cols): Dropzone & Pipeline Options */}
-            <div className="lg:col-span-7 space-y-6">
-              
-              {/* Dropzone */}
-              <div
-                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    handleFileSelect(e.dataTransfer.files[0]);
-                  }
-                }}
-                className="p-8 sm:p-10 rounded-3xl border-2 border-dashed border-sky-300 dark:border-sky-700 hover:border-[#F15A24] dark:hover:border-orange-500 bg-white/90 dark:bg-slate-900/90 transition-all text-center flex flex-col items-center justify-center space-y-4 shadow-sm hover:shadow-md group cursor-pointer relative"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      handleFileSelect(e.target.files[0]);
-                    }
-                  }}
-                  accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.mp4,.webm"
-                  className="hidden"
-                />
-
-                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-3xl bg-gradient-to-tr from-[#0284C7]/20 via-sky-100 dark:via-sky-950 to-[#F15A24]/20 border border-sky-200 dark:border-sky-800 flex items-center justify-center group-hover:scale-110 group-hover:border-[#F15A24] transition-all duration-300 shadow-xs">
-                  <UploadCloud className="w-8 h-8 text-[#0284C7] group-hover:text-[#F15A24] transition-colors" />
-                </div>
-
-                <div className="space-y-1">
-                  <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] transition-colors">
-                    Kéo & thả file ghi âm vào đây, hoặc <span className="text-[#F15A24] underline decoration-wavy">chọn từ máy tính</span>
-                  </h3>
-                  <p className="text-xs text-slate-400 font-medium">
-                    Hỗ trợ MP3, M4A, WAV, AAC, FLAC, OGG, MP4, WebM (Dung lượng tối đa 2GB)
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-1.5 flex-wrap justify-center pt-1">
-                  {['MP3 Audio', 'WAV Studio', 'M4A Voice', 'MP4 Video', 'AAC', 'FLAC 24bit'].map(fmt => (
-                    <span key={fmt} className="px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10.5px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                      {fmt}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Model & Processing Pipeline Settings Card */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-5 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="w-4 h-4 text-[#0284C7]" />
-                    <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
-                      Cấu Hình Thuật Toán ASR & Tiêu Chuẩn Đầu Ra
-                    </span>
-                  </div>
-                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Chuẩn Giọng 63 Tỉnh Thành
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {/* Select ASR Model */}
-                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 col-span-full">
-                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">Mô hình nhận dạng giọng nói (ASR Model)</span>
-                    <select
-                      value={selectedModel}
-                      onChange={(e) => setSelectedModel(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-[#0284C7]"
-                    >
-                      <option value="neural-v2">AVG Neural ASR v2.4 (Khuyên dùng - Chuẩn giọng tiếng Việt)</option>
-                      <option value="whisper-v3">Whisper Large v3 Enterprise (Đa ngôn ngữ & Dịch thuật)</option>
-                      <option value="gemini-flash">Gemini 2.5 Flash Audio (Siêu tốc & Tóm tắt trực tiếp)</option>
-                    </select>
-                  </div>
-
-                  {/* Diarization toggle */}
-                  <div
-                    onClick={() => setEnableDiarization(!enableDiarization)}
-                    className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
-                      enableDiarization
-                        ? 'bg-sky-50/70 dark:bg-sky-950/30 border-[#0284C7]/50'
-                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-black text-slate-800 dark:text-slate-200">Phân tách người nói (Diarization)</span>
-                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enableDiarization ? 'bg-[#0284C7] text-white' : 'border border-slate-400'}`}>
-                        {enableDiarization && <Check className="w-3 h-3 stroke-[3]" />}
-                      </div>
-                    </div>
-                    <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
-                      Tự động gán nhãn giọng Chủ tọa, Thư ký và từng đại biểu.
-                    </div>
-                  </div>
-
-                  {/* Punctuation toggle */}
-                  <div
-                    onClick={() => setEnablePunctuation(!enablePunctuation)}
-                    className={`p-3.5 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
-                      enablePunctuation
-                        ? 'bg-orange-50/70 dark:bg-orange-950/30 border-[#F15A24]/50'
-                        : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-black text-slate-800 dark:text-slate-200">Chuẩn hóa Dấu câu & Ngữ pháp</span>
-                      <div className={`w-4 h-4 rounded-md flex items-center justify-center ${enablePunctuation ? 'bg-[#F15A24] text-white' : 'border border-slate-400'}`}>
-                        {enablePunctuation && <Check className="w-3 h-3 stroke-[3]" />}
-                      </div>
-                    </div>
-                    <div className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-1">
-                      Chấm phẩy chính xác, tự chuẩn hóa từ viết tắt công sở.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right Column (5 cols): AI Audio Utilities Tools & Sample Test Gallery */}
-            <div className="lg:col-span-5 space-y-6">
-              
-              {/* Utility Tools Grid */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
-                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <Wand2 className="w-4 h-4 text-[#F15A24]" />
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-200">
-                    Công Cụ Xử Lý Âm Thanh Chuyên Sâu
-                  </span>
-                </div>
-
-                <div className="space-y-2.5">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-orange-100 text-[#F15A24] flex items-center justify-center font-bold text-xs shrink-0">
-                        📹
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-black text-slate-800 dark:text-slate-200">Tách Âm Thanh từ Video</h4>
-                        <p className="text-[10px] text-slate-400">Trích xuất MP3 chất lượng cao từ tệp MP4, WebM</p>
-                      </div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-emerald-100 text-emerald-700">Tự động</span>
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-sky-100 text-[#0284C7] flex items-center justify-center font-bold text-xs shrink-0">
-                        🔊
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-black text-slate-800 dark:text-slate-200">Khử Tiếng Ồn Phòng Họp</h4>
-                        <p className="text-[10px] text-slate-400">Lọc tiếng gió, tiếng vang hội trường & gõ phím</p>
-                      </div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-sky-100 text-sky-700">75% Noise Filter</span>
-                  </div>
-
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs shrink-0">
-                        🎙️
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-black text-slate-800 dark:text-slate-200">Tăng Cường Giọng Vùng Miền</h4>
-                        <p className="text-[10px] text-slate-400">Tăng nhận diện giọng Bắc, Trung, Nam</p>
-                      </div>
-                    </div>
-                    <span className="px-2 py-0.5 rounded-full text-[9.5px] font-black bg-purple-100 text-purple-700">Multi-Accent</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Sample Audios Gallery for 1-Click Test */}
-              <div className="bg-white/95 dark:bg-slate-900/95 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Trải nghiệm tức thì với 3 Ghi âm mẫu AVG:
-                  </span>
-                  <span className="text-[10.5px] font-bold text-[#0284C7]">1-Click load</span>
-                </div>
-
-                <div className="space-y-2.5">
-                  {SAMPLE_FILES.map(sample => (
-                    <div
-                      key={sample.id}
-                      onClick={() => handleLoadSample(sample)}
-                      className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:border-[#0284C7] dark:hover:border-sky-400 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl bg-sky-100 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 flex items-center justify-center text-[#0284C7] shrink-0 group-hover:scale-105 transition-transform">
-                          <FileAudio className="w-4.5 h-4.5" />
-                        </div>
-                        <div className="min-w-0">
-                          <h4 className="text-xs font-black text-slate-800 dark:text-slate-200 group-hover:text-[#0284C7] truncate">
-                            {sample.name}
-                          </h4>
-                          <p className="text-[10.5px] text-slate-400 truncate">
-                            {sample.summary.executive}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
-                          {formatTime(sample.duration)}
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#0284C7]" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* Processing Progress Modal */}
-          {isProcessing && (
-            <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 text-center">
-                <div className="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-[#0284C7] to-[#F15A24] p-0.5 shadow-lg animate-pulse">
-                  <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[22px] flex items-center justify-center">
-                    <Activity className="w-8 h-8 text-[#F15A24] animate-pulse" />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                    Đang Chuyển Đổi Thành Văn Bản...
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    {processingStage}
-                  </p>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-[#0284C7] to-[#F15A24] h-full rounded-full transition-all duration-300"
-                      style={{ width: `${processingProgress}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
-                    <span>Mô hình: {selectedModel}</span>
-                    <span className="font-black text-[#F15A24]">{processingProgress}%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-      )}
-
-      {/* ========================================================================= */}
       {/* 🎵 TRÌNH BIÊN SOẠN KARAOKE AUDIO WORKSPACE ('editor') */}
       {/* ========================================================================= */}
       {activeTab === 'editor' && (
@@ -1111,7 +1377,6 @@ export const FileTranscribeModule: React.FC = () => {
           {/* TOP AUDIO WAVEFORM PLAYER TOOLBAR */}
           <div className="bg-white/95 dark:bg-slate-900/95 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 shrink-0 shadow-2xs space-y-2.5">
             
-            {/* Top row: Back button, File details & View mode selector */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5 min-w-0">
                 <button
@@ -1180,7 +1445,7 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
             </div>
 
-            {/* Middle row: Interactive Waveform Canvas */}
+            {/* Interactive Waveform Canvas */}
             <div className="relative bg-slate-100/90 dark:bg-slate-800/80 rounded-xl p-2 border border-slate-200/80 dark:border-slate-700/80">
               <canvas
                 ref={canvasRef}
@@ -1201,9 +1466,8 @@ export const FileTranscribeModule: React.FC = () => {
               </div>
             </div>
 
-            {/* Bottom row: Player Controls & Actions */}
+            {/* Bottom Controls */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-              {/* Playback Controls */}
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   type="button"
@@ -1232,7 +1496,6 @@ export const FileTranscribeModule: React.FC = () => {
                   <FastForward className="w-4 h-4" />
                 </button>
 
-                {/* Speed selector */}
                 <div className="flex items-center gap-1 ml-1 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300">
                   <span>Tốc độ:</span>
                   <select
@@ -1249,7 +1512,6 @@ export const FileTranscribeModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <div className="relative">
                   <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
@@ -1537,7 +1799,7 @@ export const FileTranscribeModule: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* ⚙️ ĐẦU MỤC 3: CÀI ĐẶT (SYSTEM CONFIGURATION & MODEL PARAMETERS WORKSPACE) */}
+      {/* ⚙️ ĐẦU MỤC: CÀI ĐẶT (SYSTEM CONFIGURATION & MODEL PARAMETERS WORKSPACE) */}
       {/* ========================================================================= */}
       {activeTab === 'settings' && (
         <div className="w-full h-full flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10 max-w-7xl mx-auto flex flex-col">
