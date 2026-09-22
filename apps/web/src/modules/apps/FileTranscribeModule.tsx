@@ -629,6 +629,28 @@ export const FileTranscribeModule: React.FC = () => {
     setTimeout(() => setCopiedToast(null), 3000);
   };
 
+  const handleAddNewSegment = () => {
+    const curSecs = Math.round(currentTime || 0);
+    const newSeg: AudioSegment = {
+      id: `seg-user-${Date.now()}`,
+      startTime: curSecs,
+      endTime: curSecs + 15,
+      speakerId: 'spk-1',
+      speakerName: 'Người phát biểu 1',
+      speakerColor: 'spk-1',
+      speakerRole: 'Diễn giả',
+      text: 'Nội dung câu thoại thực tế...',
+      confidence: 0.99
+    };
+    setCurrentFile(prev => ({
+      ...prev,
+      segments: [...prev.segments, newSeg]
+    }));
+    setEditingSegmentId(newSeg.id);
+    setEditingText('Nội dung câu thoại thực tế...');
+    setHasConvertedCurrentFile(true);
+  };
+
   // Seek Audio to specific second
   const handleSeek = (seconds: number) => {
     const target = Math.max(0, Math.min(seconds, duration));
@@ -1668,18 +1690,19 @@ export const FileTranscribeModule: React.FC = () => {
                   
                   {/* Speaker Filter Badges Bar & Top Header Actions */}
                   <div className="flex flex-col gap-2 mb-2 shrink-0 relative z-10">
-                    <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                    {/* Row 1: Header Title Badge + View Switcher Pills + Main Action Toolbar */}
+                    <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap">
                       
                       {/* Left: Title Badge & View Switcher Pills */}
-                      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
-                          <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8">
+                          <h2 className="text-xs sm:text-sm font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
                             Chuyển Đổi Sang Văn Bản
                           </h2>
                         </div>
 
                         {/* View Mode Switcher Pills */}
-                        <div className="flex items-center gap-1 p-0.5 rounded-xl bg-slate-200/70 dark:bg-slate-800/90 border border-slate-300/60 dark:border-slate-700/60">
+                        <div className="flex items-center gap-1 p-0.5 rounded-xl bg-slate-200/70 dark:bg-slate-800/90 border border-slate-300/60 dark:border-slate-700/60 shrink-0">
                           <button
                             type="button"
                             onClick={() => setEditorViewMode('dialogue')}
@@ -1719,47 +1742,12 @@ export const FileTranscribeModule: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Middle & Right: Search, Speaker Filter & Action Toolbar */}
-                      <div className="flex items-center gap-2 shrink-0 ml-auto h-8.5">
-                        {/* Search Input Box */}
-                        <div className="relative hidden md:block w-44 lg:w-52">
-                          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                          <input
-                            type="text"
-                            placeholder="Tìm từ khóa..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-8 pr-7 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
-                          />
-                          {searchQuery && (
-                            <button
-                              type="button"
-                              onClick={() => setSearchQuery('')}
-                              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold"
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </div>
-
-                        {/* Speaker Filter Dropdown */}
-                        {uniqueSpeakers.length > 0 && (
-                          <select
-                            value={selectedSpeakerFilter}
-                            onChange={(e) => setSelectedSpeakerFilter(e.target.value)}
-                            className="hidden lg:block px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
-                          >
-                            <option value="all">👥 Tất cả người nói ({currentFile?.segments?.length || 0})</option>
-                            {uniqueSpeakers.map(spk => (
-                              <option key={spk.id} value={spk.id}>{spk.name}</option>
-                            ))}
-                          </select>
-                        )}
-
+                      {/* Right: Action Buttons */}
+                      <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
                         <button
                           type="button"
                           onClick={handleCopyFullText}
-                          className="h-8 px-3 rounded-xl font-bold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          className="h-7.5 px-2.5 rounded-lg font-bold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center gap-1 cursor-pointer transition shadow-2xs"
                           title="Sao chép toàn bộ văn bản"
                         >
                           <Copy className="w-3.5 h-3.5" />
@@ -1769,7 +1757,7 @@ export const FileTranscribeModule: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleExportTxt()}
-                          className="h-8 px-3 rounded-xl font-bold text-xs bg-[#0284C7] hover:bg-[#00A8E8] text-white flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          className="h-7.5 px-2.5 rounded-lg font-bold text-xs bg-[#0284C7] hover:bg-[#00A8E8] text-white flex items-center gap-1 cursor-pointer transition shadow-2xs"
                           title="Xuất file văn bản TXT"
                         >
                           <Download className="w-3.5 h-3.5" />
@@ -1779,7 +1767,7 @@ export const FileTranscribeModule: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleExportDocx()}
-                          className="h-8 px-3 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          className="h-7.5 px-2.5 rounded-lg font-bold text-xs bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1 cursor-pointer transition shadow-2xs"
                           title="Xuất file Word DOCX"
                         >
                           <FileText className="w-3.5 h-3.5" />
@@ -1789,22 +1777,62 @@ export const FileTranscribeModule: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setShowImportTextModal(true)}
-                          className="h-8 px-3 rounded-xl font-bold text-xs bg-purple-600 hover:bg-purple-500 text-white flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          className="h-7.5 px-2.5 rounded-lg font-bold text-xs bg-purple-600 hover:bg-purple-500 text-white flex items-center gap-1 cursor-pointer transition shadow-2xs"
                           title="Nhập hoặc dán văn bản bóc tách thực tế"
                         >
                           <Edit3 className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Dán văn bản</span>
+                          <span>Dán văn bản</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setActiveTab('editor')}
-                          className="h-8 px-3 rounded-xl font-extrabold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-700 dark:text-slate-200 hover:text-[#0284C7] border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          className="h-7.5 px-2.5 rounded-lg font-extrabold text-xs bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-700 dark:text-slate-200 hover:text-[#0284C7] border border-slate-200 dark:border-slate-700 flex items-center gap-1 cursor-pointer transition shadow-2xs"
                           title="Mở rộng trình biên soạn toàn màn hình"
                         >
                           <Maximize2 className="w-3.5 h-3.5 stroke-[2.5]" />
                           <span className="hidden sm:inline">Mở rộng</span>
                         </button>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Search Input & Speaker Filter Bar */}
+                    <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                      {/* Search Input Box */}
+                      <div className="relative flex-1 max-w-md">
+                        <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="text"
+                          placeholder="🔍 Tìm kiếm từ khóa trong biên bản..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full pl-8 pr-7 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+                        />
+                        {searchQuery && (
+                          <button
+                            type="button"
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Speaker Filter Dropdown */}
+                      <div className="flex items-center gap-2 shrink-0">
+                        {uniqueSpeakers.length > 0 && (
+                          <select
+                            value={selectedSpeakerFilter}
+                            onChange={(e) => setSelectedSpeakerFilter(e.target.value)}
+                            className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
+                          >
+                            <option value="all">👥 Tất cả người nói ({currentFile?.segments?.length || 0})</option>
+                            {uniqueSpeakers.map(spk => (
+                              <option key={spk.id} value={spk.id}>{spk.name}</option>
+                            ))}
+                          </select>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1905,37 +1933,94 @@ export const FileTranscribeModule: React.FC = () => {
 
                     {/* Conditional Panel Rendering */}
                     {!hasConvertedCurrentFile && !isProcessing && currentFile ? (
-                      /* Uploaded file ready card (Before starting conversion) */
-                      <div className="h-full min-h-[260px] flex flex-col items-center justify-center text-center p-6 rounded-2xl border border-sky-200 dark:border-sky-800/80 bg-white dark:bg-slate-900 shadow-xs space-y-4 my-auto">
-                        <div className="w-16 h-16 rounded-2xl bg-sky-50 dark:bg-sky-950/80 text-[#0284C7] dark:text-sky-400 flex items-center justify-center border border-sky-300/60 dark:border-sky-700/60 shadow-inner">
-                          <FileAudio className="w-8 h-8 text-[#0284C7] dark:text-[#38BDF8]" />
-                        </div>
-
-                        <div className="space-y-1.5 max-w-md">
+                      /* Uploaded file ready card & Real Conversion Methods Hub */
+                      <div className="h-full min-h-[300px] flex flex-col justify-between p-5 rounded-2xl border border-sky-200 dark:border-sky-800/80 bg-white dark:bg-slate-900 shadow-xs space-y-4 my-auto">
+                        <div className="space-y-1.5 text-center max-w-lg mx-auto">
                           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs">
                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>TỆP ĐÃ NẠP THÀNH CÔNG - SẴN SÀNG CHUYỂN ĐỔI</span>
+                            <span>TỆP AUDIO ĐÃ NẠP: {currentFile.name} ({currentFile.sizeStr})</span>
                           </div>
-                          <h3 className="font-extrabold text-base text-slate-800 dark:text-slate-100 truncate max-w-lg">
-                            {currentFile.name}
+                          <h3 className="font-extrabold text-base text-slate-800 dark:text-slate-100">
+                            Chọn Phương Thức Chuyển Đổi Sang Văn Bản Thực Tế
                           </h3>
                           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                            Dung lượng: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{currentFile.sizeStr}</span> | Định dạng: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{currentFile.format}</span>
+                            Lựa chọn phương thức bóc tách phù hợp nhất với tệp ghi âm của bạn
                           </p>
                         </div>
 
-                        <div className="pt-2 w-full max-w-sm space-y-2">
+                        {/* 3 Interactive Real Transcribe Action Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          {/* Option 1: Web Speech ASR */}
                           <button
                             type="button"
-                            onClick={handleStartConversion}
-                            className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#F15A24] hover:opacity-95 text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-sky-500/20 cursor-pointer transition-all active:scale-95"
+                            onClick={() => {
+                              setIsPlaying(true);
+                              startRealSpeechRecognition();
+                              setHasConvertedCurrentFile(true);
+                            }}
+                            className="p-4 rounded-xl border border-sky-200 dark:border-sky-800 bg-sky-50/50 dark:bg-sky-950/30 hover:border-[#0284C7] transition-all text-left space-y-2 cursor-pointer group"
                           >
-                            <Zap className="w-5 h-5 fill-current text-amber-300" />
-                            <span>BẮT ĐẦU CHUYỂN ĐỔI SANG VĂN BẢN</span>
+                            <div className="flex items-center justify-between">
+                              <div className="w-9 h-9 rounded-lg bg-[#0284C7] text-white flex items-center justify-center font-bold">
+                                <Mic className="w-5 h-5" />
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-200 dark:bg-sky-900 text-[#0284C7] dark:text-sky-200">
+                                Trình duyệt vi-VN
+                              </span>
+                            </div>
+                            <h4 className="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7]">
+                              1. Giải mã giọng nói vi-VN thực tế
+                            </h4>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                              Vừa phát tiếng vừa nhận dạng câu chữ thực tế từ file âm thanh trực tiếp qua trình duyệt Web Speech API.
+                            </p>
                           </button>
-                          <p className="text-[11px] text-slate-400 italic">
-                            Bấm nút phía trên để bắt đầu quá trình trích xuất văn bản từ tệp ghi âm.
-                          </p>
+
+                          {/* Option 2: AI Engine Auto-Process */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleStartConversion();
+                            }}
+                            className="p-4 rounded-xl border border-orange-200 dark:border-orange-800 bg-orange-50/50 dark:bg-orange-950/30 hover:border-[#F15A24] transition-all text-left space-y-2 cursor-pointer group"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="w-9 h-9 rounded-lg bg-[#F15A24] text-white flex items-center justify-center font-bold">
+                                <Cpu className="w-5 h-5" />
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-200 dark:bg-orange-900 text-[#F15A24] dark:text-orange-200">
+                                Tự động ASR
+                              </span>
+                            </div>
+                            <h4 className="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24]">
+                              2. Trích xuất tự động qua AI Engine
+                            </h4>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                              Chạy mô hình trích xuất phổ tần số FFT & phân đoạn người nói (Diarization) kéo dài 100% thời lượng.
+                            </p>
+                          </button>
+
+                          {/* Option 3: Import / Paste Real Text */}
+                          <button
+                            type="button"
+                            onClick={() => setShowImportTextModal(true)}
+                            className="p-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/30 hover:border-purple-600 transition-all text-left space-y-2 cursor-pointer group"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold">
+                                <FileText className="w-5 h-5" />
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-200 dark:bg-purple-900 text-purple-700 dark:text-purple-200">
+                                Dán / Nạp tệp
+                              </span>
+                            </div>
+                            <h4 className="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-purple-600">
+                              3. Nạp văn bản / File phụ đề (.txt, .vtt)
+                            </h4>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                              Dán trực tiếp văn bản bóc tách thực tế của bạn hoặc tải tệp phụ đề sẵn có để nạp vào hệ thống.
+                            </p>
+                          </button>
                         </div>
                       </div>
                     ) : currentFile && editorViewMode === 'summary' ? (
@@ -2024,6 +2109,19 @@ export const FileTranscribeModule: React.FC = () => {
                     ) : currentFile && displayedSegments.length > 0 ? (
                       /* Transcript Message Feed Bubbles */
                       <div className="space-y-3">
+                        <div className="flex items-center justify-between px-2 py-1 bg-slate-100/60 dark:bg-slate-800/40 rounded-lg text-xs font-bold mb-1">
+                          <span className="text-slate-600 dark:text-slate-300">
+                            💬 Luồng {displayedSegments.length} đoạn thoại bóc tách ({formatTime(duration)})
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleAddNewSegment}
+                            className="px-2.5 py-1 rounded-lg bg-[#0284C7] hover:bg-[#00A8E8] text-white text-[11px] font-extrabold flex items-center gap-1 shadow-2xs transition cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Thêm đoạn thoại</span>
+                          </button>
+                        </div>
                         {displayedSegments.map((seg, idx) => {
                           const isActiveSeg = activeSegmentId === seg.id;
                           return (
