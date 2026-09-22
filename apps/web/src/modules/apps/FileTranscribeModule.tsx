@@ -425,6 +425,10 @@ export const FileTranscribeModule: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(SAMPLE_FILES[0].duration);
   const [playbackRate, setPlaybackRate] = useState<number>(1.0);
+  const [transcriptionEngineMode, setTranscriptionEngineMode] = useState<'web_speech' | 'simulation'>('simulation');
+
+  // Real HTML5 Audio Element Ref
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Editor view modes: 'dialogue' | 'document' | 'summary'
   const [editorViewMode, setEditorViewMode] = useState<'dialogue' | 'document' | 'summary'>('dialogue');
@@ -454,6 +458,18 @@ export const FileTranscribeModule: React.FC = () => {
     const s = Math.floor(secs % 60);
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
+
+  // Sync real HTML5 audio element with play/pause and rate
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackRate;
+      if (isPlaying) {
+        audioRef.current.play().catch(e => console.warn('Real audio playback prevented by browser policy:', e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying, playbackRate]);
 
   // Sync tab with header events
   useEffect(() => {
@@ -486,9 +502,9 @@ export const FileTranscribeModule: React.FC = () => {
     };
   }, [isRecording]);
 
-  // Audio Playback simulation
+  // Audio Playback simulation / fallback progress sync
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && !audioRef.current?.src) {
       playIntervalRef.current = setInterval(() => {
         setCurrentTime(prev => {
           if (prev >= duration) {
@@ -510,6 +526,9 @@ export const FileTranscribeModule: React.FC = () => {
   const handleSeek = (seconds: number) => {
     const target = Math.max(0, Math.min(seconds, duration));
     setCurrentTime(target);
+    if (audioRef.current) {
+      audioRef.current.currentTime = target;
+    }
   };
 
   // Click on a segment to jump and play
@@ -558,6 +577,18 @@ export const FileTranscribeModule: React.FC = () => {
   // Handle local audio file upload (Pending state, do NOT auto-start)
   const handleFileSelect = (file: File) => {
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+    const realAudioUrl = URL.createObjectURL(file);
+
+    // Read real duration from Audio Object
+    const tempAudio = new Audio(realAudioUrl);
+    tempAudio.onloadedmetadata = () => {
+      if (tempAudio.duration && !isNaN(tempAudio.duration)) {
+        const realSecs = Math.round(tempAudio.duration);
+        setDuration(realSecs);
+        setCurrentFile(prev => ({ ...prev, duration: realSecs, audioUrl: realAudioUrl }));
+      }
+    };
+
     const pendingFile: TranscribedFile = {
       id: `file-${Date.now()}`,
       name: file.name,
@@ -568,17 +599,18 @@ export const FileTranscribeModule: React.FC = () => {
       modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
       category: 'Giao ban BĐH',
       summary: {
-        executive: `Tệp âm thanh "${file.name}" đã được nạp lên hệ thống thành công. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để trích xuất văn bản cuộc họp.`,
+        executive: `Tệp âm thanh thực tế "${file.name}" (${sizeMb} MB) đã được nạp vào Audio Engine thành công. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để khởi chạy giải mã.`,
         keyDecisions: [],
         actionItems: []
       },
-      segments: []
+      segments: [],
+      audioUrl: realAudioUrl
     };
     setCurrentFile(pendingFile);
     setHasConvertedCurrentFile(false);
     setProcessingProgress(0);
-    setProcessingStage('Tệp đã nạp thành công. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để bắt đầu.');
-    setCopiedToast(`📁 Đã nạp tệp "${file.name}". Sẵn sàng chuyển đổi!`);
+    setProcessingStage('Tệp đã nạp vào Audio Engine. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để trích xuất.');
+    setCopiedToast(`📁 Đã nạp tệp "${file.name}"! Sẵn sàng phát audio & chuyển đổi.`);
     setTimeout(() => setCopiedToast(null), 3000);
   };
 
@@ -1262,6 +1294,23 @@ export const FileTranscribeModule: React.FC = () => {
   return (
     <div className="w-full h-full flex-1 min-h-0 bg-slate-50 dark:bg-[#070B16] text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden relative font-sans select-none">
       
+      {/* 🎵 HTML5 AUDIO ENGINE (PHÁT ÂM THANH THỰC TẾ) */}
+      <audio
+        ref={audioRef}
+        src={currentFile.audioUrl}
+        onTimeUpdate={() => {
+          if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+          }
+        }}
+        onEnded={() => setIsPlaying(false)}
+        onLoadedMetadata={() => {
+          if (audioRef.current && audioRef.current.duration && !isNaN(audioRef.current.duration)) {
+            setDuration(Math.round(audioRef.current.duration));
+          }
+        }}
+      />
+
       {/* 🌐 HIGH-TECH CYBER GRID PATTERN BACKGROUND */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-35 pointer-events-none -z-0" />
 
@@ -1629,6 +1678,22 @@ export const FileTranscribeModule: React.FC = () => {
                   {/* Recessed Live Conversation Transcript Feed Cavity */}
                   <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                     
+                    {/* Inline Engine Audio Status Notice Banner */}
+                    <div className="p-3 rounded-xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-500/30 text-amber-800 dark:text-amber-200 text-xs font-semibold flex items-start gap-2.5 mb-2 shadow-2xs">
+                      <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <div className="space-y-1 text-left">
+                        <div className="flex items-center gap-2 font-black text-xs uppercase tracking-wider text-amber-900 dark:text-amber-300">
+                          <span>Thông Báo Trình Phát Audio & Giải Mã ASR</span>
+                          <span className="px-2 py-0.2 rounded-full bg-amber-200 text-amber-900 dark:bg-amber-900 dark:text-amber-100 text-[10px] font-bold">
+                            {currentFile.audioUrl ? '🎵 Trình Phát Audio Thực Tế' : '⚡ Chế độ Demo UI'}
+                          </span>
+                        </div>
+                        <p className="text-[11.5px] leading-relaxed text-slate-700 dark:text-slate-300 font-medium">
+                          Tệp <strong>"{currentFile.name}"</strong> ({currentFile.sizeStr}) đã được nạp vào Trình phát Audio. Bạn có thể bấm nút <strong>"Phát audio"</strong> bên dưới để nghe trực tiếp tiếng trong file. <i>(Lưu ý: Để giải mã tự động 100% từng từ thực tế từ file audio binary 160MB lên server, cần kết nối với GPU Backend Server ASR như Whisper Large / Google Cloud Speech API).</i>
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Inline Interactive Audio Player Scrubber Bar */}
                     {hasConvertedCurrentFile && currentFile && currentFile.segments && currentFile.segments.length > 0 && (
                       <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs mb-3 space-y-2 shrink-0">
