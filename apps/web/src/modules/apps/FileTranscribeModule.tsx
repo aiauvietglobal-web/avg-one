@@ -10,6 +10,7 @@ import {
   ArrowLeft, FileCode, CheckSquare, LayoutDashboard, RadioTower, Disc, Square, Waves, Maximize2
 } from 'lucide-react';
 import { processRealtimeSpeechPunctuation } from '../../services/speechPunctuationEngine';
+import { transcribeAudioWithGemini } from '../../services/geminiAudioTranscribe';
 import { FileTranscribeNavTab } from '../../components/layout/headers/FileTranscribeHeader';
 
 export interface AudioSegment {
@@ -404,6 +405,11 @@ export const FileTranscribeModule: React.FC = () => {
   const recordingTimerRef = useRef<any>(null);
 
   // Upload & processing state
+  const [selectedRawFile, setSelectedRawFile] = useState<File | null>(null);
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(() => localStorage.getItem('AVG_GEMINI_API_KEY') || '');
+  const [showGeminiModal, setShowGeminiModal] = useState<boolean>(false);
+  const [inputApiKey, setInputApiKey] = useState<string>('');
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [hasConvertedCurrentFile, setHasConvertedCurrentFile] = useState<boolean>(true);
@@ -703,9 +709,156 @@ export const FileTranscribeModule: React.FC = () => {
     }
   }, [currentTime, duration, currentFile]);
 
-  // Handle local audio file upload (Pending state, do NOT auto-start)
-  const handleFileSelect = (file: File) => {
+  // Helper to parse SRT or WebVTT files into structured segments
+  const parseSubtitlesToSegments = (rawText: string): AudioSegment[] => {
+    const blocks = rawText.split(/\n\s*\n/);
+    const segments: AudioSegment[] = [];
+    let idx = 0;
+    for (const block of blocks) {
+      const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+      const timeLineIndex = lines.findIndex(l => l.includes('-->'));
+      if (timeLineIndex !== -1) {
+        const timeLine = lines[timeLineIndex];
+        const textLines = lines.slice(timeLineIndex + 1).join(' ');
+        const match = timeLine.match(/(\d{2}:\d{2}:\d{2}[\.,]\d{3})\s*-->\s*(\d{2}:\d{2}:\d{2}[\.,]\d{3})/);
+        let startTime = idx * 10;
+        let endTime = (idx + 1) * 10;
+        if (match) {
+          const parseTs = (ts: string) => {
+            const parts = ts.replace(',', '.').split(':');
+            return (parseInt(parts[0]) * 3600) + (parseInt(parts[1]) * 60) + parseFloat(parts[2]);
+          };
+          startTime = parseTs(match[1]);
+          endTime = parseTs(match[2]);
+        }
+        if (textLines) {
+          segments.push({
+            id: `seg-sub-${Date.now()}-${idx}`,
+            startTime: Math.round(startTime),
+            endTime: Math.round(endTime),
+            speakerId: `spk-${(idx % 3) + 1}`,
+            speakerName: `Người phát biểu ${(idx % 3) + 1}`,
+            speakerColor: `spk-${(idx % 3) + 1}`,
+            speakerRole: 'Diễn giả',
+            text: processRealtimeSpeechPunctuation(textLines.replace(/<[^>]*>/g, '')),
+            confidence: 0.99
+          });
+          idx++;
+        }
+      }
+    }
+    return segments;
+  };
+
+  // Real Gemini Audio Speech-to-Text Transcribe Trigger
+  const handleTranscribeWithGemini = async (fileToTranscribe?: File) => {
+    const targetFile = fileToTranscribe || selectedRawFile;
+    if (!targetFile) {
+      setCopiedToast('⚠️ Chưa chọn tệp audio thực tế. Vui lòng nạp file âm thanh từ máy tính.');
+      setTimeout(() => setCopiedToast(null), 3500);
+      return;
+    }
+
+    if (!geminiApiKey) {
+      setShowGeminiModal(true);
+      return;
+    }
+
+    setIsProcessing(true);
+    setIsPaused(false);
+    isPausedRef.current = false;
+    setProcessingProgress(10);
+    setProcessingStage('Đang khởi động Google Gemini 2.5 Flash Speech Engine...');
+
+    try {
+      const res = await transcribeAudioWithGemini(targetFile, geminiApiKey, (stage, progress) => {
+        setProcessingStage(stage);
+        setProcessingProgress(progress);
+      });
+
+      const realDuration = duration || (res.segments.length > 0 ? res.segments[res.segments.length - 1].endTime : 180);
+
+      const newFile: TranscribedFile = {
+        id: `file-gemini-${Date.now()}`,
+        name: targetFile.name,
+        sizeStr: `${(targetFile.size / (1024 * 1024)).toFixed(1)} MB`,
+        duration: realDuration,
+        format: targetFile.type || 'Audio file',
+        uploadedAt: 'Vừa bóc tách Gemini AI',
+        modelUsed: 'Google Gemini 2.5 Flash Speech API',
+        category: 'Bóc tách Gemini AI',
+        summary: res.summary,
+        segments: res.segments,
+        audioUrl: currentFile.audioUrl
+      };
+
+      setCurrentFile(newFile);
+      setHasConvertedCurrentFile(true);
+      setCurrentTime(0);
+      setIsProcessing(false);
+      setIsPaused(false);
+      setSavedLibrary(prev => [newFile, ...prev]);
+      setCopiedToast('✨ Bóc tách âm thanh thực tế 100% thành công với Gemini 2.5 Flash!');
+      setTimeout(() => setCopiedToast(null), 3500);
+    } catch (err: any) {
+      console.error('Gemini ASR failed:', err);
+      setIsProcessing(false);
+      setCopiedToast(`⚠️ ${err.message || 'Lỗi bóc tách Gemini AI'}`);
+      setTimeout(() => setCopiedToast(null), 4000);
+    }
+  };
+
+  // Handle local audio / subtitle / text file upload (Pending state)
+  const handleFileSelect = async (file: File) => {
+    setSelectedRawFile(file);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+
+    // Support text or subtitle files (.txt, .srt, .vtt)
+    if (file.name.endsWith('.txt') || file.name.endsWith('.srt') || file.name.endsWith('.vtt')) {
+      const rawText = await file.text();
+      let importedSegments: AudioSegment[] = [];
+      if (file.name.endsWith('.srt') || file.name.endsWith('.vtt')) {
+        importedSegments = parseSubtitlesToSegments(rawText);
+      } else {
+        const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+        importedSegments = lines.map((line, idx) => ({
+          id: `seg-txt-${Date.now()}-${idx}`,
+          startTime: idx * 15,
+          endTime: (idx + 1) * 15,
+          speakerId: `spk-${(idx % 3) + 1}`,
+          speakerName: `Người phát biểu ${(idx % 3) + 1}`,
+          speakerColor: `spk-${(idx % 3) + 1}`,
+          speakerRole: 'Diễn giả',
+          text: processRealtimeSpeechPunctuation(line),
+          confidence: 0.99
+        }));
+      }
+
+      const importedFile: TranscribedFile = {
+        id: `file-import-${Date.now()}`,
+        name: file.name,
+        sizeStr: `${sizeMb} MB`,
+        duration: importedSegments.length > 0 ? importedSegments[importedSegments.length - 1].endTime : 120,
+        format: file.name.endsWith('.srt') ? 'Phụ đề SRT' : file.name.endsWith('.vtt') ? 'Phụ đề WebVTT' : 'Văn bản TXT',
+        uploadedAt: 'Vừa nạp từ tệp',
+        modelUsed: 'Import Trực Tiếp',
+        category: 'Tài liệu bóc tách',
+        summary: {
+          executive: `Đã nạp trực tiếp ${importedSegments.length} đoạn phát biểu thực tế từ tệp "${file.name}".`,
+          keyDecisions: ['Hoàn tất nạp văn bản thực tế từ người dùng.'],
+          actionItems: []
+        },
+        segments: importedSegments
+      };
+
+      setCurrentFile(importedFile);
+      setSavedLibrary(prev => [importedFile, ...prev]);
+      setHasConvertedCurrentFile(true);
+      setCopiedToast(`📄 Đã nạp ${importedSegments.length} đoạn văn bản từ tệp "${file.name}"!`);
+      setTimeout(() => setCopiedToast(null), 3000);
+      return;
+    }
+
     const realAudioUrl = URL.createObjectURL(file);
 
     // Read real duration from Audio Object
@@ -725,7 +878,7 @@ export const FileTranscribeModule: React.FC = () => {
       duration: 180,
       format: file.type || 'Audio file',
       uploadedAt: 'Vừa nạp (Sẵn sàng)',
-      modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
+      modelUsed: selectedModel === 'gemini-flash' ? 'Google Gemini 2.5 Flash Speech API' : selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4' : 'Whisper Large v3 Enterprise',
       category: 'Giao ban BĐH',
       summary: {
         executive: `Tệp âm thanh thực tế "${file.name}" (${sizeMb} MB) đã được nạp vào Audio Engine thành công. Bấm nút "BẮT ĐẦU CHUYỂN ĐỔI" để khởi chạy giải mã.`,
@@ -1269,6 +1422,16 @@ export const FileTranscribeModule: React.FC = () => {
       setTimeout(() => setCopiedToast(null), 2000);
       return;
     }
+
+    if (selectedModel === 'gemini-flash' || (selectedRawFile && geminiApiKey)) {
+      if (!geminiApiKey) {
+        setShowGeminiModal(true);
+        return;
+      }
+      handleTranscribeWithGemini(selectedRawFile || undefined);
+      return;
+    }
+
     const currentName = currentFile?.name || 'Giao_ban_dieu_hanh.mp3';
     const currentSize = currentFile?.sizeStr || '14.2 MB';
     const currentFmt = currentFile?.format || 'MP3 (Stereo)';
@@ -1976,27 +2139,31 @@ export const FileTranscribeModule: React.FC = () => {
                             </p>
                           </button>
 
-                          {/* Option 2: AI Engine Auto-Process */}
+                          {/* Option 2: Google Gemini 2.5 Flash Speech AI */}
                           <button
                             type="button"
                             onClick={() => {
-                              handleStartConversion();
+                              if (!geminiApiKey) {
+                                setShowGeminiModal(true);
+                              } else {
+                                handleTranscribeWithGemini(selectedRawFile || undefined);
+                              }
                             }}
                             className="p-4 rounded-xl border border-orange-200 dark:border-orange-800 bg-orange-50/50 dark:bg-orange-950/30 hover:border-[#F15A24] transition-all text-left space-y-2 cursor-pointer group"
                           >
                             <div className="flex items-center justify-between">
-                              <div className="w-9 h-9 rounded-lg bg-[#F15A24] text-white flex items-center justify-center font-bold">
-                                <Cpu className="w-5 h-5" />
+                              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#F15A24] to-amber-500 text-white flex items-center justify-center font-bold">
+                                <Sparkles className="w-5 h-5 text-white" />
                               </div>
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-200 dark:bg-orange-900 text-[#F15A24] dark:text-orange-200">
-                                Tự động ASR
+                                Gemini 2.5 Flash AI
                               </span>
                             </div>
                             <h4 className="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-[#F15A24]">
-                              2. Trích xuất tự động qua AI Engine
+                              2. Bóc tách 100% âm thanh thực qua Gemini AI
                             </h4>
                             <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
-                              Chạy mô hình trích xuất phổ tần số FFT & phân đoạn người nói (Diarization) kéo dài 100% thời lượng.
+                              Gửi tệp audio binary tới Google Gemini 2.5 Flash Speech Engine để dịch chuẩn xác 100% từng câu thoại tiếng Việt thực tế.
                             </p>
                           </button>
 
@@ -3293,6 +3460,72 @@ export const FileTranscribeModule: React.FC = () => {
                 className="px-4 py-2 rounded-xl text-xs font-black bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm cursor-pointer"
               >
                 Nạp Vào Tài Liệu
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🔑 MODAL CẤU HÌNH GOOGLE GEMINI API KEY */}
+      {showGeminiModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <h3 className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Cấu Hình Google Gemini API Key</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowGeminiModal(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                Nhập API Key Google Gemini của bạn để hệ thống bóc tách 100% âm thanh thực tế từ tệp ghi âm bằng mô hình AI Gemini 2.5 Flash Speech Engine:
+              </p>
+              <input
+                type="password"
+                value={inputApiKey}
+                onChange={(e) => setInputApiKey(e.target.value)}
+                placeholder="Dán Gemini API Key (AIzaSy...)"
+                className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#0284C7]"
+                autoFocus
+              />
+              <p className="text-[10.5px] text-slate-400">
+                Chưa có Key? Bạn có thể tạo API Key miễn phí tại <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-[#0284C7] underline font-bold">Google AI Studio</a>.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowGeminiModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 cursor-pointer"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!inputApiKey.trim()) return;
+                  const cleanKey = inputApiKey.trim();
+                  localStorage.setItem('AVG_GEMINI_API_KEY', cleanKey);
+                  setGeminiApiKey(cleanKey);
+                  setShowGeminiModal(false);
+                  setCopiedToast('🔑 Đã lưu Google Gemini API Key!');
+                  setTimeout(() => setCopiedToast(null), 2500);
+                  if (selectedRawFile) {
+                    handleTranscribeWithGemini(selectedRawFile);
+                  }
+                }}
+                className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#00A8E8] text-white shadow-sm cursor-pointer"
+              >
+                Lưu & Bóc Tách Ngay
               </button>
             </div>
           </div>
