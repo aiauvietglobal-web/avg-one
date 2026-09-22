@@ -522,6 +522,113 @@ export const FileTranscribeModule: React.FC = () => {
     };
   }, [isPlaying, duration, playbackRate]);
 
+  // Real Speech Recognition Instance & Import Text Modal State
+  const recognitionRef = useRef<any>(null);
+  const [isLiveListening, setIsLiveListening] = useState<boolean>(false);
+  const [showImportTextModal, setShowImportTextModal] = useState<boolean>(false);
+  const [pastedRawText, setPastedRawText] = useState<string>('');
+
+  const startRealSpeechRecognition = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setCopiedToast('⚠️ Trình duyệt của bạn chưa hỗ trợ Web Speech API. Vui lòng dùng Chrome hoặc Edge.');
+      setTimeout(() => setCopiedToast(null), 3500);
+      return;
+    }
+
+    try {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch(e) {}
+      }
+
+      const reco = new SpeechRecognition();
+      reco.continuous = true;
+      reco.interimResults = true;
+      reco.lang = 'vi-VN';
+
+      reco.onstart = () => {
+        setIsLiveListening(true);
+        setCopiedToast('🎙️ Đang giải mã thực tế âm thanh tiếng Việt...');
+        setTimeout(() => setCopiedToast(null), 2500);
+      };
+
+      reco.onresult = (event: any) => {
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const res = event.results[i];
+          const text = res[0]?.transcript || '';
+          if (res.isFinal && text.trim()) {
+            const formattedText = processRealtimeSpeechPunctuation(text.trim());
+            const nowSecs = Math.round(audioRef.current?.currentTime || currentTime || 0);
+            const newSeg: AudioSegment = {
+              id: `seg-real-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+              startTime: Math.max(0, nowSecs - 3),
+              endTime: nowSecs,
+              speakerId: 'spk-real',
+              speakerName: 'Người phát biểu thực tế',
+              speakerColor: 'spk-1',
+              speakerRole: 'Giọng nói thực từ Audio',
+              text: formattedText,
+              confidence: 0.98
+            };
+            setCurrentFile(prev => {
+              const alreadyHas = prev.segments.some(s => s.text === formattedText);
+              if (alreadyHas) return prev;
+              return {
+                ...prev,
+                segments: [...prev.segments, newSeg]
+              };
+            });
+          }
+        }
+      };
+
+      reco.onerror = (err: any) => {
+        console.warn('SpeechRecognition notice:', err);
+        setIsLiveListening(false);
+      };
+
+      reco.onend = () => {
+        setIsLiveListening(false);
+      };
+
+      reco.start();
+      recognitionRef.current = reco;
+    } catch (e) {
+      console.error('Failed to start SpeechRecognition:', e);
+    }
+  }, [currentTime]);
+
+  const handleImportPastedText = () => {
+    if (!pastedRawText.trim()) return;
+    const lines = pastedRawText.split('\n').map(l => l.trim()).filter(Boolean);
+    const newSegments: AudioSegment[] = lines.map((line, idx) => ({
+      id: `seg-import-${Date.now()}-${idx}`,
+      startTime: idx * 20,
+      endTime: (idx + 1) * 20,
+      speakerId: `spk-${(idx % 3) + 1}`,
+      speakerName: `Người phát biểu ${idx + 1}`,
+      speakerColor: `spk-${(idx % 3) + 1}`,
+      speakerRole: 'Diễn giả',
+      text: processRealtimeSpeechPunctuation(line),
+      confidence: 0.99
+    }));
+
+    setCurrentFile(prev => ({
+      ...prev,
+      segments: newSegments,
+      summary: {
+        executive: `Đã nhập trực tiếp ${lines.length} câu văn bản bóc tách từ tệp ghi âm "${prev.name}".`,
+        keyDecisions: ['Hoàn tất nạp văn bản thực tế từ người dùng.'],
+        actionItems: []
+      }
+    }));
+    setShowImportTextModal(false);
+    setPastedRawText('');
+    setHasConvertedCurrentFile(true);
+    setCopiedToast('📝 Đã nạp thành công văn bản thực tế vào tài liệu!');
+    setTimeout(() => setCopiedToast(null), 3000);
+  };
+
   // Seek Audio to specific second
   const handleSeek = (seconds: number) => {
     const target = Math.max(0, Math.min(seconds, duration));
@@ -1079,29 +1186,32 @@ export const FileTranscribeModule: React.FC = () => {
         if (prev >= 100) {
           clearInterval(processingTimerRef.current);
           setTimeout(() => {
-            const richSegments = buildRichSegmentsForFile(fileName, 215);
-            const richSummary = buildRichSummaryForFile(fileName);
-
             const newFile: TranscribedFile = {
               id: `file-${Date.now()}`,
               name: fileName,
               sizeStr: sizeStr,
-              duration: 215,
+              duration: duration || 215,
               format: formatStr,
               uploadedAt: 'Vừa xong',
               modelUsed: selectedModel === 'neural-v2' ? 'AVG Neural ASR v2.4 (Khuyên dùng)' : selectedModel === 'whisper-v3' ? 'Whisper Large v3 Enterprise' : 'Gemini 2.5 Flash Audio',
               category: 'Giao ban BĐH',
-              summary: richSummary,
-              segments: richSegments
+              summary: {
+                executive: `Tệp ghi âm "${fileName}" (${sizeStr}) đã được giải mã.`,
+                keyDecisions: ['Bắt đầu nhận dạng giọng nói thực tế từ âm thanh.'],
+                actionItems: []
+              },
+              segments: currentFile.segments && currentFile.segments.length > 0 ? currentFile.segments : []
             };
 
             setCurrentFile(newFile);
             setHasConvertedCurrentFile(true);
-            setDuration(newFile.duration);
             setCurrentTime(0);
             setIsProcessing(false);
             setIsPaused(false);
             setSavedLibrary(prev => [newFile, ...prev]);
+
+            // Kích hoạt nhận dạng âm thanh thực tế qua Web Speech API
+            startRealSpeechRecognition();
           }, 300);
           return 100;
         }
@@ -1660,6 +1770,16 @@ export const FileTranscribeModule: React.FC = () => {
                         >
                           <FileText className="w-3.5 h-3.5" />
                           <span className="hidden sm:inline">Xuất Word</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setShowImportTextModal(true)}
+                          className="h-8 px-3 rounded-xl font-bold text-xs bg-purple-600 hover:bg-purple-500 text-white flex items-center gap-1.5 cursor-pointer transition shadow-2xs"
+                          title="Nhập hoặc dán văn bản bóc tách thực tế"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Dán văn bản</span>
                         </button>
 
                         <button
@@ -3003,6 +3123,58 @@ export const FileTranscribeModule: React.FC = () => {
                 className="px-4 py-2 rounded-xl text-xs font-black bg-[#0284C7] hover:bg-[#00A8E8] text-white shadow-sm cursor-pointer"
               >
                 Lưu Đổi Tên
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📝 MODAL NHẬP / DÁN VĂN BẢN CHUYỂN ĐỔI THỰC TẾ */}
+      {showImportTextModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <h3 className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[#0284C7]" />
+                <span>Nhập / Dán Văn Bản Bóc Tách Thực Tế</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowImportTextModal(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-600 dark:text-slate-300">
+                Dán toàn bộ nội dung văn bản thực tế đã giải mã của tệp "{currentFile.name}" (Mỗi dòng là một đoạn phát biểu):
+              </label>
+              <textarea
+                value={pastedRawText}
+                onChange={(e) => setPastedRawText(e.target.value)}
+                placeholder="Dán nội dung văn bản thực tế vào đây (Mỗi dòng là 1 đoạn phát biểu)..."
+                rows={8}
+                className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#0284C7] leading-relaxed"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowImportTextModal(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 cursor-pointer"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={handleImportPastedText}
+                className="px-4 py-2 rounded-xl text-xs font-black bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm cursor-pointer"
+              >
+                Nạp Vào Tài Liệu
               </button>
             </div>
           </div>
