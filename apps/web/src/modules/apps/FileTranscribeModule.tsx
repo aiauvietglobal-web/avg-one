@@ -415,7 +415,7 @@ export const FileTranscribeModule: React.FC = () => {
   const [hasConvertedCurrentFile, setHasConvertedCurrentFile] = useState<boolean>(true);
   const [processingProgress, setProcessingProgress] = useState<number>(0);
   const [processingStage, setProcessingStage] = useState<string>('');
-  const [selectedModel, setSelectedModel] = useState<string>('neural-v2');
+  const [selectedModel, setSelectedModel] = useState<string>('gemini-flash');
   const [enableDiarization, setEnableDiarization] = useState<boolean>(true);
   const [enablePunctuation, setEnablePunctuation] = useState<boolean>(true);
 
@@ -1376,6 +1376,8 @@ export const FileTranscribeModule: React.FC = () => {
           setTimeout(() => {
             const generatedSegments = (currentFile.segments && currentFile.segments.length > 0)
               ? currentFile.segments
+              : selectedRawFile
+              ? []
               : buildRichSegmentsForFile(fileName, duration || 215);
 
             const newFile: TranscribedFile = {
@@ -1423,12 +1425,20 @@ export const FileTranscribeModule: React.FC = () => {
       return;
     }
 
-    if (selectedModel === 'gemini-flash' || (selectedRawFile && geminiApiKey)) {
+    // High priority for real user uploaded file: MUST use real Gemini 2.5 Flash Speech API
+    if (selectedRawFile) {
       if (!geminiApiKey) {
         setShowGeminiModal(true);
+        setCopiedToast('🔒 Vui lòng nhập Google Gemini API Key để bóc tách 100% âm thanh thực tế!');
+        setTimeout(() => setCopiedToast(null), 4000);
         return;
       }
-      handleTranscribeWithGemini(selectedRawFile || undefined);
+      handleTranscribeWithGemini(selectedRawFile);
+      return;
+    }
+
+    if (selectedModel === 'gemini-flash' && !geminiApiKey) {
+      setShowGeminiModal(true);
       return;
     }
 
