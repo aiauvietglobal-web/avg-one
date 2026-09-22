@@ -3,7 +3,6 @@ import {
   Mic, FileAudio, QrCode, FileText, LayoutGrid, Sparkles
 } from 'lucide-react';
 import { SpeechToTextModule } from './SpeechToTextModule';
-import { FileTranscribeModule } from './FileTranscribeModule';
 import { DashboardModule } from '../dashboard/DashboardModule';
 
 export type SubAppId = 'speech-to-text' | 'dashboard' | 'qr-code' | 'docs-template';
@@ -38,10 +37,10 @@ const SUB_APPS_GRID: SubAppCard[] = [
     title: 'CHUYỂN ĐỔI VĂN BẢN',
     headerTitle: 'CHUYỂN ĐỔI VĂN BẢN',
     icon: FileAudio,
-    isAvailable: true,
-    badge: 'ĐÃ SẴN SÀNG',
-    iconColor: 'text-[#0284C7] dark:text-sky-300',
-    bgColor: 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800 shadow-2xs'
+    isAvailable: false,
+    badge: 'SẮP PHÁT HÀNH',
+    iconColor: 'text-slate-400 dark:text-slate-500',
+    bgColor: 'bg-white/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700'
   },
   {
     id: 'qr-code',
@@ -278,7 +277,6 @@ export const AppsModule: React.FC = () => {
         /* ========================================================================= */
         <div className="w-full h-full max-w-full">
           {activeApp === 'speech-to-text' && <SpeechToTextModule />}
-          {activeApp === 'dashboard' && <FileTranscribeModule />}
         </div>
       )}
 
