@@ -4,7 +4,7 @@ import {
   MessageSquare, ChevronUp, ChevronDown, Trash2, Plus, Calendar as CalendarIcon,
   Search, RefreshCw, BarChart3, CheckCircle2, AlertCircle, XCircle, LayoutGrid, Table, FileSpreadsheet, Home,
   Upload, Paperclip, Image as ImageIcon, File, Download, Eye, ExternalLink,
-  Sparkles, Flame, Compass, ArrowRight, ArrowLeft, ShieldCheck, CheckSquare, Building2, Car, Plane, AlertTriangle,
+  Flame, Compass, ArrowRight, ArrowLeft, ShieldCheck, CheckSquare, Building2, Car, Plane, AlertTriangle,
   Mic, TrendingUp, TrendingDown, Layers, Filter, Target, Award, Zap, Activity
 } from 'lucide-react';
 import {
@@ -128,7 +128,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
   }
 ];
 
-export type CalendarSubAppId = 'talk' | 'work' | 'problem' | 'event';
+export type CalendarSubAppId = 'talk' | 'work';
 
 export interface CalendarSubAppCard {
   id: CalendarSubAppId;
@@ -173,34 +173,6 @@ export const CALENDAR_SUB_APPS: CalendarSubAppCard[] = [
     gradientBg: 'from-orange-500/10 via-amber-500/5 to-transparent border-orange-200/90 dark:border-orange-800/60 hover:border-orange-500/50',
     iconBg: 'bg-[#F15A24]/10 text-[#F15A24]',
     iconColor: 'text-[#F15A24]'
-  },
-  {
-    id: 'problem',
-    code: 'CAL-03',
-    title: 'LỊCH THÁO GỠ VƯỚNG MẮC',
-    headerTitle: 'LỊCH THÁO GỠ VƯỚNG MẮC',
-    icon: AlertCircle,
-    isAvailable: true,
-    badge: 'ĐÃ SẴN SÀNG',
-    description: 'Lịch làm việc trọng điểm tháo gỡ điểm nghẽn thủ tục hải quan, đăng ký bản quyền & tiến độ dự án.',
-    liveStats: '1 Vấn đề ưu tiên cao | Ban Điều Hành',
-    gradientBg: 'from-rose-500/10 via-pink-500/5 to-transparent border-rose-200/90 dark:border-rose-800/60 hover:border-rose-500/50',
-    iconBg: 'bg-rose-500/10 text-rose-500',
-    iconColor: 'text-rose-500'
-  },
-  {
-    id: 'event',
-    code: 'CAL-04',
-    title: 'LỊCH SỰ KIỆN HỆ THỐNG',
-    headerTitle: 'LỊCH SỰ KIỆN HỆ THỐNG',
-    icon: Sparkles,
-    isAvailable: false,
-    badge: 'SẮP PHÁT HÀNH',
-    description: 'Lịch sự kiện toàn tập đoàn, lễ tổng kết, đào tạo nội bộ & hội nghị chiến lược năm 2026.',
-    liveStats: 'Sự kiện Quý 3/2026 | Tập Đoàn AVG',
-    gradientBg: 'from-emerald-500/10 via-teal-500/5 to-transparent border-emerald-200/90 dark:border-emerald-800/60 hover:border-emerald-500/50',
-    iconBg: 'bg-emerald-500/10 text-emerald-500',
-    iconColor: 'text-emerald-500'
   }
 ];
 
@@ -265,11 +237,11 @@ export const CalendarModule: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Active Sub-App state: null = Landing Home Grid | 'talk' = Lịch trao đổi | 'work' = Lịch công tác | 'problem' = Lịch tháo gỡ vướng mắc | 'event' = Lịch sự kiện
-  const [activeSubApp, setActiveSubApp] = useState<CalendarSubAppId | null>(() => {
+  // Active Sub-App state: 'talk' = Lịch trao đổi | 'work' = Lịch công tác (Landing page removed per user request)
+  const [activeSubApp, setActiveSubApp] = useState<CalendarSubAppId>(() => {
     try {
       const saved = localStorage.getItem('avg_calendar_active_subapp');
-      if (saved && ['talk', 'work', 'problem', 'event'].includes(saved)) {
+      if (saved && ['talk', 'work'].includes(saved)) {
         return saved as CalendarSubAppId;
       }
     } catch (e) {}
@@ -279,7 +251,7 @@ export const CalendarModule: React.FC = () => {
   // Listen for calendar subapp change from AppShell header dropdown
   useEffect(() => {
     const handleCalendarChange = (e: any) => {
-      if (e.detail && ['talk', 'work', 'problem', 'event'].includes(e.detail)) {
+      if (e.detail && ['talk', 'work'].includes(e.detail)) {
         setActiveSubApp(e.detail as CalendarSubAppId);
         try {
           localStorage.setItem('avg_calendar_active_subapp', e.detail);
@@ -296,30 +268,26 @@ export const CalendarModule: React.FC = () => {
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'LỊCH TRAO ĐỔI' }));
     } else if (activeSubApp === 'work') {
       window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'LỊCH CÔNG TÁC' }));
-    } else if (activeSubApp === 'problem') {
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'LỊCH THÁO GỠ VƯỚNG MẮC' }));
-    } else if (activeSubApp === 'event') {
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'LỊCH SỰ KIỆN HỆ THỐNG' }));
-    } else {
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     }
   }, [activeSubApp]);
 
   // Listen for back click from AppShell header
   useEffect(() => {
     const handleSubBack = () => {
-      setActiveSubApp(null);
-      try {
-        localStorage.removeItem('avg_calendar_active_subapp');
-      } catch (err) {}
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
+      if (activeSubApp === 'work') {
+        setActiveSubApp('talk');
+        try {
+          localStorage.setItem('avg_calendar_active_subapp', 'talk');
+        } catch (err) {}
+        window.dispatchEvent(new CustomEvent('calendar_subapp_change', { detail: 'talk' }));
+        window.dispatchEvent(new CustomEvent('submodule_change', { detail: 'LỊCH TRAO ĐỔI' }));
+      }
     };
     window.addEventListener('submodule_back', handleSubBack);
     return () => {
       window.removeEventListener('submodule_back', handleSubBack);
-      window.dispatchEvent(new CustomEvent('submodule_change', { detail: '' }));
     };
-  }, []);
+  }, [activeSubApp]);
 
   // Real-time Vietnam Clock state (GMT+7)
   const [vnNow, setVnNow] = useState<Date>(new Date());
@@ -374,8 +342,8 @@ export const CalendarModule: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>(() => realTimeStr.monthYearStr);
   const [showAllDates, setShowAllDates] = useState<boolean>(false);
   
-  // Accordion Toggle
-  const [showStatsAccordion, setShowStatsAccordion] = useState<boolean>(true);
+  // Accordion Toggle (Mặc định đóng thu gọn)
+  const [showStatsAccordion, setShowStatsAccordion] = useState<boolean>(false);
 
   // 📊 BỘ LỌC VÀ TRẠNG THÁI CHO "THỐNG KÊ DỮ LIỆU TRAO ĐỔI" (Tháng, Quý, Năm & Thời gian Lạm phát)
   const [statsPeriodType, setStatsPeriodType] = useState<'month' | 'quarter' | 'year' | 'all'>('month');
@@ -549,17 +517,31 @@ export const CalendarModule: React.FC = () => {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Form states for new event
+  // Form states for new event (Để trống mặc định, không để dữ liệu demo)
   const [newTitle, setNewTitle] = useState('');
-  const [newDate, setNewDate] = useState(() => realTimeStr.dateStr);
-  const [newDayOfWeek, setNewDayOfWeek] = useState(() => realTimeStr.dayName);
-  const [newPlannedStart, setNewPlannedStart] = useState('08:30');
-  const [newPlannedEnd, setNewPlannedEnd] = useState('10:30');
-  const [newScope, setNewScope] = useState('P1');
-  const [newLegalEntity, setNewLegalEntity] = useState('AVG');
-  const [newAttendees, setNewAttendees] = useState('1. Các đầu mối AVG: 1.T; 1.C; 1; 6; #; #K2B; #K1\n2. AV: Bà Trang; Ông Trịnh');
-  const [newSecretary, setNewSecretary] = useState('#K2B');
-  const [newNotes, setNewNotes] = useState('Không có ghi chú thêm.');
+  const [newDate, setNewDate] = useState('');
+  const [newDayOfWeek, setNewDayOfWeek] = useState('');
+  const [newPlannedStart, setNewPlannedStart] = useState('');
+  const [newPlannedEnd, setNewPlannedEnd] = useState('');
+  const [newScope, setNewScope] = useState('');
+  const [newLegalEntity, setNewLegalEntity] = useState('');
+  const [newAttendees, setNewAttendees] = useState('');
+  const [newSecretary, setNewSecretary] = useState('');
+  const [newNotes, setNewNotes] = useState('');
+
+  const handleOpenAddModal = () => {
+    setNewTitle('');
+    setNewDate('');
+    setNewDayOfWeek('');
+    setNewPlannedStart('');
+    setNewPlannedEnd('');
+    setNewScope('');
+    setNewLegalEntity('');
+    setNewAttendees('');
+    setNewSecretary('');
+    setNewNotes('');
+    setShowAddModal(true);
+  };
 
   useEffect(() => {
     handleRefreshLiveEvents();
@@ -647,6 +629,14 @@ export const CalendarModule: React.FC = () => {
     setEvents(updated);
     setShowAddModal(false);
     setNewTitle('');
+    setNewDate('');
+    setNewDayOfWeek('');
+    setNewPlannedStart('');
+    setNewPlannedEnd('');
+    setNewScope('');
+    setNewLegalEntity('');
+    setNewAttendees('');
+    setNewSecretary('');
     setNewNotes('');
 
     showToast('📢 Đã ban hành & đồng bộ cuộc họp mới!');
@@ -1314,149 +1304,11 @@ export const CalendarModule: React.FC = () => {
     <>
       <button id="btn-calendar-subtab-talk" className="hidden" onClick={() => setActiveSubApp('talk')} />
       <button id="btn-calendar-subtab-work" className="hidden" onClick={() => setActiveSubApp('work')} />
-      <button id="btn-calendar-subtab-problem" className="hidden" onClick={() => setActiveSubApp('problem')} />
-      <button id="btn-calendar-subtab-event" className="hidden" onClick={() => setActiveSubApp('event')} />
     </>
   );
 
   // ==============================================================================================
-  // 🎯 CASE 1: TRANG CHỦ PHÂN HỆ LỊCH (LANDING GRID HOME VIEW)
-  // ==============================================================================================
-  // ==============================================================================================
-  // 🎯 CASE 1: TRANG CHỦ PHÂN HỆ LỊCH (LANDING GRID HOME VIEW CHUẨN AVG ONE)
-  // ==============================================================================================
-  if (activeSubApp === null) {
-    return (
-      <div className="w-full h-full flex-1 min-h-0 bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-hidden flex flex-col items-center justify-center">
-        {hiddenTriggers}
-        
-        {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER (PHONG CÁCH LƯỚI KHÔNG CHẤM BI) */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
-
-        {/* 🎨 VIBRANT MULTI-ORB AMBIENT GLOWS */}
-        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-        <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-        <div className="absolute bottom-10 left-1/3 w-[550px] h-[300px] bg-gradient-to-tr from-sky-400/10 via-amber-400/10 to-orange-400/15 dark:from-sky-600/10 dark:to-orange-600/10 rounded-full blur-[140px] pointer-events-none -z-0" />
-
-        {/* Synchronized container matching Header alignment (w-full px-3 sm:px-6 lg:px-8) */}
-        <div className="w-full px-3 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-10 sm:gap-14 lg:gap-16 relative z-10 py-8 sm:py-14 my-auto">
-          
-          {/* Header Title Section */}
-          <div className="flex flex-col items-center text-center space-y-4 max-w-2xl mx-auto">
-            <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
-              {/* SVG Clockwise Border Tracing Effect */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                <defs>
-                  <linearGradient id="calendar-slogan-border-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#0284C7" />
-                    <stop offset="35%" stopColor="#00A8E8" />
-                    <stop offset="70%" stopColor="#FF7043" />
-                    <stop offset="100%" stopColor="#F15A24" />
-                  </linearGradient>
-                </defs>
-                <rect
-                  x="1"
-                  y="1"
-                  width="calc(100% - 2px)"
-                  height="calc(100% - 2px)"
-                  rx="8"
-                  ry="8"
-                  fill="none"
-                  stroke="url(#calendar-slogan-border-gradient)"
-                  strokeWidth="1.5"
-                  className="animate-slogan-box-border"
-                />
-              </svg>
-
-              <div className="relative z-10 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-xl bg-transparent text-xs sm:text-sm font-extrabold text-slate-700 dark:text-slate-200 tracking-wide uppercase">
-                <CalendarIcon className="w-4 h-4 text-[#00A8E8]" />
-                <span>HỆ THỐNG QUẢN LÝ LỊCH & ĐIỀU HÀNH TẬP TRUNG</span>
-              </div>
-            </div>
-
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline justify-center gap-2">
-              <span>Phân Hệ</span>
-              <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                <span className="relative z-10">Lịch</span>
-                <svg className="absolute -bottom-1.5 left-0 w-full h-3 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
-                  <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
-                </svg>
-              </span>
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-              Hệ thống quản lý lịch trao đổi, lịch công tác tác nghiệp & điều hành doanh nghiệp tập trung
-            </p>
-          </div>
-
-          {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP PHÂN HỆ LỊCH (BỐ CỤC 2 HÀNG x 2 CỘT, BO GÓC 32PX) */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-[1100px] mx-auto w-full pb-2">
-            {CALENDAR_SUB_APPS.map((app, idx) => {
-              const Icon = app.icon;
-              if (app.isAvailable) {
-                return (
-                  <div
-                    key={app.id}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setActiveSubApp(app.id)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveSubApp(app.id); }}
-                    style={{ borderRadius: '26px', animationDelay: `${idx * 100}ms` }}
-                    className="group flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
-                  >
-                    {/* Hairline top glow on hover */}
-                    <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                    {/* Unified Blue Icon Badge */}
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
-                      <Icon className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
-                    </div>
-
-                    {/* Tiêu đề & Micro Tag */}
-                    <div className="flex flex-col items-center w-full space-y-0.5">
-                      <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
-                        {app.title}
-                      </h3>
-                      <span className="text-[9px] sm:text-[9.5px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors uppercase tracking-wider whitespace-nowrap">
-                        {app.badge} • {app.code}
-                      </span>
-                    </div>
-                  </div>
-                );
-              } else {
-                return (
-                  <div
-                    key={app.id}
-                    style={{ borderRadius: '26px', animationDelay: `${idx * 100}ms` }}
-                    onClick={() => setToastMessage(`🚀 "${app.title}" sắp được phát hành trong phiên bản đợt tiếp theo!`)}
-                    className="flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-slate-50/60 dark:bg-slate-900/30 rounded-[26px] border border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
-                  >
-                    {/* Icon Hộp xám */}
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 dark:text-slate-500 opacity-60" />
-                    </div>
-
-                    {/* Tiêu đề */}
-                    <div className="flex flex-col items-center w-full space-y-0.5">
-                      <h3 className="text-xs sm:text-[13px] font-bold text-slate-400/80 dark:text-slate-500 whitespace-nowrap leading-tight">
-                        {app.title}
-                      </h3>
-                      <span className="text-[9px] sm:text-[9.5px] font-semibold text-slate-400/60 uppercase tracking-wider">
-                        {app.badge}
-                      </span>
-                    </div>
-                  </div>
-                );
-              }
-            })}
-          </div>
-
-        </div>
-      </div>
-    );
-  }
-
-  // ==============================================================================================
-  // 🎯 CASE 2: LỊCH CÔNG TÁC VIEW (ACTIVE SUB APP === 'work')
+  // 🎯 CASE 1: LỊCH CÔNG TÁC VIEW (ACTIVE SUB APP === 'work')
   // ==============================================================================================
   if (activeSubApp === 'work') {
     return (
@@ -1469,18 +1321,9 @@ export const CalendarModule: React.FC = () => {
         {/* LỊCH CÔNG TÁC CONTENT */}
         <div className="w-full h-full flex flex-col space-y-3.5 relative z-10 overflow-hidden">
           
-          {/* Header Bar with Back Button */}
+          {/* Header Bar */}
           <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-xs flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setActiveSubApp(null)}
-                className="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-orange-50 dark:hover:bg-orange-950/40 text-slate-600 dark:text-slate-300 hover:text-[#F15A24] transition flex items-center gap-1.5 text-xs font-extrabold cursor-pointer"
-                title="Quay lại Trang Chủ Phân Hệ Lịch"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">Trang Chủ Lịch</span>
-              </button>
-              <div className="h-5 w-0.5 bg-slate-200 dark:bg-slate-800" />
               <div>
                 <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white uppercase flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-[#F15A24]" />
@@ -1591,7 +1434,7 @@ export const CalendarModule: React.FC = () => {
           <div className="space-y-2.5">
             {/* Primary Action Button - Primary Blue #0284C7 Gradient */}
             <button
-              onClick={() => setShowAddModal(true)}
+              onClick={handleOpenAddModal}
               className="w-full py-3 px-4 bg-gradient-to-r from-[#0077B6] via-[#0284C7] to-[#00A8E8] hover:from-[#005f92] hover:to-[#0284C7] text-white font-black text-xs sm:text-sm rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg hover:shadow-[#0284C7]/30 active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
@@ -1866,22 +1709,16 @@ export const CalendarModule: React.FC = () => {
                 <h1 className="text-lg sm:text-2xl font-extrabold text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
                   <span>Lịch</span>
                   <span className="relative inline-block px-1 font-black bg-clip-text text-transparent bg-gradient-to-r from-[#F15A24] to-amber-500">
-                    <span className="relative z-10">
-                      {activeSubApp === 'problem' ? 'Tháo Gỡ Vướng Mắc' : activeSubApp === 'event' ? 'Sự Kiện Hệ Thống' : 'Trao Đổi'}
-                    </span>
+                    <span className="relative z-10">Trao Đổi</span>
                     <svg className="absolute -bottom-1 left-0 w-full h-2.5 text-[#F15A24] opacity-50 -z-0 pointer-events-none" viewBox="0 0 200 20" preserveAspectRatio="none">
                       <path d="M 0,10 Q 100,2 200,12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="animate-draw-line-3" />
                     </svg>
                   </span>
-                  {activeSubApp === 'problem' ? <span>Trọng Điểm</span> : activeSubApp === 'event' ? <span>Tập Đoàn</span> : <span>Công Việc</span>}
+                  <span>Công Việc</span>
                 </h1>
 
                 <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  {activeSubApp === 'problem'
-                    ? 'Lịch làm việc trọng điểm tháo gỡ điểm nghẽn thủ tục hải quan, pháp lý & tiến độ dự án.'
-                    : activeSubApp === 'event'
-                    ? 'Lịch sự kiện toàn tập đoàn, lễ tổng kết, đào tạo nội bộ & hội nghị chiến lược năm 2026.'
-                    : 'Quản lý và theo dõi các cuộc trao đổi công việc một cách hiệu quả theo thời gian thực.'}
+                  Quản lý và theo dõi các cuộc trao đổi công việc một cách hiệu quả theo thời gian thực.
                 </p>
               </div>
 
@@ -1927,49 +1764,45 @@ export const CalendarModule: React.FC = () => {
           </div>
 
           {/* 📊 COLLAPSIBLE STATS ACCORDION BAR ("THỐNG KÊ DỮ LIỆU TRAO ĐỔI") */}
-          <div className="flex-shrink-0 bg-slate-50/90 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl sm:rounded-2xl overflow-hidden shadow-xs transition-all duration-200">
+          <div className="flex-shrink-0 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-2 border-t-[#F15A24] rounded-xl overflow-hidden shadow-2xs transition-all duration-200">
             {/* Header Accordion Bar */}
             <button
               onClick={() => setShowStatsAccordion(!showStatsAccordion)}
-              className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-100/70 dark:hover:bg-slate-800 transition cursor-pointer"
+              className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer"
             >
               <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-xl bg-[#F15A24]/10 border border-[#F15A24]/30 flex items-center justify-center text-[#F15A24] shrink-0 shadow-2xs">
+                <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-lg bg-orange-50 dark:bg-orange-950/40 border border-orange-200/80 dark:border-orange-900/60 flex items-center justify-center text-[#F15A24] dark:text-[#ff7043] shrink-0">
                   <BarChart3 className="w-4 h-4" />
                 </div>
                 <div className="text-left min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-black text-xs sm:text-[13px] uppercase tracking-wider text-slate-900 dark:text-white">
+                    <span className="font-bold text-xs sm:text-[13px] tracking-tight text-slate-900 dark:text-white uppercase">
                       THỐNG KÊ DỮ LIỆU TRAO ĐỔI
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-[#0284C7]/10 text-[#0284C7] dark:text-sky-400 font-extrabold text-[10px] border border-[#0284C7]/20">
+                    <span className="px-2.5 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/40 text-[#F15A24] dark:text-[#ff7043] border border-orange-200/60 dark:border-orange-900/50 font-bold text-[11px]">
                       {statsPeriodType === 'month' ? `Tháng ${statsMonth}/${statsYear}` : statsPeriodType === 'quarter' ? `Quý ${statsQuarter}/${statsYear}` : statsPeriodType === 'year' ? `Năm ${statsYear}` : 'Toàn bộ'}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                {/* Executive Summary chips on header */}
-                <div className="hidden sm:flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-700 text-[10.5px] font-black text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600">
-                    {inflationStats.totalEvents} Cuộc họp
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-[10.5px] font-black text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                    <span>Đúng giờ: {inflationStats.onTimeRate}%</span>
-                  </span>
-                  <span className={`px-2.5 py-1 rounded-lg text-[10.5px] font-black border flex items-center gap-1 ${
-                    inflationStats.totalInflationMinutes > 0
-                      ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800'
-                      : 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
-                  }`}>
-                    <Clock className="w-3 h-3" />
-                    <span>Lạm phát: {inflationStats.totalInflationMinutes > 0 ? `+${formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)} (+${inflationStats.overallInflationPercent}%)` : '0p (Chuẩn)'}</span>
-                  </span>
-                </div>
+              <div className="flex items-center gap-3 shrink-0">
+                {/* Summary chips only when collapsed */}
+                {!showStatsAccordion && (
+                  <div className="hidden sm:flex items-center gap-2 text-[11px] text-slate-500">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">{inflationStats.totalEvents} cuộc</span>
+                    <span>•</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{inflationStats.onTimeRate}% đúng giờ</span>
+                    {inflationStats.totalInflationMinutes > 0 && (
+                      <>
+                        <span>•</span>
+                        <span className="text-[#F15A24] font-semibold">+{formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)} lạm phát</span>
+                      </>
+                    )}
+                  </div>
+                )}
 
-                <div className="p-1 rounded-lg hover:bg-slate-200/60 dark:hover:bg-slate-700 text-[#F15A24]">
+                <div className="p-1 rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showStatsAccordion ? 'rotate-180' : ''}`} />
                 </div>
               </div>
@@ -1977,19 +1810,19 @@ export const CalendarModule: React.FC = () => {
 
             {/* Accordion Body Content */}
             {showStatsAccordion && (
-              <div className="p-3 sm:p-4 border-t border-slate-200/80 dark:border-slate-700/80 bg-white/70 dark:bg-slate-900/70 space-y-3 sm:space-y-4">
+              <div className="p-3.5 sm:p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 space-y-3.5">
                 
-                {/* 1. THANH ĐIỀU KHIỂN KỲ BÁO CÁO (SEGMENTED TABS & FILTERS) */}
-                <div className="bg-slate-100/90 dark:bg-slate-800/90 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+                {/* 1. BỘ LỌC KỲ BÁO CÁO (AVG ONE BRANDED TABS) */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                   {/* Segmented Control Buttons */}
-                  <div className="flex items-center gap-1 bg-slate-200/70 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-300/60 dark:border-slate-700/60">
+                  <div className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('month')}
-                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
                         statsPeriodType === 'month'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
+                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       Theo Tháng
@@ -1997,10 +1830,10 @@ export const CalendarModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('quarter')}
-                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
                         statsPeriodType === 'quarter'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
+                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       Theo Quý
@@ -2008,10 +1841,10 @@ export const CalendarModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('year')}
-                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
                         statsPeriodType === 'year'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
+                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       Theo Năm
@@ -2019,10 +1852,10 @@ export const CalendarModule: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStatsPeriodType('all')}
-                      className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                      className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
                         statsPeriodType === 'all'
                           ? 'bg-[#F15A24] text-white shadow-xs'
-                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
+                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       Toàn Bộ
@@ -2030,33 +1863,27 @@ export const CalendarModule: React.FC = () => {
                   </div>
 
                   {/* Dropdowns chọn năm & tháng/quý */}
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="hidden xl:inline text-[11px] font-bold text-slate-400 mr-1">
-                      {statsEvents.length} cuộc họp phân tích
-                    </span>
-
-                    {/* Chọn Năm */}
-                    <div className="flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                      <span className="text-[11px] font-bold text-slate-500">Năm:</span>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-md border border-slate-200/80 dark:border-slate-700 focus-within:border-[#F15A24]">
+                      <span className="text-[11px] text-slate-400">Năm</span>
                       <select
                         value={statsYear}
                         onChange={(e) => setStatsYear(e.target.value)}
-                        className="bg-transparent text-xs font-black text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
+                        className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
                       >
                         <option value="2026">2026</option>
                         <option value="2025">2025</option>
-                        <option value="ALL">Tất cả năm</option>
+                        <option value="ALL">Tất cả</option>
                       </select>
                     </div>
 
-                    {/* Chọn chi tiết Tháng nếu đang ở mode month */}
                     {statsPeriodType === 'month' && (
-                      <div className="flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <span className="text-[11px] font-bold text-slate-500">Tháng:</span>
+                      <div className="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-md border border-slate-200/80 dark:border-slate-700 focus-within:border-[#F15A24]">
+                        <span className="text-[11px] text-slate-400">Tháng</span>
                         <select
                           value={statsMonth}
                           onChange={(e) => setStatsMonth(parseInt(e.target.value, 10))}
-                          className="bg-transparent text-xs font-black text-[#0284C7] focus:outline-none cursor-pointer"
+                          className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
                         >
                           {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                             <option key={m} value={m}>Tháng {m}</option>
@@ -2065,494 +1892,254 @@ export const CalendarModule: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Chọn chi tiết Quý nếu đang ở mode quarter */}
                     {statsPeriodType === 'quarter' && (
-                      <div className="flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <span className="text-[11px] font-bold text-slate-500">Quý:</span>
+                      <div className="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-md border border-slate-200/80 dark:border-slate-700 focus-within:border-[#F15A24]">
+                        <span className="text-[11px] text-slate-400">Quý</span>
                         <select
                           value={statsQuarter}
                           onChange={(e) => setStatsQuarter(parseInt(e.target.value, 10))}
-                          className="bg-transparent text-xs font-black text-[#0284C7] focus:outline-none cursor-pointer"
+                          className="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
                         >
-                          <option value={1}>Quý 1 (T1 - T3)</option>
-                          <option value={2}>Quý 2 (T4 - T6)</option>
-                          <option value={3}>Quý 3 (T7 - T9)</option>
-                          <option value={4}>Quý 4 (T10 - T12)</option>
+                          <option value={1}>Quý 1</option>
+                          <option value={2}>Quý 2</option>
+                          <option value={3}>Quý 3</option>
+                          <option value={4}>Quý 4</option>
                         </select>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* 2. BỘ 4 THẺ KPI CHỈ SỐ CỐT LÕI (THIẾT KẾ KHOA HỌC & TRỰC QUAN HÓA) */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 text-xs">
-                  {/* Thẻ 1: Tổng số cuộc trao đổi & Tỷ lệ hoàn tất */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs flex flex-col justify-between space-y-2">
-                    <div>
-                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
-                        <span>Tổng số cuộc</span>
-                        <div className="w-6 h-6 rounded-lg bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-[#0284C7]">
-                          <MessageSquare className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                      <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
-                        {inflationStats.totalEvents} <span className="text-xs font-semibold text-slate-400">cuộc</span>
-                      </div>
+                {/* 2. DẢI CHỈ SỐ CỐT LÕI (AVG ONE MODERN DASHBOARD CARDS) */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                  {/* Card 1: Tổng số cuộc */}
+                  <div className="p-3.5 sm:p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs hover:border-[#F15A24]/30 transition-all flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng số cuộc</span>
+                      <span className="w-2 h-2 rounded-full bg-[#F15A24]" />
                     </div>
-                    <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
-                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
-                        <div
-                          className="bg-emerald-500 h-full transition-all"
-                          style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.completedCount / inflationStats.totalEvents) * 100 : 0}%` }}
-                          title={`${inflationStats.completedCount} đã hoàn tất`}
-                        />
-                        <div
-                          className="bg-amber-500 h-full transition-all"
-                          style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.ongoingOrUpcoming / inflationStats.totalEvents) * 100 : 0}%` }}
-                          title={`${inflationStats.ongoingOrUpcoming} sắp tới/đang diễn ra`}
-                        />
-                      </div>
-                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
-                        <span className="font-bold text-emerald-600 dark:text-emerald-400">{inflationStats.completedCount} hoàn tất</span>
-                        <span className="font-bold text-amber-600 dark:text-amber-400">{inflationStats.ongoingOrUpcoming} sắp tới</span>
-                      </div>
+                    <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white mt-1">
+                      {inflationStats.totalEvents} <span className="text-xs font-semibold text-slate-400">cuộc</span>
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      {inflationStats.completedCount} hoàn tất • {inflationStats.ongoingOrUpcoming} sắp tới
                     </div>
                   </div>
 
-                  {/* Thẻ 2: Tỷ lệ đúng kế hoạch (Kỷ luật giờ giấc) */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs flex flex-col justify-between space-y-2">
-                    <div>
-                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
-                        <span>Tỷ lệ đúng kế hoạch</span>
-                        <div className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                      <div className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 flex items-baseline gap-1.5">
-                        {inflationStats.onTimeRate}%
-                        <span className="text-[11px] font-bold text-slate-400">({inflationStats.onTimeTotal}/{inflationStats.totalEvents})</span>
-                      </div>
+                  {/* Card 2: Đúng kế hoạch */}
+                  <div className="p-3.5 sm:p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs hover:border-emerald-500/30 transition-all flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Đúng kế hoạch</span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     </div>
-                    <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
-                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
-                        <div
-                          className="bg-emerald-500 h-full"
-                          style={{ width: `${inflationStats.onTimeRate}%` }}
-                        />
-                        <div
-                          className="bg-rose-500 h-full"
-                          style={{ width: `${100 - inflationStats.onTimeRate}%` }}
-                        />
-                      </div>
-                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
-                        <span className="font-bold text-emerald-600">{inflationStats.onTimeTotal} đúng hạn</span>
-                        <span className="font-bold text-rose-500">{inflationStats.inflatedCount} quá giờ ({inflationStats.inflationRate}%)</span>
-                      </div>
+                    <div className="text-2xl sm:text-3xl font-black tracking-tight text-emerald-600 dark:text-emerald-400 mt-1">
+                      {inflationStats.onTimeRate}%
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      {inflationStats.onTimeTotal} đúng hạn • {inflationStats.inflatedCount} lạm phát
                     </div>
                   </div>
 
-                  {/* Thẻ 3: Tổng thời gian thực tế & Mức lạm phát */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-rose-200/80 dark:border-rose-900/60 shadow-2xs flex flex-col justify-between space-y-2 bg-gradient-to-b from-rose-50/25 to-transparent">
-                    <div>
-                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
-                        <span className="text-rose-600 dark:text-rose-400">Thời gian thực tế</span>
-                        <div className="w-6 h-6 rounded-lg bg-rose-50 dark:bg-rose-950/50 flex items-center justify-center text-rose-500">
-                          <Clock className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                      <div className="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">
-                        {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
-                      </div>
+                  {/* Card 3: Thời gian thực tế */}
+                  <div className="p-3.5 sm:p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs hover:border-sky-500/30 transition-all flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thời gian thực tế</span>
+                      <span className="w-2 h-2 rounded-full bg-sky-500" />
                     </div>
-                    <div className="space-y-1.5 pt-1 border-t border-rose-100 dark:border-rose-950/50">
-                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
-                        <div
-                          className="bg-[#0284C7] h-full"
-                          style={{ width: `${Math.min(100, Math.round((inflationStats.totalPlannedMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%` }}
-                        />
-                        <div
-                          className="bg-rose-500 h-full"
-                          style={{ width: `${Math.min(100, Math.round((inflationStats.totalInflationMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%` }}
-                        />
-                      </div>
-                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
-                        <span>Dự kiến: {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)}</span>
-                        <span className="font-bold text-rose-600 dark:text-rose-400">
-                          +{formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)} (+{inflationStats.overallInflationPercent}%)
-                        </span>
-                      </div>
+                    <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white mt-1">
+                      {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      Kế hoạch {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)}
                     </div>
                   </div>
 
-                  {/* Thẻ 4: Cường độ quá giờ & Đỉnh điểm vượt */}
-                  <div className="bg-white dark:bg-slate-900 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs flex flex-col justify-between space-y-2">
-                    <div>
-                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-extrabold text-[10px] sm:text-[10.5px] uppercase tracking-wider">
-                        <span>Cường độ quá giờ</span>
-                        <div className="w-6 h-6 rounded-lg bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-amber-500">
-                          <TrendingUp className="w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                      <div className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 mt-1 flex items-baseline gap-1.5">
-                        {inflationStats.inflatedCount > 0 ? `+${inflationStats.avgInflationMinutes}p` : '0p'}
-                        <span className="text-xs font-semibold text-slate-400">/ cuộc</span>
-                      </div>
+                  {/* Card 4: Lạm phát */}
+                  <div className="p-3.5 sm:p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs hover:border-[#F15A24]/30 transition-all flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Lạm phát</span>
+                      <span className="w-2 h-2 rounded-full bg-amber-500" />
                     </div>
-                    <div className="space-y-1.5 pt-1 border-t border-slate-100 dark:border-slate-800">
-                      <div className="text-[10px] font-semibold text-slate-500 flex items-center justify-between">
-                        <span>Đỉnh điểm: <strong className="text-rose-600 font-black">+{inflationStats.maxInflationMinutes}p</strong></span>
-                        <span className="font-bold text-amber-600">{inflationStats.inflatedCount} cuộc ({inflationStats.inflationRate}%)</span>
-                      </div>
-                      <div className="text-[9.5px] font-semibold text-slate-400 truncate">
-                        {inflationStats.severeOverrunCount > 0
-                          ? `⚠️ ${inflationStats.severeOverrunCount} cuộc vượt >25p cần rút gọn`
-                          : '✅ Trong ngưỡng kiểm soát tốt'}
-                      </div>
+                    <div className="text-2xl sm:text-3xl font-black tracking-tight mt-1">
+                      {inflationStats.totalInflationMinutes > 0 ? (
+                        <span className="text-[#F15A24]">+{formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)}</span>
+                      ) : (
+                        <span className="text-slate-900 dark:text-white">0p</span>
+                      )}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 truncate">
+                      {inflationStats.inflatedCount > 0 ? `TB +${inflationStats.avgInflationMinutes}p/cuộc lạm phát` : '100% chuẩn giờ'}
                     </div>
                   </div>
                 </div>
 
-                {/* 3. KHU VỰC PHÂN TÍCH CHUYÊN SÂU 2 CỘT */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 pt-1">
-                  
-                  {/* CỘT A: PHÂN BỔ & NHỊP ĐỘ THEO CHU KỲ (THÁNG / QUÝ / MA TRẬN NĂM) */}
-                  <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center gap-2">
-                          <Layers className="w-4 h-4 text-[#0284C7]" />
-                          <span className="font-black text-xs uppercase text-slate-800 dark:text-slate-100">
-                            {statsPeriodType === 'month' ? `Biểu Đồ 12 Tháng (${statsYear})` : statsPeriodType === 'quarter' ? `Phân Bố 4 Quý (${statsYear})` : `Ma Trận Kỷ Luật Thời Gian (${statsYear})`}
-                          </span>
-                        </div>
-                        <span className="text-[11px] font-bold text-slate-400">
-                          {statsEvents.length} cuộc trong kỳ
-                        </span>
-                      </div>
-
-                      {/* Phân bố 12 tháng: Hiển thị biểu đồ cột Histogram tương tác khoa học */}
-                      {statsPeriodType === 'month' && (
-                        <div className="space-y-3 pt-2">
-                          {/* Mini Bar Chart Histogram */}
-                          <div className="h-32 flex items-end justify-between gap-1 sm:gap-1.5 pt-4 pb-1 border-b border-slate-100 dark:border-slate-800">
-                            {(() => {
-                              const maxTotal = Math.max(...monthlyBreakdown.map(m => m.total), 1);
-                              return monthlyBreakdown.map(m => {
-                                const isSelected = statsMonth === m.month;
-                                const heightPercent = m.total > 0
-                                  ? Math.max(16, Math.round((m.total / maxTotal) * 100))
-                                  : 8;
-                                const hasInflation = m.inflationMinutes > 0;
-
-                                return (
-                                  <button
-                                    key={m.month}
-                                    type="button"
-                                    onClick={() => setStatsMonth(m.month)}
-                                    className={`flex-1 flex flex-col items-center justify-end h-full group transition cursor-pointer p-0.5 rounded-lg ${
-                                      isSelected ? 'bg-orange-50/80 dark:bg-orange-950/40 ring-1 ring-[#F15A24]' : 'hover:bg-slate-50 dark:hover:bg-slate-800/60'
-                                    }`}
-                                    title={`Tháng ${m.month}: ${m.total} cuộc họp (${m.completed} hoàn tất, ${hasInflation ? `+${formatMinutesToHoursAndMins(m.inflationMinutes)} lạm phát` : 'chuẩn giờ'})`}
-                                  >
-                                    <div className={`text-[9px] font-bold mb-1 transition ${isSelected ? 'text-[#F15A24] font-black scale-110' : 'text-slate-400 group-hover:text-slate-700'}`}>
-                                      {m.total > 0 ? m.total : ''}
-                                    </div>
-                                    <div className="w-full max-w-[22px] bg-slate-100 dark:bg-slate-800 rounded-t-md overflow-hidden flex flex-col justify-end" style={{ height: `${heightPercent}%` }}>
-                                      <div
-                                        className={`w-full rounded-t-md transition-all ${
-                                          isSelected
-                                            ? 'bg-gradient-to-t from-[#F15A24] to-amber-500'
-                                            : hasInflation
-                                            ? 'bg-gradient-to-t from-[#0284C7] via-[#0284C7] to-rose-500'
-                                            : m.total > 0
-                                            ? 'bg-[#0284C7]'
-                                            : 'bg-slate-200 dark:bg-slate-700'
-                                        }`}
-                                        style={{ height: '100%' }}
-                                      />
-                                    </div>
-                                    <div className={`text-[9.5px] mt-1 font-bold ${isSelected ? 'text-[#F15A24] font-black' : 'text-slate-500 dark:text-slate-400'}`}>
-                                      T{m.month}
-                                    </div>
-                                  </button>
-                                );
-                              });
-                            })()}
-                          </div>
-
-                          {/* Interactive Summary Pill */}
-                          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-1.5">
-                              <span className="w-2 h-2 rounded-full bg-[#F15A24]"></span>
-                              <span className="font-bold text-slate-700 dark:text-slate-200">
-                                Chi tiết Tháng {statsMonth}/{statsYear}:
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                              <span><strong>{monthlyBreakdown[statsMonth - 1]?.total || 0}</strong> cuộc ({monthlyBreakdown[statsMonth - 1]?.completed || 0} xong)</span>
-                              <span>•</span>
-                              {(monthlyBreakdown[statsMonth - 1]?.inflationMinutes || 0) > 0 ? (
-                                <span className="text-rose-600 dark:text-rose-400 font-extrabold">+{formatMinutesToHoursAndMins(monthlyBreakdown[statsMonth - 1]?.inflationMinutes || 0)} lạm phát</span>
-                              ) : (
-                                <span className="text-emerald-600 font-bold">100% đúng tiến độ</span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Phân bố 4 quý */}
-                      {statsPeriodType === 'quarter' && (
-                        <div className="grid grid-cols-2 gap-2 pt-2">
-                          {quarterlyBreakdown.map((q) => {
-                            const isSelected = statsQuarter === q.quarter;
-                            const maxQuarterCount = Math.max(...quarterlyBreakdown.map(item => item.total), 1);
-                            const percent = Math.round((q.total / maxQuarterCount) * 100);
-                            return (
-                              <button
-                                key={q.quarter}
-                                type="button"
-                                onClick={() => setStatsQuarter(q.quarter)}
-                                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                                  isSelected
-                                    ? 'bg-[#F15A24]/10 border-[#F15A24] text-[#F15A24] shadow-xs'
-                                    : 'bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400'
-                                }`}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <span className="font-black text-xs">{q.name}</span>
-                                  <span className="text-[10px] font-semibold text-slate-400">{q.sub}</span>
-                                </div>
-                                <div className="text-xl font-black mt-1 text-slate-900 dark:text-white">
-                                  {q.total} <span className="text-xs font-bold text-slate-500">cuộc</span>
-                                </div>
-                                <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
-                                  <div
-                                    className={`h-full rounded-full ${isSelected ? 'bg-[#F15A24]' : 'bg-[#0284C7]'}`}
-                                    style={{ width: `${percent}%` }}
-                                  />
-                                </div>
-                                <div className="flex items-center justify-between text-[10px] font-bold mt-1.5 text-slate-500">
-                                  <span>{q.completed} hoàn thành</span>
-                                  {q.inflationMinutes > 0 ? (
-                                    <span className="text-rose-500 font-extrabold">+{formatMinutesToHoursAndMins(q.inflationMinutes)}</span>
-                                  ) : (
-                                    <span className="text-emerald-600 font-bold">0p lạm phát</span>
-                                  )}
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {/* Phân bố theo Năm / Toàn Bộ: MA TRẬN KỶ LUẬT THỜI GIAN KHOA HỌC */}
-                      {(statsPeriodType === 'year' || statsPeriodType === 'all') && (
-                        <div className="space-y-2.5 pt-2">
-                          <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                            Phân loại mức độ tuân thủ khung giờ ({statsEvents.length} cuộc):
-                          </div>
-
-                          {/* Nhóm 1: Đúng giờ / Tiết kiệm */}
-                          <div className="p-2.5 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/60 space-y-1">
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center gap-1.5 font-extrabold text-emerald-700 dark:text-emerald-300">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                                <span>Chuẩn hoặc Tiết kiệm thời gian (≤ 0p)</span>
-                              </div>
-                              <span className="font-black text-emerald-700 dark:text-emerald-300">
-                                {inflationStats.onTimeTotal} cuộc ({inflationStats.onTimeRate}%)
-                              </span>
-                            </div>
-                            <div className="w-full bg-emerald-200/60 dark:bg-emerald-900/50 h-1.5 rounded-full overflow-hidden">
-                              <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${inflationStats.onTimeRate}%` }} />
-                            </div>
-                            <div className="text-[9.5px] text-slate-500 font-medium">
-                              Đảm bảo tiến độ công việc, đạt chuẩn quy trình giao ban điều hành AVG.
-                            </div>
-                          </div>
-
-                          {/* Nhóm 2: Vượt nhẹ 1 - 25p */}
-                          <div className="p-2.5 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/60 space-y-1">
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center gap-1.5 font-extrabold text-amber-700 dark:text-amber-300">
-                                <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
-                                <span>Phát sinh nhẹ trong thảo luận (1 - 25p)</span>
-                              </div>
-                              <span className="font-black text-amber-700 dark:text-amber-300">
-                                {inflationStats.mildOverrunCount} cuộc ({inflationStats.totalEvents > 0 ? Math.round((inflationStats.mildOverrunCount / inflationStats.totalEvents) * 100) : 0}%)
-                              </span>
-                            </div>
-                            <div className="w-full bg-amber-200/60 dark:bg-amber-900/50 h-1.5 rounded-full overflow-hidden">
-                              <div className="bg-amber-500 h-full rounded-full" style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.mildOverrunCount / inflationStats.totalEvents) * 100 : 0}%` }} />
-                            </div>
-                            <div className="text-[9.5px] text-slate-500 font-medium">
-                              Các phát sinh kỹ thuật cần làm rõ thêm, nằm trong dung sai cho phép.
-                            </div>
-                          </div>
-
-                          {/* Nhóm 3: Lạm phát nghiêm trọng > 25p */}
-                          <div className="p-2.5 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/80 dark:border-rose-900/60 space-y-1">
-                            <div className="flex items-center justify-between text-xs">
-                              <div className="flex items-center gap-1.5 font-extrabold text-rose-700 dark:text-rose-300">
-                                <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
-                                <span>Lạm phát thời gian đáng kể (&gt; 25p)</span>
-                              </div>
-                              <span className="font-black text-rose-700 dark:text-rose-300">
-                                {inflationStats.severeOverrunCount} cuộc ({inflationStats.totalEvents > 0 ? Math.round((inflationStats.severeOverrunCount / inflationStats.totalEvents) * 100) : 0}%)
-                              </span>
-                            </div>
-                            <div className="w-full bg-rose-200/60 dark:bg-rose-900/50 h-1.5 rounded-full overflow-hidden">
-                              <div className="bg-rose-500 h-full rounded-full" style={{ width: `${inflationStats.totalEvents > 0 ? (inflationStats.severeOverrunCount / inflationStats.totalEvents) * 100 : 0}%` }} />
-                            </div>
-                            <div className="text-[9.5px] text-slate-500 font-medium">
-                              Cần siết chặt nghị trình cuộc họp và nâng cao vai trò chủ tọa điều phối.
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="text-[10px] text-slate-400 font-medium pt-1 text-center border-t border-slate-100 dark:border-slate-800">
-                      💡 Nhấp vào các mốc thời gian để lọc và phân tích dữ liệu chuyên sâu
-                    </div>
-                  </div>
-
-                  {/* CỘT B: ĐỐI SOÁNH THỜI GIAN & TOP CUỘC HỌP CẦN TỐI ƯU */}
-                  <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-2xs space-y-3 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-rose-500" />
-                          <span className="font-black text-xs uppercase text-slate-800 dark:text-slate-100">
-                            Đối Soánh Thời Gian & Lạm Phát
-                          </span>
-                        </div>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-400 dark:border-rose-800">
-                          {inflationStats.inflatedCount} cuộc quá giờ
-                        </span>
-                      </div>
-
-                      {/* Thanh So Sánh Kép Trực Quan: Kế Hoạch vs Thực Tế */}
-                      <div className="mt-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-2">
-                        {/* Dòng 1: Kế hoạch */}
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between text-[11px] font-bold">
-                            <span className="text-slate-600 dark:text-slate-300">Kế hoạch dự kiến:</span>
-                            <span className="font-black text-slate-900 dark:text-white">
-                              {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)} (100% chuẩn)
-                            </span>
-                          </div>
-                          <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-                            <div className="bg-[#0284C7] h-full rounded-full" style={{ width: '100%' }} />
-                          </div>
+                {/* 3. KHU VỰC BIỂU ĐỒ CHU KỲ (AVG ONE MODERN HISTOGRAM) */}
+                <div className="p-3.5 sm:p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xs space-y-3">
+                  {statsPeriodType === 'month' && (
+                    <div className="space-y-3">
+                      {/* Histogram Area with Background Guidelines */}
+                      <div className="relative pt-2 pb-1">
+                        {/* Background Subtle Guidelines */}
+                        <div className="absolute inset-x-0 top-3 bottom-8 flex flex-col justify-between pointer-events-none opacity-30">
+                          <div className="border-b border-dashed border-slate-300 dark:border-slate-700 w-full" />
+                          <div className="border-b border-dashed border-slate-300 dark:border-slate-700 w-full" />
+                          <div className="border-b border-slate-300 dark:border-slate-700 w-full" />
                         </div>
 
-                        {/* Dòng 2: Thực tế với đoạn dôi dư lạm phát */}
-                        <div className="space-y-1 pt-1">
-                          <div className="flex items-center justify-between text-[11px] font-bold">
-                            <span className="text-rose-600 dark:text-rose-400 font-extrabold">Thực tế diễn ra:</span>
-                            <span className="font-black text-rose-600 dark:text-rose-400">
-                              {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
-                              <span className="text-[10px] font-bold text-rose-500 ml-1">
-                                (+{inflationStats.overallInflationPercent}% lạm phát)
-                              </span>
-                            </span>
-                          </div>
-                          <div className="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden flex">
-                            <div
-                              className="bg-[#0284C7] h-full"
-                              style={{
-                                width: `${Math.min(100, Math.round((inflationStats.totalPlannedMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%`
-                              }}
-                              title="Thời gian chuẩn trong kế hoạch"
-                            />
-                            <div
-                              className="bg-gradient-to-r from-amber-500 to-rose-600 h-full animate-pulse"
-                              style={{
-                                width: `${Math.min(100, Math.round((inflationStats.totalInflationMinutes / Math.max(1, inflationStats.totalActualMinutes)) * 100))}%`
-                              }}
-                              title="Thời gian lạm phát phát sinh vượt kế hoạch"
-                            />
-                          </div>
-                        </div>
+                        {/* 12 Months Columns */}
+                        <div className="relative flex items-end justify-between gap-1 sm:gap-2 h-32 z-10 px-0.5 sm:px-1">
+                          {(() => {
+                            const maxTotal = Math.max(...monthlyBreakdown.map(m => m.total), 1);
+                            return monthlyBreakdown.map(m => {
+                              const isSelected = statsMonth === m.month;
+                              const heightPercent = m.total > 0
+                                ? Math.max(16, Math.round((m.total / maxTotal) * 100))
+                                : 0;
 
-                        {/* 3 Ô Mini Metric Đối Soánh */}
-                        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 text-center">
-                          <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70">
-                            <div className="text-[9.5px] font-bold text-slate-400">Kế Hoạch</div>
-                            <div className="text-xs font-black text-slate-800 dark:text-slate-200">
-                              {formatMinutesToHoursAndMins(inflationStats.totalPlannedMinutes)}
-                            </div>
-                          </div>
-                          <div className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70">
-                            <div className="text-[9.5px] font-bold text-slate-400">Thực Tế</div>
-                            <div className="text-xs font-black text-slate-900 dark:text-white">
-                              {formatMinutesToHoursAndMins(inflationStats.totalActualMinutes)}
-                            </div>
-                          </div>
-                          <div className="p-1.5 rounded-lg bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200/70 dark:border-rose-900/60">
-                            <div className="text-[9.5px] font-bold text-rose-500">Chênh Lệch</div>
-                            <div className="text-xs font-black text-rose-600 dark:text-rose-400">
-                              +{formatMinutesToHoursAndMins(inflationStats.totalInflationMinutes)}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Top các cuộc họp bị lạm phát thời gian nhiều nhất */}
-                      <div className="space-y-1.5 pt-2">
-                        <div className="flex items-center justify-between text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">
-                          <span>Cuộc trao đổi vượt giờ nhiều nhất:</span>
-                          <span className="text-[10px] text-slate-400 font-normal">Nhấp để xem biên bản</span>
-                        </div>
-
-                        {inflationStats.topInflatedEvents.length === 0 ? (
-                          <div className="py-4 text-center text-xs font-semibold text-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-800">
-                            ✨ Tuyệt vời! 100% cuộc trao đổi trong kỳ diễn ra chuẩn hoặc sớm hơn dự kiến.
-                          </div>
-                        ) : (
-                          <div className="space-y-1.5 max-h-[160px] overflow-y-auto scrollbar-thin pr-1">
-                            {inflationStats.topInflatedEvents.map((item, idx) => (
-                              <div
-                                key={item.id}
-                                onClick={() => setSelectedEventDetail(item.rawEvent)}
-                                className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 hover:border-rose-300 dark:hover:border-rose-700 hover:bg-rose-50/30 transition cursor-pointer flex items-center justify-between gap-2 text-xs"
-                              >
-                                <div className="flex items-center gap-2 min-w-0 flex-1">
-                                  <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-black text-[10px] flex items-center justify-center shrink-0">
-                                    #{idx + 1}
-                                  </span>
-                                  <div className="min-w-0 flex-1">
-                                    <div className="font-bold text-slate-800 dark:text-slate-200 truncate" title={item.title}>
-                                      {item.title}
-                                    </div>
-                                    <div className="text-[10px] text-slate-400 font-medium">
-                                      {item.date} • Kế hoạch: {item.plannedTime} ({item.plannedMinutes}p) → {item.actualTime}
-                                    </div>
+                              return (
+                                <button
+                                  key={m.month}
+                                  type="button"
+                                  onClick={() => setStatsMonth(m.month)}
+                                  className="flex-1 flex flex-col items-center justify-end h-full group transition-all duration-150 cursor-pointer focus:outline-none"
+                                  title={`Tháng ${m.month}: ${m.total} cuộc họp (${m.completed} hoàn tất)`}
+                                >
+                                  {/* Value on top of bar */}
+                                  <div className="h-5 flex items-center justify-center mb-1">
+                                    {m.total > 0 ? (
+                                      <span className={`text-[10px] sm:text-[11px] font-black transition-all duration-150 ${
+                                        isSelected
+                                          ? 'text-[#F15A24] scale-110'
+                                          : 'text-slate-600 dark:text-slate-300 group-hover:text-[#F15A24]'
+                                      }`}>
+                                        {m.total}
+                                      </span>
+                                    ) : (
+                                      <span className="text-[10px] text-transparent group-hover:text-slate-300 dark:group-hover:text-slate-600 transition-colors select-none">
+                                        0
+                                      </span>
+                                    )}
                                   </div>
-                                </div>
-                                <div className="text-right shrink-0">
-                                  <span className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-black border ${
-                                    item.inflationMinutes > 30
-                                      ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border-rose-300 dark:border-rose-800'
-                                      : 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800'
+
+                                  {/* Bar Track & Fill */}
+                                  <div className={`w-full max-w-[28px] sm:max-w-[34px] h-[70px] rounded-lg p-0.5 flex flex-col justify-end transition-all duration-200 ${
+                                    isSelected
+                                      ? 'bg-orange-100/70 dark:bg-orange-950/40 ring-2 ring-[#F15A24]'
+                                      : 'bg-slate-100/70 dark:bg-slate-800/50 group-hover:bg-slate-200/70 dark:group-hover:bg-slate-800'
                                   }`}>
-                                    +{item.inflationMinutes}p (+{item.inflationPercent}%)
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                                    {m.total > 0 ? (
+                                      <div
+                                        className={`w-full rounded-md transition-all duration-300 ${
+                                          isSelected
+                                            ? 'bg-gradient-to-t from-[#F15A24] via-[#f77241] to-[#ff8c5a] shadow-xs'
+                                            : 'bg-gradient-to-t from-[#F15A24]/75 to-[#ff8c5a]/75 group-hover:from-[#F15A24] group-hover:to-[#ff8c5a]'
+                                        }`}
+                                        style={{ height: `${heightPercent}%` }}
+                                      />
+                                    ) : (
+                                      <div className="w-full h-1 rounded-full bg-slate-300/60 dark:bg-slate-700/60 mx-auto" />
+                                    )}
+                                  </div>
+
+                                  {/* Month Label Pill */}
+                                  <div className="mt-2 flex items-center justify-center">
+                                    <span className={`text-[10px] sm:text-[11px] px-2 py-0.5 rounded-full transition-all duration-150 ${
+                                      isSelected
+                                        ? 'bg-[#F15A24] text-white font-black shadow-xs scale-105'
+                                        : 'text-slate-500 dark:text-slate-400 font-bold group-hover:text-slate-800 dark:group-hover:text-slate-200'
+                                    }`}>
+                                      T{m.month}
+                                    </span>
+                                  </div>
+                                </button>
+                              );
+                            });
+                          })()}
+                        </div>
+                      </div>
+
+                      {/* Bottom Insight Bar */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
+                          <span className="text-slate-600 dark:text-slate-300 font-medium">
+                            Tháng {statsMonth}/{statsYear}: <strong className="text-slate-900 dark:text-white font-bold">{monthlyBreakdown[statsMonth - 1]?.total || 0} cuộc</strong> ({monthlyBreakdown[statsMonth - 1]?.completed || 0} hoàn tất)
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          {(monthlyBreakdown[statsMonth - 1]?.inflationMinutes || 0) > 0 ? (
+                            <span className="px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/40 text-[#F15A24] font-bold text-[11px] border border-orange-200/60 dark:border-orange-900/40">
+                              +{formatMinutesToHoursAndMins(monthlyBreakdown[statsMonth - 1]?.inflationMinutes || 0)} lạm phát
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold text-[11px] border border-emerald-200/60 dark:border-emerald-900/40">
+                              ✓ 100% chuẩn giờ
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
+                  )}
 
-                    <div className="text-[10px] text-slate-400 font-medium pt-1 text-center border-t border-slate-100 dark:border-slate-800">
-                      ⚡ Gợi ý: Bấm vào cuộc họp để rà soát kết luận & biên bản làm việc
+                  {statsPeriodType === 'quarter' && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                      {quarterlyBreakdown.map((q) => {
+                        const isSelected = statsQuarter === q.quarter;
+                        const maxQuarterCount = Math.max(...quarterlyBreakdown.map(item => item.total), 1);
+                        const percent = Math.round((q.total / maxQuarterCount) * 100);
+                        return (
+                          <button
+                            key={q.quarter}
+                            type="button"
+                            onClick={() => setStatsQuarter(q.quarter)}
+                            className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-orange-50/70 dark:bg-orange-950/40 border-[#F15A24] shadow-xs'
+                                : 'bg-slate-50/50 dark:bg-slate-800/40 border-slate-200/70 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className={`font-black text-xs ${isSelected ? 'text-[#F15A24]' : 'text-slate-800 dark:text-slate-200'}`}>{q.name}</span>
+                              <span className="text-[10px] font-semibold text-slate-400">{q.sub}</span>
+                            </div>
+                            <div className="text-xl font-black mt-1 text-slate-900 dark:text-white">
+                              {q.total} <span className="text-xs font-semibold text-slate-400">cuộc</span>
+                            </div>
+                            <div className="w-full bg-slate-200/70 dark:bg-slate-800 h-1.5 rounded-full mt-2.5 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-300 ${isSelected ? 'bg-[#F15A24]' : 'bg-orange-400/80 dark:bg-orange-600/80'}`}
+                                style={{ width: `${percent}%` }}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between text-[10.5px] text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                              <span>{q.completed} hoàn thành</span>
+                              <span>{q.inflationMinutes > 0 ? `+${formatMinutesToHoursAndMins(q.inflationMinutes)}` : '0p'}</span>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
-                  </div>
+                  )}
 
+                  {(statsPeriodType === 'year' || statsPeriodType === 'all') && (
+                    <div className="space-y-2.5 pt-1 text-xs">
+                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                        <span>Đúng giờ hoặc sớm hơn:</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">{inflationStats.onTimeTotal} cuộc ({inflationStats.onTimeRate}%)</span>
+                      </div>
+                      <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-[#F15A24] h-full rounded-full" style={{ width: `${inflationStats.onTimeRate}%` }} />
+                      </div>
+                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-300 pt-1">
+                        <span>Phát sinh thảo luận nhẹ (1 - 25p):</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">{inflationStats.mildOverrunCount} cuộc</span>
+                      </div>
+                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                        <span>Vượt giờ đáng kể (&gt; 25p):</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">{inflationStats.severeOverrunCount} cuộc</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
               </div>
@@ -3188,7 +2775,7 @@ export const CalendarModule: React.FC = () => {
                 <input
                   type="text"
                   required
-                  placeholder="Ví dụ: Việc trọng điểm T9 AV: chưa phải chủ tài sản mà mang đi bán..."
+                  placeholder=""
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   className="w-full px-3 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00B4D8]/40 font-medium"
@@ -3203,6 +2790,7 @@ export const CalendarModule: React.FC = () => {
                     onChange={(e) => setNewDayOfWeek(e.target.value)}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"
                   >
+                    <option value="">-- Chọn thứ --</option>
                     <option value="THỨ HAI">THỨ HAI</option>
                     <option value="THỨ BA">THỨ BA</option>
                     <option value="THỨ TƯ">THỨ TƯ</option>
@@ -3217,6 +2805,7 @@ export const CalendarModule: React.FC = () => {
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Ngày (DD/MM/YYYY)</label>
                   <input
                     type="text"
+                    placeholder=""
                     value={newDate}
                     onChange={(e) => setNewDate(e.target.value)}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"
@@ -3230,6 +2819,7 @@ export const CalendarModule: React.FC = () => {
                     onChange={(e) => setNewLegalEntity(e.target.value)}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"
                   >
+                    <option value="">-- Chọn pháp nhân --</option>
                     <option value="AVG">AVG</option>
                     <option value="DH">DH (Âu Việt Global)</option>
                     <option value="AV">AV (Âu Việt)</option>
@@ -3242,6 +2832,7 @@ export const CalendarModule: React.FC = () => {
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Giờ bắt đầu dự kiến</label>
                   <input
                     type="text"
+                    placeholder=""
                     value={newPlannedStart}
                     onChange={(e) => setNewPlannedStart(e.target.value)}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"
@@ -3252,6 +2843,7 @@ export const CalendarModule: React.FC = () => {
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Giờ kết thúc dự kiến</label>
                   <input
                     type="text"
+                    placeholder=""
                     value={newPlannedEnd}
                     onChange={(e) => setNewPlannedEnd(e.target.value)}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"
@@ -3265,7 +2857,7 @@ export const CalendarModule: React.FC = () => {
                   rows={2}
                   value={newAttendees}
                   onChange={(e) => setNewAttendees(e.target.value)}
-                  placeholder="Ví dụ: 1. Các đầu mối AVG...\n2. AV: Bà Trang..."
+                  placeholder=""
                   className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium resize-none"
                 />
               </div>
@@ -3276,7 +2868,7 @@ export const CalendarModule: React.FC = () => {
                   rows={2}
                   value={newNotes}
                   onChange={(e) => setNewNotes(e.target.value)}
-                  placeholder="Nội dung tóm tắt hoặc chuẩn bị tài liệu..."
+                  placeholder=""
                   className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium resize-none"
                 />
               </div>
@@ -3394,7 +2986,7 @@ export const CalendarModule: React.FC = () => {
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Giờ thực tế bắt đầu</label>
                   <input
                     type="text"
-                    placeholder="HH:mm (Ví dụ: 08:35)"
+                    placeholder=""
                     value={editingEvent.actualStartTime || ''}
                     onChange={(e) => setEditingEvent({ ...editingEvent, actualStartTime: e.target.value })}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"
@@ -3405,7 +2997,7 @@ export const CalendarModule: React.FC = () => {
                   <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">Giờ thực tế kết thúc</label>
                   <input
                     type="text"
-                    placeholder="HH:mm (Ví dụ: 10:25)"
+                    placeholder=""
                     value={editingEvent.actualEndTime || ''}
                     onChange={(e) => setEditingEvent({ ...editingEvent, actualEndTime: e.target.value })}
                     className="w-full px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg font-medium"

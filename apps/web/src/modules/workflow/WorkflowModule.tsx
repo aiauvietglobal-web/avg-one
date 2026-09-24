@@ -2057,35 +2057,10 @@ export const WorkflowModule: React.FC = () => {
           </h2>
         </div>
 
-        {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP PHÂN HỆ CON (BỐ CỤC 2 HÀNG 2 CỘT CHUẨN ĐỒNG BỘ 32PX) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-[1100px] mx-auto w-full pb-2">
+        {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP PHÂN HỆ CON */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-[560px] sm:max-w-[600px] mx-auto w-full pb-2">
           
-          {/* HỘP 1: 3.2 - THIẾT KẾ (Không gian làm việc & thực hành nghiệp vụ) */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => setSelectedSubModule('design')}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedSubModule('design'); }}
-            style={{ borderRadius: '26px' }}
-            className="group flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
-          >
-            {/* Hairline top glow on hover */}
-            <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-            {/* Unified Blue Icon Badge */}
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
-              <Compass className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
-            </div>
-
-            {/* Tiêu đề */}
-            <div className="flex flex-col items-center w-full">
-              <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
-                3.2 – THIẾT KẾ
-              </h3>
-            </div>
-          </div>
-
-          {/* HỘP 2: 3.1 - NGHIÊN CỨU */}
+          {/* HỘP 1: 3.1 - NGHIÊN CỨU */}
           <div
             role="button"
             tabIndex={0}
@@ -2110,23 +2085,31 @@ export const WorkflowModule: React.FC = () => {
             </div>
           </div>
 
-          {/* 2 THẺ PLACEHOLDER DỰ PHÒNG CHUẨN */}
-          {Array.from({ length: 2 }).map((_, idx) => (
-            <div
-              key={`rd-placeholder-${idx}`}
-              style={{ borderRadius: '26px' }}
-              className="flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-slate-50/60 dark:bg-slate-900/30 rounded-[26px] border border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
-            >
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 dark:text-slate-500 opacity-60" />
-              </div>
-              <div className="flex flex-col items-center w-full">
-                <h3 className="text-xs sm:text-[13px] font-bold text-slate-400/80 dark:text-slate-500 whitespace-nowrap leading-tight">
-                  + Sắp phát hành
-                </h3>
-              </div>
+          {/* HỘP 2: 3.2 - THIẾT KẾ */}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => setSelectedSubModule('design')}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedSubModule('design'); }}
+            style={{ borderRadius: '26px' }}
+            className="group flex flex-col items-center justify-between py-3.5 sm:py-4 px-3 min-h-[110px] sm:min-h-[120px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1.5 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
+          >
+            {/* Hairline top glow on hover */}
+            <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+            {/* Unified Blue Icon Badge */}
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+              <Compass className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
             </div>
-          ))}
+
+            {/* Tiêu đề */}
+            <div className="flex flex-col items-center w-full">
+              <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
+                3.2 – THIẾT KẾ
+              </h3>
+            </div>
+          </div>
+
         </div>
 
       </div>

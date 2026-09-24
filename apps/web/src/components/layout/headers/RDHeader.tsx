@@ -72,8 +72,8 @@ export const RDHeader: React.FC<RDHeaderProps> = ({
             </button>
           </div>
 
-          {/* CỤM TABS ĐIỀU HƯỚNG THEO NGỮ CẢNH */}
-          {isResearchView ? (
+          {/* CỤM TABS ĐIỀU HƯỚNG THEO NGỮ CẢNH: CHỈ HIỂN THỊ KHI VÀO GIAO DIỆN CON */}
+          {isResearchView && (
             /* TRƯỜNG HỢP 1: ĐANG Ở GIAO DIỆN ĐỘC LẬP 3.1 - NGHIÊN CỨU */
             <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
               {/* Nút quay lại kiểu viên thuốc */}
@@ -129,31 +129,6 @@ export const RDHeader: React.FC<RDHeaderProps> = ({
                 <Compass className="w-3.5 h-3.5 shrink-0 stroke-[2.2]" />
                 <span>Sang 3.2 – Thiết Kế</span>
                 <ArrowRight className="w-3 h-3 ml-0.5" />
-              </button>
-            </div>
-          ) : (
-            /* TRƯỜNG HỢP 2: ĐANG Ở TRANG CHỦ PHÂN HỆ (HIỂN THỊ CÁC HỘP ĐỘC LẬP) */
-            <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
-              {/* Tab Hộp 3.1: Nghiên cứu */}
-              <button
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: 'research' }));
-                }}
-                className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] bg-slate-100/90 dark:bg-slate-800/80 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-600 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer hover:scale-[1.02] active:scale-95"
-              >
-                <Cpu className="w-3.5 h-3.5 shrink-0 stroke-[2.2] text-emerald-600 dark:text-emerald-400 group-hover:text-white" />
-                <span>3.1 – NGHIÊN CỨU</span>
-              </button>
-
-              {/* Tab Hộp 3.2: Thiết kế */}
-              <button
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: 'design' }));
-                }}
-                className="h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] bg-slate-100/90 dark:bg-slate-800/80 hover:bg-[#0284C7] hover:text-white dark:hover:bg-sky-600 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer hover:scale-[1.02] active:scale-95"
-              >
-                <Compass className="w-3.5 h-3.5 shrink-0 stroke-[2.2] text-[#0284C7] dark:text-sky-400 group-hover:text-white" />
-                <span>3.2 – THIẾT KẾ</span>
               </button>
             </div>
           )}

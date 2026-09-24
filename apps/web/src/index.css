@@ -2712,77 +2712,273 @@ div.box-speech-bubble {
   }
 }
 
+@keyframes kinetic-float-node-1 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
 @keyframes kinetic-float-node-2 {
-  0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  33% {
-    transform: translate(6px, 10px) rotate(-2deg);
-  }
-  66% {
-    transform: translate(-4px, 5px) rotate(1deg);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(3px); }
 }
 
 @keyframes kinetic-float-node-3 {
-  0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  33% {
-    transform: translate(5px, -14px) rotate(2deg);
-  }
-  66% {
-    transform: translate(-3px, -7px) rotate(-1.5deg);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
 }
 
 @keyframes kinetic-float-node-4 {
-  0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  33% {
-    transform: translate(-6px, 11px) rotate(-1.5deg);
-  }
-  66% {
-    transform: translate(5px, 4px) rotate(1deg);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(3px); }
 }
 
 @keyframes kinetic-float-node-5 {
-  0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  40% {
-    transform: translate(0px, -10px) rotate(1deg);
-  }
-  75% {
-    transform: translate(-4px, -4px) rotate(-1deg);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
 }
 
 .animate-float-node-1 {
-  animation: kinetic-float-node-1 4.8s ease-in-out infinite;
+  animation: kinetic-float-node-1 6.5s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-float-node-2 {
-  animation: kinetic-float-node-2 5.6s ease-in-out infinite;
+  animation: kinetic-float-node-2 7.0s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-float-node-3 {
-  animation: kinetic-float-node-3 4.2s ease-in-out infinite;
+  animation: kinetic-float-node-3 6.2s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-float-node-4 {
-  animation: kinetic-float-node-4 5.2s ease-in-out infinite;
+  animation: kinetic-float-node-4 6.8s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-float-node-5 {
-  animation: kinetic-float-node-5 6.0s ease-in-out infinite;
+  animation: kinetic-float-node-5 7.2s ease-in-out infinite;
   will-change: transform;
+}
+
+/* ==========================================================================
+   MINIMALIST HERO BADGE LINE-DRAW KEYFRAMES (SYNCHRONIZED WITH HERO CADENCE 7.5s)
+   - Hiệu ứng xuất hiện vẽ nét viền đơn giản giống đường line dưới chân chữ
+   - Điểm nhấn (focal dot) bừng sáng tinh tế khi đường nét hoàn tất
+   ========================================================================== */
+
+/* 1. NỀN TẢNG SỐ - Platform Stack Draw (Sync with Line 1: 0% -> 14%) */
+@keyframes beat-draw-icon-1 {
+  0% {
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  2% {
+    opacity: 0.7;
+  }
+  14% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  94% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+}
+
+/* 2. SỐ HÓA - Digital Matrix Draw (Sync with Line 2: 13.3% -> 27%) */
+@keyframes beat-draw-icon-2 {
+  0%, 13.3% {
+    stroke-dashoffset: 180;
+    opacity: 0;
+  }
+  15.5% {
+    opacity: 0.7;
+  }
+  27% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  94% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 180;
+    opacity: 0;
+  }
+}
+
+/* 3. TỰ ĐỘNG HÓA - Automation Loop Draw (Sync with Line 3: 26.7% -> 40%) */
+@keyframes beat-draw-icon-3 {
+  0%, 26.7% {
+    stroke-dashoffset: 180;
+    opacity: 0;
+  }
+  29% {
+    opacity: 0.7;
+  }
+  40% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  94% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 180;
+    opacity: 0;
+  }
+}
+
+/* 4. TƯƠNG TÁC - Multi-Channel Dialogue Draw (Sync with Slogan Border: 40% -> 54%) */
+@keyframes beat-draw-icon-4 {
+  0%, 40% {
+    stroke-dashoffset: 170;
+    opacity: 0;
+  }
+  42.5% {
+    opacity: 0.7;
+  }
+  54% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  88% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  94% {
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: 170;
+    opacity: 0;
+  }
+}
+
+/* Focal Accent Dot Pulse & Fade Keyframes */
+@keyframes focal-dot-1 {
+  0%, 10% { transform: scale(0); opacity: 0; }
+  14% { transform: scale(1.2); opacity: 1; }
+  18% { transform: scale(1); opacity: 1; }
+  52% { transform: scale(1.12); opacity: 0.95; }
+  88% { transform: scale(1); opacity: 1; }
+  94% { opacity: 0.3; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes focal-dot-2 {
+  0%, 23% { transform: scale(0); opacity: 0; }
+  27% { transform: scale(1.2); opacity: 1; }
+  31% { transform: scale(1); opacity: 1; }
+  58% { transform: scale(1.12); opacity: 0.95; }
+  88% { transform: scale(1); opacity: 1; }
+  94% { opacity: 0.3; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes focal-dot-3 {
+  0%, 36% { transform: scale(0); opacity: 0; }
+  40% { transform: scale(1.2); opacity: 1; }
+  44% { transform: scale(1); opacity: 1; }
+  64% { transform: scale(1.12); opacity: 0.95; }
+  88% { transform: scale(1); opacity: 1; }
+  94% { opacity: 0.3; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes focal-dot-4 {
+  0%, 50% { transform: scale(0); opacity: 0; }
+  54% { transform: scale(1.2); opacity: 1; }
+  58% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(1.12); opacity: 0.95; }
+  88% { transform: scale(1); opacity: 1; }
+  94% { opacity: 0.3; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.animate-draw-icon-1 {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: beat-draw-icon-1 7.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+.animate-draw-icon-2 {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  animation: beat-draw-icon-2 7.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+.animate-draw-icon-3 {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  animation: beat-draw-icon-3 7.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+.animate-draw-icon-4 {
+  stroke-dasharray: 170;
+  stroke-dashoffset: 170;
+  animation: beat-draw-icon-4 7.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+.animate-focal-dot-1 {
+  animation: focal-dot-1 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-2 {
+  animation: focal-dot-2 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-3 {
+  animation: focal-dot-3 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-4 {
+  animation: focal-dot-4 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-1 {
+  animation: focal-dot-1 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-2 {
+  animation: focal-dot-2 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-3 {
+  animation: focal-dot-3 7.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-focal-dot-4 {
+  animation: focal-dot-4 7.5s ease-in-out infinite;
+  transform-origin: center;
 }
 
 .animate-kinetic-spin {

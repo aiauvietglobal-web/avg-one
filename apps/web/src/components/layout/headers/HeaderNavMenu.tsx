@@ -19,9 +19,28 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
   const systemDropdownRef = useRef<HTMLDivElement>(null);
 
   // 2. Lịch dropdown state & ref
-  const [calendarTabState, setCalendarTabState] = useState<'talk' | 'work' | 'problem' | 'event'>('talk');
+  const [calendarTabState, setCalendarTabState] = useState<'talk' | 'work'>(() => {
+    try {
+      const saved = localStorage.getItem('avg_calendar_active_subapp');
+      if (saved && ['talk', 'work'].includes(saved)) {
+        return saved as 'talk' | 'work';
+      }
+    } catch (e) {}
+    return 'talk';
+  });
   const [isCalendarDropdownOpen, setIsCalendarDropdownOpen] = useState(false);
   const calendarDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Sync calendarTabState when calendar sub-app changes from inside CalendarModule
+  useEffect(() => {
+    const handleSubAppChange = (e: any) => {
+      if (e.detail && ['talk', 'work'].includes(e.detail)) {
+        setCalendarTabState(e.detail as 'talk' | 'work');
+      }
+    };
+    window.addEventListener('calendar_subapp_change', handleSubAppChange);
+    return () => window.removeEventListener('calendar_subapp_change', handleSubAppChange);
+  }, []);
 
   // 3. Đơn hàng dropdown state & ref
   const [ordersTabState, setOrdersTabState] = useState<'design' | 'research' | 'sample-h1' | 'legal'>('design');
@@ -43,8 +62,8 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
 
   // Click outside listener for all dropdowns
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Node;
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (systemDropdownRef.current && !systemDropdownRef.current.contains(target)) {
         setIsSystemDropdownOpen(false);
       }
@@ -78,9 +97,12 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
     setIsSystemDropdownOpen(false);
     setIsOrdersDropdownOpen(false);
     setIsCalendarDropdownOpen(prev => !prev);
+    if (activeModule !== 'calendar') {
+      handleSelectCalendarSubTab(calendarTabState || 'talk');
+    }
   };
 
-  const handleSelectCalendarSubTab = (tab: 'talk' | 'work' | 'problem' | 'event') => {
+  const handleSelectCalendarSubTab = (tab: 'talk' | 'work') => {
     setCalendarTabState(tab);
     setIsCalendarDropdownOpen(false);
     try {
@@ -261,38 +283,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
                   >
                     <span className="text-slate-900 dark:text-white font-medium">Lịch công tác</span>
                     {isActive && calendarTabState === 'work' && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCalendarSubTab('problem');
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                      isActive && calendarTabState === 'problem'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <span className="text-slate-900 dark:text-white font-medium">Lịch tháo gỡ vướng mắc</span>
-                    {isActive && calendarTabState === 'problem' && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCalendarSubTab('event');
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                      isActive && calendarTabState === 'event'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <span className="text-slate-900 dark:text-white font-medium">Lịch sự kiện hệ thống</span>
-                    {isActive && calendarTabState === 'event' && (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
                     )}
                   </button>

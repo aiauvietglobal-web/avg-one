@@ -10,3 +10,4 @@ export * from './RDHeader';
 export * from './SpeechToTextHeader';
 export * from './DashboardHeader';
 export * from './HubDetailHeader';
+export * from './FileTranscribeHeader';

@@ -213,89 +213,62 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           </div>
 
 
-          {/* 📐 2. FLAT MODERNIST TECH AI NODE (TOP-LEFT - STRIPE & VERCEL STYLE) */}
-          <div className="hidden lg:flex absolute left-2 xl:left-8 top-2 xl:top-5 z-20 items-center animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300" style={{ animationDelay: '150ms' }}>
-            {/* Pure Bauhaus Glass Card */}
-            <div className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl bg-gradient-to-br from-white/95 via-sky-50/40 to-white/95 dark:from-slate-900/95 dark:via-sky-950/40 dark:to-slate-900/95 backdrop-blur-xl border border-sky-200/80 dark:border-sky-800/70 shadow-[0_4px_20px_-4px_rgba(2,132,199,0.12),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-[#0284C7] dark:hover:border-sky-400 hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1 transition-all duration-300">
-              
-              {/* Flat Bauhaus Hexagonal Isometric Prism Graphic with Dynamic Rotation & Singularity Pulse */}
-              <div className="relative w-12 h-12 xl:w-14 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <svg width="100%" height="100%" viewBox="0 0 64 64" fill="none" className="overflow-visible">
-                  {/* Subtle Bauhaus Facet Tints (Thuần sắc độ phẳng kỷ hà) */}
-                  {/* Top Face */}
+          {/* 1. AVG ONE // AI - NỀN TẢNG SỐ (TOP-LEFT) */}
+          <div className="hidden lg:flex absolute left-2 xl:left-8 top-3 xl:top-6 z-20 items-center animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
+            <div className="flex items-center gap-4">
+              {/* Layered Digital Platform Bedrock Architecture Icon */}
+              <div className="relative w-13 h-13 xl:w-14 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <svg width="52" height="52" viewBox="0 0 56 56" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(2,132,199,0.18)] dark:drop-shadow-[0_2px_12px_rgba(56,189,248,0.25)]">
+                  {/* Layer 1: Bedrock Foundation Isometric Plane */}
                   <polygon
-                    points="32,8 52.8,20 32,32 11.2,20"
-                    fill="#0284C7"
-                    className="fill-sky-500/15 dark:fill-sky-400/20"
-                  />
-                  {/* Left Face */}
-                  <polygon
-                    points="11.2,20 32,32 32,56 11.2,44"
-                    fill="#0284C7"
-                    className="fill-sky-600/20 dark:fill-sky-400/30"
-                  />
-                  {/* Right Face */}
-                  <polygon
-                    points="32,32 52.8,20 52.8,44 32,56"
-                    fill="#0284C7"
-                    className="fill-sky-700/25 dark:fill-sky-400/40"
-                  />
-
-                  {/* Nested Bauhaus Inverted Equilateral Triangle (Hairline Accent with Slow Rotation) */}
-                  <g className="animate-spin-slow" style={{ transformOrigin: '32px 32px' }}>
-                    <polygon
-                      points="52.8,20 32,56 11.2,20"
-                      fill="none"
-                      stroke="#38BDF8"
-                      strokeWidth="1.2"
-                      strokeDasharray="2 3"
-                      className="opacity-75"
-                    />
-                  </g>
-
-                  {/* Outer Hexagon Contour (Hairline 1.25px Precision Line) */}
-                  <polygon
-                    points="32,8 52.8,20 52.8,44 32,56 11.2,44 11.2,20"
+                    points="28,47 46,38 28,29 10,38"
                     fill="none"
                     stroke="#0284C7"
-                    strokeWidth="1.35"
+                    strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="dark:stroke-sky-400"
+                    className="dark:stroke-sky-400 opacity-45 animate-draw-icon-1"
                   />
-
-                  {/* 3 Isometric Bauhaus Axis Lines */}
-                  <line x1="32" y1="32" x2="32" y2="8" stroke="#0284C7" strokeWidth="1.25" className="dark:stroke-sky-400" />
-                  <line x1="32" y1="32" x2="52.8" y2="44" stroke="#0284C7" strokeWidth="1.25" className="dark:stroke-sky-400" />
-                  <line x1="32" y1="32" x2="11.2" y2="44" stroke="#0284C7" strokeWidth="1.25" className="dark:stroke-sky-400" />
-
-                  {/* Center Minimalist Micro Singularity & Breathing Pulse */}
-                  <circle cx="32" cy="32" r="7" stroke="#0284C7" strokeWidth="1" fill="none" className="animate-ping opacity-40 dark:stroke-sky-400" style={{ animationDuration: '3s' }} />
-                  <circle cx="32" cy="32" r="3" fill="#0284C7" className="animate-pulse dark:fill-sky-400 shadow-sm" />
-                  <circle cx="32" cy="32" r="1" fill="#FFFFFF" />
-
-                  {/* 6 Minimalist Hairline Vertex Nodes (Clean Pulsing Accents) */}
-                  <circle cx="32" cy="8" r="2" fill="#0284C7" className="dark:fill-sky-400 animate-pulse" />
-                  <circle cx="52.8" cy="20" r="2" fill="#0284C7" className="dark:fill-sky-400" />
-                  <circle cx="52.8" cy="44" r="2" fill="#0284C7" className="dark:fill-sky-400 animate-pulse" />
-                  <circle cx="32" cy="56" r="2" fill="#0284C7" className="dark:fill-sky-400" />
-                  <circle cx="11.2" cy="44" r="2" fill="#0284C7" className="dark:fill-sky-400 animate-pulse" />
-                  <circle cx="11.2" cy="20" r="2" fill="#0284C7" className="dark:fill-sky-400" />
+                  {/* Layer 2: Core Platform Layer Plane */}
+                  <polygon
+                    points="28,36 46,27 28,18 10,27"
+                    fill="none"
+                    stroke="#0284C7"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-sky-400 opacity-85 animate-draw-icon-1"
+                  />
+                  {/* Vertical Connection Axis Pillars */}
+                  <line x1="28" y1="47" x2="28" y2="14" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
+                  <line x1="10" y1="38" x2="10" y2="27" stroke="#0284C7" strokeWidth="1.4" className="dark:stroke-sky-400 opacity-40" />
+                  <line x1="46" y1="38" x2="46" y2="27" stroke="#0284C7" strokeWidth="1.4" className="dark:stroke-sky-400 opacity-40" />
+                  
+                  {/* Apex AI Core Diamond Star */}
+                  <path
+                    d="M 28,6 Q 28,14 20,14 Q 28,14 28,22 Q 28,14 36,14 Q 28,14 28,6 Z"
+                    fill="none"
+                    stroke="#0284C7"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-sky-300 animate-draw-icon-1"
+                  />
+                  {/* Luminous Platform Singularity Dot */}
+                  <circle cx="28" cy="14" r="3.2" fill="#0284C7" className="dark:fill-sky-400 animate-focal-dot-1" />
+                  <circle cx="28" cy="14" r="1.3" fill="#FFFFFF" className="animate-focal-dot-1" />
                 </svg>
               </div>
 
-              {/* Minimalist Modern Typography with Live Radar Beacon */}
-              <div className="flex flex-col text-left pr-1">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-[10px] xl:text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+              {/* Typography */}
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
                     AVG ONE // AI
                   </span>
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500" />
-                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
                 </div>
-                <span className="text-xs xl:text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
                   Kiến tạo Nền tảng Số
                 </span>
                 <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
@@ -305,97 +278,94 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* ⚡ 3. MINIMALIST AUTOMATION & TASK INDICATOR (TOP-RIGHT - STRIPE & VERCEL STYLE) */}
-          <div className="hidden lg:flex absolute right-10 xl:right-24 top-2 xl:top-5 z-20 items-center animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300" style={{ animationDelay: '300ms' }}>
-            {/* Minimalist Glass Card */}
-            <div className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl bg-gradient-to-br from-white/95 via-orange-50/40 to-white/95 dark:from-slate-900/95 dark:via-orange-950/40 dark:to-slate-900/95 backdrop-blur-xl border border-orange-200/80 dark:border-orange-800/70 shadow-[0_4px_20px_-4px_rgba(241,90,36,0.12),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-[#F15A24] dark:hover:border-orange-400 hover:shadow-xl hover:shadow-orange-500/15 hover:-translate-y-1 transition-all duration-300">
-              {/* Minimalist Pulse Orb with Zap */}
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-50 to-amber-100/60 dark:from-orange-950/60 dark:to-slate-900 border border-orange-200/90 dark:border-orange-800/70 flex items-center justify-center text-[#F15A24] shrink-0 shadow-2xs group-hover:scale-110 transition-transform duration-300">
-                <Zap className="w-4.5 h-4.5 fill-[#F15A24]/30 animate-pulse" />
+          {/* 2. FLOW // AUTO - TỰ ĐỘNG HÓA (TOP-RIGHT) */}
+          <div className="hidden lg:flex absolute right-10 xl:right-24 top-3 xl:top-6 z-20 items-center animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '300ms' }}>
+            <div className="flex items-center gap-4">
+              {/* Continuous Automated Workflow Pipeline Loop Icon */}
+              <div className="relative w-14 h-13 xl:w-16 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <svg width="58" height="46" viewBox="0 0 64 50" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(241,90,36,0.18)] dark:drop-shadow-[0_2px_12px_rgba(251,146,60,0.25)]">
+                  {/* Automated Pipeline Infinity Track */}
+                  <path
+                    d="M 32,25 C 41,12 55,12 55,25 C 55,38 41,38 32,25 C 23,12 9,12 9,25 C 9,38 23,38 32,25 Z"
+                    fill="none"
+                    stroke="#F15A24"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-orange-400 animate-draw-icon-3"
+                  />
+                  {/* Stage 1: Trigger Node */}
+                  <circle cx="9" cy="25" r="2.8" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
+                  {/* Stage 2: Action Exec Node */}
+                  <circle cx="55" cy="25" r="2.8" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
+                  {/* Flow Direction Indicator Chevrons */}
+                  <polyline points="47,15 49,18 47,21" fill="none" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="dark:stroke-orange-300 opacity-80" />
+                  <polyline points="17,35 15,32 17,29" fill="none" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="dark:stroke-orange-300 opacity-80" />
+                  {/* Central Automated Orchestration Hub Node */}
+                  <circle cx="32" cy="25" r="3.6" fill="#F15A24" className="dark:fill-orange-400 animate-focal-dot-3" />
+                  <circle cx="32" cy="25" r="1.5" fill="#FFFFFF" className="animate-focal-dot-3" />
+                </svg>
               </div>
 
-              {/* 3 Dynamic Animated Progress Task Bars */}
-              <div className="flex flex-col gap-1.5 w-18">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] shrink-0 animate-pulse" />
-                  <div className="h-1.5 flex-1 rounded-full bg-slate-200/80 dark:bg-slate-700 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-orange-400 to-[#F15A24] rounded-full animate-task-bar-1" />
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] shrink-0 animate-pulse" style={{ animationDelay: '0.4s' }} />
-                  <div className="h-1.5 flex-1 rounded-full bg-slate-200/80 dark:bg-slate-700 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-sky-400 to-[#0284C7] rounded-full animate-task-bar-2" />
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 animate-pulse" style={{ animationDelay: '0.8s' }} />
-                  <div className="h-1.5 flex-1 rounded-full bg-slate-200/80 dark:bg-slate-700 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full animate-task-bar-3" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Minimalist Micro Label */}
-              <div className="flex flex-col text-left pl-1 border-l border-slate-200/70 dark:border-slate-800/70">
-                <span className="text-[10px] font-mono font-bold text-orange-600 dark:text-orange-400 tracking-wider">
+              {/* Micro Label */}
+              <div className="flex flex-col text-left pl-2 border-l border-slate-200 dark:border-slate-800">
+                <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-orange-600 dark:text-orange-400 tracking-wider">
                   FLOW // AUTO
                 </span>
-                <span className="text-[11px] font-bold text-slate-800 dark:text-slate-100 leading-tight whitespace-nowrap">
+                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight whitespace-nowrap">
                   Tự động hóa
                 </span>
-                <span className="text-[9px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
+                <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
                   Vận hành liên tục
                 </span>
               </div>
             </div>
           </div>
 
-          {/* 📈 4. DATA CONSTELLATION ZIGZAG LINE GRAPH (BOTTOM-LEFT - FLAT MODERNIST) */}
-          <div className="hidden md:flex absolute left-4 xl:left-12 bottom-2 xl:bottom-5 z-20 items-center animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300" style={{ animationDelay: '450ms' }}>
-            <div className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl bg-gradient-to-br from-white/95 via-sky-50/40 to-white/95 dark:from-slate-900/95 dark:via-sky-950/40 dark:to-slate-900/95 backdrop-blur-xl border border-sky-200/80 dark:border-sky-800/70 shadow-[0_4px_20px_-4px_rgba(2,132,199,0.12),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-[#0284C7] dark:hover:border-sky-400 hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1 transition-all duration-300">
-              <svg width="124" height="44" viewBox="0 0 140 50" fill="none" className="overflow-visible">
-                {/* Hairline Zigzag Base Line */}
-                <polyline
-                  points="8,42 45,14 88,32 132,8"
-                  fill="none"
-                  stroke="#0284C7"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-40 dark:stroke-sky-400"
-                />
-                {/* Flowing Dashed Pulse Line */}
-                <polyline
-                  points="8,42 45,14 88,32 132,8"
-                  fill="none"
-                  stroke="#0284C7"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="dark:stroke-sky-300 animate-kinetic-data"
-                />
+          {/* 3. REAL-TIME - SỐ HÓA (BOTTOM-LEFT) */}
+          <div className="hidden md:flex absolute left-4 xl:left-12 bottom-2 xl:bottom-5 z-20 items-center animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
+            <div className="flex items-center gap-4">
+              {/* Digitalization Constellation & Data Stream Icon */}
+              <div className="relative w-15 h-13 xl:w-16 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <svg width="60" height="46" viewBox="0 0 64 50" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(2,132,199,0.18)] dark:drop-shadow-[0_2px_12px_rgba(56,189,248,0.25)]">
+                  {/* Digital Stream Data Backbone */}
+                  <path
+                    d="M 4,32 L 20,32 L 28,14 L 38,38 L 48,22 L 60,22"
+                    fill="none"
+                    stroke="#0284C7"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-sky-400 animate-draw-icon-2"
+                  />
+                  {/* Matrix Branch 1 (Down to Base Node) */}
+                  <path d="M 20,32 L 20,44 L 36,44" fill="none" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
+                  {/* Matrix Branch 2 (Up to Cloud Node) */}
+                  <path d="M 28,14 L 40,8 L 56,8" fill="none" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
 
-                {/* Real-time Dynamic Traveling Data Beam Particle */}
-                <circle r="4" fill="#38BDF8" className="filter drop-shadow-[0_0_6px_#0284C7]">
-                  <animateMotion path="M 8,42 L 45,14 L 88,32 L 132,8" dur="2.8s" repeatCount="indefinite" />
-                </circle>
+                  {/* Digitalized Matrix Constellation Nodes */}
+                  <circle cx="20" cy="32" r="2.2" fill="#0284C7" className="dark:fill-sky-400" />
+                  <circle cx="36" cy="44" r="2" fill="#0284C7" className="dark:fill-sky-400" />
+                  <circle cx="40" cy="8" r="2" fill="#0284C7" className="dark:fill-sky-400" />
+                  <circle cx="56" cy="8" r="2" fill="#0284C7" className="dark:fill-sky-400 opacity-70" />
+                  <circle cx="48" cy="22" r="2.2" fill="#0284C7" className="dark:fill-sky-400" />
+                  <circle cx="60" cy="22" r="2.4" fill="#0284C7" className="dark:fill-sky-400" />
 
-                {/* 4 Minimalist Hairline Vertex Nodes */}
-                <circle cx="8" cy="42" r="3.2" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.8" className="dark:stroke-sky-400" />
-                <circle cx="45" cy="14" r="3.2" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.8" className="dark:stroke-sky-400" />
-                <circle cx="88" cy="32" r="3.2" fill="#FFFFFF" stroke="#0284C7" strokeWidth="1.8" className="dark:stroke-sky-400" />
-                <circle cx="132" cy="8" r="4" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1.5" className="dark:fill-sky-400" />
-                <circle cx="132" cy="8" r="1.5" fill="#FFFFFF" className="animate-ping" style={{ transformOrigin: '132px 8px' }} />
-              </svg>
+                  {/* Live Real-time Apex Singularity at peak (28, 14) */}
+                  <circle cx="28" cy="14" r="3.4" fill="#0284C7" className="dark:fill-sky-400 animate-focal-dot-2" />
+                  <circle cx="28" cy="14" r="1.4" fill="#FFFFFF" className="animate-focal-dot-2" />
+                </svg>
+              </div>
+
+              {/* Typography */}
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[10px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
+                  <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
                     REAL-TIME
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 </div>
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
                   Số Hóa Toàn Diện
                 </span>
                 <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
@@ -405,25 +375,50 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 💬 5. MINIMALIST SOUNDWAVE & MULTI-CHANNEL (BOTTOM-RIGHT - FLAT MODERNIST) */}
-          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-2 xl:bottom-5 z-20 items-center animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300" style={{ animationDelay: '550ms' }}>
-            <div className="flex items-center gap-3.5 px-4 py-2.5 rounded-2xl bg-gradient-to-br from-white/95 via-amber-50/40 to-white/95 dark:from-slate-900/95 dark:via-amber-950/40 dark:to-slate-900/95 backdrop-blur-xl border border-amber-200/80 dark:border-amber-800/70 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.12),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-amber-400 dark:hover:border-amber-400 hover:shadow-xl hover:shadow-amber-500/15 hover:-translate-y-1 transition-all duration-300">
-              {/* Dynamic Equalizer 5-Bar Dancing Waveform */}
-              <div className="flex items-end gap-1.5 h-6 px-1.5 py-0.5 bg-amber-50/80 dark:bg-amber-950/40 rounded-lg border border-amber-200/60 dark:border-amber-800/50">
-                <div className="w-1.5 h-5 bg-[#F15A24] rounded-full animate-soundwave-1" />
-                <div className="w-1.5 h-5 bg-[#0284C7] rounded-full animate-soundwave-2" />
-                <div className="w-1.5 h-5 bg-sky-400 rounded-full animate-soundwave-3" />
-                <div className="w-1.5 h-5 bg-emerald-500 rounded-full animate-soundwave-4" />
-                <div className="w-1.5 h-5 bg-amber-400 rounded-full animate-soundwave-5" />
+          {/* 4. VOICE // CHAT - TƯƠNG TÁC ĐA KÊNH (BOTTOM-RIGHT) */}
+          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-2 xl:bottom-5 z-20 items-center animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '550ms' }}>
+            <div className="flex items-center gap-4">
+              {/* Multi-Channel Interactive Dialogue Convergence Icon */}
+              <div className="relative w-15 h-13 xl:w-16 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <svg width="60" height="46" viewBox="0 0 64 50" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(241,90,36,0.18)] dark:drop-shadow-[0_2px_12px_rgba(251,146,60,0.25)]">
+                  {/* Channel A: Left Interactive Speech Bubble Arc (Voice Stream) */}
+                  <path
+                    d="M 26,14 C 15,14 10,21 10,28 C 10,35 16,40 23,40 C 25,43 23,45 21,46 C 26,45 29,42 31,39"
+                    fill="none"
+                    stroke="#F15A24"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-orange-400 animate-draw-icon-4"
+                  />
+                  {/* Channel B: Right Interactive Speech Bubble Arc (Chat/Data Stream) */}
+                  <path
+                    d="M 38,10 C 49,10 54,17 54,24 C 54,31 48,36 41,36 C 39,39 41,41 43,42 C 38,41 35,38 33,35"
+                    fill="none"
+                    stroke="#F15A24"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-orange-400 animate-draw-icon-4"
+                  />
+                  {/* Central Acoustic Interaction Waves (Harmonic Multi-channel Bridges) */}
+                  <line x1="28" y1="21" x2="28" y2="29" stroke="#F15A24" strokeWidth="2" strokeLinecap="round" className="dark:stroke-orange-300 opacity-70" />
+                  <line x1="36" y1="21" x2="36" y2="29" stroke="#F15A24" strokeWidth="2" strokeLinecap="round" className="dark:stroke-orange-300 opacity-70" />
+                  {/* Central Dialogue Fusion Resonance Node at (32, 25) */}
+                  <circle cx="32" cy="25" r="3.4" fill="#F15A24" className="dark:fill-orange-400 animate-focal-dot-4" />
+                  <circle cx="32" cy="25" r="1.4" fill="#FFFFFF" className="animate-focal-dot-4" />
+                </svg>
               </div>
+
+              {/* Typography */}
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[10px] font-mono font-bold text-amber-600 dark:text-amber-400 tracking-wider">
+                  <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-amber-600 dark:text-amber-400 tracking-wider">
                     VOICE // CHAT
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-pulse" />
                 </div>
-                <span className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
                   Tương Tác Đa Kênh
                 </span>
                 <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">

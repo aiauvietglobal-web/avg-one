@@ -11,9 +11,9 @@ import { MobileHeader } from './MobileHeader';
 import {
   HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader,
   HRHeader, LegalHeader, FinanceHeader, RDHeader,
-  SpeechToTextHeader, DashboardHeader, HubDetailHeader,
+  SpeechToTextHeader, DashboardHeader, HubDetailHeader, FileTranscribeHeader,
   HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab, AppsNavTab,
-  SpeechNavTab, DashboardNavTab
+  SpeechNavTab, DashboardNavTab, FileTranscribeNavTab
 } from './headers';
 
 interface AppShellProps {
@@ -52,6 +52,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [appsNavTab, setAppsNavTab] = useState<AppsNavTab>('overview');
   const [speechNavTab, setSpeechNavTab] = useState<SpeechNavTab>('chat');
   const [dashboardNavTab, setDashboardNavTab] = useState<DashboardNavTab>('overview');
+  const [fileTranscribeNavTab, setFileTranscribeNavTab] = useState<FileTranscribeNavTab>('library');
   const [speechIsRecording, setSpeechIsRecording] = useState<boolean>(false);
   const [hubDetailTab, setHubDetailTab] = useState<string>('home');
 
@@ -179,6 +180,17 @@ export const AppShell: React.FC<AppShellProps> = ({
     };
     window.addEventListener('speech_tab_sync', handleSpeechTabSync);
     return () => window.removeEventListener('speech_tab_sync', handleSpeechTabSync);
+  }, []);
+
+  // Lắng nghe sự kiện đồng bộ tab từ FileTranscribeModule
+  useEffect(() => {
+    const handleFileTranscribeTabSync = (e: any) => {
+      if (e.detail) {
+        setFileTranscribeNavTab(e.detail);
+      }
+    };
+    window.addEventListener('file_transcribe_tab_sync', handleFileTranscribeTabSync);
+    return () => window.removeEventListener('file_transcribe_tab_sync', handleFileTranscribeTabSync);
   }, []);
 
   // Shortcut Ctrl + K để focus nhanh vào thanh tìm kiếm trên header
@@ -445,6 +457,24 @@ export const AppShell: React.FC<AppShellProps> = ({
                 }}
                 darkMode={darkMode}
                 onToggleDarkMode={onToggleDarkMode}
+                renderUserAuthButton={renderUserAuthButton}
+              />
+            ) : (activeSubTitle === 'CHUYỂN ĐỔI VĂN BẢN' || activeSubTitle === 'CHUYỂN ĐỔI FILE SANG VĂN BẢN') ? (
+              /* 3B. HEADER ĐỘC LẬP CHO PHÂN HỆ CHUYỂN ĐỔI VĂN BẢN */
+              <FileTranscribeHeader
+                onBack={() => {
+                  setActiveSubTitle('');
+                  window.dispatchEvent(new CustomEvent('submodule_back'));
+                }}
+                onGoHome={() => {
+                  setActiveSubTitle('');
+                  onSelectModule('home');
+                }}
+                activeNavTab={fileTranscribeNavTab}
+                onSelectNavTab={(tab) => {
+                  setFileTranscribeNavTab(tab);
+                  window.dispatchEvent(new CustomEvent('file_transcribe_tab_change', { detail: tab }));
+                }}
                 renderUserAuthButton={renderUserAuthButton}
               />
             ) : (

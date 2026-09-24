@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Mic, FileAudio, QrCode, FileText, LayoutGrid, Sparkles
-} from 'lucide-react';
+import { Mic, FileAudio, LayoutGrid } from 'lucide-react';
 import { SpeechToTextModule } from './SpeechToTextModule';
-import { DashboardModule } from '../dashboard/DashboardModule';
+import { FileTranscribeModule } from './FileTranscribeModule';
 
 export type SubAppId = 'speech-to-text' | 'dashboard' | 'qr-code' | 'docs-template';
 
@@ -37,32 +35,10 @@ const SUB_APPS_GRID: SubAppCard[] = [
     title: 'CHUYỂN ĐỔI VĂN BẢN',
     headerTitle: 'CHUYỂN ĐỔI VĂN BẢN',
     icon: FileAudio,
-    isAvailable: false,
-    badge: 'SẮP PHÁT HÀNH',
-    iconColor: 'text-slate-400 dark:text-slate-500',
-    bgColor: 'bg-white/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700'
-  },
-  {
-    id: 'qr-code',
-    code: 'APP-03',
-    title: 'TRÌNH TẠO MÃ QR',
-    headerTitle: 'TRÌNH TẠO MÃ QR',
-    icon: QrCode,
-    isAvailable: false,
-    badge: 'SẮP PHÁT HÀNH',
-    iconColor: 'text-slate-400 dark:text-slate-500',
-    bgColor: 'bg-white/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700'
-  },
-  {
-    id: 'docs-template',
-    code: 'APP-04',
-    title: 'MẪU VĂN BẢN',
-    headerTitle: 'MẪU VĂN BẢN',
-    icon: FileText,
-    isAvailable: false,
-    badge: 'SẮP PHÁT HÀNH',
-    iconColor: 'text-slate-400 dark:text-slate-500',
-    bgColor: 'bg-white/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700'
+    isAvailable: true,
+    badge: 'ĐÃ SẴN SÀNG',
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-sky-50 dark:bg-sky-950/80 border-sky-200 dark:border-sky-800 shadow-2xs'
   }
 ];
 
@@ -191,82 +167,37 @@ export const AppsModule: React.FC = () => {
               </h2>
             </div>
 
-            {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP ỨNG DỤNG CON (ĐỒNG BỘ 100% MÀU SẮC, GRADIENT & CHUYỂN ĐỘNG TRANG CHỦ) */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto pb-2">
-              {SUB_APPS_GRID.map((app, idx) => {
+            {/* 📦 BỘ CÁC HỘP THẺ TRUY CẬP ỨNG DỤNG CON (BỐ CỤC 2 CỘT CÂN ĐỐI) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-[560px] sm:max-w-[620px] mx-auto w-full pb-2">
+              {SUB_APPS_GRID.map((app) => {
                 const Icon = app.icon;
-                if (app.isAvailable) {
-                  return (
-                    <div
-                      key={app.id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => setActiveApp(app.id)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveApp(app.id); }}
-                      style={{ borderRadius: '26px', animationDelay: `${idx * 100}ms` }}
-                      className="group flex flex-col items-center justify-between py-3 sm:py-3.5 px-3 min-h-[106px] sm:min-h-[116px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
-                    >
-                      {/* Hairline top glow on hover */}
-                      <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                return (
+                  <div
+                    key={app.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setActiveApp(app.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveApp(app.id); }}
+                    style={{ borderRadius: '26px' }}
+                    className="w-full group flex flex-col items-center justify-between py-3.5 sm:py-4 px-4 min-h-[110px] sm:min-h-[120px] bg-gradient-to-b from-sky-100/80 via-sky-50/40 to-white/95 dark:from-sky-950/70 dark:via-slate-900/80 dark:to-slate-900/95 hover:from-sky-200/70 hover:via-sky-100/50 hover:to-white dark:hover:from-sky-900/70 dark:hover:via-slate-900 dark:hover:to-slate-900 backdrop-blur-xl rounded-[26px] border border-sky-200/80 dark:border-sky-800/60 hover:border-[#0284C7] dark:hover:border-sky-400 shadow-[0_2px_14px_-2px_rgba(2,132,199,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_2px_14px_-2px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:shadow-xl hover:shadow-sky-500/15 hover:-translate-y-1 active:scale-[0.98] transition-all duration-300 text-center relative overflow-hidden cursor-pointer select-none animate-entrance-up"
+                  >
+                    {/* Hairline top glow on hover */}
+                    <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                      {/* Unified Blue Icon Badge */}
-                      <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
-                        <Icon className="w-5.5 h-5.5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
-                      </div>
-
-                      {/* App Title */}
-                      <div className="flex flex-col items-center w-full">
-                        <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
-                          {app.title}
-                        </h3>
-                      </div>
+                    {/* Unified Blue Icon Badge */}
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+                      <Icon className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                     </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      key={app.id}
-                      style={{ borderRadius: '26px', animationDelay: `${idx * 100}ms` }}
-                      onClick={() => alert(`Ứng dụng "${app.title}" sắp được phát hành trong phiên bản đợt tiếp theo!`)}
-                      className="flex flex-col items-center justify-between py-3 sm:py-3.5 px-3 min-h-[106px] sm:min-h-[116px] bg-slate-50/60 dark:bg-slate-900/30 rounded-[26px] border border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
-                    >
-                      {/* Icon Hộp xám */}
-                      <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                        <Icon className="w-5 h-5 text-slate-400 dark:text-slate-500 opacity-60" />
-                      </div>
 
-                      {/* Tiêu đề */}
-                      <div className="flex flex-col items-center w-full space-y-0.5">
-                        <h3 className="text-xs sm:text-[13px] font-bold text-slate-400/80 dark:text-slate-500 whitespace-nowrap leading-tight">
-                          {app.title}
-                        </h3>
-                        <span className="text-[9px] sm:text-[9.5px] font-semibold text-slate-400/60 uppercase tracking-wider">
-                          {app.badge}
-                        </span>
-                      </div>
+                    {/* App Title */}
+                    <div className="flex flex-col items-center w-full">
+                      <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
+                        {app.title}
+                      </h3>
                     </div>
-                  );
-                }
+                  </div>
+                );
               })}
-
-              {/* 4 Thẻ Placeholder Sắp phát hành dự phòng đồng bộ 100% chuẩn Trang chủ */}
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <div
-                  key={`sub-placeholder-${idx}`}
-                  style={{ borderRadius: '26px', animationDelay: `${(idx + 4) * 100}ms` }}
-                  className="flex flex-col items-center justify-between py-3 sm:py-3.5 px-3 min-h-[106px] sm:min-h-[116px] bg-slate-50/60 dark:bg-slate-900/30 rounded-[26px] border border-dashed border-slate-300/80 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-center relative overflow-hidden transition-all duration-200 cursor-default select-none animate-entrance-up"
-                >
-                  <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-1 bg-white/80 dark:bg-slate-800/40 shrink-0">
-                    <Sparkles className="w-5 h-5 text-slate-400 dark:text-slate-500 opacity-60" />
-                  </div>
-                  <div className="flex flex-col items-center w-full space-y-0.5">
-                    <h3 className="text-xs sm:text-[13px] font-normal text-slate-300/60 dark:text-slate-600/60 whitespace-nowrap leading-tight">
-                      + Sắp phát hành
-                    </h3>
-                    <span className="text-[9px] text-slate-400/40 uppercase tracking-wider">AVG ECOSYSTEM</span>
-                  </div>
-                </div>
-              ))}
             </div>
 
           </div>
@@ -277,6 +208,7 @@ export const AppsModule: React.FC = () => {
         /* ========================================================================= */
         <div className="w-full h-full max-w-full">
           {activeApp === 'speech-to-text' && <SpeechToTextModule />}
+          {activeApp === 'dashboard' && <FileTranscribeModule />}
         </div>
       )}
 

@@ -42,7 +42,7 @@ export interface SpeakerColorStyle {
   dotClass: string;
 }
 
-export const SPEAKER_COLOR_PALETTE: SpeakerColorStyle[] = [
+const SPEAKER_COLOR_PALETTE: SpeakerColorStyle[] = [
   {
     colorKey: 'orange',
     bgClass: 'bg-orange-50 dark:bg-orange-950/60',
@@ -157,7 +157,7 @@ export const SPEAKER_COLOR_PALETTE: SpeakerColorStyle[] = [
   }
 ];
 
-export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
+const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   {
     id: 'spk-male',
     name: 'Giọng Nam',
@@ -178,7 +178,7 @@ export const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   }
 ];
 
-export const DEAF_SPEAKER: SpeakerProfile = {
+const DEAF_SPEAKER: SpeakerProfile = {
   id: 'spk-deaf',
   name: '3.1 - Ngọc Anh',
   color: 'sky',
@@ -233,7 +233,7 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
  * - Auto-detects question markers ("phải không", "chưa", "hả", "sao", "ở đâu", "tại sao", etc.) to append question marks (?)
  * - Auto-capitalizes sentence & line beginnings and formats spacing around punctuation
  */
-export const enhanceVietnameseTranscript = (
+const enhanceVietnameseTranscript = (
   rawText: string,
   _isLowConfidence: boolean = false,
   isFinal: boolean = true
@@ -303,11 +303,18 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       phaseRef.current += isRec ? 0.045 : 0.022;
       const phase = phaseRef.current;
 
-      // 1. HIGH-TECH CYBER OBSERVATION DECK BACKGROUND (Deep Obsidian Glass)
+      // 1. CLEAN MODERN WHITE BACKGROUND (Light mode white, Dark mode deep obsidian)
+      const isDark = document.documentElement.classList.contains('dark');
       const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-      bgGrad.addColorStop(0, '#070B16');
-      bgGrad.addColorStop(0.5, '#0B1326');
-      bgGrad.addColorStop(1, '#060913');
+      if (isDark) {
+        bgGrad.addColorStop(0, '#070B16');
+        bgGrad.addColorStop(0.5, '#0B1326');
+        bgGrad.addColorStop(1, '#060913');
+      } else {
+        bgGrad.addColorStop(0, '#FFFFFF');
+        bgGrad.addColorStop(0.5, '#F8FAFC');
+        bgGrad.addColorStop(1, '#FFFFFF');
+      }
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
@@ -328,21 +335,12 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
 
       dbLines.forEach(line => {
         const yPos = Math.round(h * line.yPct);
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.07)';
-        ctx.setLineDash([3, 5]);
-        ctx.beginPath();
-        ctx.moveTo(12, yPos);
-        ctx.lineTo(w - 12, yPos);
-        ctx.stroke();
-
-        ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
+        ctx.fillStyle = isDark ? 'rgba(148, 163, 184, 0.35)' : 'rgba(100, 116, 139, 0.45)';
         ctx.fillText(line.label, w - 14, yPos - 3);
       });
-      ctx.setLineDash([]); // Reset line dash
 
       // Tech HUD Reticles at 4 corners
-      ctx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = isDark ? 'rgba(0, 229, 255, 0.45)' : 'rgba(2, 132, 199, 0.25)';
       const cornerLen = 7;
       // Top-left
       ctx.beginPath();
@@ -369,15 +367,6 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
       ctx.lineTo(w - 8, h - 8 - cornerLen);
       ctx.stroke();
 
-      // Top HUD Status Bar
-      ctx.font = '9px "JetBrains Mono", Consolas, Menlo, monospace';
-      ctx.textAlign = 'left';
-      ctx.fillStyle = isRec ? '#00E5FF' : '#94A3B8';
-      ctx.fillText(isRec ? '● DSP LIVE // FFT 2048' : '○ DSP STANDBY // READY', 18, 18);
-
-      ctx.textAlign = 'right';
-      ctx.fillStyle = 'rgba(148, 163, 184, 0.65)';
-      ctx.fillText('48kHz • 24-BIT', w - 18, 18);
       ctx.restore();
 
       // 3. READ REAL AUDIO FREQUENCY & TIME DOMAIN DATA
@@ -477,71 +466,25 @@ export const AiAudioTrackWaveform: React.FC<AiAudioTrackWaveformProps> = ({
             } else if (segRatio > 0.65) {
               ctx.fillStyle = '#F59E0B'; // High Amber
             } else if (segRatio > 0.35) {
-              ctx.fillStyle = '#00E5FF'; // Electric Cyan
+              ctx.fillStyle = isDark ? '#00E5FF' : '#0284C7'; // Electric Cyan / Primary Blue
             } else {
-              ctx.fillStyle = '#0284C7'; // Deep Cyber Blue
+              ctx.fillStyle = isDark ? '#0284C7' : '#00A8E8'; // Deep Cyber Blue / Sky Blue
             }
-          } else {
-            // Unlit segment: Faint dark high-tech background grid slot
-            ctx.fillStyle = 'rgba(30, 41, 59, 0.30)';
+            ctx.fillRect(barX, segY, barWidth, segmentHeight);
           }
-
-          ctx.fillRect(barX, segY, barWidth, segmentHeight);
         }
 
         // Floating Peak-Hold Cap Indicator
         const peakSeg = Math.min(totalSegments - 1, Math.round(peakBars[i] * totalSegments));
         const peakY = Math.round(h - bottomPadding - (peakSeg + 1) * (segmentHeight + segmentGap));
-        ctx.fillStyle = peakBars[i] > 0.75 ? '#FBBF24' : '#00F0FF';
+        ctx.fillStyle = peakBars[i] > 0.75 ? '#FBBF24' : (isDark ? '#00F0FF' : '#0284C7');
         ctx.fillRect(barX, peakY - 1, barWidth, 2);
-      }
-
-      // 5. REAL-TIME OSCILLOSCOPE LASER BEAM (VOICE WAVEFORM TRACE)
-      if (timeData && isRec && audioVolumeLevel > 3) {
-        ctx.save();
-        ctx.strokeStyle = '#00F0FF';
-        ctx.lineWidth = 1.75;
-        ctx.shadowColor = '#00E5FF';
-        ctx.shadowBlur = 8;
-        ctx.beginPath();
-
-        const sliceW = w / (timeData.length * 0.5);
-        const oscCenterY = h * 0.52;
-
-        for (let t = 0; t < timeData.length * 0.5; t++) {
-          const v = (timeData[t] / 128.0) - 1.0;
-          const oscY = oscCenterY + v * (usableH * 0.35);
-          const oscX = t * sliceW;
-          if (t === 0) {
-            ctx.moveTo(oscX, oscY);
-          } else {
-            ctx.lineTo(oscX, oscY);
-          }
-        }
-        ctx.stroke();
-        ctx.restore();
-      } else {
-        // Idle/Standby Cyber Baseline Scan Line
-        ctx.save();
-        ctx.strokeStyle = isRec ? 'rgba(0, 229, 255, 0.40)' : 'rgba(56, 189, 248, 0.20)';
-        ctx.lineWidth = 1;
-        ctx.shadowColor = '#00E5FF';
-        ctx.shadowBlur = isRec ? 4 : 0;
-        ctx.beginPath();
-        const midY = h * 0.52;
-        ctx.moveTo(14, midY);
-        for (let x = 14; x < w - 14; x += 4) {
-          const pulse = Math.sin(phase * 4 + x * 0.08) * (isRec ? 3.5 : 1.5);
-          ctx.lineTo(x, midY + pulse);
-        }
-        ctx.stroke();
-        ctx.restore();
       }
 
       // 6. BOTTOM FREQUENCY SCALE LEGEND (High-tech Monospace Markings)
       ctx.save();
       ctx.font = '8px "JetBrains Mono", Consolas, Menlo, monospace';
-      ctx.fillStyle = 'rgba(148, 163, 184, 0.55)';
+      ctx.fillStyle = isDark ? 'rgba(148, 163, 184, 0.55)' : 'rgba(100, 116, 139, 0.75)';
       ctx.textAlign = 'center';
       const freqMarkers = ['60Hz', '250Hz', '1kHz', '4kHz', '16kHz'];
       freqMarkers.forEach((lbl, idx) => {
@@ -1354,7 +1297,11 @@ export const SpeechToTextModule: React.FC = () => {
                 return acc;
               }, {} as Record<string, number>)
             }
-          }
+          },
+          savedConversationsCount: savedConversations.length,
+          micState,
+          fontSize,
+          autoTts
         }
       }));
     };
@@ -1363,7 +1310,7 @@ export const SpeechToTextModule: React.FC = () => {
     return () => {
       window.removeEventListener('speech_request_filter_sync', sendFilterSync);
     };
-  }, [filterSpeakerId, showSpeakerFilterBar, speakers, messages]);
+  }, [filterSpeakerId, showSpeakerFilterBar, speakers, messages, savedConversations.length, micState, fontSize, autoTts]);
 
   // Helper to format friendly voice display label with Northern accent indicators
   const getVoiceDisplayName = (v: SpeechSynthesisVoice) => {
@@ -2332,7 +2279,7 @@ export const SpeechToTextModule: React.FC = () => {
     }
     const formattedText = `========================================================\n` +
       `NHẬT KÝ CHUYỂN ĐỔI GIỌNG NÓI THÀNH VĂN BẢN (AVG ONE)\n` +
-      `Mục đích: Giao tiếp Hỗ trợ Người Khiếm Thính\n` +
+      `Mục đích: Chuyển đổi Giọng nói sang Văn bản Thời gian thực\n` +
       `Thời gian xuất: ${new Date().toLocaleString('vi-VN')}\n` +
       `========================================================\n\n` +
       messages.map(m => `[${m.timestamp}] ${m.senderName}:\n${m.text}\n${m.translatedText ? `Dịch: ${m.translatedText}\n` : ''}`).join('\n---\n');
@@ -2346,6 +2293,46 @@ export const SpeechToTextModule: React.FC = () => {
     URL.revokeObjectURL(url);
     showToast('📥 Đã tải file nhật ký hội thoại (.txt) thành công!');
   };
+
+  // Lắng nghe các tác vụ nhanh từ Popover Lưu trữ & Cài đặt trên SpeechToTextHeader
+  useEffect(() => {
+    const handleStorageAction = (e: any) => {
+      const action = e.detail;
+      if (action === 'open_history') {
+        setIsHistoryModalOpen(true);
+        setIsMobileSettingsOpen(false);
+      } else if (action === 'new_conversation') {
+        handleCreateNewConversation();
+      } else if (action === 'download_transcript') {
+        handleDownloadTranscript();
+      } else if (action === 'copy_transcript') {
+        handleCopyTranscript();
+      } else if (action === 'clear_messages') {
+        handleClearMessages();
+      }
+    };
+
+    const handleSettingsAction = (e: any) => {
+      const detail = e.detail;
+      if (detail === 'open_settings') {
+        setIsMobileSettingsOpen(true);
+        setIsHistoryModalOpen(false);
+      } else if (detail === 'toggle_mic') {
+        toggleListening();
+      } else if (typeof detail === 'object' && detail?.action === 'set_font_size') {
+        if (detail.size) setFontSize(detail.size);
+      } else if (detail === 'toggle_auto_tts') {
+        setAutoTts(prev => !prev);
+      }
+    };
+
+    window.addEventListener('speech_storage_action', handleStorageAction);
+    window.addEventListener('speech_settings_action', handleSettingsAction);
+    return () => {
+      window.removeEventListener('speech_storage_action', handleStorageAction);
+      window.removeEventListener('speech_settings_action', handleSettingsAction);
+    };
+  }, [messages, currentConversationId, micState, autoTts]);
 
   // Dynamic Theme & Text Classes
   const getFontSizeClass = () => {
@@ -2407,41 +2394,17 @@ export const SpeechToTextModule: React.FC = () => {
                   <Activity className="w-3.5 h-3.5 text-[#00A8E8] animate-pulse" />
                   <span>Phổ Sóng AI</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                    <span>{micState === 'recording' ? 'LIVE' : 'STANDBY'}</span>
-                  </span>
-
-                  {/* Nút Mở rộng phổ sóng toàn màn hình */}
-                  <button
-                    onClick={() => setIsWaveformModalOpen(true)}
-                    className="h-6 px-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950/50 text-slate-600 dark:text-slate-300 hover:text-[#00A8E8] dark:hover:text-[#38BDF8] hover:border-sky-300 flex items-center gap-1 text-[10px] font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
-                    title="Mở rộng phổ sóng toàn màn hình"
-                  >
-                    <Maximize2 className="w-3 h-3 stroke-[2.5]" />
-                    <span className="hidden sm:inline">Mở rộng</span>
-                  </button>
-                </div>
               </div>
 
               {/* Clean DAW Timeline Line Waveform (Mở rộng theo chiều cao trên dưới: min-h-[340px] sm:min-h-[400px]) */}
-              <div
-                onClick={() => setIsWaveformModalOpen(true)}
-                className="relative group cursor-pointer flex-1 min-h-[340px] sm:min-h-[400px] flex flex-col"
-                title="Bấm vào để mở rộng phổ sóng toàn màn hình"
-              >
+              <div className="relative flex-1 min-h-[340px] sm:min-h-[400px] flex flex-col">
                 <AiAudioTrackWaveform
                   micState={micState}
                   audioVolumeLevel={audioVolumeLevel}
                   livePitchHz={livePitchHz}
                   analyserRef={analyserRef}
-                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-[#070B16] shadow-inner border border-slate-800/90 transition-all"
+                  className="relative flex-1 h-full min-h-[340px] sm:min-h-[400px] w-full rounded-xl overflow-hidden bg-white dark:bg-slate-950 shadow-2xs border border-slate-200/90 dark:border-slate-800 transition-all"
                 />
-                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 pointer-events-none backdrop-blur-xs shadow-xs">
-                  <Maximize2 className="w-3 h-3 stroke-[2.5]" />
-                  <span>Mở rộng</span>
-                </div>
               </div>
 
               {/* Telemetry Metrics */}
@@ -2543,29 +2506,15 @@ export const SpeechToTextModule: React.FC = () => {
                       </button>
                     )}
 
-                    {/* Nút BẮT ĐẦU NÓI & Điều Khiển Thu Âm Trực Tiếp Ở Góc Phải Hộp Thoại */}
+                    {/* Nút BẮT ĐẦU & Điều Khiển Thu Âm Trực Tiếp Ở Góc Phải Hộp Thoại */}
                     {micState === 'idle' && (
                       <button
                         onClick={toggleListening}
-                        className="relative group overflow-hidden h-8 px-3.5 sm:px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0 leading-none"
+                        className="relative group overflow-hidden h-8 px-3.5 sm:px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0 leading-none"
                         title="Bắt đầu thu âm và nhận diện giọng nói trực tiếp"
                       >
-                        {/* Subtle shine sweep */}
-                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white" />
-                        </span>
-
                         <Mic className="w-4 h-4 stroke-[2.5] shrink-0" />
-                        <span className="font-extrabold">BẮT ĐẦU NÓI</span>
-
-                        {/* Soundwave animation */}
-                        <span className="hidden sm:flex items-end gap-0.5 h-3">
-                          <span className="w-0.5 h-2 bg-white/80 rounded-full animate-audio-wave" style={{ animationDelay: '0ms' }} />
-                          <span className="w-0.5 h-3 bg-white rounded-full animate-audio-wave" style={{ animationDelay: '150ms' }} />
-                        </span>
+                        <span className="font-extrabold">BẮT ĐẦU</span>
                       </button>
                     )}
 
@@ -2729,47 +2678,7 @@ export const SpeechToTextModule: React.FC = () => {
                   </div>
                 )}
 
-                {showSpeakerFilterBar && (
-                  <div className="flex items-center gap-1 overflow-x-auto max-w-full py-0.5 no-scrollbar">
-                    <button
-                      onClick={() => setFilterSpeakerId('all')}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
-                        filterSpeakerId === 'all'
-                          ? 'bg-[#00A8E8] text-white shadow-2xs font-extrabold'
-                          : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                      }`}
-                    >
-                      Tất cả ({messages.length})
-                    </button>
-                    {speakers.map((s) => {
-                      const count = messages.filter(m => m.speakerId === s.id).length;
 
-                      return (
-                        <button
-                          key={s.id}
-                          onClick={() => setFilterSpeakerId(s.id)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
-                            filterSpeakerId === s.id
-                              ? 'bg-[#00A8E8] text-white shadow-2xs font-extrabold'
-                              : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                          }`}
-                        >
-                          <span>{s.name} ({count})</span>
-                        </button>
-                      );
-                    })}
-                    <button
-                      onClick={() => setFilterSpeakerId('spk-deaf')}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all cursor-pointer shrink-0 ${
-                        filterSpeakerId === 'spk-deaf'
-                          ? 'bg-[#00A8E8] text-white shadow-2xs font-extrabold'
-                          : 'text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'
-                      }`}
-                    >
-                      <span>{DEAF_SPEAKER.name} ({messages.filter(m => m.sender === 'DEAF').length})</span>
-                    </button>
-                  </div>
-                )}
               </div>
 
               {/* Recessed Live Conversation Transcript Feed Cavity (WITH UNIFIED 1PX BORDER) */}
@@ -2903,14 +2812,6 @@ export const SpeechToTextModule: React.FC = () => {
                     />
                     <span>Tự động đọc</span>
                   </label>
-
-                  <button
-                    onClick={() => setIsInputExpanded(!isInputExpanded)}
-                    className="p-1 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title={isInputExpanded ? 'Thu gọn khung nhập' : 'Phóng to khung nhập văn bản'}
-                  >
-                    {isInputExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-                  </button>
                 </div>
               </div>
 
