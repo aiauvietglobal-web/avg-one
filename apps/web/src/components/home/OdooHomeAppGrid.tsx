@@ -213,218 +213,258 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           </div>
 
 
-          {/* 1. AVG ONE // AI - NỀN TẢNG SỐ (TOP-LEFT) */}
-          <div className="hidden lg:flex absolute left-2 xl:left-8 top-3 xl:top-6 z-20 items-center animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
-            <div className="flex items-center gap-4">
-              {/* Layered Digital Platform Bedrock Architecture Icon */}
-              <div className="relative w-13 h-13 xl:w-14 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <svg width="52" height="52" viewBox="0 0 56 56" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(2,132,199,0.18)] dark:drop-shadow-[0_2px_12px_rgba(56,189,248,0.25)]">
-                  {/* Layer 1: Bedrock Foundation Isometric Plane */}
-                  <polygon
-                    points="28,47 46,38 28,29 10,38"
-                    fill="none"
-                    stroke="#0284C7"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-sky-400 opacity-45 animate-draw-icon-1"
-                  />
-                  {/* Layer 2: Core Platform Layer Plane */}
-                  <polygon
-                    points="28,36 46,27 28,18 10,27"
-                    fill="none"
-                    stroke="#0284C7"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-sky-400 opacity-85 animate-draw-icon-1"
-                  />
-                  {/* Vertical Connection Axis Pillars */}
-                  <line x1="28" y1="47" x2="28" y2="14" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
-                  <line x1="10" y1="38" x2="10" y2="27" stroke="#0284C7" strokeWidth="1.4" className="dark:stroke-sky-400 opacity-40" />
-                  <line x1="46" y1="38" x2="46" y2="27" stroke="#0284C7" strokeWidth="1.4" className="dark:stroke-sky-400 opacity-40" />
-                  
-                  {/* Apex AI Core Diamond Star */}
-                  <path
-                    d="M 28,6 Q 28,14 20,14 Q 28,14 28,22 Q 28,14 36,14 Q 28,14 28,6 Z"
-                    fill="none"
-                    stroke="#0284C7"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-sky-300 animate-draw-icon-1"
-                  />
-                  {/* Luminous Platform Singularity Dot */}
-                  <circle cx="28" cy="14" r="3.2" fill="#0284C7" className="dark:fill-sky-400 animate-focal-dot-1" />
-                  <circle cx="28" cy="14" r="1.3" fill="#FFFFFF" className="animate-focal-dot-1" />
-                </svg>
-              </div>
+          {/* 1. NỀN TẢNG SỐ (TOP-LEFT) - LỚN HƠN, TỐI GIẢN CHỮ */}
+          <div className="hidden lg:flex absolute left-3 xl:left-12 top-2 xl:top-5 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
+            {/* Multi-Tier 3D Isometric Bedrock Architecture Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
+                {/* Layer 1: Base Platform Slab */}
+                <polygon
+                  points="50,82 86,64 50,46 14,64"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="dark:stroke-sky-400 opacity-40"
+                />
+                <polyline
+                  points="14,64 14,68 50,86 86,68 86,64"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="1.6"
+                  className="dark:stroke-sky-400 opacity-25"
+                />
 
-              {/* Typography */}
-              <div className="flex flex-col text-left">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
-                    AVG ONE // AI
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-                </div>
-                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
-                  Kiến tạo Nền tảng Số
-                </span>
-                <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
-                  Công nghệ hóa vững chắc
-                </span>
-              </div>
+                {/* Layer 2: Middle Platform Slab */}
+                <polygon
+                  points="50,66 84,49 50,32 16,49"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="dark:stroke-sky-400 opacity-75"
+                />
+                <polyline
+                  points="16,49 16,53 50,70 84,53 84,49"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="1.6"
+                  className="dark:stroke-sky-400 opacity-30"
+                />
+
+                {/* Layer 3: Top Cyber Core Platform */}
+                <polygon
+                  points="50,50 82,34 50,18 18,34"
+                  fill="none"
+                  stroke="#00A8E8"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="dark:stroke-sky-300"
+                />
+
+                {/* Vertical Central Data Axis Conduit */}
+                <line
+                  x1="50"
+                  y1="82"
+                  x2="50"
+                  y2="18"
+                  stroke="#0284C7"
+                  strokeWidth="1.8"
+                  strokeDasharray="4 4"
+                  className="dark:stroke-sky-400 opacity-70 animate-kinetic-data"
+                />
+                {/* Corner Connecting Pillars */}
+                <line x1="18" y1="62" x2="18" y2="34" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-35" />
+                <line x1="82" y1="62" x2="82" y2="34" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-35" />
+
+                {/* Apex AI Core Diamond Star */}
+                <path
+                  d="M 50,6 Q 50,18 38,18 Q 50,18 50,30 Q 50,18 62,18 Q 50,18 50,6 Z"
+                  fill="none"
+                  stroke="#00A8E8"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="dark:stroke-sky-200"
+                />
+                {/* Luminous Central Node */}
+                <circle cx="50" cy="18" r="4.2" fill="#00A8E8" className="dark:fill-sky-300 animate-pulse" />
+                <circle cx="50" cy="18" r="1.8" fill="#FFFFFF" />
+              </svg>
+            </div>
+
+            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+            <div className="flex flex-col text-left">
+              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none">
+                Nền tảng số
+              </span>
             </div>
           </div>
 
-          {/* 2. FLOW // AUTO - TỰ ĐỘNG HÓA (TOP-RIGHT) */}
-          <div className="hidden lg:flex absolute right-10 xl:right-24 top-3 xl:top-6 z-20 items-center animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '300ms' }}>
-            <div className="flex items-center gap-4">
-              {/* Continuous Automated Workflow Pipeline Loop Icon */}
-              <div className="relative w-14 h-13 xl:w-16 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <svg width="58" height="46" viewBox="0 0 64 50" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(241,90,36,0.18)] dark:drop-shadow-[0_2px_12px_rgba(251,146,60,0.25)]">
-                  {/* Automated Pipeline Infinity Track */}
-                  <path
-                    d="M 32,25 C 41,12 55,12 55,25 C 55,38 41,38 32,25 C 23,12 9,12 9,25 C 9,38 23,38 32,25 Z"
-                    fill="none"
-                    stroke="#F15A24"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-orange-400 animate-draw-icon-3"
-                  />
-                  {/* Stage 1: Trigger Node */}
-                  <circle cx="9" cy="25" r="2.8" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
-                  {/* Stage 2: Action Exec Node */}
-                  <circle cx="55" cy="25" r="2.8" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
-                  {/* Flow Direction Indicator Chevrons */}
-                  <polyline points="47,15 49,18 47,21" fill="none" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="dark:stroke-orange-300 opacity-80" />
-                  <polyline points="17,35 15,32 17,29" fill="none" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="dark:stroke-orange-300 opacity-80" />
-                  {/* Central Automated Orchestration Hub Node */}
-                  <circle cx="32" cy="25" r="3.6" fill="#F15A24" className="dark:fill-orange-400 animate-focal-dot-3" />
-                  <circle cx="32" cy="25" r="1.5" fill="#FFFFFF" className="animate-focal-dot-3" />
-                </svg>
-              </div>
-
-              {/* Micro Label */}
-              <div className="flex flex-col text-left pl-2 border-l border-slate-200 dark:border-slate-800">
-                <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-orange-600 dark:text-orange-400 tracking-wider">
-                  FLOW // AUTO
-                </span>
-                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight whitespace-nowrap">
-                  Tự động hóa
-                </span>
-                <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
-                  Vận hành liên tục
-                </span>
-              </div>
+          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - CÁC BÁNH RĂNG LIÊN KẾT QUAY TRÒN ĐỒNG TỐC ĐỘ */}
+          <div className="hidden lg:flex absolute right-4 xl:right-16 top-2 xl:top-5 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '300ms' }}>
+            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+            <div className="flex flex-col text-right">
+              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none whitespace-nowrap">
+                Tự động hóa
+              </span>
             </div>
-          </div>
 
-          {/* 3. REAL-TIME - SỐ HÓA (BOTTOM-LEFT) */}
-          <div className="hidden md:flex absolute left-4 xl:left-12 bottom-2 xl:bottom-5 z-20 items-center animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
-            <div className="flex items-center gap-4">
-              {/* Digitalization Constellation & Data Stream Icon */}
-              <div className="relative w-15 h-13 xl:w-16 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <svg width="60" height="46" viewBox="0 0 64 50" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(2,132,199,0.18)] dark:drop-shadow-[0_2px_12px_rgba(56,189,248,0.25)]">
-                  {/* Digital Stream Data Backbone */}
+            {/* Interlocking Rotating Gears Assembly Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
+                {/* Gear 1: Bánh răng chính (12 răng, quay thuận kim đồng hồ) */}
+                <g className="animate-gear-1">
                   <path
-                    d="M 4,32 L 20,32 L 28,14 L 38,38 L 48,22 L 60,22"
-                    fill="none"
-                    stroke="#0284C7"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-sky-400 animate-draw-icon-2"
-                  />
-                  {/* Matrix Branch 1 (Down to Base Node) */}
-                  <path d="M 20,32 L 20,44 L 36,44" fill="none" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
-                  {/* Matrix Branch 2 (Up to Cloud Node) */}
-                  <path d="M 28,14 L 40,8 L 56,8" fill="none" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
-
-                  {/* Digitalized Matrix Constellation Nodes */}
-                  <circle cx="20" cy="32" r="2.2" fill="#0284C7" className="dark:fill-sky-400" />
-                  <circle cx="36" cy="44" r="2" fill="#0284C7" className="dark:fill-sky-400" />
-                  <circle cx="40" cy="8" r="2" fill="#0284C7" className="dark:fill-sky-400" />
-                  <circle cx="56" cy="8" r="2" fill="#0284C7" className="dark:fill-sky-400 opacity-70" />
-                  <circle cx="48" cy="22" r="2.2" fill="#0284C7" className="dark:fill-sky-400" />
-                  <circle cx="60" cy="22" r="2.4" fill="#0284C7" className="dark:fill-sky-400" />
-
-                  {/* Live Real-time Apex Singularity at peak (28, 14) */}
-                  <circle cx="28" cy="14" r="3.4" fill="#0284C7" className="dark:fill-sky-400 animate-focal-dot-2" />
-                  <circle cx="28" cy="14" r="1.4" fill="#FFFFFF" className="animate-focal-dot-2" />
-                </svg>
-              </div>
-
-              {/* Typography */}
-              <div className="flex flex-col text-left">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-sky-600 dark:text-sky-400 tracking-wider">
-                    REAL-TIME
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                </div>
-                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
-                  Số Hóa Toàn Diện
-                </span>
-                <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
-                  Chuẩn xác tức thì
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 4. VOICE // CHAT - TƯƠNG TÁC ĐA KÊNH (BOTTOM-RIGHT) */}
-          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-2 xl:bottom-5 z-20 items-center animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '550ms' }}>
-            <div className="flex items-center gap-4">
-              {/* Multi-Channel Interactive Dialogue Convergence Icon */}
-              <div className="relative w-15 h-13 xl:w-16 xl:h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <svg width="60" height="46" viewBox="0 0 64 50" fill="none" className="overflow-visible filter drop-shadow-[0_2px_10px_rgba(241,90,36,0.18)] dark:drop-shadow-[0_2px_12px_rgba(251,146,60,0.25)]">
-                  {/* Channel A: Left Interactive Speech Bubble Arc (Voice Stream) */}
-                  <path
-                    d="M 26,14 C 15,14 10,21 10,28 C 10,35 16,40 23,40 C 25,43 23,45 21,46 C 26,45 29,42 31,39"
+                    d="M 63.6,44.0 L 69.9,45.6 L 69.9,50.4 L 63.6,52.0 L 62.7,55.3 L 67.4,59.9 L 65.0,64.0 L 58.7,62.3 L 56.3,64.7 L 58.0,71.0 L 53.9,73.4 L 49.3,68.7 L 46.0,69.6 L 44.4,75.9 L 39.6,75.9 L 38.0,69.6 L 34.7,68.7 L 30.1,73.4 L 26.0,71.0 L 27.7,64.7 L 25.3,62.3 L 19.0,64.0 L 16.6,59.9 L 21.3,55.3 L 20.4,52.0 L 14.1,50.4 L 14.1,45.6 L 20.4,44.0 L 21.3,40.7 L 16.6,36.1 L 19.0,32.0 L 25.3,33.7 L 27.7,31.3 L 26.0,25.0 L 30.1,22.6 L 34.7,27.3 L 38.0,26.4 L 39.6,20.1 L 44.4,20.1 L 46.0,26.4 L 49.3,27.3 L 53.9,22.6 L 58.0,25.0 L 56.3,31.3 L 58.7,33.7 L 65.0,32.0 L 67.4,36.1 L 62.7,40.7 Z"
                     fill="none"
                     stroke="#F15A24"
                     strokeWidth="2.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="dark:stroke-orange-400 animate-draw-icon-4"
+                    className="dark:stroke-orange-400"
                   />
-                  {/* Channel B: Right Interactive Speech Bubble Arc (Chat/Data Stream) */}
+                  <circle cx="42" cy="48" r="12" fill="none" stroke="#F15A24" strokeWidth="1.8" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="42" y1="26" x2="42" y2="70" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="20" y1="48" x2="64" y2="48" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <circle cx="42" cy="48" r="6" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
+                  <circle cx="42" cy="48" r="3" fill="#F15A24" className="dark:fill-orange-400" />
+                  <circle cx="42" cy="48" r="1.2" fill="#FFFFFF" />
+                </g>
+
+                {/* Gear 2: Bánh răng phụ dưới (8 răng, quay ngược kim đồng hồ, khớp răng liên kết) */}
+                <g className="animate-gear-2">
                   <path
-                    d="M 38,10 C 49,10 54,17 54,24 C 54,31 48,36 41,36 C 39,39 41,41 43,42 C 38,41 35,38 33,35"
+                    d="M 90.9,69.5 L 95.4,72.7 L 93.6,76.9 L 88.2,76.0 L 86.0,78.2 L 86.9,83.6 L 82.7,85.4 L 79.5,80.9 L 76.5,80.9 L 73.3,85.4 L 69.1,83.6 L 70.0,78.2 L 67.8,76.0 L 62.4,76.9 L 60.6,72.7 L 65.1,69.5 L 65.1,66.5 L 60.6,63.3 L 62.4,59.1 L 67.8,60.0 L 70.0,57.8 L 69.1,52.4 L 73.3,50.6 L 76.5,55.1 L 79.5,55.1 L 82.7,50.6 L 86.9,52.4 L 86.0,57.8 L 88.2,60.0 L 93.6,59.1 L 95.4,63.3 L 90.9,66.5 Z"
                     fill="none"
-                    stroke="#F15A24"
+                    stroke="#F97316"
                     strokeWidth="2.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="dark:stroke-orange-400 animate-draw-icon-4"
+                    className="dark:stroke-orange-400"
                   />
-                  {/* Central Acoustic Interaction Waves (Harmonic Multi-channel Bridges) */}
-                  <line x1="28" y1="21" x2="28" y2="29" stroke="#F15A24" strokeWidth="2" strokeLinecap="round" className="dark:stroke-orange-300 opacity-70" />
-                  <line x1="36" y1="21" x2="36" y2="29" stroke="#F15A24" strokeWidth="2" strokeLinecap="round" className="dark:stroke-orange-300 opacity-70" />
-                  {/* Central Dialogue Fusion Resonance Node at (32, 25) */}
-                  <circle cx="32" cy="25" r="3.4" fill="#F15A24" className="dark:fill-orange-400 animate-focal-dot-4" />
-                  <circle cx="32" cy="25" r="1.4" fill="#FFFFFF" className="animate-focal-dot-4" />
-                </svg>
-              </div>
+                  <circle cx="78" cy="68" r="8" fill="none" stroke="#F97316" strokeWidth="1.6" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="78" y1="52" x2="78" y2="84" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="62" y1="68" x2="94" y2="68" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <circle cx="78" cy="68" r="4.5" fill="none" stroke="#F97316" strokeWidth="1.8" className="dark:stroke-orange-400" />
+                  <circle cx="78" cy="68" r="2.2" fill="#F97316" className="dark:fill-orange-400" />
+                  <circle cx="78" cy="68" r="0.9" fill="#FFFFFF" />
+                </g>
 
-              {/* Typography */}
-              <div className="flex flex-col text-left">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[10.5px] xl:text-[11.5px] font-mono font-bold text-amber-600 dark:text-amber-400 tracking-wider">
-                    VOICE // CHAT
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-pulse" />
-                </div>
-                <span className="text-[13px] xl:text-[14.5px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
-                  Tương Tác Đa Kênh
-                </span>
-                <span className="text-[9.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mt-0.5">
-                  Thông suốt mọi lúc
-                </span>
-              </div>
+                {/* Gear 3: Bánh răng phụ trên (7 răng, quay ngược kim đồng hồ, khớp răng trên) */}
+                <g className="animate-gear-3">
+                  <path
+                    d="M 84.9,26.3 L 88.4,29.2 L 86.6,32.8 L 82.2,31.9 L 80.1,33.6 L 80.1,38.1 L 76.1,39.0 L 74.1,35.0 L 71.5,34.4 L 68.0,37.1 L 64.8,34.6 L 66.7,30.5 L 65.5,28.1 L 61.1,27.0 L 61.1,23.0 L 65.5,21.9 L 66.7,19.5 L 64.8,15.4 L 68.0,12.9 L 71.5,15.6 L 74.1,15.0 L 76.1,11.0 L 80.1,11.9 L 80.1,16.4 L 82.2,18.1 L 86.6,17.2 L 88.4,20.8 L 84.9,23.7 Z"
+                    fill="none"
+                    stroke="#FB923C"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dark:stroke-orange-300"
+                  />
+                  <circle cx="75" cy="25" r="5.5" fill="none" stroke="#FB923C" strokeWidth="1.4" className="dark:stroke-orange-300 opacity-60" />
+                  <circle cx="75" cy="25" r="2.5" fill="#FB923C" className="dark:fill-orange-300" />
+                  <circle cx="75" cy="25" r="1" fill="#FFFFFF" />
+                </g>
+
+                {/* Điểm phát sáng liên kết khớp nối động */}
+                <circle cx="61" cy="58" r="1.8" fill="#F15A24" className="animate-ping opacity-75" />
+                <circle cx="58" cy="35" r="1.6" fill="#FB923C" className="animate-ping opacity-75" style={{ animationDelay: '500ms' }} />
+              </svg>
+            </div>
+          </div>
+
+          {/* 3. SỐ HÓA (BOTTOM-LEFT) - LỚN HƠN, TỐI GIẢN CHỮ */}
+          <div className="hidden md:flex absolute left-4 xl:left-14 bottom-2 xl:bottom-6 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
+            {/* Digital Transformation Waveform & Constellation Matrix Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
+                {/* Trục sóng số hóa chuyển đổi dữ liệu thời gian thực */}
+                <path
+                  d="M 6,60 L 26,60 L 36,24 L 52,76 L 68,38 L 82,54 L 94,54"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="dark:stroke-sky-400"
+                />
+                {/* Nhánh bus dữ liệu số hóa liên kết ma trận */}
+                <path d="M 36,24 L 56,12 L 88,12" fill="none" stroke="#00A8E8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-400 opacity-60 animate-kinetic-data" />
+                <path d="M 26,60 L 26,84 L 64,84" fill="none" stroke="#00A8E8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-400 opacity-60 animate-kinetic-data" />
+                <line x1="52" y1="76" x2="80" y2="76" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-40" />
+                <line x1="68" y1="38" x2="68" y2="12" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-40" />
+
+                {/* Các nút giao ma trận số hóa */}
+                <circle cx="26" cy="60" r="3" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="52" cy="76" r="3.2" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="68" cy="38" r="3" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="82" cy="54" r="3" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="94" cy="54" r="3.2" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="56" cy="12" r="2.8" fill="#00A8E8" className="dark:fill-sky-300" />
+                <circle cx="88" cy="12" r="3" fill="#00A8E8" className="dark:fill-sky-300" />
+                <circle cx="64" cy="84" r="2.8" fill="#00A8E8" className="dark:fill-sky-300" />
+
+                {/* Nút đỉnh nhận diện tức thì */}
+                <circle cx="36" cy="24" r="4.8" fill="#00A8E8" className="dark:fill-sky-300 animate-pulse" />
+                <circle cx="36" cy="24" r="2" fill="#FFFFFF" />
+              </svg>
+            </div>
+
+            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+            <div className="flex flex-col text-left">
+              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none">
+                Số hóa
+              </span>
+            </div>
+          </div>
+
+          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - LỚN HƠN, TỐI GIẢN CHỮ */}
+          <div className="hidden md:flex absolute right-4 xl:right-16 bottom-2 xl:bottom-6 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '550ms' }}>
+            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+            <div className="flex flex-col text-right">
+              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none whitespace-nowrap">
+                Tương tác
+              </span>
+            </div>
+
+            {/* Multi-Channel Interactive Dialogue Convergence Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
+                {/* Vòng cung hội thoại kênh A (Luồng giọng nói / Voice stream) */}
+                <path
+                  d="M 40,20 C 20,20 12,32 12,46 C 12,60 22,70 34,70 C 37,76 33,80 30,82 C 40,80 46,74 48,68"
+                  fill="none"
+                  stroke="#F15A24"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  className="dark:stroke-orange-400"
+                />
+                {/* Vòng cung hội thoại kênh B (Luồng tin nhắn / Chat stream) */}
+                <path
+                  d="M 60,18 C 80,18 88,30 88,44 C 88,58 78,68 66,68 C 63,74 67,78 70,80 C 60,78 54,72 52,66"
+                  fill="none"
+                  stroke="#F15A24"
+                  strokeWidth="2.6"
+                  strokeLinecap="round"
+                  className="dark:stroke-orange-400"
+                />
+
+                {/* Cầu nối âm tần tương tác trung tâm (Acoustic Harmonic Waves) */}
+                <line x1="44" y1="36" x2="44" y2="52" stroke="#F15A24" strokeWidth="2.4" strokeLinecap="round" className="dark:stroke-orange-300 animate-pulse" />
+                <line x1="50" y1="28" x2="50" y2="60" stroke="#F15A24" strokeWidth="2.6" strokeLinecap="round" className="dark:stroke-orange-400" />
+                <line x1="56" y1="36" x2="56" y2="52" stroke="#F15A24" strokeWidth="2.4" strokeLinecap="round" className="dark:stroke-orange-300 animate-pulse" />
+
+                {/* Vòng sóng tương tác lan tỏa */}
+                <circle cx="50" cy="44" r="18" fill="none" stroke="#FB923C" strokeWidth="1.5" strokeDasharray="4 4" className="opacity-45 dark:stroke-orange-300" />
+
+                {/* Hạt nhân tương tác giao thoa */}
+                <circle cx="50" cy="44" r="4.2" fill="#F15A24" className="dark:fill-orange-400 animate-pulse" />
+                <circle cx="50" cy="44" r="1.8" fill="#FFFFFF" />
+              </svg>
             </div>
           </div>
 

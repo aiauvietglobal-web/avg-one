@@ -2991,6 +2991,43 @@ div.box-speech-bubble {
   transform-origin: center;
 }
 
+/* ⚙️ INTERLOCKING SYNCHRONIZED GEAR ROTATION (BÁNH RĂNG LIÊN KẾT TỰ ĐỘNG HÓA) */
+@keyframes gear-spin-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gear-spin-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.animate-gear-1 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gear-spin-cw 14s linear infinite;
+}
+
+.animate-gear-2 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gear-spin-ccw 9.333s linear infinite;
+}
+
+.animate-gear-3 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gear-spin-ccw 8.166s linear infinite;
+}
+
 .animate-kinetic-data {
   stroke-dasharray: 8 8;
   animation: kinetic-data-flow 1.8s linear infinite;
