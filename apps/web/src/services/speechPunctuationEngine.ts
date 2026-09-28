@@ -1,5 +1,5 @@
 /**
- * AVG One Real-Time Speech Punctuation, Acoustic Normalization & Continuity Engine
+ * AVG One Real-Time Speech Punctuation, Acoustic Normalization, Domain Adaptation & Continuity Engine
  * 
  * Các trụ cột nâng cấp chuyên sâu:
  * 1. Khẩu lệnh dấu câu thực tế: "dấu chấm", "dấu phẩy", "xuống dòng", "dấu hỏi", "dấu than", "hai chấm", "ba chấm", "gạch đầu dòng"
@@ -9,7 +9,36 @@
  * 5. Khử lỗi phát âm nói nhanh, dính chữ (thế lày -> thế này, lăng suất -> năng suất, khi lào -> khi nào...)
  * 6. Cơ chế dự phòng dấu 3 chấm (...) khi âm thanh bị nghẽn/chưa kịp nghe, đảm bảo tính liên tục, không suy đoán từ
  * 7. Chuẩn hóa chính tả & kiểu gõ tiếng Việt Unicode NFC
+ * 8. HỌC & CHUYỂN ĐỔI NGÔN NGỮ CHUYÊN NGÀNH:
+ *    - Kinh tế - Tài chính - Kinh doanh: GDP, CPI, VN-Index, IPO, EBITDA, ROE, ROI, Margin, Call Margin, T+2, M&A...
+ *    - Pháp luật - Hành chính - Tố tụng: HĐXX, Thẩm phán, Nguyên đơn, Bị đơn, VIAC, NDA, Giám đốc thẩm, ERC, IRC...
+ *    - Đời sống - Xã hội - Tiêu dùng: CCCD, VNeID, BHYT, BHXH, VssID, Quét mã QR, NAPAS 24/7, CT Scanner, MRI...
+ * 9. BỘ LỌC TỪ NGỮ NHẠY CẢM TỰ ĐỘNG (SENSITIVE & PROFANITY MASKING WITH ***):
+ *    - Tự động nhận diện từ ngữ thô tục, chửi thề, lăng mạ tiếng Việt & tiếng Anh
+ *    - Che giấu an toàn bằng dấu hoa thị `***` (hoặc `[***]`) giữ gìn văn hóa công sở và môi trường làm việc chuẩn mực
  */
+
+export type DomainMode = 'all' | 'economy' | 'legal' | 'life';
+
+export interface PunctuationEngineOptions {
+  isFinal?: boolean;
+  maskSensitive?: boolean;
+  sensitiveMaskStyle?: 'asterisks' | 'bracket_asterisks';
+  domainMode?: DomainMode;
+}
+
+export interface SensitiveMaskOptions {
+  replacement?: string;
+  style?: 'asterisks' | 'bracket_asterisks';
+}
+
+export interface DomainGlossaryItem {
+  term: string;
+  domain: 'economy' | 'legal' | 'life';
+  domainLabel: string;
+  meaning: string;
+  spokenExamples: string[];
+}
 
 // 1. Bảng ánh xạ khẩu lệnh đọc dấu câu tiếng Việt sang ký tự thực tế
 const SPOKEN_PUNCTUATION_RULES: Array<{ pattern: RegExp; replacement: string }> = [
@@ -120,7 +149,268 @@ const ENTERPRISE_TERMS_RULES: Array<{ pattern: RegExp; replacement: string }> = 
   { pattern: /\b(thông\s*số\s*kỹ\s*thuật)\b/gi, replacement: 'thông số kỹ thuật' }
 ];
 
-// 4. Chuẩn hóa số đếm, phần trăm, tiền tệ, ngày giờ & đo lường theo chuẩn hành chính (ITN)
+// ============================================================================
+// 4A. HỌC & CHUYỂN ĐỔI NGÔN NGỮ KINH TẾ - TÀI CHÍNH - CHỨNG KHOÁN (ECONOMY)
+// ============================================================================
+const ECONOMY_FINANCE_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  // Các chỉ số vĩ mô & chính sách tiền tệ
+  { pattern: /(?<=^|[^\p{L}\p{N}])(xi\s*pi\s*ai|xê\s*pê\s*i|c\s*p\s*i)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CPI' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(di\s*đi\s*pi|d\s*d\s*p|g\s*d\s*p)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'GDP' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(g\s*n\s*p|gi\s*en\s*pi)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'GNP' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(p\s*m\s*i|pê\s*em\s*i)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'PMI' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ép\s*đê\s*i|f\s*d\s*i|nguồn\s*vốn\s*fdi)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'FDI' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ô\s*đê\s*a|o\s*d\s*a)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ODA' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(f\s*i\s*i|ép\s*ai\s*ai)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'FII' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(v[eê]\s*n[oờơ]\s*in\s*đ[eêếé][ct]h?|vn\s*in\s*dex|vi\s*en\s*in\s*đếch)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VN-Index' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(h[aá]t\s*en\s*[ií]ch|h[aá]t\s*n[oờơ]\s*[ií]ch|hnx\s*in\s*dex)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HNX-Index' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])([uú]p\s*com|[aắ]p\s*com|up\s*com)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'UPCoM' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lạm\s*fát)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lạm phát' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(giảm\s*fát)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'giảm phát' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nghiệp\s*vụ\s*o\s*m\s*o|thị\s*trường\s*mở\s*omo)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nghiệp vụ OMO' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lãi\s*suất\s*tái\s*cấp\s*vốn)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lãi suất tái cấp vốn' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lãi\s*suất\s*chiết\s*khấu)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lãi suất chiết khấu' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(tỷ\s*giá\s*trung\s*tâm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'tỷ giá trung tâm' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(dự\s*trữ\s*ngoại\s*hối)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'dự trữ ngoại hối' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cán\s*cân\s*thanh\s*toán)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'cán cân thanh toán' },
+
+  // Tài chính doanh nghiệp & Báo cáo tài chính
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ai\s*pi\s*ô|ai\s*bi\s*ô|i\s*p\s*o)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'IPO' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*bít\s*đa|e\s*bít\s*đát|ebit\s*da|e\s*b\s*i\s*t\s*d\s*a)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'EBITDA' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*bít|e\s*b\s*i\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'EBIT' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(rốt\s*e|rờ\s*o\s*e|r\s*o\s*e)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ROE' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(rốt\s*ai|rờ\s*o\s*i|r\s*o\s*i)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ROI' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(rốt\s*a|rờ\s*o\s*a|r\s*o\s*a)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ROA' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(rốt\s*ét|rờ\s*o\s*s|r\s*o\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ROS' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*pê\s*ét|e\s*p\s*s|e\s*pờ\s*ét)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'EPS' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(pi\s*trên\s*e|pi\s*e|p\s*e)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'P/E' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(pi\s*trên\s*bi|pi\s*bi|p\s*b)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'P/B' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(na\s*vờ|n\s*a\s*v)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'NAV' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(em\s*en\s*a|mờ\s*en\s*a|m\s*&\s*a|sáp\s*nhập\s*m\s*a)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'M&A' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*xốp|e\s*xóp|e\s*s\s*o\s*p)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ESOP' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cát\s*phờ\s*lâu|két\s*phờ\s*lâu|cash\s*lâu)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Cash Flow' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đê\s*xê\s*ép|d\s*c\s*f)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'DCF' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(vê\s*xê|v\s*c|quỹ\s*vc)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VC' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(pê\s*e|p\s*e|quỹ\s*pe)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'quỹ PE' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bích\s*pho|bíc\s*pho|big\s*four)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Big 4' },
+
+  // Giao dịch chứng khoán & Thị trường vốn
+  { pattern: /(?<=^|[^\p{L}\p{N}])(mắc\s*gin|ma\s*gin|mác\s*din|mar\s*gin)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'margin' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(côn\s*mắc\s*gin|côn\s*ma\s*gin|call\s*ma\s*gin)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'call margin' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(tê\s*cộng\s*hai\s*phẩy\s*năm|t\s*cộng\s*2\.5)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'T+2.5' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(tê\s*cộng\s*hai|t\s*cộng\s*2)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'T+2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(tê\s*cộng\s*một|t\s*cộng\s*1)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'T+1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(áp\s*tren|úp\s*tren|up\s*trend)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'uptrend' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đao\s*tren|đao\s*ren|down\s*trend)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'downtrend' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(sai\s*oay|xai\s*oay|side\s*way)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'sideway' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*a\s*t\s*c|lệnh\s*át\s*c)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh ATC' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*a\s*t\s*o|lệnh\s*át\s*ô)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh ATO' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*m\s*p|lệnh\s*em\s*pi)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh MP' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*l\s*o|lệnh\s*en\s*ô)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh LO' },
+
+  // Phân loại nợ ngân hàng
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 1 (nợ đủ tiêu chuẩn)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 2 (nợ cần chú ý)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:ba|3))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 3 (nợ dưới tiêu chuẩn)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:bốn|4))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 4 (nợ nghi ngờ)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:năm|5))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 5 (nợ có khả năng mất vốn)' },
+
+  // Quản trị doanh nghiệp
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đại\s*hội\s*đồng\s*cổ\s*đông|đ\s*h\s*đ\s*c\s*đ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ĐHĐCĐ' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(hội\s*đồng\s*quản\s*trị|h\s*đ\s*q\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HĐQT' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ban\s*kiểm\s*soát|b\s*k\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BKS' }
+];
+
+// ============================================================================
+// 4B. HỌC & CHUYỂN ĐỔI NGÔN NGỮ PHÁP LUẬT - HÀNH CHÍNH - TỐ TỤNG (LEGAL)
+// ============================================================================
+const LEGAL_ADMIN_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  // Cơ quan tư pháp, chức danh tố tụng
+  { pattern: /(?<=^|[^\p{L}\p{N}])(hát\s*đê\s*ích\s*ích|h\s*đ\s*x\s*x|hội\s*đồng\s*xét\s*xử)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HĐXX' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(vi\s*ác|vê\s*y\s*a\s*xê|v\s*i\s*a\s*c|trọng\s*tài\s*viac)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VIAC' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(viện\s*kiểm\s*sát\s*nhân\s*dân|v\s*k\s*s\s*n\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VKSND' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(tòa\s*án\s*nhân\s*dân|t\s*a\s*n\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'TAND' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cơ\s*quan\s*thi\s*hành\s*án\s*dân\s*sự|t\s*h\s*a\s*d\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'THADS' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thẩm\s*phán\s*chủ\s*tọa)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Thẩm phán chủ tọa' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(hội\s*thẩm\s*nhân\s*dân)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Hội thẩm nhân dân' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(kiểm\s*sát\s*viên)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Kiểm sát viên' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thư\s*ký\s*phiên\s*tòa)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Thư ký phiên tòa' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*sư\s*bào\s*chữa)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật sư bào chữa' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(người\s*bảo\s*vệ\s*quyền\s*và\s*lợi\s*ích\s*hợp\s*pháp)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'người bảo vệ quyền và lợi ích hợp pháp' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(người\s*đại\s*diện\s*theo\s*pháp\s*luật)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'người đại diện theo pháp luật' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(người\s*đại\s*diện\s*theo\s*ủy\s*quyền)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'người đại diện theo ủy quyền' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(người\s*có\s*quyền\s*lợi\s*(?:và\s*)?nghĩa\s*vụ\s*liên\s*quan)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'người có quyền lợi, nghĩa vụ liên quan' },
+
+  // Giai đoạn tố tụng & Phán quyết
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bản\s*án\s*sơ\s*thẩm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bản án sơ thẩm' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bản\s*án\s*phúc\s*thẩm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bản án phúc thẩm' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thủ\s*tục\s*giám\s*đốc\s*thẩm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thủ tục giám đốc thẩm' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thủ\s*tục\s*tái\s*thẩm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thủ tục tái thẩm' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(kháng\s*cáo\s*bản\s*án)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'kháng cáo bản án' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(kháng\s*nghị\s*bản\s*án)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'kháng nghị bản án' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đình\s*chỉ\s*giải\s*quyết\s*vụ\s*án)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'đình chỉ giải quyết vụ án' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(tạm\s*đình\s*chỉ\s*vụ\s*án)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'tạm đình chỉ vụ án' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(biện\s*pháp\s*khẩn\s*cấp\s*tạm\s*thời)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'biện pháp khẩn cấp tạm thời' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(phán\s*quyết\s*trọng\s*tài)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'phán quyết trọng tài' },
+
+  // Văn bản pháp luật chuyên ngành
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bộ\s*luật\s*dân\s*sự)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Bộ luật Dân sự' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bộ\s*luật\s*hình\s*sự)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Bộ luật Hình sự' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bộ\s*luật\s*lao\s*động)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Bộ luật Lao động' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bộ\s*luật\s*tố\s*tụng\s*dân\s*sự)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Bộ luật Tố tụng Dân sự' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bộ\s*luật\s*tố\s*tụng\s*hình\s*sự)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Bộ luật Tố tụng Hình sự' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*doanh\s*nghiệp)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Doanh nghiệp' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*đầu\s*tư)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Đầu tư' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*thương\s*mại)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Thương mại' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*đất\s*đai)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Đất đai' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*nhà\s*ở)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Nhà ở' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*sở\s*hữu\s*trí\s*tuệ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Sở hữu trí tuệ' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*quản\s*lý\s*thuế)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Quản lý thuế' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*chứng\s*khoán)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Chứng khoán' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(luật\s*đấu\s*thầu)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Luật Đấu thầu' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(t\s*c\s*v\s*n|tiêu\s*chuẩn\s*quốc\s*gia)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'TCVN' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(q\s*c\s*v\s*n|quy\s*chuẩn\s*quốc\s*gia)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'QCVN' },
+
+  // Hợp đồng & Doanh nghiệp
+  { pattern: /(?<=^|[^\p{L}\p{N}])(en\s*đi\s*a|n\s*d\s*a|thỏa\s*thuận\s*bảo\s*mật)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'NDA (thỏa thuận bảo mật)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*r\s*c|e\s*rờ\s*xê|giấy\s*phép\s*đăng\s*ký\s*doanh\s*nghiệp)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ERC (Đăng ký doanh nghiệp)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(i\s*r\s*c|i\s*rờ\s*xê|giấy\s*chứng\s*nhận\s*đầu\s*tư)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'IRC (Chứng nhận đầu tư)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(mã\s*số\s*thuế|m\s*s\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'mã số thuế' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(điều\s*khoản\s*bất\s*khả\s*kháng|phốt\s*ma\s*dơ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'điều khoản bất khả kháng' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(phạt\s*vi\s*phạm\s*hợp\s*đồng)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'phạt vi phạm hợp đồng' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đơn\s*phương\s*chấm\s*dứt\s*hợp\s*đồng)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'đơn phương chấm dứt hợp đồng' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bồi\s*thường\s*thiệt\s*hại)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bồi thường thiệt hại' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(hợp\s*đồng\s*vô\s*hiệu)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'hợp đồng vô hiệu' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(hợp\s*đồng\s*nguyên\s*tắc)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'hợp đồng nguyên tắc' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(công\s*chứng\s*viên)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'công chứng viên' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(sao\s*y\s*bản\s*chính)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'sao y bản chính' }
+];
+
+// ============================================================================
+// 4C. HỌC & CHUYỂN ĐỔI NGÔN NGỮ ĐỜI SỐNG - XÃ HỘI - DỊCH VỤ (LIFE)
+// ============================================================================
+const LIFE_SOCIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  // Hành chính công & Định danh điện tử
+  { pattern: /(?<=^|[^\p{L}\p{N}])(v[eê]\s*n[eê]\s*y\s*đ[eê]|v\s*n\s*e\s*i\s*d|vi\s*en\s*e\s*i\s*di)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VNeID' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(c[eê]\s*c[eê]\s*c[eê]\s*đ[eê]|c\s*c\s*c\s*d|căn\s*cước\s*công\s*dân)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CCCD' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(c[eê]\s*c[eê]\s*c[eê]\s*đ[eê]\s*gắn\s*(?:chíp|chip)|căn\s*cước\s*công\s*dân\s*gắn\s*(?:chíp|chip))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CCCD gắn chip' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(định\s*danh\s*điện\s*tử\s*mức\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'định danh điện tử mức 2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(định\s*danh\s*điện\s*tử\s*mức\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'định danh điện tử mức 1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cổng\s*dịch\s*vụ\s*công\s*quốc\s*gia)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Cổng Dịch vụ công Quốc gia' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bằng\s*lái\s*xe\s*a\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bằng lái xe A1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bằng\s*lái\s*xe\s*b\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bằng lái xe B2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bằng\s*lái\s*xe\s*b\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bằng lái xe B1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đăng\s*kiểm\s*xe\s*cơ\s*giới)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'đăng kiểm xe cơ giới' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(phạt\s*nguội\s*giao\s*thông|phạt\s*nguội)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'phạt nguội' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đăng\s*ký\s*tạm\s*trú)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'đăng ký tạm trú' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đăng\s*ký\s*thường\s*trú)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'đăng ký thường trú' },
+
+  // Y tế, Sức khỏe & Bảo hiểm
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*y\s*tê|b\s*h\s*y\s*t|bảo\s*hiểm\s*y\s*tế)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHYT' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*ích\s*hát|b\s*h\s*x\s*h|bảo\s*hiểm\s*xã\s*hội)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHXH' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*tê\s*en|b\s*h\s*t\s*n|bảo\s*hiểm\s*thất\s*nghiệp)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHTN' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(vê\s*ét\s*ét\s*y\s*đê|v\s*s\s*s\s*i\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VssID' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(chụp\s*em\s*rờ\s*ai|chụp\s*em\s*rờ\s*y|m\s*r\s*i)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chụp MRI' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(chụp\s*xi\s*ti|chụp\s*cắt\s*lớp\s*vi\s*tính|c\s*t\s*scan\w*)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chụp CT Scanner' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(siêu\s*âm\s*đốp\s*lơ|siêu\s*âm\s*dop\w*)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'siêu âm Doppler' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(giấy\s*chuyển\s*tuyến\s*bảo\s*hiểm|giấy\s*chuyển\s*viện)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'giấy chuyển viện' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(chỉ\s*số\s*đường\s*huyết)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chỉ số đường huyết' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(huyết\s*áp\s*tâm\s*thu)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'huyết áp tâm thu' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(huyết\s*áp\s*tâm\s*trương)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'huyết áp tâm trương' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(toa\s*thuốc\s*điện\s*tử)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'toa thuốc điện tử' },
+
+  // Thanh toán, Tiêu dùng, Công nghệ số
+  { pattern: /(?<=^|[^\p{L}\p{N}])(quét\s*mã\s*k[ií]u\s*r[oờơ]|quét\s*k[ií]u\s*r[oờơ]|quét\s*mã\s*q\s*r|mã\s*k[ií]u\s*r[oờơ])(?=[^\p{L}\p{N}]|$)/giu, replacement: 'quét mã QR' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(na\s*pát\s*hai\s*tư\s*bảy|na\s*pát\s*24\s*7|n\s*a\s*p\s*a\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'NAPAS 24/7' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(áp\s*bồ\s*pay|apple\s*pay)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Apple Pay' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(gúc\s*gồ\s*oắt\s*lét|gúc\s*gồ\s*woa\s*lét|google\s*wallet)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Google Wallet' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(mô\s*mô|ví\s*mo\s*mo)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'MoMo' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(gia\s*lô\s*pay|da\s*lô\s*pay|zalo\s*pay)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ZaloPay' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(su\s*pi\s*pay|sô\s*pi\s*pay|shopee\s*pay)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ShopeePay' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(mua\s*trước\s*trả\s*sau|b\s*n\s*p\s*l)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'mua trước trả sau (BNPL)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thẻ\s*tín\s*dụng\s*quốc\s*tế)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thẻ tín dụng quốc tế' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thẻ\s*ghi\s*nợ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thẻ ghi nợ' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(trả\s*góp\s*không\s*phần\s*trăm|trả\s*góp\s*0\s*phần\s*trăm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'trả góp 0%' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(giao\s*hàng\s*hỏa\s*tốc)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'giao hàng hỏa tốc' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(thanh\s*toán\s*không\s*tiền\s*mặt)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thanh toán không tiền mặt' }
+];
+
+// ============================================================================
+// 4D. BỘ LỌC TỪ NGỮ NHẠY CẢM (SENSITIVE & PROFANITY MASKING WITH ***)
+// ============================================================================
+/**
+ * Danh sách các mẫu regex nhận diện từ ngữ thô tục, bậy bạ, xúc phạm, lăng mạ
+ * Tiếng Việt (kể cả viết tắt đm, vcl, cl, l*, c*...) và Tiếng Anh thông dụng.
+ * Sử dụng Unicode boundary chuẩn xác để nhận diện mọi ký tự tiếng Việt có dấu.
+ */
+const SENSITIVE_WORD_PATTERNS: RegExp[] = [
+  // Chửi thề đ* / đệ* / đụ / địt
+  /(?<=^|[^\p{L}\p{N}])(địt\s*mẹ|địt\s*mợ|địt\s*con\s*mẹ|địt\s*cụ|địt\s*bà|địt\s*nhau|địt)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(đụ\s*má|đụ\s*mẹ|đụ\s*mợ|đụ\s*moẹ|đù\s*má|đù\s*mẹ|đệt\s*mợ|đệt\s*mẹ|đụ)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(đéo|đél|đếch|đách|mịa|mọe|bỏ\s*mẹ|bỏ\s*mợ)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(đ[íìị]t\s*m[ẹéè]|đ[íìị]t|đ[ụù]\s*m[áàẹéè]|đ[ụù])(?=[^\p{L}\p{N}]|$)/giu,
+
+  // Viết tắt chửi bậy: đm, đmm, dkm, đkm, vcl, vkl, vcc, vl, cl, cc...
+  /(?<=^|[^\p{L}\p{N}])(đ\.?m\.?m|đ\.?m|d\.?k\.?m|đ\.?k\.?m|d\.?m\.?m|d\.?m|đ\.?c\.?l\.?m|d\.?c\.?l\.?m)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(v\.?c\.?l|v\.?k\.?l|v\.?c\.?c|vl|vđ|đbrr|dbrr)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(c\.?m\.?n|c\.?m\.?n\.?r|cl|cc)(?=[^\p{L}\p{N}]|$)/giu,
+
+  // Bộ phận nhạy cảm dùng làm từ chửi thề
+  /(?<=^|[^\p{L}\p{N}])(cặc|con\s*cặc|cặk|buồi|con\s*buồi|đầu\s*buồi|dái|bìu\s*dái)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(lồn|lồ̀n|con\s*lồn|lồz|lờ|hãm\s*lồn|ngu\s*lồn|mặt\s*lồn)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(vãi\s*lồn|vãi\s*cặc|vãi\s*đái|vãi\s*cứt|vãi\s*lol|vãi\s*cả\s*lồn)(?=[^\p{L}\p{N}]|$)/giu,
+
+  // Lăng mạ, xúc phạm nhân phẩm nặng nề
+  /(?<=^|[^\p{L}\p{N}])(mẹ\s*kiếp|chó\s*chết|chó\s*đẻ|đồ\s*chó|đồ\s*khốn|khốn\s*nạn|khốn\s*khiếp)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(súc\s*vật|óc\s*chó|óc\s*lợn|ngu\s*như\s*chó|ngu\s*như\s*bò|mất\s*dạy)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(đĩ|con\s*đĩ|đĩ\s*thõa|đĩ\s*điếm|cave|gái\s*bao|dâm\s*đãng|dâm\s*tặc|ấu\s*dâm)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(bố\s*mày|mẹ\s*mày|tiên\s*sư\s*bố|mả\s*mẹ|mả\s*cha)(?=[^\p{L}\p{N}]|$)/giu,
+
+  // Biến thể lách bộ lọc dùng dấu sao hoặc chấm: đ*m, c*c, l*n...
+  /(?<=^|[^\p{L}\p{N}])([đd]\*+[mkt]|[vc]\*+[lc]|[cl]\*+[nc]|b\*+[ui])(?=[^\p{L}\p{N}]|$)/giu,
+
+  // Tiếng Anh thông dụng
+  /(?<=^|[^\p{L}\p{N}])(mother\s*fucker|motherfucker|fucker|fucking|fuck|f\*ck)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(bullshit|shit|bitch|bastard|asshole|dick|pussy|cunt)(?=[^\p{L}\p{N}]|$)/giu
+];
+
+/**
+ * Che từ ngữ nhạy cảm bằng dấu hoa thị `***` hoặc `[***]`
+ */
+export function maskSensitiveWords(text: string, options: SensitiveMaskOptions = {}): string {
+  if (!text) return '';
+  const repl = options.style === 'bracket_asterisks' ? '[***]' : (options.replacement || '***');
+  let result = text;
+  for (const pattern of SENSITIVE_WORD_PATTERNS) {
+    result = result.replace(pattern, repl);
+  }
+  return result;
+}
+
+/**
+ * Kiểm tra xem chuỗi văn bản có chứa từ ngữ nhạy cảm hay không
+ */
+export function hasSensitiveWords(text: string): boolean {
+  if (!text) return false;
+  return SENSITIVE_WORD_PATTERNS.some(pat => pat.test(text));
+}
+
+/**
+ * Phát hiện danh sách các từ ngữ nhạy cảm trong văn bản (dùng cho thanh tra / kiểm duyệt)
+ */
+export function detectSensitiveWords(text: string): Array<{ word: string; index: number }> {
+  if (!text) return [];
+  const found: Array<{ word: string; index: number }> = [];
+  for (const pattern of SENSITIVE_WORD_PATTERNS) {
+    const rx = new RegExp(pattern.source, pattern.flags);
+    let match: RegExpExecArray | null;
+    while ((match = rx.exec(text)) !== null) {
+      found.push({ word: match[0], index: match.index });
+    }
+  }
+  return found;
+}
+
+// 5. Chuẩn hóa số đếm, phần trăm, tiền tệ, ngày giờ & đo lường theo chuẩn hành chính (ITN)
 const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]) => string) }> = [
   // Phần trăm
   { pattern: /\b(một\s*trăm|100)\s*phần\s*trăm\b/gi, replacement: '100%' },
@@ -138,11 +428,19 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\b(năm|5)\s*phần\s*trăm\b/gi, replacement: '5%' },
   { pattern: /\b(\d+)\s*phần\s*trăm\b/gi, replacement: '$1%' },
 
-  // Số thập phân tiếng Việt (phẩy -> dấu phẩy thập phân)
-  { pattern: /\b(\d+)\s*phẩy\s*(\d+)\b/gi, replacement: '$1,$2' },
-  { pattern: /\b(không|0)\s*phẩy\s*năm\b/gi, replacement: '0,5' },
-  { pattern: /\b(một|1)\s*phẩy\s*năm\b/gi, replacement: '1,5' },
-  { pattern: /\b(hai|2)\s*phẩy\s*năm\b/gi, replacement: '2,5' },
+  // Số thập phân tiếng Việt (phẩy / dấu phẩy -> số thập phân, ví dụ: sáu phẩy năm -> 6,5)
+  {
+    pattern: /(?<=^|[^\p{L}\p{N}])(không|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|\d+)\s*(?:phẩy|,)\s*(không|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|\d+)(?=[^\p{L}\p{N}]|$)/giu,
+    replacement: (_match: string, a: string, b: string) => {
+      const numMap: Record<string, string> = {
+        'không': '0', 'một': '1', 'hai': '2', 'ba': '3', 'bốn': '4',
+        'năm': '5', 'sáu': '6', 'bảy': '7', 'tám': '8', 'chín': '9'
+      };
+      const left = numMap[a.toLowerCase()] || a;
+      const right = numMap[b.toLowerCase()] || b;
+      return `${left},${right}`;
+    }
+  },
 
   // Tiền tệ & Đơn vị tài chính
   { pattern: /\b(\d+)\s*(?:triệu|tr)\s*(?:đồng|đ|vnd|vnđ)?\b/gi, replacement: '$1 triệu đồng' },
@@ -207,7 +505,7 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\bbước\s*(?:mười|10)\b/gi, replacement: 'Bước 10' }
 ];
 
-// 5. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế
+// 6. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế
 const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Lỗi l/n miền Bắc
   { pattern: /\b(thế\s*này\s*này|thế\s*lày)\b/gi, replacement: 'thế này' },
@@ -245,12 +543,12 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
   { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' }
 ];
 
-// 6. Lọc từ đệm thừa thãi khi ngập ngừng (Speech Fillers)
+// 7. Lọc từ đệm thừa thãi khi ngập ngừng (Speech Fillers)
 const SPEECH_FILLER_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /(?:^|\s)(?:ừm|à\s*ừm|ờ\s*thì|uhm|uh|thì\s*là\s*mà)(?=\s|$)/gi, replacement: ' ' }
 ];
 
-// 5. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
+// 8. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
 const TRANSITION_DISCOURSE_MARKERS = [
   'tuy nhiên',
   'vì vậy',
@@ -279,7 +577,7 @@ const TRANSITION_DISCOURSE_MARKERS = [
   'tổng kết lại'
 ];
 
-// 6. Các từ kết thúc biểu thị câu hỏi trong văn nói tiếng Việt
+// 9. Các từ kết thúc biểu thị câu hỏi trong văn nói tiếng Việt
 const QUESTION_ENDINGS = [
   'phải không',
   'đúng không',
@@ -321,7 +619,7 @@ const QUESTION_ENDINGS = [
   'đúng ko'
 ];
 
-// 7. Các cụm từ bắt đầu câu hỏi tiếng Việt (Question Starters)
+// 10. Các cụm từ bắt đầu câu hỏi tiếng Việt (Question Starters)
 const QUESTION_STARTERS_REGEX = /^(tại\s*sao|vì\s*sao|làm\s*sao|có\s*phải|bao\s*giờ|khi\s*nào|ai\s*là|ai\s*sẽ|ai\s*chịu|liệu\s*có|bao\s*nhiêu|mấy\s*giờ|làm\s*thế\s*nào|có\s*cách\s*nào|cho\s*hỏi|xin\s*hỏi)\b/i;
 
 /**
@@ -330,7 +628,6 @@ const QUESTION_STARTERS_REGEX = /^(tại\s*sao|vì\s*sao|làm\s*sao|có\s*phải
 function insertSmartDiscourseCommas(text: string): string {
   let res = text;
   for (const marker of TRANSITION_DISCOURSE_MARKERS) {
-    // Nếu đứng ở đầu chuỗi hoặc ngay sau dấu chấm/dòng mới mà chưa có dấu phẩy ngay sau
     const regex = new RegExp(`(^|[.?!\\n]\\s*)(${marker})(?![,.?!:;])\\s+`, 'gi');
     res = res.replace(regex, (_m, prefix, match) => `${prefix}${match}, `);
   }
@@ -341,15 +638,24 @@ function insertSmartDiscourseCommas(text: string): string {
  * Xử lý văn bản thô từ giọng nói theo thời gian thực:
  * - Chuẩn hóa Unicode NFC
  * - Chuyển đổi khẩu lệnh dấu câu
+ * - Áp dụng từ điển Kinh tế, Pháp luật, Đời sống theo chuyên ngành lựa chọn
  * - Áp dụng chuẩn hóa số đếm, phần trăm, giờ phút (ITN)
  * - Khử lỗi phát âm nói nhanh và dịch chuẩn từ mượn
+ * - Lọc & che dấu từ ngữ nhạy cảm bằng `***` (nếu bật maskSensitive)
  * - Tự động chèn dấu phẩy sau các trạng từ chuyển ý
  * - Nhận diện ngữ điệu câu hỏi tiếng Việt (cả từ kết thúc và từ bắt đầu câu hỏi)
  * - Chuẩn hóa khoảng cách xung quanh dấu câu
  * - Viết hoa chữ cái đầu câu và sau ngắt dòng
  */
-export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boolean = true): string {
+export function processRealtimeSpeechPunctuation(
+  rawText: string,
+  optionsOrIsFinal: boolean | PunctuationEngineOptions = true
+): string {
   if (!rawText) return '';
+
+  const opts: PunctuationEngineOptions = typeof optionsOrIsFinal === 'boolean'
+    ? { isFinal: optionsOrIsFinal, maskSensitive: true, domainMode: 'all' }
+    : { isFinal: true, maskSensitive: true, domainMode: 'all', ...optionsOrIsFinal };
 
   // 1. Chuẩn hóa Unicode chuẩn dựng sẵn NFC
   let text = rawText.normalize('NFC').trim();
@@ -370,40 +676,62 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // 5. Chuẩn hóa thuật ngữ chuyên ngành sản xuất, kho vận, tài chính AVG One
+  // 5. Chuẩn hóa thuật ngữ đặc thù doanh nghiệp AVG One
   for (const rule of ENTERPRISE_TERMS_RULES) {
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // 6. Chuẩn hóa số đếm, phần trăm, tiền tệ, ngày giờ, đơn vị đo lường (ITN)
+  // 6. Học & Chuyển đổi ngôn ngữ chuyên ngành: Kinh tế, Pháp luật, Đời sống
+  const dMode = opts.domainMode || 'all';
+
+  if (dMode === 'all' || dMode === 'economy') {
+    for (const rule of ECONOMY_FINANCE_RULES) {
+      text = text.replace(rule.pattern, rule.replacement);
+    }
+  }
+
+  if (dMode === 'all' || dMode === 'legal') {
+    for (const rule of LEGAL_ADMIN_RULES) {
+      text = text.replace(rule.pattern, rule.replacement);
+    }
+  }
+
+  if (dMode === 'all' || dMode === 'life') {
+    for (const rule of LIFE_SOCIAL_RULES) {
+      text = text.replace(rule.pattern, rule.replacement);
+    }
+  }
+
+  // 7. Chuẩn hóa số đếm, phần trăm, tiền tệ, ngày giờ, đơn vị đo lường (ITN)
   for (const rule of ITN_RULES) {
     text = typeof rule.replacement === 'function'
       ? text.replace(rule.pattern, rule.replacement as any)
       : text.replace(rule.pattern, rule.replacement);
   }
 
-  // 7. Lọc các từ đệm ngập ngừng thừa thãi
+  // 8. Lọc các từ đệm ngập ngừng thừa thãi
   for (const rule of SPEECH_FILLER_RULES) {
     text = text.replace(rule.pattern, rule.replacement);
   }
 
-  // 8. Tự động chèn dấu phẩy hợp lý sau liên từ và trạng ngữ chuyển tiếp
+  // 9. Lọc từ ngữ nhạy cảm nếu tính năng được bật (mặc định BẬT)
+  if (opts.maskSensitive !== false) {
+    text = maskSensitiveWords(text, { style: opts.sensitiveMaskStyle || 'asterisks' });
+  }
+
+  // 10. Tự động chèn dấu phẩy hợp lý sau liên từ và trạng ngữ chuyển tiếp
   text = insertSmartDiscourseCommas(text);
 
-  // 9. Chuẩn hóa khoảng cách quanh dấu câu:
-  // Không để khoảng trắng trước dấu câu: "xin chào ," -> "xin chào,"
+  // 11. Chuẩn hóa khoảng cách quanh dấu câu:
   text = text.replace(/\s+([,.?!:;%])/g, '$1');
-  // Phải có đúng 1 khoảng trắng sau dấu câu (nếu không phải là cuối chuỗi hoặc xuống dòng)
   text = text.replace(/([,.?!:;%])(?=[^\s\d\n)\]}])/g, '$1 ');
-  // Xử lý khoảng cách quanh dấu mở đóng ngoặc
   text = text.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
   text = text.replace(/"\s+/g, '"').replace(/\s+"/g, '"');
   text = text.replace(/\s{2,}/g, ' ');
 
-  // 10. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
-  if (isFinal) {
+  // 12. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
+  if (opts.isFinal) {
     const trimmed = text.trim();
-    // Nếu chưa có dấu kết thúc câu (. ? ! ...)
     if (!/[.?!…]$/.test(trimmed)) {
       const lower = trimmed.toLowerCase();
       const hasQuestionEnding = QUESTION_ENDINGS.some(ending => {
@@ -414,7 +742,6 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
       if (hasQuestionEnding || hasQuestionStarter) {
         text = trimmed.replace(/,\s*$/, '') + '?';
       } else {
-        // Tự động thêm dấu chấm nếu câu đã có độ dài ý nghĩa (>= 3 từ)
         const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
         if (wordCount >= 3 && !trimmed.endsWith(':') && !trimmed.endsWith(',')) {
           text = trimmed + '.';
@@ -423,8 +750,13 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
     }
   }
 
-  // 11. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
+  // 13. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
   text = autoCapitalizeSentences(text);
+
+  // Đảm bảo sau khi viết hoa các từ nhạy cảm vẫn được ẩn sạch sẽ
+  if (opts.maskSensitive !== false) {
+    text = maskSensitiveWords(text, { style: opts.sensitiveMaskStyle || 'asterisks' });
+  }
 
   return text.trim();
 }
@@ -435,10 +767,8 @@ export function processRealtimeSpeechPunctuation(rawText: string, isFinal: boole
 export function autoCapitalizeSentences(text: string): string {
   if (!text) return '';
 
-  // Viết hoa ký tự đầu
   let result = text.charAt(0).toUpperCase() + text.slice(1);
 
-  // Viết hoa sau các dấu kết câu: . ? ! \n
   result = result.replace(/([.?!]\s+)([a-zà-ỹ])/g, (_, p1, p2) => p1 + p2.toUpperCase());
   result = result.replace(/(\n\s*[-*]?\s*)([a-zà-ỹ])/g, (_, p1, p2) => p1 + p2.toUpperCase());
 
@@ -454,12 +784,10 @@ export function autoCapitalizeSentences(text: string): string {
 export function splitIntoReadableSpeechSegments(text: string, maxWords: number = 14): string[] {
   if (!text || !text.trim()) return [];
 
-  // Tách trước theo ngắt dòng \n
   const lineBlocks = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
   const allSegments: string[] = [];
 
   for (const block of lineBlocks) {
-    // Tách theo dấu kết câu . ? ! ;
     const rawSentences = block
       .split(/(?<=[.?!;])\s+/)
       .map(s => s.trim())
@@ -468,13 +796,11 @@ export function splitIntoReadableSpeechSegments(text: string, maxWords: number =
     for (const sentence of rawSentences) {
       const words = sentence.split(' ').filter(Boolean);
 
-      // Nếu câu có độ dài vừa phải, giữ nguyên
       if (words.length <= maxWords) {
         allSegments.push(autoCapitalizeSentences(sentence));
         continue;
       }
 
-      // Nếu câu quá dài, chia nhỏ tại các điểm ngắt tự nhiên
       let currentWords: string[] = [];
       for (let i = 0; i < words.length; i++) {
         const w = words[i];
@@ -510,10 +836,6 @@ export function splitIntoReadableSpeechSegments(text: string, maxWords: number =
 
 /**
  * Ghép nối hai đoạn văn bản liên tiếp mà không bị lặp từ / lặp câu (Deduplication & Overlap Merging)
- * - Tự động phát hiện khi câu mới là bản chỉnh sửa/mở rộng hoàn thiện hơn của câu trước
- * - Hỗ trợ đối soát câu dài lên tới 60 từ (chuẩn câu tiếng Việt)
- * - Tự động phát hiện và thay thế câu cuối cùng nếu câu mới là bản hoàn thiện của câu đó
- * - Tuyệt đối không nuốt lời nói hay xóa bỏ các câu từ hợp lệ
  */
 export function mergeSpeechWithoutOverlap(prevText: string, newText: string): string {
   const prev = prevText.trim();
@@ -527,49 +849,38 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   const prevNorm = stripPunct(prev);
   const nextNorm = stripPunct(next);
 
-  // 1. Nếu văn bản mới giống hệt văn bản cũ (trùng lặp hoàn toàn)
   if (prevNorm === nextNorm) {
     return prev;
   }
 
-  // 2. Nếu văn bản mới bao trùm hoặc là phần mở rộng đầy đủ hơn của toàn bộ văn bản cũ
   if (nextNorm.startsWith(prevNorm)) {
     return next;
   }
 
-  // 2b. Nếu văn bản cũ đã bao hàm toàn bộ văn bản mới (tránh lặp lại câu vừa nói)
   if (prevNorm.endsWith(nextNorm) || prevNorm.includes(nextNorm)) {
     return prev;
   }
 
-  // 2c. Kiểm tra câu cuối cùng trong văn bản cũ:
-  // Nếu prev gồm nhiều câu, và câu mới là bản hoàn thiện/mở rộng của câu cuối cùng
   const sentences = prev.split(/(?<=[.?!…\n])\s+/).filter(Boolean);
   if (sentences.length > 1) {
     const lastSentence = sentences[sentences.length - 1].trim();
     const lastSentNorm = stripPunct(lastSentence);
 
     if (lastSentNorm && (nextNorm.startsWith(lastSentNorm) || nextNorm === lastSentNorm)) {
-      // Thay thế câu cuối cùng cũ bằng câu mới hoàn thiện hơn
       const allPrevSentences = sentences.slice(0, sentences.length - 1).join(' ');
       const separator = allPrevSentences.endsWith('\n') ? '' : ' ';
       return `${allPrevSentences}${separator}${next}`;
     }
   }
 
-  // 3. Tìm phần giao thoa (suffix-to-prefix overlap) giữa đuôi của prev và đầu của next
   const prevWords = prev.split(/\s+/);
   const nextWords = next.split(/\s+/);
   const prevNormWords = prevWords.map(w => stripPunct(w)).filter(Boolean);
   const nextNormWords = nextWords.map(w => stripPunct(w)).filter(Boolean);
 
   let maxOverlap = 0;
-  // Hỗ trợ kiểm tra tới 60 từ (toàn bộ dung lượng câu tiếng Việt thông thường)
   const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 60);
 
-  // QUY TẮC BẢO TOÀN THÔNG TIN & CHỐNG CẮT MẤT TỪ:
-  // - Nếu chỉ trùng 1 từ: TUYỆT ĐỐI KHÔNG CẮT BỎ (tránh nuốt mất chủ ngữ hoặc từ đầu câu)
-  // - Chỉ coi là overlap khi trùng từ 2 từ trở lên và tổng chiều dài >= 6 ký tự
   for (let k = maxCheck; k >= 2; k--) {
     const prevSuffix = prevNormWords.slice(prevNormWords.length - k).join(' ');
     const nextPrefix = nextNormWords.slice(0, k).join(' ');
@@ -580,20 +891,18 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   }
 
   if (maxOverlap > 0) {
-    // Chỉ lấy phần đuôi không bị trùng lặp của nextWords
     const remainingWords = nextWords.slice(maxOverlap).join(' ').trim();
     if (!remainingWords) return prev;
     const separator = prev.endsWith('\n') ? '' : ' ';
     return `${prev}${separator}${remainingWords}`;
   }
 
-  // 4. Nếu là câu phát biểu mới hoàn toàn, nối tiếp bình thường
   const separator = prev.endsWith('\n') ? '' : ' ';
   return `${prev}${separator}${next}`;
 }
 
 /**
- * Khử phần tiền tố bị trùng lặp của câu mới nếu đầu câu mới trùng với đuôi câu trước (ví dụ khi chuyển người nói hoặc chia đoạn)
+ * Khử phần tiền tố bị trùng lặp của câu mới nếu đầu câu mới trùng với đuôi câu trước
  */
 export function stripPrefixOverlap(existingText: string, incomingText: string): string {
   const exist = existingText.trim();
@@ -618,7 +927,6 @@ export function stripPrefixOverlap(existingText: string, incomingText: string): 
     }
   }
 
-  // Nếu trùng 1 từ nhưng từ đó dài >= 5 ký tự (ví dụ: "chúng tôi")
   if (maxOverlap === 0 && maxCheck >= 1) {
     const lastExistWord = existWords[existWords.length - 1];
     const firstIncWord = incomingNormWords[0];
@@ -660,4 +968,142 @@ export function isNearDuplicateUtterance(textA: string, textB: string): boolean 
 
   const similarity = (2 * common) / (wordsA.length + wordsB.length);
   return similarity >= 0.85;
+}
+
+// ============================================================================
+// 11. BẢNG TỪ ĐIỂN THUẬT NGỮ CHUYÊN NGÀNH (DOMAIN GLOSSARY)
+// ============================================================================
+export const DOMAIN_GLOSSARY: DomainGlossaryItem[] = [
+  // Kinh tế - Tài chính
+  {
+    term: 'GDP / CPI / PMI',
+    domain: 'economy',
+    domainLabel: 'Kinh tế & Vĩ mô',
+    meaning: 'Các chỉ số vĩ mô cốt lõi: Tổng sản phẩm nội địa, Chỉ số giá tiêu dùng, Chỉ số nhà quản trị mua hàng.',
+    spokenExamples: ['di đi pi', 'xi pi ai', 'pê em i']
+  },
+  {
+    term: 'VN-Index / HNX-Index',
+    domain: 'economy',
+    domainLabel: 'Chứng khoán',
+    meaning: 'Chỉ số biến động thị trường chứng khoán cơ sở tại HOSE và HNX.',
+    spokenExamples: ['vê nờ in đếch', 'hát en ích']
+  },
+  {
+    term: 'EBITDA / ROE / ROI',
+    domain: 'economy',
+    domainLabel: 'Tài chính doanh nghiệp',
+    meaning: 'Lợi nhuận trước lãi vay, thuế, khấu hao; Tỷ suất sinh lời trên vốn chủ sở hữu và trên đầu tư.',
+    spokenExamples: ['e bít đa', 'rốt e', 'rốt ai']
+  },
+  {
+    term: 'M&A / IPO / ESOP',
+    domain: 'economy',
+    domainLabel: 'Đầu tư & Vốn',
+    meaning: 'Sáp nhập và mua lại; Chào bán cổ phiếu lần đầu ra công chúng; Phát hành cổ phiếu thưởng cho nhân sự.',
+    spokenExamples: ['em en a', 'ai pi ô', 'e xốp']
+  },
+  {
+    term: 'Margin / Call Margin',
+    domain: 'economy',
+    domainLabel: 'Giao dịch tài chính',
+    meaning: 'Đòn bẩy tài chính ký quỹ và yêu cầu bổ sung ký quỹ bắt buộc.',
+    spokenExamples: ['ma gin', 'mắc gin', 'côn ma gin']
+  },
+  {
+    term: 'T+2 / T+2.5',
+    domain: 'economy',
+    domainLabel: 'Chu kỳ thanh toán',
+    meaning: 'Thời gian hoàn tất bù trừ và chuyển quyền sở hữu cổ phiếu tại Trung tâm lưu ký VSD.',
+    spokenExamples: ['tê cộng hai', 'tê cộng hai phẩy năm']
+  },
+
+  // Pháp luật - Hành chính
+  {
+    term: 'HĐXX / VKSND / TAND',
+    domain: 'legal',
+    domainLabel: 'Cơ quan tố tụng',
+    meaning: 'Hội đồng xét xử, Viện kiểm sát nhân dân, Tòa án nhân dân các cấp.',
+    spokenExamples: ['hát đê ích ích', 'viện kiểm sát', 'tòa án']
+  },
+  {
+    term: 'VIAC',
+    domain: 'legal',
+    domainLabel: 'Trọng tài thương mại',
+    meaning: 'Trung tâm Trọng tài Quốc tế Việt Nam - cơ quan giải quyết tranh chấp kinh doanh thương mại.',
+    spokenExamples: ['vi ác', 'vê y a xê', 'trọng tài']
+  },
+  {
+    term: 'Nguyên đơn / Bị đơn',
+    domain: 'legal',
+    domainLabel: 'Đương sự tố tụng',
+    meaning: 'Người khởi kiện yêu cầu Tòa bảo vệ quyền lợi và người bị kiện trong vụ án dân sự, thương mại.',
+    spokenExamples: ['nguyên đơn', 'bị đơn', 'đương sự']
+  },
+  {
+    term: 'NDA',
+    domain: 'legal',
+    domainLabel: 'Hợp đồng bảo mật',
+    meaning: 'Thỏa thuận bảo mật thông tin kinh doanh, kỹ thuật giữa các đối tác thương mại.',
+    spokenExamples: ['en đi a', 'thỏa thuận bảo mật']
+  },
+  {
+    term: 'Bất khả kháng (Force Majeure)',
+    domain: 'legal',
+    domainLabel: 'Nghiệp vụ hợp đồng',
+    meaning: 'Sự kiện khách quan không lường trước được dẫn đến miễn trừ nghĩa vụ bồi thường vi phạm.',
+    spokenExamples: ['bất khả kháng', 'phốt ma dơ']
+  },
+  {
+    term: 'Giám đốc thẩm / Tái thẩm',
+    domain: 'legal',
+    domainLabel: 'Tố tụng đặc biệt',
+    meaning: 'Xem xét lại bản án, quyết định đã có hiệu lực pháp luật khi phát hiện vi phạm pháp luật hoặc tình tiết mới.',
+    spokenExamples: ['giám đốc thẩm', 'tái thẩm']
+  },
+
+  // Đời sống - Xã hội
+  {
+    term: 'CCCD / VNeID mức 2',
+    domain: 'life',
+    domainLabel: 'Định danh công dân',
+    meaning: 'Thẻ Căn cước công dân gắn chip và Tài khoản Định danh điện tử tích hợp dịch vụ công quốc gia.',
+    spokenExamples: ['cê cê cê đê', 'vê nê y đê', 'định danh mức hai']
+  },
+  {
+    term: 'BHYT / BHXH / VssID',
+    domain: 'life',
+    domainLabel: 'An sinh & Y tế',
+    meaning: 'Bảo hiểm y tế, Bảo hiểm xã hội và Ứng dụng số BHXH trên thiết bị di động.',
+    spokenExamples: ['bê hát y tê', 'bê hát ích hát', 'vê ét ét y đê']
+  },
+  {
+    term: 'Quét mã QR / NAPAS 24/7',
+    domain: 'life',
+    domainLabel: 'Thanh toán đời sống',
+    meaning: 'Thanh toán tiêu dùng không tiền mặt thông qua mã QR và mạng lưới chuyển mạch quốc gia.',
+    spokenExamples: ['quét kiu rờ', 'na pát hai tư bảy']
+  },
+  {
+    term: 'MRI / CT Scanner / Doppler',
+    domain: 'life',
+    domainLabel: 'Chăm sóc sức khỏe',
+    meaning: 'Các kỹ thuật chẩn đoán hình ảnh y khoa hiện đại: cộng hưởng từ, cắt lớp vi tính, siêu âm màu.',
+    spokenExamples: ['em rờ ai', 'xi ti', 'đốp lơ']
+  },
+  {
+    term: 'Apple Pay / Google Wallet / MoMo',
+    domain: 'life',
+    domainLabel: 'Ví & Thẻ số',
+    meaning: 'Công nghệ thanh toán chạm một chạm không tiếp xúc và ví điện tử tiêu dùng phổ biến.',
+    spokenExamples: ['áp bồ pay', 'gúc gồ oắt lét', 'mô mô', 'gia lô pay']
+  }
+];
+
+/**
+ * Lấy danh sách thuật ngữ chuyên ngành theo phân hệ
+ */
+export function getDomainGlossary(domain: DomainMode = 'all'): DomainGlossaryItem[] {
+  if (domain === 'all') return DOMAIN_GLOSSARY;
+  return DOMAIN_GLOSSARY.filter(item => item.domain === domain);
 }

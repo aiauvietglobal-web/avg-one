@@ -185,39 +185,20 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
         {/* 🛸 VIETTEL AI-STYLE VECTOR LINE-ART & GEOMETRIC ANIMATED HERO */}
         <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-4 sm:py-7 px-2 overflow-visible min-h-[250px] sm:min-h-[290px] xl:min-h-[330px]">
           
-          {/* 🪐 1. LARGE CONCENTRIC ORBITAL RINGS WITH LIVE REVOLVING SATELLITES (TOP-RIGHT CORNER) */}
-          <div className="hidden md:block absolute -top-10 -right-8 xl:-right-14 w-64 h-64 xl:w-84 xl:h-84 pointer-events-none overflow-visible z-0 animate-entrance-right" style={{ animationDelay: '200ms' }}>
-            <svg className="w-full h-full" viewBox="0 0 320 320" fill="none">
-              {/* Inner Concentric Orbit (r=140) */}
-              <circle cx="300" cy="20" r="140" stroke="#F15A24" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="6 6" />
-              {/* Middle Concentric Orbit (r=210) */}
-              <circle cx="300" cy="20" r="210" stroke="#F15A24" strokeOpacity="0.35" strokeWidth="2" />
-              {/* Outer Sweeping Orbit (r=280) */}
-              <circle cx="300" cy="20" r="280" stroke="#0284C7" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="8 4" />
-              
-              {/* 🛰️ Revolving Satellites on Orbit 1 (Counter-Clockwise) */}
-              <g className="animate-orbit-satellite-2">
-                <circle cx="160" cy="20" r="7" fill="#F15A24" />
-                <circle cx="160" cy="20" r="3" fill="#FFFFFF" />
-                <circle cx="160" cy="20" r="12" stroke="#F15A24" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.6" />
-              </g>
-
-              {/* 🛰️ Revolving Satellites on Orbit 2 (Clockwise) */}
-              <g className="animate-orbit-satellite-1">
-                <circle cx="90" cy="20" r="6" fill="#0284C7" />
-                <circle cx="90" cy="20" r="2.5" fill="#FFFFFF" />
-                <circle cx="510" cy="20" r="5" fill="#F15A24" />
-                <circle cx="510" cy="20" r="2" fill="#FFFFFF" />
-              </g>
-            </svg>
-          </div>
 
 
-          {/* 1. NỀN TẢNG SỐ (TOP-LEFT) - LỚN HƠN, TỐI GIẢN CHỮ */}
-          <div className="hidden lg:flex absolute left-3 xl:left-12 top-2 xl:top-5 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
+          {/* 1. NỀN TẢNG SỐ (TOP-LEFT) - BẢN VẼ KỸ THUẬT BLUEPRINT PHÁ CÁCH */}
+          <div className="hidden lg:flex absolute left-4 xl:left-14 top-4 xl:top-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
             {/* Multi-Tier 3D Isometric Bedrock Architecture Icon */}
             <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
               <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
+                {/* Vòng chuẩn tọa độ kỹ thuật mờ bên dưới */}
+                <circle cx="50" cy="50" r="44" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 6" opacity="0.25" className="dark:stroke-sky-400" />
+                <line x1="50" y1="3" x2="50" y2="9" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+                <line x1="50" y1="91" x2="50" y2="97" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+                <line x1="3" y1="50" x2="9" y2="50" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+                <line x1="91" y1="50" x2="97" y2="50" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+
                 {/* Layer 1: Base Platform Slab */}
                 <polygon
                   points="50,82 86,64 50,46 14,64"
@@ -296,26 +277,65 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               </svg>
             </div>
 
-            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
+            <div className="hidden sm:flex items-center -mr-1 opacity-70">
+              <div className="w-1.5 h-1.5 rotate-45 border border-sky-500 bg-white dark:bg-slate-900" />
+              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-r from-sky-500 to-transparent" />
+            </div>
+
+            {/* Typography: Bố cục khoa học, phá cách với chỉ số kỹ thuật */}
             <div className="flex flex-col text-left">
-              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="font-mono text-[10px] xl:text-[11px] font-black text-sky-600 dark:text-sky-400 tracking-wider">
+                  01 // ARCHITECTURE
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" />
+              </div>
+              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs">
                 Nền tảng số
+              </span>
+              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-sky-400 rounded-full" />
+                <span>SYS.CORE • LAYER 03</span>
               </span>
             </div>
           </div>
 
-          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - CÁC BÁNH RĂNG LIÊN KẾT QUAY TRÒN ĐỒNG TỐC ĐỘ */}
-          <div className="hidden lg:flex absolute right-4 xl:right-16 top-2 xl:top-5 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '300ms' }}>
-            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - BỘ BÁNH RĂNG CƠ HỌC ĐO KHỚP CHÍNH XÁC */}
+          <div className="hidden lg:flex absolute right-8 xl:right-20 top-4 xl:top-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '300ms' }}>
+            {/* Typography: Căn phải khoa học, chỉ số kỹ thuật liên kết */}
             <div className="flex flex-col text-right">
-              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none whitespace-nowrap">
+              <div className="flex items-center justify-end gap-1.5 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
+                <span className="font-mono text-[10px] xl:text-[11px] font-black text-orange-600 dark:text-orange-400 tracking-wider">
+                  AUTOMATION // 02
+                </span>
+              </div>
+              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs whitespace-nowrap">
                 Tự động hóa
+              </span>
+              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center justify-end gap-1.5">
+                <span>GEAR.SYNC • 100% CAD</span>
+                <span className="w-1 h-1 bg-orange-400 rounded-full" />
               </span>
             </div>
 
-            {/* Interlocking Rotating Gears Assembly Icon */}
+            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
+            <div className="hidden sm:flex items-center -ml-1 opacity-70">
+              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-l from-[#F15A24] to-transparent" />
+              <div className="w-1.5 h-1.5 rotate-45 border border-[#F15A24] bg-white dark:bg-slate-900" />
+            </div>
+
+            {/* Interlocking Rotating Gears Assembly Icon With Precision Compass Scale */}
             <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
               <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
+                {/* Vành đo góc cơ khí kỹ thuật (Compass Caliper Ring) */}
+                <circle cx="42" cy="48" r="39" stroke="#F15A24" strokeWidth="0.8" strokeDasharray="2 4" opacity="0.3" className="dark:stroke-orange-400" />
+                <line x1="42" y1="6" x2="42" y2="10" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+                <line x1="42" y1="86" x2="42" y2="90" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+                <line x1="0" y1="48" x2="4" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+                <line x1="80" y1="48" x2="84" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+
                 {/* Gear 1: Bánh răng chính (12 răng, quay thuận kim đồng hồ) */}
                 <g className="animate-gear-1">
                   <path
@@ -377,11 +397,16 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 3. SỐ HÓA (BOTTOM-LEFT) - LỚN HƠN, TỐI GIẢN CHỮ */}
-          <div className="hidden md:flex absolute left-4 xl:left-14 bottom-2 xl:bottom-6 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
+          {/* 3. SỐ HÓA (BOTTOM-LEFT) - BỐ CỤC LỆCH TẦNG KHOA HỌC (INWARD DIAGONAL SHIFT) */}
+          <div className="hidden md:flex absolute left-8 xl:left-22 bottom-3 xl:bottom-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
             {/* Digital Transformation Waveform & Constellation Matrix Icon */}
             <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
               <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
+                {/* Các vạch lấy mẫu tín hiệu số hóa (DSP Sampling Stems) */}
+                <line x1="36" y1="24" x2="36" y2="60" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
+                <line x1="52" y1="60" x2="52" y2="76" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
+                <line x1="68" y1="38" x2="68" y2="60" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
+
                 {/* Trục sóng số hóa chuyển đổi dữ liệu thời gian thực */}
                 <path
                   d="M 6,60 L 26,60 L 36,24 L 52,76 L 68,38 L 82,54 L 94,54"
@@ -414,21 +439,53 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               </svg>
             </div>
 
-            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
+            <div className="hidden sm:flex items-center -mr-1 opacity-70">
+              <div className="w-1.5 h-1.5 rotate-45 border border-sky-500 bg-white dark:bg-slate-900" />
+              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-r from-sky-500 to-transparent" />
+            </div>
+
+            {/* Typography: Bố cục khoa học, phá cách với chỉ số kỹ thuật */}
             <div className="flex flex-col text-left">
-              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none">
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="font-mono text-[10px] xl:text-[11px] font-black text-sky-600 dark:text-sky-400 tracking-wider">
+                  03 // REAL-TIME
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              </div>
+              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs">
                 Số hóa
+              </span>
+              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-emerald-400 rounded-full" />
+                <span>DSP.MATRIX • SAMPLING 60Hz</span>
               </span>
             </div>
           </div>
 
-          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - LỚN HƠN, TỐI GIẢN CHỮ */}
-          <div className="hidden md:flex absolute right-4 xl:right-16 bottom-2 xl:bottom-6 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '550ms' }}>
-            {/* Typography: Tối giản - Chỉ để chữ tiêu đề chính */}
+          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - SÓNG GIAO THOA CỘNG HƯỞNG ĐA CHIỀU */}
+          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-3 xl:bottom-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '550ms' }}>
+            {/* Typography: Căn phải khoa học, chỉ số kỹ thuật liên kết */}
             <div className="flex flex-col text-right">
-              <span className="text-base sm:text-lg xl:text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-tight select-none whitespace-nowrap">
+              <div className="flex items-center justify-end gap-1.5 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                <span className="font-mono text-[10px] xl:text-[11px] font-black text-amber-600 dark:text-amber-400 tracking-wider">
+                  INTERACTION // 04
+                </span>
+              </div>
+              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs whitespace-nowrap">
                 Tương tác
               </span>
+              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center justify-end gap-1.5">
+                <span>VOICE & CHAT • QUANTUM RESONANCE</span>
+                <span className="w-1 h-1 bg-amber-400 rounded-full" />
+              </span>
+            </div>
+
+            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
+            <div className="hidden sm:flex items-center -ml-1 opacity-70">
+              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-l from-[#F15A24] to-transparent" />
+              <div className="w-1.5 h-1.5 rotate-45 border border-[#F15A24] bg-white dark:bg-slate-900" />
             </div>
 
             {/* Multi-Channel Interactive Dialogue Convergence Icon */}

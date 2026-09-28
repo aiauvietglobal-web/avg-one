@@ -1,4 +1,9 @@
 import { AudioSegment, TranscribedFile } from '../modules/apps/FileTranscribeModule';
+import {
+  processRealtimeSpeechPunctuation,
+  DomainMode,
+  maskSensitiveWords
+} from './speechPunctuationEngine';
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   let binary = '';
@@ -10,14 +15,23 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
   return window.btoa(binary);
 }
 
+export interface GeminiTranscribeOptions {
+  domainMode?: DomainMode;
+  maskSensitive?: boolean;
+}
+
 export async function transcribeAudioWithGemini(
   file: File,
   apiKey: string,
-  onProgress?: (stage: string, progress: number) => void
+  onProgress?: (stage: string, progress: number) => void,
+  options?: GeminiTranscribeOptions
 ): Promise<{ segments: AudioSegment[]; summary: TranscribedFile['summary'] }> {
   if (!apiKey) {
     throw new Error('Vui lòng nhập Google Gemini API Key để thực hiện giải mã âm thanh thực tế.');
   }
+
+  const maskSensitive = options?.maskSensitive !== false;
+  const domainMode = options?.domainMode || 'all';
 
   onProgress?.('Đang đọc dữ liệu tệp âm thanh binary...', 15);
   const arrayBuffer = await file.arrayBuffer();
@@ -29,11 +43,17 @@ export async function transcribeAudioWithGemini(
 
   onProgress?.('Đang gửi âm thanh tới Google Gemini 2.5 Flash Speech Engine...', 60);
 
-  const promptText = `Bạn là chuyên gia bóc tách băng ghi âm tiếng Việt chuyên nghiệp. Hãy nghe toàn bộ âm thanh trong tệp và trích xuất TOÀN BỘ nội dung phát biểu thực tế của các nhân vật.
+  const promptText = `Bạn là chuyên gia bóc tách băng ghi âm tiếng Việt chuyên nghiệp thuộc phân hệ chuyển đổi thông minh AVG One. Hãy nghe toàn bộ âm thanh trong tệp và trích xuất TOÀN BỘ nội dung phát biểu thực tế của các nhân vật.
 
 YÊU CẦU BẮT BUỘC:
 1. Giải mã 100% chính xác lời nói tiếng Việt thực tế từ file âm thanh. KHÔNG tự nghĩ ra hay tạo câu mẫu giả định.
-2. Trả về JSON thuần túy (KHÔNG bọc trong markdown \`\`\`json):
+2. Áp dụng chuẩn xác thuật ngữ chuyên ngành:
+   - Kinh tế & Tài chính: GDP, CPI, EBITDA, ROE, ROI, VN-Index, IPO, M&A, margin, call margin, nợ xấu nhóm 1-5, ĐHĐCĐ, HĐQT...
+   - Pháp luật & Hành chính: TAND, VKSND, HĐXX, VIAC, NDA, Bộ luật Dân sự, Bộ luật Hình sự, nguyên đơn, bị đơn, kháng cáo, giám đốc thẩm...
+   - Đời sống & Xã hội: CCCD gắn chip, VNeID mức 2, BHYT, BHXH, VssID, quét mã QR, NAPAS 24/7, chụp MRI, CT Scanner...
+3. LƯU Ý BẢO VỆ TỪ NGỮ NHẠY CẢM:
+   - Nếu trong lời nói có từ ngữ thô tục, chửi thề, lăng mạ, báng bổ (tiếng Việt hoặc tiếng Anh), BẮT BUỘC ẩn bằng dấu ba sao: *** (ví dụ: đ***, ***, mẹ kiếp -> mẹ *** hoặc ***) để đảm bảo chuẩn mực công sở.
+4. Trả về JSON thuần túy (KHÔNG bọc trong markdown \`\`\`json):
 {
   "summary": {
     "executive": "Tóm tắt ngắn gọn nội dung thực tế cuộc họp...",
@@ -89,24 +109,48 @@ YÊU CẦU BẮT BUỘC:
   const parsed = JSON.parse(cleanJson);
 
   const rawSegments: any[] = parsed.segments || [];
-  const segments: AudioSegment[] = rawSegments.map((s, idx) => ({
-    id: `seg-gemini-${Date.now()}-${idx}`,
-    startTime: Number(s.startTime) || 0,
-    endTime: Number(s.endTime) || (Number(s.startTime) || 0) + 15,
-    speakerId: s.speakerId || `spk-${(idx % 3) + 1}`,
-    speakerName: s.speakerName || `Người phát biểu ${(idx % 3) + 1}`,
-    speakerColor: `spk-${(idx % 4) + 1}`,
-    speakerRole: s.speakerRole || 'Diễn giả',
-    text: s.text || '',
-    confidence: 0.99
-  }));
+  const segments: AudioSegment[] = rawSegments.map((s, idx) => {
+    // Áp dụng bộ lọc ngôn ngữ chuyên ngành và từ nhạy cảm
+    let processedText = s.text || '';
+    processedText = processRealtimeSpeechPunctuation(processedText, {
+      isFinal: true,
+      maskSensitive,
+      domainMode
+    });
+
+    if (maskSensitive) {
+      processedText = maskSensitiveWords(processedText);
+    }
+
+    return {
+      id: `seg-gemini-${Date.now()}-${idx}`,
+      startTime: Number(s.startTime) || 0,
+      endTime: Number(s.endTime) || (Number(s.startTime) || 0) + 15,
+      speakerId: s.speakerId || `spk-${(idx % 3) + 1}`,
+      speakerName: s.speakerName || `Người phát biểu ${(idx % 3) + 1}`,
+      speakerColor: `spk-${(idx % 4) + 1}`,
+      speakerRole: s.speakerRole || 'Diễn giả',
+      text: processedText,
+      confidence: 0.99
+    };
+  });
+
+  let executiveSummary = parsed.summary?.executive || 'Đã bóc tách nội dung thực tế từ Gemini AI.';
+  if (maskSensitive) {
+    executiveSummary = maskSensitiveWords(executiveSummary);
+  }
 
   return {
     segments,
-    summary: parsed.summary || {
-      executive: 'Đã bóc tách nội dung thực tế từ Gemini AI.',
-      keyDecisions: [],
-      actionItems: []
+    summary: {
+      executive: executiveSummary,
+      keyDecisions: (parsed.summary?.keyDecisions || []).map((kd: string) =>
+        maskSensitive ? maskSensitiveWords(kd) : kd
+      ),
+      actionItems: (parsed.summary?.actionItems || []).map((act: any) => ({
+        ...act,
+        task: maskSensitive ? maskSensitiveWords(act.task || '') : (act.task || '')
+      }))
     }
   };
 }

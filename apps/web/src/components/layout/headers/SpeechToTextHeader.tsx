@@ -12,6 +12,7 @@ import {
   Sparkles,
   ChevronRight,
   Clock,
+  Plus,
   PlusCircle,
   Download,
   Copy,
@@ -23,6 +24,41 @@ import {
 } from 'lucide-react';
 
 export type SpeechNavTab = 'storage' | 'utilities' | 'settings' | 'chat' | 'history' | 'templates';
+
+export interface HeaderConversationItem {
+  id: string;
+  title: string;
+  createdAt: string;
+  messageCount: number;
+  lastMessage?: string;
+}
+
+const getInitialSavedConversations = (): HeaderConversationItem[] => {
+  try {
+    const stored = localStorage.getItem('avg_speech_saved_conversations');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        return parsed.map((c: any) => ({
+          id: c.id,
+          title: c.title || 'Cuộc trao đổi',
+          createdAt: c.createdAt || '',
+          messageCount: Array.isArray(c.messages) ? c.messages.length : 0,
+          lastMessage: Array.isArray(c.messages) && c.messages.length > 0 ? c.messages[c.messages.length - 1].text : '',
+        }));
+      }
+    }
+  } catch (e) {}
+  return [];
+};
+
+const getInitialCurrentConvId = (): string => {
+  try {
+    return localStorage.getItem('avg_speech_current_conv_id') || '';
+  } catch (e) {
+    return '';
+  }
+};
 
 export interface SpeechToTextHeaderProps {
   onBack: () => void;
@@ -75,6 +111,8 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
 
   // Synced states for storage & settings popovers
   const [savedConversationsCount, setSavedConversationsCount] = useState<number>(0);
+  const [savedConversationsList, setSavedConversationsList] = useState<HeaderConversationItem[]>(getInitialSavedConversations);
+  const [currentConvId, setCurrentConvId] = useState<string>(getInitialCurrentConvId);
   const [micState, setMicState] = useState<'idle' | 'recording' | 'paused'>('idle');
   const [fontSize, setFontSize] = useState<'normal' | 'large' | 'xlarge' | 'massive'>('xlarge');
   const [autoTts, setAutoTts] = useState<boolean>(true);
@@ -106,6 +144,8 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
         if (e.detail.counts !== undefined) setFilterCounts(e.detail.counts);
         if (e.detail.showSpeakerFilterBar !== undefined) setShowChatFilterBar(e.detail.showSpeakerFilterBar);
         if (e.detail.savedConversationsCount !== undefined) setSavedConversationsCount(e.detail.savedConversationsCount);
+        if (e.detail.savedConversations !== undefined) setSavedConversationsList(e.detail.savedConversations);
+        if (e.detail.currentConversationId !== undefined) setCurrentConvId(e.detail.currentConversationId);
         if (e.detail.micState !== undefined) setMicState(e.detail.micState);
         if (e.detail.fontSize !== undefined) setFontSize(e.detail.fontSize);
         if (e.detail.autoTts !== undefined) setAutoTts(e.detail.autoTts);
@@ -124,9 +164,29 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
     }
   };
 
+  const handleSelectConversation = (id: string) => {
+    setIsStorageOpen(false);
+    setCurrentConvId(id);
+    window.dispatchEvent(new CustomEvent('speech_select_conversation', { detail: { id } }));
+  };
+
+  const handleDeleteConversation = (id: string, title: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.dispatchEvent(new CustomEvent('speech_delete_conversation', { detail: { id, title } }));
+    setSavedConversationsList(prev => prev.filter(c => c.id !== id));
+  };
+
   const handleTabClick = (tab: SpeechNavTab) => {
     if (tab === 'storage') {
-      setIsStorageOpen(prev => !prev);
+      setIsStorageOpen(prev => {
+        const next = !prev;
+        if (next) {
+          setSavedConversationsList(getInitialSavedConversations());
+          setCurrentConvId(getInitialCurrentConvId());
+          window.dispatchEvent(new CustomEvent('speech_request_filter_sync'));
+        }
+        return next;
+      });
       setIsUtilitiesOpen(false);
       setIsSettingsOpen(false);
       return;
@@ -226,109 +286,109 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                 />
               </button>
 
-              {/* DROPDOWN MENU KHO LƯU TRỮ VÀ LỊCH SỬ - NỀN TRẮNG ĐẶC (SOLID WHITE) CHỐNG XUYÊN THẤU */}
+              {/* DROPDOWN MENU HIỆN TRỰC TIẾP LỊCH SỬ CÁC CUỘC TRAO ĐỔI - NỀN TRẮNG ĐẶC (SOLID WHITE) */}
               {isStorageOpen && (
-                <div className="absolute top-full left-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-2xl p-3 z-50 animate-dropdown-slide ring-1 ring-black/5">
-                  {/* Header của Lưu trữ Popover: Đồng bộ chuẩn Gradient Xanh */}
-                  <div className="p-3.5 bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#38BDF8] text-white rounded-2xl flex items-center justify-between mb-2.5 shadow-sm relative overflow-hidden">
-                    <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl pointer-events-none" />
-                    <div className="flex items-center gap-2.5 relative z-10">
-                      <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/20 shrink-0">
-                        <FolderOpen className="w-4 h-4 text-white stroke-[2.5]" />
-                      </div>
-                      <div>
-                        <h4 className="font-black text-xs uppercase tracking-wider text-white">LƯU TRỮ & LỊCH SỬ</h4>
-                        <p className="text-[10px] text-white/90 font-medium">Quản lý phiên ghi âm & bản ghi thoại</p>
-                      </div>
+                <div className="absolute top-full left-0 mt-2 w-80 sm:w-88 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2.5 z-50 animate-dropdown-slide overflow-hidden">
+                  {/* Header phân cấp dải màu nổi bật, BỎ subtitle 'Quản lý phiên ghi âm & bản ghi thoại' theo yêu cầu */}
+                  <div className="-mx-2.5 -mt-2.5 px-3.5 py-2.5 mb-2 bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white flex items-center justify-between shadow-2xs">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+                      <h4 className="font-black text-xs uppercase tracking-wider text-white">LỊCH SỬ TRAO ĐỔI</h4>
                     </div>
-                    <span className="relative z-10 text-[10px] font-black text-white bg-white/20 px-2 py-0.5 rounded-full border border-white/20 shadow-2xs">
-                      {savedConversationsCount} phiên
-                    </span>
-                  </div>
-
-                  {/* Danh sách các tác vụ lưu trữ nhanh */}
-                  <div className="space-y-1.5">
-                    {/* Xem toàn bộ lịch sử */}
-                    <button
-                      onClick={() => handleStorageAction('open_history')}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800 group"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/60 text-[#00A8E8] flex items-center justify-center shrink-0">
-                          <Clock className="w-3.5 h-3.5 stroke-[2.2]" />
-                        </div>
-                        <div className="text-left">
-                          <div className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">Xem toàn bộ lịch sử</div>
-                          <div className="text-[10px] text-slate-400">Tìm kiếm & xem lại các phiên đã lưu</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
-                    </button>
-
-                    {/* Tạo phiên hội thoại mới */}
                     <button
                       onClick={() => handleStorageAction('new_conversation')}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800 group"
+                      className="text-[11px] font-bold text-[#0284C7] bg-white hover:bg-sky-50 px-2 py-0.5 rounded-md shadow-2xs cursor-pointer transition-all flex items-center gap-1 hover:scale-105 active:scale-95"
+                      title="Tạo cuộc trao đổi mới"
                     >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                          <PlusCircle className="w-3.5 h-3.5 stroke-[2.2]" />
-                        </div>
-                        <div className="text-left">
-                          <div className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Tạo phiên hội thoại mới</div>
-                          <div className="text-[10px] text-slate-400">Lưu phiên cũ & mở trang hội thoại mới</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
-                    </button>
-
-                    {/* Xuất file văn bản TXT */}
-                    <button
-                      onClick={() => handleStorageAction('download_transcript')}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800 group"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                          <Download className="w-3.5 h-3.5 stroke-[2.2]" />
-                        </div>
-                        <div className="text-left">
-                          <div className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Xuất file văn bản (.TXT)</div>
-                          <div className="text-[10px] text-slate-400">Tải biên bản phiên thoại về máy tính</div>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
-                    </button>
-
-                    {/* Sao chép toàn bộ nội dung */}
-                    <button
-                      onClick={() => handleStorageAction('copy_transcript')}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800 group"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                          <Copy className="w-3.5 h-3.5 stroke-[2.2]" />
-                        </div>
-                        <div className="text-left">
-                          <div className="font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Sao chép nội dung</div>
-                          <div className="text-[10px] text-slate-400">Copy toàn bộ văn bản vào clipboard</div>
-                        </div>
-                      </div>
+                      <Plus className="w-3 h-3 stroke-[3]" />
+                      <span>Phiên mới</span>
                     </button>
                   </div>
 
-                  {/* Footer của Lưu trữ: Trạng thái tự động lưu & Nút dọn sạch */}
-                  <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-1">
-                    <div className="flex items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span>Tự động lưu vào máy</span>
-                    </div>
+                  {/* HIỆN TRỰC TIẾP LỊCH SỬ CÁC CUỘC TRAO ĐỔI (Bỏ hoàn toàn danh sách các nút tác vụ cũ) */}
+                  <div className="max-h-72 sm:max-h-80 overflow-y-auto space-y-1 pr-0.5 custom-scrollbar">
+                    {savedConversationsList.length === 0 ? (
+                      <div className="py-7 text-center text-slate-400 dark:text-slate-500">
+                        <MessageSquare className="w-7 h-7 mx-auto mb-1.5 opacity-40 text-[#0284C7]" />
+                        <p className="text-xs font-medium">Chưa có cuộc trao đổi nào được lưu</p>
+                        <button
+                          onClick={() => handleStorageAction('new_conversation')}
+                          className="mt-2 text-xs font-bold text-[#0284C7] dark:text-sky-400 hover:underline inline-flex items-center gap-1"
+                        >
+                          <Plus className="w-3 h-3 stroke-[2.5]" />
+                          <span>Bắt đầu cuộc trao đổi mới</span>
+                        </button>
+                      </div>
+                    ) : (
+                      savedConversationsList.map((conv) => {
+                        const isActive = conv.id === currentConvId;
+                        return (
+                          <div
+                            key={conv.id}
+                            onClick={() => handleSelectConversation(conv.id)}
+                            className={`w-full group text-left px-2.5 py-2 rounded-lg cursor-pointer transition-all flex items-center justify-between border ${
+                              isActive
+                                ? 'bg-sky-50 dark:bg-sky-950/60 border-sky-300 dark:border-sky-800 shadow-2xs'
+                                : 'bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/70 border-transparent hover:border-slate-200/60 dark:hover:border-slate-700/60'
+                            }`}
+                          >
+                            <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                              <MessageSquare
+                                className={`w-4 h-4 shrink-0 mt-0.5 ${
+                                  isActive
+                                    ? 'text-[#0284C7] stroke-[2.5]'
+                                    : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300'
+                                }`}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5">
+                                  <span
+                                    className={`text-xs truncate block font-bold ${
+                                      isActive
+                                        ? 'text-[#0284C7] dark:text-sky-400'
+                                        : 'text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white'
+                                    }`}
+                                  >
+                                    {conv.title || 'Cuộc trao đổi'}
+                                  </span>
+                                  {isActive && (
+                                    <span className="text-[9px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-300 bg-sky-100 dark:bg-sky-900/80 px-1.5 py-0.2 rounded shrink-0">
+                                      Đang mở
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5 text-[10.5px] text-slate-400 dark:text-slate-500">
+                                  <span>{conv.createdAt || 'Gần đây'}</span>
+                                  <span>•</span>
+                                  <span>{conv.messageCount} câu thoại</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Nút xóa nhanh cuộc trao đổi */}
+                            <button
+                              onClick={(e) => handleDeleteConversation(conv.id, conv.title, e)}
+                              className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-all shrink-0 ml-1"
+                              title="Xóa cuộc trao đổi này"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Footer đơn giản, khoa học */}
+                  <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between px-1 text-[11px] text-slate-400">
+                    <span>
+                      Tổng: <strong className="text-slate-700 dark:text-slate-200">{savedConversationsList.length}</strong> cuộc trao đổi
+                    </span>
                     <button
-                      onClick={() => handleStorageAction('clear_messages')}
-                      className="text-[10px] font-bold text-rose-500 hover:text-rose-600 dark:text-rose-400 hover:underline cursor-pointer flex items-center gap-1"
-                      title="Dọn sạch tin nhắn hiện tại"
+                      onClick={() => handleStorageAction('open_history')}
+                      className="text-[#0284C7] dark:text-sky-400 hover:underline font-semibold cursor-pointer"
                     >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Dọn màn hình</span>
+                      Mở cửa sổ chi tiết
                     </button>
                   </div>
                 </div>
@@ -361,46 +421,46 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
 
               {/* DROPDOWN MENU TÍCH HỢP BỘ LỌC VÀ TIỆN ÍCH - NỀN TRẮNG ĐẶC (SOLID WHITE) CHỐNG XUYÊN THẤU */}
               {isUtilitiesOpen && (
-                <div className="absolute top-full left-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-2xl p-3 z-50 animate-dropdown-slide ring-1 ring-black/5">
-                  {/* Header của Tiện ích Popover: Đồng bộ Gradient Xanh */}
-                  <div className="p-3.5 bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#38BDF8] text-white rounded-2xl flex items-center justify-between mb-2.5 shadow-sm relative overflow-hidden">
-                    <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl pointer-events-none" />
-                    <div className="flex items-center gap-2.5 relative z-10">
-                      <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/20 shrink-0">
-                        <SlidersHorizontal className="w-4 h-4 text-white stroke-[2.5]" />
-                      </div>
-                      <div>
-                        <h4 className="font-black text-xs uppercase tracking-wider text-white">BỘ LỌC & TIỆN ÍCH</h4>
-                        <p className="text-[10px] text-white/90 font-medium">Lọc người nói & công cụ bổ trợ</p>
-                      </div>
+                <div className="absolute top-full left-0 mt-2 w-76 sm:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2.5 z-50 animate-dropdown-slide overflow-hidden">
+                  {/* Header phân cấp với màu sắc nổi bật, đồng bộ thanh lịch */}
+                  <div className="-mx-2.5 -mt-2.5 px-3.5 py-2.5 mb-2 bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white flex items-center justify-between shadow-2xs">
+                    <div className="flex items-center gap-2">
+                      <SlidersHorizontal className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+                      <h4 className="font-black text-xs uppercase tracking-wider text-white">BỘ LỌC & TIỆN ÍCH</h4>
                     </div>
-                    {filterSpeakerId !== 'all' && (
+                    {filterSpeakerId !== 'all' ? (
                       <button
                         onClick={() => handleSelectFilter('all')}
-                        className="relative z-10 text-[10px] font-bold text-[#0284C7] bg-white hover:bg-white/90 px-2.5 py-0.5 rounded-full transition-colors cursor-pointer shadow-2xs"
+                        className="text-[10.5px] font-bold text-sky-900 bg-white hover:bg-sky-50 px-2 py-0.5 rounded-md shadow-2xs cursor-pointer transition-colors"
                       >
                         Đặt lại
                       </button>
+                    ) : (
+                      <span className="text-[10.5px] font-bold text-white bg-white/20 px-2 py-0.5 rounded-md border border-white/20 shadow-2xs">
+                        Tất cả
+                      </span>
                     )}
                   </div>
 
-                  {/* Danh sách các tùy chọn lọc người nói */}
-                  <div className="space-y-1.5">
+                  {/* Danh sách các tùy chọn lọc người nói - Đơn giản, khoa học */}
+                  <div className="space-y-0.5">
                     {/* Tất cả */}
                     <button
                       onClick={() => handleSelectFilter('all')}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                         filterSpeakerId === 'all'
-                          ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                          : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
+                          ? 'bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white'
+                          : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 font-normal'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <Users className={`w-4 h-4 shrink-0 ${filterSpeakerId === 'all' ? 'text-white' : 'text-slate-400'}`} />
+                      <div className="flex items-center gap-2">
+                        <Users className={`w-4 h-4 ${filterSpeakerId === 'all' ? 'text-slate-800 dark:text-white' : 'text-slate-400'}`} />
                         <span>Tất cả người nói</span>
                       </div>
-                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                        filterSpeakerId === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      <span className={`text-[10.5px] px-2 py-0.5 rounded-md font-semibold ${
+                        filterSpeakerId === 'all'
+                          ? 'bg-slate-200/90 dark:bg-slate-700 text-slate-800 dark:text-slate-100'
+                          : 'text-slate-400 bg-slate-100 dark:bg-slate-800'
                       }`}>
                         {filterCounts.all}
                       </span>
@@ -409,18 +469,20 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                     {/* Giọng Nam */}
                     <button
                       onClick={() => handleSelectFilter('spk-male')}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                         filterSpeakerId === 'spk-male'
-                          ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                          : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
+                          ? 'bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white'
+                          : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 font-normal'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-sky-500 ring-2 ring-sky-300/60 dark:ring-sky-800 shrink-0" />
-                        <span>👨 Giọng Nam</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">👨</span>
+                        <span>Giọng Nam</span>
                       </div>
-                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                        filterSpeakerId === 'spk-male' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      <span className={`text-[10.5px] px-2 py-0.5 rounded-md font-semibold ${
+                        filterSpeakerId === 'spk-male'
+                          ? 'bg-slate-200/90 dark:bg-slate-700 text-slate-800 dark:text-slate-100'
+                          : 'text-slate-400 bg-slate-100 dark:bg-slate-800'
                       }`}>
                         {filterCounts.bySpeaker?.['spk-male'] ?? 0}
                       </span>
@@ -429,18 +491,20 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                     {/* Giọng Nữ */}
                     <button
                       onClick={() => handleSelectFilter('spk-female')}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                         filterSpeakerId === 'spk-female'
-                          ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                          : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
+                          ? 'bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white'
+                          : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 font-normal'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-pink-500 ring-2 ring-pink-300/60 dark:ring-pink-800 shrink-0" />
-                        <span>👩 Giọng Nữ</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">👩</span>
+                        <span>Giọng Nữ</span>
                       </div>
-                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                        filterSpeakerId === 'spk-female' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      <span className={`text-[10.5px] px-2 py-0.5 rounded-md font-semibold ${
+                        filterSpeakerId === 'spk-female'
+                          ? 'bg-slate-200/90 dark:bg-slate-700 text-slate-800 dark:text-slate-100'
+                          : 'text-slate-400 bg-slate-100 dark:bg-slate-800'
                       }`}>
                         {filterCounts.bySpeaker?.['spk-female'] ?? 0}
                       </span>
@@ -449,18 +513,20 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                     {/* Tôi */}
                     <button
                       onClick={() => handleSelectFilter('spk-deaf')}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                      className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                         filterSpeakerId === 'spk-deaf'
-                          ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                          : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
+                          ? 'bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white'
+                          : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 font-normal'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-sky-600 ring-2 ring-sky-300/60 dark:ring-sky-800 shrink-0" />
-                        <span>👤 Tôi</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">👤</span>
+                        <span>Tôi</span>
                       </div>
-                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                        filterSpeakerId === 'spk-deaf' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      <span className={`text-[10.5px] px-2 py-0.5 rounded-md font-semibold ${
+                        filterSpeakerId === 'spk-deaf'
+                          ? 'bg-slate-200/90 dark:bg-slate-700 text-slate-800 dark:text-slate-100'
+                          : 'text-slate-400 bg-slate-100 dark:bg-slate-800'
                       }`}>
                         {filterCounts.deaf}
                       </span>
@@ -471,21 +537,23 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                       <button
                         key={s.id}
                         onClick={() => handleSelectFilter(s.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
+                        className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                           filterSpeakerId === s.id
-                            ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white font-black shadow-xs'
-                            : 'bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium border border-slate-100 dark:border-slate-800'
+                            ? 'bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white'
+                            : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/70 font-normal'
                         }`}
                       >
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-2">
                           <span
-                            className="w-2.5 h-2.5 rounded-full ring-2 ring-slate-300 dark:ring-slate-700 shrink-0"
+                            className="w-2 h-2 rounded-full shrink-0"
                             style={{ backgroundColor: s.color || '#10B981' }}
                           />
                           <span>{s.name}</span>
                         </div>
-                        <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold ${
-                          filterSpeakerId === s.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        <span className={`text-[10.5px] px-2 py-0.5 rounded-md font-semibold ${
+                          filterSpeakerId === s.id
+                            ? 'bg-slate-200/90 dark:bg-slate-700 text-slate-800 dark:text-slate-100'
+                            : 'text-slate-400 bg-slate-100 dark:bg-slate-800'
                         }`}>
                           {filterCounts.bySpeaker?.[s.id] ?? 0}
                         </span>
@@ -494,24 +562,24 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                   </div>
 
                   {/* Tiện ích mở rộng & Công cụ hỗ trợ */}
-                  <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                    <div className="px-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 space-y-0.5">
+                    <div className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Công Cụ Bổ Trợ
                     </div>
 
                     {/* Ghim thanh lọc trên khung chat */}
                     <button
                       onClick={handleToggleChatFilterBar}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors border border-slate-100 dark:border-slate-800"
+                      className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs hover:bg-slate-50 dark:hover:bg-slate-800/70 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors"
                     >
-                      <span className="flex items-center gap-2 font-medium">
+                      <div className="flex items-center gap-2">
                         <Pin className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Ghim thanh lọc ở khung chat</span>
-                      </span>
-                      <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full transition-all ${
+                        <span className="font-medium text-slate-800 dark:text-slate-100">Ghim thanh lọc ở khung chat</span>
+                      </div>
+                      <span className={`text-[10.5px] font-semibold px-2 py-0.5 rounded-md transition-all ${
                         showChatFilterBar
-                          ? 'bg-sky-600 text-white shadow-xs'
-                          : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                          ? 'bg-sky-50 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200/80 dark:border-sky-800'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
                       }`}>
                         {showChatFilterBar ? 'BẬT' : 'TẮT'}
                       </span>
@@ -520,13 +588,13 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                     {/* Mẫu phản hồi nhanh */}
                     <button
                       onClick={handleOpenTemplates}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-50 hover:bg-sky-50 dark:bg-slate-800/90 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors font-medium group border border-slate-100 dark:border-slate-800"
+                      className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs hover:bg-slate-50 dark:hover:bg-slate-800/70 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors group"
                     >
-                      <span className="flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5 text-sky-500" />
-                        <span className="group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">Mẫu phản hồi nhanh</span>
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200" />
+                        <span className="font-medium text-slate-800 dark:text-slate-100">Mẫu phản hồi nhanh</span>
+                      </div>
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
                     </button>
                   </div>
                 </div>
@@ -554,67 +622,55 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
 
               {/* DROPDOWN MENU CÀI ĐẶT HỆ THỐNG - NỀN TRẮNG ĐẶC (SOLID WHITE) CHỐNG XUYÊN THẤU */}
               {isSettingsOpen && (
-                <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-2.5 w-84 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-2xl p-3 z-50 animate-dropdown-slide ring-1 ring-black/5">
-                  {/* Header của Cài đặt Popover: Đồng bộ Gradient Xanh */}
-                  <div className="p-3.5 bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#38BDF8] text-white rounded-2xl flex items-center justify-between mb-2.5 shadow-sm relative overflow-hidden">
-                    <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl pointer-events-none" />
-                    <div className="flex items-center gap-2.5 relative z-10">
-                      <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/20 shrink-0">
-                        <Settings className="w-4 h-4 text-white stroke-[2.5]" />
-                      </div>
-                      <div>
-                        <h4 className="font-black text-xs uppercase tracking-wider text-white">CÀI ĐẶT HỆ THỐNG</h4>
-                        <p className="text-[10px] text-white/90 font-medium">Micro, giọng đọc & cỡ chữ hiển thị</p>
-                      </div>
+                <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-2 w-76 sm:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2.5 z-50 animate-dropdown-slide overflow-hidden">
+                  {/* Header phân cấp với màu sắc nổi bật, đồng bộ thanh lịch */}
+                  <div className="-mx-2.5 -mt-2.5 px-3.5 py-2.5 mb-2 bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white flex items-center justify-between shadow-2xs">
+                    <div className="flex items-center gap-2">
+                      <Settings className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+                      <h4 className="font-black text-xs uppercase tracking-wider text-white">CÀI ĐẶT HỆ THỐNG</h4>
                     </div>
-                    <span className="relative z-10 text-[10px] font-bold text-white bg-white/20 px-2 py-0.5 rounded-full border border-white/20 shadow-2xs">
+                    <span className="text-[10.5px] font-bold text-white bg-white/20 px-2 py-0.5 rounded-md border border-white/20 shadow-2xs">
                       Chuẩn
                     </span>
                   </div>
 
-                  {/* Các tùy chỉnh cài đặt nhanh */}
-                  <div className="space-y-2">
+                  {/* Các tùy chỉnh cài đặt - Bố cục khoa học, thanh lịch */}
+                  <div className="space-y-1.5">
                     {/* Micro & Thu âm trực tiếp */}
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2.5">
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                          micState === 'recording'
-                            ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-500 animate-pulse'
-                            : 'bg-sky-100 dark:bg-sky-950/60 text-[#00A8E8]'
-                        }`}>
-                          <Mic className="w-4 h-4 stroke-[2.2]" />
-                        </div>
+                    <div className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-colors">
+                      <div className="flex items-center gap-2">
+                        <Mic className={`w-4 h-4 ${micState === 'recording' ? 'text-rose-500 animate-pulse' : 'text-slate-400'}`} />
                         <div>
-                          <div className="text-xs font-bold text-slate-800 dark:text-slate-100">Microphone thu âm</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400">
-                            {micState === 'recording' ? '🔴 Đang thu âm trực tiếp...' : micState === 'paused' ? '⏸️ Tạm dừng' : '⚪ Đang tắt mic'}
+                          <div className="text-xs font-medium text-slate-800 dark:text-slate-100">Microphone thu âm</div>
+                          <div className="text-[10.5px] text-slate-400">
+                            {micState === 'recording' ? '🔴 Đang chuyển đổi ...' : micState === 'paused' ? '⏸️ Tạm dừng' : '⚪ Đang tắt mic'}
                           </div>
                         </div>
                       </div>
                       <button
                         onClick={() => handleSettingsAction('toggle_mic')}
-                        className={`px-3 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-all ${
+                        className={`px-2.5 py-1 rounded-md text-xs font-semibold cursor-pointer transition-all border ${
                           micState === 'recording'
-                            ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-xs'
-                            : 'bg-sky-600 hover:bg-sky-500 text-white shadow-xs'
+                            ? 'bg-rose-50 text-rose-600 border-rose-300 dark:bg-rose-950/60 dark:text-rose-400 dark:border-rose-800'
+                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                         }`}
                       >
                         {micState === 'recording' ? 'Dừng mic' : 'Bật mic'}
                       </button>
                     </div>
 
-                    {/* Cỡ chữ hiển thị */}
-                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-100 dark:border-slate-800 space-y-1.5">
+                    {/* Cỡ chữ hiển thị - Segmented control khoa học */}
+                    <div className="px-2 py-1.5 space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-100">
-                          <Type className="w-3.5 h-3.5 text-slate-400" />
+                        <div className="flex items-center gap-2 text-slate-800 dark:text-slate-100 font-medium">
+                          <Type className="w-4 h-4 text-slate-400" />
                           <span>Cỡ chữ văn bản</span>
                         </div>
-                        <span className="text-[10px] font-medium text-slate-400">
+                        <span className="text-[10.5px] text-slate-400">
                           {fontSize === 'normal' ? 'Nhỏ' : fontSize === 'large' ? 'Vừa' : fontSize === 'xlarge' ? 'Lớn' : 'Rất lớn'}
                         </span>
                       </div>
-                      <div className="grid grid-cols-4 gap-1 pt-0.5">
+                      <div className="grid grid-cols-4 gap-1 p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800">
                         {(
                           [
                             { id: 'normal', label: 'Nhỏ' },
@@ -626,10 +682,10 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                           <button
                             key={sizeOpt.id}
                             onClick={() => handleSettingsAction({ action: 'set_font_size', size: sizeOpt.id })}
-                            className={`py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer text-center ${
+                            className={`py-1 rounded-md text-[11px] transition-all cursor-pointer text-center font-medium ${
                               fontSize === sizeOpt.id
-                                ? 'bg-[#00A8E8] text-white shadow-xs font-black'
-                                : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-2xs font-bold'
+                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                             }`}
                           >
                             {sizeOpt.label}
@@ -639,22 +695,20 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                     </div>
 
                     {/* Tự động phát âm thanh (TTS) */}
-                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/60 text-[#00A8E8] flex items-center justify-center shrink-0">
-                          <Volume2 className="w-4 h-4 stroke-[2.2]" />
-                        </div>
+                    <div className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-colors">
+                      <div className="flex items-center gap-2">
+                        <Volume2 className="w-4 h-4 text-slate-400" />
                         <div>
-                          <div className="text-xs font-bold text-slate-800 dark:text-slate-100">Phát âm thanh AI (TTS)</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400">Tự động đọc giọng phản hồi</div>
+                          <div className="text-xs font-medium text-slate-800 dark:text-slate-100">Phát âm thanh AI (TTS)</div>
+                          <div className="text-[10.5px] text-slate-400">Tự động đọc giọng phản hồi</div>
                         </div>
                       </div>
                       <button
                         onClick={() => handleSettingsAction('toggle_auto_tts')}
-                        className={`px-3 py-1 rounded-full text-[10px] font-black cursor-pointer transition-all ${
+                        className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold cursor-pointer transition-all border ${
                           autoTts
-                            ? 'bg-sky-600 text-white shadow-xs'
-                            : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                            ? 'bg-sky-50 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border-sky-200/80 dark:border-sky-800'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700'
                         }`}
                       >
                         {autoTts ? 'BẬT' : 'TẮT'}
@@ -662,16 +716,16 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
                     </div>
 
                     {/* Mở toàn bộ tùy chỉnh chi tiết */}
-                    <div className="pt-1">
+                    <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
                       <button
                         onClick={() => handleSettingsAction('open_settings')}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs bg-slate-100 hover:bg-sky-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 cursor-pointer transition-colors border border-slate-200 dark:border-slate-700 group font-bold"
+                        className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs hover:bg-slate-50 dark:hover:bg-slate-800/70 text-slate-700 dark:text-slate-200 cursor-pointer transition-colors group"
                       >
                         <div className="flex items-center gap-2">
-                          <Sliders className="w-3.5 h-3.5 text-sky-500" />
-                          <span>Mở bảng tùy chỉnh chi tiết đầy đủ</span>
+                          <Sliders className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200" />
+                          <span className="font-medium text-slate-800 dark:text-slate-100">Mở bảng tùy chỉnh chi tiết</span>
                         </div>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
                       </button>
                     </div>
                   </div>

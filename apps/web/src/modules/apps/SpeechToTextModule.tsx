@@ -1,17 +1,24 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   Mic, MicOff, Volume2, VolumeX, RotateCcw, Copy, Download, Trash2,
   Settings, Type, Sparkles, MessageSquare, FlipVertical, Play, Pause, Send,
-  HelpCircle, CheckCircle2, Shield, Languages, RefreshCw, AlertCircle, Eye, EyeOff, Sliders, SlidersHorizontal, Globe, ArrowRightLeft, FileText, Check, Repeat,
+  HelpCircle, CheckCircle2, Shield, Languages, RefreshCw, AlertCircle, Eye, EyeOff, Sliders, SlidersHorizontal, ArrowRightLeft, FileText, Check, Repeat,
   Users, UserPlus, Edit3, Filter, Plus, Activity, Zap, Maximize2, Minimize2, Gauge, X, Calendar, ToggleLeft, ToggleRight, Square,
-  History, FolderOpen, PlusCircle, Clock, Edit2, Search, Waves, Radio
+  History, FolderOpen, PlusCircle, Clock, Edit2, Search, Waves, Radio,
+  ShieldCheck, ShieldAlert, BookOpen, TrendingUp, Scale, HeartHandshake
 } from 'lucide-react';
 import {
   processRealtimeSpeechPunctuation,
   splitIntoReadableSpeechSegments,
   mergeSpeechWithoutOverlap,
   stripPrefixOverlap,
-  isNearDuplicateUtterance
+  isNearDuplicateUtterance,
+  DomainMode,
+  DomainGlossaryItem,
+  getDomainGlossary,
+  maskSensitiveWords,
+  hasSensitiveWords,
+  detectSensitiveWords
 } from '../../services/speechPunctuationEngine';
 
 // Web Speech API Types declaration for TypeScript compatibility
@@ -233,13 +240,28 @@ const DEMO_TRANSLATIONS: { [key: string]: { [lang: string]: string } } = {
  * - Auto-detects question markers ("phải không", "chưa", "hả", "sao", "ở đâu", "tại sao", etc.) to append question marks (?)
  * - Auto-capitalizes sentence & line beginnings and formats spacing around punctuation
  */
+export interface EngineConfigRef {
+  maskSensitive: boolean;
+  domainMode: DomainMode;
+}
+
+export const globalSpeechConfig: EngineConfigRef = {
+  maskSensitive: true,
+  domainMode: 'all'
+};
+
 const enhanceVietnameseTranscript = (
   rawText: string,
   _isLowConfidence: boolean = false,
-  isFinal: boolean = true
+  isFinal: boolean = true,
+  options?: { maskSensitive?: boolean; domainMode?: DomainMode }
 ): string => {
   if (!rawText) return '';
-  return processRealtimeSpeechPunctuation(rawText, isFinal);
+  return processRealtimeSpeechPunctuation(rawText, {
+    isFinal,
+    maskSensitive: options?.maskSensitive !== undefined ? options.maskSensitive : globalSpeechConfig.maskSensitive,
+    domainMode: options?.domainMode || globalSpeechConfig.domainMode
+  });
 };
 
 interface AiAudioTrackWaveformProps {
@@ -617,6 +639,53 @@ export const SpeechToTextModule: React.FC = () => {
   }, [showSpeakerFilterBar]);
   const activeSpeakerRef = useRef<string>('spk-male');
 
+  // Sensitive Words Masking (***) & Domain Mode (Kinh tế, Pháp luật, Đời sống)
+  const [maskSensitiveWordsEnabled, setMaskSensitiveWordsEnabled] = useState<boolean>(() => {
+    try {
+      const stored = localStorage.getItem('avg_speech_mask_sensitive');
+      if (stored !== null) return JSON.parse(stored);
+    } catch (e) {}
+    return true; // Mặc định BẬT lọc từ nhạy cảm với ***
+  });
+
+  const [domainMode, setDomainMode] = useState<DomainMode>(() => {
+    try {
+      const stored = localStorage.getItem('avg_speech_domain_mode');
+      if (stored && ['all', 'economy', 'legal', 'life'].includes(stored)) return stored as DomainMode;
+    } catch (e) {}
+    return 'all';
+  });
+
+  const [isGlossaryModalOpen, setIsGlossaryModalOpen] = useState<boolean>(false);
+  const [glossarySearch, setGlossarySearch] = useState<string>('');
+  const [glossaryDomainFilter, setGlossaryDomainFilter] = useState<DomainMode>('all');
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('avg_speech_mask_sensitive', JSON.stringify(maskSensitiveWordsEnabled));
+    } catch (e) {}
+    globalSpeechConfig.maskSensitive = maskSensitiveWordsEnabled;
+  }, [maskSensitiveWordsEnabled]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('avg_speech_domain_mode', domainMode);
+    } catch (e) {}
+    globalSpeechConfig.domainMode = domainMode;
+  }, [domainMode]);
+
+  const filteredGlossaryList = useMemo(() => {
+    const list = getDomainGlossary(glossaryDomainFilter);
+    if (!glossarySearch.trim()) return list;
+    const q = glossarySearch.toLowerCase().trim();
+    return list.filter(item =>
+      item.term.toLowerCase().includes(q) ||
+      item.meaning.toLowerCase().includes(q) ||
+      item.domainLabel.toLowerCase().includes(q) ||
+      item.spokenExamples.some(ex => ex.toLowerCase().includes(q))
+    );
+  }, [glossaryDomainFilter, glossarySearch]);
+
   // Auto persist speakers to localStorage whenever modified
   useEffect(() => {
     try {
@@ -691,6 +760,13 @@ export const SpeechToTextModule: React.FC = () => {
       return updated;
     });
   }, [messages, currentConversationId]);
+
+  // Keep lastHearingMsgTextRef in sync with latest hearing message for real-time deduplication
+  useEffect(() => {
+    const lastHearing = [...messages].reverse().find(m => m.sender === 'HEARING');
+    lastHearingMsgTextRef.current = lastHearing?.text || '';
+  }, [messages]);
+
   const [deafTextInput, setDeafTextInput] = useState<string>('');
   const [isInputExpanded, setIsInputExpanded] = useState<boolean>(false);
   const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
@@ -771,6 +847,7 @@ export const SpeechToTextModule: React.FC = () => {
   const recentlyCommittedUtterancesRef = useRef<Map<string, number>>(new Map());
   const isRestartingRef = useRef<boolean>(false);
   const lastAutoCommittedTextRef = useRef<string>('');
+  const lastHearingMsgTextRef = useRef<string>('');
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
   const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
@@ -1121,7 +1198,7 @@ export const SpeechToTextModule: React.FC = () => {
         setMicState('recording');
         micStateRef.current = 'recording';
         startRealtimeSpeechTicker();
-        showToast('🔴 Đang thu âm... Hãy nói trực tiếp vào Micro');
+        showToast('🔴 Đang chuyển đổi ... Hãy nói trực tiếp vào Micro');
         return false;
       }
 
@@ -1157,7 +1234,7 @@ export const SpeechToTextModule: React.FC = () => {
       setMicState('recording');
       micStateRef.current = 'recording';
       startRealtimeSpeechTicker();
-      showToast('🔴 Đang thu âm... Hãy nói trực tiếp vào Micro của bạn!');
+      showToast('🔴 Đang chuyển đổi ... Hãy nói trực tiếp vào Micro của bạn!');
       return true;
     } catch (err: any) {
       console.warn('MediaRecorder getUserMedia error:', err);
@@ -1166,7 +1243,7 @@ export const SpeechToTextModule: React.FC = () => {
       setMicState('recording');
       micStateRef.current = 'recording';
       startRealtimeSpeechTicker();
-      showToast('🔴 Đang thu âm... Hãy nói vào Micro');
+      showToast('🔴 Đang chuyển đổi ... Hãy nói vào Micro');
       return false;
     }
   };
@@ -1299,6 +1376,14 @@ export const SpeechToTextModule: React.FC = () => {
             }
           },
           savedConversationsCount: savedConversations.length,
+          savedConversations: savedConversations.map(c => ({
+            id: c.id,
+            title: c.title,
+            createdAt: c.createdAt,
+            messageCount: c.messages?.length || 0,
+            lastMessage: c.messages && c.messages.length > 0 ? c.messages[c.messages.length - 1].text : '',
+          })),
+          currentConversationId,
           micState,
           fontSize,
           autoTts
@@ -1310,7 +1395,7 @@ export const SpeechToTextModule: React.FC = () => {
     return () => {
       window.removeEventListener('speech_request_filter_sync', sendFilterSync);
     };
-  }, [filterSpeakerId, showSpeakerFilterBar, speakers, messages, savedConversations.length, micState, fontSize, autoTts]);
+  }, [filterSpeakerId, showSpeakerFilterBar, speakers, messages, savedConversations, currentConversationId, micState, fontSize, autoTts]);
 
   // Helper to format friendly voice display label with Northern accent indicators
   const getVoiceDisplayName = (v: SpeechSynthesisVoice) => {
@@ -1760,11 +1845,15 @@ export const SpeechToTextModule: React.FC = () => {
               processedFinalIndexRef.current = i + 1;
             }
           } else {
-            interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText.trim();
+            if (i >= processedFinalIndexRef.current) {
+              interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText.trim();
+            }
           }
         }
 
-        // 1. Nếu có kết quả chính thức (isFinal), lưu ngay vào danh sách hội thoại
+        const lastCommitted = (lastHearingMsgTextRef.current || '').trim();
+
+        // 1. Nếu có kết quả chính thức (isFinal), khử trùng lặp và lưu ngay vào danh sách hội thoại
         if (newFinalTranscript.trim()) {
           if (silenceCommitTimerRef.current) {
             clearTimeout(silenceCommitTimerRef.current);
@@ -1773,32 +1862,76 @@ export const SpeechToTextModule: React.FC = () => {
           accumulatedInterimRef.current = '';
           lastInterimRef.current = '';
           setInterimTranscript('');
-          commitTranscriptToMessage(newFinalTranscript.trim(), true);
+
+          let textToCommit = newFinalTranscript.trim();
+          if (lastCommitted) {
+            const normLast = lastCommitted.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+            const normFinal = textToCommit.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+            if (normLast === normFinal || normLast.endsWith(normFinal) || (normFinal.length < normLast.length && normLast.includes(normFinal))) {
+              textToCommit = '';
+            } else if (normFinal.startsWith(normLast)) {
+              textToCommit = stripPrefixOverlap(lastCommitted, textToCommit);
+            } else {
+              textToCommit = stripPrefixOverlap(lastCommitted, textToCommit);
+            }
+          }
+
+          if (textToCommit && textToCommit.length >= 2) {
+            commitTranscriptToMessage(textToCommit, true);
+          }
         }
 
-        // 2. Xử lý văn bản tạm thời (interim): Vừa hiển thị trực tiếp vừa bật bộ đếm tự động lưu
+        // 2. Xử lý văn bản tạm thời (interim): Khử triệt để phần trùng lặp với tin nhắn đã chốt
         if (interimTranscriptText.trim()) {
-          accumulatedInterimRef.current = interimTranscriptText.trim();
-          lastInterimRef.current = interimTranscriptText.trim();
-          const formattedInterim = enhanceVietnameseTranscript(interimTranscriptText.trim(), false, false);
-          setInterimTranscript(formattedInterim);
+          let cleanInterim = interimTranscriptText.trim();
+          if (lastCommitted) {
+            const normLast = lastCommitted.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+            const normInterim = cleanInterim.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
 
-          // BỘ ĐỆM AN TOÀN TRÁNH NGHẼN KẾT NỐI (WATCHDOG SAFETY TIMER):
-          // Chỉ chốt tự động nếu người dùng ngừng nói hoàn toàn sau 3.5 giây mà trình duyệt chưa gửi isFinal
-          if (silenceCommitTimerRef.current) {
-            clearTimeout(silenceCommitTimerRef.current);
-          }
-          silenceCommitTimerRef.current = setTimeout(() => {
-            if (accumulatedInterimRef.current.trim()) {
-              const textToSave = accumulatedInterimRef.current.trim();
-              accumulatedInterimRef.current = '';
-              lastInterimRef.current = '';
-              setInterimTranscript('');
-              // Đánh dấu chỉ mục để tránh finalize lại đoạn này khi Chromium gửi sau
-              processedFinalIndexRef.current = event.results.length;
-              commitTranscriptToMessage(textToSave, true);
+            // Nếu toàn bộ interim là câu cũ hoặc là phần đuôi của câu cũ, bỏ qua không hiển thị lại
+            if (normLast === normInterim || normLast.endsWith(normInterim) || (normInterim.length < normLast.length && normLast.includes(normInterim))) {
+              cleanInterim = '';
+            } else if (normInterim.startsWith(normLast)) {
+              cleanInterim = stripPrefixOverlap(lastCommitted, cleanInterim);
+            } else {
+              cleanInterim = stripPrefixOverlap(lastCommitted, cleanInterim);
             }
-          }, 3500);
+          }
+
+          if (cleanInterim && cleanInterim.length >= 2) {
+            accumulatedInterimRef.current = cleanInterim;
+            lastInterimRef.current = cleanInterim;
+            const formattedInterim = enhanceVietnameseTranscript(cleanInterim, false, false);
+            setInterimTranscript(formattedInterim);
+
+            // BỘ ĐỆM TỰ ĐỘNG CHỐT LỜI THỜI GIAN THỰC (REAL-TIME COMMIT TIMER):
+            // Chốt văn bản hội thoại trực tiếp ngay khi ngừng nói sau 1.5 giây
+            if (silenceCommitTimerRef.current) {
+              clearTimeout(silenceCommitTimerRef.current);
+            }
+            silenceCommitTimerRef.current = setTimeout(() => {
+              if (accumulatedInterimRef.current.trim()) {
+                let textToSave = accumulatedInterimRef.current.trim();
+                const latestCommitted = (lastHearingMsgTextRef.current || '').trim();
+                if (latestCommitted) {
+                  textToSave = stripPrefixOverlap(latestCommitted, textToSave);
+                }
+                accumulatedInterimRef.current = '';
+                lastInterimRef.current = '';
+                setInterimTranscript('');
+                if (textToSave && textToSave.length >= 2) {
+                  processedFinalIndexRef.current = event.results.length;
+                  commitTranscriptToMessage(textToSave, true);
+                }
+              }
+            }, 1500);
+          } else {
+            // Không còn nội dung mới -> dọn sạch preview để tránh trùng lặp
+            accumulatedInterimRef.current = '';
+            lastInterimRef.current = '';
+            setInterimTranscript('');
+          }
         } else if (!newFinalTranscript.trim()) {
           // Tránh xóa vội preview nếu chưa có nội dung mới
           if (!accumulatedInterimRef.current) {
@@ -1994,7 +2127,7 @@ export const SpeechToTextModule: React.FC = () => {
         if (deafInputRef.current) {
           deafInputRef.current.focus();
         }
-        showToast('🔴 Đang thu âm... Hãy nói trực tiếp vào Micro của bạn!');
+        showToast('🔴 Đang chuyển đổi ... Hãy nói trực tiếp vào Micro của bạn!');
         return;
       }
 
@@ -2022,7 +2155,7 @@ export const SpeechToTextModule: React.FC = () => {
         startMediaRecorderFallback();
       }
       startAudioPitchAnalyzer();
-      showToast('🔴 Đang thu âm & chuyển đổi giọng nói theo thời gian thực!');
+      showToast('🔴 Đang chuyển đổi ...');
     } else if (micState === 'recording') {
       // Transition from RECORDING (Red) -> PAUSED (Yellow)
       if (silenceCommitTimerRef.current) {
@@ -2188,6 +2321,110 @@ export const SpeechToTextModule: React.FC = () => {
     showToast(`✨ Đã tạo cuộc hội thoại mới: "${newTitle}"`);
   };
 
+  // Kết thúc phiên thu âm và làm mới lại cuộc hội thoại
+  const handleFinishConversation = () => {
+    // 1. Dọn dẹp bộ đếm khoảng lặng và lưu nốt câu đệm dở dang (nếu có)
+    if (silenceCommitTimerRef.current) {
+      clearTimeout(silenceCommitTimerRef.current);
+      silenceCommitTimerRef.current = null;
+    }
+    const pending = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
+    let finalMessages = [...messages];
+    if (pending) {
+      const enhancedText = enhanceVietnameseTranscript(pending, false, true);
+      if (enhancedText) {
+        const currentSpk = speakers.find(s => s.id === activeSpeakerRef.current) || DEFAULT_SPEAKERS[0];
+        const timestampStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const lastMsg = finalMessages[finalMessages.length - 1];
+        if (!lastMsg || lastMsg.text !== enhancedText) {
+          finalMessages.push({
+            id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            sender: 'HEARING',
+            senderName: currentSpk.name,
+            speakerId: currentSpk.id,
+            text: enhancedText,
+            translatedText: translateText(enhancedText, targetLanguage),
+            timestamp: timestampStr,
+            date: dateStr
+          });
+        }
+      }
+      accumulatedInterimRef.current = '';
+      lastInterimRef.current = '';
+    }
+
+    // 2. Dừng micro và các bộ phân tích
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.stop();
+      } catch (e) {}
+      recognitionRef.current = null;
+    }
+    setIsListening(false);
+    isListeningRef.current = false;
+    stopRealtimeSpeechTicker();
+    stopAudioPitchAnalyzer();
+    setMicState('idle');
+    micStateRef.current = 'idle';
+    setInterimTranscript('');
+
+    // 3. Đảm bảo cuộc hội thoại vừa kết thúc được lưu trữ vào danh sách SavedConversations
+    if (currentConversationId && finalMessages.length > 0) {
+      setSavedConversations(prev => {
+        const existingIdx = prev.findIndex(c => c.id === currentConversationId);
+        let updated: SavedConversation[];
+        if (existingIdx >= 0) {
+          updated = [...prev];
+          updated[existingIdx] = {
+            ...updated[existingIdx],
+            messages: finalMessages,
+            updatedAt: new Date().toISOString()
+          };
+        } else {
+          const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+          const dateStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+          updated = [{
+            id: currentConversationId,
+            title: `Hội thoại (${dateStr} ${timeStr})`,
+            createdAt: new Date().toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            updatedAt: new Date().toISOString(),
+            messages: finalMessages
+          }, ...prev];
+        }
+        try {
+          localStorage.setItem('avg_speech_saved_conversations', JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
+    }
+
+    // 4. Khởi tạo phiên hội thoại mới, làm mới hoàn toàn màn hình
+    const newId = `conv-${Date.now()}`;
+    const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+    const newTitle = `Hội thoại (${dateStr} ${timeStr})`;
+
+    const newConv: SavedConversation = {
+      id: newId,
+      title: newTitle,
+      createdAt: new Date().toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      updatedAt: new Date().toISOString(),
+      messages: []
+    };
+
+    setSavedConversations(prev => [newConv, ...prev]);
+    setCurrentConversationId(newId);
+    setMessages([]);
+    setDeafTextInput('');
+    setFilterSpeakerId('all');
+
+    showToast('⏹️ Đã kết thúc và làm mới cuộc hội thoại.');
+  };
+
   // Select Saved Conversation
   const handleSelectConversation = (conv: SavedConversation) => {
     setCurrentConversationId(conv.id);
@@ -2326,13 +2563,32 @@ export const SpeechToTextModule: React.FC = () => {
       }
     };
 
+    const handleSelectConversationEvent = (e: any) => {
+      const id = e.detail?.id;
+      if (!id) return;
+      const target = savedConversations.find(c => c.id === id);
+      if (target) {
+        handleSelectConversation(target);
+      }
+    };
+
+    const handleDeleteConversationEvent = (e: any) => {
+      const { id, title } = e.detail || {};
+      if (!id) return;
+      handleDeleteConversation(id, title || 'cuộc trao đổi', { stopPropagation: () => {} } as any);
+    };
+
     window.addEventListener('speech_storage_action', handleStorageAction);
     window.addEventListener('speech_settings_action', handleSettingsAction);
+    window.addEventListener('speech_select_conversation', handleSelectConversationEvent);
+    window.addEventListener('speech_delete_conversation', handleDeleteConversationEvent);
     return () => {
       window.removeEventListener('speech_storage_action', handleStorageAction);
       window.removeEventListener('speech_settings_action', handleSettingsAction);
+      window.removeEventListener('speech_select_conversation', handleSelectConversationEvent);
+      window.removeEventListener('speech_delete_conversation', handleDeleteConversationEvent);
     };
-  }, [messages, currentConversationId, micState, autoTts]);
+  }, [messages, currentConversationId, micState, autoTts, savedConversations]);
 
   // Dynamic Theme & Text Classes
   const getFontSizeClass = () => {
@@ -2521,11 +2777,11 @@ export const SpeechToTextModule: React.FC = () => {
                     {micState === 'recording' && (
                       <div className="flex items-center gap-1.5 shrink-0 h-8.5">
                         <div className="flex items-center gap-1.5 h-8 px-2.5 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/80 rounded-xl text-xs text-red-600 dark:text-red-400 font-extrabold shadow-2xs leading-none">
-                          <span className="relative flex h-2.5 w-2.5 shrink-0">
+                          <span className="relative flex h-2 w-2 shrink-0">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_8px_#ef4444]" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_#ef4444]" />
                           </span>
-                          <span className="hidden sm:inline">Đang thu âm...</span>
+                          <span>Đang chuyển đổi ...</span>
                         </div>
                         <button
                           onClick={toggleListening}
@@ -2536,37 +2792,9 @@ export const SpeechToTextModule: React.FC = () => {
                           <span>TẠM DỪNG</span>
                         </button>
                         <button
-                          onClick={() => {
-                            if (silenceCommitTimerRef.current) {
-                              clearTimeout(silenceCommitTimerRef.current);
-                              silenceCommitTimerRef.current = null;
-                            }
-                            const pending = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
-                            if (pending) {
-                              commitTranscriptToMessage(pending, true);
-                              accumulatedInterimRef.current = '';
-                              lastInterimRef.current = '';
-                            }
-                            if (recognitionRef.current) {
-                              try {
-                                recognitionRef.current.onend = null;
-                                recognitionRef.current.onerror = null;
-                                recognitionRef.current.onresult = null;
-                                recognitionRef.current.stop();
-                              } catch (e) {}
-                              recognitionRef.current = null;
-                            }
-                            setIsListening(false);
-                            isListeningRef.current = false;
-                            stopRealtimeSpeechTicker();
-                            stopAudioPitchAnalyzer();
-                            setMicState('idle');
-                            micStateRef.current = 'idle';
-                            setInterimTranscript('');
-                            showToast('⏹️ Đã kết thúc phiên thu âm.');
-                          }}
-                          className="h-8 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none"
-                          title="Kết thúc phiên thu âm"
+                          onClick={handleFinishConversation}
+                          className="h-8 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none cursor-pointer"
+                          title="Kết thúc và làm mới cuộc hội thoại"
                         >
                           <Square className="w-3.5 h-3.5 fill-current" />
                           <span>KẾT THÚC</span>
@@ -2589,37 +2817,9 @@ export const SpeechToTextModule: React.FC = () => {
                           <span>TIẾP TỤC</span>
                         </button>
                         <button
-                          onClick={() => {
-                            if (silenceCommitTimerRef.current) {
-                              clearTimeout(silenceCommitTimerRef.current);
-                              silenceCommitTimerRef.current = null;
-                            }
-                            const pending = accumulatedInterimRef.current.trim() || lastInterimRef.current.trim();
-                            if (pending) {
-                              commitTranscriptToMessage(pending, true);
-                              accumulatedInterimRef.current = '';
-                              lastInterimRef.current = '';
-                            }
-                            if (recognitionRef.current) {
-                              try {
-                                recognitionRef.current.onend = null;
-                                recognitionRef.current.onerror = null;
-                                recognitionRef.current.onresult = null;
-                                recognitionRef.current.stop();
-                              } catch (e) {}
-                              recognitionRef.current = null;
-                            }
-                            setIsListening(false);
-                            isListeningRef.current = false;
-                            stopRealtimeSpeechTicker();
-                            stopAudioPitchAnalyzer();
-                            setMicState('idle');
-                            micStateRef.current = 'idle';
-                            setInterimTranscript('');
-                            showToast('⏹️ Đã kết thúc phiên thu âm.');
-                          }}
-                          className="h-8 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none"
-                          title="Kết thúc phiên thu âm"
+                          onClick={handleFinishConversation}
+                          className="h-8 text-xs font-black text-white bg-rose-600 hover:bg-rose-500 px-3 rounded-xl flex items-center gap-1.5 shadow-md hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all active:scale-95 uppercase tracking-wide shrink-0 leading-none cursor-pointer"
+                          title="Kết thúc và làm mới cuộc hội thoại"
                         >
                           <Square className="w-3.5 h-3.5 fill-current" />
                           <span>KẾT THÚC</span>
@@ -2684,26 +2884,14 @@ export const SpeechToTextModule: React.FC = () => {
               {/* Recessed Live Conversation Transcript Feed Cavity (WITH UNIFIED 1PX BORDER) */}
               <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
                 {messages.length === 0 && !interimTranscript && (
-                  <div className="h-full flex flex-col items-center justify-center text-center space-y-3.5 py-10 my-auto">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20 shadow-inner">
-                      <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-[#00A8E8] dark:text-[#38BDF8]" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="font-black text-base text-slate-800 dark:text-slate-100">Sẵn Sàng Nhận Diện Giọng Nói</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                        Bấm nút <strong className="text-emerald-600 dark:text-emerald-400">"BẮT ĐẦU NÓI"</strong> ở thanh phía trên hoặc bấm nút bên dưới để bắt đầu nhận diện hội thoại trực tiếp.
-                      </p>
-                    </div>
-                    {micState === 'idle' && (
-                      <button
-                        onClick={toggleListening}
-                        className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                        title="Bắt đầu thu âm ngay"
-                      >
-                        <Mic className="w-4 h-4 stroke-[2.5]" />
-                        <span>BẮT ĐẦU NÓI NGAY</span>
-                      </button>
-                    )}
+                  <div className="h-full flex flex-col items-center justify-center text-center py-10 my-auto">
+                    <button
+                      onClick={toggleListening}
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20 shadow-inner hover:scale-110 active:scale-95 hover:bg-[#00A8E8]/25 transition-all cursor-pointer group"
+                      title="Bắt đầu nói"
+                    >
+                      <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-[#00A8E8] dark:text-[#38BDF8] group-hover:scale-110 transition-transform" />
+                    </button>
                   </div>
                 )}
 
@@ -2778,13 +2966,25 @@ export const SpeechToTextModule: React.FC = () => {
 
                 {interimTranscript && (
                   <div className="flex flex-col items-start w-full">
-                    <div className="p-3.5 sm:p-4 rounded-xl bg-sky-50 dark:bg-slate-900 border-2 border-[#00A8E8] text-slate-900 dark:text-white w-fit max-w-[88%] shadow-md">
-                      <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[#00A8E8] dark:text-[#38BDF8] mb-1">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8] animate-pulse" />
-                        Đang nói trực tiếp:
+                    <div className="p-3.5 sm:p-4 rounded-xl transition-all w-fit max-w-[88%] bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-sky-300 dark:border-sky-700 shadow-xs">
+                      <div className="flex items-center gap-2 text-[11px] font-extrabold mb-1.5 text-orange-500 dark:text-orange-400">
+                        <span>{speakers.find(s => s.id === activeSpeakerId)?.name || 'Giọng Nam'}</span>
+                        <span className="inline-flex items-center gap-1 font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 text-[10.5px]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                          Đang chuyển đổi ...
+                        </span>
                       </div>
-                      <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>
+
+                      <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-medium`}>
                         {interimTranscript}
+                      </div>
+
+                      <div className="mt-1.5 flex items-center justify-between gap-4 text-[11px] pt-0.5 text-slate-400">
+                        <span className="font-medium shrink-0 flex items-center gap-1.5">
+                          <span>{new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
+                          <span className="opacity-40">•</span>
+                          <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -3349,16 +3549,14 @@ export const SpeechToTextModule: React.FC = () => {
             {/* Messages Live Transcript Feed Cavity */}
             <div className="space-y-3 flex-1 min-h-0 overflow-y-auto p-4 rounded-xl bg-slate-50/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
               {messages.length === 0 && !interimTranscript && (
-                <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-10 my-auto">
-                  <div className="w-16 h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20">
-                    <Mic className="w-8 h-8 text-[#00A8E8] dark:text-[#38BDF8]" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="font-black text-base text-slate-800 dark:text-slate-100">Sẵn Sàng Nhận Diện Giọng Nói (Toàn Màn Hình)</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                      Bấm nút <strong className="text-emerald-600 dark:text-emerald-400">"Bắt Đầu Nói"</strong> để nhận diện giọng nói trực tiếp.
-                    </p>
-                  </div>
+                <div className="h-full flex flex-col items-center justify-center text-center py-10 my-auto">
+                  <button
+                    onClick={toggleListening}
+                    className="w-16 h-16 rounded-xl bg-[#00A8E8]/10 dark:bg-[#00A8E8]/20 flex items-center justify-center border border-[#00A8E8]/20 shadow-inner hover:scale-110 active:scale-95 hover:bg-[#00A8E8]/25 transition-all cursor-pointer group"
+                    title="Bắt đầu nói"
+                  >
+                    <Mic className="w-8 h-8 text-[#00A8E8] dark:text-[#38BDF8] group-hover:scale-110 transition-transform" />
+                  </button>
                 </div>
               )}
 
@@ -3422,12 +3620,17 @@ export const SpeechToTextModule: React.FC = () => {
 
               {interimTranscript && (
                 <div className="flex flex-col items-start w-full">
-                  <div className="p-4 rounded-xl bg-sky-50 dark:bg-slate-900 border-2 border-[#00A8E8] text-slate-900 dark:text-white w-fit max-w-[85%] shadow-md">
-                    <div className="flex items-center gap-1.5 text-xs font-extrabold text-[#00A8E8] dark:text-[#38BDF8] mb-1">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#00A8E8] animate-pulse" />
-                      Đang nói trực tiếp:
+                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-sky-300 dark:border-sky-700 w-fit max-w-[85%] shadow-sm">
+                    <div className="flex items-center gap-2 mb-1.5 text-xs font-extrabold text-orange-500 dark:text-orange-400">
+                      <span>{speakers.find(s => s.id === activeSpeakerId)?.name || 'Giọng Nam'}</span>
+                      <span className="inline-flex items-center gap-1 font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 text-[11px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                        Đang chuyển đổi ...
+                      </span>
                     </div>
-                    <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-semibold`}>{interimTranscript}</div>
+                    <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-medium`}>
+                      {interimTranscript}
+                    </div>
                   </div>
                 </div>
               )}
@@ -3659,8 +3862,8 @@ export const SpeechToTextModule: React.FC = () => {
                     <div className="flex flex-col">
                       <span className="font-black text-slate-900 dark:text-white text-xs">
                         {micState === 'idle' && 'Micro đang tắt'}
-                        {micState === 'recording' && 'Đang thu âm trực tiếp...'}
-                        {micState === 'paused' && 'Đang tạm dừng thu âm'}
+                        {micState === 'recording' && 'Đang chuyển đổi ...'}
+                        {micState === 'paused' && 'Đang tạm dừng'}
                       </span>
                       <span className="text-[11px] text-slate-500 dark:text-slate-400">
                         {micState === 'idle' && 'Bấm nút tròn để bắt đầu nói'}
@@ -3672,21 +3875,109 @@ export const SpeechToTextModule: React.FC = () => {
 
                   {micState !== 'idle' && (
                     <button
-                      onClick={() => {
-                        if (recognitionRef.current) {
-                          try { recognitionRef.current.stop(); } catch (e) {}
-                        }
-                        setIsListening(false);
-                        stopAudioPitchAnalyzer();
-                        setMicState('idle');
-                        setInterimTranscript('');
-                        showToast('⏹️ Đã kết thúc phiên thu âm.');
-                      }}
+                      onClick={handleFinishConversation}
                       className="px-3 py-1.5 bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 rounded-xl text-xs font-bold hover:bg-rose-200 transition-colors cursor-pointer"
+                      title="Kết thúc và làm mới cuộc hội thoại"
                     >
                       Kết thúc
                     </button>
                   )}
+                </div>
+              </div>
+
+              {/* SECTION: CHUYÊN NGÀNH HỌC TẬP & BỘ LỌC TỪ NGỮ NHẠY CẢM */}
+              <div className="bg-slate-50 dark:bg-slate-900/90 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-black text-slate-800 dark:text-slate-100 flex items-center gap-2 text-xs uppercase tracking-wider">
+                    <div className="w-6 h-6 rounded-lg bg-sky-100 dark:bg-sky-950/60 text-[#00A8E8] flex items-center justify-center">
+                      <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
+                    <span>Bộ Lọc Nhạy Cảm & Chuyên Ngành</span>
+                  </h4>
+                  <button
+                    onClick={() => {
+                      setIsGlossaryModalOpen(true);
+                      setIsMobileSettingsOpen(false);
+                    }}
+                    className="flex items-center gap-1 text-[11px] font-bold text-[#00A8E8] hover:underline cursor-pointer"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>Xem từ điển (17+)</span>
+                  </button>
+                </div>
+
+                {/* Bộ lọc từ nhạy cảm Switch */}
+                <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200/80 dark:border-slate-700">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      maskSensitiveWordsEnabled
+                        ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-600'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-400'
+                    }`}>
+                      {maskSensitiveWordsEnabled ? <ShieldCheck className="w-4 h-4" /> : <ShieldAlert className="w-4 h-4" />}
+                    </div>
+                    <div>
+                      <div className="font-black text-slate-900 dark:text-white text-xs">
+                        Ẩn từ ngữ nhạy cảm bằng dấu ***
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                        {maskSensitiveWordsEnabled ? 'Tự động che thô tục, chửi thề thành ***' : 'Đang tắt bộ lọc (hiển thị nguyên văn)'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      const next = !maskSensitiveWordsEnabled;
+                      setMaskSensitiveWordsEnabled(next);
+                      showToast(next ? '🛡️ Đã bật lọc từ nhạy cảm (***)' : '⚠️ Đã tắt lọc từ nhạy cảm');
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {maskSensitiveWordsEnabled ? (
+                      <ToggleRight className="w-7 h-7 text-emerald-600" />
+                    ) : (
+                      <ToggleLeft className="w-7 h-7 text-slate-400" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Chuyên ngành chuyển đổi */}
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-black text-slate-600 dark:text-slate-400">
+                    Lĩnh vực học tập ưu tiên:
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[
+                      { key: 'all' as DomainMode, label: '🌐 Đa ngành', desc: 'Nhận diện toàn diện' },
+                      { key: 'economy' as DomainMode, label: '📈 Kinh tế & Vốn', desc: 'GDP, CPI, EBITDA, IPO' },
+                      { key: 'legal' as DomainMode, label: '⚖️ Pháp luật & Tố tụng', desc: 'HĐXX, NDA, TAND, VIAC' },
+                      { key: 'life' as DomainMode, label: '🏡 Đời sống & Tiêu dùng', desc: 'CCCD, VNeID, QR, BHYT' }
+                    ].map((item) => {
+                      const isSel = domainMode === item.key;
+                      return (
+                        <button
+                          key={item.key}
+                          onClick={() => {
+                            setDomainMode(item.key);
+                            showToast(`Đã chuyển sang chuyên ngành: ${item.label}`);
+                          }}
+                          className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${
+                            isSel
+                              ? 'bg-sky-50 dark:bg-sky-950/60 border-sky-400 dark:border-sky-700 shadow-2xs'
+                              : 'bg-white dark:bg-slate-800/90 border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                          }`}
+                        >
+                          <div className={`font-black text-xs ${isSel ? 'text-[#00A8E8]' : 'text-slate-800 dark:text-slate-200'}`}>
+                            {item.label}
+                          </div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
+                            {item.desc}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
@@ -3963,6 +4254,151 @@ export const SpeechToTextModule: React.FC = () => {
                 className="px-5 py-2.5 bg-[#00A8E8] hover:bg-[#0284C7] text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer transition-transform active:scale-95 flex items-center gap-1.5"
               >
                 <Mic className="w-4 h-4" /> Thử Kết Nối Lại Micro
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================================================== */}
+      {/* 📚 MODAL TRA CỨU TỪ ĐIỂN CHUYÊN NGÀNH (KINH TẾ - PHÁP LUẬT - ĐỜI SỐNG)                         */}
+      {/* ============================================================================================== */}
+      {isGlossaryModalOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
+          onClick={() => setIsGlossaryModalOpen(false)}
+        >
+          <div
+            className="bg-white dark:bg-[#1E1420] border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col justify-between animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-4 sm:p-5 bg-gradient-to-r from-[#0284C7] via-[#00A8E8] to-[#38BDF8] text-white flex items-center justify-between flex-shrink-0 relative overflow-hidden shadow-sm">
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner border border-white/20 shrink-0">
+                  <BookOpen className="w-5 h-5 text-white stroke-[2.5]" />
+                </div>
+                <div>
+                  <h3 className="font-black text-base sm:text-lg text-white uppercase tracking-tight">
+                    TỪ ĐIỂN CHUYÊN NGÀNH HỌC TẬP
+                  </h3>
+                  <p className="text-xs text-white/90 font-medium">
+                    Thuật ngữ Kinh tế - Tài chính, Pháp luật - Tố tụng, Đời sống & Xã hội
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsGlossaryModalOpen(false)}
+                className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/30 text-white flex items-center justify-center transition-all cursor-pointer relative z-10"
+                title="Đóng từ điển"
+              >
+                <X className="w-4.5 h-4.5" />
+              </button>
+            </div>
+
+            {/* Filter Bar & Search */}
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center justify-between">
+              {/* Domain Filter Tabs */}
+              <div className="flex items-center gap-1 bg-white dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                {[
+                  { key: 'all' as DomainMode, label: 'Tất cả' },
+                  { key: 'economy' as DomainMode, label: '📈 Kinh tế' },
+                  { key: 'legal' as DomainMode, label: '⚖️ Pháp luật' },
+                  { key: 'life' as DomainMode, label: '🏡 Đời sống' }
+                ].map(tab => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setGlossaryDomainFilter(tab.key)}
+                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                      glossaryDomainFilter === tab.key
+                        ? 'bg-[#0284C7] text-white shadow-xs font-black'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-sky-600'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Search input */}
+              <div className="relative flex-1 max-w-xs">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={glossarySearch}
+                  onChange={(e) => setGlossarySearch(e.target.value)}
+                  placeholder="Tìm thuật ngữ hoặc cách đọc..."
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                />
+              </div>
+            </div>
+
+            {/* Glossary Items List */}
+            <div className="p-4 space-y-2.5 flex-1 overflow-y-auto custom-scrollbar max-h-[50vh]">
+              {filteredGlossaryList.length === 0 ? (
+                <div className="text-center py-10 text-slate-400 text-xs">
+                  Không tìm thấy thuật ngữ phù hợp với từ khóa "{glossarySearch}"
+                </div>
+              ) : (
+                filteredGlossaryList.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 hover:border-sky-300 dark:hover:border-sky-700 transition-all flex flex-col gap-1.5"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-black text-xs text-slate-900 dark:text-white">
+                          {item.term}
+                        </span>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          item.domain === 'economy'
+                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                            : item.domain === 'legal'
+                            ? 'bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:text-purple-300'
+                            : 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
+                        }`}>
+                          {item.domainLabel}
+                        </span>
+                      </div>
+
+                      <div className="text-[11px] text-slate-400">
+                        {item.domain === 'economy' && '📈 Kinh tế'}
+                        {item.domain === 'legal' && '⚖️ Pháp luật'}
+                        {item.domain === 'life' && '🏡 Đời sống'}
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-300">
+                      {item.meaning}
+                    </p>
+
+                    <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                      <span className="text-[10px] font-bold text-slate-400">Khẩu ngữ bồi nhận diện:</span>
+                      {item.spokenExamples.map((ex, exIdx) => (
+                        <span
+                          key={exIdx}
+                          className="px-2 py-0.5 rounded-lg bg-white dark:bg-slate-800 text-[10px] font-mono text-sky-700 dark:text-sky-300 border border-slate-200 dark:border-slate-700 shadow-2xs"
+                        >
+                          "{ex}"
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Hiển thị {filteredGlossaryList.length} thuật ngữ đã học • Tự động chuyển đổi khi nói
+              </span>
+              <button
+                onClick={() => setIsGlossaryModalOpen(false)}
+                className="px-4 py-1.5 bg-[#0284C7] hover:bg-[#00A8E8] text-white rounded-xl text-xs font-black transition cursor-pointer"
+              >
+                Đã hiểu
               </button>
             </div>
           </div>

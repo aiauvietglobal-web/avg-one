@@ -9,9 +9,13 @@ import {
   Wand2, Mic, Cpu, Database, Waves, Maximize2, Minimize2,
   FileAudio, FileText, CheckSquare, BarChart3, Users, Star,
   HelpCircle, ChevronDown, Radio, Square, FileSpreadsheet,
-  CornerDownLeft, Bookmark, Tag
+  CornerDownLeft, Bookmark, Tag, Globe, ShieldAlert, BookOpen
 } from 'lucide-react';
-import { processRealtimeSpeechPunctuation } from '../../services/speechPunctuationEngine';
+import {
+  processRealtimeSpeechPunctuation,
+  DomainMode,
+  maskSensitiveWords
+} from '../../services/speechPunctuationEngine';
 import { transcribeAudioWithGemini } from '../../services/geminiAudioTranscribe';
 import { FileTranscribeNavTab } from '../../components/layout/headers/FileTranscribeHeader';
 
@@ -291,6 +295,75 @@ const STUDIO_SAMPLE_FILES: TranscribedFile[] = [
         confidence: 0.99
       }
     ]
+  },
+  {
+    id: 'sample-4',
+    name: 'Giao_ban_Kinh_te_Phap_ly_Doi_song_2026.mp3',
+    sizeStr: '19.8 MB',
+    duration: 210,
+    format: 'MP3 Stereo • 48kHz • Studio HD',
+    uploadedAt: 'Hôm nay lúc 08:30',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG Neural ASR',
+    category: 'Kinh tế & Pháp lý',
+    summary: {
+      executive: 'Cuộc họp liên bộ phận đánh giá các chỉ số kinh tế vĩ mô quý III (CPI, GDP đạt 6,5%), kế hoạch niêm yết IPO, rà soát thỏa thuận bảo mật NDA theo Luật Doanh nghiệp, và triển khai số hóa định danh CCCD gắn chip qua VNeID mức 2.',
+      keyDecisions: [
+        'Duyệt kế hoạch chuẩn bị hồ sơ IPO và kiểm toán Big 4 cho năm tài chính 2026-2027.',
+        'Phòng Pháp chế hoàn tất phụ lục điều khoản bất khả kháng và hợp đồng nguyên tắc với đối tác trước ngày 30/10.',
+        'Triển khai nộp phí hành chính qua Cổng Dịch vụ công Quốc gia và quét mã QR NAPAS 24/7 cho toàn bộ cán bộ nhân viên.'
+      ],
+      actionItems: [
+        { id: 'act-41', task: 'Rà soát chỉ số biên lợi nhuận EBITDA và ROE quý III', assignee: 'Phòng Tài chính Kế toán', deadline: '28/09/2026', priority: 'Cao', completed: false },
+        { id: 'act-42', task: 'Đại diện AVG làm việc với Hội đồng Trọng tài VIAC', assignee: 'Ban Pháp chế & Tố tụng', deadline: '05/10/2026', priority: 'Cao', completed: false },
+        { id: 'act-43', task: 'Hướng dẫn cài đặt ứng dụng VssID và tích hợp BHYT', assignee: 'Phòng Hành chính Nhân sự', deadline: '10/10/2026', priority: 'Trung bình', completed: true }
+      ]
+    },
+    segments: [
+      {
+        id: 's4-seg-1',
+        startTime: 0,
+        endTime: 48,
+        speakerId: 'spk-1',
+        speakerName: 'Nguyễn Văn Quản Lý',
+        speakerColor: 'spk-1',
+        speakerRole: 'Tổng Giám Đốc (CEO)',
+        text: 'Thưa các đồng chí, báo cáo tài chính quý III cho thấy chỉ số CPI duy trì ổn định và GDP toàn tập đoàn đạt mức tăng trưởng 6,5%. Đợt này chỉ số VN-Index phục hồi tốt, chúng ta cần đẩy nhanh tiến độ IPO và kiểm soát chặt tỷ lệ nợ nhóm 1.',
+        confidence: 0.99
+      },
+      {
+        id: 's4-seg-2',
+        startTime: 49,
+        endTime: 115,
+        speakerId: 'spk-3',
+        speakerName: 'Trần Thị Trưởng Phòng',
+        speakerColor: 'spk-3',
+        speakerRole: 'Pháp Lý & Hợp Đồng',
+        text: 'Báo cáo anh, về mặt pháp lý, chúng tôi đã đối chiếu toàn bộ hợp đồng nguyên tắc theo quy định của Bộ luật Dân sự và Luật Doanh nghiệp. Các tranh chấp hợp đồng nếu phát sinh đều thống nhất đưa ra Trung tâm Trọng tài Quốc tế VIAC để bảo vệ quyền lợi hợp pháp.',
+        confidence: 0.98
+      },
+      {
+        id: 's4-seg-3',
+        startTime: 116,
+        endTime: 172,
+        speakerId: 'spk-4',
+        speakerName: 'Lê Văn Đời Sống',
+        speakerColor: 'spk-4',
+        speakerRole: 'Hành Chính & Xã Hội',
+        text: 'Về đời sống xã hội của cán bộ công nhân viên: 100% nhân sự đã hoàn tất cập nhật CCCD gắn chip và kích hoạt định danh VNeID mức 2. Việc thanh toán phí y tế BHYT hiện đã kết nối trực tiếp qua quét mã QR NAPAS 24/7 cực kỳ tiện lợi.',
+        confidence: 0.99
+      },
+      {
+        id: 's4-seg-4',
+        startTime: 173,
+        endTime: 210,
+        speakerId: 'spk-2',
+        speakerName: 'Lê Văn Nhân Viên',
+        speakerColor: 'spk-2',
+        speakerRole: 'Kỹ sư trưởng R&D 3.1',
+        text: 'Đội ngũ kỹ thuật cam kết tiến độ. Mọi trở ngại trước đây đều đã được giải quyết dứt điểm, tuyệt đối không để ai phàn nàn hay nói lời *** ảnh hưởng đến tinh thần tập thể.',
+        confidence: 0.97
+      }
+    ]
   }
 ];
 
@@ -298,6 +371,35 @@ export const FileTranscribeModule: React.FC = () => {
   // 📁 Current Active File State
   const [currentFile, setCurrentFile] = useState<TranscribedFile>(STUDIO_SAMPLE_FILES[0]);
   const [activeTab, setActiveTab] = useState<FileTranscribeNavTab>('editor');
+
+  // 🛡️ Sensitive Words Masking (***) & Domain Mode (Kinh tế, Pháp luật, Đời sống)
+  const [maskSensitiveWordsEnabled, setMaskSensitiveWordsEnabled] = useState<boolean>(() => {
+    try {
+      const stored = localStorage.getItem('avg_file_transcribe_mask_sensitive');
+      if (stored !== null) return JSON.parse(stored);
+    } catch (e) {}
+    return true; // Mặc định BẬT
+  });
+
+  const [domainMode, setDomainMode] = useState<DomainMode>(() => {
+    try {
+      const stored = localStorage.getItem('avg_file_transcribe_domain_mode');
+      if (stored && ['all', 'economy', 'legal', 'life'].includes(stored)) return stored as DomainMode;
+    } catch (e) {}
+    return 'all';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('avg_file_transcribe_mask_sensitive', JSON.stringify(maskSensitiveWordsEnabled));
+    } catch (e) {}
+  }, [maskSensitiveWordsEnabled]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('avg_file_transcribe_domain_mode', domainMode);
+    } catch (e) {}
+  }, [domainMode]);
 
   // 🎵 Audio Playback & Waveform Engine State
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -846,7 +948,56 @@ export const FileTranscribeModule: React.FC = () => {
         </div>
 
         {/* Quick Toolbar Actions */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          {/* Chuyên ngành chuyển đổi */}
+          <div className="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700 text-[11px]">
+            {[
+              { key: 'all' as DomainMode, label: '🌐 Đa ngành' },
+              { key: 'economy' as DomainMode, label: '📈 Kinh tế' },
+              { key: 'legal' as DomainMode, label: '⚖️ Pháp luật' },
+              { key: 'life' as DomainMode, label: '🏡 Đời sống' }
+            ].map(d => (
+              <button
+                key={d.key}
+                onClick={() => {
+                  setDomainMode(d.key);
+                  setCopiedToast(`Chuyên ngành: ${d.label}`);
+                  setTimeout(() => setCopiedToast(null), 2500);
+                }}
+                className={`px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
+                  domainMode === d.key
+                    ? 'bg-[#0284C7] text-white shadow-2xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-sky-600'
+                }`}
+              >
+                {d.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Lọc từ nhạy cảm *** */}
+          <button
+            onClick={() => {
+              const next = !maskSensitiveWordsEnabled;
+              setMaskSensitiveWordsEnabled(next);
+              setCopiedToast(next ? '🛡️ Đã bật lọc từ nhạy cảm (***)' : '⚠️ Đã tắt lọc từ nhạy cảm');
+              setTimeout(() => setCopiedToast(null), 2500);
+            }}
+            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 border shadow-2xs ${
+              maskSensitiveWordsEnabled
+                ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'
+            }`}
+            title="Bật/Tắt chế độ che từ ngữ nhạy cảm bằng dấu ***"
+          >
+            {maskSensitiveWordsEnabled ? (
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            ) : (
+              <ShieldAlert className="w-3.5 h-3.5 text-slate-400" />
+            )}
+            <span className="hidden sm:inline">Lọc từ nhạy cảm (***)</span>
+          </button>
+
           {/* Change File button */}
           <button
             onClick={() => setShowImportModal(true)}
