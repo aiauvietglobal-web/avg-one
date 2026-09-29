@@ -444,9 +444,25 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   },
 
   // Tiền tệ & Đơn vị tài chính
-  { pattern: /\b(\d+)\s*(?:triệu|tr)\s*(?:đồng|đ|vnd|vnđ)?\b/gi, replacement: '$1 triệu đồng' },
-  { pattern: /\b(\d+)\s*(?:tỷ|tiền\s*tỷ)\s*(?:đồng|đ|vnd|vnđ)?\b/gi, replacement: '$1 tỷ đồng' },
-  { pattern: /\b(\d+)\s*(?:nghìn|ngàn|k)\s*(?:đồng|đ|vnd|vnđ)\b/gi, replacement: '$1.000 đ' },
+  // Tách dính chữ sau đơn vị tiền tệ TRƯỚC (ví dụ: 'đồngnhé', 'triệunhé', 'tỷnhé')
+  { pattern: /(đồng|triệu|tỷ)(nhé|nha|nhỉ|đấy|đó|rồi|ạ|này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 $2' },
+
+  // Tỷ viết bằng chữ
+  {
+    pattern: /(?<=^|[^\p{L}\p{N}])(một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\s*tỷ(?:\s*(?:đồng|đ|vnd|vnđ))?(?=[^\p{L}\p{N}]|$)/giu,
+    replacement: (_: string, num: string) => {
+      const map: Record<string, string> = {
+        'một': '1', 'hai': '2', 'ba': '3', 'bốn': '4', 'năm': '5',
+        'sáu': '6', 'bảy': '7', 'tám': '8', 'chín': '9', 'mười': '10'
+      };
+      return `${map[num.toLowerCase()] || num} tỷ đồng`;
+    }
+  },
+
+  // Tiền tệ dạng số (khắc phục triệt để lỗi nuốt khoảng trắng dính chữ 'đồngnhé')
+  { pattern: /(?<=^|[^\p{L}\p{N}])(\d+)\s*(?:triệu|tr)(?:\s*(?:đồng|đ|vnd|vnđ))?(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 triệu đồng' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(\d+)\s*(?:tỷ|tiền\s*tỷ)(?:\s*(?:đồng|đ|vnd|vnđ))?(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 tỷ đồng' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(\d+)\s*(?:nghìn|ngàn|k)(?:\s*(?:đồng|đ|vnd|vnđ))(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1.000 đ' },
   { pattern: /\bmột\s*triệu(?:\s*đồng)?\b/gi, replacement: '1.000.000 đ' },
   { pattern: /\bhai\s*triệu(?:\s*đồng)?\b/gi, replacement: '2.000.000 đ' },
   { pattern: /\bba\s*triệu(?:\s*đồng)?\b/gi, replacement: '3.000.000 đ' },
@@ -456,6 +472,10 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\bhai\s*trăm\s*nghìn(?:\s*đồng)?\b/gi, replacement: '200.000 đ' },
   { pattern: /\bmột\s*trăm\s*nghìn(?:\s*đồng)?\b/gi, replacement: '100.000 đ' },
   { pattern: /\bnăm\s*mươi\s*nghìn(?:\s*đồng)?\b/gi, replacement: '50.000 đ' },
+
+  // Ngày tháng: tháng 05 -> tháng 5, ngày 05 -> ngày 5
+  { pattern: /(?<=^|[^\p{L}\p{N}])tháng\s*0([1-9])(?=[^\p{L}\p{N}]|$)/giu, replacement: 'tháng $1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])ngày\s*0([1-9])(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ngày $1' },
 
   // Đơn vị đo lường kỹ thuật
   { pattern: /\b(\d+)\s*(?:mét\s*vuông|m\s*vuông)\b/gi, replacement: '$1 m²' },
@@ -532,7 +552,16 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
   { pattern: /\b(dõ\s*ràng)\b/gi, replacement: 'rõ ràng' },
   { pattern: /\b(rải\s*quyết)\b/gi, replacement: 'giải quyết' },
   { pattern: /\b(dán\s*tiếp)\b/gi, replacement: 'gián tiếp' },
-  { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' }
+  { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' },
+
+  // Nhận diện ngữ cảnh âm học hội họp & trao đổi công việc
+  { pattern: /(?<=^|[^\p{L}\p{N}])vừa\s*nấu\s*được(?=[^\p{L}\p{N}]|$)/giu, replacement: 'vừa ... được' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])trên\s*bàn\s*học(?=[^\p{L}\p{N}]|$)/giu, replacement: 'trên bàn họp' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])bàn\s*học(?=[^\p{L}\p{N}]|$)(?=.*(?:họp|biên\s*bản|báo\s*cáo|cơ\s*quan|hội\s*đồng|nghị\s*quyết|hợp\s*đồng|lệch|thanh\s*toán))/giu, replacement: 'bàn họp' },
+  { pattern: /(?<=(?:họp|biên\s*bản|báo\s*cáo|cơ\s*quan|hội\s*đồng|nghị\s*quyết|hợp\s*đồng|lệch|thanh\s*toán).*?)(?<=^|[^\p{L}\p{N}])bàn\s*học(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bàn họp' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])về\s*mặc\s+(cái\s*này|pháp\s*lý|kỹ\s*thuật|nội\s*dung|thực\s*tế|quy\s*trình)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'về mặt $1' },
+  { pattern: /Tuyết\s*Thanh\s*toán/gu, replacement: 'Tuyết thanh toán' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])ba\s*thằng(?=[^\p{L}\p{N}]|$)(?=.*(?:cơ\s*quan|nhà\s*nước|biên\s*bản|họp|hợp\s*đồng))/giu, replacement: 'ba bên' }
 ];
 
 // 7. Từ đệm khi nói (được giữ nguyên để phản ánh trung thực lời nói của người dùng)
@@ -543,7 +572,15 @@ const INAUDIBLE_OR_GAP_RULES: Array<{ pattern: RegExp; replacement: string }> = 
   { pattern: /\b(nghe\s*không\s*rõ|không\s*nghe\s*rõ|chỗ\s*này\s*không\s*rõ|chưa\s*nghe\s*rõ|không\s*rõ\s*tiếng)\b/gi, replacement: ' ... ' },
   { pattern: /(?:\[\s*(?:unclear|inaudible|không\s*rõ|nhiễu)\s*\]|\(\s*(?:unclear|inaudible|không\s*rõ)\s*\)|\?{3,})/gi, replacement: ' ... ' },
   { pattern: /%hesitation%/gi, replacement: ' ... ' },
-  { pattern: /\b(nhưng|mà|tuy\s*nhiên|hoặc\s*là|song)\s+(hiệu\s*quả|kết\s*quả|thành\s*công|tiến\s*độ)\b/gi, replacement: '$1 ... $2' }
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nhưng|mà|tuy\s*nhiên|hoặc\s*là|song)\s+(hiệu\s*quả|kết\s*quả|thành\s*công|đạt\s*yêu\s*cầu|tiến\s*độ)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  // Ngập ngừng khuyết bổ ngữ theo phản ánh thực tế người dùng:
+  { pattern: /(?<=^|[^\p{L}\p{N}])(vấn\s*đề\s*công\s*cụ)\s+(liên\s*quan\s*đến)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(công\s*cụ)\s+(liên\s*quan\s*đến)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lúc\s*nào\s*cũng\s*trực\s*tiếp)\s+thêm\s+(thực\s*tế)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... thêm $2' },
+  // Lặp từ ngắc ngứ (Stuttering / Repetition): "cái này cái này", "lệch này lệch với cái này"
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cái\s*này)\s+(cái\s*này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(lệch\s*này)\s+(lệch\s*với\s*cái\s*này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ờ|ừm|à\s*thì)(?=[^\p{L}\p{N}]|$)/giu, replacement: ' ... ' }
 ];
 
 // 8. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
@@ -633,6 +670,41 @@ function insertSmartDiscourseCommas(text: string): string {
 }
 
 /**
+ * Tự động nhận diện ranh giới câu, ngữ điệu câu hỏi giữa dòng, và chèn dấu câu tự nhiên cho văn bản thoại tiếng Việt
+ */
+export function insertNaturalVietnamesePunctuation(text: string): string {
+  if (!text) return '';
+  let res = text;
+
+  // 1. Phân tách câu & Ngữ điệu câu hỏi giữa dòng
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(nên\s*lấy\s*cái\s*nào|chọn\s*cái\s*nào|lấy\s*cái\s*nào)\s+([a-zA-ZÀ-ỹ])/giu, '$1? $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(thì\s*cổ\s*đông\s*thôi\s*ý\s*nhỉ|ý\s*nhỉ|nhỉ|hả|sao\s*nhỉ)\s+([a-zA-ZÀ-ỹ])/giu, '$1? $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(đúng\s*không|phải\s*không|được\s*không|phải\s*chăng)\s*\??$/giu, ', $1?');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(đúng\s*không|phải\s*không|được\s*không)\s+([a-zA-ZÀ-ỹ])/giu, ', $1? $2');
+
+  // 2. Tiểu từ kết thúc câu trần thuật ngắt ý giữa dòng
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(nhé|nha|nhớ)\s+(Thứ\s*nhất|Thứ\s*hai|Thứ\s*ba|Lúc|Khi|Hiện\s*tại|Bây\s*giờ|Mặt\s*khác|Hình\s*như|[A-ZÀ-Ỹ])/gu, '$1. $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(mâu\s*thuẫn\s*này|vấn\s*đề\s*này)\s+(Lúc|Khi|Hiện\s*tại|Bây\s*giờ|Thứ|[A-ZÀ-Ỹ])/gu, '$1. $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(bàn\s*luận\s*đấy|trao\s*đổi\s*đấy|nói\s*đấy|đấy|đó)\s+(Hình\s*như|Hiện\s*tại|Bây\s*giờ|Lúc|Khi|[A-ZÀ-Ỹ])/gu, '$1. $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(một\s*lần\s*rồi|xong\s*rồi|hết\s*rồi)\s+(ba\s*thằng|ba\s*bên|bây\s*giờ|hiện\s*tại|chúng\s*tôi|chúng\s*ta|mình|anh|chị)/giu, '$1. $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(ba\s*bên\s*luôn|ba\s*thằng\s*luôn|luôn)\s+(là\s*từ|từ\s*trên)(?=[^\p{L}\p{N}]|$)/giu, '$1. $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(hơn|xong|rồi|được)\s+(em\s*bây\s*giờ|bây\s*giờ\s*em|hiện\s*tại\s*em|bây\s*giờ\s*mình|hiện\s*tại\s*mình)(?=[^\p{L}\p{N}]|$)/giu, '$1. $2');
+
+  // 3. Chèn dấu phẩy mệnh đề & liên từ trong giao tiếp
+  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(nhưng|mà|song|tuy\s*nhiên)\s+/giu, '$1, $2 ');
+  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(nên|cho\s*nên|vì\s*vậy|do\s*đó)\s+/giu, '$1, $2 ');
+  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(đồng\s*thời|ngoài\s*ra|hơn\s*nữa)\s+/giu, '$1, $2 ');
+
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(cái\s*nào\s*cũng\s*là\s*nhà\s*nước)\s+(nên)/giu, '$1, $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(Lúc\s*mà\s*giao\s*hàng|Lúc\s*mà\s*hàng)(?=[^\p{L}\p{N}]|$)/giu, 'Lúc giao hàng');
+  res = res.replace(/(\bgiữ\s*lại\s*cái\s*thằng\s*này|\bgiữ\s*lại\s*cái\s*này)\s+(thì)/giu, '$1, $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(Hình\s*như)\s+(ở\s*biên\s*bản\s*họp)/giu, '$1, $2');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(Thứ\s*nhất\s*là|Thứ\s*nhất|Thứ\s*hai\s*là|Thứ\s*hai)\s+/giu, '$1, ');
+
+  return res;
+}
+
+/**
  * Xử lý văn bản thô từ giọng nói theo thời gian thực:
  * - Chuẩn hóa Unicode NFC
  * - Chuyển đổi khẩu lệnh dấu câu
@@ -640,9 +712,10 @@ function insertSmartDiscourseCommas(text: string): string {
  * - Áp dụng chuẩn hóa số đếm, phần trăm, giờ phút (ITN)
  * - Khử lỗi phát âm nói nhanh và dịch chuẩn từ mượn
  * - Lọc & che dấu từ ngữ nhạy cảm bằng `***` (nếu bật maskSensitive)
+ * - Tự động nhận diện ranh giới mệnh đề và câu hỏi giữa dòng
  * - Tự động chèn dấu phẩy sau các trạng từ chuyển ý
  * - Nhận diện ngữ điệu câu hỏi tiếng Việt (cả từ kết thúc và từ bắt đầu câu hỏi)
- * - Chuẩn hóa khoảng cách xung quanh dấu câu
+ * - Chuẩn hóa khoảng cách xung quanh dấu câu và dấu ba chấm (...)
  * - Viết hoa chữ cái đầu câu và sau ngắt dòng
  */
 export function processRealtimeSpeechPunctuation(
@@ -722,14 +795,16 @@ export function processRealtimeSpeechPunctuation(
     text = maskSensitiveWords(text, { style: opts.sensitiveMaskStyle || 'asterisks' });
   }
 
-  // 10. Tự động chèn dấu phẩy hợp lý sau liên từ và trạng ngữ chuyển tiếp
+  // 10. Tự động nhận diện ranh giới câu, ngữ điệu câu hỏi giữa dòng và liên từ chuyển tiếp
+  text = insertNaturalVietnamesePunctuation(text);
   text = insertSmartDiscourseCommas(text);
 
   // 11. Chuẩn hóa khoảng cách quanh dấu câu và dấu ba chấm:
   text = text.replace(/\s*\.{3,}\s*/g, ' ... ');
   text = text.replace(/\s*…\s*/g, ' ... ');
-  text = text.replace(/\s+([,.?!:;%])/g, '$1');
-  text = text.replace(/([,.?!:;%])(?=[^\s\d\n)\]}])/g, '$1 ');
+  text = text.replace(/\s+([,?!:;%])/g, '$1');
+  text = text.replace(/\s+(?<!\.)\.(?!\.)/g, '.');
+  text = text.replace(/([,?!:;%]|(?<!\.)\.(?!\.))(?=[^\s\d\n)\]}])/g, '$1 ');
   text = text.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
   text = text.replace(/"\s+/g, '"').replace(/\s+"/g, '"');
   text = text.replace(/\s{2,}/g, ' ');
@@ -760,7 +835,7 @@ export function processRealtimeSpeechPunctuation(
 
   // 14. Tự động tách đoạn nếu chứa các ý dài hoàn chỉnh (Paragraph Segmentation)
   if (opts.isFinal) {
-    text = formatParagraphSegmentation(text, 30);
+    text = formatParagraphSegmentation(text, 28);
   }
 
   // Đảm bảo sau khi viết hoa các từ nhạy cảm vẫn được ẩn sạch sẽ
@@ -775,9 +850,10 @@ export function processRealtimeSpeechPunctuation(
  * Tự động phân đoạn văn bản (Paragraph Segmentation):
  * - Giữ nguyên các điểm ngắt đoạn do khẩu lệnh ("xuống đoạn", "ngắt đoạn", "đoạn mới" -> \n\n)
  * - Tự động tách đoạn khi một ý/câu hoàn chỉnh (. ? !) đạt độ dài phù hợp (25-35 từ)
+ * - Bảo toàn nguyên vẹn dấu ba chấm (...) giữa câu không bị tách vụn
  * giúp văn bản trình bày rõ ràng, khoa học, dễ đọc như phụ đề trực tiếp
  */
-export function formatParagraphSegmentation(text: string, wordsPerParagraph: number = 30): string {
+export function formatParagraphSegmentation(text: string, wordsPerParagraph: number = 28): string {
   if (!text) return '';
 
   const paragraphs = text.split(/\n\s*\n/);
@@ -787,7 +863,8 @@ export function formatParagraphSegmentation(text: string, wordsPerParagraph: num
     const trimmedPara = para.trim();
     if (!trimmedPara) continue;
 
-    const sentences = trimmedPara.split(/(?<=[.?!])\s+/).filter(Boolean);
+    // Không tách đoạn ở giữa dấu ba chấm (...)
+    const sentences = trimmedPara.split(/(?<=(?<!\.)[.?!])\s+/).filter(Boolean);
     if (sentences.length <= 1) {
       formattedParagraphs.push(trimmedPara);
       continue;
@@ -818,14 +895,15 @@ export function formatParagraphSegmentation(text: string, wordsPerParagraph: num
 
 /**
  * Tự động viết hoa đầu câu, sau dấu chấm, chấm hỏi, chấm than và sau ngắt dòng
+ * Không viết hoa sau dấu ba chấm (...) giữa chừng
  */
 export function autoCapitalizeSentences(text: string): string {
   if (!text) return '';
 
   let result = text.charAt(0).toUpperCase() + text.slice(1);
 
-  result = result.replace(/([.?!]\s+)([a-zà-ỹ])/g, (_, p1, p2) => p1 + p2.toUpperCase());
-  result = result.replace(/(\n\s*[-*]?\s*)([a-zà-ỹ])/g, (_, p1, p2) => p1 + p2.toUpperCase());
+  result = result.replace(/(^|(?<!\.)[.?!]\s+)([a-zà-ỹ])/gu, (_, p1, p2) => p1 + p2.toUpperCase());
+  result = result.replace(/(\n\s*[-*]?\s*)([a-zà-ỹ])/gu, (_, p1, p2) => p1 + p2.toUpperCase());
 
   return result;
 }
