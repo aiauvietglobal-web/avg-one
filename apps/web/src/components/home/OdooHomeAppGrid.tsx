@@ -412,54 +412,80 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - THIẾT KẾ MỀM MẠI, UYỂN CHUYỂN PHONG CÁCH VIETTEL AI */}
+          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - BIỂU TƯỢNG MẠNG LƯỚI TƯƠNG TÁC ĐA CHIỀU (BỎ TOÀN BỘ CHỮ THEO YÊU CẦU) */}
           <div 
-            className="hidden md:flex absolute right-4 xl:right-12 bottom-3 xl:bottom-6 z-20 items-center gap-3.5 px-4 py-2.5 xl:px-5 xl:py-3 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-orange-200/50 dark:border-orange-900/40 shadow-[0_4px_20px_rgba(241,90,36,0.06)] hover:shadow-[0_8px_30px_rgba(241,90,36,0.15)] hover:border-orange-300 dark:hover:border-orange-500/50 hover:-translate-y-0.5 transition-all duration-300 group cursor-default select-none animate-entrance-right animate-float-node-4"
+            className="hidden md:flex absolute right-4 xl:right-12 bottom-1 xl:bottom-3 z-20 items-center justify-center select-none cursor-default group animate-entrance-right animate-float-node-4"
             style={{ animationDelay: '550ms' }}
           >
-            {/* Typography */}
-            <div className="flex flex-col text-right">
-              <div className="flex items-center justify-end gap-1.5 mb-0.5">
-                <span className="text-[10px] xl:text-[11px] font-semibold text-orange-600 dark:text-orange-400 tracking-wide">
-                  Giao tiếp đa chiều
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-              </div>
-              <span className="text-base xl:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
-                Tương tác
-              </span>
-              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
-                Trợ lý AI & kết nối đa kênh
-              </span>
-            </div>
+            {/* Biểu tượng Mạng lưới Tương tác 5 Node (1 Trung tâm kết nối 4 Vệ tinh) chuẩn theo ảnh mẫu */}
+            <div className="w-[136px] h-[105px] sm:w-[152px] sm:h-[117px] xl:w-[170px] xl:h-[131px] shrink-0 filter drop-shadow-[0_4px_16px_rgba(29,53,87,0.14)] dark:drop-shadow-[0_6px_20px_rgba(0,0,0,0.45)] group-hover:scale-105 transition-transform duration-300">
+              <svg 
+                viewBox="58 26 246 208" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="w-full h-full overflow-visible"
+              >
+                {/* 1. CÁC ĐƯỜNG KẾT NỐI (NAVY LINK BARS) */}
+                <g className="stroke-[#1D3557] dark:stroke-sky-400/90" strokeWidth="10" strokeLinecap="round">
+                  {/* Đường nối Top-Left */}
+                  <line x1="175" y1="135" x2="95" y2="88" />
+                  {/* Đường nối Top-Right */}
+                  <line x1="175" y1="135" x2="225" y2="62" />
+                  {/* Đường nối Bottom-Left */}
+                  <line x1="175" y1="135" x2="100" y2="198" />
+                  {/* Đường nối Bottom-Right */}
+                  <line x1="175" y1="135" x2="268" y2="175" />
+                </g>
 
-            {/* Soft Icon Badge */}
-            <div className="relative w-11 h-11 xl:w-12 xl:h-12 rounded-xl bg-gradient-to-br from-orange-500/10 to-amber-500/15 flex items-center justify-center shrink-0 border border-orange-300/30 dark:border-orange-700/40 group-hover:scale-105 transition-transform duration-300 shadow-xs">
-              <svg viewBox="0 0 48 48" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
-                <defs>
-                  <linearGradient id="grad-inter" x1="10" y1="10" x2="38" y2="38" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#F15A24" />
-                    <stop offset="100%" stopColor="#F59E0B" />
-                  </linearGradient>
-                </defs>
-                {/* Bong bóng hội thoại bo tròn mềm */}
-                <path
-                  d="M 11 22 C 11 15.5 16.5 11 23.5 11 C 30.5 11 36 15.5 36 22 C 36 25 34.5 28 32 30 C 31 32.5 33 35 34 36 C 31 36 28 34.5 26.5 33.5 C 25.5 33.8 24.5 34 23.5 34 C 16.5 34 11 28.5 11 22 Z"
-                  stroke="url(#grad-inter)"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="url(#grad-inter)"
-                  fillOpacity="0.08"
-                />
-                {/* Sóng âm thanh hội thoại nhịp nhàng */}
-                <line x1="23.5" y1="17" x2="23.5" y2="27" stroke="#F15A24" strokeWidth="2.2" strokeLinecap="round" className="animate-pulse" />
-                <line x1="19.5" y1="19" x2="19.5" y2="25" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
-                <line x1="27.5" y1="19" x2="27.5" y2="25" stroke="#FB923C" strokeWidth="2" strokeLinecap="round" />
-                {/* Điểm sáng tương tác góc dưới */}
-                <circle cx="36" cy="16" r="2.5" fill="#F59E0B" className="animate-ping" opacity="0.8" />
-                <circle cx="36" cy="16" r="2" fill="#F59E0B" />
-                <circle cx="36" cy="16" r="0.8" fill="#FFFFFF" />
+                {/* Tín hiệu xung điện tương tác truyền dẫn dọc đường nối (Interactive Data Signals) */}
+                <g fill="#38BDF8">
+                  <circle cx="135" cy="111.5" r="2.5" className="animate-ping" opacity="0.75" />
+                  <circle cx="200" cy="98.5" r="2.5" className="animate-ping" opacity="0.75" />
+                  <circle cx="137.5" cy="166.5" r="2.5" className="animate-ping" opacity="0.75" />
+                  <circle cx="221.5" cy="155" r="2.5" className="animate-ping" opacity="0.75" />
+                </g>
+
+                {/* 2. NODE VỆ TINH 1: TOP-LEFT */}
+                <g className="group/node1">
+                  <circle cx="95" cy="88" r="26" className="fill-white dark:fill-slate-900 stroke-[#1D3557] dark:stroke-sky-400" strokeWidth="4.5" />
+                  {/* Avatar User xanh dương */}
+                  <circle cx="95" cy="80" r="8.5" className="fill-[#0090D0] dark:fill-sky-400" />
+                  <path d="M 80 104 C 80 93.5, 86 90, 95 90 C 104 90, 110 93.5, 110 104 C 106 107, 84 107, 80 104 Z" className="fill-[#0090D0] dark:fill-sky-400" />
+                </g>
+
+                {/* 3. NODE VỆ TINH 2: TOP-RIGHT */}
+                <g className="group/node2">
+                  <circle cx="225" cy="62" r="26" className="fill-white dark:fill-slate-900 stroke-[#1D3557] dark:stroke-sky-400" strokeWidth="4.5" />
+                  {/* Avatar User xanh dương */}
+                  <circle cx="225" cy="54" r="8.5" className="fill-[#0090D0] dark:fill-sky-400" />
+                  <path d="M 210 78 C 210 67.5, 216 64, 225 64 C 234 64, 240 67.5, 240 78 C 236 81, 214 81, 210 78 Z" className="fill-[#0090D0] dark:fill-sky-400" />
+                </g>
+
+                {/* 4. NODE VỆ TINH 3: BOTTOM-LEFT */}
+                <g className="group/node3">
+                  <circle cx="100" cy="198" r="26" className="fill-white dark:fill-slate-900 stroke-[#1D3557] dark:stroke-sky-400" strokeWidth="4.5" />
+                  {/* Avatar User xanh dương */}
+                  <circle cx="100" cy="190" r="8.5" className="fill-[#0090D0] dark:fill-sky-400" />
+                  <path d="M 85 214 C 85 203.5, 91 200, 100 200 C 109 200, 115 203.5, 115 214 C 111 217, 89 217, 85 214 Z" className="fill-[#0090D0] dark:fill-sky-400" />
+                </g>
+
+                {/* 5. NODE VỆ TINH 4: BOTTOM-RIGHT */}
+                <g className="group/node4">
+                  <circle cx="268" cy="175" r="26" className="fill-white dark:fill-slate-900 stroke-[#1D3557] dark:stroke-sky-400" strokeWidth="4.5" />
+                  {/* Avatar User xanh dương */}
+                  <circle cx="268" cy="167" r="8.5" className="fill-[#0090D0] dark:fill-sky-400" />
+                  <path d="M 253 191 C 253 180.5, 259 177, 268 177 C 277 177, 283 180.5, 283 191 C 279 194, 257 194, 253 191 Z" className="fill-[#0090D0] dark:fill-sky-400" />
+                </g>
+
+                {/* 6. NODE TRUNG TÂM (CENTER HUB - NGƯỜI ĐIỀU PHỐI / TƯƠNG TÁC CHÍNH) */}
+                <g className="group/hub">
+                  {/* Hào quang thở nhẹ quanh node trung tâm */}
+                  <circle cx="175" cy="135" r="44" className="fill-sky-400/15 dark:fill-sky-400/10 animate-pulse" />
+                  <circle cx="175" cy="135" r="37" className="fill-white dark:fill-slate-900 stroke-[#1D3557] dark:stroke-sky-300" strokeWidth="6" />
+                  {/* Avatar User Navy Đậm nét trung tâm */}
+                  <circle cx="175" cy="123" r="12" className="fill-[#1D3557] dark:fill-sky-200" />
+                  <path d="M 154 158 C 154 143, 162 138, 175 138 C 188 138, 196 143, 196 158 C 190 162, 160 162, 154 158 Z" className="fill-[#1D3557] dark:fill-sky-200" />
+                </g>
               </svg>
             </div>
           </div>
