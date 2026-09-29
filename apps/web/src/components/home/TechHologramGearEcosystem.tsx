@@ -1,13 +1,13 @@
 import React from 'react';
 
 /**
- * ⚙️ TECH LINE GEAR CUBES (AVG ONE ISOMETRIC GEOMETRIC LINE ART - RIGHT SIDE)
+ * ⚙️ TECH 3D ARCHITECTURAL GEAR COMPOSITION (AVG ONE 3D DEPTH ISOMETRIC - RIGHT SIDE)
  * 
- * Phương án hình hộp, hình khối 3D dạng line kết hợp Bánh răng (Clean Isometric Line Cubes):
- * - Bỏ toàn bộ các vòng elip và line thừa gây rối mắt.
- * - Cụm 3 Bánh răng cơ học (Cam & Xanh dương) xoay mượt mà 60fps ăn khớp chuẩn xác.
- * - Bệ đế khối hộp không gian 3D (Isometric Tech Podium) nâng đỡ vững chắc đồng bộ với bên trái.
- * - 4 Khối hộp vệ tinh (Satellite Tech Cubes) dạng line sắc nét mang các biểu tượng vận hành cốt lõi.
+ * Bố cục phân tầng không gian 3D có chiều sâu cơ khí (Layered 3D Depth Mechanical Composition):
+ * - Tầng 1 (Đế máy cơ khí - Mechanical Engine Base Slab): Bệ khối 3D dày dặn, vững chãi đồng bộ với bên trái.
+ * - Tầng 2 (Các khối Module truyền động - Transmission Service Blocks): 3 khối hộp chức năng (Lock, Megaphone, Users) gối lên bệ.
+ * - Tầng 3 (Hệ 3 Bánh Răng Cơ Học Ăn Khớp - Precision 3-Gear Drive): Cụm bánh răng Cam & Xanh dương gắn trên các trục truyền động đứng.
+ * - Chiều sâu phối cảnh 3D sắc nét nhờ phân cấp sáng/tối 3 mặt phẳng và nét line phân lớp (Không dùng shadow mờ).
  */
 
 interface TechHologramGearEcosystemProps {
@@ -36,143 +36,132 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
         className="w-full h-full overflow-visible"
       >
         {/* ========================================================================= */}
-        {/* 1. BỆ ĐẾ HÌNH HỘP 3D ISOMETRIC (CLEAN ISOMETRIC PODIUM SLAB - KHÔNG RỐI)    */}
+        {/* TẦNG 1: BỆ ĐẾ MÁY KHỐI HỘP 3D DÀY DẶN (THICK MECHANICAL BASE SLAB)          */}
         {/* ========================================================================= */}
-        <g id="isometric-gear-slab">
-          {/* Mặt đáy bên trái khối bệ */}
+        <g id="gear-foundation-slab">
+          {/* Mặt đáy trước-trái của bệ máy */}
           <polygon
-            points="140,290 260,340 260,355 140,305"
+            points="140,265 260,325 260,350 140,290"
             stroke="#0284C7"
             strokeWidth="1.8"
-            className="fill-sky-100/80 dark:fill-slate-950/80"
+            className="fill-sky-100/90 dark:fill-slate-900/95"
           />
-          {/* Mặt đáy bên phải khối bệ */}
+          {/* Mặt đáy trước-phải của bệ máy */}
           <polygon
-            points="260,340 380,290 380,305 260,355"
+            points="260,325 380,265 380,290 260,350"
             stroke="#F15A24"
             strokeWidth="1.8"
-            className="fill-orange-100/60 dark:fill-slate-900/60"
+            className="fill-orange-100/80 dark:fill-slate-800/90"
           />
-          {/* Mặt trên bệ đài hình hộp (Top Face of Isometric Slab) */}
+          {/* Mặt trên bệ máy (Top Face of Mechanical Slab) */}
           <polygon
-            points="260,240 380,290 260,340 140,290"
+            points="260,205 380,265 260,325 140,265"
             stroke="#0284C7"
             strokeWidth="2.2"
-            className="fill-white/95 dark:fill-slate-900/95"
+            className="fill-white/95 dark:fill-slate-950/95"
           />
 
-          {/* Đường viền khung trang trí dạng line bên trong mặt bệ (Inner Inset Frame) */}
+          {/* Đường gân cấu trúc bên trong mặt bệ (Structural Grid Inset) */}
           <polygon
-            points="260,252 360,290 260,328 160,290"
+            points="260,218 362,265 260,312 158,265"
             stroke="#F15A24"
             strokeWidth="1.2"
             strokeDasharray="6 4"
             fill="none"
-            className="opacity-75"
+            className="opacity-70"
           />
 
-          {/* Đường line thẳng dứt khoát dẫn từ bệ lên cụm bánh răng */}
-          <line x1="260" y1="285" x2="260" y2="210" stroke="#F15A24" strokeWidth="1.5" strokeDasharray="3 3" className="opacity-60" />
+          {/* Khe rãnh lắp ghép trục máy trung tâm (Center Gear Drive Basin) */}
+          <polygon
+            points="260,240 310,265 260,290 210,265"
+            stroke="#F15A24"
+            strokeWidth="1.4"
+            className="fill-orange-50/80 dark:fill-slate-900"
+          />
         </g>
 
         {/* ========================================================================= */}
-        {/* 2. CÁC ĐƯỜNG LINE KẾT NỐI TỐI GIẢN TỚI 4 KHỐI HỘP VỆ TINH                 */}
+        {/* TẦNG 2: CÁC KHỐI MODULE TRUYỀN ĐỘNG GẮN VÀO BỆ (TRANSMISSION SERVICE BLOCKS)*/}
         {/* ========================================================================= */}
-        <g id="cube-connectors" stroke="#0284C7" strokeWidth="1.5" strokeLinecap="round" className="opacity-75 dark:opacity-60">
-          {/* Nối Box 1 (Top-Left) */}
-          <polyline points="145,135 180,150 205,160" strokeDasharray="4 3" />
-          {/* Nối Box 2 (Bottom-Left) */}
-          <polyline points="120,245 155,270 175,278" />
-          {/* Nối Box 3 (Top-Right) */}
-          <polyline points="375,135 340,150 315,160" stroke="#F15A24" strokeDasharray="4 3" />
-          {/* Nối Box 4 (Bottom-Right) */}
-          <polyline points="400,245 365,270 345,278" stroke="#F15A24" />
-        </g>
-
-        {/* ========================================================================= */}
-        {/* 3. BỐN KHỐI HỘP VỆ TINH 3D DẠNG LINE (4 SATELLITE ISOMETRIC CUBES)        */}
-        {/* ========================================================================= */}
-
-        {/* ------------------------------------------------------------- */}
-        {/* BOX 1: TOP-LEFT - MINI GEARS (Khối hộp 3D dạng Line)          */}
-        {/* ------------------------------------------------------------- */}
-        <g id="box-gears" className="transition-transform duration-300 hover:scale-105 cursor-pointer pointer-events-auto">
-          <g transform="translate(125, 115)">
-            <polygon points="0,-18 20,-8 0,2 -20,-8" stroke="#0284C7" strokeWidth="1.5" className="fill-white dark:fill-slate-900" />
-            <polygon points="-20,-8 0,2 0,22 -20,12" stroke="#0284C7" strokeWidth="1.5" className="fill-sky-50 dark:fill-slate-950" />
-            <polygon points="0,2 20,-8 20,12 0,22" stroke="#0284C7" strokeWidth="1.5" className="fill-sky-100 dark:fill-slate-800" />
-            {/* Icon 3 Bánh răng mini dạng Line */}
-            <g transform="translate(0, -8) scale(0.85)">
-              <circle cx="-3" cy="-3" r="4.5" stroke="#0284C7" strokeWidth="1.1" strokeDasharray="2.5 1.5" className="fill-white dark:fill-slate-900" />
-              <circle cx="-3" cy="-3" r="1.5" className="fill-[#0284C7]" />
-              <circle cx="4" cy="3" r="4" stroke="#F15A24" strokeWidth="1.1" strokeDasharray="2.5 1.5" className="fill-white dark:fill-slate-900" />
-              <circle cx="4" cy="3" r="1.5" className="fill-[#F15A24]" />
-            </g>
-          </g>
-        </g>
-
-        {/* ------------------------------------------------------------- */}
-        {/* BOX 2: BOTTOM-LEFT - SECURITY LOCK (Khối hộp 3D dạng Line)    */}
-        {/* ------------------------------------------------------------- */}
-        <g id="box-lock" className="transition-transform duration-300 hover:scale-105 cursor-pointer pointer-events-auto">
-          <g transform="translate(95, 230)">
-            <polygon points="0,-22 24,-10 0,2 -24,-10" stroke="#0284C7" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
-            <polygon points="-24,-10 0,2 0,26 -24,14" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-50 dark:fill-slate-950" />
-            <polygon points="0,2 24,-10 24,14 0,26" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-100 dark:fill-slate-800" />
-            {/* Icon Lock $ dạng Line */}
-            <g transform="translate(0, -10) scale(0.9)">
-              <path d="M -3 -2 L -3 -6 A 3.5 3.5 0 0 1 3 -6 L 3 -2" stroke="#0284C7" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-              <rect x="-5" y="-2" width="10" height="8" rx="1.5" stroke="#0284C7" strokeWidth="1.3" className="fill-white dark:fill-slate-900" />
-              <text x="0" y="4" fill="#F15A24" fontSize="6.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">$</text>
-            </g>
-          </g>
-        </g>
-
-        {/* ------------------------------------------------------------- */}
-        {/* BOX 3: TOP-RIGHT - MEGAPHONE (Khối hộp 3D dạng Line)          */}
-        {/* ------------------------------------------------------------- */}
-        <g id="box-megaphone" className="transition-transform duration-300 hover:scale-105 cursor-pointer pointer-events-auto">
-          <g transform="translate(395, 115)">
-            <polygon points="0,-18 20,-8 0,2 -20,-8" stroke="#F15A24" strokeWidth="1.5" className="fill-white dark:fill-slate-900" />
-            <polygon points="-20,-8 0,2 0,22 -20,12" stroke="#F15A24" strokeWidth="1.5" className="fill-orange-50 dark:fill-slate-950" />
-            <polygon points="0,2 20,-8 20,12 0,22" stroke="#F15A24" strokeWidth="1.5" className="fill-orange-100 dark:fill-slate-800" />
-            {/* Icon Megaphone dạng Line */}
-            <g transform="translate(0, -8) scale(0.85)">
-              <path d="M 4 -4 L -2 -2 L -5 -2 L -5 2 L -2 2 L 4 5 Z" stroke="#F15A24" strokeWidth="1.2" className="fill-white dark:fill-slate-900" />
-              <path d="M 6 -2 A 3 3 0 0 1 6 3" stroke="#F15A24" strokeWidth="1.2" strokeLinecap="round" fill="none" />
-            </g>
-          </g>
-        </g>
-
-        {/* ------------------------------------------------------------- */}
-        {/* BOX 4: BOTTOM-RIGHT - TEAM USERS (Khối hộp 3D dạng Line)      */}
-        {/* ------------------------------------------------------------- */}
-        <g id="box-users" className="transition-transform duration-300 hover:scale-105 cursor-pointer pointer-events-auto">
-          <g transform="translate(425, 230)">
-            <polygon points="0,-22 24,-10 0,2 -24,-10" stroke="#F15A24" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
-            <polygon points="-24,-10 0,2 0,26 -24,14" stroke="#F15A24" strokeWidth="1.6" className="fill-orange-50 dark:fill-slate-950" />
-            <polygon points="0,2 24,-10 24,14 0,26" stroke="#F15A24" strokeWidth="1.6" className="fill-orange-100 dark:fill-slate-800" />
-            {/* Icon 3 Users dạng Line */}
-            <g transform="translate(0, -10) scale(0.9)">
-              <circle cx="-5" cy="-3" r="2" stroke="#F15A24" strokeWidth="1" fill="none" />
-              <path d="M -8 4 C -8 1.5 -6 0.5 -5 0.5 C -4 0.5 -2 1.5 -2 4" stroke="#F15A24" strokeWidth="1" fill="none" />
-              <circle cx="5" cy="-3" r="2" stroke="#F15A24" strokeWidth="1" fill="none" />
-              <path d="M 2 4 C 2 1.5 4 0.5 5 0.5 C 6 0.5 8 1.5 8 4" stroke="#F15A24" strokeWidth="1" fill="none" />
-              <circle cx="0" cy="-4" r="2.8" stroke="#0284C7" strokeWidth="1.2" className="fill-white dark:fill-slate-900" />
-              <path d="M -4.5 5 C -4.5 1.8 -2.5 0.2 0 0.2 C 2.5 0.2 4.5 1.8 4.5 5" stroke="#0284C7" strokeWidth="1.3" fill="none" />
-            </g>
-          </g>
-        </g>
-
-        {/* ========================================================================= */}
-        {/* 4. CỤM 3 BÁNH RĂNG LINE TRƠN ĂN KHỚP (PRECISION 3-GEAR CLUSTER)           */}
-        {/* ========================================================================= */}
-        <g id="line-floating-gears">
+        <g id="gear-modular-blocks">
           
           {/* ------------------------------------------------------------- */}
-          {/* BÁNH RĂNG 1: TRÊN ĐỈNH (TOP GEAR) - MÀU CAM THƯƠNG HIỆU       */}
-          {/* Tâm: (260, 92) - Quay thuận chiều kim đồng hồ (+360°) trong 12s*/}
+          {/* MODULE 1 (TRÁI): BẢO MẬT & KIỂM SOÁT TÀI CHÍNH (LOCK $)       */}
           {/* ------------------------------------------------------------- */}
+          <g id="block-lock" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
+            <g transform="translate(180, 240)">
+              {/* Mặt trên */}
+              <polygon points="0,-22 26,-9 0,4 -26,-9" stroke="#0284C7" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
+              {/* Mặt trái */}
+              <polygon points="-26,-9 0,4 0,30 -26,17" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-100/90 dark:fill-slate-950" />
+              {/* Mặt phải */}
+              <polygon points="0,4 26,-9 26,17 0,30" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-200/80 dark:fill-slate-800" />
+              {/* Icon Lock $ dạng Line */}
+              <g transform="translate(0, -9) scale(0.95)">
+                <path d="M -3 -2 L -3 -6 A 3.5 3.5 0 0 1 3 -6 L 3 -2" stroke="#0284C7" strokeWidth="1.3" fill="none" strokeLinecap="round" />
+                <rect x="-5" y="-2" width="10" height="8" rx="1.5" stroke="#0284C7" strokeWidth="1.3" className="fill-white dark:fill-slate-900" />
+                <text x="0" y="4.2" fill="#F15A24" fontSize="6.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">$</text>
+              </g>
+            </g>
+          </g>
+
+          {/* ------------------------------------------------------------- */}
+          {/* MODULE 2 (PHẢI): ĐỘI NGŨ NHÂN SỰ & KHÁCH HÀNG (TEAM USERS)    */}
+          {/* ------------------------------------------------------------- */}
+          <g id="block-users" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
+            <g transform="translate(340, 240)">
+              {/* Mặt trên */}
+              <polygon points="0,-22 26,-9 0,4 -26,-9" stroke="#F15A24" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
+              {/* Mặt trái */}
+              <polygon points="-26,-9 0,4 0,30 -26,17" stroke="#F15A24" strokeWidth="1.6" className="fill-orange-100/90 dark:fill-slate-950" />
+              {/* Mặt phải */}
+              <polygon points="0,4 26,-9 26,17 0,30" stroke="#F15A24" strokeWidth="1.6" className="fill-orange-200/80 dark:fill-slate-800" />
+              {/* Icon 3 Users Line */}
+              <g transform="translate(0, -9) scale(0.95)">
+                <circle cx="-5" cy="-3" r="2" stroke="#F15A24" strokeWidth="1" fill="none" />
+                <path d="M -8 4 C -8 1.5 -6 0.5 -5 0.5 C -4 0.5 -2 1.5 -2 4" stroke="#F15A24" strokeWidth="1" fill="none" />
+                <circle cx="5" cy="-3" r="2" stroke="#F15A24" strokeWidth="1" fill="none" />
+                <path d="M 2 4 C 2 1.5 4 0.5 5 0.5 C 6 0.5 8 1.5 8 4" stroke="#F15A24" strokeWidth="1" fill="none" />
+                <circle cx="0" cy="-4" r="2.8" stroke="#0284C7" strokeWidth="1.2" className="fill-white dark:fill-slate-900" />
+                <path d="M -4.5 5 C -4.5 1.8 -2.5 0.2 0 0.2 C 2.5 0.2 4.5 1.8 4.5 5" stroke="#0284C7" strokeWidth="1.3" fill="none" />
+              </g>
+            </g>
+          </g>
+
+          {/* ------------------------------------------------------------- */}
+          {/* MODULE 3 (TRƯỚC): TRUYỀN THÔNG & KẾT NỐI (MEGAPHONE)         */}
+          {/* ------------------------------------------------------------- */}
+          <g id="block-megaphone" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
+            <g transform="translate(260, 280)">
+              <polygon points="0,-18 22,-7 0,4 -22,-7" stroke="#F15A24" strokeWidth="1.5" className="fill-white dark:fill-slate-900" />
+              <polygon points="-22,-7 0,4 0,24 -22,13" stroke="#F15A24" strokeWidth="1.5" className="fill-orange-100/90 dark:fill-slate-950" />
+              <polygon points="0,4 22,-7 22,13 0,24" stroke="#F15A24" strokeWidth="1.5" className="fill-orange-200/80 dark:fill-slate-800" />
+              {/* Icon Megaphone Line */}
+              <g transform="translate(0, -7) scale(0.9)">
+                <path d="M 4 -4 L -2 -2 L -5 -2 L -5 2 L -2 2 L 4 5 Z" stroke="#F15A24" strokeWidth="1.2" className="fill-white dark:fill-slate-900" />
+                <path d="M 6 -2 A 3 3 0 0 1 6 3" stroke="#0284C7" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+              </g>
+            </g>
+          </g>
+        </g>
+
+        {/* ========================================================================= */}
+        {/* TRỤ TRUYỀN ĐỘNG CƠ KHÍ ĐỨNG (MECHANICAL DRIVE TRANSMISSION SHAFTS)        */}
+        {/* ========================================================================= */}
+        <g id="gear-drive-shafts" stroke="#0284C7" strokeWidth="1.5" className="opacity-75 dark:opacity-60">
+          {/* Trục cắm thẳng từ bệ máy lên tâm bánh răng trái */}
+          <line x1="203.5" y1="230" x2="203.5" y2="175" strokeDasharray="4 3" />
+          {/* Trục cắm thẳng từ bệ máy lên tâm bánh răng phải */}
+          <line x1="316.5" y1="230" x2="316.5" y2="175" stroke="#F15A24" strokeDasharray="4 3" />
+          {/* Trục tâm nâng đỡ bánh răng cam đỉnh */}
+          <line x1="260" y1="240" x2="260" y2="140" stroke="#F15A24" strokeWidth="1.6" strokeDasharray="6 3" />
+        </g>
+
+        {/* ========================================================================= */}
+        {/* TẦNG 3: CỤM 3 BÁNH RĂNG CƠ HỌC ĂN KHỚP (PRECISION 3-GEAR DRIVE CLUSTER)    */}
+        {/* ========================================================================= */}
+        <g id="layer-3-gear-cluster">
+          {/* BÁNH RĂNG 1: TRÊN ĐỈNH (TOP GEAR) - MÀU CAM THƯƠNG HIỆU */}
           <g transform="translate(260, 92)">
             <g>
               <path
@@ -201,10 +190,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             </g>
           </g>
 
-          {/* ----------------------------------------------------------------- */}
-          {/* BÁNH RĂNG 2: DƯỚI BÊN TRÁI (BOTTOM-LEFT GEAR) - MÀU XANH DƯƠNG     */}
-          {/* Tâm: (203.5, 142.8) - Ăn khớp chuẩn Bánh 1 - Quay ngược chiều 12s  */}
-          {/* ----------------------------------------------------------------- */}
+          {/* BÁNH RĂNG 2: DƯỚI BÊN TRÁI (BOTTOM-LEFT GEAR) - MÀU XANH DƯƠNG */}
           <g transform="translate(203.5, 142.8)">
             <g>
               <path
@@ -233,10 +219,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             </g>
           </g>
 
-          {/* ----------------------------------------------------------------- */}
-          {/* BÁNH RĂNG 3: DƯỚI BÊN PHẢI (BOTTOM-RIGHT GEAR) - MÀU XANH DƯƠNG    */}
-          {/* Tâm: (316.5, 142.8) - Ăn khớp chuẩn Bánh 1 - Quay ngược chiều 12s  */}
-          {/* ----------------------------------------------------------------- */}
+          {/* BÁNH RĂNG 3: DƯỚI BÊN PHẢI (BOTTOM-RIGHT GEAR) - MÀU XANH DƯƠNG */}
           <g transform="translate(316.5, 142.8)">
             <g>
               <path
@@ -263,6 +246,25 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
                 repeatCount="indefinite"
               />
             </g>
+          </g>
+        </g>
+
+        {/* 2 Khối hộp vệ tinh nhỏ cân bằng không gian ở tầng cao (Upper Satellite Pods) */}
+        <g id="upper-satellites-gear" transform="translate(0, -5)">
+          {/* Vệ tinh trên-trái: Mini Gears */}
+          <g transform="translate(140, 100) scale(0.75)" className="opacity-85">
+            <polygon points="0,-18 20,-8 0,2 -20,-8" stroke="#0284C7" strokeWidth="1.4" className="fill-white dark:fill-slate-900" />
+            <polygon points="-20,-8 0,2 0,22 -20,12" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-50 dark:fill-slate-950" />
+            <polygon points="0,2 20,-8 20,12 0,22" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-100 dark:fill-slate-800" />
+            <line x1="20" y1="2" x2="65" y2="20" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="3 3" className="opacity-50" />
+          </g>
+
+          {/* Vệ tinh trên-phải: Rocket Engine / Velocity */}
+          <g transform="translate(380, 100) scale(0.75)" className="opacity-85">
+            <polygon points="0,-18 20,-8 0,2 -20,-8" stroke="#F15A24" strokeWidth="1.4" className="fill-white dark:fill-slate-900" />
+            <polygon points="-20,-8 0,2 0,22 -20,12" stroke="#F15A24" strokeWidth="1.4" className="fill-orange-50 dark:fill-slate-950" />
+            <polygon points="0,2 20,-8 20,12 0,22" stroke="#F15A24" strokeWidth="1.4" className="fill-orange-100 dark:fill-slate-800" />
+            <line x1="-20" y1="2" x2="-65" y2="20" stroke="#F15A24" strokeWidth="1.2" strokeDasharray="3 3" className="opacity-50" />
           </g>
         </g>
       </svg>
