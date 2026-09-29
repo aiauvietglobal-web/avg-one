@@ -230,148 +230,66 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - CÁCH ĐIỆU CAO CẤP & BỘ BÁNH RĂNG 3D ĂN KHỚP CHUẨN XÁC */}
+          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - KHÔNG HỘP, CHỈ CÒN CHỮ "TỰ ĐỘNG HÓA" & BÁNH RĂNG TO GẤP 5 LẦN */}
           <div 
-            className="hidden lg:flex absolute right-2 xl:right-6 top-0 xl:top-1 z-20 items-center gap-4 xl:gap-6 animate-entrance-right animate-float-node-3 select-none cursor-default group"
+            className="hidden lg:flex absolute right-4 xl:right-10 top-0 xl:top-1 z-20 items-center gap-3.5 xl:gap-5 animate-entrance-right animate-float-node-3 select-none cursor-default group"
             style={{ animationDelay: '300ms' }}
           >
-            {/* Khối chữ TỰ ĐỘNG HÓA cách điệu sang trọng, tinh tế */}
-            <div className="flex flex-col items-end text-right">
-              {/* Badge micro-tag phát sáng */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mb-1 rounded-full bg-gradient-to-r from-orange-500/10 via-amber-500/15 to-orange-500/10 dark:from-orange-500/20 dark:via-amber-500/25 dark:to-orange-500/20 border border-orange-500/30 dark:border-orange-500/40 shadow-2xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24] animate-pulse" />
-                <span className="text-[10px] xl:text-[11px] font-bold text-orange-600 dark:text-orange-400 tracking-wider uppercase">
-                  Vận hành thông minh
-                </span>
-              </div>
+            {/* Chỉ để chữ "Tự động hóa" */}
+            <span className="text-xl sm:text-2xl xl:text-3xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight drop-shadow-2xs whitespace-nowrap group-hover:text-orange-500 transition-colors">
+              Tự động hóa
+            </span>
 
-              {/* Chữ TỰ ĐỘNG HÓA cách điệu với Gradient kim loại và đổ bóng 3D */}
-              <span className="text-xl sm:text-2xl xl:text-3xl font-black uppercase tracking-tight leading-none bg-gradient-to-r from-slate-900 via-orange-600 to-amber-600 dark:from-slate-100 dark:via-orange-400 dark:to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(241,90,36,0.2)] group-hover:scale-[1.02] transition-transform duration-300">
-                Tự động hóa
-              </span>
-
-              {/* Phụ đề bổ trợ ý nghĩa */}
-              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 font-medium tracking-normal mt-1">
-                Chuẩn hóa quy trình liên cụm
-              </span>
-            </div>
-
-            {/* Sân khấu bánh răng 3D (3D Isometric Perspective + Multi-stop Shaders) */}
-            <div 
-              className="w-[150px] h-[122px] sm:w-[166px] sm:h-[135px] xl:w-[186px] xl:h-[150px] shrink-0 transition-transform duration-500 group-hover:scale-105"
-              style={{
-                perspective: '1000px',
-                transform: 'rotateX(8deg) rotateY(-6deg)',
-                transformStyle: 'preserve-3d'
-              }}
-            >
-              <svg viewBox="8 10 190 152" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full overflow-visible">
-                <defs>
-                  {/* 3D Drop Shadow */}
-                  <filter id="gear3d-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feDropShadow dx="2.5" dy="4" stdDeviation="3.5" floodColor="#090D16" floodOpacity="0.35" />
-                  </filter>
-
-                  {/* 3D Gradients */}
-                  {/* 1. Cam 3D Gradient */}
-                  <linearGradient id="grad-gear-orange-3d" x1="0.15" y1="0.1" x2="0.85" y2="0.95">
-                    <stop offset="0%" stopColor="#FFA666" />
-                    <stop offset="35%" stopColor="#F15A24" />
-                    <stop offset="75%" stopColor="#EA580C" />
-                    <stop offset="100%" stopColor="#9A3412" />
-                  </linearGradient>
-
-                  {/* 2. Xám 3D Metallic Gradient */}
-                  <linearGradient id="grad-gear-gray-3d" x1="0.15" y1="0.1" x2="0.85" y2="0.95">
-                    <stop offset="0%" stopColor="#F8FAFC" />
-                    <stop offset="40%" stopColor="#CBD5E1" />
-                    <stop offset="80%" stopColor="#94A3B8" />
-                    <stop offset="100%" stopColor="#475569" />
-                  </linearGradient>
-
-                  {/* 3. Đen 3D Obsidian/Carbon Gradient */}
-                  <linearGradient id="grad-gear-black-3d" x1="0.15" y1="0.1" x2="0.85" y2="0.95">
-                    <stop offset="0%" stopColor="#475569" />
-                    <stop offset="30%" stopColor="#1E293B" />
-                    <stop offset="75%" stopColor="#0F172A" />
-                    <stop offset="100%" stopColor="#020617" />
-                  </linearGradient>
-
-                  {/* 4. Xanh dương 3D Sapphire Gradient */}
-                  <linearGradient id="grad-gear-blue-3d" x1="0.15" y1="0.1" x2="0.85" y2="0.95">
-                    <stop offset="0%" stopColor="#7DD3FC" />
-                    <stop offset="35%" stopColor="#0284C7" />
-                    <stop offset="75%" stopColor="#0369A1" />
-                    <stop offset="100%" stopColor="#0C4A6E" />
-                  </linearGradient>
-
-                  {/* Metallic Hub Gradient */}
-                  <radialGradient id="grad-gear-hub" cx="40%" cy="35%" r="65%">
-                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
-                    <stop offset="60%" stopColor="#CBD5E1" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#0F172A" stopOpacity="0.45" />
-                  </radialGradient>
-                </defs>
-
-                {/* 1. BÁNH RĂNG MÀU CAM (LỚN NHẤT - TRÊN TRÁI - TẠO ĐIỂM NHẤN 3D NỔI BẬT - QUAY THUẬN CHIỀU 16s) */}
-                <g filter="url(#gear3d-shadow)">
-                  <path d="M 94.40 56.00 A 36.4 36.4 0 0 1 94.31 58.50 L 103.30 62.72 A 45.8 45.8 0 0 1 102.43 67.13 L 92.51 67.59 A 36.4 36.4 0 0 1 91.63 69.93 A 36.4 36.4 0 0 1 90.59 72.21 L 97.28 79.55 A 45.8 45.8 0 0 1 94.79 83.28 L 85.45 79.91 A 36.4 36.4 0 0 1 83.74 81.74 A 36.4 36.4 0 0 1 81.91 83.45 L 85.28 92.79 A 45.8 45.8 0 0 1 81.55 95.28 L 74.21 88.59 A 36.4 36.4 0 0 1 71.93 89.63 A 36.4 36.4 0 0 1 69.59 90.51 L 69.13 100.43 A 45.8 45.8 0 0 1 64.72 101.30 L 60.50 92.31 A 36.4 36.4 0 0 1 58.00 92.40 A 36.4 36.4 0 0 1 55.50 92.31 L 51.28 101.30 A 45.8 45.8 0 0 1 46.87 100.43 L 46.41 90.51 A 36.4 36.4 0 0 1 44.07 89.63 A 36.4 36.4 0 0 1 41.79 88.59 L 34.45 95.28 A 45.8 45.8 0 0 1 30.72 92.79 L 34.09 83.45 A 36.4 36.4 0 0 1 32.26 81.74 A 36.4 36.4 0 0 1 30.55 79.91 L 21.21 83.28 A 45.8 45.8 0 0 1 18.72 79.55 L 25.41 72.21 A 36.4 36.4 0 0 1 24.37 69.93 A 36.4 36.4 0 0 1 23.49 67.59 L 13.57 67.13 A 45.8 45.8 0 0 1 12.70 62.72 L 21.69 58.50 A 36.4 36.4 0 0 1 21.60 56.00 A 36.4 36.4 0 0 1 21.69 53.50 L 12.70 49.28 A 45.8 45.8 0 0 1 13.57 44.87 L 23.49 44.41 A 36.4 36.4 0 0 1 24.37 42.07 A 36.4 36.4 0 0 1 25.41 39.79 L 18.72 32.45 A 45.8 45.8 0 0 1 21.21 28.72 L 30.55 32.09 A 36.4 36.4 0 0 1 32.26 30.26 A 36.4 36.4 0 0 1 34.09 28.55 L 30.72 19.21 A 45.8 45.8 0 0 1 34.45 16.72 L 41.79 23.41 A 36.4 36.4 0 0 1 44.07 22.37 A 36.4 36.4 0 0 1 46.41 21.49 L 46.87 11.57 A 45.8 45.8 0 0 1 51.28 10.70 L 55.50 19.69 A 36.4 36.4 0 0 1 58.00 19.60 A 36.4 36.4 0 0 1 60.50 19.69 L 64.72 10.70 A 45.8 45.8 0 0 1 69.13 11.57 L 69.59 21.49 A 36.4 36.4 0 0 1 71.93 22.37 A 36.4 36.4 0 0 1 74.21 23.41 L 81.55 16.72 A 45.8 45.8 0 0 1 85.28 19.21 L 81.91 28.55 A 36.4 36.4 0 0 1 83.74 30.26 A 36.4 36.4 0 0 1 85.45 32.09 L 94.79 28.72 A 45.8 45.8 0 0 1 97.28 32.45 L 90.59 39.79 A 36.4 36.4 0 0 1 91.63 42.07 A 36.4 36.4 0 0 1 92.51 44.41 L 102.43 44.87 A 45.8 45.8 0 0 1 103.30 49.28 L 94.31 53.50 A 36.4 36.4 0 0 1 94.40 56.00 Z M 76.00 56.00 A 18.0 18.0 0 1 0 40.00 56.00 A 18.0 18.0 0 1 0 76.00 56.00 Z" fill="url(#grad-gear-orange-3d)" stroke="#FDBA74" strokeWidth="0.75" strokeOpacity="0.6" fillRule="evenodd" />
-                  <circle cx="58" cy="56" r="30.0" stroke="#FFEDD5" strokeWidth="1" strokeOpacity="0.45" strokeDasharray="3 3" fill="none" />
-                  <circle cx="58" cy="56" r="21.5" stroke="#9A3412" strokeWidth="1.2" strokeOpacity="0.6" fill="none" />
-                  <circle cx="58" cy="56" r="18.0" fill="url(#grad-gear-hub)" />
+            {/* Biểu tượng 4 bánh răng ăn khớp chuẩn xác: Cam, Xám, Đen, Xanh dương */}
+            <div className="w-[140px] h-[112px] sm:w-[155px] sm:h-[124px] xl:w-[172px] xl:h-[138px] shrink-0 filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.16)] dark:drop-shadow-[0_6px_20px_rgba(0,0,0,0.35)] group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="15 8 178 142" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full overflow-visible">
+                {/* 1. BÁNH RĂNG MÀU CAM (TRÊN TRÁI - QUAY THUẬN CHIỀU 12s) */}
+                <g>
+                  <path d="M 86.00 54.00 A 26.0 26.0 0 0 1 85.89 56.38 L 94.72 60.91 A 35.4 35.4 0 0 1 93.52 65.38 L 83.61 64.89 A 26.0 26.0 0 0 1 82.52 67.00 A 26.0 26.0 0 0 1 81.23 69.01 L 86.62 77.34 A 35.4 35.4 0 0 1 83.34 80.62 L 75.01 75.23 A 26.0 26.0 0 0 1 73.00 76.52 A 26.0 26.0 0 0 1 70.89 77.61 L 71.38 87.52 A 35.4 35.4 0 0 1 66.91 88.72 L 62.38 79.89 A 26.0 26.0 0 0 1 60.00 80.00 A 26.0 26.0 0 0 1 57.62 79.89 L 53.09 88.72 A 35.4 35.4 0 0 1 48.62 87.52 L 49.11 77.61 A 26.0 26.0 0 0 1 47.00 76.52 A 26.0 26.0 0 0 1 44.99 75.23 L 36.66 80.62 A 35.4 35.4 0 0 1 33.38 77.34 L 38.77 69.01 A 26.0 26.0 0 0 1 37.48 67.00 A 26.0 26.0 0 0 1 36.39 64.89 L 26.48 65.38 A 35.4 35.4 0 0 1 25.28 60.91 L 34.11 56.38 A 26.0 26.0 0 0 1 34.00 54.00 A 26.0 26.0 0 0 1 34.11 51.62 L 25.28 47.09 A 35.4 35.4 0 0 1 26.48 42.62 L 36.39 43.11 A 26.0 26.0 0 0 1 37.48 41.00 A 26.0 26.0 0 0 1 38.77 38.99 L 33.38 30.66 A 35.4 35.4 0 0 1 36.66 27.38 L 44.99 32.77 A 26.0 26.0 0 0 1 47.00 31.48 A 26.0 26.0 0 0 1 49.11 30.39 L 48.62 20.48 A 35.4 35.4 0 0 1 53.09 19.28 L 57.62 28.11 A 26.0 26.0 0 0 1 60.00 28.00 A 26.0 26.0 0 0 1 62.38 28.11 L 66.91 19.28 A 35.4 35.4 0 0 1 71.38 20.48 L 70.89 30.39 A 26.0 26.0 0 0 1 73.00 31.48 A 26.0 26.0 0 0 1 75.01 32.77 L 83.34 27.38 A 35.4 35.4 0 0 1 86.62 30.66 L 81.23 38.99 A 26.0 26.0 0 0 1 82.52 41.00 A 26.0 26.0 0 0 1 83.61 43.11 L 93.52 42.62 A 35.4 35.4 0 0 1 94.72 47.09 L 85.89 51.62 A 26.0 26.0 0 0 1 86.00 54.00 Z M 74.00 54.00 A 14.0 14.0 0 1 0 46.00 54.00 A 14.0 14.0 0 1 0 74.00 54.00 Z" fill="#F15A24" stroke="#EA580C" strokeWidth="0.6" fillRule="evenodd" />
                   <animateTransform
                     attributeName="transform"
                     type="rotate"
-                    from="0 58 56"
-                    to="360 58 56"
-                    dur="16s"
-                    repeatCount="indefinite"
-                  />
-                </g>
-
-                {/* 2. BÁNH RĂNG MÀU XÁM (NHỎ NHẤT TRÊN PHẢI - NỚI KHOẢNG CÁCH ĂN KHỚP 3D - QUAY NGƯỢC CHIỀU 8s) */}
-                <g filter="url(#gear3d-shadow)">
-                  <path d="M 135.59 43.53 A 15.6 15.6 0 0 1 134.86 45.54 L 141.59 52.80 A 25.0 25.0 0 0 1 138.54 56.64 L 129.95 51.71 A 15.6 15.6 0 0 1 128.15 52.87 A 15.6 15.6 0 0 1 126.21 53.78 L 125.84 63.67 A 25.0 25.0 0 0 1 120.97 64.23 L 118.39 54.67 A 15.6 15.6 0 0 1 116.29 54.23 A 15.6 15.6 0 0 1 114.28 53.50 L 107.02 60.23 A 25.0 25.0 0 0 1 103.18 57.18 L 108.11 48.59 A 15.6 15.6 0 0 1 106.95 46.79 A 15.6 15.6 0 0 1 106.04 44.85 L 96.15 44.48 A 25.0 25.0 0 0 1 95.59 39.61 L 105.15 37.03 A 15.6 15.6 0 0 1 105.59 34.93 A 15.6 15.6 0 0 1 106.32 32.92 L 99.59 25.66 A 25.0 25.0 0 0 1 102.64 21.82 L 111.23 26.75 A 15.6 15.6 0 0 1 113.03 25.59 A 15.6 15.6 0 0 1 114.97 24.68 L 115.34 14.79 A 25.0 25.0 0 0 1 120.21 14.23 L 122.79 23.79 A 15.6 15.6 0 0 1 124.89 24.23 A 15.6 15.6 0 0 1 126.90 24.96 L 134.16 18.23 A 25.0 25.0 0 0 1 138.00 21.28 L 133.07 29.87 A 15.6 15.6 0 0 1 134.23 31.67 A 15.6 15.6 0 0 1 135.14 33.61 L 145.03 33.98 A 25.0 25.0 0 0 1 145.59 38.85 L 136.03 41.43 A 15.6 15.6 0 0 1 135.59 43.53 Z M 128.59 39.23 A 8.0 8.0 0 1 0 112.59 39.23 A 8.0 8.0 0 1 0 128.59 39.23 Z" fill="url(#grad-gear-gray-3d)" stroke="#FFFFFF" strokeWidth="0.65" strokeOpacity="0.7" fillRule="evenodd" />
-                  <circle cx="120.59" cy="39.23" r="14.1" stroke="#F8FAFC" strokeWidth="0.8" strokeOpacity="0.5" fill="none" />
-                  <circle cx="120.59" cy="39.23" r="10.5" stroke="#475569" strokeWidth="1" strokeOpacity="0.5" fill="none" />
-                  <circle cx="120.59" cy="39.23" r="8.0" fill="url(#grad-gear-hub)" />
-                  <animateTransform
-                    attributeName="transform"
-                    type="rotate"
-                    from="0 120.59 39.23"
-                    to="-360 120.59 39.23"
-                    dur="8s"
-                    repeatCount="indefinite"
-                  />
-                </g>
-
-                {/* 3. BÁNH RĂNG MÀU ĐEN (DƯỚI GIỮA - OBSIDIAN 3D ĂN KHỚP HOÀN HẢO - QUAY NGƯỢC CHIỀU 12s) */}
-                <g filter="url(#gear3d-shadow)">
-                  <path d="M 119.16 127.18 A 26.0 26.0 0 0 1 118.52 129.50 L 126.15 135.88 A 35.4 35.4 0 0 1 123.94 140.00 L 114.47 137.64 A 26.0 26.0 0 0 1 112.92 139.51 A 26.0 26.0 0 0 1 111.20 141.16 L 114.61 150.45 A 35.4 35.4 0 0 1 110.65 152.99 L 103.88 145.79 A 26.0 26.0 0 0 1 101.55 146.61 A 26.0 26.0 0 0 1 99.18 147.21 L 97.43 157.06 A 35.4 35.4 0 0 1 92.79 157.25 L 90.39 147.66 A 26.0 26.0 0 0 1 88.08 147.25 A 26.0 26.0 0 0 1 85.83 146.61 L 79.52 154.26 A 35.4 35.4 0 0 1 75.31 152.05 L 78.47 142.66 A 26.0 26.0 0 0 1 76.60 141.11 A 26.0 26.0 0 0 1 74.95 139.39 L 65.66 142.80 A 35.4 35.4 0 0 1 63.12 138.84 L 70.32 132.07 A 26.0 26.0 0 0 1 69.50 129.74 A 26.0 26.0 0 0 1 68.90 127.37 L 59.05 125.62 A 35.4 35.4 0 0 1 58.86 120.98 L 68.45 118.58 A 26.0 26.0 0 0 1 68.86 116.27 A 26.0 26.0 0 0 1 69.50 114.02 L 61.85 107.71 A 35.4 35.4 0 0 1 64.06 103.50 L 73.45 106.66 A 26.0 26.0 0 0 1 75.00 104.79 A 26.0 26.0 0 0 1 76.72 103.14 L 73.31 93.85 A 35.4 35.4 0 0 1 77.27 91.31 L 84.04 98.51 A 26.0 26.0 0 0 1 86.37 97.69 A 26.0 26.0 0 0 1 88.74 97.09 L 90.49 87.24 A 35.4 35.4 0 0 1 95.13 87.05 L 97.53 96.64 A 26.0 26.0 0 0 1 99.84 97.05 A 26.0 26.0 0 0 1 102.09 97.69 L 108.40 90.04 A 35.4 35.4 0 0 1 112.61 92.25 L 109.45 101.64 A 26.0 26.0 0 0 1 111.32 103.19 A 26.0 26.0 0 0 1 112.97 104.91 L 122.26 101.50 A 35.4 35.4 0 0 1 124.80 105.46 L 117.60 112.23 A 26.0 26.0 0 0 1 118.42 114.56 A 26.0 26.0 0 0 1 119.02 116.93 L 128.87 118.68 A 35.4 35.4 0 0 1 129.06 123.32 L 119.47 125.72 A 26.0 26.0 0 0 1 119.16 127.18 Z M 107.49 122.75 A 14.0 14.0 0 1 0 79.49 122.75 A 14.0 14.0 0 1 0 107.49 122.75 Z" fill="url(#grad-gear-black-3d)" stroke="#64748B" strokeWidth="0.7" strokeOpacity="0.6" fillRule="evenodd" />
-                  <circle cx="93.49" cy="122.75" r="22.5" stroke="#94A3B8" strokeWidth="0.9" strokeOpacity="0.35" strokeDasharray="2 3" fill="none" />
-                  <circle cx="93.49" cy="122.75" r="17.0" stroke="#020617" strokeWidth="1.2" strokeOpacity="0.8" fill="none" />
-                  <circle cx="93.49" cy="122.75" r="14.0" fill="url(#grad-gear-hub)" />
-                  <animateTransform
-                    attributeName="transform"
-                    type="rotate"
-                    from="0 93.49 122.75"
-                    to="-360 93.49 122.75"
+                    from="0 60 54"
+                    to="360 60 54"
                     dur="12s"
                     repeatCount="indefinite"
                   />
                 </g>
 
-                {/* 4. BÁNH RĂNG MÀU XANH DƯƠNG (PHẢI - SAPPHIRE 3D ĂN KHỚP CHUẨN XÁC - QUAY THUẬN CHIỀU 12s) */}
-                <g filter="url(#gear3d-shadow)">
-                  <path d="M 183.04 112.56 A 26.0 26.0 0 0 1 182.26 114.81 L 189.47 121.63 A 35.4 35.4 0 0 1 187.06 125.59 L 177.69 122.33 A 26.0 26.0 0 0 1 176.04 124.06 A 26.0 26.0 0 0 1 174.25 125.62 L 177.07 135.13 A 35.4 35.4 0 0 1 173.01 137.36 L 166.52 129.85 A 26.0 26.0 0 0 1 164.24 130.52 A 26.0 26.0 0 0 1 161.90 130.98 L 159.59 140.63 A 35.4 35.4 0 0 1 154.96 140.52 L 153.10 130.78 A 26.0 26.0 0 0 1 150.78 130.21 A 26.0 26.0 0 0 1 148.53 129.44 L 141.71 136.65 A 35.4 35.4 0 0 1 137.75 134.24 L 141.01 124.87 A 26.0 26.0 0 0 1 139.28 123.22 A 26.0 26.0 0 0 1 137.72 121.43 L 128.21 124.25 A 35.4 35.4 0 0 1 125.98 120.19 L 133.49 113.70 A 26.0 26.0 0 0 1 132.82 111.42 A 26.0 26.0 0 0 1 132.36 109.08 L 122.71 106.77 A 35.4 35.4 0 0 1 122.82 102.14 L 132.56 100.28 A 26.0 26.0 0 0 1 133.13 97.96 A 26.0 26.0 0 0 1 133.90 95.71 L 126.69 88.89 A 35.4 35.4 0 0 1 129.10 84.93 L 138.47 88.19 A 26.0 26.0 0 0 1 140.12 86.46 A 26.0 26.0 0 0 1 141.91 84.90 L 139.09 75.39 A 35.4 35.4 0 0 1 143.15 73.16 L 149.64 80.67 A 26.0 26.0 0 0 1 151.92 80.00 A 26.0 26.0 0 0 1 154.26 79.54 L 156.57 69.89 A 35.4 35.4 0 0 1 161.20 70.00 L 163.06 79.74 A 26.0 26.0 0 0 1 165.38 80.31 A 26.0 26.0 0 0 1 167.63 81.08 L 174.45 73.87 A 35.4 35.4 0 0 1 178.41 76.28 L 175.15 85.65 A 26.0 26.0 0 0 1 176.88 87.30 A 26.0 26.0 0 0 1 178.44 89.09 L 187.95 86.27 A 35.4 35.4 0 0 1 190.18 90.33 L 182.67 96.82 A 26.0 26.0 0 0 1 183.34 99.10 A 26.0 26.0 0 0 1 183.80 101.44 L 193.45 103.75 A 35.4 35.4 0 0 1 193.34 108.38 L 183.60 110.24 A 26.0 26.0 0 0 1 183.04 112.56 Z M 171.27 109.19 A 14.0 14.0 0 1 0 143.27 109.19 A 14.0 14.0 0 1 0 171.27 109.19 Z" fill="url(#grad-gear-blue-3d)" stroke="#BAE6FD" strokeWidth="0.7" strokeOpacity="0.6" fillRule="evenodd" />
-                  <circle cx="157.27" cy="109.19" r="22.5" stroke="#E0F2FE" strokeWidth="0.9" strokeOpacity="0.4" strokeDasharray="3 3" fill="none" />
-                  <circle cx="157.27" cy="109.19" r="17.0" stroke="#075985" strokeWidth="1.2" strokeOpacity="0.6" fill="none" />
-                  <circle cx="157.27" cy="109.19" r="14.0" fill="url(#grad-gear-hub)" />
+                {/* 2. BÁNH RĂNG MÀU XÁM (NHỎ NHẤT TRÊN PHẢI - CHỈ KHỚP VỚI BÁNH RĂNG CAM - QUAY NGƯỢC CHIỀU 8s TỶ SỐ 1.5) */}
+                <g>
+                  <path d="M 123.74 48.34 A 15.6 15.6 0 0 1 122.54 50.12 L 127.32 58.79 A 25.0 25.0 0 0 1 123.43 61.77 L 116.29 54.91 A 15.6 15.6 0 0 1 114.27 55.61 A 15.6 15.6 0 0 1 112.16 56.02 L 109.41 65.53 A 25.0 25.0 0 0 1 104.55 64.89 L 104.35 54.99 A 15.6 15.6 0 0 1 102.43 54.05 A 15.6 15.6 0 0 1 100.65 52.85 L 91.98 57.63 A 25.0 25.0 0 0 1 89.00 53.74 L 95.86 46.60 A 15.6 15.6 0 0 1 95.16 44.58 A 15.6 15.6 0 0 1 94.75 42.47 L 85.24 39.72 A 25.0 25.0 0 0 1 85.88 34.86 L 95.78 34.66 A 15.6 15.6 0 0 1 96.72 32.74 A 15.6 15.6 0 0 1 97.92 30.96 L 93.14 22.29 A 25.0 25.0 0 0 1 97.03 19.31 L 104.17 26.17 A 15.6 15.6 0 0 1 106.19 25.47 A 15.6 15.6 0 0 1 108.30 25.06 L 111.05 15.55 A 25.0 25.0 0 0 1 115.91 16.19 L 116.11 26.09 A 15.6 15.6 0 0 1 118.03 27.03 A 15.6 15.6 0 0 1 119.81 28.23 L 128.48 23.45 A 25.0 25.0 0 0 1 131.46 27.34 L 124.60 34.48 A 15.6 15.6 0 0 1 125.30 36.50 A 15.6 15.6 0 0 1 125.71 38.61 L 135.22 41.36 A 25.0 25.0 0 0 1 134.58 46.22 L 124.68 46.42 A 15.6 15.6 0 0 1 123.74 48.34 Z M 118.23 40.54 A 8.0 8.0 0 1 0 102.23 40.54 A 8.0 8.0 0 1 0 118.23 40.54 Z" fill="#94A3B8" stroke="#64748B" strokeWidth="0.6" className="dark:fill-slate-300 dark:stroke-slate-400" fillRule="evenodd" />
                   <animateTransform
                     attributeName="transform"
                     type="rotate"
-                    from="0 157.27 109.19"
-                    to="360 157.27 109.19"
+                    from="0 110.23 40.54"
+                    to="-360 110.23 40.54"
+                    dur="8s"
+                    repeatCount="indefinite"
+                  />
+                </g>
+
+                {/* 3. BÁNH RĂNG MÀU ĐEN (DƯỚI GIỮA - ĂN KHỚP HOÀN HẢO - QUAY NGƯỢC CHIỀU 12s) */}
+                <g>
+                  <path d="M 114.25 116.40 A 26.0 26.0 0 0 1 113.48 118.65 L 120.69 125.47 A 35.4 35.4 0 0 1 118.28 129.43 L 108.91 126.17 A 26.0 26.0 0 0 1 107.26 127.90 A 26.0 26.0 0 0 1 105.47 129.46 L 108.29 138.97 A 35.4 35.4 0 0 1 104.23 141.20 L 97.74 133.69 A 26.0 26.0 0 0 1 95.46 134.36 A 26.0 26.0 0 0 1 93.12 134.82 L 90.81 144.47 A 35.4 35.4 0 0 1 86.18 144.36 L 84.32 134.62 A 26.0 26.0 0 0 1 82.00 134.05 A 26.0 26.0 0 0 1 79.75 133.28 L 72.93 140.49 A 35.4 35.4 0 0 1 68.97 138.08 L 72.23 128.71 A 26.0 26.0 0 0 1 70.50 127.06 A 26.0 26.0 0 0 1 68.94 125.27 L 59.43 128.09 A 35.4 35.4 0 0 1 57.20 124.03 L 64.71 117.54 A 26.0 26.0 0 0 1 64.04 115.26 A 26.0 26.0 0 0 1 63.58 112.92 L 53.93 110.61 A 35.4 35.4 0 0 1 54.04 105.98 L 63.78 104.12 A 26.0 26.0 0 0 1 64.35 101.80 A 26.0 26.0 0 0 1 65.12 99.55 L 57.91 92.73 A 35.4 35.4 0 0 1 60.32 88.77 L 69.69 92.03 A 26.0 26.0 0 0 1 71.34 90.30 A 26.0 26.0 0 0 1 73.13 88.74 L 70.31 79.23 A 35.4 35.4 0 0 1 74.37 77.00 L 80.86 84.51 A 26.0 26.0 0 0 1 83.14 83.84 A 26.0 26.0 0 0 1 85.48 83.38 L 87.79 73.73 A 35.4 35.4 0 0 1 92.42 73.84 L 94.28 83.58 A 26.0 26.0 0 0 1 96.60 84.15 A 26.0 26.0 0 0 1 98.85 84.92 L 105.67 77.71 A 35.4 35.4 0 0 1 109.63 80.12 L 106.37 89.49 A 26.0 26.0 0 0 1 108.10 91.14 A 26.0 26.0 0 0 1 109.66 92.93 L 119.17 90.11 A 35.4 35.4 0 0 1 121.40 94.17 L 113.89 100.66 A 26.0 26.0 0 0 1 114.56 102.94 A 26.0 26.0 0 0 1 115.02 105.28 L 124.67 107.59 A 35.4 35.4 0 0 1 124.56 112.22 L 114.82 114.08 A 26.0 26.0 0 0 1 114.25 116.40 Z M 103.30 109.10 A 14.0 14.0 0 1 0 75.30 109.10 A 14.0 14.0 0 1 0 103.30 109.10 Z" fill="#18181B" stroke="#3F3F46" strokeWidth="0.6" className="dark:fill-slate-900 dark:stroke-slate-600" fillRule="evenodd" />
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 89.3 109.1"
+                    to="-360 89.3 109.1"
+                    dur="12s"
+                    repeatCount="indefinite"
+                  />
+                </g>
+
+                {/* 4. BÁNH RĂNG MÀU XANH DƯƠNG (PHẢI - ĂN KHỚP HOÀN HẢO VỚI BÁNH RĂNG ĐEN - QUAY THUẬN CHIỀU 12s) */}
+                <g>
+                  <path d="M 174.10 107.10 A 26.0 26.0 0 0 1 173.02 109.22 L 179.20 116.98 A 35.4 35.4 0 0 1 176.27 120.57 L 167.44 116.04 A 26.0 26.0 0 0 1 165.57 117.51 A 26.0 26.0 0 0 1 163.58 118.81 L 165.05 128.63 A 35.4 35.4 0 0 1 160.72 130.26 L 155.34 121.93 A 26.0 26.0 0 0 1 152.98 122.27 A 26.0 26.0 0 0 1 150.60 122.40 L 146.98 131.63 A 35.4 35.4 0 0 1 142.41 130.89 L 141.91 120.98 A 26.0 26.0 0 0 1 139.70 120.10 A 26.0 26.0 0 0 1 137.58 119.02 L 129.82 125.20 A 35.4 35.4 0 0 1 129.82 125.20 A 35.4 35.4 0 0 1 126.23 122.27 L 130.76 113.44 A 26.0 26.0 0 0 1 129.29 111.57 A 26.0 26.0 0 0 1 127.99 109.58 L 118.17 111.05 A 35.4 35.4 0 0 1 116.54 106.72 L 124.87 101.34 A 26.0 26.0 0 0 1 124.53 98.98 A 26.0 26.0 0 0 1 124.40 96.60 L 115.17 92.98 A 35.4 35.4 0 0 1 115.91 88.41 L 125.82 87.91 A 26.0 26.0 0 0 1 126.70 85.70 A 26.0 26.0 0 0 1 127.78 83.58 L 121.60 75.82 A 35.4 35.4 0 0 1 124.53 72.23 L 133.36 76.76 A 26.0 26.0 0 0 1 135.23 75.29 A 26.0 26.0 0 0 1 137.22 73.99 L 135.75 64.17 A 35.4 35.4 0 0 1 140.08 62.54 L 145.46 70.87 A 26.0 26.0 0 0 1 147.82 70.53 A 26.0 26.0 0 0 1 150.20 70.40 L 153.82 61.17 A 35.4 35.4 0 0 1 158.39 61.91 L 158.89 71.82 A 26.0 26.0 0 0 1 161.10 72.70 A 26.0 26.0 0 0 1 163.22 73.78 L 170.98 67.60 A 35.4 35.4 0 0 1 174.57 70.53 L 170.04 79.36 A 26.0 26.0 0 0 1 171.51 81.23 A 26.0 26.0 0 0 1 172.81 83.22 L 182.63 81.75 A 35.4 35.4 0 0 1 184.26 86.08 L 175.93 91.46 A 26.0 26.0 0 0 1 176.27 93.82 A 26.0 26.0 0 0 1 176.40 96.20 L 185.63 99.82 A 35.4 35.4 0 0 1 184.89 104.39 L 174.98 104.89 A 26.0 26.0 0 0 1 174.10 107.10 Z M 164.40 96.40 A 14.0 14.0 0 1 0 136.40 96.40 A 14.0 14.0 0 1 0 164.40 96.40 Z" fill="#0284C7" stroke="#0369A1" strokeWidth="0.6" className="dark:fill-sky-500 dark:stroke-sky-400" fillRule="evenodd" />
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 150.4 96.4"
+                    to="360 150.4 96.4"
                     dur="12s"
                     repeatCount="indefinite"
                   />
