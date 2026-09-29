@@ -208,12 +208,6 @@ const ECONOMY_FINANCE_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*m\s*p|lệnh\s*em\s*pi)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh MP' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*l\s*o|lệnh\s*en\s*ô)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh LO' },
 
-  // Phân loại nợ ngân hàng
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 1' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:ba|3))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 3' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:bốn|4))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 4' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:năm|5))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 5' },
 
   // Quản trị doanh nghiệp
   { pattern: /(?<=^|[^\p{L}\p{N}])(đ\s*h\s*đ\s*c\s*đ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ĐHĐCĐ' },
@@ -291,9 +285,9 @@ const LEGAL_ADMIN_RULES: Array<{ pattern: RegExp; replacement: string }> = [
 // ============================================================================
 const LIFE_SOCIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Hành chính công & Định danh điện tử
-  { pattern: /(?<=^|[^\p{L}\p{N}])(v[eê]\s*n[eê]\s*y\s*đ[eê]|v\s*n\s*e\s*i\s*d|vi\s*en\s*e\s*i\s*di)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VNeID' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(c[eê]\s*c[eê]\s*c[eê]\s*đ[eê]|c\s*c\s*c\s*d|căn\s*cước\s*công\s*dân)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CCCD' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(c[eê]\s*c[eê]\s*c[eê]\s*đ[eê]\s*gắn\s*(?:chíp|chip)|căn\s*cước\s*công\s*dân\s*gắn\s*(?:chíp|chip))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CCCD gắn chip' },
+    { pattern: /(?<=^|[^\p{L}\p{N}])(v[eê]\s*n[eê]\s*y\s*đ[eê]|v\s*n\s*e\s*i\s*d|vi\s*en\s*e\s*i\s*di)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VNeID' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(c[eê]\s*c[eê]\s*c[eê]\s*đ[eê]|c\s*c\s*c\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CCCD' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(c[eê]\s*c[eê]\s*c[eê]\s*đ[eê]\s*gắn\s*(?:chíp|chip)|c\s*c\s*c\s*d\s*gắn\s*(?:chíp|chip))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'CCCD gắn chip' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(định\s*danh\s*điện\s*tử\s*mức\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'định danh điện tử mức 2' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(định\s*danh\s*điện\s*tử\s*mức\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'định danh điện tử mức 1' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(cổng\s*dịch\s*vụ\s*công\s*quốc\s*gia)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Cổng Dịch vụ công Quốc gia' },
@@ -306,12 +300,12 @@ const LIFE_SOCIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /(?<=^|[^\p{L}\p{N}])(đăng\s*ký\s*thường\s*trú)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'đăng ký thường trú' },
 
   // Y tế, Sức khỏe & Bảo hiểm
-  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*y\s*tê|b\s*h\s*y\s*t|bảo\s*hiểm\s*y\s*tế)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHYT' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*ích\s*hát|b\s*h\s*x\s*h|bảo\s*hiểm\s*xã\s*hội)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHXH' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*tê\s*en|b\s*h\s*t\s*n|bảo\s*hiểm\s*thất\s*nghiệp)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHTN' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*y\s*tê|b\s*h\s*y\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHYT' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*ích\s*hát|b\s*h\s*x\s*h)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHXH' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bê\s*hát\s*tê\s*en|b\s*h\s*t\s*n)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BHTN' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(vê\s*ét\s*ét\s*y\s*đê|v\s*s\s*s\s*i\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VssID' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(chụp\s*em\s*rờ\s*ai|chụp\s*em\s*rờ\s*y|m\s*r\s*i)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chụp MRI' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(chụp\s*xi\s*ti|chụp\s*cắt\s*lớp\s*vi\s*tính|c\s*t\s*scan\w*)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chụp CT Scanner' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(chụp\s*xi\s*ti|c\s*t\s*scan\w*)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chụp CT Scanner' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(siêu\s*âm\s*đốp\s*lơ|siêu\s*âm\s*dop\w*)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'siêu âm Doppler' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(giấy\s*chuyển\s*tuyến\s*bảo\s*hiểm|giấy\s*chuyển\s*viện)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'giấy chuyển viện' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(chỉ\s*số\s*đường\s*huyết)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'chỉ số đường huyết' },
@@ -350,14 +344,14 @@ const SENSITIVE_WORD_PATTERNS: RegExp[] = [
   /(?<=^|[^\p{L}\p{N}])(đéo|đél|đếch|đách|mịa|mọe|bỏ\s*mẹ|bỏ\s*mợ)(?=[^\p{L}\p{N}]|$)/giu,
   /(?<=^|[^\p{L}\p{N}])(đ[íìị]t\s*m[ẹéè]|đ[íìị]t|đ[ụù]\s*m[áàẹéè]|đ[ụù])(?=[^\p{L}\p{N}]|$)/giu,
 
-  // Viết tắt chửi bậy: đm, đmm, dkm, đkm, vcl, vkl, vcc, vl, cl, cc...
+  // Viết tắt chửi bậy: đm, đmm, dkm, đkm, vcl, vkl, vcc, vl...
   /(?<=^|[^\p{L}\p{N}])(đ\.?m\.?m|đ\.?m|d\.?k\.?m|đ\.?k\.?m|d\.?m\.?m|d\.?m|đ\.?c\.?l\.?m|d\.?c\.?l\.?m)(?=[^\p{L}\p{N}]|$)/giu,
-  /(?<=^|[^\p{L}\p{N}])(v\.?c\.?l|v\.?k\.?l|v\.?c\.?c|vl|vđ|đbrr|dbrr)(?=[^\p{L}\p{N}]|$)/giu,
-  /(?<=^|[^\p{L}\p{N}])(c\.?m\.?n|c\.?m\.?n\.?r|cl|cc)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(v\.?c\.?l|v\.?k\.?l|v\.?c\.?c|vl|đbrr|dbrr)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(c\.?m\.?n|c\.?m\.?n\.?r)(?=[^\p{L}\p{N}]|$)/giu,
 
   // Bộ phận nhạy cảm dùng làm từ chửi thề
   /(?<=^|[^\p{L}\p{N}])(cặc|con\s*cặc|cặk|buồi|con\s*buồi|đầu\s*buồi|dái|bìu\s*dái)(?=[^\p{L}\p{N}]|$)/giu,
-  /(?<=^|[^\p{L}\p{N}])(lồn|lồ̀n|con\s*lồn|lồz|lờ|hãm\s*lồn|ngu\s*lồn|mặt\s*lồn)(?=[^\p{L}\p{N}]|$)/giu,
+  /(?<=^|[^\p{L}\p{N}])(lồn|lồ̀n|con\s*lồn|lồz|hãm\s*lồn|ngu\s*lồn|mặt\s*lồn)(?=[^\p{L}\p{N}]|$)/giu,
   /(?<=^|[^\p{L}\p{N}])(vãi\s*lồn|vãi\s*cặc|vãi\s*đái|vãi\s*cứt|vãi\s*lol|vãi\s*cả\s*lồn)(?=[^\p{L}\p{N}]|$)/giu,
 
   // Lăng mạ, xúc phạm nhân phẩm nặng nề
@@ -553,15 +547,6 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
   { pattern: /\b(rải\s*quyết)\b/gi, replacement: 'giải quyết' },
   { pattern: /\b(dán\s*tiếp)\b/gi, replacement: 'gián tiếp' },
   { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' },
-
-  // Nhận diện ngữ cảnh âm học hội họp & trao đổi công việc
-  { pattern: /(?<=^|[^\p{L}\p{N}])vừa\s*nấu\s*được(?=[^\p{L}\p{N}]|$)/giu, replacement: 'vừa ... được' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])trên\s*bàn\s*học(?=[^\p{L}\p{N}]|$)/giu, replacement: 'trên bàn họp' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])bàn\s*học(?=[^\p{L}\p{N}]|$)(?=.*(?:họp|biên\s*bản|báo\s*cáo|cơ\s*quan|hội\s*đồng|nghị\s*quyết|hợp\s*đồng|lệch|thanh\s*toán))/giu, replacement: 'bàn họp' },
-  { pattern: /(?<=(?:họp|biên\s*bản|báo\s*cáo|cơ\s*quan|hội\s*đồng|nghị\s*quyết|hợp\s*đồng|lệch|thanh\s*toán).*?)(?<=^|[^\p{L}\p{N}])bàn\s*học(?=[^\p{L}\p{N}]|$)/giu, replacement: 'bàn họp' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])về\s*mặc\s+(cái\s*này|pháp\s*lý|kỹ\s*thuật|nội\s*dung|thực\s*tế|quy\s*trình)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'về mặt $1' },
-  { pattern: /Tuyết\s*Thanh\s*toán/gu, replacement: 'Tuyết thanh toán' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])ba\s*thằng(?=[^\p{L}\p{N}]|$)(?=.*(?:cơ\s*quan|nhà\s*nước|biên\s*bản|họp|hợp\s*đồng))/giu, replacement: 'ba bên' }
 ];
 
 // 7. Từ đệm khi nói (được giữ nguyên để phản ánh trung thực lời nói của người dùng)
@@ -572,15 +557,9 @@ const INAUDIBLE_OR_GAP_RULES: Array<{ pattern: RegExp; replacement: string }> = 
   { pattern: /\b(nghe\s*không\s*rõ|không\s*nghe\s*rõ|chỗ\s*này\s*không\s*rõ|chưa\s*nghe\s*rõ|không\s*rõ\s*tiếng)\b/gi, replacement: ' ... ' },
   { pattern: /(?:\[\s*(?:unclear|inaudible|không\s*rõ|nhiễu)\s*\]|\(\s*(?:unclear|inaudible|không\s*rõ)\s*\)|\?{3,})/gi, replacement: ' ... ' },
   { pattern: /%hesitation%/gi, replacement: ' ... ' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nhưng|mà|tuy\s*nhiên|hoặc\s*là|song)\s+(hiệu\s*quả|kết\s*quả|thành\s*công|đạt\s*yêu\s*cầu|tiến\s*độ)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  // Ngập ngừng khuyết bổ ngữ theo phản ánh thực tế người dùng:
-  { pattern: /(?<=^|[^\p{L}\p{N}])(vấn\s*đề\s*công\s*cụ)\s+(liên\s*quan\s*đến)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(công\s*cụ)\s+(liên\s*quan\s*đến)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(lúc\s*nào\s*cũng\s*trực\s*tiếp)\s+thêm\s+(thực\s*tế)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... thêm $2' },
-  // Lặp từ ngắc ngứ (Stuttering / Repetition): "cái này cái này", "lệch này lệch với cái này"
+  // Lặp từ ngắc ngứ (Stuttering / Repetition): "cái này cái này" -> "cái này ... cái này"
   { pattern: /(?<=^|[^\p{L}\p{N}])(cái\s*này)\s+(cái\s*này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(lệch\s*này)\s+(lệch\s*với\s*cái\s*này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(ờ|ừm|à\s*thì)(?=[^\p{L}\p{N}]|$)/giu, replacement: ' ... ' }
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ờ|ừm|à\s*thì|ờm)(?=[^\p{L}\p{N}]|$)/giu, replacement: ' ... ' }
 ];
 
 // 8. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
@@ -670,36 +649,15 @@ function insertSmartDiscourseCommas(text: string): string {
 }
 
 /**
- * Tự động nhận diện ranh giới câu, ngữ điệu câu hỏi giữa dòng, và chèn dấu câu tự nhiên cho văn bản thoại tiếng Việt
+ * Tự động chèn dấu câu tự nhiên cho văn bản thoại tiếng Việt
+ * Tôn trọng 100% nguyên văn lời nói, không tự ý sửa từ ngữ hay cắt xén nội dung
  */
 export function insertNaturalVietnamesePunctuation(text: string): string {
   if (!text) return '';
   let res = text;
 
-  // 1. Phân tách câu & Ngữ điệu câu hỏi giữa dòng
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(nên\s*lấy\s*cái\s*nào|chọn\s*cái\s*nào|lấy\s*cái\s*nào)\s+([a-zA-ZÀ-ỹ])/giu, '$1? $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(thì\s*cổ\s*đông\s*thôi\s*ý\s*nhỉ|ý\s*nhỉ|nhỉ|hả|sao\s*nhỉ)\s+([a-zA-ZÀ-ỹ])/giu, '$1? $2');
+  // Dấu phẩy trước câu hỏi đuôi ở cuối câu: "...kia, đúng không?" / "..., phải không?"
   res = res.replace(/(?<=^|[^\p{L}\p{N}])(đúng\s*không|phải\s*không|được\s*không|phải\s*chăng)\s*\??$/giu, ', $1?');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(đúng\s*không|phải\s*không|được\s*không)\s+([a-zA-ZÀ-ỹ])/giu, ', $1? $2');
-
-  // 2. Tiểu từ kết thúc câu trần thuật ngắt ý giữa dòng
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(nhé|nha|nhớ)\s+(Thứ\s*nhất|Thứ\s*hai|Thứ\s*ba|Lúc|Khi|Hiện\s*tại|Bây\s*giờ|Mặt\s*khác|Hình\s*như|[A-ZÀ-Ỹ])/gu, '$1. $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(mâu\s*thuẫn\s*này|vấn\s*đề\s*này)\s+(Lúc|Khi|Hiện\s*tại|Bây\s*giờ|Thứ|[A-ZÀ-Ỹ])/gu, '$1. $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(bàn\s*luận\s*đấy|trao\s*đổi\s*đấy|nói\s*đấy|đấy|đó)\s+(Hình\s*như|Hiện\s*tại|Bây\s*giờ|Lúc|Khi|[A-ZÀ-Ỹ])/gu, '$1. $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(một\s*lần\s*rồi|xong\s*rồi|hết\s*rồi)\s+(ba\s*thằng|ba\s*bên|bây\s*giờ|hiện\s*tại|chúng\s*tôi|chúng\s*ta|mình|anh|chị)/giu, '$1. $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(ba\s*bên\s*luôn|ba\s*thằng\s*luôn|luôn)\s+(là\s*từ|từ\s*trên)(?=[^\p{L}\p{N}]|$)/giu, '$1. $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(hơn|xong|rồi|được)\s+(em\s*bây\s*giờ|bây\s*giờ\s*em|hiện\s*tại\s*em|bây\s*giờ\s*mình|hiện\s*tại\s*mình)(?=[^\p{L}\p{N}]|$)/giu, '$1. $2');
-
-  // 3. Chèn dấu phẩy mệnh đề & liên từ trong giao tiếp
-  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(nhưng|mà|song|tuy\s*nhiên)\s+/giu, '$1, $2 ');
-  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(nên|cho\s*nên|vì\s*vậy|do\s*đó)\s+/giu, '$1, $2 ');
-  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(đồng\s*thời|ngoài\s*ra|hơn\s*nữa)\s+/giu, '$1, $2 ');
-
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(cái\s*nào\s*cũng\s*là\s*nhà\s*nước)\s+(nên)/giu, '$1, $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(Lúc\s*mà\s*giao\s*hàng|Lúc\s*mà\s*hàng)(?=[^\p{L}\p{N}]|$)/giu, 'Lúc giao hàng');
-  res = res.replace(/(\bgiữ\s*lại\s*cái\s*thằng\s*này|\bgiữ\s*lại\s*cái\s*này)\s+(thì)/giu, '$1, $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(Hình\s*như)\s+(ở\s*biên\s*bản\s*họp)/giu, '$1, $2');
-  res = res.replace(/(?<=^|[^\p{L}\p{N}])(Thứ\s*nhất\s*là|Thứ\s*nhất|Thứ\s*hai\s*là|Thứ\s*hai)\s+/giu, '$1, ');
 
   return res;
 }

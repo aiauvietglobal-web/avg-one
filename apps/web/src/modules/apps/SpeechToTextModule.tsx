@@ -167,7 +167,7 @@ const SPEAKER_COLOR_PALETTE: SpeakerColorStyle[] = [
 const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   {
     id: 'spk-male',
-    name: 'Giọng Nam',
+    name: 'Người nói 1',
     color: SPEAKER_COLOR_PALETTE[4].colorKey,
     bgClass: SPEAKER_COLOR_PALETTE[4].bgClass,
     borderClass: SPEAKER_COLOR_PALETTE[4].borderClass,
@@ -176,7 +176,7 @@ const DEFAULT_SPEAKERS: SpeakerProfile[] = [
   },
   {
     id: 'spk-female',
-    name: 'Giọng Nữ',
+    name: 'Người nói 2',
     color: SPEAKER_COLOR_PALETTE[9].colorKey,
     bgClass: SPEAKER_COLOR_PALETTE[9].bgClass,
     borderClass: SPEAKER_COLOR_PALETTE[9].borderClass,
@@ -850,10 +850,10 @@ export const SpeechToTextModule: React.FC = () => {
   const lastHearingMsgTextRef = useRef<string>('');
 
   // Real-time Pitch-Based Voice Diarization (Frequency & Acoustic Analysis)
-  const [autoDiarization, setAutoDiarization] = useState<boolean>(true);
+  const [autoDiarization, setAutoDiarization] = useState<boolean>(false);
   const [livePitchHz, setLivePitchHz] = useState<number | null>(null);
   const [detectedVoiceLabel, setDetectedVoiceLabel] = useState<string>('Đang chờ giọng nói...');
-  const autoDiarizationRef = useRef<boolean>(true);
+  const autoDiarizationRef = useRef<boolean>(false);
 
   useEffect(() => {
     autoDiarizationRef.current = autoDiarization;
@@ -973,12 +973,9 @@ export const SpeechToTextModule: React.FC = () => {
       if (micStateRef.current !== 'recording') return;
 
       const audioConstraints = {
-        echoCancellation: { ideal: true },
-        noiseSuppression: { ideal: true },
-        autoGainControl: { ideal: true },
-        channelCount: { ideal: 1 },
-        sampleRate: { ideal: 48000 },
-        sampleSize: { ideal: 16 }
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
       };
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints }).catch(err => {
