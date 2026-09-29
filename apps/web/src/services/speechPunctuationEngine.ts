@@ -55,6 +55,7 @@ const SPOKEN_PUNCTUATION_RULES: Array<{ pattern: RegExp; replacement: string }> 
   { pattern: /\b(dấu\s*chấm\s*phẩy|chấm\s*phẩy)\b/gi, replacement: ';' },
   { pattern: /\b(chấm\s*hết\s*câu|chấm\s*hết|dấu\s*chấm|chấm\s*câu)\b/gi, replacement: '.' },
   { pattern: /\b(dấu\s*phẩy|ngắt\s*phẩy|phẩy)\b/gi, replacement: ',' },
+  { pattern: /\b(dấu\s*ba\s*chấm|ba\s*chấm|dấu\s*chấm\s*lửng|chấm\s*lửng)\b/gi, replacement: ' ... ' },
 
   // Dấu ngoặc & biểu tượng
   { pattern: /\b(mở\s*ngoặc\s*đơn|mở\s*ngoặc)\b/gi, replacement: ' (' },
@@ -537,6 +538,14 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
 // 7. Từ đệm khi nói (được giữ nguyên để phản ánh trung thực lời nói của người dùng)
 const SPEECH_FILLER_RULES: Array<{ pattern: RegExp; replacement: string }> = [];
 
+// 7B. Nhận diện các điểm khuyết âm, âm thanh bị nghẽn/không rõ nghĩa hoặc gián đoạn giữa các ý -> chèn dấu ba chấm (...)
+const INAUDIBLE_OR_GAP_RULES: Array<{ pattern: RegExp; replacement: string }> = [
+  { pattern: /\b(nghe\s*không\s*rõ|không\s*nghe\s*rõ|chỗ\s*này\s*không\s*rõ|chưa\s*nghe\s*rõ|không\s*rõ\s*tiếng)\b/gi, replacement: ' ... ' },
+  { pattern: /(?:\[\s*(?:unclear|inaudible|không\s*rõ|nhiễu)\s*\]|\(\s*(?:unclear|inaudible|không\s*rõ)\s*\)|\?{3,})/gi, replacement: ' ... ' },
+  { pattern: /%hesitation%/gi, replacement: ' ... ' },
+  { pattern: /\b(nhưng|mà|tuy\s*nhiên|hoặc\s*là|song)\s+(hiệu\s*quả|kết\s*quả|thành\s*công|tiến\s*độ)\b/gi, replacement: '$1 ... $2' }
+];
+
 // 8. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
 const TRANSITION_DISCOURSE_MARKERS = [
   'tuy nhiên',
@@ -703,6 +712,11 @@ export function processRealtimeSpeechPunctuation(
     text = text.replace(rule.pattern, rule.replacement);
   }
 
+  // 8B. Xử lý các điểm âm thanh nghẽn, khuyết thông tin hoặc đứt quãng -> chèn dấu ba chấm (...)
+  for (const rule of INAUDIBLE_OR_GAP_RULES) {
+    text = text.replace(rule.pattern, rule.replacement);
+  }
+
   // 9. Lọc từ ngữ nhạy cảm nếu tính năng được bật (mặc định BẬT)
   if (opts.maskSensitive !== false) {
     text = maskSensitiveWords(text, { style: opts.sensitiveMaskStyle || 'asterisks' });
@@ -711,7 +725,9 @@ export function processRealtimeSpeechPunctuation(
   // 10. Tự động chèn dấu phẩy hợp lý sau liên từ và trạng ngữ chuyển tiếp
   text = insertSmartDiscourseCommas(text);
 
-  // 11. Chuẩn hóa khoảng cách quanh dấu câu:
+  // 11. Chuẩn hóa khoảng cách quanh dấu câu và dấu ba chấm:
+  text = text.replace(/\s*\.{3,}\s*/g, ' ... ');
+  text = text.replace(/\s*…\s*/g, ' ... ');
   text = text.replace(/\s+([,.?!:;%])/g, '$1');
   text = text.replace(/([,.?!:;%])(?=[^\s\d\n)\]}])/g, '$1 ');
   text = text.replace(/\(\s+/g, '(').replace(/\s+\)/g, ')');
@@ -721,7 +737,7 @@ export function processRealtimeSpeechPunctuation(
   // 12. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
   if (opts.isFinal) {
     const trimmed = text.trim();
-    if (!/[.?!…]$/.test(trimmed)) {
+    if (!/[.?!…]$/.test(trimmed) && !trimmed.endsWith('...')) {
       const lower = trimmed.toLowerCase();
       const hasQuestionEnding = QUESTION_ENDINGS.some(ending => {
         return lower.endsWith(ending) || lower.endsWith(ending + ',');
@@ -928,9 +944,30 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
     return `${prev}${separator}${remainingWords}`;
   }
 
-  // Ghép nối tự nhiên với dấu ngắt câu thích hợp
-  const separator = prev.endsWith('\n') ? '' : (/[.?!:;]$/.test(prev) ? ' ' : '. ');
-  return `${prev}${separator}${next}`;
+  // Nếu câu trước kết thúc bằng dấu ngắt câu hoàn chỉnh (. ? !)
+  if (/[.?!]$/.test(prev)) {
+    return `${prev} ${next}`;
+  }
+
+  // Nếu câu trước đã có dấu 3 chấm hoặc chấm lửng ở đuôi
+  if (/(?:\.{3,}|…)$/.test(prev)) {
+    return `${prev} ${next}`;
+  }
+
+  // Nếu câu trước kết thúc bằng dấu ngắt dòng hoặc hai chấm
+  if (prev.endsWith('\n') || prev.endsWith(':')) {
+    return `${prev} ${next}`;
+  }
+
+  // Nếu câu trước có dấu phẩy hoặc chấm phẩy ở cuối
+  if (/[,;]$/.test(prev)) {
+    const cleanPrev = prev.replace(/[,;]$/, '');
+    return `${cleanPrev} ... ${next}`;
+  }
+
+  // Nếu câu trước chưa kết thúc hoàn chỉnh (bị xót thông tin, âm thanh nghẽn, ngắt quãng):
+  // Tự động chèn dấu ... thể hiện chỗ gián đoạn theo đúng yêu cầu người dùng
+  return `${prev} ... ${next}`;
 }
 
 /**
