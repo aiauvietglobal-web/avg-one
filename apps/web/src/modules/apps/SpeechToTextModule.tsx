@@ -1653,31 +1653,28 @@ export const SpeechToTextModule: React.FC = () => {
       }
 
       const lastMsg = prev[prev.length - 1];
-      const normLast = (lastMsg.text || '').toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-      const normNew = enhancedText.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
 
-      // Tránh lặp lại đúng 1 câu duy nhất vừa được ghi trong tích tắc
-      if (normLast === normNew) {
-        return prev;
+      // Khử tiền tố lặp lại (nếu có do nhận diện giọng nói giao thoa giữa các phiên)
+      let cleanedText = enhancedText;
+      if (lastMsg && lastMsg.text) {
+        cleanedText = stripPrefixOverlap(lastMsg.text, enhancedText);
+        if (!cleanedText || cleanedText.trim().length < 2) {
+          return prev;
+        }
       }
 
-      // Nếu câu trước là bản ngắt dở do silence timer và câu mới bao hàm toàn bộ câu trước -> cập nhật hoàn thiện
-      if (lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id && normNew.startsWith(normLast) && normLast.length >= 4) {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          ...lastMsg,
-          text: enhancedText,
-          translatedText: translateText(enhancedText, targetLanguage),
-          timestamp: timestampStr,
-          date: lastMsg.date || dateStr
-        };
-        return updated;
+      const normLast = (lastMsg.text || '').toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const normNew = cleanedText.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+
+      // Tránh lặp lại đúng 1 câu duy nhất vừa được ghi
+      if (normLast === normNew) {
+        return prev;
       }
 
       // Cùng một người đang nói: kiểm tra tách đoạn (Paragraph Segmentation)
       if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id) {
         const lastMsgWordCount = (lastMsg.text || '').split(/\s+/).filter(Boolean).length;
-        const hasExplicitParagraphBreak = enhancedText.includes('\n\n') || (lastMsg.text || '').endsWith('\n\n');
+        const hasExplicitParagraphBreak = cleanedText.includes('\n\n') || (lastMsg.text || '').endsWith('\n\n');
 
         // TÁCH ĐOẠN: Khi tin nhắn trước đã là 1 đoạn hoàn chỉnh (>= 28 từ và có dấu kết câu) hoặc có lệnh xuống đoạn
         if (hasExplicitParagraphBreak || (lastMsgWordCount >= 28 && /[.?!]$/.test((lastMsg.text || '').trim()))) {
@@ -1688,8 +1685,8 @@ export const SpeechToTextModule: React.FC = () => {
               sender: 'HEARING',
               senderName: currentSpk.name,
               speakerId: currentSpk.id,
-              text: enhancedText,
-              translatedText: translateText(enhancedText, targetLanguage),
+              text: cleanedText,
+              translatedText: translateText(cleanedText, targetLanguage),
               timestamp: timestampStr,
               date: dateStr
             }
@@ -1697,7 +1694,7 @@ export const SpeechToTextModule: React.FC = () => {
         }
 
         // Nối tiếp tự nhiên vào đoạn hiện tại
-        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText);
+        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, cleanedText);
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...lastMsg,
@@ -1717,8 +1714,8 @@ export const SpeechToTextModule: React.FC = () => {
           sender: 'HEARING',
           senderName: currentSpk.name,
           speakerId: currentSpk.id,
-          text: enhancedText,
-          translatedText: translateText(enhancedText, targetLanguage),
+          text: cleanedText,
+          translatedText: translateText(cleanedText, targetLanguage),
           timestamp: timestampStr,
           date: dateStr
         }
@@ -1766,8 +1763,8 @@ export const SpeechToTextModule: React.FC = () => {
         let newFinalTranscript = '';
         let interimTranscriptText = '';
 
-        // Đọc tuần tự theo chuẩn resultIndex của Web Speech API
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
+        // Bắt đầu từ processedFinalIndexRef để KHÔNG BAO GIỜ đọc lại bất kỳ kết quả nào đã final
+        for (let i = processedFinalIndexRef.current; i < event.results.length; ++i) {
           const res = event.results[i];
           if (!res || !res[0]) continue;
 
@@ -1776,6 +1773,7 @@ export const SpeechToTextModule: React.FC = () => {
 
           if (res.isFinal) {
             newFinalTranscript += (newFinalTranscript ? ' ' : '') + bestText;
+            processedFinalIndexRef.current = i + 1;
           } else {
             interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText;
           }
@@ -1783,10 +1781,6 @@ export const SpeechToTextModule: React.FC = () => {
 
         // 1. Nếu có kết quả chính thức (isFinal), lưu ngay vào danh sách hội thoại
         if (newFinalTranscript.trim()) {
-          if (silenceCommitTimerRef.current) {
-            clearTimeout(silenceCommitTimerRef.current);
-            silenceCommitTimerRef.current = null;
-          }
           accumulatedInterimRef.current = '';
           lastInterimRef.current = '';
           setInterimTranscript('');
@@ -1803,24 +1797,10 @@ export const SpeechToTextModule: React.FC = () => {
           // Hiển thị trực tiếp phụ đề đang chuyển đổi
           const formattedInterim = enhanceVietnameseTranscript(rawInterim, false, false);
           setInterimTranscript(formattedInterim);
-
-          // BỘ ĐỆM TỰ ĐỘNG CHỐT LỜI KHI NGỪNG NÓI (1.5 giây)
-          if (silenceCommitTimerRef.current) {
-            clearTimeout(silenceCommitTimerRef.current);
-          }
-          silenceCommitTimerRef.current = setTimeout(() => {
-            const pending = accumulatedInterimRef.current.trim();
-            if (pending) {
-              accumulatedInterimRef.current = '';
-              lastInterimRef.current = '';
-              setInterimTranscript('');
-              commitTranscriptToMessage(pending, true);
-            }
-          }, 1500);
         } else if (!newFinalTranscript.trim()) {
-          if (!accumulatedInterimRef.current) {
-            setInterimTranscript('');
-          }
+          accumulatedInterimRef.current = '';
+          lastInterimRef.current = '';
+          setInterimTranscript('');
         }
       };
 
