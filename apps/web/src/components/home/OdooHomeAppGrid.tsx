@@ -245,7 +245,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
 
 
-          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: REFINED MONOLITHIC QUANTUM EMBLEM */}
+          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: STUDIO 3D HOLOGRAM QUANTUM DATA CORE */}
           <div 
             className="hidden md:flex absolute left-2 lg:left-6 xl:left-12 2xl:left-20 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none cursor-default group"
             style={{ animationDelay: '200ms' }}
@@ -253,7 +253,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             <TechHologramDataCore className="w-[240px] md:w-[270px] lg:w-[310px] xl:w-[350px] 2xl:w-[390px] h-auto group-hover:scale-[1.03] transition-transform duration-500" />
           </div>
 
-          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: REFINED MONOLITHIC GEAR EMBLEM */}
+          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: STUDIO 3D HOLOGRAM GEAR ECOSYSTEM */}
           <div 
             className="hidden md:flex absolute right-2 lg:right-6 xl:right-12 2xl:right-20 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none cursor-default group"
             style={{ animationDelay: '250ms' }}
