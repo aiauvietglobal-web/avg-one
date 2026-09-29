@@ -187,340 +187,204 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
 
 
-          {/* 1. NỀN TẢNG SỐ (TOP-LEFT) - BẢN VẼ KỸ THUẬT BLUEPRINT PHÁ CÁCH */}
-          <div className="hidden lg:flex absolute left-4 xl:left-14 top-4 xl:top-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
-            {/* Multi-Tier 3D Isometric Bedrock Architecture Icon */}
-            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
-                {/* Vòng chuẩn tọa độ kỹ thuật mờ bên dưới */}
-                <circle cx="50" cy="50" r="44" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 6" opacity="0.25" className="dark:stroke-sky-400" />
-                <line x1="50" y1="3" x2="50" y2="9" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
-                <line x1="50" y1="91" x2="50" y2="97" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
-                <line x1="3" y1="50" x2="9" y2="50" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
-                <line x1="91" y1="50" x2="97" y2="50" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+          {/* 1. NỀN TẢNG SỐ (TOP-LEFT) - THIẾT KẾ MỀM MẠI, UYỂN CHUYỂN PHONG CÁCH VIETTEL AI */}
+          <div 
+            className="hidden lg:flex absolute left-4 xl:left-12 top-3 xl:top-6 z-20 items-center gap-3.5 px-4 py-2.5 xl:px-5 xl:py-3 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-sky-200/50 dark:border-sky-900/40 shadow-[0_4px_20px_rgba(2,132,199,0.06)] hover:shadow-[0_8px_30px_rgba(2,132,199,0.15)] hover:border-sky-300 dark:hover:border-sky-500/50 hover:-translate-y-0.5 transition-all duration-300 group cursor-default select-none animate-entrance-left animate-float-node-1"
+            style={{ animationDelay: '150ms' }}
+          >
+            {/* Soft Icon Badge */}
+            <div className="relative w-11 h-11 xl:w-12 xl:h-12 rounded-xl bg-gradient-to-br from-sky-500/10 to-blue-500/15 flex items-center justify-center shrink-0 border border-sky-300/30 dark:border-sky-700/40 group-hover:scale-105 transition-transform duration-300 shadow-xs">
+              <svg viewBox="0 0 48 48" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
+                <defs>
+                  <linearGradient id="grad-plat" x1="6" y1="10" x2="42" y2="38" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="100%" stopColor="#38BDF8" />
+                  </linearGradient>
+                </defs>
+                {/* Tầng 3 - Dưới cùng */}
+                <path d="M 8 33 C 8 30 15 27.5 24 27.5 C 33 27.5 40 30 40 33 C 40 36 33 38.5 24 38.5 C 15 38.5 8 36 8 33 Z" stroke="url(#grad-plat)" strokeWidth="1.8" strokeLinecap="round" opacity="0.4" />
+                {/* Tầng 2 - Ở giữa */}
+                <path d="M 8 24.5 C 8 21.5 15 19 24 19 C 33 19 40 21.5 40 24.5 C 40 27.5 33 30 24 30 C 15 30 8 27.5 8 24.5 Z" stroke="url(#grad-plat)" strokeWidth="2" strokeLinecap="round" opacity="0.75" />
+                {/* Tầng 1 - Mặt đỉnh hợp nhất */}
+                <path d="M 8 16 C 8 13 15 10.5 24 10.5 C 33 10.5 40 13 40 16 C 40 19 33 21.5 24 21.5 C 15 21.5 8 19 8 16 Z" fill="url(#grad-plat)" fillOpacity="0.12" stroke="url(#grad-plat)" strokeWidth="2.2" strokeLinecap="round" />
+                {/* Điểm sáng trung tâm */}
+                <circle cx="24" cy="16" r="3" fill="#0284C7" className="animate-pulse" />
+                <circle cx="24" cy="16" r="1.2" fill="#FFFFFF" />
+              </svg>
+            </div>
 
-                {/* Layer 1: Base Platform Slab */}
-                <polygon
-                  points="50,82 86,64 50,46 14,64"
-                  fill="none"
-                  stroke="#0284C7"
+            {/* Typography */}
+            <div className="flex flex-col text-left">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                <span className="text-[10px] xl:text-[11px] font-semibold text-sky-600 dark:text-sky-400 tracking-wide">
+                  Hạ tầng cốt lõi
+                </span>
+              </div>
+              <span className="text-base xl:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
+                Nền tảng số
+              </span>
+              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                Hệ thống quản trị hợp nhất
+              </span>
+            </div>
+          </div>
+
+          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - THIẾT KẾ MỀM MẠI, UYỂN CHUYỂN PHONG CÁCH VIETTEL AI */}
+          <div 
+            className="hidden lg:flex absolute right-4 xl:right-12 top-3 xl:top-6 z-20 items-center gap-3.5 px-4 py-2.5 xl:px-5 xl:py-3 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-orange-200/50 dark:border-orange-900/40 shadow-[0_4px_20px_rgba(241,90,36,0.06)] hover:shadow-[0_8px_30px_rgba(241,90,36,0.15)] hover:border-orange-300 dark:hover:border-orange-500/50 hover:-translate-y-0.5 transition-all duration-300 group cursor-default select-none animate-entrance-right animate-float-node-3"
+            style={{ animationDelay: '300ms' }}
+          >
+            {/* Typography */}
+            <div className="flex flex-col text-right">
+              <div className="flex items-center justify-end gap-1.5 mb-0.5">
+                <span className="text-[10px] xl:text-[11px] font-semibold text-orange-600 dark:text-orange-400 tracking-wide">
+                  Vận hành thông minh
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+              </div>
+              <span className="text-base xl:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
+                Tự động hóa
+              </span>
+              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                Tối ưu quy trình & nguồn lực
+              </span>
+            </div>
+
+            {/* Soft Icon Badge */}
+            <div className="relative w-11 h-11 xl:w-12 xl:h-12 rounded-xl bg-gradient-to-br from-orange-500/10 to-amber-500/15 flex items-center justify-center shrink-0 border border-orange-300/30 dark:border-orange-700/40 group-hover:scale-105 transition-transform duration-300 shadow-xs">
+              <svg viewBox="0 0 48 48" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
+                <defs>
+                  <linearGradient id="grad-auto" x1="5" y1="17" x2="43" y2="31" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#F15A24" />
+                    <stop offset="100%" stopColor="#FB923C" />
+                  </linearGradient>
+                </defs>
+                {/* Vòng lặp vô cực mềm mại */}
+                <path
+                  d="M 15 17 C 8.5 17 5 21 5 24 C 5 27 8.5 31 15 31 C 21.5 31 26.5 17 33 17 C 39.5 17 43 21 43 24 C 43 27 39.5 31 33 31 C 26.5 31 21.5 17 15 17 Z"
+                  stroke="url(#grad-auto)"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                {/* Hai vòng tuần hoàn quỹ đạo nhẹ */}
+                <circle cx="15" cy="24" r="3.5" fill="none" stroke="#F15A24" strokeWidth="1.5" opacity="0.6" />
+                <circle cx="33" cy="24" r="3.5" fill="none" stroke="#FB923C" strokeWidth="1.5" opacity="0.6" />
+                {/* Điểm chuyển động nhịp nhàng */}
+                <circle cx="24" cy="24" r="2.2" fill="#F15A24" className="animate-ping" opacity="0.8" />
+                <circle cx="24" cy="24" r="2" fill="#F15A24" />
+                <circle cx="24" cy="24" r="0.8" fill="#FFFFFF" />
+              </svg>
+            </div>
+          </div>
+
+          {/* 3. SỐ HÓA (BOTTOM-LEFT) - THIẾT KẾ MỀM MẠI, UYỂN CHUYỂN PHONG CÁCH VIETTEL AI */}
+          <div 
+            className="hidden md:flex absolute left-4 xl:left-12 bottom-3 xl:bottom-6 z-20 items-center gap-3.5 px-4 py-2.5 xl:px-5 xl:py-3 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-sky-200/50 dark:border-sky-900/40 shadow-[0_4px_20px_rgba(2,132,199,0.06)] hover:shadow-[0_8px_30px_rgba(2,132,199,0.15)] hover:border-sky-300 dark:hover:border-sky-500/50 hover:-translate-y-0.5 transition-all duration-300 group cursor-default select-none animate-entrance-left animate-float-node-2"
+            style={{ animationDelay: '450ms' }}
+          >
+            {/* Soft Icon Badge */}
+            <div className="relative w-11 h-11 xl:w-12 xl:h-12 rounded-xl bg-gradient-to-br from-cyan-500/10 to-sky-500/15 flex items-center justify-center shrink-0 border border-sky-300/30 dark:border-sky-700/40 group-hover:scale-105 transition-transform duration-300 shadow-xs">
+              <svg viewBox="0 0 48 48" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
+                <defs>
+                  <linearGradient id="grad-digit" x1="6" y1="14" x2="44" y2="34" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#0284C7" />
+                    <stop offset="50%" stopColor="#00A8E8" />
+                    <stop offset="100%" stopColor="#10B981" />
+                  </linearGradient>
+                </defs>
+                {/* Đường sóng uốn lượn mềm mại dạng Bezier */}
+                <path
+                  d="M 6 27 C 12 27 14 15 20 15 C 26 15 28 33 34 33 C 38 33 40 24 44 24"
+                  stroke="url(#grad-digit)"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                {/* Đường sóng phụ mờ */}
+                <path
+                  d="M 6 23 C 12 23 15 19 21 19 C 27 19 31 29 37 29 C 40 29 42 26 44 26"
+                  stroke="url(#grad-digit)"
+                  strokeWidth="1.4"
+                  strokeDasharray="3 3"
+                  opacity="0.45"
+                  strokeLinecap="round"
+                />
+                {/* Các điểm nút phát sáng lan tỏa */}
+                <circle cx="20" cy="15" r="3.2" fill="#0284C7" className="animate-pulse" />
+                <circle cx="20" cy="15" r="1.2" fill="#FFFFFF" />
+                <circle cx="34" cy="33" r="2.8" fill="#00A8E8" />
+                <circle cx="34" cy="33" r="1" fill="#FFFFFF" />
+                <circle cx="44" cy="24" r="2.2" fill="#10B981" />
+              </svg>
+            </div>
+
+            {/* Typography */}
+            <div className="flex flex-col text-left">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[10px] xl:text-[11px] font-semibold text-sky-600 dark:text-sky-400 tracking-wide">
+                  Dữ liệu thông suốt
+                </span>
+              </div>
+              <span className="text-base xl:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
+                Số hóa
+              </span>
+              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                Khai phá & xử lý dữ liệu tức thì
+              </span>
+            </div>
+          </div>
+
+          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - THIẾT KẾ MỀM MẠI, UYỂN CHUYỂN PHONG CÁCH VIETTEL AI */}
+          <div 
+            className="hidden md:flex absolute right-4 xl:right-12 bottom-3 xl:bottom-6 z-20 items-center gap-3.5 px-4 py-2.5 xl:px-5 xl:py-3 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-orange-200/50 dark:border-orange-900/40 shadow-[0_4px_20px_rgba(241,90,36,0.06)] hover:shadow-[0_8px_30px_rgba(241,90,36,0.15)] hover:border-orange-300 dark:hover:border-orange-500/50 hover:-translate-y-0.5 transition-all duration-300 group cursor-default select-none animate-entrance-right animate-float-node-4"
+            style={{ animationDelay: '550ms' }}
+          >
+            {/* Typography */}
+            <div className="flex flex-col text-right">
+              <div className="flex items-center justify-end gap-1.5 mb-0.5">
+                <span className="text-[10px] xl:text-[11px] font-semibold text-orange-600 dark:text-orange-400 tracking-wide">
+                  Giao tiếp đa chiều
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              </div>
+              <span className="text-base xl:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
+                Tương tác
+              </span>
+              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
+                Trợ lý AI & kết nối đa kênh
+              </span>
+            </div>
+
+            {/* Soft Icon Badge */}
+            <div className="relative w-11 h-11 xl:w-12 xl:h-12 rounded-xl bg-gradient-to-br from-orange-500/10 to-amber-500/15 flex items-center justify-center shrink-0 border border-orange-300/30 dark:border-orange-700/40 group-hover:scale-105 transition-transform duration-300 shadow-xs">
+              <svg viewBox="0 0 48 48" fill="none" className="w-6 h-6 sm:w-7 sm:h-7">
+                <defs>
+                  <linearGradient id="grad-inter" x1="10" y1="10" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#F15A24" />
+                    <stop offset="100%" stopColor="#F59E0B" />
+                  </linearGradient>
+                </defs>
+                {/* Bong bóng hội thoại bo tròn mềm */}
+                <path
+                  d="M 11 22 C 11 15.5 16.5 11 23.5 11 C 30.5 11 36 15.5 36 22 C 36 25 34.5 28 32 30 C 31 32.5 33 35 34 36 C 31 36 28 34.5 26.5 33.5 C 25.5 33.8 24.5 34 23.5 34 C 16.5 34 11 28.5 11 22 Z"
+                  stroke="url(#grad-inter)"
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="dark:stroke-sky-400 opacity-40"
+                  fill="url(#grad-inter)"
+                  fillOpacity="0.08"
                 />
-                <polyline
-                  points="14,64 14,68 50,86 86,68 86,64"
-                  fill="none"
-                  stroke="#0284C7"
-                  strokeWidth="1.6"
-                  className="dark:stroke-sky-400 opacity-25"
-                />
-
-                {/* Layer 2: Middle Platform Slab */}
-                <polygon
-                  points="50,66 84,49 50,32 16,49"
-                  fill="none"
-                  stroke="#0284C7"
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="dark:stroke-sky-400 opacity-75"
-                />
-                <polyline
-                  points="16,49 16,53 50,70 84,53 84,49"
-                  fill="none"
-                  stroke="#0284C7"
-                  strokeWidth="1.6"
-                  className="dark:stroke-sky-400 opacity-30"
-                />
-
-                {/* Layer 3: Top Cyber Core Platform */}
-                <polygon
-                  points="50,50 82,34 50,18 18,34"
-                  fill="none"
-                  stroke="#00A8E8"
-                  strokeWidth="2.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="dark:stroke-sky-300"
-                />
-
-                {/* Vertical Central Data Axis Conduit */}
-                <line
-                  x1="50"
-                  y1="82"
-                  x2="50"
-                  y2="18"
-                  stroke="#0284C7"
-                  strokeWidth="1.8"
-                  strokeDasharray="4 4"
-                  className="dark:stroke-sky-400 opacity-70 animate-kinetic-data"
-                />
-                {/* Corner Connecting Pillars */}
-                <line x1="18" y1="62" x2="18" y2="34" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-35" />
-                <line x1="82" y1="62" x2="82" y2="34" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-35" />
-
-                {/* Apex AI Core Diamond Star */}
-                <path
-                  d="M 50,6 Q 50,18 38,18 Q 50,18 50,30 Q 50,18 62,18 Q 50,18 50,6 Z"
-                  fill="none"
-                  stroke="#00A8E8"
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="dark:stroke-sky-200"
-                />
-                {/* Luminous Central Node */}
-                <circle cx="50" cy="18" r="4.2" fill="#00A8E8" className="dark:fill-sky-300 animate-pulse" />
-                <circle cx="50" cy="18" r="1.8" fill="#FFFFFF" />
-              </svg>
-            </div>
-
-            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
-            <div className="hidden sm:flex items-center -mr-1 opacity-70">
-              <div className="w-1.5 h-1.5 rotate-45 border border-sky-500 bg-white dark:bg-slate-900" />
-              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-r from-sky-500 to-transparent" />
-            </div>
-
-            {/* Typography: Bố cục khoa học, phá cách với chỉ số kỹ thuật */}
-            <div className="flex flex-col text-left">
-              <div className="flex items-center gap-1.5 mb-1">
-                <span className="font-mono text-[10px] xl:text-[11px] font-black text-sky-600 dark:text-sky-400 tracking-wider">
-                  01 // ARCHITECTURE
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" />
-              </div>
-              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs">
-                Nền tảng số
-              </span>
-              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-sky-400 rounded-full" />
-                <span>SYS.CORE • LAYER 03</span>
-              </span>
-            </div>
-          </div>
-
-          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - BỘ BÁNH RĂNG CƠ HỌC ĐO KHỚP CHÍNH XÁC */}
-          <div className="hidden lg:flex absolute right-8 xl:right-20 top-4 xl:top-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-3 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '300ms' }}>
-            {/* Typography: Căn phải khoa học, chỉ số kỹ thuật liên kết */}
-            <div className="flex flex-col text-right">
-              <div className="flex items-center justify-end gap-1.5 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
-                <span className="font-mono text-[10px] xl:text-[11px] font-black text-orange-600 dark:text-orange-400 tracking-wider">
-                  AUTOMATION // 02
-                </span>
-              </div>
-              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs whitespace-nowrap">
-                Tự động hóa
-              </span>
-              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center justify-end gap-1.5">
-                <span>GEAR.SYNC • 100% CAD</span>
-                <span className="w-1 h-1 bg-orange-400 rounded-full" />
-              </span>
-            </div>
-
-            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
-            <div className="hidden sm:flex items-center -ml-1 opacity-70">
-              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-l from-[#F15A24] to-transparent" />
-              <div className="w-1.5 h-1.5 rotate-45 border border-[#F15A24] bg-white dark:bg-slate-900" />
-            </div>
-
-            {/* Interlocking Rotating Gears Assembly Icon With Precision Compass Scale */}
-            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
-                {/* Vành đo góc cơ khí kỹ thuật (Compass Caliper Ring) */}
-                <circle cx="42" cy="48" r="39" stroke="#F15A24" strokeWidth="0.8" strokeDasharray="2 4" opacity="0.3" className="dark:stroke-orange-400" />
-                <line x1="42" y1="6" x2="42" y2="10" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
-                <line x1="42" y1="86" x2="42" y2="90" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
-                <line x1="0" y1="48" x2="4" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
-                <line x1="80" y1="48" x2="84" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
-
-                {/* Gear 1: Bánh răng chính (12 răng, quay thuận kim đồng hồ) */}
-                <g className="animate-gear-1">
-                  <path
-                    d="M 63.6,44.0 L 69.9,45.6 L 69.9,50.4 L 63.6,52.0 L 62.7,55.3 L 67.4,59.9 L 65.0,64.0 L 58.7,62.3 L 56.3,64.7 L 58.0,71.0 L 53.9,73.4 L 49.3,68.7 L 46.0,69.6 L 44.4,75.9 L 39.6,75.9 L 38.0,69.6 L 34.7,68.7 L 30.1,73.4 L 26.0,71.0 L 27.7,64.7 L 25.3,62.3 L 19.0,64.0 L 16.6,59.9 L 21.3,55.3 L 20.4,52.0 L 14.1,50.4 L 14.1,45.6 L 20.4,44.0 L 21.3,40.7 L 16.6,36.1 L 19.0,32.0 L 25.3,33.7 L 27.7,31.3 L 26.0,25.0 L 30.1,22.6 L 34.7,27.3 L 38.0,26.4 L 39.6,20.1 L 44.4,20.1 L 46.0,26.4 L 49.3,27.3 L 53.9,22.6 L 58.0,25.0 L 56.3,31.3 L 58.7,33.7 L 65.0,32.0 L 67.4,36.1 L 62.7,40.7 Z"
-                    fill="none"
-                    stroke="#F15A24"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-orange-400"
-                  />
-                  <circle cx="42" cy="48" r="12" fill="none" stroke="#F15A24" strokeWidth="1.8" className="dark:stroke-orange-400 opacity-60" />
-                  <line x1="42" y1="26" x2="42" y2="70" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
-                  <line x1="20" y1="48" x2="64" y2="48" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
-                  <circle cx="42" cy="48" r="6" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
-                  <circle cx="42" cy="48" r="3" fill="#F15A24" className="dark:fill-orange-400" />
-                  <circle cx="42" cy="48" r="1.2" fill="#FFFFFF" />
-                </g>
-
-                {/* Gear 2: Bánh răng phụ dưới (8 răng, quay ngược kim đồng hồ, khớp răng liên kết) */}
-                <g className="animate-gear-2">
-                  <path
-                    d="M 90.9,69.5 L 95.4,72.7 L 93.6,76.9 L 88.2,76.0 L 86.0,78.2 L 86.9,83.6 L 82.7,85.4 L 79.5,80.9 L 76.5,80.9 L 73.3,85.4 L 69.1,83.6 L 70.0,78.2 L 67.8,76.0 L 62.4,76.9 L 60.6,72.7 L 65.1,69.5 L 65.1,66.5 L 60.6,63.3 L 62.4,59.1 L 67.8,60.0 L 70.0,57.8 L 69.1,52.4 L 73.3,50.6 L 76.5,55.1 L 79.5,55.1 L 82.7,50.6 L 86.9,52.4 L 86.0,57.8 L 88.2,60.0 L 93.6,59.1 L 95.4,63.3 L 90.9,66.5 Z"
-                    fill="none"
-                    stroke="#F97316"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-orange-400"
-                  />
-                  <circle cx="78" cy="68" r="8" fill="none" stroke="#F97316" strokeWidth="1.6" className="dark:stroke-orange-400 opacity-60" />
-                  <line x1="78" y1="52" x2="78" y2="84" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
-                  <line x1="62" y1="68" x2="94" y2="68" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
-                  <circle cx="78" cy="68" r="4.5" fill="none" stroke="#F97316" strokeWidth="1.8" className="dark:stroke-orange-400" />
-                  <circle cx="78" cy="68" r="2.2" fill="#F97316" className="dark:fill-orange-400" />
-                  <circle cx="78" cy="68" r="0.9" fill="#FFFFFF" />
-                </g>
-
-                {/* Gear 3: Bánh răng phụ trên (7 răng, quay ngược kim đồng hồ, khớp răng trên) */}
-                <g className="animate-gear-3">
-                  <path
-                    d="M 84.9,26.3 L 88.4,29.2 L 86.6,32.8 L 82.2,31.9 L 80.1,33.6 L 80.1,38.1 L 76.1,39.0 L 74.1,35.0 L 71.5,34.4 L 68.0,37.1 L 64.8,34.6 L 66.7,30.5 L 65.5,28.1 L 61.1,27.0 L 61.1,23.0 L 65.5,21.9 L 66.7,19.5 L 64.8,15.4 L 68.0,12.9 L 71.5,15.6 L 74.1,15.0 L 76.1,11.0 L 80.1,11.9 L 80.1,16.4 L 82.2,18.1 L 86.6,17.2 L 88.4,20.8 L 84.9,23.7 Z"
-                    fill="none"
-                    stroke="#FB923C"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="dark:stroke-orange-300"
-                  />
-                  <circle cx="75" cy="25" r="5.5" fill="none" stroke="#FB923C" strokeWidth="1.4" className="dark:stroke-orange-300 opacity-60" />
-                  <circle cx="75" cy="25" r="2.5" fill="#FB923C" className="dark:fill-orange-300" />
-                  <circle cx="75" cy="25" r="1" fill="#FFFFFF" />
-                </g>
-
-                {/* Điểm phát sáng liên kết khớp nối động */}
-                <circle cx="61" cy="58" r="1.8" fill="#F15A24" className="animate-ping opacity-75" />
-                <circle cx="58" cy="35" r="1.6" fill="#FB923C" className="animate-ping opacity-75" style={{ animationDelay: '500ms' }} />
-              </svg>
-            </div>
-          </div>
-
-          {/* 3. SỐ HÓA (BOTTOM-LEFT) - BỐ CỤC LỆCH TẦNG KHOA HỌC (INWARD DIAGONAL SHIFT) */}
-          <div className="hidden md:flex absolute left-8 xl:left-22 bottom-3 xl:bottom-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
-            {/* Digital Transformation Waveform & Constellation Matrix Icon */}
-            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
-                {/* Các vạch lấy mẫu tín hiệu số hóa (DSP Sampling Stems) */}
-                <line x1="36" y1="24" x2="36" y2="60" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
-                <line x1="52" y1="60" x2="52" y2="76" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
-                <line x1="68" y1="38" x2="68" y2="60" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
-
-                {/* Trục sóng số hóa chuyển đổi dữ liệu thời gian thực */}
-                <path
-                  d="M 6,60 L 26,60 L 36,24 L 52,76 L 68,38 L 82,54 L 94,54"
-                  fill="none"
-                  stroke="#0284C7"
-                  strokeWidth="2.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="dark:stroke-sky-400"
-                />
-                {/* Nhánh bus dữ liệu số hóa liên kết ma trận */}
-                <path d="M 36,24 L 56,12 L 88,12" fill="none" stroke="#00A8E8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-400 opacity-60 animate-kinetic-data" />
-                <path d="M 26,60 L 26,84 L 64,84" fill="none" stroke="#00A8E8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-400 opacity-60 animate-kinetic-data" />
-                <line x1="52" y1="76" x2="80" y2="76" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-40" />
-                <line x1="68" y1="38" x2="68" y2="12" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-40" />
-
-                {/* Các nút giao ma trận số hóa */}
-                <circle cx="26" cy="60" r="3" fill="#0284C7" className="dark:fill-sky-400" />
-                <circle cx="52" cy="76" r="3.2" fill="#0284C7" className="dark:fill-sky-400" />
-                <circle cx="68" cy="38" r="3" fill="#0284C7" className="dark:fill-sky-400" />
-                <circle cx="82" cy="54" r="3" fill="#0284C7" className="dark:fill-sky-400" />
-                <circle cx="94" cy="54" r="3.2" fill="#0284C7" className="dark:fill-sky-400" />
-                <circle cx="56" cy="12" r="2.8" fill="#00A8E8" className="dark:fill-sky-300" />
-                <circle cx="88" cy="12" r="3" fill="#00A8E8" className="dark:fill-sky-300" />
-                <circle cx="64" cy="84" r="2.8" fill="#00A8E8" className="dark:fill-sky-300" />
-
-                {/* Nút đỉnh nhận diện tức thì */}
-                <circle cx="36" cy="24" r="4.8" fill="#00A8E8" className="dark:fill-sky-300 animate-pulse" />
-                <circle cx="36" cy="24" r="2" fill="#FFFFFF" />
-              </svg>
-            </div>
-
-            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
-            <div className="hidden sm:flex items-center -mr-1 opacity-70">
-              <div className="w-1.5 h-1.5 rotate-45 border border-sky-500 bg-white dark:bg-slate-900" />
-              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-r from-sky-500 to-transparent" />
-            </div>
-
-            {/* Typography: Bố cục khoa học, phá cách với chỉ số kỹ thuật */}
-            <div className="flex flex-col text-left">
-              <div className="flex items-center gap-1.5 mb-1">
-                <span className="font-mono text-[10px] xl:text-[11px] font-black text-sky-600 dark:text-sky-400 tracking-wider">
-                  03 // REAL-TIME
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              </div>
-              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs">
-                Số hóa
-              </span>
-              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-emerald-400 rounded-full" />
-                <span>DSP.MATRIX • SAMPLING 60Hz</span>
-              </span>
-            </div>
-          </div>
-
-          {/* 4. TƯƠNG TÁC (BOTTOM-RIGHT) - SÓNG GIAO THOA CỘNG HƯỞNG ĐA CHIỀU */}
-          <div className="hidden md:flex absolute right-4 xl:right-14 bottom-3 xl:bottom-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-right animate-float-node-4 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '550ms' }}>
-            {/* Typography: Căn phải khoa học, chỉ số kỹ thuật liên kết */}
-            <div className="flex flex-col text-right">
-              <div className="flex items-center justify-end gap-1.5 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                <span className="font-mono text-[10px] xl:text-[11px] font-black text-amber-600 dark:text-amber-400 tracking-wider">
-                  INTERACTION // 04
-                </span>
-              </div>
-              <span className="text-lg xl:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight leading-none uppercase drop-shadow-2xs whitespace-nowrap">
-                Tương tác
-              </span>
-              <span className="font-mono text-[9px] xl:text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mt-1.5 flex items-center justify-end gap-1.5">
-                <span>VOICE & CHAT • QUANTUM RESONANCE</span>
-                <span className="w-1 h-1 bg-amber-400 rounded-full" />
-              </span>
-            </div>
-
-            {/* Đường gióng kỹ thuật (Scientific Leader Line) */}
-            <div className="hidden sm:flex items-center -ml-1 opacity-70">
-              <div className="w-6 xl:w-10 h-[1px] bg-gradient-to-l from-[#F15A24] to-transparent" />
-              <div className="w-1.5 h-1.5 rotate-45 border border-[#F15A24] bg-white dark:bg-slate-900" />
-            </div>
-
-            {/* Multi-Channel Interactive Dialogue Convergence Icon */}
-            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
-                {/* Vòng cung hội thoại kênh A (Luồng giọng nói / Voice stream) */}
-                <path
-                  d="M 40,20 C 20,20 12,32 12,46 C 12,60 22,70 34,70 C 37,76 33,80 30,82 C 40,80 46,74 48,68"
-                  fill="none"
-                  stroke="#F15A24"
-                  strokeWidth="2.6"
-                  strokeLinecap="round"
-                  className="dark:stroke-orange-400"
-                />
-                {/* Vòng cung hội thoại kênh B (Luồng tin nhắn / Chat stream) */}
-                <path
-                  d="M 60,18 C 80,18 88,30 88,44 C 88,58 78,68 66,68 C 63,74 67,78 70,80 C 60,78 54,72 52,66"
-                  fill="none"
-                  stroke="#F15A24"
-                  strokeWidth="2.6"
-                  strokeLinecap="round"
-                  className="dark:stroke-orange-400"
-                />
-
-                {/* Cầu nối âm tần tương tác trung tâm (Acoustic Harmonic Waves) */}
-                <line x1="44" y1="36" x2="44" y2="52" stroke="#F15A24" strokeWidth="2.4" strokeLinecap="round" className="dark:stroke-orange-300 animate-pulse" />
-                <line x1="50" y1="28" x2="50" y2="60" stroke="#F15A24" strokeWidth="2.6" strokeLinecap="round" className="dark:stroke-orange-400" />
-                <line x1="56" y1="36" x2="56" y2="52" stroke="#F15A24" strokeWidth="2.4" strokeLinecap="round" className="dark:stroke-orange-300 animate-pulse" />
-
-                {/* Vòng sóng tương tác lan tỏa */}
-                <circle cx="50" cy="44" r="18" fill="none" stroke="#FB923C" strokeWidth="1.5" strokeDasharray="4 4" className="opacity-45 dark:stroke-orange-300" />
-
-                {/* Hạt nhân tương tác giao thoa */}
-                <circle cx="50" cy="44" r="4.2" fill="#F15A24" className="dark:fill-orange-400 animate-pulse" />
-                <circle cx="50" cy="44" r="1.8" fill="#FFFFFF" />
+                {/* Sóng âm thanh hội thoại nhịp nhàng */}
+                <line x1="23.5" y1="17" x2="23.5" y2="27" stroke="#F15A24" strokeWidth="2.2" strokeLinecap="round" className="animate-pulse" />
+                <line x1="19.5" y1="19" x2="19.5" y2="25" stroke="#F97316" strokeWidth="2" strokeLinecap="round" />
+                <line x1="27.5" y1="19" x2="27.5" y2="25" stroke="#FB923C" strokeWidth="2" strokeLinecap="round" />
+                {/* Điểm sáng tương tác góc dưới */}
+                <circle cx="36" cy="16" r="2.5" fill="#F59E0B" className="animate-ping" opacity="0.8" />
+                <circle cx="36" cy="16" r="2" fill="#F59E0B" />
+                <circle cx="36" cy="16" r="0.8" fill="#FFFFFF" />
               </svg>
             </div>
           </div>
