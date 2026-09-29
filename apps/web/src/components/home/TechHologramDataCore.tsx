@@ -1,13 +1,13 @@
 import React from 'react';
 
 /**
- * 🌐 TECH 3D ARCHITECTURAL PLATFORM CUBES (AVG ONE 3D DEPTH ISOMETRIC - LEFT SIDE)
+ * 🌐 TECH 3D MONOLITHIC DATA PLATFORM (AVG ONE INTEGRATED ISOMETRIC ARCHITECTURE - LEFT SIDE)
  * 
- * Bố cục phân tầng không gian 3D có chiều sâu kiến trúc (Layered 3D Depth Composition):
- * - Tầng 1 (Đế móng - Foundation Base Slab): Bệ khối 3D dày dặn, vững chãi ("Một nền tảng Vững chắc!").
- * - Tầng 2 (Các khối Module kết nối - Modular Service Blocks): 3 khối hộp chức năng (Shield, Cloud, Analytics) gối lên bệ.
- * - Tầng 3 (Lõi Lập Phương Lượng Tử - Central Quantum AI Cube): Khối lập phương 3D nổi bật ở đỉnh với các trục liên kết dữ liệu dọc.
- * - Chiều sâu phối cảnh 3D sắc nét nhờ phân cấp sáng/tối 3 mặt phẳng và nét line phân lớp (Không dùng shadow mờ).
+ * Bố cục khối hộp 3D nguyên khối có chiều sâu thực thụ (True 3D Monolithic Depth):
+ * - Toàn bộ cấu trúc tích hợp thành một Khối Kiến Trúc Số 3D gắn kết (Cohesive Tech Monolith).
+ * - Khối lập phương lượng tử đỉnh (Top Quantum Cube) gối trực tiếp lên Bệ khối hộp 3D vững chãi.
+ * - Hai khối module cánh (Side Data Blocks) mở rộng không gian 3 chiều đối xứng.
+ * - Trọng tâm Y chuẩn xác (80 -> 295), căn giữa hoàn hảo với Slogan AVG One, không bao giờ bị cắt mép.
  */
 
 interface TechHologramDataCoreProps {
@@ -24,140 +24,120 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
         className="w-full h-full overflow-visible"
       >
         {/* ========================================================================= */}
-        {/* TẦNG 1: BỆ ĐẾ MÓNG KHỐI HỘP 3D DÀY DẶN (THICK FOUNDATION SLAB)             */}
+        {/* 1. KHỐI BỆ HỘP 3D NỀN TẢNG (INTEGRATED ISOMETRIC BASE SLAB)                 */}
         {/* ========================================================================= */}
-        <g id="layer-1-foundation-slab">
-          {/* Mặt đáy trước-trái của bệ móng */}
+        <g id="base-monolith">
+          {/* Mặt trái bệ chính */}
           <polygon
-            points="140,265 260,325 260,350 140,290"
+            points="170,215 260,258 260,298 170,255"
             stroke="#0284C7"
-            strokeWidth="1.8"
-            className="fill-sky-100/90 dark:fill-slate-900/95"
+            strokeWidth="2"
+            className="fill-sky-100/90 dark:fill-slate-950/95"
           />
-          {/* Mặt đáy trước-phải của bệ móng */}
+          {/* Mặt phải bệ chính */}
           <polygon
-            points="260,325 380,265 380,290 260,350"
+            points="260,258 350,215 350,255 260,298"
             stroke="#0284C7"
-            strokeWidth="1.8"
+            strokeWidth="2"
             className="fill-sky-200/80 dark:fill-slate-800/90"
           />
-          {/* Mặt trên bệ móng (Top Face of Foundation) */}
+          {/* Mặt trên bệ chính (Top Face) */}
           <polygon
-            points="260,205 380,265 260,325 140,265"
+            points="260,172 350,215 260,258 170,215"
             stroke="#0284C7"
             strokeWidth="2.2"
-            className="fill-white/95 dark:fill-slate-950/95"
+            className="fill-white/95 dark:fill-slate-900/95"
           />
 
-          {/* Đường gân cấu trúc bên trong mặt bệ (Structural Grid Inset) */}
+          {/* Đường gân cấu trúc âm bản trên mặt bệ (Recessed Isometric Inset) */}
           <polygon
-            points="260,218 362,265 260,312 158,265"
+            points="260,186 332,215 260,244 188,215"
             stroke="#38BDF8"
             strokeWidth="1.2"
-            strokeDasharray="6 4"
+            strokeDasharray="5 3"
             fill="none"
-            className="opacity-70"
+            className="opacity-75"
           />
 
-          {/* Khe rãnh công nghệ trung tâm (Center Docking Channel) */}
+          {/* Khe docking kết nối dữ liệu trung tâm */}
           <polygon
-            points="260,240 310,265 260,290 210,265"
+            points="260,200 295,215 260,230 225,215"
             stroke="#0284C7"
             strokeWidth="1.4"
-            className="fill-sky-50 dark:fill-slate-900"
+            className="fill-sky-50 dark:fill-slate-950"
           />
         </g>
 
         {/* ========================================================================= */}
-        {/* TẦNG 2: CÁC KHỐI MODULE CHỨC NĂNG GẮN KẾT VÀO BỆ (MODULAR SERVICE BLOCKS)   */}
+        {/* 2. HAI KHỐI MODULE CÁNH 3D (INTEGRATED SIDE MODULE BLOCKS)                */}
         {/* ========================================================================= */}
-        <g id="layer-2-modular-blocks">
+        
+        {/* KHỐI CÁNH TRÁI: BẢO MẬT & AN NINH (CYBER SHIELD) */}
+        <g id="left-wing-module" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
+          {/* Chân nối từ bệ chính sang khối cánh */}
+          <polygon points="170,230 140,245 140,255 170,240" stroke="#0284C7" strokeWidth="1.2" className="fill-sky-100/60 dark:fill-slate-900/60" />
           
-          {/* ------------------------------------------------------------- */}
-          {/* MODULE 1 (TRÁI): BẢO MẬT & AN NINH MẠNG (SECURITY SHIELD)     */}
-          {/* ------------------------------------------------------------- */}
-          <g id="block-shield" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
-            {/* Khối hộp 3D đặt gối trên mép trái bệ móng */}
-            <g transform="translate(180, 240)">
-              {/* Mặt trên */}
-              <polygon points="0,-22 26,-9 0,4 -26,-9" stroke="#0284C7" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
-              {/* Mặt trái */}
-              <polygon points="-26,-9 0,4 0,30 -26,17" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-100/90 dark:fill-slate-950" />
-              {/* Mặt phải */}
-              <polygon points="0,4 26,-9 26,17 0,30" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-200/80 dark:fill-slate-800" />
-              {/* Icon Shield dạng Line */}
-              <g transform="translate(0, -9) scale(0.95)">
-                <path
-                  d="M 0 -8 L 6 -5 L 6 0 C 6 4.5 3.5 8 0 9.5 C -3.5 8 -6 4.5 -6 0 L -6 -5 Z"
-                  stroke="#0284C7"
-                  strokeWidth="1.3"
-                  className="fill-white dark:fill-slate-900"
-                />
-                <path d="M -2 0 L -0.5 1.8 L 3 -2" stroke="#38BDF8" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-              </g>
+          <g transform="translate(130, 225)">
+            {/* Mặt trên */}
+            <polygon points="0,-18 22,-7 0,4 -22,-7" stroke="#0284C7" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
+            {/* Mặt trái */}
+            <polygon points="-22,-7 0,4 0,26 -22,15" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-100/90 dark:fill-slate-950" />
+            {/* Mặt phải */}
+            <polygon points="0,4 22,-7 22,15 0,26" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-200/80 dark:fill-slate-800" />
+            {/* Icon Shield Line */}
+            <g transform="translate(0, -7) scale(0.9)">
+              <path
+                d="M 0 -8 L 6 -5 L 6 0 C 6 4.5 3.5 8 0 9.5 C -3.5 8 -6 4.5 -6 0 L -6 -5 Z"
+                stroke="#0284C7"
+                strokeWidth="1.3"
+                className="fill-white dark:fill-slate-900"
+              />
+              <path d="M -2 0 L -0.5 1.8 L 3 -2" stroke="#38BDF8" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
             </g>
           </g>
+        </g>
 
-          {/* ------------------------------------------------------------- */}
-          {/* MODULE 2 (PHẢI): ĐÁM MÂY DỮ LIỆU (CLOUD ARCHITECTURE)         */}
-          {/* ------------------------------------------------------------- */}
-          <g id="block-cloud" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
-            {/* Khối hộp 3D đặt gối trên mép phải bệ móng */}
-            <g transform="translate(340, 240)">
-              {/* Mặt trên */}
-              <polygon points="0,-22 26,-9 0,4 -26,-9" stroke="#0284C7" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
-              {/* Mặt trái */}
-              <polygon points="-26,-9 0,4 0,30 -26,17" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-100/90 dark:fill-slate-950" />
-              {/* Mặt phải */}
-              <polygon points="0,4 26,-9 26,17 0,30" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-200/80 dark:fill-slate-800" />
-              {/* Icon Cloud dạng Line */}
-              <g transform="translate(0, -9) scale(0.95)">
-                <path
-                  d="M -5 3 L 5 3 C 6.5 3 7.5 2 7.5 0.5 C 7.5 -1 6.5 -2 5 -2 C 4.8 -2 4.5 -2 4.3 -1.8 C 4 -3.8 2 -5 0 -5 C -1.8 -5 -3.3 -4 -3.8 -2.3 C -4.2 -2.5 -4.6 -2.5 -5 -2.5 C -6.7 -2.5 -8 -1.2 -8 0.5 C -8 2 -6.7 3 -5 3 Z"
-                  stroke="#0284C7"
-                  strokeWidth="1.3"
-                  className="fill-white dark:fill-slate-900"
-                />
-              </g>
-            </g>
-          </g>
-
-          {/* ------------------------------------------------------------- */}
-          {/* MODULE 3 (TRƯỚC): PHÂN TÍCH DỮ LIỆU THÔNG MINH (ANALYTICS)   */}
-          {/* ------------------------------------------------------------- */}
-          <g id="block-analytics" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
-            {/* Khối hộp bậc thang phía trước bệ móng */}
-            <g transform="translate(260, 280)">
-              <polygon points="0,-18 22,-7 0,4 -22,-7" stroke="#0284C7" strokeWidth="1.5" className="fill-white dark:fill-slate-900" />
-              <polygon points="-22,-7 0,4 0,24 -22,13" stroke="#0284C7" strokeWidth="1.5" className="fill-sky-100/90 dark:fill-slate-950" />
-              <polygon points="0,4 22,-7 22,13 0,24" stroke="#0284C7" strokeWidth="1.5" className="fill-sky-200/80 dark:fill-slate-800" />
-              {/* Icon Chart Line */}
-              <g transform="translate(0, -7) scale(0.9)">
-                <rect x="-5" y="-1" width="2.2" height="6" rx="0.5" stroke="#0284C7" strokeWidth="1" className="fill-white dark:fill-slate-900" />
-                <rect x="-1" y="-4" width="2.2" height="9" rx="0.5" stroke="#0284C7" strokeWidth="1" className="fill-sky-100 dark:fill-sky-900" />
-                <rect x="3" y="-7" width="2.2" height="12" rx="0.5" stroke="#0284C7" strokeWidth="1" className="fill-sky-200 dark:fill-sky-800" />
-                <path d="M -6 -2 L -1 -5 L 4 -8" stroke="#38BDF8" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-              </g>
+        {/* KHỐI CÁNH PHẢI: ĐÁM MÂY DỮ LIỆU (CLOUD ARCHITECTURE) */}
+        <g id="right-wing-module" className="transition-transform duration-300 hover:-translate-y-1 cursor-pointer pointer-events-auto">
+          {/* Chân nối từ bệ chính sang khối cánh */}
+          <polygon points="350,230 380,245 380,255 350,240" stroke="#0284C7" strokeWidth="1.2" className="fill-sky-100/60 dark:fill-slate-900/60" />
+          
+          <g transform="translate(390, 225)">
+            {/* Mặt trên */}
+            <polygon points="0,-18 22,-7 0,4 -22,-7" stroke="#0284C7" strokeWidth="1.6" className="fill-white dark:fill-slate-900" />
+            {/* Mặt trái */}
+            <polygon points="-22,-7 0,4 0,26 -22,15" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-100/90 dark:fill-slate-950" />
+            {/* Mặt phải */}
+            <polygon points="0,4 22,-7 22,15 0,26" stroke="#0284C7" strokeWidth="1.6" className="fill-sky-200/80 dark:fill-slate-800" />
+            {/* Icon Cloud Line */}
+            <g transform="translate(0, -7) scale(0.9)">
+              <path
+                d="M -5 3 L 5 3 C 6.5 3 7.5 2 7.5 0.5 C 7.5 -1 6.5 -2 5 -2 C 4.8 -2 4.5 -2 4.3 -1.8 C 4 -3.8 2 -5 0 -5 C -1.8 -5 -3.3 -4 -3.8 -2.3 C -4.2 -2.5 -4.6 -2.5 -5 -2.5 C -6.7 -2.5 -8 -1.2 -8 0.5 C -8 2 -6.7 3 -5 3 Z"
+                stroke="#0284C7"
+                strokeWidth="1.3"
+                className="fill-white dark:fill-slate-900"
+              />
             </g>
           </g>
         </g>
 
         {/* ========================================================================= */}
-        {/* TRỤ DẪN DỮ LIỆU ĐỨNG (VERTICAL DATA TRANSMISSION PILLARS)                 */}
+        {/* 3. KHỐI TRUYỀN DẪN TRUNG TÂM NỐI THẲNG LÊN LÕI (CENTRAL RISER BLOCK)        */}
         {/* ========================================================================= */}
-        <g id="data-vertical-pillars" stroke="#0284C7" strokeWidth="1.5" className="opacity-75 dark:opacity-60">
-          {/* Trục chính giữa từ bệ móng lên đáy khối lập phương */}
-          <line x1="260" y1="240" x2="260" y2="175" strokeDasharray="4 3" />
-          <line x1="210" y1="215" x2="225" y2="155" strokeDasharray="3 3" />
-          <line x1="310" y1="215" x2="295" y2="155" strokeDasharray="3 3" />
+        <g id="center-riser">
+          {/* Trụ khối hộp trung gian gắn trực tiếp bệ và khối lập phương */}
+          <polygon points="235,160 260,172 260,200 235,188" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-100/70 dark:fill-slate-900" />
+          <polygon points="260,172 285,160 285,188 260,200" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-200/60 dark:fill-slate-800" />
+          {/* Các đường line dữ liệu dọc */}
+          <line x1="260" y1="172" x2="260" y2="135" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 2" />
         </g>
 
         {/* ========================================================================= */}
-        {/* TẦNG 3: LÕI LẬP PHƯƠNG LƯỢNG TỬ TRUNG TÂM (CENTRAL QUANTUM AI CUBE)       */}
+        {/* 4. KHỐI LẬP PHƯƠNG LƯỢNG TỬ ĐỈNH TRANG TRỌNG (TOP HERO QUANTUM CUBE)       */}
         {/* ========================================================================= */}
-        <g id="layer-3-quantum-cube">
-          {/* Đặt ở vị trí trung tâm hoàn hảo: X=260, Y=115 (Không bao giờ bị tràn đỉnh!) */}
-          <g transform="translate(260, 115)">
+        <g id="top-quantum-cube">
+          {/* Đặt ở vị trí trung tâm hoàn mỹ: X=260, Y=112 (Cách mép trên 50px, an toàn 100%) */}
+          <g transform="translate(260, 112)">
             
             {/* MẶT TRÊN KHỐI LẬP PHƯƠNG (Top Face - Sáng nhất) */}
             <polygon
@@ -181,13 +161,13 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               className="fill-sky-100/90 dark:fill-slate-800/90"
             />
 
-            {/* Các đường vân kỹ thuật isometric bên trong mặt phẳng */}
+            {/* Các đường gân kỹ thuật isometric bên trong mặt phẳng */}
             <line x1="0" y1="-24" x2="23" y2="-12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
             <line x1="0" y1="-24" x2="-23" y2="-12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
             <line x1="0" y1="24" x2="23" y2="12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
             <line x1="0" y1="24" x2="-23" y2="12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
 
-            {/* KHỐI LẬP PHƯƠNG CON LỒNG BÊN TRONG (Inner Nested Tesseract Cube) */}
+            {/* KHỐI LẬP PHƯƠNG LỒNG NỘI TẠI (Inner Nested Tesseract Cube Line) */}
             <polygon
               points="0,-24 23,-12 0,0 -23,-12"
               stroke="#0284C7"
@@ -212,33 +192,14 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             <circle cx="0" cy="0" r="4.5" stroke="#38BDF8" strokeWidth="1.2" className="fill-sky-50 dark:fill-sky-950" />
             <circle cx="0" cy="0" r="1.8" className="fill-[#0284C7]" />
 
-            {/* Hoạt họa bồng bềnh êm ái */}
+            {/* Chuyển động bồng bềnh êm ái */}
             <animateTransform
               attributeName="transform"
               type="translate"
-              values="0,-4; 0,4; 0,-4"
+              values="0,-3; 0,3; 0,-3"
               dur="4s"
               repeatCount="indefinite"
             />
-          </g>
-        </g>
-
-        {/* 2 Khối hộp vệ tinh nhỏ cân bằng không gian ở tầng cao (Upper Satellite Pods) */}
-        <g id="upper-satellites" transform="translate(0, -5)">
-          {/* Vệ tinh trên-trái: CPU Core */}
-          <g transform="translate(140, 100) scale(0.75)" className="opacity-85">
-            <polygon points="0,-18 20,-8 0,2 -20,-8" stroke="#0284C7" strokeWidth="1.4" className="fill-white dark:fill-slate-900" />
-            <polygon points="-20,-8 0,2 0,22 -20,12" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-50 dark:fill-slate-950" />
-            <polygon points="0,2 20,-8 20,12 0,22" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-100 dark:fill-slate-800" />
-            <line x1="20" y1="2" x2="65" y2="20" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="3 3" className="opacity-50" />
-          </g>
-
-          {/* Vệ tinh trên-phải: Global IoT */}
-          <g transform="translate(380, 100) scale(0.75)" className="opacity-85">
-            <polygon points="0,-18 20,-8 0,2 -20,-8" stroke="#0284C7" strokeWidth="1.4" className="fill-white dark:fill-slate-900" />
-            <polygon points="-20,-8 0,2 0,22 -20,12" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-50 dark:fill-slate-950" />
-            <polygon points="0,2 20,-8 20,12 0,22" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-100 dark:fill-slate-800" />
-            <line x1="-20" y1="2" x2="-65" y2="20" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="3 3" className="opacity-50" />
           </g>
         </g>
       </svg>
