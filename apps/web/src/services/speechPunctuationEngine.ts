@@ -559,7 +559,8 @@ const INAUDIBLE_OR_GAP_RULES: Array<{ pattern: RegExp; replacement: string }> = 
   { pattern: /%hesitation%/gi, replacement: ' ... ' },
   // Lặp từ ngắc ngứ (Stuttering / Repetition): "cái này cái này" -> "cái này ... cái này"
   { pattern: /(?<=^|[^\p{L}\p{N}])(cái\s*này)\s+(cái\s*này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(ờ|ừm|à\s*thì|ờm)(?=[^\p{L}\p{N}]|$)/giu, replacement: ' ... ' }
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cái|thì|là|này|đang|tôi|mình)\s+\1(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(ờ|ừm|à\s*thì|ờm|ơ\s*kìa|ừ\s*thì)(?=[^\p{L}\p{N}]|$)/giu, replacement: ' ... ' }
 ];
 
 // 8. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
@@ -586,6 +587,7 @@ const TRANSITION_DISCOURSE_MARKERS = [
   'theo anh',
   'trước hết',
   'đồng thời',
+  'hình như',
   'ngược lại',
   'nói chung là',
   'tổng kết lại'
@@ -656,8 +658,38 @@ export function insertNaturalVietnamesePunctuation(text: string): string {
   if (!text) return '';
   let res = text;
 
-  // Dấu phẩy trước câu hỏi đuôi ở cuối câu: "...kia, đúng không?" / "..., phải không?"
+  // 1. Nhận diện các câu hỏi giữa dòng (Mid-sentence Questions)
+  // Khi gặp các cụm từ nghi vấn hỏi lựa chọn hoặc thắc mắc:
+  // "nên lấy cái nào", "chọn cái nào", "ở đâu", "như thế nào", "làm sao bây giờ", "để làm gì", "nghĩa là gì"...
+  res = res.replace(
+    /(?<=^|[^\p{L}\p{N}])(nên\s*lấy\s*cái\s*nào|chọn\s*cái\s*nào|lấy\s*cái\s*nào|ở\s*đâu|như\s*thế\s*nào|làm\s*sao\s*bây\s*giờ|để\s*làm\s*gì|nghĩa\s*là\s*gì)\s+([a-zA-ZÀ-ỹ])/giu,
+    '$1? $2'
+  );
+
+  // Nhận diện tiểu từ nghi vấn băn khoăn: "ý nhỉ", "nhỉ", "sao nhỉ", "thế nhỉ", "hả"
+  res = res.replace(
+    /(?<=^|[^\p{L}\p{N}])(ý\s*nhỉ|nhỉ|sao\s*nhỉ|thế\s*nhỉ|hả\s*(?:anh|chị|em|bạn)?)\s+([a-zA-ZÀ-ỹ])/giu,
+    '$1? $2'
+  );
+
+  // 2. Nhận diện câu hỏi đuôi (Tag questions) ở cuối câu hoặc giữa chừng
+  // "...kia, đúng không?" / "..., phải không?"
   res = res.replace(/(?<=^|[^\p{L}\p{N}])(đúng\s*không|phải\s*không|được\s*không|phải\s*chăng)\s*\??$/giu, ', $1?');
+  res = res.replace(/(?<=^|[^\p{L}\p{N}])(đúng\s*không|phải\s*không|được\s*không)\s+([a-zA-ZÀ-ỹ])/giu, ', $1? $2');
+
+  // 3. Tự động chèn dấu chấm (.) sau các tiểu từ kết thúc ý câu khi đứng trước một ý mới
+  // Khi người nói dùng "nhé", "nha", "đấy", "đó", "rồi", "xong", "luôn", "ạ"
+  // và từ tiếp theo là khởi đầu của một mệnh đề hoặc chủ ngữ mới
+  const nextThoughtStarters = 'Thứ\\s*(?:nhất|hai|ba|tư|năm)|Lúc|Khi|Hiện\\s*tại|Bây\\s*giờ|Mặt\\s*khác|Hình\\s*như|Chúng\\s*tôi|Chúng\\s*ta|Tôi|Mình|Anh|Chị|Em|Tất\\s*cả|Văn\\s*bản|Hợp\\s*đồng|Báo\\s*cáo|[A-ZÀ-Ỹ]';
+  res = res.replace(new RegExp(`(?<=^|[^\\p{L}\\p{N}])(nhé|nha|nhớ|ạ)\\s+(${nextThoughtStarters})`, 'gu'), '$1. $2');
+  res = res.replace(new RegExp(`(?<=^|[^\\p{L}\\p{N}])(đấy|đó)\\s+(${nextThoughtStarters})`, 'gu'), '$1. $2');
+  res = res.replace(new RegExp(`(?<=^|[^\\p{L}\\p{N}])(rồi|xong)\\s+(${nextThoughtStarters})`, 'gu'), '$1. $2');
+  res = res.replace(new RegExp(`(?<=^|[^\\p{L}\\p{N}])(luôn)\\s+(${nextThoughtStarters})`, 'gu'), '$1. $2');
+
+  // 4. Tự động chèn dấu phẩy (,) trước các liên từ liên kết câu / vế khi mệnh đề trước có >= 3 từ
+  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(nhưng|tuy\s*nhiên|song)\s+/giu, '$1, $2 ');
+  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(vì\s*vậy|do\s*đó|cho\s*nên|đồng\s*thời|ngoài\s*ra|hơn\s*nữa|mặt\s*khác)\s+/giu, '$1, $2 ');
+  res = res.replace(/(\b[\p{L}\p{N}]+\s+[\p{L}\p{N}]+\s+[\p{L}\p{N}]+)\s+(bây\s*giờ|hiện\s*tại)\s+([a-zA-ZÀ-ỹ]+)/giu, '$1, $2 $3');
 
   return res;
 }
