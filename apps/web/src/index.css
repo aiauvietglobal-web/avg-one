@@ -3028,6 +3028,31 @@ div.box-speech-bubble {
   animation: gear-spin-ccw 8.166s linear infinite;
 }
 
+/* Synchronized 4-Gear System (Tự động hóa - Chuẩn khớp động học) */
+.animate-gear-mesh-orange {
+  transform-origin: 0px 0px;
+  animation: gear-spin-cw 12s linear infinite;
+  will-change: transform;
+}
+
+.animate-gear-mesh-gray {
+  transform-origin: 0px 0px;
+  animation: gear-spin-ccw 8s linear infinite;
+  will-change: transform;
+}
+
+.animate-gear-mesh-blue {
+  transform-origin: 0px 0px;
+  animation: gear-spin-cw 12s linear infinite;
+  will-change: transform;
+}
+
+.animate-gear-mesh-green {
+  transform-origin: 0px 0px;
+  animation: gear-spin-ccw 12s linear infinite;
+  will-change: transform;
+}
+
 .animate-kinetic-data {
   stroke-dasharray: 8 8;
   animation: kinetic-data-flow 1.8s linear infinite;
