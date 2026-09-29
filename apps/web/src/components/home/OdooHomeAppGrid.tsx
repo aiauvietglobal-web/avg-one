@@ -230,30 +230,19 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
             </div>
           </div>
 
-          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - THIẾT KẾ MỀM MẠI, UYỂN CHUYỂN PHONG CÁCH VIETTEL AI */}
+          {/* 2. TỰ ĐỘNG HÓA (TOP-RIGHT) - KHÔNG HỘP, CHỈ CÒN CHỮ "TỰ ĐỘNG HÓA" & BÁNH RĂNG TO GẤP 5 LẦN */}
           <div 
-            className="hidden lg:flex absolute right-4 xl:right-12 top-3 xl:top-6 z-20 items-center gap-3.5 px-4 py-2.5 xl:px-5 xl:py-3 rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-md border border-orange-200/50 dark:border-orange-900/40 shadow-[0_4px_20px_rgba(241,90,36,0.06)] hover:shadow-[0_8px_30px_rgba(241,90,36,0.15)] hover:border-orange-300 dark:hover:border-orange-500/50 hover:-translate-y-0.5 transition-all duration-300 group cursor-default select-none animate-entrance-right animate-float-node-3"
+            className="hidden lg:flex absolute right-4 xl:right-10 top-0 xl:top-1 z-20 items-center gap-3.5 xl:gap-5 animate-entrance-right animate-float-node-3 select-none cursor-default group"
             style={{ animationDelay: '300ms' }}
           >
-            {/* Typography */}
-            <div className="flex flex-col text-right">
-              <div className="flex items-center justify-end gap-1.5 mb-0.5">
-                <span className="text-[10px] xl:text-[11px] font-semibold text-orange-600 dark:text-orange-400 tracking-wide">
-                  Vận hành thông minh
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-              </div>
-              <span className="text-base xl:text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight">
-                Tự động hóa
-              </span>
-              <span className="text-[11px] xl:text-xs text-slate-500 dark:text-slate-400 leading-snug mt-0.5">
-                Tối ưu quy trình & nguồn lực
-              </span>
-            </div>
+            {/* Chỉ để chữ "Tự động hóa" */}
+            <span className="text-xl sm:text-2xl xl:text-3xl font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight drop-shadow-2xs whitespace-nowrap group-hover:text-orange-500 transition-colors">
+              Tự động hóa
+            </span>
 
-            {/* Soft Icon Badge - Bánh Răng Đa Sắc Tự Động Hóa (Chuẩn theo ảnh mẫu Join Us) */}
-            <div className="relative w-12 h-12 xl:w-13 xl:h-13 p-1 rounded-xl bg-gradient-to-br from-orange-500/10 via-amber-500/10 to-orange-500/15 dark:from-slate-800/80 dark:to-slate-800/60 flex items-center justify-center shrink-0 border border-orange-300/30 dark:border-orange-700/40 group-hover:scale-105 transition-transform duration-300 shadow-xs">
-              <svg viewBox="15 10 168 136" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full overflow-visible drop-shadow-[0_2px_4px_rgba(0,0,0,0.08)]">
+            {/* Biểu tượng 4 bánh răng to gấp 5 lần (không hộp) */}
+            <div className="w-48 h-38 sm:w-56 sm:h-46 xl:w-64 xl:h-52 shrink-0 filter drop-shadow-[0_6px_20px_rgba(241,90,36,0.18)] dark:drop-shadow-[0_8px_24px_rgba(251,146,60,0.25)] group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="15 10 168 136" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full overflow-visible">
                 {/* 1. BÁNH RĂNG CAM (LỚN - TRÊN TRÁI) */}
                 <g>
                   <path d="M 85.92 56.08 A 26 26 0 0 1 85.51 59.04 L 94.24 62.84 A 35.36 35.36 0 0 1 92.13 68.77 L 82.96 66.20 A 26 26 0 0 1 81.41 68.76 A 26 26 0 0 1 79.57 71.12 L 85.23 78.78 A 35.36 35.36 0 0 1 80.44 82.85 L 73.78 76.05 A 26 26 0 0 1 71.16 77.48 A 26 26 0 0 1 68.39 78.61 L 69.46 88.07 A 35.36 35.36 0 0 1 63.28 89.21 L 60.91 79.98 A 26 26 0 0 1 57.92 79.92 A 26 26 0 0 1 54.96 79.51 L 51.16 88.24 A 35.36 35.36 0 0 1 45.23 86.13 L 47.80 76.96 A 26 26 0 0 1 45.24 75.41 A 26 26 0 0 1 42.88 73.57 L 35.22 79.23 A 35.36 35.36 0 0 1 31.15 74.44 L 37.95 67.78 A 26 26 0 0 1 36.52 65.16 A 26 26 0 0 1 35.39 62.39 L 25.93 63.46 A 35.36 35.36 0 0 1 24.79 57.28 L 34.02 54.91 A 26 26 0 0 1 34.08 51.92 A 26 26 0 0 1 34.49 48.96 L 25.76 45.16 A 35.36 35.36 0 0 1 27.87 39.23 L 37.04 41.80 A 26 26 0 0 1 38.59 39.24 A 26 26 0 0 1 40.43 36.88 L 34.77 29.22 A 35.36 35.36 0 0 1 39.56 25.15 L 46.22 31.95 A 26 26 0 0 1 48.84 30.52 A 26 26 0 0 1 51.61 29.39 L 50.54 19.93 A 35.36 35.36 0 0 1 56.72 18.79 L 59.09 28.02 A 26 26 0 0 1 62.08 28.08 A 26 26 0 0 1 65.04 28.49 L 68.84 19.76 A 35.36 35.36 0 0 1 74.77 21.87 L 72.20 31.04 A 26 26 0 0 1 74.76 32.59 A 26 26 0 0 1 77.12 34.43 L 84.78 28.77 A 35.36 35.36 0 0 1 88.85 33.56 L 82.05 40.22 A 26 26 0 0 1 83.48 42.84 A 26 26 0 0 1 84.61 45.61 L 94.07 44.54 A 35.36 35.36 0 0 1 95.21 50.72 L 85.98 53.09 A 26 26 0 0 1 85.92 56.08 Z M 76.50 54.00 A 16.5 16.5 0 1 0 43.50 54.00 A 16.5 16.5 0 1 0 76.50 54.00 Z" fill="#F28C38" fillRule="evenodd" />
