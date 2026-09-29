@@ -2808,10 +2808,8 @@ export const SpeechToTextModule: React.FC = () => {
                         </div>
 
                         <div className="mt-1.5 flex items-center justify-between gap-4 text-[11px] pt-0.5">
-                          <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0 flex items-center gap-1.5">
-                            <span>{msg.timestamp}</span>
-                            <span className="opacity-40">•</span>
-                            <span>{msg.date || new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                          <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0">
+                            {msg.timestamp}
                           </span>
                           {isDeafMsg && (
                             <button
@@ -2830,24 +2828,18 @@ export const SpeechToTextModule: React.FC = () => {
 
                 {interimTranscript && (
                   <div className="flex flex-col items-start w-full">
-                    <div className="p-3.5 sm:p-4 rounded-xl transition-all w-fit max-w-[88%] bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-sky-300 dark:border-sky-700 shadow-xs">
-                      <div className="flex items-center gap-2 text-[11px] font-extrabold mb-1.5 text-orange-500 dark:text-orange-400">
+                    <div className="p-3.5 sm:p-4 rounded-xl transition-all w-fit max-w-[88%] bg-white text-slate-900 border border-slate-200/90 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 shadow-xs">
+                      <div className="flex items-center gap-1.5 text-[11px] font-extrabold mb-1.5 text-orange-500 dark:text-orange-400">
                         <span>{speakers.find(s => s.id === activeSpeakerId)?.name || 'Giọng Nam'}</span>
-                        <span className="inline-flex items-center gap-1 font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 text-[10.5px]">
-                          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-                          Đang chuyển đổi ...
-                        </span>
                       </div>
 
                       <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-medium`}>
                         {interimTranscript}
                       </div>
 
-                      <div className="mt-1.5 flex items-center justify-between gap-4 text-[11px] pt-0.5 text-slate-400">
-                        <span className="font-medium shrink-0 flex items-center gap-1.5">
-                          <span>{new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
-                          <span className="opacity-40">•</span>
-                          <span>{new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                      <div className="mt-1.5 flex items-center justify-between gap-4 text-[11px] pt-0.5 text-slate-500 dark:text-slate-400">
+                        <span className="font-medium shrink-0">
+                          {new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                     </div>
@@ -3462,10 +3454,8 @@ export const SpeechToTextModule: React.FC = () => {
                         {msg.text}
                       </div>
                       <div className="mt-1.5 flex items-center justify-between gap-4 text-xs pt-0.5">
-                        <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0 flex items-center gap-1.5">
-                          <span>{msg.timestamp}</span>
-                          <span className="opacity-40">•</span>
-                          <span>{msg.date || new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                        <span className="text-slate-500 dark:text-slate-400 font-medium shrink-0">
+                          {msg.timestamp}
                         </span>
                         {isDeafMsg && (
                           <button
@@ -3484,16 +3474,17 @@ export const SpeechToTextModule: React.FC = () => {
 
               {interimTranscript && (
                 <div className="flex flex-col items-start w-full">
-                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-sky-300 dark:border-sky-700 w-fit max-w-[85%] shadow-sm">
-                    <div className="flex items-center gap-2 mb-1.5 text-xs font-extrabold text-orange-500 dark:text-orange-400">
+                  <div className="p-4 rounded-xl bg-white text-slate-900 border border-slate-200/90 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 w-fit max-w-[85%] shadow-xs">
+                    <div className="flex items-center gap-1.5 mb-1.5 text-xs font-extrabold text-orange-500 dark:text-orange-400">
                       <span>{speakers.find(s => s.id === activeSpeakerId)?.name || 'Giọng Nam'}</span>
-                      <span className="inline-flex items-center gap-1 font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 text-[11px]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-                        Đang chuyển đổi ...
-                      </span>
                     </div>
                     <div className={`${getFontSizeClass()} break-words whitespace-pre-line text-slate-900 dark:text-slate-100 font-medium`}>
                       {interimTranscript}
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between gap-4 text-xs pt-0.5 text-slate-500 dark:text-slate-400">
+                      <span className="font-medium shrink-0">
+                        {new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
                     </div>
                   </div>
                 </div>
