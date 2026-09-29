@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { AppModuleId } from '../layout/AppLauncherModal';
 import { TechHologramGearEcosystem } from './TechHologramGearEcosystem';
+import { TechHologramDataCore } from './TechHologramDataCore';
 
 // 5 TRỤ CỘT CHIẾN LƯỢC: SỐ HÓA - CÔNG NGHỆ HÓA - TỐC ĐỘ - CHẤT LƯỢNG - GIÁ
 export const STRATEGIC_PILLARS = [
@@ -244,12 +245,20 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
 
 
-          {/* 🛸 HỆ THỐNG BIỂU TƯỢNG HOLOGRAM CÔNG NGHỆ 3D (3D SCI-FI HOLOGRAM GEAR ECOSYSTEM) */}
+          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: 3D HOLOGRAPHIC DATA CORE & QUANTUM PLATFORM */}
           <div 
-            className="hidden lg:flex absolute right-1 xl:right-6 2xl:right-12 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none cursor-default group"
+            className="hidden md:flex absolute left-0 lg:left-1 xl:left-4 2xl:left-8 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none cursor-default group"
+            style={{ animationDelay: '200ms' }}
+          >
+            <TechHologramDataCore className="w-[330px] md:w-[370px] lg:w-[420px] xl:w-[480px] 2xl:w-[540px] h-auto drop-shadow-[0_8px_32px_rgba(56,189,248,0.25)] dark:drop-shadow-[0_12px_45px_rgba(0,0,0,0.6)] group-hover:scale-[1.03] transition-transform duration-500" />
+          </div>
+
+          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: 3D HOLOGRAPHIC GEAR PLATFORM (ĐÃ CĂN CHỈNH TO KHỚP) */}
+          <div 
+            className="hidden md:flex absolute right-0 lg:right-1 xl:right-4 2xl:right-8 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none cursor-default group"
             style={{ animationDelay: '250ms' }}
           >
-            <TechHologramGearEcosystem className="w-[320px] lg:w-[360px] xl:w-[430px] 2xl:w-[480px] h-auto drop-shadow-[0_8px_30px_rgba(0,229,255,0.25)] dark:drop-shadow-[0_12px_45px_rgba(0,0,0,0.6)] group-hover:scale-[1.03] transition-transform duration-500" />
+            <TechHologramGearEcosystem className="w-[330px] md:w-[370px] lg:w-[420px] xl:w-[480px] 2xl:w-[540px] h-auto drop-shadow-[0_8px_32px_rgba(0,229,255,0.25)] dark:drop-shadow-[0_12px_45px_rgba(0,0,0,0.6)] group-hover:scale-[1.03] transition-transform duration-500" />
           </div>
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}

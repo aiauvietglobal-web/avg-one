@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * 🛸 TECH HOLOGRAM GEAR ECOSYSTEM (AVG ONE 3D SCI-FI PLATFORM)
+ * 🛸 TECH HOLOGRAM GEAR ECOSYSTEM (AVG ONE 3D SCI-FI PLATFORM - RIGHT SIDE)
  * 
  * Nâng cấp bố cục biểu tượng theo thiết kế Hologram Công nghệ 3D:
  * 1. Bệ đài công nghệ không gian elip 3D (Hologram Pedestal with concentric luminous rings & HUD ticks)
@@ -22,7 +22,6 @@ interface TechHologramGearEcosystemProps {
 
 export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps> = ({ className = '' }) => {
   // SVG Path cho bánh răng 8 răng chuẩn kỹ thuật (Pitch R = 38, Outer R = 46, Inner R = 30, Hole R = 15)
-  // Được tính toán hình học chính xác để các răng hình thang đối xứng hoàn hảo
   const gearPath = 
     "M 30.00 0.00 A 30 30 0 0 1 28.23 10.16 L 41.31 20.24 A 46 46 0 0 1 35.90 28.76 L 21.21 21.21 " +
     "A 30 30 0 0 1 12.77 27.14 L 14.90 43.52 A 46 46 0 0 1 5.05 45.72 L 0.00 30.00 " +
@@ -44,12 +43,12 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
       >
         <defs>
           {/* 🌟 NEON GLOW FILTERS */}
-          <filter id="holo-gear-glow" x="-40%" y="-40%" width="180%" height="180%">
+          <filter id="holo-gear-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="4.5" result="blur1" />
             <feGaussianBlur stdDeviation="9" result="blur2" />
             <feColorMatrix
               type="matrix"
-              values="0 0 0 0 0   0 0.9 0 0 0.95   0 0 1 0 1   0 0 0 0.85 0"
+              values="0 0 0 0 0   0 0.85 0 0 0.9   0 0 1 0 1   0 0 0 0.85 0"
               in="blur1"
               result="glow1"
             />
@@ -84,8 +83,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           {/* Gradient cho 3 bánh răng Neon Cyan */}
           <linearGradient id="holo-gear-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#A5F3FC" />
-            <stop offset="35%" stopColor="#22D3EE" />
-            <stop offset="70%" stopColor="#00E5FF" />
+            <stop offset="30%" stopColor="#22D3EE" />
+            <stop offset="65%" stopColor="#00E5FF" />
             <stop offset="100%" stopColor="#0284C7" />
           </linearGradient>
 
@@ -98,8 +97,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
 
           {/* Gradient chùm sáng dọc (Light Core Beam) từ bệ chiếu lên bánh răng */}
           <linearGradient id="holo-beam-grad" x1="50%" y1="100%" x2="50%" y2="0%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
-            <stop offset="15%" stopColor="#F97316" stopOpacity="0.65" />
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+            <stop offset="15%" stopColor="#F97316" stopOpacity="0.7" />
             <stop offset="35%" stopColor="#00F0FF" stopOpacity="0.5" />
             <stop offset="75%" stopColor="#0284C7" stopOpacity="0.2" />
             <stop offset="100%" stopColor="#00F0FF" stopOpacity="0" />
@@ -108,27 +107,27 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           {/* Gradient bệ đài trung tâm */}
           <radialGradient id="holo-pedestal-core" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
-            <stop offset="25%" stopColor="#FDBA74" stopOpacity="0.9" />
-            <stop offset="45%" stopColor="#FB923C" stopOpacity="0.75" />
-            <stop offset="70%" stopColor="#00E5FF" stopOpacity="0.5" />
+            <stop offset="25%" stopColor="#FDBA74" stopOpacity="0.95" />
+            <stop offset="45%" stopColor="#FB923C" stopOpacity="0.8" />
+            <stop offset="70%" stopColor="#00E5FF" stopOpacity="0.55" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
           </radialGradient>
 
           {/* Gradient bệ node vệ tinh */}
           <radialGradient id="holo-node-base" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.9" />
-            <stop offset="45%" stopColor="#00E5FF" stopOpacity="0.5" />
-            <stop offset="80%" stopColor="#0284C7" stopOpacity="0.25" />
+            <stop offset="45%" stopColor="#00E5FF" stopOpacity="0.55" />
+            <stop offset="80%" stopColor="#0284C7" stopOpacity="0.3" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
           </radialGradient>
 
           {/* Gradient vành đai bệ đài */}
           <linearGradient id="holo-ring-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.2" />
-            <stop offset="30%" stopColor="#38BDF8" stopOpacity="0.9" />
+            <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.25" />
+            <stop offset="30%" stopColor="#38BDF8" stopOpacity="0.95" />
             <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-            <stop offset="70%" stopColor="#38BDF8" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0.2" />
+            <stop offset="70%" stopColor="#38BDF8" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0.25" />
           </linearGradient>
         </defs>
 
@@ -138,7 +137,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
         <g id="hologram-pedestal" className="opacity-95 dark:opacity-100">
           
           {/* Vầng sáng nền khuếch tán dưới đáy bệ */}
-          <ellipse cx="260" cy="275" rx="220" ry="70" fill="url(#holo-pedestal-core)" opacity="0.25" />
+          <ellipse cx="260" cy="275" rx="220" ry="70" fill="url(#holo-pedestal-core)" opacity="0.3" />
 
           {/* Vòng elip ngoài cùng viền đứt đoạn (Outer dashed radar orbit) */}
           <ellipse
@@ -147,9 +146,9 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             rx="215"
             ry="66"
             stroke="#00E5FF"
-            strokeWidth="1.2"
+            strokeWidth="1.4"
             strokeDasharray="8 6 3 6"
-            strokeOpacity="0.45"
+            strokeOpacity="0.6"
           />
 
           {/* Vòng elip thứ hai với vạch chia công nghệ (HUD ticks ring) */}
@@ -158,10 +157,10 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             cy="275"
             rx="185"
             ry="55"
-            stroke="#38BDF8"
+            stroke="#0284C7"
             strokeWidth="2.2"
             strokeDasharray="2 7"
-            strokeOpacity="0.65"
+            strokeOpacity="0.75"
           />
 
           {/* Vành đai elip phát sáng chính (Primary luminous HUD track) */}
@@ -173,7 +172,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             stroke="url(#holo-ring-grad)"
             strokeWidth="2.8"
             filter="url(#holo-core-flare)"
-            strokeOpacity="0.9"
+            strokeOpacity="0.95"
           />
 
           {/* Vòng elip tầng trong với các cung sáng phân đoạn */}
@@ -183,9 +182,9 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             rx="125"
             ry="36"
             stroke="#00E5FF"
-            strokeWidth="1.5"
+            strokeWidth="1.6"
             strokeDasharray="45 15 30 10"
-            strokeOpacity="0.75"
+            strokeOpacity="0.8"
           />
 
           <ellipse
@@ -194,9 +193,9 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             rx="95"
             ry="27"
             stroke="#38BDF8"
-            strokeWidth="1.8"
+            strokeWidth="2"
             strokeDasharray="6 4"
-            strokeOpacity="0.85"
+            strokeOpacity="0.9"
           />
 
           {/* Vòng đĩa lõi năng lượng (Inner reactor plate) */}
@@ -208,7 +207,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             stroke="#FFFFFF"
             strokeWidth="2"
             fill="#0284C7"
-            fillOpacity="0.25"
+            fillOpacity="0.3"
           />
 
           {/* Lõi năng lượng trung tâm phát sáng cực mạnh (Core Reactor) */}
@@ -230,7 +229,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           />
 
           {/* Các vạch nan hoa tỏa từ tâm (Radial HUD Ticks) */}
-          <g stroke="#00E5FF" strokeWidth="1" strokeOpacity="0.5">
+          <g stroke="#00E5FF" strokeWidth="1" strokeOpacity="0.6">
             <line x1="165" y1="275" x2="190" y2="275" />
             <line x1="330" y1="275" x2="355" y2="275" />
             <line x1="260" y1="240" x2="260" y2="249" />
@@ -251,9 +250,9 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           />
 
           {/* Các tia sáng thẳng đứng mỏng (Vertical Laser Beams) */}
-          <g stroke="#00E5FF" strokeWidth="1" strokeOpacity="0.6">
+          <g stroke="#00E5FF" strokeWidth="1" strokeOpacity="0.65">
             <line x1="240" y1="275" x2="230" y2="110" strokeDasharray="30 8" />
-            <line x1="260" y1="275" x2="260" y2="80" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.85" />
+            <line x1="260" y1="275" x2="260" y2="80" stroke="#FFFFFF" strokeWidth="1.5" strokeOpacity="0.9" />
             <line x1="280" y1="275" x2="290" y2="110" strokeDasharray="30 8" />
           </g>
         </g>
@@ -264,7 +263,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
         <g id="hologram-circuit-network">
           
           {/* --- CÁC ĐƯỜNG MẠCH ĐIỆN TỬ NỐI TỪ BỆ ĐÀI RA 6 NODE --- */}
-          <g stroke="#00E5FF" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.85">
+          <g stroke="#00E5FF" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.9">
             {/* Mạch 1: Ra Node Top-Left (Ổ khóa) */}
             <path d="M 195 245 L 165 215 L 135 215" strokeDasharray="4 2" />
             {/* Mạch 2: Ra Node Far-Left (Bóng đèn) */}
@@ -299,7 +298,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <ellipse cx="135" cy="225" rx="18" ry="6" stroke="#00E5FF" strokeWidth="1.2" fill="none" filter="url(#holo-node-glow)" />
             {/* Hộp phát sáng & Icon Ổ khóa $ */}
             <g transform="translate(135, 202)">
-              <circle cx="0" cy="0" r="14" fill="#0284C7" fillOpacity="0.4" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
+              <circle cx="0" cy="0" r="14" fill="#0284C7" fillOpacity="0.45" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
               {/* Shackle */}
               <path d="M -4 -1 L -4 -6 A 4 4 0 0 1 4 -6 L 4 -1" stroke="#FFFFFF" strokeWidth="1.4" fill="none" strokeLinecap="round" />
               {/* Body */}
@@ -318,7 +317,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <ellipse cx="50" cy="264" rx="20" ry="7" stroke="#00E5FF" strokeWidth="1.4" fill="none" filter="url(#holo-node-glow)" />
             {/* Icon Bóng đèn */}
             <g transform="translate(50, 238)">
-              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.4" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
+              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.45" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
               {/* Bulb shape */}
               <path
                 d="M -5 3 C -7 1 -8 -2 -8 -5 C -8 -9.5 -4.5 -13 0 -13 C 4.5 -13 8 -9.5 8 -5 C 8 -2 7 1 5 3 L 4 6 L -4 6 Z"
@@ -343,7 +342,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <ellipse cx="95" cy="340" rx="20" ry="7" stroke="#00E5FF" strokeWidth="1.4" fill="none" filter="url(#holo-node-glow)" />
             {/* Icon 3 Bánh răng mini */}
             <g transform="translate(95, 314)">
-              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.4" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
+              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.45" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
               {/* Gear 1 */}
               <circle cx="-3" cy="-3" r="5" fill="#00E5FF" stroke="#FFFFFF" strokeWidth="0.8" strokeDasharray="3 1.5" />
               <circle cx="-3" cy="-3" r="1.8" fill="#0F172A" />
@@ -365,7 +364,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <ellipse cx="385" cy="225" rx="18" ry="6" stroke="#00E5FF" strokeWidth="1.2" fill="none" filter="url(#holo-node-glow)" />
             {/* Icon Megaphone */}
             <g transform="translate(385, 202)">
-              <circle cx="0" cy="0" r="14" fill="#0284C7" fillOpacity="0.4" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
+              <circle cx="0" cy="0" r="14" fill="#0284C7" fillOpacity="0.45" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
               {/* Thân loa */}
               <path d="M 4 -5 L -2 -2 L -5 -2 L -5 3 L -2 3 L 4 6 Z" fill="#00E5FF" stroke="#FFFFFF" strokeWidth="0.8" />
               <path d="M -3 3 L -3 7 L -1 7 L -1 3" fill="#38BDF8" stroke="#FFFFFF" strokeWidth="0.6" />
@@ -384,7 +383,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <ellipse cx="470" cy="264" rx="20" ry="7" stroke="#00E5FF" strokeWidth="1.4" fill="none" filter="url(#holo-node-glow)" />
             {/* Icon 3 Người */}
             <g transform="translate(470, 238)">
-              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.4" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
+              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.45" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
               {/* Người phụ trái */}
               <circle cx="-5.5" cy="-3.5" r="2.3" fill="#7DD3FC" />
               <path d="M -9 5 C -9 2.5 -7 1 -5.5 1 C -4 1 -2 2.5 -2 5 Z" fill="#7DD3FC" />
@@ -406,7 +405,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <ellipse cx="425" cy="340" rx="20" ry="7" stroke="#00E5FF" strokeWidth="1.4" fill="none" filter="url(#holo-node-glow)" />
             {/* Icon Não bộ AI */}
             <g transform="translate(425, 314)">
-              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.4" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
+              <circle cx="0" cy="0" r="15" fill="#0284C7" fillOpacity="0.45" stroke="#00E5FF" strokeWidth="1.5" filter="url(#holo-node-glow)" />
               {/* Bán cầu não trái */}
               <path
                 d="M -1 -7 C -4 -7 -7 -5 -7 -2 C -7 -0.5 -6 0.5 -5 1 C -6 2 -7 3.5 -7 5 C -7 7.5 -4.5 8 -1 8"
@@ -462,8 +461,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
               <animateTransform
                 attributeName="transform"
                 type="rotate"
-                from="22.5 0 0"
-                to="382.5 0 0"
+                from="12.6 0 0"
+                to="372.6 0 0"
                 dur="12s"
                 repeatCount="indefinite"
               />
@@ -493,8 +492,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
               <animateTransform
                 attributeName="transform"
                 type="rotate"
-                from="0 0 0"
-                to="-360 0 0"
+                from="-3.8 0 0"
+                to="-363.8 0 0"
                 dur="12s"
                 repeatCount="indefinite"
               />
@@ -524,8 +523,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
               <animateTransform
                 attributeName="transform"
                 type="rotate"
-                from="0 0 0"
-                to="-360 0 0"
+                from="29.0 0 0"
+                to="-331.0 0 0"
                 dur="12s"
                 repeatCount="indefinite"
               />
