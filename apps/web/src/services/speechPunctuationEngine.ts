@@ -94,7 +94,7 @@ const LOANWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\b(sét\s*tanh|xét\s*ting|xét\s*tinh)\b/gi, replacement: 'setting' },
   { pattern: /\b(xíp\s*hàng|xíp\s*pinh)\b/gi, replacement: 'ship hàng' },
   { pattern: /\b(con\s*phơm|công\s*phơm)\b/gi, replacement: 'confirm' },
-  { pattern: /\b(ken\s*xồ|can\s*xồ|hủy\s*kèo)\b/gi, replacement: 'cancel' },
+  { pattern: /\b(ken\s*xồ|can\s*xồ)\b/gi, replacement: 'cancel' },
   { pattern: /\b(on\s*lai)\b/gi, replacement: 'online' },
   { pattern: /\b(ọp\s*lai)\b/gi, replacement: 'offline' },
   { pattern: /\b(lai\s*trym|lai\s*trim)\b/gi, replacement: 'livestream' },
@@ -208,16 +208,16 @@ const ECONOMY_FINANCE_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /(?<=^|[^\p{L}\p{N}])(lệnh\s*l\s*o|lệnh\s*en\s*ô)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'lệnh LO' },
 
   // Phân loại nợ ngân hàng
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 1 (nợ đủ tiêu chuẩn)' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 2 (nợ cần chú ý)' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:ba|3))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 3 (nợ dưới tiêu chuẩn)' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:bốn|4))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 4 (nợ nghi ngờ)' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:năm|5))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 5 (nợ có khả năng mất vốn)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:một|1))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:hai|2))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:ba|3))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 3' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:bốn|4))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 4' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(nợ\s*xấu\s*nhóm\s*(?:năm|5))(?=[^\p{L}\p{N}]|$)/giu, replacement: 'nợ nhóm 5' },
 
   // Quản trị doanh nghiệp
-  { pattern: /(?<=^|[^\p{L}\p{N}])(đại\s*hội\s*đồng\s*cổ\s*đông|đ\s*h\s*đ\s*c\s*đ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ĐHĐCĐ' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(hội\s*đồng\s*quản\s*trị|h\s*đ\s*q\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HĐQT' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(ban\s*kiểm\s*soát|b\s*k\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BKS' }
+  { pattern: /(?<=^|[^\p{L}\p{N}])(đ\s*h\s*đ\s*c\s*đ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ĐHĐCĐ' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(h\s*đ\s*q\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HĐQT' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(b\s*k\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BKS' }
 ];
 
 // ============================================================================
@@ -225,11 +225,11 @@ const ECONOMY_FINANCE_RULES: Array<{ pattern: RegExp; replacement: string }> = [
 // ============================================================================
 const LEGAL_ADMIN_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Cơ quan tư pháp, chức danh tố tụng
-  { pattern: /(?<=^|[^\p{L}\p{N}])(hát\s*đê\s*ích\s*ích|h\s*đ\s*x\s*x|hội\s*đồng\s*xét\s*xử)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HĐXX' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(vi\s*ác|vê\s*y\s*a\s*xê|v\s*i\s*a\s*c|trọng\s*tài\s*viac)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VIAC' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(viện\s*kiểm\s*sát\s*nhân\s*dân|v\s*k\s*s\s*n\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VKSND' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(tòa\s*án\s*nhân\s*dân|t\s*a\s*n\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'TAND' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(cơ\s*quan\s*thi\s*hành\s*án\s*dân\s*sự|t\s*h\s*a\s*d\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'THADS' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(hát\s*đê\s*ích\s*ích|h\s*đ\s*x\s*x)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'HĐXX' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(vi\s*ác|vê\s*y\s*a\s*xê|v\s*i\s*a\s*c)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VIAC' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(v\s*k\s*s\s*n\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'VKSND' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(t\s*a\s*n\s*d)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'TAND' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(t\s*h\s*a\s*d\s*s)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'THADS' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(thẩm\s*phán\s*chủ\s*tọa)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Thẩm phán chủ tọa' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(hội\s*thẩm\s*nhân\s*dân)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Hội thẩm nhân dân' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(kiểm\s*sát\s*viên)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'Kiểm sát viên' },
@@ -271,9 +271,9 @@ const LEGAL_ADMIN_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /(?<=^|[^\p{L}\p{N}])(q\s*c\s*v\s*n|quy\s*chuẩn\s*quốc\s*gia)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'QCVN' },
 
   // Hợp đồng & Doanh nghiệp
-  { pattern: /(?<=^|[^\p{L}\p{N}])(en\s*đi\s*a|n\s*d\s*a|thỏa\s*thuận\s*bảo\s*mật)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'NDA (thỏa thuận bảo mật)' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*r\s*c|e\s*rờ\s*xê|giấy\s*phép\s*đăng\s*ký\s*doanh\s*nghiệp)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ERC (Đăng ký doanh nghiệp)' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(i\s*r\s*c|i\s*rờ\s*xê|giấy\s*chứng\s*nhận\s*đầu\s*tư)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'IRC (Chứng nhận đầu tư)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(en\s*đi\s*a|n\s*d\s*a)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'NDA' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(e\s*r\s*c|e\s*rờ\s*xê)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ERC' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(i\s*r\s*c|i\s*rờ\s*xê)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'IRC' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(mã\s*số\s*thuế|m\s*s\s*t)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'mã số thuế' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(điều\s*khoản\s*bất\s*khả\s*kháng|phốt\s*ma\s*dơ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'điều khoản bất khả kháng' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(phạt\s*vi\s*phạm\s*hợp\s*đồng)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'phạt vi phạm hợp đồng' },
@@ -326,7 +326,7 @@ const LIFE_SOCIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /(?<=^|[^\p{L}\p{N}])(mô\s*mô|ví\s*mo\s*mo)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'MoMo' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(gia\s*lô\s*pay|da\s*lô\s*pay|zalo\s*pay)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ZaloPay' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(su\s*pi\s*pay|sô\s*pi\s*pay|shopee\s*pay)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'ShopeePay' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(mua\s*trước\s*trả\s*sau|b\s*n\s*p\s*l)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'mua trước trả sau (BNPL)' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(b\s*n\s*p\s*l)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'BNPL' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(thẻ\s*tín\s*dụng\s*quốc\s*tế)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thẻ tín dụng quốc tế' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(thẻ\s*ghi\s*nợ)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'thẻ ghi nợ' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(trả\s*góp\s*không\s*phần\s*trăm|trả\s*góp\s*0\s*phần\s*trăm)(?=[^\p{L}\p{N}]|$)/giu, replacement: 'trả góp 0%' },
@@ -531,22 +531,11 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
   { pattern: /\b(dõ\s*ràng)\b/gi, replacement: 'rõ ràng' },
   { pattern: /\b(rải\s*quyết)\b/gi, replacement: 'giải quyết' },
   { pattern: /\b(dán\s*tiếp)\b/gi, replacement: 'gián tiếp' },
-
-  // Từ địa phương miền Trung & Nam khi nói nhanh
-  { pattern: /\b(hôm\s*ni)\b/gi, replacement: 'hôm nay' },
-  { pattern: /\b(bây\s*chừ)\b/gi, replacement: 'bây giờ' },
-  { pattern: /\b(làm\s*chi)\b/gi, replacement: 'làm gì' },
-  { pattern: /\b(mần\s*răng)\b/gi, replacement: 'làm sao' },
-  { pattern: /\b(răng\s*rứa)\b/gi, replacement: 'sao thế' },
-  { pattern: /\b(chi\s*mô)\b/gi, replacement: 'gì đâu' },
-  { pattern: /\b(thiệt\s*tình)\b/gi, replacement: 'thật tình' },
   { pattern: /\b(dấn\s*đề)\b/gi, replacement: 'vấn đề' }
 ];
 
-// 7. Lọc từ đệm thừa thãi khi ngập ngừng (Speech Fillers)
-const SPEECH_FILLER_RULES: Array<{ pattern: RegExp; replacement: string }> = [
-  { pattern: /(?:^|\s)(?:ừm|à\s*ừm|ờ\s*thì|uhm|uh|thì\s*là\s*mà)(?=\s|$)/gi, replacement: ' ' }
-];
+// 7. Từ đệm khi nói (được giữ nguyên để phản ánh trung thực lời nói của người dùng)
+const SPEECH_FILLER_RULES: Array<{ pattern: RegExp; replacement: string }> = [];
 
 // 8. Tự động chèn dấu phẩy sau các liên từ và trạng ngữ chuyển ý trong giao tiếp/hội họp
 const TRANSITION_DISCOURSE_MARKERS = [
@@ -753,12 +742,62 @@ export function processRealtimeSpeechPunctuation(
   // 13. Viết hoa chữ cái đầu tiên và sau các dấu chấm/chấm hỏi/chấm than/xuống dòng
   text = autoCapitalizeSentences(text);
 
+  // 14. Tự động tách đoạn nếu chứa các ý dài hoàn chỉnh (Paragraph Segmentation)
+  if (opts.isFinal) {
+    text = formatParagraphSegmentation(text, 30);
+  }
+
   // Đảm bảo sau khi viết hoa các từ nhạy cảm vẫn được ẩn sạch sẽ
   if (opts.maskSensitive !== false) {
     text = maskSensitiveWords(text, { style: opts.sensitiveMaskStyle || 'asterisks' });
   }
 
   return text.trim();
+}
+
+/**
+ * Tự động phân đoạn văn bản (Paragraph Segmentation):
+ * - Giữ nguyên các điểm ngắt đoạn do khẩu lệnh ("xuống đoạn", "ngắt đoạn", "đoạn mới" -> \n\n)
+ * - Tự động tách đoạn khi một ý/câu hoàn chỉnh (. ? !) đạt độ dài phù hợp (25-35 từ)
+ * giúp văn bản trình bày rõ ràng, khoa học, dễ đọc như phụ đề trực tiếp
+ */
+export function formatParagraphSegmentation(text: string, wordsPerParagraph: number = 30): string {
+  if (!text) return '';
+
+  const paragraphs = text.split(/\n\s*\n/);
+  const formattedParagraphs: string[] = [];
+
+  for (const para of paragraphs) {
+    const trimmedPara = para.trim();
+    if (!trimmedPara) continue;
+
+    const sentences = trimmedPara.split(/(?<=[.?!])\s+/).filter(Boolean);
+    if (sentences.length <= 1) {
+      formattedParagraphs.push(trimmedPara);
+      continue;
+    }
+
+    let currentChunk: string[] = [];
+    let currentWordCount = 0;
+
+    for (const sent of sentences) {
+      const sentWords = sent.split(/\s+/).filter(Boolean).length;
+      if (currentChunk.length > 0 && (currentWordCount + sentWords > wordsPerParagraph)) {
+        formattedParagraphs.push(currentChunk.join(' '));
+        currentChunk = [sent];
+        currentWordCount = sentWords;
+      } else {
+        currentChunk.push(sent);
+        currentWordCount += sentWords;
+      }
+    }
+
+    if (currentChunk.length > 0) {
+      formattedParagraphs.push(currentChunk.join(' '));
+    }
+  }
+
+  return formattedParagraphs.join('\n\n');
 }
 
 /**
@@ -849,37 +888,29 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   const prevNorm = stripPunct(prev);
   const nextNorm = stripPunct(next);
 
+  // Nội dung hoàn toàn giống nhau -> giữ prev
   if (prevNorm === nextNorm) {
     return prev;
   }
 
-  if (nextNorm.startsWith(prevNorm)) {
+  // Câu mới là bản mở rộng bắt đầu bằng câu cũ -> nhận câu mới
+  if (nextNorm.startsWith(prevNorm) && prevNorm.length >= 4) {
     return next;
   }
 
-  if (prevNorm.endsWith(nextNorm) || prevNorm.includes(nextNorm)) {
+  // Đuôi câu cũ giống hệt câu mới và câu mới chỉ có 1 từ ngắn (hiện tượng dội âm)
+  if (prevNorm.endsWith(nextNorm) && nextNorm.split(' ').length <= 1) {
     return prev;
   }
 
-  const sentences = prev.split(/(?<=[.?!…\n])\s+/).filter(Boolean);
-  if (sentences.length > 1) {
-    const lastSentence = sentences[sentences.length - 1].trim();
-    const lastSentNorm = stripPunct(lastSentence);
-
-    if (lastSentNorm && (nextNorm.startsWith(lastSentNorm) || nextNorm === lastSentNorm)) {
-      const allPrevSentences = sentences.slice(0, sentences.length - 1).join(' ');
-      const separator = allPrevSentences.endsWith('\n') ? '' : ' ';
-      return `${allPrevSentences}${separator}${next}`;
-    }
-  }
-
+  // Kiểm tra overlap giữa đuôi câu trước và đầu câu sau (từ 2 đến 15 từ)
   const prevWords = prev.split(/\s+/);
   const nextWords = next.split(/\s+/);
   const prevNormWords = prevWords.map(w => stripPunct(w)).filter(Boolean);
   const nextNormWords = nextWords.map(w => stripPunct(w)).filter(Boolean);
 
   let maxOverlap = 0;
-  const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 60);
+  const maxCheck = Math.min(prevNormWords.length, nextNormWords.length, 15);
 
   for (let k = maxCheck; k >= 2; k--) {
     const prevSuffix = prevNormWords.slice(prevNormWords.length - k).join(' ');
@@ -897,7 +928,8 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
     return `${prev}${separator}${remainingWords}`;
   }
 
-  const separator = prev.endsWith('\n') ? '' : ' ';
+  // Ghép nối tự nhiên với dấu ngắt câu thích hợp
+  const separator = prev.endsWith('\n') ? '' : (/[.?!:;]$/.test(prev) ? ' ' : '. ');
   return `${prev}${separator}${next}`;
 }
 

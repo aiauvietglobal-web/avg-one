@@ -1612,27 +1612,7 @@ export const SpeechToTextModule: React.FC = () => {
     if (!rawText || !rawText.trim()) return;
     const textToCommit = rawText.trim();
 
-    // 1. Chặn tuyệt đối hiện tượng lặp văn bản bằng bộ đệm dấu vân tay âm thanh 8 giây
-    const norm = textToCommit.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-    if (!norm) return;
-
-    const now = Date.now();
-    for (const [pastNorm, pastTime] of recentlyCommittedUtterancesRef.current.entries()) {
-      if (now - pastTime < 8000) {
-        if (pastNorm === norm || pastNorm.endsWith(norm) || norm.endsWith(pastNorm) || isNearDuplicateUtterance(pastNorm, norm)) {
-          return;
-        }
-      }
-    }
-    recentlyCommittedUtterancesRef.current.set(norm, now);
-
-    // Dọn dẹp cache cũ > 25s
-    if (recentlyCommittedUtterancesRef.current.size > 40) {
-      for (const [k, t] of recentlyCommittedUtterancesRef.current.entries()) {
-        if (now - t > 25000) recentlyCommittedUtterancesRef.current.delete(k);
-      }
-    }
-
+    // Chuẩn hóa, bổ sung dấu câu tự nhiên và phân đoạn rõ ràng
     const enhancedText = enhanceVietnameseTranscript(textToCommit, false, isFinalUtterance);
     if (!enhancedText) return;
 
@@ -1673,37 +1653,34 @@ export const SpeechToTextModule: React.FC = () => {
       }
 
       const lastMsg = prev[prev.length - 1];
+      const normLast = (lastMsg.text || '').toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const normNew = enhancedText.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
 
-      // Deep containment check on lastMsg:
-      const lastNorm = (lastMsg.text || '').toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-      if (lastNorm === norm || lastNorm.endsWith(norm) || (norm.length < lastNorm.length && lastNorm.includes(norm))) {
+      // Tránh lặp lại đúng 1 câu duy nhất vừa được ghi trong tích tắc
+      if (normLast === normNew) {
         return prev;
       }
 
-      // Nếu tin nhắn cuối là bản tiền thân của câu mới (ví dụ do interim timer hoặc bổ sung từ mới)
-      if (lastMsg.sender === 'HEARING' && norm.startsWith(lastNorm) && lastNorm.length >= 5) {
+      // Nếu câu trước là bản ngắt dở do silence timer và câu mới bao hàm toàn bộ câu trước -> cập nhật hoàn thiện
+      if (lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id && normNew.startsWith(normLast) && normLast.length >= 4) {
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...lastMsg,
-          text: enhancedText.trim(),
-          translatedText: translateText(enhancedText.trim(), targetLanguage),
+          text: enhancedText,
+          translatedText: translateText(enhancedText, targetLanguage),
           timestamp: timestampStr,
           date: lastMsg.date || dateStr
         };
         return updated;
       }
 
-      // Cùng một người đang nói:
+      // Cùng một người đang nói: kiểm tra tách đoạn (Paragraph Segmentation)
       if (lastMsg && lastMsg.sender === 'HEARING' && lastMsg.speakerId === currentSpk.id) {
         const lastMsgWordCount = (lastMsg.text || '').split(/\s+/).filter(Boolean).length;
-        
-        // Nếu tin nhắn trước đã đủ dài (>= 28 từ) và đã kết thúc câu, tách ra tin nhắn mới
-        if (lastMsgWordCount >= 28 && /[.?!]$/.test((lastMsg.text || '').trim())) {
-          // BẮT BUỘC lọc sạch phần trùng lặp ở đầu câu mới trước khi tách
-          const stripped = stripPrefixOverlap(lastMsg.text, enhancedText.trim());
-          if (!stripped || stripped.length < 2) {
-            return prev;
-          }
+        const hasExplicitParagraphBreak = enhancedText.includes('\n\n') || (lastMsg.text || '').endsWith('\n\n');
+
+        // TÁCH ĐOẠN: Khi tin nhắn trước đã là 1 đoạn hoàn chỉnh (>= 28 từ và có dấu kết câu) hoặc có lệnh xuống đoạn
+        if (hasExplicitParagraphBreak || (lastMsgWordCount >= 28 && /[.?!]$/.test((lastMsg.text || '').trim()))) {
           return [
             ...prev,
             {
@@ -1711,19 +1688,16 @@ export const SpeechToTextModule: React.FC = () => {
               sender: 'HEARING',
               senderName: currentSpk.name,
               speakerId: currentSpk.id,
-              text: stripped,
-              translatedText: translateText(stripped, targetLanguage),
+              text: enhancedText,
+              translatedText: translateText(enhancedText, targetLanguage),
               timestamp: timestampStr,
               date: dateStr
             }
           ];
         }
 
-        // Khử trùng lặp 100% và nối tiếp văn bản vào đoạn hiện tại
-        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText.trim());
-        if (mergedText === lastMsg.text) {
-          return prev;
-        }
+        // Nối tiếp tự nhiên vào đoạn hiện tại
+        const mergedText = mergeSpeechWithoutOverlap(lastMsg.text, enhancedText);
         const updated = [...prev];
         updated[updated.length - 1] = {
           ...lastMsg,
@@ -1735,11 +1709,7 @@ export const SpeechToTextModule: React.FC = () => {
         return updated;
       }
 
-      // Khác người nói: tạo phân đoạn/tin nhắn mới, LUÔN khử phần trùng lặp đầu câu
-      const stripped = stripPrefixOverlap(lastMsg.text, enhancedText.trim());
-      if (!stripped || stripped.length < 2) {
-        return prev;
-      }
+      // Khác người nói: tạo phân đoạn hội thoại mới của người nói mới
       return [
         ...prev,
         {
@@ -1747,8 +1717,8 @@ export const SpeechToTextModule: React.FC = () => {
           sender: 'HEARING',
           senderName: currentSpk.name,
           speakerId: currentSpk.id,
-          text: stripped,
-          translatedText: translateText(stripped, targetLanguage),
+          text: enhancedText,
+          translatedText: translateText(enhancedText, targetLanguage),
           timestamp: timestampStr,
           date: dateStr
         }
@@ -1784,46 +1754,11 @@ export const SpeechToTextModule: React.FC = () => {
         setRecognitionError(null);
       };
 
-      // Thuật toán chấm điểm chọn candidate tối ưu nhất trong các alternatives của Web Speech API
+      // Luôn lấy giả thuyết âm học tốt nhất (beam hypothesis 0) từ Web Speech API
+      // Không can thiệp điểm tùy tiện để đảm bảo chính xác 100% lời nói thực tế của người dùng
       const pickOptimalAlternative = (alternatives: any[]): string => {
         if (!alternatives || alternatives.length === 0) return '';
-        if (alternatives.length === 1) return alternatives[0]?.transcript || '';
-
-        let bestCandidate = alternatives[0]?.transcript || '';
-        let highestScore = -999;
-
-        for (let a = 0; a < alternatives.length; a++) {
-          const candidate = alternatives[a];
-          const text = (candidate?.transcript || '').trim();
-          if (!text) continue;
-
-          let score = (typeof candidate.confidence === 'number' && candidate.confidence > 0)
-            ? candidate.confidence * 10
-            : (10 - a * 1.5); // Thứ tự ưu tiên mặc định của Chromium
-
-          // 1. Điểm cộng cho dấu thanh tiếng Việt đầy đủ và chuẩn xác
-          const toneMatches = text.match(/[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/gi);
-          if (toneMatches) {
-            score += Math.min(5, toneMatches.length * 0.5);
-          }
-
-          // 2. Điểm cộng cao cho các thuật ngữ doanh nghiệp, ERP, kế toán và AVG One
-          if (/AVG|Á Âu Việt|ERP|BOM|CRM|HRM|KPI|OKR|PO|PR|SO|VAT|lệnh sản xuất|xuất kho|nhập kho|nghiệm thu|hóa đơn|công nợ|hợp đồng|thông số|kỹ thuật|kiểm kê|tiêu chuẩn/i.test(text)) {
-            score += 8;
-          }
-
-          // 3. Phạt nếu câu bị cụt 1-2 ký tự rác
-          if (text.length <= 2 && text.length < bestCandidate.length) {
-            score -= 4;
-          }
-
-          if (score > highestScore) {
-            highestScore = score;
-            bestCandidate = text;
-          }
-        }
-
-        return bestCandidate;
+        return (alternatives[0]?.transcript || '').trim();
       };
 
       recognition.onresult = (event: any) => {
@@ -1831,29 +1766,22 @@ export const SpeechToTextModule: React.FC = () => {
         let newFinalTranscript = '';
         let interimTranscriptText = '';
 
-        // Quét kết quả trả về từ Chromium Speech Recognition với tracking chỉ mục chính xác
-        for (let i = 0; i < event.results.length; ++i) {
+        // Đọc tuần tự theo chuẩn resultIndex của Web Speech API
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
           const res = event.results[i];
           if (!res || !res[0]) continue;
 
-          // Chọn candidate tối ưu nhất trong các alternatives
           const bestText = pickOptimalAlternative(Array.from(res));
+          if (!bestText) continue;
 
           if (res.isFinal) {
-            if (i >= processedFinalIndexRef.current) {
-              newFinalTranscript += (newFinalTranscript ? ' ' : '') + bestText.trim();
-              processedFinalIndexRef.current = i + 1;
-            }
+            newFinalTranscript += (newFinalTranscript ? ' ' : '') + bestText;
           } else {
-            if (i >= processedFinalIndexRef.current) {
-              interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText.trim();
-            }
+            interimTranscriptText += (interimTranscriptText ? ' ' : '') + bestText;
           }
         }
 
-        const lastCommitted = (lastHearingMsgTextRef.current || '').trim();
-
-        // 1. Nếu có kết quả chính thức (isFinal), khử trùng lặp và lưu ngay vào danh sách hội thoại
+        // 1. Nếu có kết quả chính thức (isFinal), lưu ngay vào danh sách hội thoại
         if (newFinalTranscript.trim()) {
           if (silenceCommitTimerRef.current) {
             clearTimeout(silenceCommitTimerRef.current);
@@ -1863,77 +1791,33 @@ export const SpeechToTextModule: React.FC = () => {
           lastInterimRef.current = '';
           setInterimTranscript('');
 
-          let textToCommit = newFinalTranscript.trim();
-          if (lastCommitted) {
-            const normLast = lastCommitted.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-            const normFinal = textToCommit.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-
-            if (normLast === normFinal || normLast.endsWith(normFinal) || (normFinal.length < normLast.length && normLast.includes(normFinal))) {
-              textToCommit = '';
-            } else if (normFinal.startsWith(normLast)) {
-              textToCommit = stripPrefixOverlap(lastCommitted, textToCommit);
-            } else {
-              textToCommit = stripPrefixOverlap(lastCommitted, textToCommit);
-            }
-          }
-
-          if (textToCommit && textToCommit.length >= 2) {
-            commitTranscriptToMessage(textToCommit, true);
-          }
+          commitTranscriptToMessage(newFinalTranscript.trim(), true);
         }
 
-        // 2. Xử lý văn bản tạm thời (interim): Khử triệt để phần trùng lặp với tin nhắn đã chốt
+        // 2. Xử lý văn bản phụ đề trực tiếp thời gian thực (Live Subtitle / Interim):
         if (interimTranscriptText.trim()) {
-          let cleanInterim = interimTranscriptText.trim();
-          if (lastCommitted) {
-            const normLast = lastCommitted.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-            const normInterim = cleanInterim.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
+          const rawInterim = interimTranscriptText.trim();
+          accumulatedInterimRef.current = rawInterim;
+          lastInterimRef.current = rawInterim;
+          
+          // Hiển thị trực tiếp phụ đề đang chuyển đổi
+          const formattedInterim = enhanceVietnameseTranscript(rawInterim, false, false);
+          setInterimTranscript(formattedInterim);
 
-            // Nếu toàn bộ interim là câu cũ hoặc là phần đuôi của câu cũ, bỏ qua không hiển thị lại
-            if (normLast === normInterim || normLast.endsWith(normInterim) || (normInterim.length < normLast.length && normLast.includes(normInterim))) {
-              cleanInterim = '';
-            } else if (normInterim.startsWith(normLast)) {
-              cleanInterim = stripPrefixOverlap(lastCommitted, cleanInterim);
-            } else {
-              cleanInterim = stripPrefixOverlap(lastCommitted, cleanInterim);
-            }
+          // BỘ ĐỆM TỰ ĐỘNG CHỐT LỜI KHI NGỪNG NÓI (1.5 giây)
+          if (silenceCommitTimerRef.current) {
+            clearTimeout(silenceCommitTimerRef.current);
           }
-
-          if (cleanInterim && cleanInterim.length >= 2) {
-            accumulatedInterimRef.current = cleanInterim;
-            lastInterimRef.current = cleanInterim;
-            const formattedInterim = enhanceVietnameseTranscript(cleanInterim, false, false);
-            setInterimTranscript(formattedInterim);
-
-            // BỘ ĐỆM TỰ ĐỘNG CHỐT LỜI THỜI GIAN THỰC (REAL-TIME COMMIT TIMER):
-            // Chốt văn bản hội thoại trực tiếp ngay khi ngừng nói sau 1.5 giây
-            if (silenceCommitTimerRef.current) {
-              clearTimeout(silenceCommitTimerRef.current);
+          silenceCommitTimerRef.current = setTimeout(() => {
+            const pending = accumulatedInterimRef.current.trim();
+            if (pending) {
+              accumulatedInterimRef.current = '';
+              lastInterimRef.current = '';
+              setInterimTranscript('');
+              commitTranscriptToMessage(pending, true);
             }
-            silenceCommitTimerRef.current = setTimeout(() => {
-              if (accumulatedInterimRef.current.trim()) {
-                let textToSave = accumulatedInterimRef.current.trim();
-                const latestCommitted = (lastHearingMsgTextRef.current || '').trim();
-                if (latestCommitted) {
-                  textToSave = stripPrefixOverlap(latestCommitted, textToSave);
-                }
-                accumulatedInterimRef.current = '';
-                lastInterimRef.current = '';
-                setInterimTranscript('');
-                if (textToSave && textToSave.length >= 2) {
-                  processedFinalIndexRef.current = event.results.length;
-                  commitTranscriptToMessage(textToSave, true);
-                }
-              }
-            }, 1500);
-          } else {
-            // Không còn nội dung mới -> dọn sạch preview để tránh trùng lặp
-            accumulatedInterimRef.current = '';
-            lastInterimRef.current = '';
-            setInterimTranscript('');
-          }
+          }, 1500);
         } else if (!newFinalTranscript.trim()) {
-          // Tránh xóa vội preview nếu chưa có nội dung mới
           if (!accumulatedInterimRef.current) {
             setInterimTranscript('');
           }

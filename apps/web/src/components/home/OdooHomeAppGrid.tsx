@@ -189,98 +189,62 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
           {/* 1. NỀN TẢNG SỐ (TOP-LEFT) - BẢN VẼ KỸ THUẬT BLUEPRINT PHÁ CÁCH */}
           <div className="hidden lg:flex absolute left-4 xl:left-14 top-4 xl:top-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-1 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '150ms' }}>
-            {/* Multi-Tier 3D Isometric Bedrock Architecture Icon with Glassmorphism Pedestal */}
-            <div className="relative w-22 h-22 sm:w-24 sm:h-24 xl:w-28 xl:h-28 flex items-center justify-center shrink-0 group-hover:scale-105 transition-all duration-300">
-              {/* Lớp hào quang ambient glow nền mờ sang trọng */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-500/12 via-sky-400/6 to-transparent dark:from-sky-500/20 dark:via-sky-400/8 dark:to-transparent border border-sky-400/25 dark:border-sky-400/35 backdrop-blur-xs shadow-[0_8px_24px_rgba(2,132,199,0.12)] -z-10 group-hover:border-sky-400/45 group-hover:shadow-[0_12px_32px_rgba(2,132,199,0.24)] transition-all duration-300" />
-              
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5 overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.28)] dark:drop-shadow-[0_4px_22px_rgba(56,189,248,0.35)]">
-                <defs>
-                  <linearGradient id="plat-top-3" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.55" />
-                    <stop offset="100%" stopColor="#0284C7" stopOpacity="0.3" />
-                  </linearGradient>
-                  <linearGradient id="plat-top-2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00A8E8" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#0369A1" stopOpacity="0.2" />
-                  </linearGradient>
-                  <linearGradient id="plat-top-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0284C7" stopOpacity="0.32" />
-                    <stop offset="100%" stopColor="#075985" stopOpacity="0.18" />
-                  </linearGradient>
-                  <linearGradient id="plat-side" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#0369A1" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="#075985" stopOpacity="0.8" />
-                  </linearGradient>
-                  <radialGradient id="plat-glow" cx="50%" cy="30%" r="50%">
-                    <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-
+            {/* Multi-Tier 3D Isometric Bedrock Architecture Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
                 {/* Vòng chuẩn tọa độ kỹ thuật mờ bên dưới */}
-                <circle cx="50" cy="50" r="44" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 6" opacity="0.35" className="dark:stroke-sky-400" />
-                <line x1="50" y1="3" x2="50" y2="8" stroke="#0284C7" strokeWidth="1.4" opacity="0.5" className="dark:stroke-sky-400" />
-                <line x1="50" y1="92" x2="50" y2="97" stroke="#0284C7" strokeWidth="1.4" opacity="0.5" className="dark:stroke-sky-400" />
-                <line x1="3" y1="50" x2="8" y2="50" stroke="#0284C7" strokeWidth="1.4" opacity="0.5" className="dark:stroke-sky-400" />
-                <line x1="92" y1="50" x2="97" y2="50" stroke="#0284C7" strokeWidth="1.4" opacity="0.5" className="dark:stroke-sky-400" />
+                <circle cx="50" cy="50" r="44" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 6" opacity="0.25" className="dark:stroke-sky-400" />
+                <line x1="50" y1="3" x2="50" y2="9" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+                <line x1="50" y1="91" x2="50" y2="97" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+                <line x1="3" y1="50" x2="9" y2="50" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
+                <line x1="91" y1="50" x2="97" y2="50" stroke="#0284C7" strokeWidth="1.2" opacity="0.4" className="dark:stroke-sky-400" />
 
-                {/* Layer 1: Base Platform Slab (3D Bevel with Gradient Fill) */}
-                <polygon
-                  points="14,64 14,70 50,88 86,70 86,64 50,82"
-                  fill="url(#plat-side)"
-                  stroke="#0284C7"
-                  strokeWidth="1.8"
-                  className="opacity-70"
-                />
+                {/* Layer 1: Base Platform Slab */}
                 <polygon
                   points="50,82 86,64 50,46 14,64"
-                  fill="url(#plat-top-1)"
+                  fill="none"
                   stroke="#0284C7"
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="dark:stroke-sky-400"
+                  className="dark:stroke-sky-400 opacity-40"
+                />
+                <polyline
+                  points="14,64 14,68 50,86 86,68 86,64"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="1.6"
+                  className="dark:stroke-sky-400 opacity-25"
                 />
 
-                {/* Layer 2: Middle Platform Slab (3D Bevel with Gradient Fill) */}
-                <polygon
-                  points="16,49 16,55 50,72 84,55 84,49 50,66"
-                  fill="url(#plat-side)"
-                  stroke="#00A8E8"
-                  strokeWidth="1.8"
-                  className="opacity-80"
-                />
+                {/* Layer 2: Middle Platform Slab */}
                 <polygon
                   points="50,66 84,49 50,32 16,49"
-                  fill="url(#plat-top-2)"
-                  stroke="#00A8E8"
+                  fill="none"
+                  stroke="#0284C7"
                   strokeWidth="2.4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="dark:stroke-sky-400"
+                  className="dark:stroke-sky-400 opacity-75"
+                />
+                <polyline
+                  points="16,49 16,53 50,70 84,53 84,49"
+                  fill="none"
+                  stroke="#0284C7"
+                  strokeWidth="1.6"
+                  className="dark:stroke-sky-400 opacity-30"
                 />
 
-                {/* Layer 3: Top Cyber Core Platform (3D Bevel with Radiant Fill) */}
-                <polygon
-                  points="18,34 18,39 50,55 82,39 82,34 50,50"
-                  fill="url(#plat-side)"
-                  stroke="#38BDF8"
-                  strokeWidth="1.8"
-                />
+                {/* Layer 3: Top Cyber Core Platform */}
                 <polygon
                   points="50,50 82,34 50,18 18,34"
-                  fill="url(#plat-top-3)"
-                  stroke="#38BDF8"
+                  fill="none"
+                  stroke="#00A8E8"
                   strokeWidth="2.6"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="dark:stroke-sky-300"
                 />
-
-                {/* Lưới vi mạch trên mặt trên tầng 3 */}
-                <line x1="34" y1="26" x2="66" y2="42" stroke="#FFFFFF" strokeWidth="1" opacity="0.6" strokeDasharray="2 3" />
-                <line x1="66" y1="26" x2="34" y2="42" stroke="#FFFFFF" strokeWidth="1" opacity="0.6" strokeDasharray="2 3" />
 
                 {/* Vertical Central Data Axis Conduit */}
                 <line
@@ -288,28 +252,28 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                   y1="82"
                   x2="50"
                   y2="18"
-                  stroke="#38BDF8"
-                  strokeWidth="2"
+                  stroke="#0284C7"
+                  strokeWidth="1.8"
                   strokeDasharray="4 4"
-                  className="animate-kinetic-data drop-shadow-[0_0_8px_#38BDF8]"
+                  className="dark:stroke-sky-400 opacity-70 animate-kinetic-data"
                 />
-                {/* Corner Connecting Light Pillars */}
-                <line x1="18" y1="62" x2="18" y2="34" stroke="#00A8E8" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
-                <line x1="82" y1="62" x2="82" y2="34" stroke="#00A8E8" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-60" />
+                {/* Corner Connecting Pillars */}
+                <line x1="18" y1="62" x2="18" y2="34" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-35" />
+                <line x1="82" y1="62" x2="82" y2="34" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-35" />
 
                 {/* Apex AI Core Diamond Star */}
                 <path
-                  d="M 50,5 Q 50,18 37,18 Q 50,18 50,31 Q 50,18 63,18 Q 50,18 50,5 Z"
-                  fill="url(#plat-glow)"
-                  stroke="#FFFFFF"
-                  strokeWidth="2"
+                  d="M 50,6 Q 50,18 38,18 Q 50,18 50,30 Q 50,18 62,18 Q 50,18 50,6 Z"
+                  fill="none"
+                  stroke="#00A8E8"
+                  strokeWidth="2.4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="filter drop-shadow-[0_0_10px_#38BDF8]"
+                  className="dark:stroke-sky-200"
                 />
                 {/* Luminous Central Node */}
-                <circle cx="50" cy="18" r="5" fill="#38BDF8" className="animate-pulse opacity-90 shadow-[0_0_12px_#38BDF8]" />
-                <circle cx="50" cy="18" r="2.2" fill="#FFFFFF" />
+                <circle cx="50" cy="18" r="4.2" fill="#00A8E8" className="dark:fill-sky-300 animate-pulse" />
+                <circle cx="50" cy="18" r="1.8" fill="#FFFFFF" />
               </svg>
             </div>
 
@@ -362,170 +326,116 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               <div className="w-1.5 h-1.5 rotate-45 border border-[#F15A24] bg-white dark:bg-slate-900" />
             </div>
 
-            {/* Interlocking Rotating Gears Assembly Icon With Glassmorphism Pedestal */}
-            <div className="relative w-22 h-22 sm:w-24 sm:h-24 xl:w-28 xl:h-28 flex items-center justify-center shrink-0 group-hover:scale-105 transition-all duration-300">
-              {/* Lớp hào quang ambient glow nền mờ sang trọng */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/12 via-orange-400/6 to-transparent dark:from-orange-500/20 dark:via-orange-400/8 dark:to-transparent border border-orange-400/25 dark:border-orange-400/35 backdrop-blur-xs shadow-[0_8px_24px_rgba(241,90,36,0.12)] -z-10 group-hover:border-orange-400/45 group-hover:shadow-[0_12px_32px_rgba(241,90,36,0.24)] transition-all duration-300" />
-
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5 overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.28)] dark:drop-shadow-[0_4px_22px_rgba(251,146,60,0.35)]">
-                <defs>
-                  <radialGradient id="gear-body-1" cx="42%" cy="48%" r="48%">
-                    <stop offset="0%" stopColor="#FFF7ED" stopOpacity="0.45" />
-                    <stop offset="60%" stopColor="#FDBA74" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#EA580C" stopOpacity="0.15" />
-                  </radialGradient>
-                  <radialGradient id="gear-body-2" cx="78%" cy="68%" r="45%">
-                    <stop offset="0%" stopColor="#FED7AA" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#C2410C" stopOpacity="0.18" />
-                  </radialGradient>
-                  <radialGradient id="gear-body-3" cx="75%" cy="25%" r="45%">
-                    <stop offset="0%" stopColor="#FDBA74" stopOpacity="0.45" />
-                    <stop offset="100%" stopColor="#EA580C" stopOpacity="0.2" />
-                  </radialGradient>
-                </defs>
-
+            {/* Interlocking Rotating Gears Assembly Icon With Precision Compass Scale */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
                 {/* Vành đo góc cơ khí kỹ thuật (Compass Caliper Ring) */}
-                <circle cx="42" cy="48" r="39" stroke="#F15A24" strokeWidth="0.8" strokeDasharray="2 4" opacity="0.4" className="dark:stroke-orange-400" />
-                <line x1="42" y1="5" x2="42" y2="10" stroke="#F15A24" strokeWidth="1.4" opacity="0.6" className="dark:stroke-orange-400" />
-                <line x1="42" y1="86" x2="42" y2="91" stroke="#F15A24" strokeWidth="1.4" opacity="0.6" className="dark:stroke-orange-400" />
-                <line x1="0" y1="48" x2="5" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.6" className="dark:stroke-orange-400" />
-                <line x1="79" y1="48" x2="84" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.6" className="dark:stroke-orange-400" />
+                <circle cx="42" cy="48" r="39" stroke="#F15A24" strokeWidth="0.8" strokeDasharray="2 4" opacity="0.3" className="dark:stroke-orange-400" />
+                <line x1="42" y1="6" x2="42" y2="10" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+                <line x1="42" y1="86" x2="42" y2="90" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+                <line x1="0" y1="48" x2="4" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
+                <line x1="80" y1="48" x2="84" y2="48" stroke="#F15A24" strokeWidth="1.4" opacity="0.5" className="dark:stroke-orange-400" />
 
                 {/* Gear 1: Bánh răng chính (12 răng, quay thuận kim đồng hồ) */}
                 <g className="animate-gear-1">
                   <path
                     d="M 63.6,44.0 L 69.9,45.6 L 69.9,50.4 L 63.6,52.0 L 62.7,55.3 L 67.4,59.9 L 65.0,64.0 L 58.7,62.3 L 56.3,64.7 L 58.0,71.0 L 53.9,73.4 L 49.3,68.7 L 46.0,69.6 L 44.4,75.9 L 39.6,75.9 L 38.0,69.6 L 34.7,68.7 L 30.1,73.4 L 26.0,71.0 L 27.7,64.7 L 25.3,62.3 L 19.0,64.0 L 16.6,59.9 L 21.3,55.3 L 20.4,52.0 L 14.1,50.4 L 14.1,45.6 L 20.4,44.0 L 21.3,40.7 L 16.6,36.1 L 19.0,32.0 L 25.3,33.7 L 27.7,31.3 L 26.0,25.0 L 30.1,22.6 L 34.7,27.3 L 38.0,26.4 L 39.6,20.1 L 44.4,20.1 L 46.0,26.4 L 49.3,27.3 L 53.9,22.6 L 58.0,25.0 L 56.3,31.3 L 58.7,33.7 L 65.0,32.0 L 67.4,36.1 L 62.7,40.7 Z"
-                    fill="url(#gear-body-1)"
+                    fill="none"
                     stroke="#F15A24"
-                    strokeWidth="2.4"
+                    strokeWidth="2.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="dark:stroke-orange-400"
                   />
-                  <circle cx="42" cy="48" r="13" fill="#FFFFFF" fillOpacity="0.4" stroke="#F15A24" strokeWidth="1.8" className="dark:fill-slate-900/60 dark:stroke-orange-400" />
-                  <line x1="42" y1="26" x2="42" y2="70" stroke="#F15A24" strokeWidth="2" strokeLinecap="round" className="dark:stroke-orange-400 opacity-75" />
-                  <line x1="20" y1="48" x2="64" y2="48" stroke="#F15A24" strokeWidth="2" strokeLinecap="round" className="dark:stroke-orange-400 opacity-75" />
-                  <circle cx="42" cy="48" r="6.5" fill="#F97316" stroke="#FFFFFF" strokeWidth="1.6" className="dark:fill-orange-400" />
-                  <circle cx="42" cy="48" r="2.2" fill="#FFFFFF" />
+                  <circle cx="42" cy="48" r="12" fill="none" stroke="#F15A24" strokeWidth="1.8" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="42" y1="26" x2="42" y2="70" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="20" y1="48" x2="64" y2="48" stroke="#F15A24" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <circle cx="42" cy="48" r="6" fill="none" stroke="#F15A24" strokeWidth="2" className="dark:stroke-orange-400" />
+                  <circle cx="42" cy="48" r="3" fill="#F15A24" className="dark:fill-orange-400" />
+                  <circle cx="42" cy="48" r="1.2" fill="#FFFFFF" />
                 </g>
 
                 {/* Gear 2: Bánh răng phụ dưới (8 răng, quay ngược kim đồng hồ, khớp răng liên kết) */}
                 <g className="animate-gear-2">
                   <path
                     d="M 90.9,69.5 L 95.4,72.7 L 93.6,76.9 L 88.2,76.0 L 86.0,78.2 L 86.9,83.6 L 82.7,85.4 L 79.5,80.9 L 76.5,80.9 L 73.3,85.4 L 69.1,83.6 L 70.0,78.2 L 67.8,76.0 L 62.4,76.9 L 60.6,72.7 L 65.1,69.5 L 65.1,66.5 L 60.6,63.3 L 62.4,59.1 L 67.8,60.0 L 70.0,57.8 L 69.1,52.4 L 73.3,50.6 L 76.5,55.1 L 79.5,55.1 L 82.7,50.6 L 86.9,52.4 L 86.0,57.8 L 88.2,60.0 L 93.6,59.1 L 95.4,63.3 L 90.9,66.5 Z"
-                    fill="url(#gear-body-2)"
-                    stroke="#EA580C"
+                    fill="none"
+                    stroke="#F97316"
                     strokeWidth="2.2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="dark:stroke-orange-400"
                   />
-                  <circle cx="78" cy="68" r="8.5" fill="#FFFFFF" fillOpacity="0.4" stroke="#EA580C" strokeWidth="1.6" className="dark:fill-slate-900/60 dark:stroke-orange-400" />
-                  <line x1="78" y1="52" x2="78" y2="84" stroke="#EA580C" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-70" />
-                  <line x1="62" y1="68" x2="94" y2="68" stroke="#EA580C" strokeWidth="1.8" strokeLinecap="round" className="dark:stroke-orange-400 opacity-70" />
-                  <circle cx="78" cy="68" r="5" fill="#EA580C" stroke="#FFFFFF" strokeWidth="1.4" className="dark:fill-orange-400" />
-                  <circle cx="78" cy="68" r="1.8" fill="#FFFFFF" />
+                  <circle cx="78" cy="68" r="8" fill="none" stroke="#F97316" strokeWidth="1.6" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="78" y1="52" x2="78" y2="84" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <line x1="62" y1="68" x2="94" y2="68" stroke="#F97316" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-orange-400 opacity-60" />
+                  <circle cx="78" cy="68" r="4.5" fill="none" stroke="#F97316" strokeWidth="1.8" className="dark:stroke-orange-400" />
+                  <circle cx="78" cy="68" r="2.2" fill="#F97316" className="dark:fill-orange-400" />
+                  <circle cx="78" cy="68" r="0.9" fill="#FFFFFF" />
                 </g>
 
                 {/* Gear 3: Bánh răng phụ trên (7 răng, quay ngược kim đồng hồ, khớp răng trên) */}
                 <g className="animate-gear-3">
                   <path
                     d="M 84.9,26.3 L 88.4,29.2 L 86.6,32.8 L 82.2,31.9 L 80.1,33.6 L 80.1,38.1 L 76.1,39.0 L 74.1,35.0 L 71.5,34.4 L 68.0,37.1 L 64.8,34.6 L 66.7,30.5 L 65.5,28.1 L 61.1,27.0 L 61.1,23.0 L 65.5,21.9 L 66.7,19.5 L 64.8,15.4 L 68.0,12.9 L 71.5,15.6 L 74.1,15.0 L 76.1,11.0 L 80.1,11.9 L 80.1,16.4 L 82.2,18.1 L 86.6,17.2 L 88.4,20.8 L 84.9,23.7 Z"
-                    fill="url(#gear-body-3)"
-                    stroke="#F97316"
+                    fill="none"
+                    stroke="#FB923C"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className="dark:stroke-orange-300"
                   />
-                  <circle cx="75" cy="25" r="5.8" fill="#FFFFFF" fillOpacity="0.4" stroke="#F97316" strokeWidth="1.4" className="dark:fill-slate-900/60 dark:stroke-orange-300" />
-                  <circle cx="75" cy="25" r="3.2" fill="#F97316" stroke="#FFFFFF" strokeWidth="1.2" className="dark:fill-orange-300" />
-                  <circle cx="75" cy="25" r="1.2" fill="#FFFFFF" />
+                  <circle cx="75" cy="25" r="5.5" fill="none" stroke="#FB923C" strokeWidth="1.4" className="dark:stroke-orange-300 opacity-60" />
+                  <circle cx="75" cy="25" r="2.5" fill="#FB923C" className="dark:fill-orange-300" />
+                  <circle cx="75" cy="25" r="1" fill="#FFFFFF" />
                 </g>
 
-                {/* Điểm phát sáng liên kết khớp nối động (Contact Sparks) */}
-                <circle cx="61" cy="58" r="3" fill="#F15A24" className="animate-ping opacity-85" />
-                <circle cx="61" cy="58" r="1.5" fill="#FFFFFF" />
-                <circle cx="58" cy="35" r="2.8" fill="#FB923C" className="animate-ping opacity-85" style={{ animationDelay: '500ms' }} />
-                <circle cx="58" cy="35" r="1.4" fill="#FFFFFF" />
+                {/* Điểm phát sáng liên kết khớp nối động */}
+                <circle cx="61" cy="58" r="1.8" fill="#F15A24" className="animate-ping opacity-75" />
+                <circle cx="58" cy="35" r="1.6" fill="#FB923C" className="animate-ping opacity-75" style={{ animationDelay: '500ms' }} />
               </svg>
             </div>
           </div>
 
           {/* 3. SỐ HÓA (BOTTOM-LEFT) - BỐ CỤC LỆCH TẦNG KHOA HỌC (INWARD DIAGONAL SHIFT) */}
           <div className="hidden md:flex absolute left-8 xl:left-22 bottom-3 xl:bottom-7 z-20 items-center gap-3.5 xl:gap-4.5 animate-entrance-left animate-float-node-2 cursor-default group transition-all duration-300 select-none" style={{ animationDelay: '450ms' }}>
-            {/* Digital Transformation Waveform & Constellation Matrix Icon with Glassmorphism Pedestal */}
-            <div className="relative w-22 h-22 sm:w-24 sm:h-24 xl:w-28 xl:h-28 flex items-center justify-center shrink-0 group-hover:scale-105 transition-all duration-300">
-              {/* Lớp hào quang ambient glow nền mờ sang trọng */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-500/12 via-sky-400/6 to-transparent dark:from-sky-500/20 dark:via-sky-400/8 dark:to-transparent border border-sky-400/25 dark:border-sky-400/35 backdrop-blur-xs shadow-[0_8px_24px_rgba(2,132,199,0.12)] -z-10 group-hover:border-sky-400/45 group-hover:shadow-[0_12px_32px_rgba(2,132,199,0.24)] transition-all duration-300" />
-
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5 overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.28)] dark:drop-shadow-[0_4px_22px_rgba(56,189,248,0.35)]">
-                <defs>
-                  <linearGradient id="wave-area-fill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.4" />
-                    <stop offset="50%" stopColor="#0284C7" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#0369A1" stopOpacity="0.02" />
-                  </linearGradient>
-                  <linearGradient id="wave-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#0284C7" />
-                    <stop offset="45%" stopColor="#00A8E8" />
-                    <stop offset="100%" stopColor="#38BDF8" />
-                  </linearGradient>
-                  <linearGradient id="spec-bar-grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.65" />
-                    <stop offset="100%" stopColor="#0284C7" stopOpacity="0.25" />
-                  </linearGradient>
-                </defs>
-
-                {/* Các vạch cột phổ dữ liệu số hóa nền (DSP Matrix Columns) */}
-                <rect x="23" y="44" width="6" height="38" rx="2" fill="url(#spec-bar-grad)" />
-                <rect x="33" y="24" width="6" height="58" rx="2" fill="url(#spec-bar-grad)" />
-                <rect x="49" y="52" width="6" height="30" rx="2" fill="url(#spec-bar-grad)" />
-                <rect x="65" y="38" width="6" height="44" rx="2" fill="url(#spec-bar-grad)" />
-                <rect x="79" y="48" width="6" height="34" rx="2" fill="url(#spec-bar-grad)" />
-
+            {/* Digital Transformation Waveform & Constellation Matrix Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(2,132,199,0.22)] dark:drop-shadow-[0_4px_20px_rgba(56,189,248,0.28)]">
                 {/* Các vạch lấy mẫu tín hiệu số hóa (DSP Sampling Stems) */}
-                <line x1="36" y1="24" x2="36" y2="60" stroke="#00A8E8" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.6" className="dark:stroke-sky-400" />
-                <line x1="52" y1="60" x2="52" y2="76" stroke="#00A8E8" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.6" className="dark:stroke-sky-400" />
-                <line x1="68" y1="38" x2="68" y2="60" stroke="#00A8E8" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.6" className="dark:stroke-sky-400" />
-
-                {/* Vùng diện tích sóng số hóa phủ màu (Waveform Area Gradient) */}
-                <polygon
-                  points="6,60 26,60 36,24 52,76 68,38 82,54 94,54 94,86 6,86"
-                  fill="url(#wave-area-fill)"
-                />
+                <line x1="36" y1="24" x2="36" y2="60" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
+                <line x1="52" y1="60" x2="52" y2="76" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
+                <line x1="68" y1="38" x2="68" y2="60" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="2 3" opacity="0.45" className="dark:stroke-sky-400" />
 
                 {/* Trục sóng số hóa chuyển đổi dữ liệu thời gian thực */}
                 <path
                   d="M 6,60 L 26,60 L 36,24 L 52,76 L 68,38 L 82,54 L 94,54"
                   fill="none"
-                  stroke="url(#wave-line-grad)"
-                  strokeWidth="3.2"
+                  stroke="#0284C7"
+                  strokeWidth="2.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="filter drop-shadow-[0_0_8px_#38BDF8]"
+                  className="dark:stroke-sky-400"
                 />
-
                 {/* Nhánh bus dữ liệu số hóa liên kết ma trận */}
-                <path d="M 36,24 L 56,12 L 88,12" fill="none" stroke="#38BDF8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-300 opacity-75 animate-kinetic-data" />
-                <path d="M 26,60 L 26,84 L 64,84" fill="none" stroke="#38BDF8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-300 opacity-75 animate-kinetic-data" />
-                <line x1="52" y1="76" x2="80" y2="76" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-55" />
-                <line x1="68" y1="38" x2="68" y2="12" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-55" />
+                <path d="M 36,24 L 56,12 L 88,12" fill="none" stroke="#00A8E8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-400 opacity-60 animate-kinetic-data" />
+                <path d="M 26,60 L 26,84 L 64,84" fill="none" stroke="#00A8E8" strokeWidth="1.8" strokeDasharray="4 4" className="dark:stroke-sky-400 opacity-60 animate-kinetic-data" />
+                <line x1="52" y1="76" x2="80" y2="76" stroke="#0284C7" strokeWidth="1.6" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-40" />
+                <line x1="68" y1="38" x2="68" y2="12" stroke="#0284C7" strokeWidth="1.4" strokeDasharray="3 3" className="dark:stroke-sky-400 opacity-40" />
 
-                {/* Các nút giao ma trận số hóa (Multi-ring luminous nodes) */}
-                <circle cx="26" cy="60" r="3.6" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1.2" />
-                <circle cx="52" cy="76" r="3.8" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1.2" />
-                <circle cx="68" cy="38" r="3.6" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1.2" />
-                <circle cx="82" cy="54" r="3.6" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1.2" />
-                <circle cx="94" cy="54" r="3.8" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1.2" />
-                <circle cx="56" cy="12" r="3.2" fill="#00A8E8" stroke="#FFFFFF" strokeWidth="1" />
-                <circle cx="88" cy="12" r="3.4" fill="#00A8E8" stroke="#FFFFFF" strokeWidth="1" />
-                <circle cx="64" cy="84" r="3.2" fill="#00A8E8" stroke="#FFFFFF" strokeWidth="1" />
+                {/* Các nút giao ma trận số hóa */}
+                <circle cx="26" cy="60" r="3" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="52" cy="76" r="3.2" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="68" cy="38" r="3" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="82" cy="54" r="3" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="94" cy="54" r="3.2" fill="#0284C7" className="dark:fill-sky-400" />
+                <circle cx="56" cy="12" r="2.8" fill="#00A8E8" className="dark:fill-sky-300" />
+                <circle cx="88" cy="12" r="3" fill="#00A8E8" className="dark:fill-sky-300" />
+                <circle cx="64" cy="84" r="2.8" fill="#00A8E8" className="dark:fill-sky-300" />
 
-                {/* Nút đỉnh nhận diện tức thì (Apex Peak Node with Ripple) */}
-                <circle cx="36" cy="24" r="8" fill="#38BDF8" className="animate-ping opacity-60" />
-                <circle cx="36" cy="24" r="5.2" fill="#00A8E8" stroke="#FFFFFF" strokeWidth="1.8" className="shadow-[0_0_12px_#38BDF8]" />
-                <circle cx="36" cy="24" r="2.2" fill="#FFFFFF" />
+                {/* Nút đỉnh nhận diện tức thì */}
+                <circle cx="36" cy="24" r="4.8" fill="#00A8E8" className="dark:fill-sky-300 animate-pulse" />
+                <circle cx="36" cy="24" r="2" fill="#FFFFFF" />
               </svg>
             </div>
 
@@ -578,61 +488,39 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
               <div className="w-1.5 h-1.5 rotate-45 border border-[#F15A24] bg-white dark:bg-slate-900" />
             </div>
 
-            {/* Multi-Channel Interactive Dialogue Convergence Icon with Glassmorphism Pedestal */}
-            <div className="relative w-22 h-22 sm:w-24 sm:h-24 xl:w-28 xl:h-28 flex items-center justify-center shrink-0 group-hover:scale-105 transition-all duration-300">
-              {/* Lớp hào quang ambient glow nền mờ sang trọng */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/12 via-orange-400/6 to-transparent dark:from-orange-500/20 dark:via-orange-400/8 dark:to-transparent border border-orange-400/25 dark:border-orange-400/35 backdrop-blur-xs shadow-[0_8px_24px_rgba(241,90,36,0.12)] -z-10 group-hover:border-orange-400/45 group-hover:shadow-[0_12px_32px_rgba(241,90,36,0.24)] transition-all duration-300" />
-
-              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5 overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.28)] dark:drop-shadow-[0_4px_22px_rgba(251,146,60,0.35)]">
-                <defs>
-                  <linearGradient id="chat-orb-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFF7ED" stopOpacity="0.45" />
-                    <stop offset="100%" stopColor="#FDBA74" stopOpacity="0.22" />
-                  </linearGradient>
-                  <linearGradient id="chat-orb-2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FED7AA" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#FB923C" stopOpacity="0.2" />
-                  </linearGradient>
-                  <linearGradient id="voice-bar-grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#F15A24" />
-                    <stop offset="100%" stopColor="#FB923C" />
-                  </linearGradient>
-                </defs>
-
-                {/* Vòng sóng cộng hưởng lượng tử (Orbital Resonance Wave) */}
-                <ellipse cx="50" cy="44" rx="36" ry="18" stroke="#FB923C" strokeWidth="1" strokeDasharray="3 4" opacity="0.45" transform="rotate(-15 50 44)" />
-                <ellipse cx="50" cy="44" rx="36" ry="18" stroke="#F15A24" strokeWidth="1" strokeDasharray="3 4" opacity="0.45" transform="rotate(15 50 44)" />
-
-                {/* Bong bóng đối thoại Kênh A (Luồng giọng nói / Voice stream) */}
+            {/* Multi-Channel Interactive Dialogue Convergence Icon */}
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 xl:w-26 xl:h-26 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <svg viewBox="0 0 100 100" fill="none" className="w-full h-full overflow-visible filter drop-shadow-[0_4px_16px_rgba(241,90,36,0.22)] dark:drop-shadow-[0_4px_20px_rgba(251,146,60,0.28)]">
+                {/* Vòng cung hội thoại kênh A (Luồng giọng nói / Voice stream) */}
                 <path
                   d="M 40,20 C 20,20 12,32 12,46 C 12,60 22,70 34,70 C 37,76 33,80 30,82 C 40,80 46,74 48,68"
-                  fill="url(#chat-orb-1)"
+                  fill="none"
                   stroke="#F15A24"
-                  strokeWidth="2.8"
+                  strokeWidth="2.6"
                   strokeLinecap="round"
                   className="dark:stroke-orange-400"
                 />
-
-                {/* Bong bóng đối thoại Kênh B (Luồng tin nhắn / Chat stream) */}
+                {/* Vòng cung hội thoại kênh B (Luồng tin nhắn / Chat stream) */}
                 <path
                   d="M 60,18 C 80,18 88,30 88,44 C 88,58 78,68 66,68 C 63,74 67,78 70,80 C 60,78 54,72 52,66"
-                  fill="url(#chat-orb-2)"
-                  stroke="#EA580C"
-                  strokeWidth="2.8"
+                  fill="none"
+                  stroke="#F15A24"
+                  strokeWidth="2.6"
                   strokeLinecap="round"
                   className="dark:stroke-orange-400"
                 />
 
-                {/* Cụm 5 thanh sóng âm tần tương tác trung tâm (Acoustic Harmonic Waves) */}
-                <line x1="38" y1="38" x2="38" y2="50" stroke="url(#voice-bar-grad)" strokeWidth="2.4" strokeLinecap="round" className="animate-pulse" />
-                <line x1="44" y1="32" x2="44" y2="56" stroke="url(#voice-bar-grad)" strokeWidth="2.6" strokeLinecap="round" className="animate-pulse" style={{ animationDelay: '150ms' }} />
-                <line x1="50" y1="24" x2="50" y2="64" stroke="url(#voice-bar-grad)" strokeWidth="3" strokeLinecap="round" className="filter drop-shadow-[0_0_6px_#F15A24]" />
-                <line x1="56" y1="32" x2="56" y2="56" stroke="url(#voice-bar-grad)" strokeWidth="2.6" strokeLinecap="round" className="animate-pulse" style={{ animationDelay: '300ms' }} />
-                <line x1="62" y1="38" x2="62" y2="50" stroke="url(#voice-bar-grad)" strokeWidth="2.4" strokeLinecap="round" className="animate-pulse" style={{ animationDelay: '450ms' }} />
+                {/* Cầu nối âm tần tương tác trung tâm (Acoustic Harmonic Waves) */}
+                <line x1="44" y1="36" x2="44" y2="52" stroke="#F15A24" strokeWidth="2.4" strokeLinecap="round" className="dark:stroke-orange-300 animate-pulse" />
+                <line x1="50" y1="28" x2="50" y2="60" stroke="#F15A24" strokeWidth="2.6" strokeLinecap="round" className="dark:stroke-orange-400" />
+                <line x1="56" y1="36" x2="56" y2="52" stroke="#F15A24" strokeWidth="2.4" strokeLinecap="round" className="dark:stroke-orange-300 animate-pulse" />
 
-                {/* Hạt nhân tương tác giao thoa (Quantum Nexus Core) */}
-                <circle cx="50" cy="44" r="5" fill="#F15A24" stroke="#FFFFFF" strokeWidth="1.8" className="animate-pulse shadow-[0_0_10px_#F15A24]" />
-                <circle cx="50" cy="44" r="2" fill="#FFFFFF" />
+                {/* Vòng sóng tương tác lan tỏa */}
+                <circle cx="50" cy="44" r="18" fill="none" stroke="#FB923C" strokeWidth="1.5" strokeDasharray="4 4" className="opacity-45 dark:stroke-orange-300" />
+
+                {/* Hạt nhân tương tác giao thoa */}
+                <circle cx="50" cy="44" r="4.2" fill="#F15A24" className="dark:fill-orange-400 animate-pulse" />
+                <circle cx="50" cy="44" r="1.8" fill="#FFFFFF" />
               </svg>
             </div>
           </div>
