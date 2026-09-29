@@ -4,10 +4,10 @@ import React from 'react';
  * 🌐 TECH 3D MONOLITHIC DATA PLATFORM (AVG ONE INTEGRATED ISOMETRIC ARCHITECTURE - LEFT SIDE)
  * 
  * Bố cục khối hộp 3D nguyên khối có chiều sâu thực thụ (True 3D Monolithic Depth):
- * - Toàn bộ cấu trúc tích hợp thành một Khối Kiến Trúc Số 3D gắn kết (Cohesive Tech Monolith).
+ * - Đã sửa lỗi văng vị trí: Khối lập phương nằm chuẩn xác tại trọng tâm (X=260, Y=115), gắn kết với bệ máy.
  * - Khối lập phương lượng tử đỉnh (Top Quantum Cube) gối trực tiếp lên Bệ khối hộp 3D vững chãi.
  * - Hai khối module cánh (Side Data Blocks) mở rộng không gian 3 chiều đối xứng.
- * - Trọng tâm Y chuẩn xác (80 -> 295), căn giữa hoàn hảo với Slogan AVG One, không bao giờ bị cắt mép.
+ * - Trọng tâm Y chuẩn xác (75 -> 295), căn giữa hoàn hảo với Slogan AVG One, không bao giờ bị cắt mép.
  */
 
 interface TechHologramDataCoreProps {
@@ -59,13 +59,15 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             className="opacity-75"
           />
 
-          {/* Khe docking kết nối dữ liệu trung tâm */}
+          {/* Đế cắm chân trụ khối lập phương (Docking Base) */}
           <polygon
-            points="260,200 295,215 260,230 225,215"
+            points="260,195 290,210 260,225 230,210"
             stroke="#0284C7"
             strokeWidth="1.4"
             className="fill-sky-50 dark:fill-slate-950"
           />
+          {/* Trục liên kết dữ liệu thẳng đứng nối từ đế bệ lên đáy khối lập phương */}
+          <line x1="260" y1="210" x2="260" y2="162" stroke="#0284C7" strokeWidth="2" strokeDasharray="4 2" />
         </g>
 
         {/* ========================================================================= */}
@@ -122,85 +124,63 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
         </g>
 
         {/* ========================================================================= */}
-        {/* 3. KHỐI TRUYỀN DẪN TRUNG TÂM NỐI THẲNG LÊN LÕI (CENTRAL RISER BLOCK)        */}
+        {/* 3. KHỐI LẬP PHƯƠNG LƯỢNG TỬ ĐỈNH (TOP QUANTUM CUBE) - VỊ TRÍ CHUẨN XÁC     */}
         {/* ========================================================================= */}
-        <g id="center-riser">
-          {/* Trụ khối hộp trung gian gắn trực tiếp bệ và khối lập phương */}
-          <polygon points="235,160 260,172 260,200 235,188" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-100/70 dark:fill-slate-900" />
-          <polygon points="260,172 285,160 285,188 260,200" stroke="#0284C7" strokeWidth="1.4" className="fill-sky-200/60 dark:fill-slate-800" />
-          {/* Các đường line dữ liệu dọc */}
-          <line x1="260" y1="172" x2="260" y2="135" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 2" />
-        </g>
+        {/* Định vị tuyệt đối tại X=260, Y=115, TUYỆT ĐỐI KHÔNG DÙNG animateTransform đè vị trí! */}
+        <g id="top-quantum-cube" transform="translate(260, 115)">
+          
+          {/* MẶT TRÊN KHỐI LẬP PHƯƠNG (Top Face - Sáng nhất) */}
+          <polygon
+            points="0,-48 46,-24 0,0 -46,-24"
+            stroke="#0284C7"
+            strokeWidth="2.2"
+            className="fill-white/95 dark:fill-slate-900/95"
+          />
+          {/* MẶT TRÁI KHỐI LẬP PHƯƠNG (Left Face - Trung gian) */}
+          <polygon
+            points="-46,-24 0,0 0,48 -46,24"
+            stroke="#0284C7"
+            strokeWidth="2.2"
+            className="fill-sky-50/95 dark:fill-slate-950/95"
+          />
+          {/* MẶT PHẢI KHỐI LẬP PHƯƠNG (Right Face - Tối hơn tạo khối) */}
+          <polygon
+            points="0,0 46,-24 46,24 0,48"
+            stroke="#0284C7"
+            strokeWidth="2.2"
+            className="fill-sky-100/90 dark:fill-slate-800/90"
+          />
 
-        {/* ========================================================================= */}
-        {/* 4. KHỐI LẬP PHƯƠNG LƯỢNG TỬ ĐỈNH TRANG TRỌNG (TOP HERO QUANTUM CUBE)       */}
-        {/* ========================================================================= */}
-        <g id="top-quantum-cube">
-          {/* Đặt ở vị trí trung tâm hoàn mỹ: X=260, Y=112 (Cách mép trên 50px, an toàn 100%) */}
-          <g transform="translate(260, 112)">
-            
-            {/* MẶT TRÊN KHỐI LẬP PHƯƠNG (Top Face - Sáng nhất) */}
-            <polygon
-              points="0,-48 46,-24 0,0 -46,-24"
-              stroke="#0284C7"
-              strokeWidth="2.2"
-              className="fill-white/95 dark:fill-slate-900/95"
-            />
-            {/* MẶT TRÁI KHỐI LẬP PHƯƠNG (Left Face - Trung gian) */}
-            <polygon
-              points="-46,-24 0,0 0,48 -46,24"
-              stroke="#0284C7"
-              strokeWidth="2.2"
-              className="fill-sky-50/95 dark:fill-slate-950/95"
-            />
-            {/* MẶT PHẢI KHỐI LẬP PHƯƠNG (Right Face - Tối hơn tạo khối) */}
-            <polygon
-              points="0,0 46,-24 46,24 0,48"
-              stroke="#0284C7"
-              strokeWidth="2.2"
-              className="fill-sky-100/90 dark:fill-slate-800/90"
-            />
+          {/* Các đường gân kỹ thuật isometric bên trong mặt phẳng */}
+          <line x1="0" y1="-24" x2="23" y2="-12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
+          <line x1="0" y1="-24" x2="-23" y2="-12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
+          <line x1="0" y1="24" x2="23" y2="12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
+          <line x1="0" y1="24" x2="-23" y2="12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
 
-            {/* Các đường gân kỹ thuật isometric bên trong mặt phẳng */}
-            <line x1="0" y1="-24" x2="23" y2="-12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
-            <line x1="0" y1="-24" x2="-23" y2="-12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
-            <line x1="0" y1="24" x2="23" y2="12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
-            <line x1="0" y1="24" x2="-23" y2="12" stroke="#38BDF8" strokeWidth="1.2" strokeDasharray="3 3" />
+          {/* KHỐI LẬP PHƯƠNG LỒNG NỘI TẠI (Inner Nested Tesseract Cube Line) */}
+          <polygon
+            points="0,-24 23,-12 0,0 -23,-12"
+            stroke="#0284C7"
+            strokeWidth="1.5"
+            className="fill-sky-100/80 dark:fill-sky-900/80"
+          />
+          <polygon
+            points="-23,-12 0,0 0,24 -23,12"
+            stroke="#0284C7"
+            strokeWidth="1.5"
+            className="fill-sky-200/70 dark:fill-sky-950/70"
+          />
+          <polygon
+            points="0,0 23,-12 23,12 0,24"
+            stroke="#0284C7"
+            strokeWidth="1.5"
+            className="fill-sky-300/60 dark:fill-sky-800/60"
+          />
 
-            {/* KHỐI LẬP PHƯƠNG LỒNG NỘI TẠI (Inner Nested Tesseract Cube Line) */}
-            <polygon
-              points="0,-24 23,-12 0,0 -23,-12"
-              stroke="#0284C7"
-              strokeWidth="1.5"
-              className="fill-sky-100/80 dark:fill-sky-900/80"
-            />
-            <polygon
-              points="-23,-12 0,0 0,24 -23,12"
-              stroke="#0284C7"
-              strokeWidth="1.5"
-              className="fill-sky-200/70 dark:fill-sky-950/70"
-            />
-            <polygon
-              points="0,0 23,-12 23,12 0,24"
-              stroke="#0284C7"
-              strokeWidth="1.5"
-              className="fill-sky-300/60 dark:fill-sky-800/60"
-            />
-
-            {/* Lõi tâm vi mạch số đồng tâm */}
-            <circle cx="0" cy="0" r="9" stroke="#0284C7" strokeWidth="1.8" className="fill-white dark:fill-slate-900" />
-            <circle cx="0" cy="0" r="4.5" stroke="#38BDF8" strokeWidth="1.2" className="fill-sky-50 dark:fill-sky-950" />
-            <circle cx="0" cy="0" r="1.8" className="fill-[#0284C7]" />
-
-            {/* Chuyển động bồng bềnh êm ái */}
-            <animateTransform
-              attributeName="transform"
-              type="translate"
-              values="0,-3; 0,3; 0,-3"
-              dur="4s"
-              repeatCount="indefinite"
-            />
-          </g>
+          {/* Lõi tâm vi mạch số đồng tâm */}
+          <circle cx="0" cy="0" r="9" stroke="#0284C7" strokeWidth="1.8" className="fill-white dark:fill-slate-900" />
+          <circle cx="0" cy="0" r="4.5" stroke="#38BDF8" strokeWidth="1.2" className="fill-sky-50 dark:fill-sky-950" />
+          <circle cx="0" cy="0" r="1.8" className="fill-[#0284C7]" />
         </g>
       </svg>
     </div>
