@@ -246,27 +246,17 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
 
 
           {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: 1000R CURVED OLED DISPLAY QUANTUM CORE */}
-          <div 
-            className="hidden md:flex absolute left-2 lg:left-4 xl:left-8 2xl:left-14 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none cursor-default group"
-            style={{ 
-              animationDelay: '200ms',
-              transform: 'perspective(1000px) rotateY(6deg)',
-              transformOrigin: 'center center'
-            }}
-          >
-            <TechHologramDataCore className="w-[270px] md:w-[300px] lg:w-[340px] xl:w-[390px] 2xl:w-[430px] h-auto group-hover:scale-[1.03] transition-all duration-500" />
+          <div className="hidden md:flex absolute left-2 lg:left-4 xl:left-8 2xl:left-14 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
+            <div className="animate-curved-screen-left">
+              <TechHologramDataCore className="w-[255px] md:w-[285px] lg:w-[320px] xl:w-[370px] 2xl:w-[415px] h-auto group-hover:scale-[1.03] transition-all duration-500" />
+            </div>
           </div>
 
           {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: 1000R CURVED OLED DISPLAY KINETIC GEARS */}
-          <div 
-            className="hidden md:flex absolute right-2 lg:right-4 xl:right-8 2xl:right-14 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none cursor-default group"
-            style={{ 
-              animationDelay: '250ms',
-              transform: 'perspective(1000px) rotateY(-6deg)',
-              transformOrigin: 'center center'
-            }}
-          >
-            <TechHologramGearEcosystem className="w-[270px] md:w-[300px] lg:w-[340px] xl:w-[390px] 2xl:w-[430px] h-auto group-hover:scale-[1.03] transition-all duration-500" />
+          <div className="hidden md:flex absolute right-2 lg:right-4 xl:right-8 2xl:right-14 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
+            <div className="animate-curved-screen-right">
+              <TechHologramGearEcosystem className="w-[255px] md:w-[285px] lg:w-[320px] xl:w-[370px] 2xl:w-[415px] h-auto group-hover:scale-[1.03] transition-all duration-500" />
+            </div>
           </div>
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}

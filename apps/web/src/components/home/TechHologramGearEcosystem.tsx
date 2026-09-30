@@ -207,7 +207,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
         {/* ========================================================================= */}
         {/* TẦNG 3: CỖ MÁY 3 BÁNH RĂNG VI CƠ KHÍ XOAY TRONG KHÔNG GIAN MÀN HÌNH CONG  */}
         {/* ========================================================================= */}
-        <g className="anim-curved-gears" filter="url(#curved-gear-shadow)">
+        <g transform="translate(220, 145) scale(1.16) translate(-220, -145)">
+          <g className="anim-curved-gears" filter="url(#curved-gear-shadow)">
           
           {/* VÒNG ĐAI QUỸ ĐẠO BẠCH KIM BẢO VỆ CỖ MÁY */}
           <g transform="translate(220, 145) rotate(-16)">
@@ -358,6 +359,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
               />
             </g>
           </g>
+        </g>
         </g>
 
         {/* ========================================================================= */}
