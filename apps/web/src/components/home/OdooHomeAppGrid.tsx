@@ -245,20 +245,20 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
 
 
-          {/* 🌐 CỬA SỔ CÔNG NGHỆ BÊN TRÁI: ENTERPRISE PRO AI NEURAL STREAM */}
+          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: AI NEURAL VISION STREAM (SEAMLESS BLEND) */}
           <div 
-            className="hidden md:flex absolute left-2 lg:left-6 xl:left-10 2xl:left-16 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none group"
+            className="hidden md:flex absolute left-1 lg:left-3 xl:left-8 2xl:left-14 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none group"
             style={{ animationDelay: '200ms' }}
           >
-            <TechHologramDataCore className="w-[260px] md:w-[285px] lg:w-[320px] xl:w-[360px] 2xl:w-[400px] h-auto group-hover:scale-[1.02] transition-all duration-300" />
+            <TechHologramDataCore className="w-[270px] md:w-[300px] lg:w-[340px] xl:w-[380px] 2xl:w-[420px] h-auto transition-transform duration-500 group-hover:scale-[1.03]" />
           </div>
 
-          {/* 🛸 CỬA SỔ CÔNG NGHỆ BÊN PHẢI: ENTERPRISE PRO KINETIC WORKFLOW */}
+          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: KINETIC GEAR ECOSYSTEM (SEAMLESS BLEND) */}
           <div 
-            className="hidden md:flex absolute right-2 lg:right-6 xl:right-10 2xl:right-16 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none group"
+            className="hidden md:flex absolute right-1 lg:right-3 xl:right-8 2xl:right-14 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none group"
             style={{ animationDelay: '250ms' }}
           >
-            <TechHologramGearEcosystem className="w-[260px] md:w-[285px] lg:w-[320px] xl:w-[360px] 2xl:w-[400px] h-auto group-hover:scale-[1.02] transition-all duration-300" />
+            <TechHologramGearEcosystem className="w-[270px] md:w-[300px] lg:w-[340px] xl:w-[380px] 2xl:w-[420px] h-auto transition-transform duration-500 group-hover:scale-[1.03]" />
           </div>
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}
