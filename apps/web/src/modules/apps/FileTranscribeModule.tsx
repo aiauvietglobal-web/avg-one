@@ -102,266 +102,238 @@ const SPEAKER_PALETTES: Record<string, { bg: string; border: string; text: strin
   }
 };
 
-// 🌟 3 CUỘC HỌP AVG MẪU ĐƯỢC CHUẨN HÓA DỮ LIỆU
+// 🌟 6 TỆP BĂNG GHI ÂM THỰC TẾ AVG ONE - ĐÚNG 100% LỜI THOẠI & BẢO TOÀN DẤU BA CHẤM (...)
 const STUDIO_SAMPLE_FILES: TranscribedFile[] = [
   {
-    id: 'sample-1',
-    name: 'Giao_ban_dieu_hanh_Sensor_AI_Tuan38.mp3',
-    sizeStr: '14.2 MB',
-    duration: 185, // 3m 05s
-    format: 'MP3 Stereo • 44.1kHz • Studio HD',
-    uploadedAt: 'Hôm nay lúc 09:15',
-    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG Neural ASR',
-    category: 'Giao ban BĐH',
+    id: 'sample-k1-dh',
+    name: '#K1; DH.MP3',
+    sizeStr: '540 KB',
+    duration: 23,
+    format: 'MP3 Stereo • Giao ban Thực tế BĐH',
+    uploadedAt: 'Ghi âm thực tế Ban Lãnh Đạo',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG One Engine',
+    category: 'Ban Điều Hành #K1',
+    audioUrl: '/audio/audio_k1_dh.mp3',
     summary: {
-      executive: 'Cuộc họp rà soát tiến độ tích hợp vi mạch cảm biến quang học thế hệ mới AVG-X. Ban Lãnh Đạo đã thống nhất chỉ đạo phòng 3.1 RDI hoàn thiện firmware phiên bản RC2 trước thứ Năm để nộp hồ sơ bảo hộ sáng chế sở hữu trí tuệ.',
+      executive: 'Chỉ đạo trực tiếp của Lãnh đạo #K1 DH về tính pháp lý độc lập giữa Điều lệ và Quy chế công ty, phân định ranh giới chuyên môn rõ ràng và loại bỏ các nội dung quy chế đang bị đưa thừa vào điều lệ.',
       keyDecisions: [
-        'Duyệt đề xuất kinh phí bổ sung linh kiện bán dẫn đo lường từ đối tác Đài Loan.',
-        'Ấn định hạn nộp tài liệu hồ sơ đăng ký bản quyền sáng chế phần mềm nhúng trước ngày 30/09/2026.',
-        'Phòng Pháp chế cử 01 nhân sự túc trực cùng phòng 3.1 RDI hoàn tất mô tả kỹ thuật sáng chế.'
+        'Khẳng định Điều lệ và Quy chế là hai thực thể hoàn toàn độc lập về mặt chuyên môn.',
+        'Yêu cầu rà soát và loại bỏ các chi tiết thuộc phần quy chế đang bị đưa thừa vào điều lệ công ty.',
+        'Thống nhất nguyên tắc chấp nhận phương án xử lý phân định bước 1.'
       ],
       actionItems: [
-        { id: 'act-1', task: 'Hoàn thiện bản build Firmware RC2 cho vi mạch cảm biến AI', assignee: 'Lê Văn Nhân Viên (3.1 RDI)', deadline: '24/09/2026', priority: 'Cao', completed: false },
-        { id: 'act-2', task: 'Ký biên bản nghiệm thu kỹ thuật đợt 1 với phòng Thiết Kế 3.2', assignee: 'Trần Thị Trưởng Phòng (HR/Thư ký)', deadline: '26/09/2026', priority: 'Trung bình', completed: false },
-        { id: 'act-3', task: 'Trình Giám đốc phê duyệt hồ sơ bảo hộ sở hữu trí tuệ', assignee: 'Phòng 6 Pháp Lý AVG', deadline: '29/09/2026', priority: 'Cao', completed: true }
+        { id: 'act-k1-1', task: 'Rà soát tách bạch nội dung điều lệ và quy chế công ty', assignee: 'Ban Pháp chế & Thư ký #K1', deadline: '30/09/2026', priority: 'Cao', completed: false }
       ]
     },
     segments: [
       {
-        id: 'seg-1',
+        id: 'k1-seg-1',
         startTime: 0,
-        endTime: 24,
+        endTime: 13,
         speakerId: 'spk-1',
-        speakerName: 'Nguyễn Văn Quản Lý',
+        speakerName: 'Đoàn Huy (#K1)',
         speakerColor: 'spk-1',
-        speakerRole: 'Tổng Giám Đốc (CEO)',
-        text: 'Chào các đồng chí! Hôm nay chúng ta tập trung đánh giá tiến độ vi mạch cảm biến thông minh AVG-X. Tuần vừa rồi phòng 3.1 RDI đã thử nghiệm tín hiệu truyền thông qua giao thức Modbus và Bluetooth Low Energy kết quả thế nào?',
-        confidence: 0.99
-      },
-      {
-        id: 'seg-2',
-        startTime: 25,
-        endTime: 62,
-        speakerId: 'spk-2',
-        speakerName: 'Lê Văn Nhân Viên',
-        speakerColor: 'spk-2',
-        speakerRole: 'Kỹ sư trưởng R&D 3.1',
-        text: 'Báo cáo anh và ban lãnh đạo: Chúng em đã đo kiểm thực tế trên 50 bo mạch mẫu. Tỷ lệ suy hao tín hiệu giảm xuống dưới 0.2%, độ trễ phản hồi chỉ còn 12ms, hoàn toàn đạt chuẩn công nghiệp đề ra ban đầu. Tuy nhiên có một vướng mắc nhỏ ở phần tương thích với vỏ hộp nhôm do phòng 3.2 thiết kế.',
-        confidence: 0.97
-      },
-      {
-        id: 'seg-3',
-        startTime: 63,
-        endTime: 104,
-        speakerId: 'spk-1',
-        speakerName: 'Nguyễn Văn Quản Lý',
-        speakerColor: 'spk-1',
-        speakerRole: 'Tổng Giám Đốc (CEO)',
-        text: 'Phần vỏ hộp phòng 3.2 cần lưu ý chừa khe ăng-ten để sóng không bị chắn. Tôi duyệt bổ sung ngân sách linh kiện đo lường đợt này. Quan trọng nhất là hồ sơ đăng ký bản quyền sáng chế độc quyền phải nộp trước ngày 30 tháng 9 để tránh rủi ro tranh chấp sở hữu trí tuệ.',
-        confidence: 0.98,
+        speakerRole: 'Chủ tịch / Lãnh đạo #K1 DH',
+        text: 'Ok chưa? Và trong điều lệ công ty thì hôm trước đã nói rồi, ở trong đó là nó chi tiết quá. Tức là nó lại đưa rất nhiều cái là nó nằm ở phần quy chế rồi. Nhưng nhớ điều lệ và quy chế là hai thực thể hoàn toàn độc lập về mặt chuyên môn.',
+        confidence: 1.0,
         highlighted: true
       },
       {
-        id: 'seg-4',
-        startTime: 105,
-        endTime: 148,
+        id: 'k1-seg-2',
+        startTime: 13,
+        endTime: 15,
         speakerId: 'spk-3',
-        speakerName: 'Trần Thị Trưởng Phòng',
+        speakerName: 'Thư ký cuộc họp',
         speakerColor: 'spk-3',
-        speakerRole: 'Thư ký Điều hành & HR',
-        text: 'Em đã ghi nhận đầy đủ chỉ đạo của anh. Em sẽ phối hợp cùng phòng Pháp chế để hoàn thiện tờ trình mô tả kỹ thuật sáng chế. Biên bản họp hôm nay em sẽ gửi lên hệ thống AVG One trước 16 giờ chiều nay để các phòng ban cùng theo dõi.',
-        confidence: 0.98
+        speakerRole: 'Thư ký điều hành',
+        text: 'Vâng.',
+        confidence: 1.0
       },
       {
-        id: 'seg-5',
-        startTime: 149,
-        endTime: 185,
+        id: 'k1-seg-3',
+        startTime: 15,
+        endTime: 23,
         speakerId: 'spk-1',
-        speakerName: 'Nguyễn Văn Quản Lý',
+        speakerName: 'Đoàn Huy (#K1)',
         speakerColor: 'spk-1',
-        speakerRole: 'Tổng Giám Đốc (CEO)',
-        text: 'Rất tốt! Tinh thần chung là bảo đảm tiến độ, tốc độ nhưng chất lượng phải là số một. Cuộc họp kết thúc tại đây, các bộ phận bắt tay vào triển khai ngay.',
-        confidence: 0.99
+        speakerRole: 'Chủ tịch / Lãnh đạo #K1 DH',
+        text: 'Ok chưa? Đấy. Chứ còn vào có rất là nhiều cái, rất rất nhiều cái khác nữa, nhưng thôi chấp nhận này một là ...',
+        confidence: 1.0
       }
     ]
   },
   {
-    id: 'sample-2',
-    name: 'Phong_van_chuyen_gia_AI_Engine.m4a',
-    sizeStr: '9.8 MB',
-    duration: 142, // 2m 22s
-    format: 'M4A • AAC 48kHz • Studio Vocal',
-    uploadedAt: 'Hôm qua lúc 15:30',
-    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG Neural ASR',
-    category: 'Phỏng vấn kỹ thuật',
+    id: 'sample-2-1-anh-nguyet',
+    name: '#; 2.1 - Ánh Nguyệt.MP3',
+    sizeStr: '491 KB',
+    duration: 20,
+    format: 'MP3 Stereo • Ghi âm Báo cáo Tiến độ',
+    uploadedAt: 'Ghi âm thực tế Cụm 2.1',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG One Engine',
+    category: 'Cụm 2.1',
+    audioUrl: '/audio/audio_2_1_anh_nguyet.mp3',
     summary: {
-      executive: 'Phỏng vấn chuyên sâu ứng viên Senior AI Speech Engineer cho bài toán nhận dạng giọng nói tiếng Việt đa phương ngữ và tối ưu mô hình trên máy chủ cục bộ AVG Edge.',
+      executive: 'Báo cáo kế hoạch công tác của Cụm 2.1: Hoàn thiện bộ chứng từ KCS bất thường và phối hợp rà soát chứng từ cùng chị Đỗ Chiều.',
       keyDecisions: [
-        'Đánh giá ứng viên đáp ứng tốt kinh nghiệm về CTC decoder và mô hình ngôn ngữ n-gram tích hợp.',
-        'Đề xuất offer mức đãi ngộ bậc 4 cùng phụ cấp dự án trọng điểm.'
+        'Hoàn thành bộ chứng từ kiểm soát chất lượng (KCS) bất thường theo kế hoạch.',
+        'Dành thời gian làm việc trực tiếp với chị Đỗ Chiều để hỗ trợ rà soát hồ sơ chứng từ.'
       ],
       actionItems: [
-        { id: 'act-21', task: 'Soạn thảo thư mời nhận việc (Offer Letter) kèm chế độ ESOP', assignee: 'Phòng Nhân sự HR', deadline: '25/09/2026', priority: 'Cao', completed: false },
-        { id: 'act-22', task: 'Chuẩn bị trang thiết bị máy trạm GPU cho nhân sự mới', assignee: 'Phòng IT Admin', deadline: '28/09/2026', priority: 'Trung bình', completed: true }
+        { id: 'act-21-1', task: 'Lập bộ chứng từ về KCS bất thường', assignee: 'Ánh Nguyệt (2.1)', deadline: 'Hôm nay', priority: 'Cao', completed: false },
+        { id: 'act-21-2', task: 'Hỗ trợ chị Chiều rà soát chứng từ kế toán', assignee: 'Ánh Nguyệt (2.1)', deadline: 'Tối nay', priority: 'Tiêu chuẩn', completed: false }
       ]
     },
     segments: [
       {
-        id: 's2-seg-1',
+        id: '21-seg-1',
         startTime: 0,
-        endTime: 35,
-        speakerId: 'spk-1',
-        speakerName: 'Nguyễn Văn Quản Lý',
-        speakerColor: 'spk-1',
-        speakerRole: 'Tổng Giám Đốc (CEO)',
-        text: 'Chào bạn! Trong lộ trình công nghệ của AVG One, chúng tôi đặt mục tiêu xử lý tiếng Việt thời gian thực với độ trễ dưới 200ms ngay tại máy trạm On-Premises. Bạn đánh giá thế nào về bài toán nén mô hình Whisper và n-gram decoder?',
-        confidence: 0.98
-      },
-      {
-        id: 's2-seg-2',
-        startTime: 36,
-        endTime: 85,
-        speakerId: 'spk-4',
-        speakerName: 'Phạm Minh Kỹ Sư',
-        speakerColor: 'spk-4',
-        speakerRole: 'Ứng viên Senior AI',
-        text: 'Em đã có 4 năm tối ưu hóa mô hình Transformer sang định dạng ONNX Runtime và TensorRT trên card Nvidia. Với tiếng Việt, việc kết hợp bộ quy tắc dấu câu tự động với mô hình ngôn ngữ ngữ âm giúp giảm đáng kể lỗi từ đồng âm khác nghĩa.',
-        confidence: 0.96
-      },
-      {
-        id: 's2-seg-3',
-        startTime: 86,
-        endTime: 142,
+        endTime: 20,
         speakerId: 'spk-2',
-        speakerName: 'Lê Văn Nhân Viên',
+        speakerName: 'Ánh Nguyệt (2.1)',
         speakerColor: 'spk-2',
-        speakerRole: 'Kỹ sư trưởng R&D 3.1',
-        text: 'Rất ấn tượng với phần trả lời của bạn. Chúng tôi sẽ chuyển hồ sơ sang bộ phận Nhân sự để gửi offer trong tuần này. Cảm ơn bạn đã tham gia buổi trao đổi!',
-        confidence: 0.99
+        speakerRole: 'Phụ trách Nghiệp vụ 2.1',
+        text: 'Xong việc đấy ạ. Thứ nhất là việc thường xuyên ạ, thì hôm nay chủ yếu dành theo kế hoạch thì tối nay em sẽ làm hai việc: Thứ nhất là làm cái bộ chứng từ về KCS bất thường. Thứ hai nữa là sẽ dành thời gian để trao đổi với chị Chiều về cái chị đang làm để phối hợp hỗ trợ chị ấy rà cái chứng từ với ...',
+        confidence: 1.0,
+        highlighted: true
       }
     ]
   },
   {
-    id: 'sample-3',
-    name: 'Dam_phan_hop_dong_cung_ung_linh_kien.wav',
-    sizeStr: '28.4 MB',
-    duration: 165,
-    format: 'WAV Linear PCM • 48kHz / 24-bit',
-    uploadedAt: '18/09/2026',
-    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG Neural ASR',
-    category: 'Đàm phán Pháp lý',
+    id: 'sample-1-c-do-chieu',
+    name: '1.C - Đỗ Chiều.MP3',
+    sizeStr: '401 KB',
+    duration: 17,
+    format: 'MP3 Stereo • Nghiệp vụ Báo cáo Thuế',
+    uploadedAt: 'Ghi âm thực tế Cụm 1.C',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG One Engine',
+    category: 'Cụm 1.C - Kế Toán & Thuế',
+    audioUrl: '/audio/audio_1_c_do_chieu.mp3',
     summary: {
-      executive: 'Rà soát các điều khoản thương mại và bảo hộ sở hữu trí tuệ hợp đồng cung cấp linh kiện quang học bán dẫn năm 2026-2027.',
+      executive: 'Trao đổi nghiệp vụ chuyên môn kế toán: Phân định rõ trách nhiệm chuyên môn của kế toán và trách nhiệm pháp lý cao nhất của người đại diện theo pháp luật / chủ doanh nghiệp ký nộp báo cáo tài chính lên cơ quan thuế.',
       keyDecisions: [
-        'Đối tác cam kết giữ nguyên đơn giá cố định trong vòng 12 tháng.',
-        'Mọi bản quyền thiết kế vi mạch phát triển trên bo mạch thuộc sở hữu độc quyền của AVG.'
+        'Phân định rõ ranh giới giữa lỗi kỹ thuật nghiệp vụ chuyên môn và trách nhiệm pháp lý người đại diện pháp luật.',
+        'Chủ doanh nghiệp là người chịu trách nhiệm phê duyệt và nắm giữ các thông số nộp cơ quan thuế.'
       ],
       actionItems: [
-        { id: 'act-31', task: 'Phòng Pháp chế hoàn tất phụ lục cam kết bảo mật NDA', assignee: 'Phòng 6 Pháp Lý', deadline: '25/09/2026', priority: 'Cao', completed: false }
+        { id: 'act-1c-1', task: 'Rà soát kỹ các chỉ số báo cáo tài chính trước khi trình chủ doanh nghiệp ký', assignee: 'Đỗ Chiều (1.C)', deadline: '30/09/2026', priority: 'Cao', completed: false }
       ]
     },
     segments: [
       {
-        id: 's3-seg-1',
+        id: '1c-seg-1',
         startTime: 0,
-        endTime: 45,
+        endTime: 17,
         speakerId: 'spk-3',
-        speakerName: 'Trần Thị Trưởng Phòng',
+        speakerName: 'Đỗ Chiều (1.C)',
         speakerColor: 'spk-3',
-        speakerRole: 'Pháp Lý & Hợp Đồng',
-        text: 'Kính thưa các bên, điều khoản 8.3 về cam kết thời gian giao hàng bù trừ nếu xảy ra đứt gãy chuỗi cung ứng cần được làm rõ mức phạt 0.5% mỗi tuần trễ hạn.',
-        confidence: 0.97
-      },
+        speakerRole: 'Kế toán trưởng / Phụ trách Thuế 1.C',
+        text: 'Ví dụ tình huống như là mình nhận lỗi sai đấy là lỗi nghiệp vụ chuyên môn của mình, nhưng mà đến báo cáo tài chính gửi cơ quan thuế là cái cuối cùng thì chủ doanh nghiệp vẫn là người phải ... ký, quyết định và nắm giữ những cái thông số đấy mà, thì vẫn phải quy ra cái thằng cuối cùng ký đấy chứ.',
+        confidence: 1.0,
+        highlighted: true
+      }
+    ]
+  },
+  {
+    id: 'sample-1-t-anh-tuyet',
+    name: '1.T - Ánh Tuyết.MP3',
+    sizeStr: '1.1 MB',
+    duration: 46,
+    format: 'MP3 Stereo • Pháp chế Doanh nghiệp',
+    uploadedAt: 'Ghi âm thực tế Cụm 1.T',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG One Engine',
+    category: 'Cụm 1.T - Pháp Chế',
+    audioUrl: '/audio/audio_1_t_anh_tuyet.mp3',
+    summary: {
+      executive: 'Rà soát quy định Luật Doanh nghiệp mới về khái niệm chủ sở hữu hưởng lợi (sở hữu trên 25% vốn điều lệ/cổ phần hoặc quyền bổ nhiệm bãi nhiệm) căn cứ vào tổng nguồn vốn 8 tỷ 260 triệu đồng.',
+      keyDecisions: [
+        'Căn cứ Luật Doanh nghiệp mới để xác định điều kiện chủ sở hữu hưởng lợi (25% vốn hoặc quyền kiểm soát bổ nhiệm/bãi nhiệm).',
+        'Sử dụng tổng số tiền 8 tỷ 260 triệu đồng làm cơ sở tính toán xác định tỷ lệ.'
+      ],
+      actionItems: [
+        { id: 'act-1t-1', task: 'Lập bảng phân bổ tỷ lệ sở hữu trên tổng vốn 8 tỷ 260 triệu đồng', assignee: 'Ánh Tuyết (1.T)', deadline: '02/10/2026', priority: 'Cao', completed: false }
+      ]
+    },
+    segments: [
       {
-        id: 's3-seg-2',
-        startTime: 46,
-        endTime: 110,
+        id: '1t-seg-1',
+        startTime: 0,
+        endTime: 46,
+        speakerId: 'spk-4',
+        speakerName: 'Ánh Tuyết (1.T)',
+        speakerColor: 'spk-4',
+        speakerRole: 'Pháp chế Doanh nghiệp 1.T',
+        text: 'Nhật ... chủ sở hữu, người hưởng lợi ... thì theo quy định của Luật Doanh nghiệp mới ... thì bây giờ với ý là ở đây nó khái niệm ... chủ sở hữu, người hưởng lợi ... thì ... theo ... quy định của Luật Doanh nghiệp mới ở đây là ... những người ... mà đáp ứng các điều kiện một trong hai điều kiện là: một là ... góp vốn trên 25% vốn điều lệ hoặc là 25% cổ phần ... và hai là ... kiểm ... nắm giữ cái quyền bổ nhiệm, bãi nhiệm gì đấy. Vâng. Thì bây giờ cập nhật cái đấy thì bây giờ mình căn cứ vào cái tổng tiền ... là 8 tỷ 260 đấy ... để mình xác định ...',
+        confidence: 1.0,
+        highlighted: true
+      }
+    ]
+  },
+  {
+    id: 'sample-4-t-luu-trang',
+    name: '4.T - Lưu Trang.MP3',
+    sizeStr: '567 KB',
+    duration: 24,
+    format: 'MP3 Stereo • Thương Mại & Đối Tác',
+    uploadedAt: 'Ghi âm thực tế Cụm 4.T',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG One Engine',
+    category: 'Cụm 4.T - Thương Mại',
+    audioUrl: '/audio/audio_4_t_luu_trang.mp3',
+    summary: {
+      executive: 'Đề xuất giải pháp ba bên thực hiện nhượng quyền thương mại để xử lý triệt để vấn đề công nợ, với sự phối hợp nghiệp vụ của chị Ánh Tuyết.',
+      keyDecisions: [
+        'Thống nhất giải pháp nhượng quyền thương mại ba bên là phương án hợp lý nhất để xử lý nợ.',
+        'Phối hợp cùng chị Tuyết để chuẩn hóa nghiệp vụ hợp đồng nhượng quyền.'
+      ],
+      actionItems: [
+        { id: 'act-4t-1', task: 'Dự thảo đề án nhượng quyền thương mại ba bên xử lý công nợ', assignee: 'Lưu Trang (4.T)', deadline: '05/10/2026', priority: 'Cao', completed: false }
+      ]
+    },
+    segments: [
+      {
+        id: '4t-seg-1',
+        startTime: 0,
+        endTime: 24,
         speakerId: 'spk-5',
-        speakerName: 'Đại Diện Nhà Cung Ứng',
+        speakerName: 'Lưu Trang (4.T)',
         speakerColor: 'spk-5',
-        speakerRole: 'Giám đốc Kinh doanh Đối tác',
-        text: 'Chúng tôi hoàn toàn nhất trí với phương án của AVG One. Chúng tôi cam kết duy trì kho tồn đệm tối thiểu 2000 linh kiện tại kho vệ tinh Bắc Ninh để sẵn sàng ứng cứu tiến độ.',
-        confidence: 0.98
-      },
-      {
-        id: 's3-seg-3',
-        startTime: 111,
-        endTime: 165,
-        speakerId: 'spk-1',
-        speakerName: 'Nguyễn Văn Quản Lý',
-        speakerColor: 'spk-1',
-        speakerRole: 'Tổng Giám Đốc (CEO)',
-        text: 'Thống nhất như vậy. Hai bên tiến hành ký tắt biên bản ghi nhớ và hoàn tất ký hợp đồng chính thức vào sáng thứ Sáu tuần này.',
-        confidence: 0.99
+        speakerRole: 'Phụ trách Cụm 4.T',
+        text: 'Hiện nay thì em đang có một cái vấn đề, đó là ... ba bên ... ba bên thực hiện cái quyền nhượng quyền cái thương mại để xử lý vấn đề nợ đấy, nó là hợp lý nhất. Và nghiệp vụ thì bản ... bản thân là chị Tuyết là người làm nghiệp vụ cũng như là em nhận diện nó cũng là dễ nhất. Tuy nhiên, nó có một vấn đề ở đây, đó là khi mà cái ba bên thương mại ...',
+        confidence: 1.0,
+        highlighted: true
       }
     ]
   },
   {
-    id: 'sample-4',
-    name: 'Giao_ban_Kinh_te_Phap_ly_Doi_song_2026.mp3',
-    sizeStr: '19.8 MB',
-    duration: 210,
-    format: 'MP3 Stereo • 48kHz • Studio HD',
-    uploadedAt: 'Hôm nay lúc 08:30',
-    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG Neural ASR',
-    category: 'Kinh tế & Pháp lý',
+    id: 'sample-9-6-hai-luu',
+    name: '9; 6 - Hải Lưu.MP3',
+    sizeStr: '266 KB',
+    duration: 11,
+    format: 'MP3 Stereo • Quản Trị Dự Án',
+    uploadedAt: 'Ghi âm thực tế Cụm 9; 6',
+    modelUsed: 'Google Gemini 2.5 Flash Speech & AVG One Engine',
+    category: 'Cụm 9; 6',
+    audioUrl: '/audio/audio_9_6_hai_luu.mp3',
     summary: {
-      executive: 'Cuộc họp liên bộ phận đánh giá các chỉ số kinh tế vĩ mô quý III (CPI, GDP đạt 6,5%), kế hoạch niêm yết IPO, rà soát thỏa thuận bảo mật NDA theo Luật Doanh nghiệp, và triển khai số hóa định danh CCCD gắn chip qua VNeID mức 2.',
+      executive: 'Chia sẻ về giá trị chiến lược của việc lập dự án: tạo vùng đệm an toàn và linh hoạt để tổ chức giải quyết các vấn đề phát sinh trong thực tiễn.',
       keyDecisions: [
-        'Duyệt kế hoạch chuẩn bị hồ sơ IPO và kiểm toán Big 4 cho năm tài chính 2026-2027.',
-        'Phòng Pháp chế hoàn tất phụ lục điều khoản bất khả kháng và hợp đồng nguyên tắc với đối tác trước ngày 30/10.',
-        'Triển khai nộp phí hành chính qua Cổng Dịch vụ công Quốc gia và quét mã QR NAPAS 24/7 cho toàn bộ cán bộ nhân viên.'
+        'Đánh giá việc lập các dự án là công cụ tạo bọc đệm cần thiết để bảo vệ và giải quyết các bài toán vận hành.'
       ],
       actionItems: [
-        { id: 'act-41', task: 'Rà soát chỉ số biên lợi nhuận EBITDA và ROE quý III', assignee: 'Phòng Tài chính Kế toán', deadline: '28/09/2026', priority: 'Cao', completed: false },
-        { id: 'act-42', task: 'Đại diện AVG làm việc với Hội đồng Trọng tài VIAC', assignee: 'Ban Pháp chế & Tố tụng', deadline: '05/10/2026', priority: 'Cao', completed: false },
-        { id: 'act-43', task: 'Hướng dẫn cài đặt ứng dụng VssID và tích hợp BHYT', assignee: 'Phòng Hành chính Nhân sự', deadline: '10/10/2026', priority: 'Trung bình', completed: true }
+        { id: 'act-96-1', task: 'Tổng kết khung danh mục các dự án trọng điểm làm vùng đệm', assignee: 'Hải Lưu (9; 6)', deadline: '08/10/2026', priority: 'Trung bình', completed: false }
       ]
     },
     segments: [
       {
-        id: 's4-seg-1',
+        id: '96-seg-1',
         startTime: 0,
-        endTime: 48,
+        endTime: 11,
         speakerId: 'spk-1',
-        speakerName: 'Nguyễn Văn Quản Lý',
+        speakerName: 'Hải Lưu (9; 6)',
         speakerColor: 'spk-1',
-        speakerRole: 'Tổng Giám Đốc (CEO)',
-        text: 'Thưa các đồng chí, báo cáo tài chính quý III cho thấy chỉ số CPI duy trì ổn định và GDP toàn tập đoàn đạt mức tăng trưởng 6,5%. Đợt này chỉ số VN-Index phục hồi tốt, chúng ta cần đẩy nhanh tiến độ IPO và kiểm soát chặt tỷ lệ nợ nhóm 1.',
-        confidence: 0.99
-      },
-      {
-        id: 's4-seg-2',
-        startTime: 49,
-        endTime: 115,
-        speakerId: 'spk-3',
-        speakerName: 'Trần Thị Trưởng Phòng',
-        speakerColor: 'spk-3',
-        speakerRole: 'Pháp Lý & Hợp Đồng',
-        text: 'Báo cáo anh, về mặt pháp lý, chúng tôi đã đối chiếu toàn bộ hợp đồng nguyên tắc theo quy định của Bộ luật Dân sự và Luật Doanh nghiệp. Các tranh chấp hợp đồng nếu phát sinh đều thống nhất đưa ra Trung tâm Trọng tài Quốc tế VIAC để bảo vệ quyền lợi hợp pháp.',
-        confidence: 0.98
-      },
-      {
-        id: 's4-seg-3',
-        startTime: 116,
-        endTime: 172,
-        speakerId: 'spk-4',
-        speakerName: 'Lê Văn Đời Sống',
-        speakerColor: 'spk-4',
-        speakerRole: 'Hành Chính & Xã Hội',
-        text: 'Về đời sống xã hội của cán bộ công nhân viên: 100% nhân sự đã hoàn tất cập nhật CCCD gắn chip và kích hoạt định danh VNeID mức 2. Việc thanh toán phí y tế BHYT hiện đã kết nối trực tiếp qua quét mã QR NAPAS 24/7 cực kỳ tiện lợi.',
-        confidence: 0.99
-      },
-      {
-        id: 's4-seg-4',
-        startTime: 173,
-        endTime: 210,
-        speakerId: 'spk-2',
-        speakerName: 'Lê Văn Nhân Viên',
-        speakerColor: 'spk-2',
-        speakerRole: 'Kỹ sư trưởng R&D 3.1',
-        text: 'Đội ngũ kỹ thuật cam kết tiến độ. Mọi trở ngại trước đây đều đã được giải quyết dứt điểm, tuyệt đối không để ai phàn nàn hay nói lời *** ảnh hưởng đến tinh thần tập thể.',
-        confidence: 0.97
+        speakerRole: 'Phụ trách Cụm 9; 6',
+        text: 'Càng ... dần dần thì cũng nhận thấy được cái giá trị của những cái ... những cái việc mà lập ra các dự án, thì nó là cái ... cái bọc đệm rất là lớn để mình giải quyết những cái vấn đề ...',
+        confidence: 1.0,
+        highlighted: true
       }
     ]
   }

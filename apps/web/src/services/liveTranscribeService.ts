@@ -28,37 +28,26 @@ export interface TranscriptItem {
 
 export type TranscribeStatus = 'idle' | 'recording' | 'paused' | 'error';
 
-// Custom Dictionary for Domain Keyword Boosting in AVG One
+// Custom Dictionary for Domain Keyword Boosting in AVG One (Chỉ chuẩn hóa ký hiệu, KHÔNG sửa đổi lời nói)
 const AVG_KEYWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
-  // Personnel & Code names
+  // Personnel & Code names (Chỉ nhận diện mã hóa phân hệ/nhân sự theo cách gọi viết tắt)
   { pattern: /\b(bê\s*5\s*chấm\s*1|b5\.1|b\s*năm\s*chấm\s*một)\b/gi, replacement: 'B5.1' },
   { pattern: /\b(5\.1\s*t|5\.1t|năm\s*chấm\s*một\s*tê)\b/gi, replacement: '5.1T' },
   { pattern: /\b(2\.1|hai\s*chấm\s*một)\b/gi, replacement: '2.1' },
-  { pattern: /\b(3\.1|ba\s*chấm\s*một)\b/gi, replacement: '3.1 - RDI' },
+  { pattern: /\b(3\.1|ba\s*chấm\s*một)\b/gi, replacement: '3.1' },
   { pattern: /\b(rê\s*đê\s*i|r\s*d\s*i)\b/gi, replacement: 'RDI' },
   { pattern: /\b(ca\s*2\s*tê|k2t|k\s*hai\s*tê|k\s*2\s*t)\b/gi, replacement: '#K2T' },
   { pattern: /\b(ca\s*1|k1|k\s*một)\b/gi, replacement: '#K1' },
   { pattern: /\b(ca\s*2\s*bê|k2b|k\s*hai\s*bê|k\s*2\s*b)\b/gi, replacement: '#K2B' },
   { pattern: /\b(áp\s*1|áp\s*một|ác\s*1|ác\s*một)\b/gi, replacement: 'AC1' },
   { pattern: /\b(áp\s*2|áp\s*hai|ác\s*2|ác\s*hai)\b/gi, replacement: 'AC2' },
-  { pattern: /\b(bà\s*bích|chị\s*bích)\b/gi, replacement: 'bà Bích' },
-  { pattern: /\b(bà\s*trang|chị\s*trang)\b/gi, replacement: 'bà Trang' },
-  { pattern: /\b(ông\s*trịnh|anh\s*trịnh)\b/gi, replacement: 'ông Trịnh' },
 
   // Entity & Systems
-  { pattern: /\b(a\s*vê\s*gờ|ây\s*vi\s*gi|avg\s*one)\b/gi, replacement: 'AVG One' },
+  { pattern: /\b(a\s*vê\s*gờ\s*oăn|avg\s*oăn|a\s*v\s*g\s*one)\b/gi, replacement: 'AVG One' },
+  { pattern: /\b(a\s*vê\s*gờ|ây\s*vi\s*gi|a\s*v\s*g)\b/gi, replacement: 'AVG' },
   { pattern: /\b(a\s*vê|ây\s*vi)\b/gi, replacement: 'AV' },
   { pattern: /\b(đoàn\s*huy|pháp\s*nhân\s*dh|d\s*hát)\b/gi, replacement: 'DH' },
-  { pattern: /\b(vê\s*bê\s*ca\s*lờ|vbkl)\b/gi, replacement: 'VBKL' },
-  { pattern: /\b(văn\s*bản\s*kết\s*luận)\b/gi, replacement: 'Văn bản kết luận (VBKL)' },
-  { pattern: /\b(lệnh\s*sản\s*xuất)\b/gi, replacement: 'Lệnh sản xuất' },
-  { pattern: /\b(quản\s*lý\s*thuế)\b/gi, replacement: 'Quản lý thuế' },
-  { pattern: /\b(xuất\s*kho)\b/gi, replacement: 'Xuất kho' },
-  { pattern: /\b(nhập\s*kho)\b/gi, replacement: 'Nhập kho' },
-  { pattern: /\b(hợp\s*đồng\s*kinh\s*tế)\b/gi, replacement: 'Hợp đồng kinh tế' },
-  { pattern: /\b(biên\s*bản\s*nghiệm\s*thu)\b/gi, replacement: 'Biên bản nghiệm thu' },
-  { pattern: /\b(báo\s*cáo\s*tài\s*chính)\b/gi, replacement: 'Báo cáo tài chính' },
-  { pattern: /\b(đăng\s*ký\s*bản\s*quyền|sở\s*hữu\s*trí\s*tuệ|shtt)\b/gi, replacement: 'Đăng ký SHTT' },
+  { pattern: /\b(vê\s*bê\s*ca\s*lờ|v\s*b\s*k\s*l)\b/gi, replacement: 'VBKL' },
   { pattern: /\b(mẫu\s*h\s*1|mẫu\s*h1)\b/gi, replacement: 'mẫu H1' },
   { pattern: /\b(mẫu\s*h\s*2|mẫu\s*h2)\b/gi, replacement: 'mẫu H2' }
 ];

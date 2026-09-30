@@ -1651,21 +1651,14 @@ export const SpeechToTextModule: React.FC = () => {
 
       const lastMsg = prev[prev.length - 1];
 
-      // Khử tiền tố lặp lại (nếu có do nhận diện giọng nói giao thoa giữa các phiên)
+      // Khử tiền tố lặp lại nếu có do nhận diện giọng nói giao thoa giữa các phiên
       let cleanedText = enhancedText;
       if (lastMsg && lastMsg.text) {
         cleanedText = stripPrefixOverlap(lastMsg.text, enhancedText);
-        if (!cleanedText || cleanedText.trim().length < 2) {
-          return prev;
+        // Tuyệt đối bảo toàn lời thoại người nói, không bao giờ bỏ rơi nội dung ngắn
+        if (!cleanedText || cleanedText.trim().length === 0) {
+          cleanedText = enhancedText;
         }
-      }
-
-      const normLast = (lastMsg.text || '').toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-      const normNew = cleanedText.toLowerCase().replace(/[,.?!:;…"'\n\r\t]+/g, ' ').replace(/\s+/g, ' ').trim();
-
-      // Tránh lặp lại đúng 1 câu duy nhất vừa được ghi
-      if (normLast === normNew) {
-        return prev;
       }
 
       // Cùng một người đang nói: kiểm tra tách đoạn (Paragraph Segmentation)

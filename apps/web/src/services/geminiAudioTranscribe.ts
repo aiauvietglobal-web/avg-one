@@ -45,15 +45,24 @@ export async function transcribeAudioWithGemini(
 
   const promptText = `Bạn là chuyên gia bóc tách băng ghi âm tiếng Việt chuyên nghiệp thuộc phân hệ chuyển đổi thông minh AVG One. Hãy nghe toàn bộ âm thanh trong tệp và trích xuất TOÀN BỘ nội dung phát biểu thực tế của các nhân vật.
 
-YÊU CẦU BẮT BUỘC:
-1. Giải mã 100% chính xác lời nói tiếng Việt thực tế từ file âm thanh. KHÔNG tự nghĩ ra hay tạo câu mẫu giả định.
-2. Áp dụng chuẩn xác thuật ngữ chuyên ngành:
+QUY TẮC BẮT BUỘC ĐỐI VỚI VĂN BẢN CHUYỂN ĐỔI:
+1. ĐÚNG 100% THỰC TẾ LỜI THOẠI:
+   - Trích xuất chính xác tuyệt đối từng câu, từng từ mà nhân vật thực sự nói ra trong file audio.
+   - TUYỆT ĐỐI KHÔNG BIÊN SOẠN LINH TINH, không tự ý sửa đổi, trau chuốt, tóm lược hay bịa đặt thêm bớt câu từ.
+2. TUYỆT ĐỐI KHÔNG BỎ THÔNG TIN:
+   - Mọi thông tin, con số (ví dụ: "8 tỷ 260", "25%", "báo cáo tài chính"), câu xác nhận ngắn ("Vâng", "Dạ", "Đúng rồi", "Ok chưa?") đều phải được ghi nhận đầy đủ vào đúng timeline.
+3. BẮT BUỘC THỂ HIỆN DẤU BA CHẤM (...) KHI:
+   - Người nói ngập ngừng, dừng lại suy nghĩ, ngắt nghỉ giữa câu (ví dụ: "người phải ... ký", "theo ... quy định").
+   - Lặp từ ngắc ngứ (ví dụ: "cái này ... cái này", "những cái ... những cái").
+   - Câu nói lửng lơ, chưa kết thúc hoặc bị đứt quãng ở cuối (ví dụ: "chấp nhận này một là ...", "để mình xác định ...", "chứng từ với ...").
+   - Âm thanh bị nhiễu, nghẽn hoặc khuyết thông tin. Không được bỏ qua mà phải thể hiện bằng dấu '...'.
+4. Áp dụng chuẩn xác thuật ngữ chuyên ngành và mã hóa:
    - Kinh tế & Tài chính: GDP, CPI, EBITDA, ROE, ROI, VN-Index, IPO, M&A, margin, call margin, nợ xấu nhóm 1-5, ĐHĐCĐ, HĐQT...
-   - Pháp luật & Hành chính: TAND, VKSND, HĐXX, VIAC, NDA, Bộ luật Dân sự, Bộ luật Hình sự, nguyên đơn, bị đơn, kháng cáo, giám đốc thẩm...
-   - Đời sống & Xã hội: CCCD gắn chip, VNeID mức 2, BHYT, BHXH, VssID, quét mã QR, NAPAS 24/7, chụp MRI, CT Scanner...
-3. LƯU Ý BẢO VỆ TỪ NGỮ NHẠY CẢM:
-   - Nếu trong lời nói có từ ngữ thô tục, chửi thề, lăng mạ, báng bổ (tiếng Việt hoặc tiếng Anh), BẮT BUỘC ẩn bằng dấu ba sao: *** (ví dụ: đ***, ***, mẹ kiếp -> mẹ *** hoặc ***) để đảm bảo chuẩn mực công sở.
-4. Trả về JSON thuần túy (KHÔNG bọc trong markdown \`\`\`json):
+   - Pháp luật & Hành chính: TAND, VKSND, HĐXX, VIAC, NDA, Bộ luật Dân sự, Bộ luật Hình sự, nguyên đơn, bị đơn, kháng cáo, giám đốc thẩm, Luật Doanh nghiệp...
+   - AVG One: #K1, #K2T, #K2B, B5.1, 5.1T, 2.1, 3.1, 1.C, 1.T, 4.T, 9; 6, DH, AV, AVG One, VBKL, KCS...
+5. LƯU Ý BẢO VỆ TỪ NGỮ NHẠY CẢM:
+   - Nếu trong lời nói có từ ngữ thô tục, chửi thề, BẮT BUỘC ẩn bằng dấu ba sao: *** để đảm bảo chuẩn mực công sở.
+6. Trả về JSON thuần túy (KHÔNG bọc trong markdown \`\`\`json):
 {
   "summary": {
     "executive": "Tóm tắt ngắn gọn nội dung thực tế cuộc họp...",

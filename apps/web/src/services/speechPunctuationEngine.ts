@@ -116,7 +116,9 @@ const LOANWORD_RULES: Array<{ pattern: RegExp; replacement: string }> = [
 // 3. Chuẩn hóa thuật ngữ đặc thù doanh nghiệp & hệ thống AVG One
 const ENTERPRISE_TERMS_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   { pattern: /\b(a\s*vê\s*gờ\s*oăn|avg\s*oăn|a\s*v\s*g\s*one)\b/gi, replacement: 'AVG One' },
-  { pattern: /\b(a\s*vê\s*gờ|a\s*v\s*g|á\s*âu\s*việt|á\s*âu\s*việt\s*gờ\s*lô\s*bồ)\b/gi, replacement: 'Á Âu Việt Global' },
+  { pattern: /\b(a\s*vê\s*gờ|a\s*v\s*g)\b/gi, replacement: 'AVG' },
+  { pattern: /\b(á\s*âu\s*việt\s*gờ\s*lô\s*bồ)\b/gi, replacement: 'Á Âu Việt Global' },
+  { pattern: /\b(á\s*âu\s*việt)\b/gi, replacement: 'Á Âu Việt' },
   { pattern: /\b(e\s*rờ\s*pê|e\s*r\s*p)\b/gi, replacement: 'ERP' },
   { pattern: /\b(xê\s*rờ\s*mờ|c\s*r\s*m)\b/gi, replacement: 'CRM' },
   { pattern: /\b(hát\s*rờ\s*mờ|h\s*r\s*m)\b/gi, replacement: 'HRM' },
@@ -520,10 +522,10 @@ const ITN_RULES: Array<{ pattern: RegExp; replacement: string | ((...args: any[]
   { pattern: /\bbước\s*(?:mười|10)\b/gi, replacement: 'Bước 10' }
 ];
 
-// 6. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế
+// 6. Khử lỗi phát âm méo tiếng khi nói nhanh hoặc lẫn lộn phương ngữ thực tế (chỉ nắn chính tả, không bỏ từ)
 const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> = [
   // Lỗi l/n miền Bắc
-  { pattern: /\b(thế\s*này\s*này|thế\s*lày)\b/gi, replacement: 'thế này' },
+  { pattern: /\b(thế\s*lày)\b/gi, replacement: 'thế này' },
   { pattern: /\b(như\s*lày)\b/gi, replacement: 'như này' },
   { pattern: /\b(khi\s*lào)\b/gi, replacement: 'khi nào' },
   { pattern: /\b(lăng\s*suất)\b/gi, replacement: 'năng suất' },
@@ -552,14 +554,17 @@ const SPOKEN_COLLOQUIAL_RULES: Array<{ pattern: RegExp; replacement: string }> =
 // 7. Từ đệm khi nói (được giữ nguyên để phản ánh trung thực lời nói của người dùng)
 const SPEECH_FILLER_RULES: Array<{ pattern: RegExp; replacement: string }> = [];
 
-// 7B. Nhận diện các điểm khuyết âm, âm thanh bị nghẽn/không rõ nghĩa hoặc gián đoạn giữa các ý -> chèn dấu ba chấm (...)
+// 7B. Nhận diện các điểm khuyết âm, âm thanh bị nghẽn/nhiễu hoặc ngập ngừng giữa các ý -> chèn dấu ba chấm (...)
 const INAUDIBLE_OR_GAP_RULES: Array<{ pattern: RegExp; replacement: string }> = [
-  { pattern: /\b(nghe\s*không\s*rõ|không\s*nghe\s*rõ|chỗ\s*này\s*không\s*rõ|chưa\s*nghe\s*rõ|không\s*rõ\s*tiếng)\b/gi, replacement: ' ... ' },
   { pattern: /(?:\[\s*(?:unclear|inaudible|không\s*rõ|nhiễu)\s*\]|\(\s*(?:unclear|inaudible|không\s*rõ)\s*\)|\?{3,})/gi, replacement: ' ... ' },
   { pattern: /%hesitation%/gi, replacement: ' ... ' },
-  // Lặp từ ngắc ngứ (Stuttering / Repetition): "cái này cái này" -> "cái này ... cái này"
+  // Lặp từ ngắc ngứ (Stuttering / Repetition): bảo tồn cả 2 từ và nối bằng dấu ... phản ánh đúng lời thoại thực tế
   { pattern: /(?<=^|[^\p{L}\p{N}])(cái\s*này)\s+(cái\s*này)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
-  { pattern: /(?<=^|[^\p{L}\p{N}])(cái|thì|là|này|đang|tôi|mình)\s+\1(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $1' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(những\s*cái)\s+(những\s*cái)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(bản)\s+(bản\s*thân)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(người\s*phải)\s+(ký)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cái)\s+(cái\s+[\p{L}\p{N}]+)(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $2' },
+  { pattern: /(?<=^|[^\p{L}\p{N}])(cái|thì|là|này|đang|tôi|mình|chúng\s*ta|nó|ở|bên|người|theo)\s+\1(?=[^\p{L}\p{N}]|$)/giu, replacement: '$1 ... $1' },
   { pattern: /(?<=^|[^\p{L}\p{N}])(ờ|ừm|à\s*thì|ờm|ơ\s*kìa|ừ\s*thì)(?=[^\p{L}\p{N}]|$)/giu, replacement: ' ... ' }
 ];
 
@@ -630,13 +635,19 @@ const QUESTION_ENDINGS = [
   'có không',
   'biết không',
   'ok không',
+  'ok chưa',
+  'oke chưa',
+  'rõ chưa',
   'được ko',
   'phải ko',
   'đúng ko'
 ];
 
 // 10. Các cụm từ bắt đầu câu hỏi tiếng Việt (Question Starters)
-const QUESTION_STARTERS_REGEX = /^(tại\s*sao|vì\s*sao|làm\s*sao|có\s*phải|bao\s*giờ|khi\s*nào|ai\s*là|ai\s*sẽ|ai\s*chịu|liệu\s*có|bao\s*nhiêu|mấy\s*giờ|làm\s*thế\s*nào|có\s*cách\s*nào|cho\s*hỏi|xin\s*hỏi)\b/i;
+const QUESTION_STARTERS_REGEX = /^(tại\s*sao|vì\s*sao|làm\s*sao|có\s*phải|bao\s*giờ|khi\s*nào|ai\s*là|ai\s*sẽ|ai\s*chịu|liệu\s*có|bao\s*nhiêu|mấy\s*giờ|làm\s*thế\s*nào|có\s*cách\s*nào|cho\s*hỏi|xin\s*hỏi)\b/iu;
+
+// 10B. Nhận diện các dấu hiệu lời thoại thực tế bị lửng lơ, ngắt quãng, chưa kết thúc hoặc khuyết thông tin -> Gắn dấu ...
+export const INCOMPLETE_TRAILING_MARKERS_REGEX = /(?:(?:^|[^\p{L}\p{N}])(?:thì|là|và|nhưng|mà|hoặc|hay|cho nên|do đó|vì thế|bởi vì|do là|tại vì|tại|nên|song|tuy nhiên|tuy|nhưng mà|thế nên|thế là|thế thì|vậy thì|nếu|nếu như|giá như|dù|mặc dù|về|của|đối với|trong|ở|lên|xuống|vào|ra|tới|đến|theo|với|cho|bằng|đang|sẽ|sắp|chuẩn bị|đã|vừa|mới|từng|được|bị|phải|cần|muốn|định|ví dụ như|ví dụ|chẳng hạn như|chẳng hạn|như là|kiểu như|kiểu|nói chung là|thực ra là|thực ra thì|vấn đề là|ý là|đại loại là|nghĩa là|tức là|còn về|còn|khoảng|chừng|tầm|một là|hai là|ba là|bốn là|mấy cái|những cái|các|mỗi|từng|thì bây giờ|thì bây giờ mình|để mình|để|khi mà|khi mà cái|với cái|cái|rất là nhiều cái|những cái|cái gì|thế nào|vân vân|vv|v\.v)\s*$)|(?:(?:^|[^\p{L}\p{N}])(?:để|để\s*mà|nhằm)\s+(?:mình|chúng\s*ta|em|anh|chị)\s+[\p{L}\p{N}\s]{1,25}$)|(?:(?:^|[^\p{L}\p{N}])khi\s*mà\s+[\p{L}\p{N}\s]{1,25}$)|(?:(?:^|[^\p{L}\p{N}])(?:những|các|mấy)\s+(?:cái\s+)?vấn\s*đề\s*$)|(?:[,;:\-–—]\s*$)/iu;
 
 /**
  * Tự động chèn dấu phẩy hợp lý sau các cụm từ chuyển tiếp mở đầu câu
@@ -799,9 +810,9 @@ export function processRealtimeSpeechPunctuation(
   text = text.replace(/"\s+/g, '"').replace(/\s+"/g, '"');
   text = text.replace(/\s{2,}/g, ' ');
 
-  // 12. Nếu là câu chốt (final), kiểm tra xem có phải câu hỏi không
+  // 12. Tự động chốt dấu câu kết thúc theo ngữ điệu và phản ánh trung thực thực tế lời thoại
+  const trimmed = text.trim();
   if (opts.isFinal) {
-    const trimmed = text.trim();
     if (!/[.?!…]$/.test(trimmed) && !trimmed.endsWith('...')) {
       const lower = trimmed.toLowerCase();
       const hasQuestionEnding = QUESTION_ENDINGS.some(ending => {
@@ -810,13 +821,25 @@ export function processRealtimeSpeechPunctuation(
       const hasQuestionStarter = QUESTION_STARTERS_REGEX.test(lower);
 
       if (hasQuestionEnding || hasQuestionStarter) {
-        text = trimmed.replace(/,\s*$/, '') + '?';
+        text = trimmed.replace(/[,;:\-–—\s]*$/, '') + '?';
+      } else if (INCOMPLETE_TRAILING_MARKERS_REGEX.test(trimmed)) {
+        // Dấu ba chấm (...) cho các câu nói lửng lơ, đứt quãng, ngắt nghỉ hoặc khuyết thông tin theo thực tế ghi âm
+        text = trimmed.replace(/[,;:\-–—\s]*$/, '') + ' ...';
       } else {
         const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
-        if (wordCount >= 3 && !trimmed.endsWith(':') && !trimmed.endsWith(',')) {
-          text = trimmed + '.';
+        const isCommonShortAnswer = /^(vâng|dạ|chuẩn|đúng|chính xác|rồi|xong|được|nhất trí|đồng ý|không|có|được rồi|đúng rồi|dạ vâng|vâng ạ|dạ được|thế này|tất nhiên|chắc chắn)$/i.test(trimmed);
+        if (wordCount >= 3 || isCommonShortAnswer) {
+          text = trimmed.replace(/[,;:\-–—\s]*$/, '') + '.';
+        } else {
+          // Cụm từ ngắt quãng hoặc chưa nói trọn ý: gắn dấu ba chấm (...) thể hiện trung thực lời nói
+          text = trimmed.replace(/[,;:\-–—\s]*$/, '') + ' ...';
         }
       }
+    }
+  } else {
+    // Với kết quả tạm thời (interim): nếu người nói đang ngập ngừng ở các từ nối, thể hiện ngay dấu ...
+    if (INCOMPLETE_TRAILING_MARKERS_REGEX.test(trimmed) && !trimmed.endsWith('...')) {
+      text = trimmed.replace(/[,;:\-–—\s]*$/, '') + ' ...';
     }
   }
 
@@ -972,19 +995,9 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   const prevNorm = stripPunct(prev);
   const nextNorm = stripPunct(next);
 
-  // Nội dung hoàn toàn giống nhau -> giữ prev
-  if (prevNorm === nextNorm) {
-    return prev;
-  }
-
   // Câu mới là bản mở rộng bắt đầu bằng câu cũ -> nhận câu mới
   if (nextNorm.startsWith(prevNorm) && prevNorm.length >= 4) {
     return next;
-  }
-
-  // Đuôi câu cũ giống hệt câu mới và câu mới chỉ có 1 từ ngắn (hiện tượng dội âm)
-  if (prevNorm.endsWith(nextNorm) && nextNorm.split(' ').length <= 1) {
-    return prev;
   }
 
   // Kiểm tra overlap giữa đuôi câu trước và đầu câu sau (từ 2 đến 15 từ)
@@ -999,17 +1012,18 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
   for (let k = maxCheck; k >= 2; k--) {
     const prevSuffix = prevNormWords.slice(prevNormWords.length - k).join(' ');
     const nextPrefix = nextNormWords.slice(0, k).join(' ');
-    if (prevSuffix === nextPrefix && prevSuffix.length >= 6) {
+    if (prevSuffix === nextPrefix && prevSuffix.length >= 8) {
       maxOverlap = k;
       break;
     }
   }
 
-  if (maxOverlap > 0) {
+  if (maxOverlap > 0 && nextWords.length > maxOverlap) {
     const remainingWords = nextWords.slice(maxOverlap).join(' ').trim();
-    if (!remainingWords) return prev;
-    const separator = prev.endsWith('\n') ? '' : ' ';
-    return `${prev}${separator}${remainingWords}`;
+    if (remainingWords) {
+      const separator = prev.endsWith('\n') ? '' : ' ';
+      return `${prev}${separator}${remainingWords}`;
+    }
   }
 
   // Nếu câu trước kết thúc bằng dấu ngắt câu hoàn chỉnh (. ? !)
@@ -1040,6 +1054,7 @@ export function mergeSpeechWithoutOverlap(prevText: string, newText: string): st
 
 /**
  * Khử phần tiền tố bị trùng lặp của câu mới nếu đầu câu mới trùng với đuôi câu trước
+ * Bảo toàn 100% nội dung thực tế lời thoại, tuyệt đối không bỏ rơi từ ngữ hay làm rỗng câu
  */
 export function stripPrefixOverlap(existingText: string, incomingText: string): string {
   const exist = existingText.trim();
@@ -1053,28 +1068,24 @@ export function stripPrefixOverlap(existingText: string, incomingText: string): 
   const incomingNormWords = incomingWords.map(w => stripPunct(w)).filter(Boolean);
 
   let maxOverlap = 0;
-  const maxCheck = Math.min(existWords.length, incomingNormWords.length, 60);
+  const maxCheck = Math.min(existWords.length, incomingNormWords.length, 30);
 
+  // Chỉ khử overlap khi trùng lặp tối thiểu từ 2 từ liên tiếp trở lên và độ dài chuỗi trùng >= 8 ký tự
   for (let k = maxCheck; k >= 2; k--) {
     const existSuffix = existWords.slice(existWords.length - k).join(' ');
     const incomingPrefix = incomingNormWords.slice(0, k).join(' ');
-    if (existSuffix === incomingPrefix && existSuffix.length >= 5) {
+    if (existSuffix === incomingPrefix && existSuffix.length >= 8) {
       maxOverlap = k;
       break;
     }
   }
 
-  if (maxOverlap === 0 && maxCheck >= 1) {
-    const lastExistWord = existWords[existWords.length - 1];
-    const firstIncWord = incomingNormWords[0];
-    if (lastExistWord === firstIncWord && lastExistWord.length >= 6) {
-      maxOverlap = 1;
-    }
-  }
-
-  if (maxOverlap > 0) {
+  // Tuyệt đối không xóa nếu phần incoming chỉ có chừng đó từ (tránh xóa mất câu ngắn hoặc câu lặp lại có chủ đích)
+  if (maxOverlap > 0 && incomingWords.length > maxOverlap) {
     const remaining = incomingWords.slice(maxOverlap).join(' ').trim();
-    return remaining ? autoCapitalizeSentences(remaining) : '';
+    if (remaining) {
+      return autoCapitalizeSentences(remaining);
+    }
   }
 
   return incoming;
