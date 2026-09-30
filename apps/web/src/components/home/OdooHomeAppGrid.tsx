@@ -245,20 +245,20 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
 
 
-          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: ULTRA-MODERN QUANTUM DATA CORE */}
+          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: GRAND QUANTUM DATA CORE & AI NEURAL HUB */}
           <div 
-            className="hidden md:flex absolute left-2 lg:left-6 xl:left-12 2xl:left-20 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none cursor-default group"
+            className="hidden md:flex absolute left-1 lg:left-3 xl:left-8 2xl:left-14 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-left select-none cursor-default group"
             style={{ animationDelay: '200ms' }}
           >
-            <TechHologramDataCore className="w-[220px] md:w-[250px] lg:w-[280px] xl:w-[320px] 2xl:w-[360px] h-auto group-hover:scale-[1.03] transition-transform duration-500" />
+            <TechHologramDataCore className="w-[260px] md:w-[290px] lg:w-[330px] xl:w-[380px] 2xl:w-[420px] h-auto group-hover:scale-[1.03] transition-transform duration-500" />
           </div>
 
-          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: ULTRA-MODERN PRECISION KINETIC ENGINE */}
+          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: GRAND KINETIC GEAR ECOSYSTEM & AUTOMATION HUB */}
           <div 
-            className="hidden md:flex absolute right-2 lg:right-6 xl:right-12 2xl:right-20 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none cursor-default group"
+            className="hidden md:flex absolute right-1 lg:right-3 xl:right-8 2xl:right-14 top-1/2 -translate-y-1/2 z-20 items-center animate-entrance-right select-none cursor-default group"
             style={{ animationDelay: '250ms' }}
           >
-            <TechHologramGearEcosystem className="w-[220px] md:w-[250px] lg:w-[280px] xl:w-[320px] 2xl:w-[360px] h-auto group-hover:scale-[1.03] transition-transform duration-500" />
+            <TechHologramGearEcosystem className="w-[260px] md:w-[290px] lg:w-[330px] xl:w-[380px] 2xl:w-[420px] h-auto group-hover:scale-[1.03] transition-transform duration-500" />
           </div>
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}

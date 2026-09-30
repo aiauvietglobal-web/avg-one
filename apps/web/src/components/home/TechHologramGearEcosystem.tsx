@@ -1,14 +1,16 @@
 import React from 'react';
 
 /**
- * ⚙️ HAUTE HORLOGERIE KINETIC GEAR ECOSYSTEM (RIGHT HERO EMBLEM)
+ * ⚙️ GRAND KINETIC GEAR ECOSYSTEM & AUTOMATION HUB (RIGHT HERO COMPONENT)
  * 
- * Phong cách Cơ khí Xa xỉ & Tinh tế Đỉnh cao (Ultra-Refined Swiss Precision):
- * - Bộ 3 Bánh răng vi cơ khí 12 răng mảnh dẻ (Fine-Pitch Skeletonized Chronograph Gears).
- * - Bảng màu tinh tế, thanh nhã: Vàng Champagne / Hổ Phách Nhẹ (Top Gear) & Bạch Kim / Lam Ngọc (Bottom Gears).
- * - Cấu trúc lộ cơ tinh xảo (Skeletonized Wheels) với nan hoa khí động học, vòng chia độ micro-chronometer và chân kính Ruby.
- * - Loại bỏ hoàn toàn đĩa tròn đứt nét rời rạc dưới chân; thay bằng bóng đổ mờ quang học nhẹ nhàng, gắn kết tự nhiên.
- * - Chuyển động xoay ăn khớp 60fps mượt mà, lơ lửng êm ái trong không gian.
+ * Thiết kế Đẳng cấp & Ấn tượng 2026 (Stripe & Linear Enterprise Ecosystem Visual):
+ * - Điểm nhấn uy lực trung tâm: Cụm 3 Bánh răng Haute Horlogerie 3D bề thế, bóng bẩy với đường phản quang ánh sáng lướt qua.
+ * - Vầng hào quang năng lượng thương hiệu (Brand Energy Halo): Giao thoa mềm mại giữa Xanh Coban sâu (#0284C7) và Cam Hổ Phách (#F15A24).
+ * - Hệ thống Thẻ Kính Mờ Động học (Floating Glass Telemetry Cards):
+ *   + Card 1: ⚡ Tự Động Hóa (100% SOP SOP Flow)
+ *   + Card 2: 🔄 Đồng Bộ Tức Thì (Zero Latency)
+ *   + Card 3: 👥 20 Nhân Sự Lõi (Hiệp Đồng Tác Chiến)
+ * - Đường dẫn truyền hạt photon năng lượng (Energy Conduit Stream) kết nối cỗ máy và các vệ tinh dữ liệu.
  */
 
 interface TechHologramGearEcosystemProps {
@@ -16,176 +18,243 @@ interface TechHologramGearEcosystemProps {
 }
 
 export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps> = ({ className = '' }) => {
-  // SVG Path cho bánh răng vi cơ khí 12 răng chuẩn kỹ thuật (Pitch R = 36, Outer R = 40.5, Root R = 31.5, Hole R = 16)
-  const fineGearPath = 
-    "M 31.50 0.00 L 31.29 3.62 L 39.82 7.38 L 38.18 13.52 L 28.91 12.51 " +
-    "L 27.28 15.75 L 25.29 18.78 L 30.80 26.30 L 26.30 30.80 L 18.78 25.29 " +
-    "L 15.75 27.28 L 12.51 28.91 L 13.52 38.18 L 7.38 39.82 L 3.62 31.29 " +
-    "L 0.00 31.50 L -3.62 31.29 L -7.38 39.82 L -13.52 38.18 L -12.51 28.91 " +
-    "L -15.75 27.28 L -18.78 25.29 L -26.30 30.80 L -30.80 26.30 L -25.29 18.78 " +
-    "L -27.28 15.75 L -28.91 12.51 L -38.18 13.52 L -39.82 7.38 L -31.29 3.62 " +
-    "L -31.50 0.00 L -31.29 -3.62 L -39.82 -7.38 L -38.18 -13.52 L -28.91 -12.51 " +
-    "L -27.28 -15.75 L -25.29 -18.78 L -30.80 -26.30 L -26.30 -30.80 L -18.78 -25.29 " +
-    "L -15.75 -27.28 L -12.51 -28.91 L -13.52 -38.18 L -7.38 -39.82 L -3.62 -31.29 " +
-    "L -0.00 -31.50 L 3.62 -31.29 L 7.38 -39.82 L 13.52 -38.18 L 12.51 -28.91 " +
-    "L 15.75 -27.28 L 18.78 -25.29 L 26.30 -30.80 L 30.80 -26.30 L 25.29 -18.78 " +
-    "L 27.28 -15.75 L 28.91 -12.51 L 38.18 -13.52 L 39.82 -7.38 L 31.29 -3.62 Z " +
-    "M 16 0 A 16 16 0 1 0 -16 0 A 16 16 0 1 0 16 0 Z";
+  // SVG Path cho bánh răng vi cơ khí 12 răng chuẩn kỹ thuật (Pitch R = 38, Outer R = 43, Root R = 33, Hole R = 17)
+  const masterGearPath = 
+    "M 33.00 0.00 L 32.78 3.79 L 42.28 7.84 L 40.54 14.37 L 30.29 13.10 " +
+    "L 28.58 16.50 L 26.49 19.68 L 32.73 27.20 L 27.20 32.73 L 19.68 26.49 " +
+    "L 16.50 28.58 L 13.10 30.29 L 14.37 40.54 L 7.84 42.28 L 3.79 32.78 " +
+    "L 0.00 33.00 L -3.79 32.78 L -7.84 42.28 L -14.37 40.54 L -13.10 30.29 " +
+    "L -16.50 28.58 L -19.68 26.49 L -27.20 32.73 L -32.73 27.20 L -26.49 19.68 " +
+    "L -28.58 16.50 L -30.29 13.10 L -40.54 14.37 L -42.28 7.84 L -32.78 3.79 " +
+    "L -33.00 0.00 L -32.78 -3.79 L -42.28 -7.84 L -40.54 -14.37 L -30.29 -13.10 " +
+    "L -28.58 -16.50 L -26.49 -19.68 L -32.73 -27.20 L -27.20 -32.73 L -19.68 -26.49 " +
+    "L -16.50 -28.58 L -13.10 -30.29 L -14.37 -40.54 L -7.84 -42.28 L -3.79 -32.78 " +
+    "L -0.00 -33.00 L 3.79 -32.78 L 7.84 -42.28 L 14.37 -40.54 L 13.10 -30.29 " +
+    "L 16.50 -28.58 L 19.68 -26.49 L 27.20 -32.73 L 32.73 -27.20 L 26.49 -19.68 " +
+    "L 28.58 -16.50 L 30.29 -13.10 L 40.54 -14.37 L 42.28 -7.84 L 32.78 -3.79 Z " +
+    "M 17 0 A 17 17 0 1 0 -17 0 A 17 17 0 1 0 17 0 Z";
 
   return (
     <div className={`relative select-none pointer-events-none ${className}`}>
       <svg
-        viewBox="0 0 380 260"
+        viewBox="0 0 450 310"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full overflow-visible"
       >
         <defs>
-          {/* 🌟 HỆ GRADIENT TINH TẾ, TRONG TRẺO & SANG TRỌNG 🌟 */}
-          
-          {/* Gradient Bánh Răng Vàng Champagne / Hổ Phách Nhẹ (Top Gear) */}
-          <linearGradient id="fine-amber-champagne" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="25%" stopColor="#FEF3C7" />
-            <stop offset="60%" stopColor="#F59E0B" />
-            <stop offset="100%" stopColor="#D97706" />
-          </linearGradient>
-
-          {/* Gradient Bánh Răng Lam Ngọc / Bạch Kim Trong Trẻo (Bottom Gears) */}
-          <linearGradient id="fine-sapphire-platinum" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="25%" stopColor="#E0F2FE" />
-            <stop offset="65%" stopColor="#38BDF8" />
-            <stop offset="100%" stopColor="#0284C7" />
-          </linearGradient>
-
-          {/* Vát cạnh 3D siêu mỏng nhẹ (Subtle 3D Rim) */}
-          <linearGradient id="fine-bevel-shadow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#0F172A" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#0369A1" stopOpacity="0.65" />
-          </linearGradient>
-
-          {/* Vành vát kim cương phản quang ánh sáng trắng (Gleam Edge) */}
-          <linearGradient id="fine-gleam-edge" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#BAE6FD" stopOpacity="0.8" />
-          </linearGradient>
-
-          {/* Chân kính Ruby siêu nhỏ tinh xảo */}
-          <radialGradient id="fine-ruby-pivot" cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#FECDD3" />
-            <stop offset="40%" stopColor="#F43F5E" />
-            <stop offset="80%" stopColor="#BE123C" />
-            <stop offset="100%" stopColor="#881337" />
-          </radialGradient>
-
-          {/* Đĩa phản chiếu ánh sáng êm dịu nâng đỡ khối (Tự nhiên, không tách rời) */}
-          <radialGradient id="fine-ground-ambient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#0284C7" stopOpacity="0.14" />
-            <stop offset="45%" stopColor="#38BDF8" stopOpacity="0.06" />
-            <stop offset="80%" stopColor="#0284C7" stopOpacity="0.01" />
+          {/* 🌟 VẦNG HÀO QUANG NĂNG LƯỢNG THƯƠNG HIỆU RỰC RỠ (BRAND ENERGY HALO) */}
+          <radialGradient id="hub-ambient-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.28" />
+            <stop offset="35%" stopColor="#0284C7" stopOpacity="0.16" />
+            <stop offset="65%" stopColor="#F59E0B" stopOpacity="0.08" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
           </radialGradient>
 
-          {/* Bộ lọc bóng đổ mềm mại, có chiều sâu quang học */}
-          <filter id="fine-soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="#0F172A" floodOpacity="0.10" />
+          {/* Gradient Bánh Răng Vàng Hổ Phách & Vàng Hồng Hoàng Gia (Top Master Gear) */}
+          <linearGradient id="gear-royal-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="20%" stopColor="#FEF08A" />
+            <stop offset="55%" stopColor="#F59E0B" />
+            <stop offset="85%" stopColor="#EA580C" />
+            <stop offset="100%" stopColor="#9A3412" />
+          </linearGradient>
+
+          {/* Gradient Bánh Răng Lam Ngọc & Bạch Kim Cao Cấp (Bottom Precision Gears) */}
+          <linearGradient id="gear-sapphire-titanium" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="20%" stopColor="#E0F2FE" />
+            <stop offset="55%" stopColor="#38BDF8" />
+            <stop offset="85%" stopColor="#0284C7" />
+            <stop offset="100%" stopColor="#0369A1" />
+          </linearGradient>
+
+          {/* Lớp dày 3D Extrusion đổ bóng sang trọng */}
+          <linearGradient id="gear-depth-bevel" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#0F172A" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#0369A1" stopOpacity="0.75" />
+          </linearGradient>
+
+          {/* Viền vát kim cương phản quang ánh sáng trắng rực rỡ */}
+          <linearGradient id="gear-specular-sheen" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#BAE6FD" stopOpacity="0.9" />
+          </linearGradient>
+
+          {/* Chân kính Ruby đính tâm */}
+          <radialGradient id="ruby-jewel-glow" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="#FECDD3" />
+            <stop offset="40%" stopColor="#F43F5E" />
+            <stop offset="80%" stopColor="#BE123C" />
+            <stop offset="100%" stopColor="#4C0519" />
+          </radialGradient>
+
+          {/* Gradient Thẻ Kính Mờ (Glassmorphic Card Background) */}
+          <linearGradient id="glass-card-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.92" />
+            <stop offset="100%" stopColor="#F8FAFC" stopOpacity="0.82" />
+          </linearGradient>
+
+          <linearGradient id="glass-card-border" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#BAE6FD" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.4" />
+          </linearGradient>
+
+          {/* Bộ lọc bóng đổ cao cấp cho các thẻ và cỗ máy */}
+          <filter id="hub-master-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#0F172A" floodOpacity="0.12" />
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#0284C7" floodOpacity="0.15" />
+          </filter>
+
+          <filter id="card-soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="#0F172A" floodOpacity="0.08" />
           </filter>
         </defs>
 
         <style>{`
-          @keyframes fine-horlogerie-float {
+          @keyframes kinetic-sculpture-float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-7px); }
           }
-          @keyframes fine-ambient-breathe {
-            0%, 100% { opacity: 0.75; transform: scale(1); }
-            50% { opacity: 0.95; transform: scale(1.04); }
+          @keyframes card-hover-1 {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
           }
-          .anim-gear-float { animation: fine-horlogerie-float 6s ease-in-out infinite; }
-          .anim-ambient-breathe { animation: fine-ambient-breathe 4s ease-in-out infinite; transform-origin: 190px 195px; }
+          @keyframes card-hover-2 {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(4px); }
+          }
+          @keyframes pulse-energy-halo {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.06); opacity: 1; }
+          }
+          @keyframes beam-dash-flow {
+            0% { stroke-dashoffset: 60; }
+            100% { stroke-dashoffset: 0; }
+          }
+          .anim-sculpture { animation: kinetic-sculpture-float 6s ease-in-out infinite; }
+          .anim-card-1 { animation: card-hover-1 5s ease-in-out infinite 0.3s; }
+          .anim-card-2 { animation: card-hover-2 5.5s ease-in-out infinite 0.7s; }
+          .anim-card-3 { animation: card-hover-1 4.8s ease-in-out infinite 1.1s; }
+          .anim-halo-pulse { animation: pulse-energy-halo 4s ease-in-out infinite; transform-origin: 225px 150px; }
+          .anim-energy-beam { stroke-dasharray: 6 4; animation: beam-dash-flow 2s linear infinite; }
         `}</style>
 
         {/* ========================================================================= */}
-        {/* VÙNG NÂNG ĐỠ QUANG HỌC DƯỚI CHÂN (GROUNDING AMBIENT OCCLUSION)            */}
+        {/* TẦNG 1: VẦNG HÀO QUANG NĂNG LƯỢNG RỰC RỠ TẠO CHIỀU SÂU BỨT PHÁ           */}
         {/* ========================================================================= */}
-        <g id="grounding-ambient" transform="translate(190, 195)">
-          {/* Vùng phản chiếu êm ái sát đáy bánh răng */}
-          <ellipse cx="0" cy="0" rx="84" ry="16" fill="url(#fine-ground-ambient)" className="anim-ambient-breathe" />
+        <g id="energy-environment" transform="translate(225, 145)">
+          {/* Hào quang trung tâm mở rộng toàn cụm */}
+          <ellipse cx="0" cy="0" rx="160" ry="95" fill="url(#hub-ambient-glow)" className="anim-halo-pulse" />
           
-          {/* Vạch đo lường vi cơ khí tinh tế (Micro Aerospace Scale) */}
-          <ellipse cx="0" cy="0" rx="72" ry="13" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 4" opacity="0.3" />
-          <ellipse cx="0" cy="0" rx="48" ry="8.5" stroke="#F59E0B" strokeWidth="0.6" strokeDasharray="2 3" opacity="0.25" />
-          <circle cx="-72" cy="0" r="1.5" fill="#0284C7" opacity="0.6" />
-          <circle cx="72" cy="0" r="1.5" fill="#F59E0B" opacity="0.6" />
+          {/* Các vòng sóng vi lượng tử công nghệ cao */}
+          <ellipse cx="0" cy="0" rx="130" ry="60" stroke="#0284C7" strokeWidth="1" strokeDasharray="6 8" opacity="0.3" />
+          <ellipse cx="0" cy="0" rx="95" ry="42" stroke="#F59E0B" strokeWidth="0.8" strokeDasharray="4 6" opacity="0.25" />
         </g>
 
         {/* ========================================================================= */}
-        {/* KHỐI CHÍNH: CỖ MÁY 3 BÁNH RĂNG VI CƠ KHÍ THỤY SĨ (HAUTE HORLOGERIE TRIAD) */}
+        {/* TẦNG 2: CÁC ĐƯỜNG DẪN TRUYỀN NĂNG LƯỢNG PHOTON (ENERGY CONDUIT BEAMS)     */}
         {/* ========================================================================= */}
-        <g className="anim-gear-float" filter="url(#fine-soft-shadow)">
+        <g id="conduit-streams">
+          {/* Dẫn truyền tới Card 1 (Top-Left: 85, 55) */}
+          <path
+            d="M 185 105 C 150 90, 115 75, 85 55"
+            stroke="#38BDF8"
+            strokeWidth="1.4"
+            fill="none"
+            className="anim-energy-beam opacity-60"
+          />
+          <circle cx="85" cy="55" r="2.5" fill="#38BDF8" />
+
+          {/* Dẫn truyền tới Card 2 (Bottom-Left: 80, 240) */}
+          <path
+            d="M 175 180 C 140 210, 110 225, 80 240"
+            stroke="#0284C7"
+            strokeWidth="1.4"
+            fill="none"
+            className="anim-energy-beam opacity-60"
+          />
+          <circle cx="80" cy="240" r="2.5" fill="#0284C7" />
+
+          {/* Dẫn truyền tới Card 3 (Right: 375, 145) */}
+          <path
+            d="M 280 150 C 315 150, 345 145, 375 145"
+            stroke="#F59E0B"
+            strokeWidth="1.4"
+            fill="none"
+            className="anim-energy-beam opacity-60"
+          />
+          <circle cx="375" cy="145" r="2.5" fill="#F59E0B" />
+        </g>
+
+        {/* ========================================================================= */}
+        {/* TẦNG 3: CỖ MÁY 3 BÁNH RĂNG ĐỘNG LỰC HỌC TRUNG TÂM (GRAND KINETIC ENGINE)  */}
+        {/* ========================================================================= */}
+        <g className="anim-sculpture" filter="url(#hub-master-shadow)">
           
-          {/* VÒNG ĐAI QUỸ ĐẠO BẠCH KIM THANH THOÁT ÔM LẤY BỘ MÁY */}
-          <g transform="translate(190, 122) rotate(-18)">
+          {/* VÒNG ĐAI CON QUAY QUỸ ĐẠO BẠCH KIM BẢO VỆ CỖ MÁY */}
+          <g transform="translate(225, 145) rotate(-16)">
             <ellipse
               cx="0"
               cy="0"
-              rx="90"
-              ry="34"
+              rx="98"
+              ry="38"
               stroke="#0284C7"
-              strokeWidth="1.2"
+              strokeWidth="1.4"
               fill="none"
-              strokeDasharray="40 12 20 12"
-              opacity="0.35"
+              strokeDasharray="45 15 25 15"
+              opacity="0.45"
             />
             <ellipse
               cx="0"
               cy="0"
-              rx="88"
-              ry="32.5"
+              rx="96"
+              ry="36"
               stroke="#FFFFFF"
-              strokeWidth="0.6"
+              strokeWidth="0.8"
               fill="none"
-              opacity="0.6"
+              opacity="0.75"
             />
-            <circle cx="90" cy="0" r="2" fill="#38BDF8" />
+            <circle cx="98" cy="0" r="2.5" fill="#F59E0B" />
+            <circle cx="-98" cy="0" r="2.5" fill="#38BDF8" />
           </g>
 
           {/* ------------------------------------------------------------- */}
-          {/* BÁNH RĂNG 1: TRÊN ĐỈNH - VÀNG CHAMPAGNE / HỔ PHÁCH TINH TẾ     */}
-          {/* Tâm: (190, 88) - 12 răng - Xoay thuận chiều (+360°) trong 16s  */}
+          {/* BÁNH RĂNG 1: TRÊN ĐỈNH - VÀNG HỔ PHÁCH HOÀNG GIA (MASTER GEAR) */}
+          {/* Tâm: (225, 105) - 12 răng - Xoay thuận (+360°) trong 15s       */}
           {/* ------------------------------------------------------------- */}
-          <g transform="translate(190, 88)">
+          <g transform="translate(225, 105)">
             <g>
-              {/* Lớp dày 3D siêu nhẹ 2.5px */}
-              <g transform="translate(0, 2.5)">
-                <path d={fineGearPath} fill="url(#fine-bevel-shadow)" fillRule="evenodd" />
+              {/* Lớp dày 3D Extrusion 3px sắc sảo */}
+              <g transform="translate(0, 3.2)">
+                <path d={masterGearPath} fill="url(#gear-depth-bevel)" fillRule="evenodd" />
               </g>
 
-              {/* Mặt Bánh Răng Vàng Champagne bóng bẩy */}
+              {/* Mặt Bánh Răng Vàng Hổ Phách sang trọng */}
               <path
-                d={fineGearPath}
-                fill="url(#fine-amber-champagne)"
-                stroke="#D97706"
-                strokeWidth="0.8"
+                d={masterGearPath}
+                fill="url(#gear-royal-amber)"
+                stroke="#C2410C"
+                strokeWidth="1"
                 fillRule="evenodd"
               />
 
-              {/* Gờ vát kim cương phản quang ánh sáng trắng viền mặt trên */}
-              <circle cx="0" cy="0" r="24" stroke="url(#fine-gleam-edge)" strokeWidth="0.9" fill="none" />
-              <circle cx="0" cy="0" r="23" stroke="#B45309" strokeWidth="0.6" strokeDasharray="2 1.5" fill="none" opacity="0.6" />
+              {/* Gờ vát kim cương phản quang ánh sáng trắng viền ngoài */}
+              <circle cx="0" cy="0" r="26" stroke="url(#gear-specular-sheen)" strokeWidth="1.2" fill="none" />
+              <circle cx="0" cy="0" r="24.5" stroke="#7C2D12" strokeWidth="0.8" strokeDasharray="3 2" fill="none" opacity="0.6" />
 
-              {/* 4 Nan hoa khí động học phay rỗng (Skeletonized Cutouts) */}
-              <line x1="-15" y1="0" x2="-23" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="15" y1="0" x2="23" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="0" y1="-15" x2="0" y2="-23" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="0" y1="15" x2="0" y2="23" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
+              {/* 4 Nan hoa rãnh phay CNC tinh xảo */}
+              <line x1="-17" y1="0" x2="-26" y2="0" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="17" y1="0" x2="26" y2="0" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="0" y1="-17" x2="0" y2="-26" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="0" y1="17" x2="0" y2="26" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
 
-              {/* Trục xoay chân kính Ruby đỏ xa xỉ */}
-              <circle cx="0" cy="0" r="6.5" fill="#451A03" stroke="#F59E0B" strokeWidth="0.8" />
-              <circle cx="0" cy="0" r="4.5" fill="url(#fine-ruby-pivot)" stroke="#FFFFFF" strokeWidth="0.6" />
-              <circle cx="-1.4" cy="-1.4" r="1.2" fill="#FFFFFF" opacity="0.95" />
+              {/* Trục xoay chân kính Ruby đỏ rực rỡ */}
+              <circle cx="0" cy="0" r="7.5" fill="#451A03" stroke="#F59E0B" strokeWidth="1" />
+              <circle cx="0" cy="0" r="5" fill="url(#ruby-jewel-glow)" stroke="#FFFFFF" strokeWidth="0.8" />
+              <circle cx="-1.6" cy="-1.6" r="1.4" fill="#FFFFFF" opacity="0.95" />
 
               {/* Xoay 60fps mượt mà thuận chiều kim đồng hồ */}
               <animateTransform
@@ -193,93 +262,160 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
                 type="rotate"
                 from="0 0 0"
                 to="360 0 0"
-                dur="16s"
+                dur="15s"
                 repeatCount="indefinite"
               />
             </g>
           </g>
 
           {/* ------------------------------------------------------------- */}
-          {/* BÁNH RĂNG 2: DƯỚI TRÁI - LAM NGỌC & BẠCH KIM TRONG TRẺO        */}
-          {/* Tâm: (139, 139) - 12 răng - Xoay ngược chiều (-360°) 16s, -15° */}
+          {/* BÁNH RĂNG 2: DƯỚI TRÁI - LAM NGỌC TITAN (LEFT PRECISION GEAR) */}
+          {/* Tâm: (171, 159) - 12 răng - Xoay ngược (-360°) 15s, pha -15°   */}
           {/* ------------------------------------------------------------- */}
-          <g transform="translate(139, 139)">
+          <g transform="translate(171, 159)">
             <g>
-              <g transform="translate(0, 2.5)">
-                <path d={fineGearPath} fill="url(#fine-bevel-shadow)" fillRule="evenodd" />
+              <g transform="translate(0, 3.2)">
+                <path d={masterGearPath} fill="url(#gear-depth-bevel)" fillRule="evenodd" />
               </g>
 
               <path
-                d={fineGearPath}
-                fill="url(#fine-sapphire-platinum)"
-                stroke="#0284C7"
-                strokeWidth="0.8"
+                d={masterGearPath}
+                fill="url(#gear-sapphire-titanium)"
+                stroke="#0369A1"
+                strokeWidth="1"
                 fillRule="evenodd"
               />
 
-              <circle cx="0" cy="0" r="24" stroke="url(#fine-gleam-edge)" strokeWidth="0.9" fill="none" />
-              <circle cx="0" cy="0" r="23" stroke="#0369A1" strokeWidth="0.6" strokeDasharray="2 1.5" fill="none" opacity="0.6" />
+              <circle cx="0" cy="0" r="26" stroke="url(#gear-specular-sheen)" strokeWidth="1.2" fill="none" />
+              <circle cx="0" cy="0" r="24.5" stroke="#0F172A" strokeWidth="0.8" strokeDasharray="3 2" fill="none" opacity="0.6" />
 
-              <line x1="-15" y1="0" x2="-23" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="15" y1="0" x2="23" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="0" y1="-15" x2="0" y2="-23" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="0" y1="15" x2="0" y2="23" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
+              <line x1="-17" y1="0" x2="-26" y2="0" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="17" y1="0" x2="26" y2="0" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="0" y1="-17" x2="0" y2="-26" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="0" y1="17" x2="0" y2="26" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
 
               {/* Nắp trục Titan nung xanh Coban */}
-              <circle cx="0" cy="0" r="6.5" fill="#0C4A6E" stroke="#38BDF8" strokeWidth="0.8" />
-              <circle cx="0" cy="0" r="4.5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.6" />
-              <circle cx="-1.4" cy="-1.4" r="1.2" fill="#FFFFFF" opacity="0.95" />
+              <circle cx="0" cy="0" r="7.5" fill="#0C4A6E" stroke="#38BDF8" strokeWidth="1" />
+              <circle cx="0" cy="0" r="5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.8" />
+              <circle cx="-1.6" cy="-1.6" r="1.4" fill="#FFFFFF" opacity="0.95" />
 
               <animateTransform
                 attributeName="transform"
                 type="rotate"
                 from="-15 0 0"
                 to="-375 0 0"
-                dur="16s"
+                dur="15s"
                 repeatCount="indefinite"
               />
             </g>
           </g>
 
           {/* ------------------------------------------------------------- */}
-          {/* BÁNH RĂNG 3: DƯỚI PHẢI - LAM NGỌC & BẠCH KIM TRONG TRẺO       */}
-          {/* Tâm: (241, 139) - 12 răng - Xoay ngược chiều (-360°) 16s, +15° */}
+          {/* BÁNH RĂNG 3: DƯỚI PHẢI - LAM NGỌC TITAN (RIGHT PRECISION GEAR)*/}
+          {/* Tâm: (279, 159) - 12 răng - Xoay ngược (-360°) 15s, pha +15°   */}
           {/* ------------------------------------------------------------- */}
-          <g transform="translate(241, 139)">
+          <g transform="translate(279, 159)">
             <g>
-              <g transform="translate(0, 2.5)">
-                <path d={fineGearPath} fill="url(#fine-bevel-shadow)" fillRule="evenodd" />
+              <g transform="translate(0, 3.2)">
+                <path d={masterGearPath} fill="url(#gear-depth-bevel)" fillRule="evenodd" />
               </g>
 
               <path
-                d={fineGearPath}
-                fill="url(#fine-sapphire-platinum)"
-                stroke="#0284C7"
-                strokeWidth="0.8"
+                d={masterGearPath}
+                fill="url(#gear-sapphire-titanium)"
+                stroke="#0369A1"
+                strokeWidth="1"
                 fillRule="evenodd"
               />
 
-              <circle cx="0" cy="0" r="24" stroke="url(#fine-gleam-edge)" strokeWidth="0.9" fill="none" />
-              <circle cx="0" cy="0" r="23" stroke="#0369A1" strokeWidth="0.6" strokeDasharray="2 1.5" fill="none" opacity="0.6" />
+              <circle cx="0" cy="0" r="26" stroke="url(#gear-specular-sheen)" strokeWidth="1.2" fill="none" />
+              <circle cx="0" cy="0" r="24.5" stroke="#0F172A" strokeWidth="0.8" strokeDasharray="3 2" fill="none" opacity="0.6" />
 
-              <line x1="-15" y1="0" x2="-23" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="15" y1="0" x2="23" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="0" y1="-15" x2="0" y2="-23" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-              <line x1="0" y1="15" x2="0" y2="23" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
+              <line x1="-17" y1="0" x2="-26" y2="0" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="17" y1="0" x2="26" y2="0" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="0" y1="-17" x2="0" y2="-26" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
+              <line x1="0" y1="17" x2="0" y2="26" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" opacity="0.95" />
 
-              <circle cx="0" cy="0" r="6.5" fill="#0C4A6E" stroke="#38BDF8" strokeWidth="0.8" />
-              <circle cx="0" cy="0" r="4.5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.6" />
-              <circle cx="-1.4" cy="-1.4" r="1.2" fill="#FFFFFF" opacity="0.95" />
+              <circle cx="0" cy="0" r="7.5" fill="#0C4A6E" stroke="#38BDF8" strokeWidth="1" />
+              <circle cx="0" cy="0" r="5" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.8" />
+              <circle cx="-1.6" cy="-1.6" r="1.4" fill="#FFFFFF" opacity="0.95" />
 
               <animateTransform
                 attributeName="transform"
                 type="rotate"
                 from="15 0 0"
                 to="-345 0 0"
-                dur="16s"
+                dur="15s"
                 repeatCount="indefinite"
               />
             </g>
+          </g>
+        </g>
+
+        {/* ========================================================================= */}
+        {/* TẦNG 4: HỆ THỐNG THẺ KÍNH MỜ CÔNG NGHỆ CAO (FLOATING TELEMETRY CARDS)     */}
+        {/* ========================================================================= */}
+        <g id="telemetry-badges">
+          
+          {/* ⚡ CARD 1: TỰ ĐỘNG HÓA (TOP-LEFT: X=20, Y=35) */}
+          <g className="anim-card-1" transform="translate(20, 35)" filter="url(#card-soft-shadow)">
+            <rect
+              x="0"
+              y="0"
+              width="132"
+              height="44"
+              rx="10"
+              fill="url(#glass-card-bg)"
+              stroke="url(#glass-card-border)"
+              strokeWidth="1.2"
+            />
+            {/* Icon Huy hiệu phát sáng */}
+            <rect x="8" y="9" width="26" height="26" rx="6" fill="#F0FDF4" stroke="#86EFAC" strokeWidth="1" />
+            <path d="M21 15l-4 8h5l-1 6 5-8h-5l1-6z" fill="#16A34A" />
+            {/* Nhãn & Giá trị */}
+            <text x="40" y="21" fill="#0F172A" fontSize="10.5" fontWeight="bold" fontFamily="sans-serif">Tự Động Hóa</text>
+            <text x="40" y="34" fill="#16A34A" fontSize="9" fontWeight="600" fontFamily="sans-serif">● 100% SOP Flow</text>
+          </g>
+
+          {/* 👥 CARD 2: 20 NHÂN SỰ LÕI (BOTTOM-LEFT: X=20, Y=225) */}
+          <g className="anim-card-2" transform="translate(20, 225)" filter="url(#card-soft-shadow)">
+            <rect
+              x="0"
+              y="0"
+              width="138"
+              height="44"
+              rx="10"
+              fill="url(#glass-card-bg)"
+              stroke="url(#glass-card-border)"
+              strokeWidth="1.2"
+            />
+            <rect x="8" y="9" width="26" height="26" rx="6" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="1" />
+            {/* Icon Người / Team */}
+            <circle cx="21" cy="18" r="3.2" fill="#0284C7" />
+            <path d="M15 29v-1a3 3 0 0 1 6 0v1" fill="#0284C7" />
+            <circle cx="27" cy="19" r="2.2" fill="#38BDF8" />
+            <path d="M26 29v-1a2 2 0 0 1 3 0v1" fill="#38BDF8" />
+            <text x="40" y="21" fill="#0F172A" fontSize="10.5" fontWeight="bold" fontFamily="sans-serif">20 Nhân Sự Lõi</text>
+            <text x="40" y="34" fill="#0284C7" fontSize="9" fontWeight="600" fontFamily="sans-serif">Hiệp Đồng Tác Chiến</text>
+          </g>
+
+          {/* 🚀 CARD 3: VẬN HÀNH TỐC ĐỘ (RIGHT: X=325, Y=125) */}
+          <g className="anim-card-3" transform="translate(325, 125)" filter="url(#card-soft-shadow)">
+            <rect
+              x="0"
+              y="0"
+              width="118"
+              height="44"
+              rx="10"
+              fill="url(#glass-card-bg)"
+              stroke="url(#glass-card-border)"
+              strokeWidth="1.2"
+            />
+            <rect x="8" y="9" width="26" height="26" rx="6" fill="#FFF7ED" stroke="#FDBA74" strokeWidth="1" />
+            {/* Icon Gauge / Rocket */}
+            <path d="M21 16a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 3v3l2 2" stroke="#EA580C" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+            <text x="40" y="21" fill="#0F172A" fontSize="10.5" fontWeight="bold" fontFamily="sans-serif">Vận Hành Tức Thì</text>
+            <text x="40" y="34" fill="#EA580C" fontSize="9" fontWeight="600" fontFamily="sans-serif">Tốc Độ & Giá Tối Ưu</text>
           </g>
         </g>
       </svg>
