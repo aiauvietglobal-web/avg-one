@@ -124,18 +124,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <stop offset="100%" stopColor="#4C0519" />
           </radialGradient>
 
-          {/* Thẻ Kính Mờ Telemetry */}
-          <linearGradient id="curved-badge-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#F8FAFC" stopOpacity="0.88" />
-          </linearGradient>
-
-          <linearGradient id="curved-badge-border" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-            <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#0284C7" stopOpacity="0.5" />
-          </linearGradient>
-
           {/* Bộ lọc bóng đổ màn hình cong nổi bật khỏi nền web */}
           <filter id="curved-monitor-shadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="12" stdDeviation="16" floodColor="#0F172A" floodOpacity="0.22" />
@@ -145,10 +133,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           <filter id="curved-gear-shadow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#000000" floodOpacity="0.65" />
             <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#38BDF8" floodOpacity="0.35" />
-          </filter>
-
-          <filter id="curved-badge-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#0F172A" floodOpacity="0.14" />
           </filter>
         </defs>
 
@@ -218,53 +202,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           <g transform="translate(220, 145)">
             <ellipse cx="0" cy="0" rx="145" ry="85" fill="url(#curved-core-glow)" className="anim-curved-energy" />
           </g>
-
-          {/* 1.5 Thanh Thông Tin HUD Trên Màn Hình Cong (Header & Footer Status Bars) */}
-          <g fill="#38BDF8" fontSize="8" fontWeight="bold" fontFamily="monospace" letterSpacing="1" opacity="0.75">
-            {/* Header Status */}
-            <circle cx="28" cy="38" r="2" fill="#22C55E" />
-            <text x="36" y="41">1000R CURVED OLED // KINETIC ENGINE</text>
-            <text x="325" y="41" textAnchor="end">120HZ • HDR1000</text>
-
-            {/* Footer Status */}
-            <text x="28" y="250">AVG-ONE WORKSPACE OS</text>
-            <text x="412" y="250" textAnchor="end">STATUS: SYNCHRONIZED [ + ]</text>
-          </g>
-        </g>
-
-        {/* ========================================================================= */}
-        {/* TẦNG 2: CÁC ĐƯỜNG DẪN TRUYỀN NĂNG LƯỢNG UỐN CONG THEO MẶT KÍNH           */}
-        {/* ========================================================================= */}
-        <g id="curved-conduit-streams">
-          {/* Nhánh dẫn tới Card 1 (Top-Left) */}
-          <path
-            d="M 180 110 C 140 95, 100 80, 70 65"
-            stroke="#38BDF8"
-            strokeWidth="1.4"
-            fill="none"
-            className="anim-curved-stream opacity-70"
-          />
-          <circle cx="70" cy="65" r="2" fill="#38BDF8" />
-
-          {/* Nhánh dẫn tới Card 2 (Bottom-Left) */}
-          <path
-            d="M 170 175 C 130 205, 95 218, 65 228"
-            stroke="#0284C7"
-            strokeWidth="1.4"
-            fill="none"
-            className="anim-curved-stream opacity-70"
-          />
-          <circle cx="65" cy="228" r="2" fill="#0284C7" />
-
-          {/* Nhánh dẫn tới Card 3 (Right) */}
-          <path
-            d="M 270 145 C 310 145, 335 140, 360 140"
-            stroke="#F59E0B"
-            strokeWidth="1.4"
-            fill="none"
-            className="anim-curved-stream opacity-70"
-          />
-          <circle cx="360" cy="140" r="2" fill="#F59E0B" />
         </g>
 
         {/* ========================================================================= */}
@@ -431,70 +368,8 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           fill="url(#curved-glass-sheen)"
           className="anim-curved-sheen pointer-events-none"
         />
-
-        {/* ========================================================================= */}
-        {/* TẦNG 5: HỆ THỐNG THẺ KÍNH MỜ TELEMETRY TRÊN MÀN HÌNH CONG                 */}
-        {/* ========================================================================= */}
-        <g id="curved-telemetry-cards">
-          
-          {/* ⚡ CARD 1: TỰ ĐỘNG HÓA (TOP-LEFT: X=24, Y=48) */}
-          <g transform="translate(24, 48)" filter="url(#curved-badge-shadow)">
-            <rect
-              x="0"
-              y="0"
-              width="122"
-              height="38"
-              rx="8"
-              fill="url(#curved-badge-bg)"
-              stroke="url(#curved-badge-border)"
-              strokeWidth="1"
-            />
-            <rect x="7" y="8" width="22" height="22" rx="5" fill="#F0FDF4" stroke="#86EFAC" strokeWidth="0.8" />
-            <path d="M18 13l-3 7h4l-1 5 4-7h-4l1-5z" fill="#16A34A" />
-            <text x="34" y="19" fill="#0F172A" fontSize="9.5" fontWeight="bold" fontFamily="sans-serif">Tự Động Hóa</text>
-            <text x="34" y="30" fill="#16A34A" fontSize="8" fontWeight="600" fontFamily="sans-serif">● 100% SOP Flow</text>
-          </g>
-
-          {/* 👥 CARD 2: 20 NHÂN SỰ LÕI (BOTTOM-LEFT: X=24, Y=208) */}
-          <g transform="translate(24, 208)" filter="url(#curved-badge-shadow)">
-            <rect
-              x="0"
-              y="0"
-              width="128"
-              height="38"
-              rx="8"
-              fill="url(#curved-badge-bg)"
-              stroke="url(#curved-badge-border)"
-              strokeWidth="1"
-            />
-            <rect x="7" y="8" width="22" height="22" rx="5" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="0.8" />
-            <circle cx="18" cy="16" r="2.8" fill="#0284C7" />
-            <path d="M13 25v-1a2.5 2.5 0 0 1 5 0v1" fill="#0284C7" />
-            <circle cx="23" cy="17" r="1.8" fill="#38BDF8" />
-            <path d="M22 25v-1a1.8 1.8 0 0 1 2.5 0v1" fill="#38BDF8" />
-            <text x="34" y="19" fill="#0F172A" fontSize="9.5" fontWeight="bold" fontFamily="sans-serif">20 Nhân Sự Lõi</text>
-            <text x="34" y="30" fill="#0284C7" fontSize="8" fontWeight="600" fontFamily="sans-serif">Hiệp Đồng Tác Chiến</text>
-          </g>
-
-          {/* 🚀 CARD 3: VẬN HÀNH TỐC ĐỘ (RIGHT: X=310, Y=126) */}
-          <g transform="translate(310, 126)" filter="url(#curved-badge-shadow)">
-            <rect
-              x="0"
-              y="0"
-              width="114"
-              height="38"
-              rx="8"
-              fill="url(#curved-badge-bg)"
-              stroke="url(#curved-badge-border)"
-              strokeWidth="1"
-            />
-            <rect x="7" y="8" width="22" height="22" rx="5" fill="#FFF7ED" stroke="#FDBA74" strokeWidth="0.8" />
-            <path d="M18 14a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2.5v2.5l1.8 1.8" stroke="#EA580C" strokeWidth="1.2" strokeLinecap="round" fill="none" />
-            <text x="34" y="19" fill="#0F172A" fontSize="9.5" fontWeight="bold" fontFamily="sans-serif">Vận Hành Tức Thì</text>
-            <text x="34" y="30" fill="#EA580C" fontSize="8" fontWeight="600" fontFamily="sans-serif">Tốc Độ & Giá Tối Ưu</text>
-          </g>
-        </g>
       </svg>
     </div>
   );
 };
+
