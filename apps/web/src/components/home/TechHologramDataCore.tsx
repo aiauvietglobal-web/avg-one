@@ -1,14 +1,15 @@
 import React from 'react';
 
 /**
- * 🌐 ULTRA-MODERN QUANTUM DATA CORE (LEFT HERO EMBLEM)
+ * 🌐 OPTICAL CRYSTAL QUANTUM DATA CORE (LEFT HERO EMBLEM)
  * 
- * Phong cách Thiết kế Công nghệ Cao cấp 2026 (Modern High-End Luxury Tech):
- * - Tương phản cực cao trên nền sáng (High Contrast Navy & Titanium Chrome, không nhợt nhạt, không chói mắt).
- * - Khối Lập Phương Lượng Tử 3D Titan & Kính Tinh Thể (Precision Diamond-Cut Monolith) lơ lửng không trọng lực.
- * - Hệ vòng đai kim loại chất lỏng (Liquid Platinum Gyroscopic Ring) lượn quanh mượt mà, sang trọng.
- * - Lõi năng lượng AI sắc nét tỏa sáng nhịp thở nhẹ.
- * - Loại bỏ hoàn toàn bệ đài rối rắm, chùm sáng mờ nhạt và dây nhợ vụn vặt; đồng bộ hoàn hảo với cỗ máy bánh răng bên phải.
+ * Phong cách Pha lê Quang học & Tinh tế Đỉnh cao (Ultra-Refined Optical Crystal):
+ * - Khối Lập phương Đa diện Pha lê Kính mờ (Translucent Layered Crystal Prism).
+ * - Bảng màu trong trẻo, thanh nhã đồng bộ: Kính Bạch Kim (Top Face), Lam Ngọc Khói Sâu (Left Face) & Lam Ngọc Sáng (Right Face).
+ * - Lõi Lượng tử Vi mô (Quantum Singularity): Điểm sao phát quang 4 cánh tinh xảo, loại bỏ hoàn toàn mắt thần tối đen nặng nề.
+ * - Khối Tesseract đa tầng lồng ghép bên trong với các vi mạch laser thanh mảnh.
+ * - Loại bỏ hoàn toàn đĩa tròn đứt nét rời rạc dưới chân; thay bằng bóng đổ mờ quang học nhẹ nhàng, gắn kết tự nhiên.
+ * - Hệ 2 vòng đai con quay 3D kim loại chất lỏng uốn lượn mềm mại, sang trọng.
  */
 
 interface TechHologramDataCoreProps {
@@ -19,206 +20,229 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
   return (
     <div className={`relative select-none pointer-events-none ${className}`}>
       <svg
-        viewBox="0 0 380 320"
+        viewBox="0 0 380 260"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full overflow-visible"
       >
         <defs>
-          {/* 🌟 HỆ GRADIENT KIM LOẠI TITAN & COBALT SANG TRỌNG (HIGH CONTRAST) */}
+          {/* 🌟 HỆ GRADIENT TINH TẾ, TRONG TRẺO & SANG TRỌNG 🌟 */}
           
-          {/* Mặt Trên Lập Phương: Kính Tinh Thể Bạch Kim (Brushed Specular Platinum Face) */}
-          <linearGradient id="monolith-face-top" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Mặt Trên: Kính Pha Lê Bạch Kim Trong Suốt (Frosted Crystal Top Face) */}
+          <linearGradient id="crystal-face-top" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="30%" stopColor="#F1F5F9" />
-            <stop offset="65%" stopColor="#CBD5E1" />
-            <stop offset="100%" stopColor="#94A3B8" />
+            <stop offset="35%" stopColor="#F0F9FF" />
+            <stop offset="70%" stopColor="#E0F2FE" />
+            <stop offset="100%" stopColor="#BAE6FD" />
           </linearGradient>
 
-          {/* Mặt Trái Lập Phương: Titan Khói Sâu (Smoked Deep Titanium Face) */}
-          <linearGradient id="monolith-face-left" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#0F172A" />
-            <stop offset="45%" stopColor="#1E293B" />
-            <stop offset="80%" stopColor="#334155" />
-            <stop offset="100%" stopColor="#475569" />
+          {/* Mặt Trái: Lam Ngọc Khói Sâu Trong Trẻo (Smoky Sapphire Left Face) */}
+          <linearGradient id="crystal-face-left" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#082F49" />
+            <stop offset="45%" stopColor="#075985" />
+            <stop offset="80%" stopColor="#0284C7" />
+            <stop offset="100%" stopColor="#38BDF8" />
           </linearGradient>
 
-          {/* Mặt Phải Lập Phương: Xanh Coban Titan Sâu (Deep Cobalt Titanium Face) */}
-          <linearGradient id="monolith-face-right" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Mặt Phải: Lam Ngọc Sáng Bóng (Vibrant Sky Blue Right Face) */}
+          <linearGradient id="crystal-face-right" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#0284C7" />
-            <stop offset="50%" stopColor="#0369A1" />
+            <stop offset="45%" stopColor="#0369A1" />
             <stop offset="85%" stopColor="#0C4A6E" />
             <stop offset="100%" stopColor="#082F49" />
           </linearGradient>
 
-          {/* Vòng Đai Quỹ Đạo Kim Loại Chất Lỏng (Liquid Metal Ribbon) */}
-          <linearGradient id="liquid-orbit-ribbon" x1="0%" y1="0%" x2="100%" y2="80%">
+          {/* Vòng Đai Quỹ Đạo Kim Loại Chất Lỏng (Liquid Platinum Ribbon) */}
+          <linearGradient id="crystal-liquid-ribbon" x1="0%" y1="0%" x2="100%" y2="80%">
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="25%" stopColor="#BAE6FD" />
-            <stop offset="55%" stopColor="#0284C7" />
-            <stop offset="85%" stopColor="#0369A1" />
-            <stop offset="100%" stopColor="#38BDF8" />
+            <stop offset="30%" stopColor="#BAE6FD" />
+            <stop offset="65%" stopColor="#38BDF8" />
+            <stop offset="100%" stopColor="#0284C7" />
           </linearGradient>
 
-          {/* Cạnh Sống Vát Kim Cương Phản Quang Sắc Lẹm (Diamond Chamfer Ridge) */}
-          <linearGradient id="diamond-edge-bright" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.3" />
-            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-            <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.4" />
+          {/* Vành vát kim cương phản quang ánh sáng trắng (Gleam Edge) */}
+          <linearGradient id="crystal-gleam-edge" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#BAE6FD" stopOpacity="0.8" />
           </linearGradient>
 
-          {/* Đĩa Phản Chiếu Kính Mờ Đáy (Frosted Reflection Base) */}
-          <radialGradient id="frosted-glass-disc-left" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#0284C7" stopOpacity="0.18" />
-            <stop offset="45%" stopColor="#38BDF8" stopOpacity="0.08" />
-            <stop offset="85%" stopColor="#0284C7" stopOpacity="0.02" />
+          {/* Đĩa phản chiếu ánh sáng êm dịu nâng đỡ khối */}
+          <radialGradient id="crystal-ground-ambient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#0284C7" stopOpacity="0.14" />
+            <stop offset="45%" stopColor="#38BDF8" stopOpacity="0.06" />
+            <stop offset="80%" stopColor="#0284C7" stopOpacity="0.01" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
           </radialGradient>
 
-          {/* Bóng đổ vật lý mềm mại cho khối 3D */}
-          <filter id="soft-depth-shadow-left" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="12" stdDeviation="10" floodColor="#0F172A" floodOpacity="0.16" />
-          </filter>
-
-          <filter id="core-subtle-glow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#0284C7" floodOpacity="0.25" />
+          {/* Bộ lọc bóng đổ mềm mại */}
+          <filter id="crystal-soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="#0F172A" floodOpacity="0.10" />
           </filter>
         </defs>
 
         <style>{`
-          @keyframes monolith-float {
+          @keyframes crystal-prism-float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(0.4deg); }
+            50% { transform: translateY(-5px) rotate(0.3deg); }
           }
-          @keyframes ambient-pulse-left {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.04); opacity: 1; }
+          @keyframes crystal-ambient-breathe {
+            0%, 100% { opacity: 0.75; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(1.04); }
           }
-          @keyframes ai-pulse-core {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+          @keyframes star-singularity-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.15); opacity: 1; }
           }
-          .anim-monolith-sculpture { animation: monolith-float 6s ease-in-out infinite; }
-          .anim-ambient-pulse-left { animation: ambient-pulse-left 4s ease-in-out infinite; transform-origin: 190px 255px; }
-          .anim-ai-pulse { animation: ai-pulse-core 3.5s ease-in-out infinite; transform-origin: 0 0; }
+          .anim-crystal-float { animation: crystal-prism-float 6s ease-in-out infinite; }
+          .anim-ambient-breathe-left { animation: crystal-ambient-breathe 4s ease-in-out infinite; transform-origin: 190px 195px; }
+          .anim-star-pulse { animation: star-singularity-pulse 3s ease-in-out infinite; transform-origin: 0 0; }
         `}</style>
 
         {/* ========================================================================= */}
-        {/* TẦNG ĐÁY: ĐĨA KÍNH MỜ PHẢN CHIẾU SANG TRỌNG (MINIMALIST LUXURY REFLECTION) */}
+        {/* VÙNG NÂNG ĐỠ QUANG HỌC DƯỚI CHÂN (GROUNDING AMBIENT OCCLUSION)            */}
         {/* ========================================================================= */}
-        <g id="luxury-pedestal-left" transform="translate(190, 255)">
-          {/* Đĩa phản chiếu êm ái dưới chân */}
-          <ellipse cx="0" cy="0" rx="100" ry="24" fill="url(#frosted-glass-disc-left)" className="anim-ambient-pulse-left" />
+        <g id="grounding-ambient-left" transform="translate(190, 195)">
+          <ellipse cx="0" cy="0" rx="84" ry="16" fill="url(#crystal-ground-ambient)" className="anim-ambient-breathe-left" />
           
-          {/* Vành định vị chân trời thanh mảnh */}
-          <ellipse cx="0" cy="0" rx="88" ry="20" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="6 4" opacity="0.3" />
-          <ellipse cx="0" cy="0" rx="60" ry="14" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="3 3" opacity="0.25" />
-
-          {/* Các hạt vi tinh thể định vị trên quỹ đạo */}
-          <circle cx="-88" cy="0" r="2" fill="#FFFFFF" opacity="0.7" />
-          <circle cx="88" cy="0" r="2" fill="#0284C7" opacity="0.7" />
+          {/* Vạch đo lường vi lượng tử tinh tế */}
+          <ellipse cx="0" cy="0" rx="72" ry="13" stroke="#0284C7" strokeWidth="0.8" strokeDasharray="3 4" opacity="0.3" />
+          <ellipse cx="0" cy="0" rx="48" ry="8.5" stroke="#38BDF8" strokeWidth="0.6" strokeDasharray="2 3" opacity="0.25" />
+          <circle cx="-72" cy="0" r="1.5" fill="#FFFFFF" opacity="0.7" />
+          <circle cx="72" cy="0" r="1.5" fill="#0284C7" opacity="0.7" />
         </g>
 
         {/* ========================================================================= */}
-        {/* KHỐI CHÍNH: KHỐI LẬP PHƯƠNG LƯỢNG TỬ TITAN 3D (QUANTUM MONOLITH SCULPTURE) */}
+        {/* KHỐI CHÍNH: KHỐI LẬP PHƯƠNG PHA LÊ QUANG HỌC (OPTICAL CRYSTAL PRISM)      */}
         {/* ========================================================================= */}
-        <g className="anim-monolith-sculpture" filter="url(#soft-depth-shadow-left)">
+        <g className="anim-crystal-float" filter="url(#crystal-soft-shadow)">
           
-          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 1: NGHIÊNG TRỤC TRÁI -26° */}
-          <g transform="translate(190, 140) rotate(-26)">
+          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 1: NGHIÊNG TRỤC TRÁI -24° */}
+          <g transform="translate(190, 122) rotate(-24)">
             <ellipse
               cx="0"
               cy="0"
-              rx="96"
-              ry="34"
-              stroke="url(#liquid-orbit-ribbon)"
-              strokeWidth="2.2"
+              rx="92"
+              ry="33"
+              stroke="url(#crystal-liquid-ribbon)"
+              strokeWidth="1.4"
               fill="none"
-              strokeDasharray="55 20 30 20"
-              opacity="0.85"
+              strokeDasharray="45 15 25 15"
+              opacity="0.7"
             />
             <ellipse
               cx="0"
               cy="0"
-              rx="94"
-              ry="32.5"
+              rx="90"
+              ry="31.5"
               stroke="#FFFFFF"
-              strokeWidth="0.8"
+              strokeWidth="0.6"
               fill="none"
-              opacity="0.9"
+              opacity="0.8"
             />
-            <circle cx="96" cy="0" r="2.8" fill="#FFFFFF" />
+            <circle cx="92" cy="0" r="2.2" fill="#FFFFFF" />
           </g>
 
-          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 2: NGHIÊNG TRỤC PHẢI +36° */}
-          <g transform="translate(190, 140) rotate(36)">
+          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 2: NGHIÊNG TRỤC PHẢI +32° */}
+          <g transform="translate(190, 122) rotate(32)">
             <ellipse
               cx="0"
               cy="0"
-              rx="96"
-              ry="34"
+              rx="92"
+              ry="33"
               stroke="#0284C7"
-              strokeWidth="1.6"
+              strokeWidth="1"
               fill="none"
-              strokeDasharray="45 25 25 25"
-              opacity="0.5"
+              strokeDasharray="35 20 20 20"
+              opacity="0.4"
             />
-            <circle cx="-96" cy="0" r="2.5" fill="#38BDF8" />
+            <circle cx="-92" cy="0" r="2" fill="#38BDF8" />
           </g>
 
-          {/* KHỐI LẬP PHƯƠNG TITAN NGUYÊN KHỐI (ISOMETRIC TITANIUM MONOLITH) */}
-          <g transform="translate(190, 140)" filter="url(#core-subtle-glow)">
+          {/* KHỐI LẬP PHƯƠNG PHA LÊ QUANG HỌC (ISOMETRIC CRYSTAL MONOLITH) */}
+          <g transform="translate(190, 122)">
             
-            {/* MẶT TRÊN: BỀ MẶT BẠCH KIM SÁNG BÓNG (Top Brushed Specular Face) */}
+            {/* MẶT TRÊN: BỀ MẶT KÍNH PHA LÊ BẠCH KIM (Top Frosted Glass Face) */}
             <polygon
-              points="0,-58 50,-29 0,0 -50,-29"
-              fill="url(#monolith-face-top)"
+              points="0,-52 46,-26 0,0 -46,-26"
+              fill="url(#crystal-face-top)"
               stroke="#CBD5E1"
-              strokeWidth="1.4"
-            />
-            {/* Cạnh vát kim cương mặt trên */}
-            <polygon
-              points="0,-54 46,-27 0,0 -46,-27"
-              fill="none"
-              stroke="url(#diamond-edge-bright)"
               strokeWidth="1"
+            />
+            {/* Viền vát kim cương mặt trên phản chiếu ánh sáng */}
+            <polygon
+              points="0,-48 42,-24 0,0 -42,-24"
+              fill="none"
+              stroke="url(#crystal-gleam-edge)"
+              strokeWidth="0.8"
               opacity="0.9"
             />
 
-            {/* MẶT TRÁI: TITAN KHÓI SÂU (Left Smoked Deep Titanium Face) */}
+            {/* MẶT TRÁI: LAM NGỌC KHÓI SÂU (Left Smoky Sapphire Face) */}
             <polygon
-              points="-50,-29 0,0 0,58 -50,29"
-              fill="url(#monolith-face-left)"
-              stroke="#475569"
-              strokeWidth="1.4"
-            />
-            {/* Các đường phay laser vi mô */}
-            <line x1="-38" y1="-20" x2="-6" y2="-2" stroke="#64748B" strokeWidth="1" strokeDasharray="5 3" opacity="0.6" />
-            <line x1="-38" y1="-2" x2="-6" y2="16" stroke="#64748B" strokeWidth="1" strokeDasharray="5 3" opacity="0.6" />
-            <line x1="-38" y1="16" x2="-6" y2="34" stroke="#64748B" strokeWidth="1" strokeDasharray="5 3" opacity="0.6" />
-
-            {/* MẶT PHẢI: TITAN XANH COBAN SÂU (Right Deep Cobalt Face) */}
-            <polygon
-              points="0,0 50,-29 50,29 0,58"
-              fill="url(#monolith-face-right)"
+              points="-46,-26 0,0 0,52 -46,26"
+              fill="url(#crystal-face-left)"
               stroke="#0369A1"
-              strokeWidth="1.4"
+              strokeWidth="1"
             />
-            {/* Phản xạ ánh kim cobalt trên mặt phải */}
-            <line x1="6" y1="-2" x2="38" y2="-20" stroke="#38BDF8" strokeWidth="1" strokeDasharray="5 3" opacity="0.75" />
-            <line x1="6" y1="16" x2="38" y2="-2" stroke="#38BDF8" strokeWidth="1" strokeDasharray="5 3" opacity="0.75" />
-            <line x1="6" y1="34" x2="38" y2="16" stroke="#38BDF8" strokeWidth="1" strokeDasharray="5 3" opacity="0.75" />
+            {/* Vi mạch laser thanh mảnh */}
+            <line x1="-34" y1="-17" x2="-6" y2="-2" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 2.5" opacity="0.7" />
+            <line x1="-34" y1="-2" x2="-6" y2="13" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 2.5" opacity="0.7" />
+            <line x1="-34" y1="13" x2="-6" y2="28" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 2.5" opacity="0.7" />
 
-            {/* CẠNH SỐNG TRUNG TÂM PHẢN CHIẾU VỆT SÁNG BẠCH KIM (Center Ridge Specular) */}
-            <line x1="0" y1="0" x2="0" y2="58" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" />
-            <line x1="-50" y1="-29" x2="0" y2="0" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
-            <line x1="0" y1="0" x2="50" y2="-29" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
+            {/* MẶT PHẢI: LAM NGỌC SÁNG BÓNG (Right Vibrant Sapphire Face) */}
+            <polygon
+              points="0,0 46,-26 46,26 0,52"
+              fill="url(#crystal-face-right)"
+              stroke="#0284C7"
+              strokeWidth="1"
+            />
+            {/* Phản xạ ánh sáng vi mô trên mặt phải */}
+            <line x1="6" y1="-2" x2="34" y2="-17" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="4 2.5" opacity="0.75" />
+            <line x1="6" y1="13" x2="34" y2="-2" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="4 2.5" opacity="0.75" />
+            <line x1="6" y1="28" x2="34" y2="13" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="4 2.5" opacity="0.75" />
 
-            {/* LÕI NĂNG LƯỢNG TRÍ TUỆ NHÂN TẠO AI (CENTRAL NEURAL AI CORE) */}
-            <g id="monolith-ai-core" className="anim-ai-pulse" transform="translate(0, 0)">
-              <circle cx="0" cy="0" r="14" fill="#0F172A" stroke="url(#liquid-orbit-ribbon)" strokeWidth="1.6" />
-              <circle cx="0" cy="0" r="9" fill="#0284C7" stroke="#FFFFFF" strokeWidth="1" />
-              <circle cx="-2.5" cy="-2.5" r="2.5" fill="#FFFFFF" />
+            {/* CẠNH SỐNG TRUNG TÂM PHẢN QUANG SẮC LẸM (Center Ridge Specular) */}
+            <line x1="0" y1="0" x2="0" y2="52" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" />
+            <line x1="-46" y1="-26" x2="0" y2="0" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="0" y1="0" x2="46" y2="-26" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" />
+
+            {/* KHỐI TESSERACT LỒNG GHÉP BÊN TRONG (INNER CRYSTAL TESSERACT) */}
+            <g transform="scale(0.55)">
+              <polygon
+                points="0,-48 42,-24 0,0 -42,-24"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="1.2"
+                strokeDasharray="4 2.5"
+                opacity="0.85"
+              />
+              <polygon
+                points="-42,-24 0,0 0,48 -42,24"
+                fill="none"
+                stroke="#BAE6FD"
+                strokeWidth="1"
+                opacity="0.75"
+              />
+              <polygon
+                points="0,0 42,-24 42,24 0,48"
+                fill="none"
+                stroke="#38BDF8"
+                strokeWidth="1"
+                opacity="0.75"
+              />
+            </g>
+
+            {/* LÕI LƯỢNG TỬ ĐIỂM SAO AI PHÁT QUANG (QUANTUM SINGULARITY MICRO-STAR) */}
+            <g id="ai-singularity-star" className="anim-star-pulse" transform="translate(0, 0)">
+              {/* Vòng hào quang nhỏ trong suốt */}
+              <circle cx="0" cy="0" r="10" fill="#0C4A6E" stroke="url(#crystal-liquid-ribbon)" strokeWidth="1.2" opacity="0.9" />
+              <circle cx="0" cy="0" r="6" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.8" />
+              
+              {/* Điểm sao phát quang 4 cánh siêu tinh tế */}
+              <line x1="-4" y1="0" x2="4" y2="0" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+              <line x1="0" y1="-4" x2="0" y2="4" stroke="#FFFFFF" strokeWidth="1.4" strokeLinecap="round" />
+              <circle cx="0" cy="0" r="1.5" fill="#FFFFFF" />
             </g>
           </g>
         </g>
