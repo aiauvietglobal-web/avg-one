@@ -1,15 +1,15 @@
 import React from 'react';
 
 /**
- * 🌐 DIMENSIONAL PORTAL: QUANTUM DATA CORE (LEFT HERO COMPONENT)
+ * 🌐 1000R CURVED OLED DISPLAY: QUANTUM DATA CORE (LEFT HERO COMPONENT)
  * 
- * Hiệu ứng Chiều Sâu 3D "Đục Thủng Lớp Nền" (Sunken 3D Quantum Vacuum Chamber / Dimensional Portal):
- * - Mặt nền phẳng của trang web được "đục thủng" bằng một giếng công nghệ bo góc 3D sâu hun hút (Sunken Perspective Chamber).
- * - Cạnh vát 3D (Recessed Inner Bevel) với đổ bóng đa tầng tạo cảm giác khoét sâu vào không gian phần cứng lượng tử.
- * - Đáy giếng là khoang công nghệ vũ trụ sâu thẳm (Deep Obsidian Navy #061325) với lưới phối cảnh 3D và vầng hào quang lam ngọc bừng sáng.
- * - Bên trong buồng lượng tử: Khối Lập Phương Lượng Tử Pha Lê 3D (Grand Crystal Monolith) lơ lửng, phát quang điểm sao AI 4 cánh rực sáng.
- * - Lớp kính tinh thể bảo vệ bên trên với vệt quét ánh sáng quang học (Diagonal Glass Gleam) và các ký hiệu vi cơ khí góc [ + ].
- * - 3 Thẻ Kính Mờ Telemetry tích hợp vi mạch nổi nhẹ trên miệng giếng.
+ * Thiết kế Màn Hình Cong Công Nghệ Cao 1000R (Ultra-wide Curved Cockpit HUD Display):
+ * - Khung màn hình cong vật lý (Curved OLED Bezel) với độ cong 1000R ôm trọn góc nhìn về phía trung tâm.
+ * - Mặt kính cong phản chiếu quang học (Cylindrical Glass Caustics & Reflection Arcs).
+ * - Lưới hiển thị không gian mạng uốn lượn theo độ cong hình trụ (Curved Perspective Cyber Grid).
+ * - Buồng lượng tử chiều sâu: Khối Lập Phương Lượng Tử Pha Lê 3D (Grand Crystal Monolith) lơ lửng, phát quang điểm sao AI 4 cánh rực sáng.
+ * - Các thanh trạng thái hiển thị chuẩn màn hình chuyên dụng: 1000R CURVED DISPLAY • 120Hz OLED HDR.
+ * - 3 Thẻ Kính Mờ Telemetry uốn nhẹ theo độ cong của màn hình.
  */
 
 interface TechHologramDataCoreProps {
@@ -17,6 +17,10 @@ interface TechHologramDataCoreProps {
 }
 
 export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ className = '' }) => {
+  // Khung màn hình cong 1000R chuẩn xác (Hình trụ uốn cong đều)
+  const curvedScreenOutline = 
+    "M 26 22 Q 220 38 414 22 A 16 16 0 0 1 426 38 L 426 242 A 16 16 0 0 1 414 258 Q 220 274 26 258 A 16 16 0 0 1 14 242 L 14 38 A 16 16 0 0 1 26 22 Z";
+
   return (
     <div className={`relative select-none pointer-events-none ${className}`}>
       <svg
@@ -26,55 +30,53 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
         className="w-full h-full overflow-visible"
       >
         <defs>
-          {/* 🌟 HỆ THỐNG GRADIENTS CHIỀU SÂU "ĐỤC THỦNG NỀN" (SUNKEN 3D CAVITY) 🌟 */}
+          {/* 🌟 HỆ THỐNG GRADIENT MÀN HÌNH CONG 1000R CHUYÊN DỤNG 🌟 */}
           
-          {/* Đáy giếng sâu: Không gian Obsidian Navy sâu thẳm */}
-          <radialGradient id="portal-cavity-floor-left" cx="50%" cy="50%" r="65%">
-            <stop offset="0%" stopColor="#0B2545" />
-            <stop offset="45%" stopColor="#06152B" />
-            <stop offset="85%" stopColor="#030B17" />
-            <stop offset="100%" stopColor="#01050A" />
+          {/* Mặt nền OLED cong */}
+          <radialGradient id="curved-oled-surface-left" cx="50%" cy="50%" r="65%">
+            <stop offset="0%" stopColor="#08203E" />
+            <stop offset="45%" stopColor="#051326" />
+            <stop offset="80%" stopColor="#020813" />
+            <stop offset="100%" stopColor="#010408" />
           </radialGradient>
 
-          {/* Vầng hào quang nội tại bừng sáng từ tâm đáy giếng */}
-          <radialGradient id="portal-core-burst-left" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.45" />
+          {/* Vầng sáng năng lượng rực rỡ bên trong màn hình cong */}
+          <radialGradient id="curved-core-glow-left" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.5" />
             <stop offset="35%" stopColor="#0284C7" stopOpacity="0.25" />
             <stop offset="65%" stopColor="#6366F1" stopOpacity="0.15" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
           </radialGradient>
 
-          {/* Cạnh vát bóng đổ trên (Top Recessed Shadow Wall) */}
-          <linearGradient id="portal-top-bevel-left" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="#020617" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#020617" stopOpacity="0" />
+          {/* Khung viền kim loại màn hình cong */}
+          <linearGradient id="curved-chassis-bezel-left" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#475569" />
+            <stop offset="25%" stopColor="#1E293B" />
+            <stop offset="50%" stopColor="#0F172A" />
+            <stop offset="75%" stopColor="#1E293B" />
+            <stop offset="100%" stopColor="#334155" />
           </linearGradient>
 
-          {/* Cạnh vát phản quang dưới (Bottom Recessed Specular Wall) */}
-          <linearGradient id="portal-bottom-bevel-left" x1="50%" y1="100%" x2="50%" y2="0%">
-            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
-          </linearGradient>
-
-          {/* Viền ngoài miệng giếng trên mặt nền phẳng */}
-          <linearGradient id="portal-outer-lip-left" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-            <stop offset="30%" stopColor="#E2E8F0" stopOpacity="0.8" />
-            <stop offset="70%" stopColor="#BAE6FD" stopOpacity="0.5" />
+          {/* Viền phát quang Neon Cyan chạy quanh mép màn hình cong */}
+          <linearGradient id="curved-neon-rim-left" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#0284C7" stopOpacity="0.4" />
+            <stop offset="20%" stopColor="#38BDF8" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
+            <stop offset="80%" stopColor="#38BDF8" stopOpacity="0.9" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0.4" />
           </linearGradient>
 
-          {/* Vệt quét ánh sáng mặt kính bảo vệ */}
-          <linearGradient id="portal-glass-gleam-left" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.22" />
-            <stop offset="25%" stopColor="#FFFFFF" stopOpacity="0.08" />
-            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0" />
-            <stop offset="75%" stopColor="#38BDF8" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+          {/* Vệt phản quang ánh sáng cong uốn lượn qua mặt kính */}
+          <linearGradient id="curved-glass-sheen-left" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.18" />
+            <stop offset="20%" stopColor="#FFFFFF" stopOpacity="0.05" />
+            <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.02" />
+            <stop offset="75%" stopColor="#FFFFFF" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.16" />
           </linearGradient>
 
           {/* Mặt Trên Lập Phương: Kính Tinh Thể Bạch Kim */}
-          <linearGradient id="monolith-face-top-portal" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="monolith-face-top-curved" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
             <stop offset="30%" stopColor="#F0F9FF" />
             <stop offset="70%" stopColor="#E0F2FE" />
@@ -82,7 +84,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
           </linearGradient>
 
           {/* Mặt Trái Lập Phương: Lam Ngọc Khói Sâu */}
-          <linearGradient id="monolith-face-left-portal" x1="0%" y1="100%" x2="100%" y2="0%">
+          <linearGradient id="monolith-face-left-curved" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#082F49" />
             <stop offset="40%" stopColor="#075985" />
             <stop offset="80%" stopColor="#0284C7" />
@@ -90,7 +92,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
           </linearGradient>
 
           {/* Mặt Phải Lập Phương: Lam Ngọc Sáng Bóng */}
-          <linearGradient id="monolith-face-right-portal" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="monolith-face-right-curved" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#0284C7" />
             <stop offset="45%" stopColor="#0369A1" />
             <stop offset="85%" stopColor="#0C4A6E" />
@@ -98,7 +100,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
           </linearGradient>
 
           {/* Vòng Đai Quỹ Đạo Kim Loại Chất Lỏng */}
-          <linearGradient id="liquid-ribbon-portal" x1="0%" y1="0%" x2="100%" y2="80%">
+          <linearGradient id="liquid-ribbon-curved" x1="0%" y1="0%" x2="100%" y2="80%">
             <stop offset="0%" stopColor="#FFFFFF" />
             <stop offset="30%" stopColor="#BAE6FD" />
             <stop offset="65%" stopColor="#38BDF8" />
@@ -106,187 +108,166 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
           </linearGradient>
 
           {/* Cạnh Sống Vát Kim Cương Phản Quang Sắc Lẹm */}
-          <linearGradient id="monolith-gleam-edge-portal" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id="monolith-gleam-edge-curved" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
             <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.3" />
             <stop offset="100%" stopColor="#BAE6FD" stopOpacity="0.8" />
           </linearGradient>
 
-          {/* Gradient Thẻ Kính Mờ */}
-          <linearGradient id="glass-badge-bg-left" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Thẻ Kính Mờ Telemetry */}
+          <linearGradient id="curved-badge-bg-left" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
             <stop offset="100%" stopColor="#F8FAFC" stopOpacity="0.88" />
           </linearGradient>
 
-          <linearGradient id="glass-badge-border-left" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="curved-badge-border-left" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-            <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.7" />
+            <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.75" />
             <stop offset="100%" stopColor="#0284C7" stopOpacity="0.5" />
           </linearGradient>
 
-          {/* Bộ lọc bóng đổ chiều sâu khoang giếng */}
-          <filter id="portal-inner-shadow-left" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="#0F172A" floodOpacity="0.25" />
-            <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#0284C7" floodOpacity="0.2" />
+          {/* Bộ lọc bóng đổ màn hình cong */}
+          <filter id="curved-monitor-shadow-left" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="12" stdDeviation="16" floodColor="#0F172A" floodOpacity="0.22" />
+            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#0284C7" floodOpacity="0.25" />
           </filter>
 
-          <filter id="monolith-cluster-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#000000" floodOpacity="0.6" />
-            <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="#38BDF8" floodOpacity="0.3" />
+          <filter id="curved-monolith-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#000000" floodOpacity="0.65" />
+            <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#38BDF8" floodOpacity="0.35" />
           </filter>
 
-          <filter id="badge-depth-shadow-left" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#0F172A" floodOpacity="0.12" />
+          <filter id="curved-badge-shadow-left" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#0F172A" floodOpacity="0.14" />
           </filter>
         </defs>
 
         <style>{`
-          @keyframes portal-monolith-float {
+          @keyframes curved-monolith-float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-5px) rotate(0.3deg); }
           }
-          @keyframes portal-energy-pulse-left {
+          @keyframes curved-energy-pulse-left {
             0%, 100% { transform: scale(1); opacity: 0.85; }
             50% { transform: scale(1.08); opacity: 1; }
           }
-          @keyframes star-pulse-portal {
+          @keyframes star-pulse-curved {
             0%, 100% { transform: scale(1); opacity: 0.9; }
             50% { transform: scale(1.15); opacity: 1; }
           }
-          @keyframes beam-dash-flow-left-portal {
+          @keyframes beam-dash-flow-left-curved {
             0% { stroke-dashoffset: 40; }
             100% { stroke-dashoffset: 0; }
           }
-          @keyframes glass-sheen-sweep-left {
+          @keyframes curved-sheen-sweep-left {
             0%, 100% { opacity: 0.8; }
             50% { opacity: 1; }
           }
-          .anim-portal-monolith { animation: portal-monolith-float 6s ease-in-out infinite; }
-          .anim-portal-energy-left { animation: portal-energy-pulse-left 4s ease-in-out infinite; transform-origin: 220px 140px; }
-          .anim-star-portal { animation: star-pulse-portal 3s ease-in-out infinite; transform-origin: 0 0; }
-          .anim-portal-stream-left { stroke-dasharray: 5 3; animation: beam-dash-flow-left-portal 1.5s linear infinite; }
-          .anim-sheen-left { animation: glass-sheen-sweep-left 5s ease-in-out infinite; }
+          .anim-curved-monolith { animation: curved-monolith-float 6s ease-in-out infinite; }
+          .anim-curved-energy-left { animation: curved-energy-pulse-left 4s ease-in-out infinite; transform-origin: 220px 145px; }
+          .anim-star-curved { animation: star-pulse-curved 3s ease-in-out infinite; transform-origin: 0 0; }
+          .anim-curved-stream-left { stroke-dasharray: 5 3; animation: beam-dash-flow-left-curved 1.5s linear infinite; }
+          .anim-curved-sheen-left { animation: curved-sheen-sweep-left 5s ease-in-out infinite; }
         `}</style>
 
         {/* ========================================================================= */}
-        {/* TẦNG 1: "ĐỤC THỦNG LỚP NỀN" - GIẾNG CÔNG NGHỆ 3D SÂU HUN HÚT (SUNKEN WELL) */}
+        {/* TẦNG 1: KHUNG VỎ & MẶT HIỂN THỊ MÀN HÌNH CONG 1000R (CURVED OLED MONITOR)   */}
         {/* ========================================================================= */}
-        <g id="sunken-dimensional-portal-left">
+        <g id="curved-display-chassis-left" filter="url(#curved-monitor-shadow-left)">
           
-          {/* 1.1 Khối Đáy Giếng Sâu */}
-          <rect
-            x="14"
-            y="14"
-            width="412"
-            height="252"
-            rx="20"
-            fill="url(#portal-cavity-floor-left)"
-            filter="url(#portal-inner-shadow-left)"
+          {/* 1.1 Thân Vỏ Màn Hình Cong (Chassis Rim) */}
+          <path
+            d={curvedScreenOutline}
+            fill="url(#curved-oled-surface-left)"
+            stroke="url(#curved-chassis-bezel-left)"
+            strokeWidth="3.5"
           />
 
-          {/* 1.2 Lưới Phối Cảnh Chiều Sâu 3D ở Đáy Giếng */}
+          {/* 1.2 Viền Neon Cyan phát quang dọc mép màn hình cong */}
+          <path
+            d={curvedScreenOutline}
+            stroke="url(#curved-neon-rim-left)"
+            strokeWidth="1.2"
+            fill="none"
+          />
+
+          {/* 1.3 Lưới Phối Cảnh Uốn Cong 1000R Theo Mặt Trụ */}
           <g opacity="0.22">
-            <line x1="60" y1="20" x2="40" y2="260" stroke="#38BDF8" strokeWidth="0.8" />
-            <line x1="120" y1="20" x2="110" y2="260" stroke="#38BDF8" strokeWidth="0.8" />
-            <line x1="180" y1="20" x2="180" y2="260" stroke="#38BDF8" strokeWidth="0.8" />
-            <line x1="240" y1="20" x2="240" y2="260" stroke="#38BDF8" strokeWidth="0.8" />
-            <line x1="300" y1="20" x2="310" y2="260" stroke="#38BDF8" strokeWidth="0.8" />
-            <line x1="360" y1="20" x2="380" y2="260" stroke="#38BDF8" strokeWidth="0.8" />
-            <line x1="20" y1="70" x2="420" y2="70" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 4" />
-            <line x1="20" y1="140" x2="420" y2="140" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 4" />
-            <line x1="20" y1="210" x2="420" y2="210" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 4" />
+            <path d="M 20 80 Q 220 96 420 80" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 4" fill="none" />
+            <path d="M 16 145 Q 220 161 424 145" stroke="#38BDF8" strokeWidth="1" strokeDasharray="6 6" fill="none" />
+            <path d="M 20 210 Q 220 226 420 210" stroke="#38BDF8" strokeWidth="0.8" strokeDasharray="4 4" fill="none" />
+
+            <line x1="220" y1="38" x2="220" y2="274" stroke="#38BDF8" strokeWidth="0.9" />
+            <line x1="155" y1="34" x2="148" y2="268" stroke="#38BDF8" strokeWidth="0.8" />
+            <line x1="95" y1="30" x2="82" y2="263" stroke="#38BDF8" strokeWidth="0.8" />
+            <line x1="45" y1="26" x2="28" y2="256" stroke="#38BDF8" strokeWidth="0.8" />
+
+            <line x1="285" y1="34" x2="292" y2="268" stroke="#38BDF8" strokeWidth="0.8" />
+            <line x1="345" y1="30" x2="358" y2="263" stroke="#38BDF8" strokeWidth="0.8" />
+            <line x1="395" y1="26" x2="412" y2="256" stroke="#38BDF8" strokeWidth="0.8" />
           </g>
 
-          {/* 1.3 Vầng hào quang năng lượng từ tâm đáy giếng chiếu rọi */}
-          <g transform="translate(220, 140)">
-            <ellipse cx="0" cy="0" rx="140" ry="85" fill="url(#portal-core-burst-left)" className="anim-portal-energy-left" />
+          {/* 1.4 Vầng hào quang năng lượng từ tâm màn hình cong */}
+          <g transform="translate(220, 145)">
+            <ellipse cx="0" cy="0" rx="145" ry="85" fill="url(#curved-core-glow-left)" className="anim-curved-energy-left" />
           </g>
 
-          {/* 1.4 Thành Vát 3D Khoét Sâu */}
-          <rect x="14" y="14" width="412" height="40" rx="20" fill="url(#portal-top-bevel-left)" />
-          <rect x="14" y="226" width="412" height="40" rx="20" fill="url(#portal-bottom-bevel-left)" />
+          {/* 1.5 Thanh Thông Tin HUD Trên Màn Hình Cong */}
+          <g fill="#38BDF8" fontSize="8" fontWeight="bold" fontFamily="monospace" letterSpacing="1" opacity="0.75">
+            <circle cx="28" cy="38" r="2" fill="#22C55E" />
+            <text x="36" y="41">1000R CURVED OLED // QUANTUM DATA</text>
+            <text x="325" y="41" textAnchor="end">120HZ • HDR1000</text>
 
-          {/* 1.5 Vành Miệng Giếng Vát Kim Cương Ngoài Cùng */}
-          <rect
-            x="14"
-            y="14"
-            width="412"
-            height="252"
-            rx="20"
-            stroke="url(#portal-outer-lip-left)"
-            strokeWidth="1.6"
-            fill="none"
-          />
-          <rect
-            x="16"
-            y="16"
-            width="408"
-            height="248"
-            rx="18"
-            stroke="#0284C7"
-            strokeWidth="0.8"
-            strokeDasharray="4 6"
-            opacity="0.35"
-            fill="none"
-          />
-
-          {/* Ký hiệu vi cơ khí đo đạc 4 góc miệng giếng [ + ] */}
-          <g stroke="#38BDF8" strokeWidth="1.2" opacity="0.65">
-            <line x1="28" y1="24" x2="28" y2="34" />
-            <line x1="23" y1="29" x2="33" y2="29" />
-            <text x="38" y="32" fill="#38BDF8" fontSize="8" fontWeight="bold" fontFamily="monospace" letterSpacing="1">CHAMBER_01 // QUANTUM_DATA</text>
-
-            <line x1="412" y1="246" x2="412" y2="256" />
-            <line x1="407" y1="251" x2="417" y2="251" />
-            <text x="305" y="254" fill="#38BDF8" fontSize="8" fontWeight="bold" fontFamily="monospace" letterSpacing="1">STATUS: AI CORE READY</text>
+            <text x="28" y="250">AVG-ONE WORKSPACE OS</text>
+            <text x="412" y="250" textAnchor="end">STATUS: AI NEURAL ONLINE [ + ]</text>
           </g>
         </g>
 
         {/* ========================================================================= */}
-        {/* TẦNG 2: CÁC ĐƯỜNG DẪN TRUYỀN NĂNG LƯỢNG NỘI TẠI DƯỚI ĐÁY GIẾNG           */}
+        {/* TẦNG 2: CÁC ĐƯỜNG DẪN TRUYỀN NĂNG LƯỢNG UỐN CONG THEO MẶT KÍNH           */}
         {/* ========================================================================= */}
-        <g id="portal-conduit-streams-left">
+        <g id="curved-conduit-streams-left">
           <path
-            d="M 260 100 C 300 85, 335 70, 365 52"
+            d="M 260 110 C 300 95, 335 80, 365 65"
             stroke="#38BDF8"
             strokeWidth="1.4"
             fill="none"
-            className="anim-portal-stream-left opacity-70"
+            className="anim-curved-stream-left opacity-70"
           />
-          <circle cx="365" cy="52" r="2" fill="#38BDF8" />
+          <circle cx="365" cy="65" r="2" fill="#38BDF8" />
 
           <path
-            d="M 270 170 C 310 200, 340 215, 370 228"
+            d="M 270 175 C 310 205, 340 218, 370 228"
             stroke="#0284C7"
             strokeWidth="1.4"
             fill="none"
-            className="anim-portal-stream-left opacity-70"
+            className="anim-curved-stream-left opacity-70"
           />
           <circle cx="370" cy="228" r="2" fill="#0284C7" />
 
           <path
-            d="M 170 140 C 130 140, 105 135, 75 135"
+            d="M 170 145 C 130 145, 105 140, 75 140"
             stroke="#6366F1"
             strokeWidth="1.4"
             fill="none"
-            className="anim-portal-stream-left opacity-70"
+            className="anim-curved-stream-left opacity-70"
           />
-          <circle cx="75" cy="135" r="2" fill="#6366F1" />
+          <circle cx="75" cy="140" r="2" fill="#6366F1" />
         </g>
 
         {/* ========================================================================= */}
-        {/* TẦNG 3: KHỐI LẬP PHƯƠNG LƯỢNG TỬ TITAN 3D LƠ LỬNG TRONG BUỒNG SÂU        */}
+        {/* TẦNG 3: KHỐI LẬP PHƯƠNG LƯỢNG TỬ TITAN 3D TRÊN MÀN HÌNH CONG              */}
         {/* ========================================================================= */}
-        <g className="anim-portal-monolith" filter="url(#monolith-cluster-shadow)">
+        <g className="anim-curved-monolith" filter="url(#curved-monolith-shadow)">
           
-          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 1: NGHIÊNG TRỤC TRÁI -24° */}
-          <g transform="translate(220, 140) rotate(-24)">
+          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 1 */}
+          <g transform="translate(220, 145) rotate(-24)">
             <ellipse
               cx="0"
               cy="0"
               rx="98"
               ry="36"
-              stroke="url(#liquid-ribbon-portal)"
+              stroke="url(#liquid-ribbon-curved)"
               strokeWidth="1.6"
               fill="none"
               strokeDasharray="45 15 25 15"
@@ -306,8 +287,8 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             <circle cx="-98" cy="0" r="2.5" fill="#38BDF8" />
           </g>
 
-          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 2: NGHIÊNG TRỤC PHẢI +32° */}
-          <g transform="translate(220, 140) rotate(32)">
+          {/* VÒNG ĐAI QUỸ ĐẠO KIM LOẠI CHẤT LỎNG 2 */}
+          <g transform="translate(220, 145) rotate(32)">
             <ellipse
               cx="0"
               cy="0"
@@ -323,12 +304,12 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
           </g>
 
           {/* KHỐI LẬP PHƯƠNG PHA LÊ BỀ THẾ */}
-          <g transform="translate(220, 140)">
+          <g transform="translate(220, 145)">
             
             {/* MẶT TRÊN: BỀ MẶT KÍNH PHA LÊ BẠCH KIM */}
             <polygon
               points="0,-54 48,-27 0,0 -48,-27"
-              fill="url(#monolith-face-top-portal)"
+              fill="url(#monolith-face-top-curved)"
               stroke="#CBD5E1"
               strokeWidth="1.2"
             />
@@ -336,7 +317,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             <polygon
               points="0,-50 44,-25 0,0 -44,-25"
               fill="none"
-              stroke="url(#monolith-gleam-edge-portal)"
+              stroke="url(#monolith-gleam-edge-curved)"
               strokeWidth="1"
               opacity="0.95"
             />
@@ -344,11 +325,10 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             {/* MẶT TRÁI: LAM NGỌC KHÓI SÂU */}
             <polygon
               points="-48,-27 0,0 0,54 -48,27"
-              fill="url(#monolith-face-left-portal)"
+              fill="url(#monolith-face-left-curved)"
               stroke="#0369A1"
               strokeWidth="1.2"
             />
-            {/* Vi mạch laser thanh mảnh */}
             <line x1="-36" y1="-18" x2="-8" y2="-2" stroke="#38BDF8" strokeWidth="0.9" strokeDasharray="5 3" opacity="0.8" />
             <line x1="-36" y1="-2" x2="-8" y2="14" stroke="#38BDF8" strokeWidth="0.9" strokeDasharray="5 3" opacity="0.8" />
             <line x1="-36" y1="14" x2="-8" y2="30" stroke="#38BDF8" strokeWidth="0.9" strokeDasharray="5 3" opacity="0.8" />
@@ -356,11 +336,10 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             {/* MẶT PHẢI: LAM NGỌC SÁNG BÓNG */}
             <polygon
               points="0,0 48,-27 48,27 0,54"
-              fill="url(#monolith-face-right-portal)"
+              fill="url(#monolith-face-right-curved)"
               stroke="#0284C7"
               strokeWidth="1.2"
             />
-            {/* Phản xạ ánh sáng vi mô trên mặt phải */}
             <line x1="8" y1="-2" x2="36" y2="-18" stroke="#BAE6FD" strokeWidth="0.9" strokeDasharray="5 3" opacity="0.85" />
             <line x1="8" y1="14" x2="36" y2="-2" stroke="#BAE6FD" strokeWidth="0.9" strokeDasharray="5 3" opacity="0.85" />
             <line x1="8" y1="30" x2="36" y2="14" stroke="#BAE6FD" strokeWidth="0.9" strokeDasharray="5 3" opacity="0.85" />
@@ -397,8 +376,8 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             </g>
 
             {/* LÕI LƯỢNG TỬ ĐIỂM SAO AI PHÁT QUANG */}
-            <g id="ai-singularity-star-portal" className="anim-star-portal" transform="translate(0, 0)">
-              <circle cx="0" cy="0" r="11" fill="#0C4A6E" stroke="url(#liquid-ribbon-portal)" strokeWidth="1.4" opacity="0.9" />
+            <g id="ai-singularity-star-curved" className="anim-star-curved" transform="translate(0, 0)">
+              <circle cx="0" cy="0" r="11" fill="#0C4A6E" stroke="url(#liquid-ribbon-curved)" strokeWidth="1.4" opacity="0.9" />
               <circle cx="0" cy="0" r="7" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.9" />
               
               <line x1="-5" y1="0" x2="5" y2="0" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
@@ -409,33 +388,29 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
         </g>
 
         {/* ========================================================================= */}
-        {/* TẦNG 4: MẶT KÍNH TINH THỂ PHẢN QUANG (CRYSTAL COVER GLASS SHEEN)          */}
+        {/* TẦNG 4: VỆT PHẢN QUANG MẶT KÍNH CONG (CYLINDRICAL GLASS SHEEN SWEEP)       */}
         {/* ========================================================================= */}
-        <rect
-          x="14"
-          y="14"
-          width="412"
-          height="252"
-          rx="20"
-          fill="url(#portal-glass-gleam-left)"
-          className="anim-sheen-left pointer-events-none"
+        <path
+          d={curvedScreenOutline}
+          fill="url(#curved-glass-sheen-left)"
+          className="anim-curved-sheen-left pointer-events-none"
         />
 
         {/* ========================================================================= */}
-        {/* TẦNG 5: HỆ THỐNG THẺ KÍNH MỜ TELEMETRY NỔI NHẸ TRÊN MIỆNG GIẾNG (CARDS)   */}
+        {/* TẦNG 5: HỆ THỐNG THẺ KÍNH MỜ TELEMETRY TRÊN MÀN HÌNH CONG                 */}
         {/* ========================================================================= */}
-        <g id="portal-telemetry-cards-left">
+        <g id="curved-telemetry-cards-left">
           
-          {/* 🧠 CARD 1: TRÍ TUỆ NHÂN TẠO AI (TOP-RIGHT: X=275, Y=24) */}
-          <g transform="translate(275, 24)" filter="url(#badge-depth-shadow-left)">
+          {/* 🧠 CARD 1: TRÍ TUỆ NHÂN TẠO AI (TOP-RIGHT: X=275, Y=48) */}
+          <g transform="translate(275, 48)" filter="url(#curved-badge-shadow-left)">
             <rect
               x="0"
               y="0"
               width="142"
               height="38"
               rx="8"
-              fill="url(#glass-badge-bg-left)"
-              stroke="url(#glass-badge-border-left)"
+              fill="url(#curved-badge-bg-left)"
+              stroke="url(#curved-badge-border-left)"
               strokeWidth="1"
             />
             <rect x="7" y="8" width="22" height="22" rx="5" fill="#F0FDF4" stroke="#86EFAC" strokeWidth="0.8" />
@@ -444,16 +419,16 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             <text x="34" y="30" fill="#16A34A" fontSize="8" fontWeight="600" fontFamily="sans-serif">● Xử Lý SOP Tức Thì</text>
           </g>
 
-          {/* 📊 CARD 2: 100% SỐ HÓA (BOTTOM-RIGHT: X=275, Y=218) */}
-          <g transform="translate(275, 218)" filter="url(#badge-depth-shadow-left)">
+          {/* 📊 CARD 2: 100% SỐ HÓA (BOTTOM-RIGHT: X=275, Y=208) */}
+          <g transform="translate(275, 208)" filter="url(#curved-badge-shadow-left)">
             <rect
               x="0"
               y="0"
               width="142"
               height="38"
               rx="8"
-              fill="url(#glass-badge-bg-left)"
-              stroke="url(#glass-badge-border-left)"
+              fill="url(#curved-badge-bg-left)"
+              stroke="url(#curved-badge-border-left)"
               strokeWidth="1"
             />
             <rect x="7" y="8" width="22" height="22" rx="5" fill="#EFF6FF" stroke="#93C5FD" strokeWidth="0.8" />
@@ -464,16 +439,16 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             <text x="34" y="30" fill="#0284C7" fontSize="8" fontWeight="600" fontFamily="sans-serif">Dữ Liệu Thời Gian Thực</text>
           </g>
 
-          {/* 🛡️ CARD 3: BẢO MẬT ĐA TẦNG (LEFT: X=18, Y=121) */}
-          <g transform="translate(18, 121)" filter="url(#badge-depth-shadow-left)">
+          {/* 🛡️ CARD 3: BẢO MẬT ĐA TẦNG (LEFT: X=18, Y=126) */}
+          <g transform="translate(18, 126)" filter="url(#curved-badge-shadow-left)">
             <rect
               x="0"
               y="0"
               width="126"
               height="38"
               rx="8"
-              fill="url(#glass-badge-bg-left)"
-              stroke="url(#glass-badge-border-left)"
+              fill="url(#curved-badge-bg-left)"
+              stroke="url(#curved-badge-border-left)"
               strokeWidth="1"
             />
             <rect x="7" y="8" width="22" height="22" rx="5" fill="#EEF2FF" stroke="#A5B4FC" strokeWidth="0.8" />
