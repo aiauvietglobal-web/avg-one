@@ -1,20 +1,17 @@
 import React from 'react';
 
 /**
- * 🐐 2D ANIMATED BLACK SECURITY GOAT (CHÚ DÊ ĐEN CÔNG NGHỆ 2D THỰC THỤ)
+ * 🐐 2D ANIMATED BLACK GOAT SILHOUETTE (BÓNG ĐEN CHUYỂN ĐỘNG CHÂN THỰC)
  * 
- * - Đúng chuẩn giải phẫu loài dê (Goat Anatomy):
- *   + Cặp sừng cong vuốt ra sau (Scimitar-curved Horns) có khía đốt vân nổi rõ nét.
- *   + Mõm thuôn dài, sống mũi gồ nhẹ (Roman profile), khóe miệng và lỗ mũi dê.
- *   + Chòm râu cằm dê đen (Goatee beard) dài, bay bổng đặc trưng.
- *   + Đôi tai chúc ngang hình lá mít (Leaf-shaped ears) vểnh nghe ngóng.
- *   + Mắt dê con ngươi ngang (Horizontal pupil) ánh xanh cyan thông minh.
- *   + Đuôi cộc vểnh ngược lên trên (Upturned perky tail - đặc điểm phân biệt rõ với cừu).
- *   + Khớp khuỷu chân sau gập góc, móng guốc chẵn (Cloven hooves) sắc nét.
- * - Đầy đủ các pha chuyển động:
- *   1. Đi (Walk): Bước đi tuần tra khoan thai, 4 chân luân phiên nhịp nhàng.
- *   2. Ngồi (Sit): Gập 4 chân ngồi nghỉ uy nghiêm giữa hộp, chớp mắt, vểnh tai, thở êm ái, vẫy đuôi.
- *   3. Chạy (Run): Đứng dậy phi nước đại thần tốc, sải chân dài, vệt bụi tốc độ bứt phá.
+ * - Đúng chuẩn phong cách Silhouette (Bóng đen thuần túy như video stock green screen):
+ *   + Dáng silhouette liền khối, đường cong sinh học tự nhiên, cơ bắp mềm mại.
+ *   + Cặp sừng dê cong vuốt đặc trưng qua gáy.
+ *   + Mõm dê thuôn dài, râu cằm buông rủ, đuôi cộc vểnh.
+ *   + Khớp khuỷu chân sau gập góc, móng guốc chẵn rõ nét.
+ * - Đầy đủ 3 pha chuyển động sống động:
+ *   1. ĐI BỘ (Walking): Bước đi tuần tra khoan thai, 4 chân luân phiên nhịp nhàng.
+ *   2. NGỒI NGHỈ (Sitting): Gập 4 chân ngồi xếp uy nghiêm giữa sàn, thở êm ái, vểnh tai, vẫy đuôi.
+ *   3. CHẠY (Running): Đứng dậy phi nước đại thần tốc, sải chân dài lướt qua hộp.
  */
 
 interface SecurityGoatProps {
@@ -29,373 +26,453 @@ export const SecurityGoat: React.FC<SecurityGoatProps> = ({
   return (
     <div className={`relative inline-flex items-center justify-center select-none pointer-events-none ${className}`}>
       <svg
-        viewBox="0 0 76 54"
+        viewBox="0 0 100 68"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full overflow-visible"
       >
         <defs>
-          {/* Gradient Sừng Dê Đen Kim Loại (Obsidian Black) */}
-          <linearGradient id="goat-real-horn-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#475569" />
-            <stop offset="35%" stopColor="#1E293B" />
-            <stop offset="100%" stopColor="#090D16" />
-          </linearGradient>
-
-          {/* Gradient Sừng Dê Sau */}
-          <linearGradient id="goat-real-horn-back-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#334155" />
-            <stop offset="50%" stopColor="#0F172A" />
-            <stop offset="100%" stopColor="#020617" />
-          </linearGradient>
-
-          {/* Gradient Thân Dê Đen Tuyền Cơ Bắp (Deep Obsidian Black) */}
-          <linearGradient id="goat-real-body-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          {/* Màu bóng đen tuyền Obsidian chính xác theo phong cách Silhouette */}
+          <linearGradient id="goat-sil-main" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#1E293B" />
-            <stop offset="45%" stopColor="#0F172A" />
-            <stop offset="100%" stopColor="#020617" />
+            <stop offset="40%" stopColor="#0F172A" />
+            <stop offset="100%" stopColor="#050811" />
           </linearGradient>
 
-          {/* Gradient Chân Xa (Tông than sẫm phân biệt 2D depth) */}
-          <linearGradient id="goat-real-leg-far-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          {/* Lớp bóng chân xa (Tối hơn nhẹ để phân biệt 2 lớp chân khi sải bước) */}
+          <linearGradient id="goat-sil-far" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#334155" />
-            <stop offset="100%" stopColor="#1E293B" />
-          </linearGradient>
-
-          {/* Khiên bảo mật Cyan mờ phía sau */}
-          <linearGradient id="goat-real-shield-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#0284C7" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#0F172A" />
           </linearGradient>
         </defs>
 
         <style>{`
-          /* === 1. ĐI BỘ (WALK CYCLE) === */
-          @keyframes goat-walk-body {
+          /* =========================================================
+             1. ĐI BỘ (WALK CYCLE - 1.2s NHỊP ĐỘ CHÂN THẬT)
+             ========================================================= */
+          @keyframes sil-walk-torso {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-1.5px) rotate(-1deg); }
+            25% { transform: translateY(-1.2px) rotate(-0.5deg); }
+            50% { transform: translateY(0.4px) rotate(0.5deg); }
+            75% { transform: translateY(-0.8px) rotate(-0.3deg); }
           }
-          @keyframes goat-walk-fn {
-            0%, 100% { transform: rotate(-18deg); }
-            50% { transform: rotate(18deg); }
+          @keyframes sil-walk-fn {
+            0% { transform: rotate(-22deg); }
+            25% { transform: rotate(4deg); }
+            50% { transform: rotate(20deg); }
+            75% { transform: rotate(-6deg); }
+            100% { transform: rotate(-22deg); }
           }
-          @keyframes goat-walk-ff {
-            0%, 100% { transform: rotate(18deg); }
+          @keyframes sil-walk-ff {
+            0% { transform: rotate(20deg); }
+            25% { transform: rotate(-6deg); }
+            50% { transform: rotate(-22deg); }
+            75% { transform: rotate(4deg); }
+            100% { transform: rotate(20deg); }
+          }
+          @keyframes sil-walk-bn {
+            0% { transform: rotate(18deg); }
+            25% { transform: rotate(-4deg); }
             50% { transform: rotate(-18deg); }
+            75% { transform: rotate(6deg); }
+            100% { transform: rotate(18deg); }
           }
-          @keyframes goat-walk-bn {
-            0%, 100% { transform: rotate(16deg); }
-            50% { transform: rotate(-16deg); }
+          @keyframes sil-walk-bf {
+            0% { transform: rotate(-18deg); }
+            25% { transform: rotate(6deg); }
+            50% { transform: rotate(18deg); }
+            75% { transform: rotate(-4deg); }
+            100% { transform: rotate(-18deg); }
           }
-          @keyframes goat-walk-bf {
-            0%, 100% { transform: rotate(-16deg); }
+          @keyframes sil-walk-tail {
+            0%, 100% { transform: rotate(0deg); }
             50% { transform: rotate(16deg); }
           }
-          @keyframes goat-walk-tail {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(18deg); }
-          }
-          @keyframes goat-walk-beard {
-            0%, 100% { transform: rotate(-2deg); }
+          @keyframes sil-walk-beard {
+            0%, 100% { transform: rotate(-3deg); }
             50% { transform: rotate(8deg); }
           }
 
-          /* === 2. CHẠY PHI NƯỚC ĐẠI (RUN / GALLOP CYCLE) === */
-          @keyframes goat-run-body {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-3px) rotate(-2deg); }
-            50% { transform: translateY(1px) rotate(1deg); }
+          /* =========================================================
+             2. NGỒI NGHỈ (SIT CYCLE - THỞ & VỂNH TAI & VẪY ĐUÔI)
+             ========================================================= */
+          @keyframes sil-sit-breathe {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-1px) scale(1.01); }
+          }
+          @keyframes sil-sit-ear {
+            0%, 78%, 100% { transform: rotate(0deg); }
+            82% { transform: rotate(-14deg); }
+            88% { transform: rotate(10deg); }
+            92% { transform: rotate(-6deg); }
+          }
+          @keyframes sil-sit-tail {
+            0%, 75%, 100% { transform: rotate(0deg); }
+            80% { transform: rotate(24deg); }
+            85% { transform: rotate(-12deg); }
+            90% { transform: rotate(18deg); }
+          }
+
+          /* =========================================================
+             3. CHẠY PHI NƯỚC ĐẠI (GALLOP CYCLE - 0.42s NHỊP NHANH)
+             ========================================================= */
+          @keyframes sil-run-torso {
+            0%, 100% { transform: translateY(0px) rotate(-1deg); }
+            25% { transform: translateY(-3.5px) rotate(-3deg); }
+            50% { transform: translateY(1.5px) rotate(1.5deg); }
             75% { transform: translateY(-2px) rotate(-1deg); }
           }
-          @keyframes goat-run-fn {
-            0% { transform: rotate(-32deg); }
-            35% { transform: rotate(26deg); }
-            70% { transform: rotate(-10deg); }
-            100% { transform: rotate(-32deg); }
+          @keyframes sil-run-fn {
+            0% { transform: rotate(-35deg); }
+            35% { transform: rotate(28deg); }
+            70% { transform: rotate(-12deg); }
+            100% { transform: rotate(-35deg); }
           }
-          @keyframes goat-run-ff {
-            0% { transform: rotate(25deg); }
+          @keyframes sil-run-ff {
+            0% { transform: rotate(28deg); }
+            35% { transform: rotate(-30deg); }
+            70% { transform: rotate(14deg); }
+            100% { transform: rotate(28deg); }
+          }
+          @keyframes sil-run-bn {
+            0% { transform: rotate(34deg); }
             35% { transform: rotate(-26deg); }
-            70% { transform: rotate(12deg); }
-            100% { transform: rotate(25deg); }
+            70% { transform: rotate(10deg); }
+            100% { transform: rotate(34deg); }
           }
-          @keyframes goat-run-bn {
-            0% { transform: rotate(32deg); }
-            35% { transform: rotate(-24deg); }
-            70% { transform: rotate(8deg); }
-            100% { transform: rotate(32deg); }
+          @keyframes sil-run-bf {
+            0% { transform: rotate(-26deg); }
+            35% { transform: rotate(32deg); }
+            70% { transform: rotate(-12deg); }
+            100% { transform: rotate(-26deg); }
           }
-          @keyframes goat-run-bf {
-            0% { transform: rotate(-24deg); }
-            35% { transform: rotate(30deg); }
-            70% { transform: rotate(-10deg); }
-            100% { transform: rotate(-24deg); }
+          @keyframes sil-run-beard {
+            0%, 100% { transform: rotate(-4deg); }
+            50% { transform: rotate(-22deg); }
           }
-          @keyframes goat-run-tail {
+          @keyframes sil-run-tail {
             0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(22deg); }
+            50% { transform: rotate(24deg); }
           }
-          @keyframes goat-run-beard {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-18deg); }
-          }
-          @keyframes goat-dust-stream {
-            0% { transform: translateX(0px); opacity: 0.8; }
-            100% { transform: translateX(-20px); opacity: 0; }
+          @keyframes sil-run-dust {
+            0% { transform: translateX(0px); opacity: 0.7; }
+            100% { transform: translateX(-24px); opacity: 0; }
           }
 
-          /* === 3. NGỒI NGHỈ & CẢNH GIỚI (SIT / REST CYCLE) === */
-          @keyframes goat-sit-breathe {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-0.8px) scale(1.01); }
-          }
-          @keyframes goat-sit-ear-twitch {
-            0%, 75%, 100% { transform: rotate(0deg); }
-            80% { transform: rotate(-12deg); }
-            85% { transform: rotate(10deg); }
-            90% { transform: rotate(-6deg); }
-          }
-          @keyframes goat-sit-tail-flick {
-            0%, 80%, 100% { transform: rotate(0deg); }
-            85% { transform: rotate(25deg); }
-            90% { transform: rotate(-10deg); }
-            95% { transform: rotate(15deg); }
-          }
-          @keyframes goat-sit-eye-blink {
-            0%, 93%, 97%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-          }
+          /* Bindings */
+          .anim-sw-torso { animation: sil-walk-torso 1.2s ease-in-out infinite; transform-origin: 46px 36px; }
+          .anim-sw-fn { animation: sil-walk-fn 1.2s ease-in-out infinite; transform-origin: 58px 38px; }
+          .anim-sw-ff { animation: sil-walk-ff 1.2s ease-in-out infinite; transform-origin: 56px 37px; }
+          .anim-sw-bn { animation: sil-walk-bn 1.2s ease-in-out infinite; transform-origin: 30px 36px; }
+          .anim-sw-bf { animation: sil-walk-bf 1.2s ease-in-out infinite; transform-origin: 32px 35px; }
+          .anim-sw-tail { animation: sil-walk-tail 0.9s ease-in-out infinite; transform-origin: 21px 28px; }
+          .anim-sw-beard { animation: sil-walk-beard 1.2s ease-in-out infinite; transform-origin: 74px 34px; }
 
-          /* Class bindings */
-          .anim-walk-torso { animation: goat-walk-body 1.1s ease-in-out infinite; transform-origin: 34px 28px; }
-          .anim-walk-leg-fn { animation: goat-walk-fn 1.1s ease-in-out infinite; transform-origin: 45px 30px; }
-          .anim-walk-leg-ff { animation: goat-walk-ff 1.1s ease-in-out infinite; transform-origin: 46px 29px; }
-          .anim-walk-leg-bn { animation: goat-walk-bn 1.1s ease-in-out infinite; transform-origin: 24px 29px; }
-          .anim-walk-leg-bf { animation: goat-walk-bf 1.1s ease-in-out infinite; transform-origin: 25px 28px; }
-          .anim-walk-tail-w { animation: goat-walk-tail 0.8s ease-in-out infinite; transform-origin: 17px 24px; }
-          .anim-walk-beard-w { animation: goat-walk-beard 1.1s ease-in-out infinite; transform-origin: 58px 27px; }
+          .anim-ss-breathe { animation: sil-sit-breathe 2.6s ease-in-out infinite; transform-origin: 45px 50px; }
+          .anim-ss-ear { animation: sil-sit-ear 3.4s ease-in-out infinite; transform-origin: 58px 25px; }
+          .anim-ss-tail { animation: sil-sit-tail 3.0s ease-in-out infinite; transform-origin: 20px 42px; }
 
-          .anim-run-torso { animation: goat-run-body 0.4s ease-in-out infinite; transform-origin: 34px 28px; }
-          .anim-run-leg-fn { animation: goat-run-fn 0.4s ease-in-out infinite; transform-origin: 45px 30px; }
-          .anim-run-leg-ff { animation: goat-run-ff 0.4s ease-in-out infinite; transform-origin: 46px 29px; }
-          .anim-run-leg-bn { animation: goat-run-bn 0.4s ease-in-out infinite; transform-origin: 24px 29px; }
-          .anim-run-leg-bf { animation: goat-run-bf 0.4s ease-in-out infinite; transform-origin: 25px 28px; }
-          .anim-run-tail-r { animation: goat-run-tail 0.3s ease-in-out infinite; transform-origin: 17px 24px; }
-          .anim-run-beard-r { animation: goat-run-beard 0.35s ease-in-out infinite; transform-origin: 58px 27px; }
-          .anim-run-dust { animation: goat-dust-stream 0.35s linear infinite; }
-
-          .anim-sit-breathe { animation: goat-sit-breathe 2.4s ease-in-out infinite; transform-origin: 35px 40px; }
-          .anim-sit-ear { animation: goat-sit-ear-twitch 3.2s ease-in-out infinite; transform-origin: 46px 18px; }
-          .anim-sit-tail { animation: goat-sit-tail-flick 2.8s ease-in-out infinite; transform-origin: 15px 32px; }
-          .anim-sit-eye { animation: goat-sit-eye-blink 3.5s ease-in-out infinite; transform-origin: 51px 18px; }
+          .anim-sr-torso { animation: sil-run-torso 0.42s ease-in-out infinite; transform-origin: 46px 36px; }
+          .anim-sr-fn { animation: sil-run-fn 0.42s ease-in-out infinite; transform-origin: 58px 38px; }
+          .anim-sr-ff { animation: sil-run-ff 0.42s ease-in-out infinite; transform-origin: 56px 37px; }
+          .anim-sr-bn { animation: sil-run-bn 0.42s ease-in-out infinite; transform-origin: 30px 36px; }
+          .anim-sr-bf { animation: sil-run-bf 0.42s ease-in-out infinite; transform-origin: 32px 35px; }
+          .anim-sr-beard { animation: sil-run-beard 0.42s ease-in-out infinite; transform-origin: 74px 34px; }
+          .anim-sr-tail { animation: sil-run-tail 0.35s ease-in-out infinite; transform-origin: 21px 28px; }
+          .anim-sr-dust { animation: sil-run-dust 0.38s linear infinite; }
         `}</style>
 
-        {/* 🛡️ BIỂU TƯỢNG KHIÊN BẢO MẬT NỀN */}
-        <g opacity="0.35" transform="translate(36, 26)">
-          <path
-            d="M 0 -19 L 16 -13 C 16 5 9 17 0 21 C -9 17 -16 5 -16 -13 Z"
-            fill="url(#goat-real-shield-grad)"
-            stroke="#0284C7"
-            strokeWidth="1.1"
-            strokeDasharray="4 2"
-          />
-        </g>
-
         {/* ======================================================================
-            POSE 1: ĐI BỘ (WALK POSE)
+            TƯ THẾ 1: ĐI BỘ (WALKING SILHOUETTE)
             ====================================================================== */}
         {(pose === 'walk' || pose === 'auto') && (
-          <g className={`goat-pose-walk ${pose === 'auto' ? 'anim-pose-walk' : ''}`}>
-            {/* Chân xa (Front far + Back far) */}
-            <g className="anim-walk-leg-ff">
-              <path d="M 46 29 L 47 38 L 43 45 L 45 47 L 49 39 L 48 29 Z" fill="url(#goat-real-leg-far-grad)" stroke="#1E293B" strokeWidth="0.5" />
-              <path d="M 42 45 L 45 47 L 42 47.5 Z" fill="#000000" />
+          <g className={`sil-pose-walk ${pose === 'auto' ? 'anim-sil-walk' : ''}`}>
+            {/* Lớp chân xa (Phía sau) */}
+            <g className="anim-sw-ff">
+              <path
+                d="M 55 37 C 56 42 55 48 53 54 L 56 61 L 53 62 L 50 54 C 52 48 53 42 52 37 Z"
+                fill="url(#goat-sil-far)"
+              />
+              {/* Móng guốc xa */}
+              <path d="M 53 60 L 56.5 61.5 L 53 62.5 Z" fill="#020408" />
             </g>
-            <g className="anim-walk-leg-bf">
-              <path d="M 25 28 L 20 37 L 27 45 L 25 47 L 18 37 L 23 28 Z" fill="url(#goat-real-leg-far-grad)" stroke="#1E293B" strokeWidth="0.5" />
-              <path d="M 25 45 L 27 46.5 L 24 47 Z" fill="#000000" />
+            <g className="anim-sw-bf">
+              <path
+                d="M 33 35 C 31 41 27 47 26 51 L 33 60 L 30 62 L 23 52 C 24 47 28 41 30 35 Z"
+                fill="url(#goat-sil-far)"
+              />
+              {/* Móng guốc xa */}
+              <path d="M 30 60 L 33.5 61.5 L 30 62.5 Z" fill="#020408" />
             </g>
 
-            {/* Sừng sau */}
-            <path d="M 46 16 C 43 1, 26 -1, 13 6 C 20 8, 33 10, 42 18 Z" fill="url(#goat-real-horn-back-grad)" stroke="#1E293B" strokeWidth="0.6" />
+            {/* Sừng phía sau */}
+            <path
+              d="M 59 17 C 55 7 42 5 29 11 C 36 13 47 15 56 20 Z"
+              fill="url(#goat-sil-far)"
+            />
 
-            {/* Thân + Đầu đi bộ */}
-            <g className="anim-walk-torso">
-              {/* Đuôi cộc vểnh lên */}
-              <g className="anim-walk-tail-w">
-                <path d="M 18 24 C 13 21 12 17 15 15 C 17 16 18 19 20 23 Z" fill="#0F172A" stroke="#334155" strokeWidth="0.7" />
+            {/* Khối thân thể + Đầu đi bộ */}
+            <g className="anim-sw-torso">
+              {/* Đuôi cộc vểnh lên trên */}
+              <g className="anim-sw-tail">
+                <path
+                  d="M 22 28 C 17 24 15 19 18 17 C 20 18 22 22 24 27 Z"
+                  fill="url(#goat-sil-main)"
+                />
               </g>
 
-              {/* Khối thân chú dê (vai gồ cao, bụng thon) */}
-              <path d="M 19 24 C 23 22 34 22 43 25 L 45 30 C 39 34 25 34 19 29 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.8" />
-              {/* Ức và cổ vươn cao */}
-              <path d="M 37 24 L 45 16 L 51 18 L 46 29 Z" fill="url(#goat-real-body-grad)" />
-              {/* Đầu dê có sống mũi gồ nhẹ (Roman profile) */}
-              <path d="M 44 17 L 48 13 L 56 18 L 65 24 L 64 27 L 57 28 L 47 24 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.8" />
-              {/* Khóe miệng & Lỗ mũi */}
-              <path d="M 64 24 L 63 26 L 60 26.5" stroke="#000000" strokeWidth="0.9" strokeLinecap="round" />
-              {/* Chòm râu cằm dê dài đặc trưng */}
-              <g className="anim-walk-beard-w">
-                <path d="M 58 28 C 61 34 60 41 55 43 C 54 39 55 33 56 28 Z" fill="#090D16" stroke="#475569" strokeWidth="0.7" />
+              {/* Thân mình hữu cơ liền khối chuẩn giải phẫu (Organic Torso) */}
+              <path
+                d="M 23 29 C 27 27 38 27 48 29 C 55 31 63 36 65 44 C 64 50 56 50 48 48 C 38 46 28 44 23 37 Z"
+                fill="url(#goat-sil-main)"
+              />
+
+              {/* Cổ vươn cao và ngực nở */}
+              <path
+                d="M 46 29 L 55 19 L 63 21 L 62 38 Z"
+                fill="url(#goat-sil-main)"
+              />
+
+              {/* Đầu dê có sống mũi gồ nhẹ (Roman profile) và mõm thuôn dài */}
+              <path
+                d="M 54 20 L 59 15 L 68 21 L 80 28 L 79 32 L 72 34 L 59 28 Z"
+                fill="url(#goat-sil-main)"
+              />
+
+              {/* Chóp mũi & Môi */}
+              <circle cx="79.5" cy="29" r="1.2" fill="#020408" />
+
+              {/* Chòm râu cằm dài buông lơi (Goatee beard) */}
+              <g className="anim-sw-beard">
+                <path
+                  d="M 73 34 C 77 41 76 50 71 52 C 69 47 70 40 71 34 Z"
+                  fill="url(#goat-sil-main)"
+                />
               </g>
-              {/* Đôi tai lá mít chúc ngang */}
-              <path d="M 45 17 C 40 16 34 18 32 21 C 35 21 41 20 45 18 Z" fill="#1E293B" stroke="#475569" strokeWidth="0.7" />
-              <path d="M 43 18 C 39 17 35 19 34 20 C 36 20 40 19 43 18 Z" fill="#334155" />
-              {/* Mắt dê con ngươi ngang thông minh */}
-              <ellipse cx="51" cy="18" rx="1.6" ry="1.3" fill="#38BDF8" />
-              <rect x="50" y="17.5" width="2" height="0.8" rx="0.4" fill="#090D16" />
-              <circle cx="51.6" cy="17.4" r="0.35" fill="#FFFFFF" />
 
-              {/* Sừng cong lớn phía trước với các khía đốt uy nghi */}
-              <path d="M 48 18 C 45 3, 28 1, 15 8 C 22 10, 36 12, 45 20 Z" fill="url(#goat-real-horn-grad)" stroke="#64748B" strokeWidth="0.8" />
-              <line x1="43" y1="13" x2="44" y2="15.5" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="36" y1="8" x2="37" y2="10.5" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="29" y1="5.5" x2="30" y2="8" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="22" y1="5.5" x2="23" y2="7.5" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="16" y1="7.5" x2="17" y2="9.5" stroke="#94A3B8" strokeWidth="0.8" />
+              {/* Đôi tai lá mít chúc ngang mềm mại */}
+              <path
+                d="M 56 20 C 50 19 44 21 41 24 C 44 25 51 24 56 21 Z"
+                fill="url(#goat-sil-main)"
+              />
+
+              {/* Sừng trước dài cong vút hình lưỡi liềm uy nghi */}
+              <path
+                d="M 62 18 C 58 5 43 3 28 9 C 36 12 49 14 59 21 Z"
+                fill="url(#goat-sil-main)"
+              />
+              {/* Các khía đốt trên sống sừng dê thật */}
+              <line x1="57" y1="13" x2="58" y2="16" stroke="#475569" strokeWidth="0.8" />
+              <line x1="49" y1="8" x2="50" y2="11" stroke="#475569" strokeWidth="0.8" />
+              <line x1="41" y1="5.5" x2="42" y2="8.5" stroke="#475569" strokeWidth="0.8" />
+              <line x1="33" y1="6" x2="34" y2="8.5" stroke="#475569" strokeWidth="0.8" />
             </g>
 
-            {/* Chân gần (Front near + Back near) */}
-            <g className="anim-walk-leg-fn">
-              <path d="M 44 29 L 47 38 L 51 45 L 49 47 L 44 39 L 42 29 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.7" />
-              <path d="M 49 45 L 51.5 46.5 L 48.5 47 Z" fill="#000000" />
+            {/* Lớp chân gần (Phía trước) */}
+            <g className="anim-sw-fn">
+              <path
+                d="M 58 38 C 60 44 61 50 59 55 L 63 61 L 60 62 L 56 55 C 57 49 56 43 55 38 Z"
+                fill="url(#goat-sil-main)"
+              />
+              {/* Móng guốc trước */}
+              <path d="M 60 60 L 63.5 61.5 L 60 62.5 Z" fill="#020408" />
             </g>
-            <g className="anim-walk-leg-bn">
-              <path d="M 24 28 C 21 30 18 33 19 38 L 13 45 L 15 47 L 22 39 L 24 33 L 26 28 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.7" />
-              <path d="M 12.5 44.5 L 15 46.5 L 12 47 Z" fill="#000000" />
+            <g className="anim-sw-bn">
+              <path
+                d="M 30 36 C 27 41 23 46 22 51 L 28 60 L 25 62 L 19 52 C 20 46 24 41 27 36 Z"
+                fill="url(#goat-sil-main)"
+              />
+              {/* Móng guốc sau */}
+              <path d="M 25 60 L 28.5 61.5 L 25 62.5 Z" fill="#020408" />
             </g>
           </g>
         )}
 
         {/* ======================================================================
-            POSE 2: NGỒI NGHỈ & CẢNH GIỚI (SIT / REST POSE)
+            TƯ THẾ 2: NGỒI NGHỈ (SITTING SILHOUETTE)
             ====================================================================== */}
         {(pose === 'sit' || pose === 'auto') && (
-          <g className={`goat-pose-sit ${pose === 'auto' ? 'anim-pose-sit' : ''}`}>
-            {/* Toàn bộ tư thế ngồi xếp chân uy nghiêm */}
-            <g className="anim-sit-breathe">
+          <g className={`sil-pose-sit ${pose === 'auto' ? 'anim-sil-sit' : ''}`}>
+            {/* Toàn bộ khối bóng dáng chú dê ngồi sát mặt đất */}
+            <g className="anim-ss-breathe">
               {/* Sừng sau */}
-              <path d="M 46 25 C 43 10, 26 8, 13 15 C 20 17, 33 19, 42 27 Z" fill="url(#goat-real-horn-back-grad)" stroke="#1E293B" strokeWidth="0.6" />
+              <path
+                d="M 59 27 C 55 17 42 15 29 21 C 36 23 47 25 56 30 Z"
+                fill="url(#goat-sil-far)"
+              />
 
-              {/* Đuôi cộc ngồi vẫy */}
-              <g className="anim-sit-tail">
-                <path d="M 16 32 C 11 29 10 25 13 23 C 15 24 16 27 18 31 Z" fill="#0F172A" stroke="#334155" strokeWidth="0.7" />
+              {/* Đuôi cộc ngồi vểnh ngoe nguẩy */}
+              <g className="anim-ss-tail">
+                <path
+                  d="M 20 38 C 15 34 13 29 16 27 C 18 28 20 32 22 37 Z"
+                  fill="url(#goat-sil-main)"
+                />
               </g>
 
-              {/* Thân chú dê ngồi sát mặt đất */}
-              <path d="M 16 32 C 20 28 34 28 44 32 C 48 35 48 44 42 45 C 32 46 22 46 16 42 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.8" />
-              
+              {/* Khối thân chú dê ngồi êm ái sát đất */}
+              <path
+                d="M 21 39 C 25 35 38 35 48 37 C 56 40 60 48 57 56 C 50 61 32 62 21 57 C 17 52 17 44 21 39 Z"
+                fill="url(#goat-sil-main)"
+              />
+
               {/* 4 Chân gập sát bên sườn và dưới ngực khi ngồi */}
               {/* Chân sau gập áp sát đùi */}
-              <path d="M 18 36 C 14 41 15 45 26 45 C 27 43 24 40 20 37 Z" fill="url(#goat-real-leg-far-grad)" stroke="#1E293B" strokeWidth="0.6" />
-              <path d="M 23 44 L 26 45 L 24 45.5 Z" fill="#000000" />
-              {/* Chân trước gập khuỷu về sau */}
-              <path d="M 44 34 L 49 42 L 40 44 L 41 45.5 L 51 43 L 46 34 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.7" />
-              <path d="M 39 44 L 41.5 45 L 39.5 45.5 Z" fill="#000000" />
+              <path
+                d="M 23 47 C 18 53 19 59 34 60 C 35 57 31 52 26 48 Z"
+                fill="url(#goat-sil-far)"
+              />
+              <path d="M 31 59 L 34.5 60.5 L 31 61.5 Z" fill="#020408" />
 
-              {/* Ức & Cổ vươn cao cảnh giác */}
-              <path d="M 36 32 L 45 24 L 51 26 L 46 36 Z" fill="url(#goat-real-body-grad)" />
+              {/* Chân trước gập khuỷu về sau */}
+              <path
+                d="M 55 44 L 62 55 L 49 58 L 50 60.5 L 65 57 L 58 44 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <path d="M 48 58 L 51 59.5 L 48 60.5 Z" fill="#020408" />
+
+              {/* Cổ vươn cao & Ngực ngẩng uy nghiêm */}
+              <path
+                d="M 45 37 L 55 27 L 63 29 L 61 46 Z"
+                fill="url(#goat-sil-main)"
+              />
+
               {/* Đầu dê ngẩng cao */}
-              <path d="M 44 25 L 48 21 L 56 26 L 65 32 L 64 35 L 57 36 L 47 32 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.8" />
-              <path d="M 64 32 L 63 34 L 60 34.5" stroke="#000000" strokeWidth="0.9" strokeLinecap="round" />
-              
-              {/* Chòm râu cằm dài buông rủ êm ái */}
-              <path d="M 58 36 C 61 41 60 47 55 49 C 54 45 55 40 56 36 Z" fill="#090D16" stroke="#475569" strokeWidth="0.7" />
+              <path
+                d="M 54 28 L 59 23 L 68 29 L 80 36 L 79 40 L 72 42 L 59 36 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <circle cx="79.5" cy="37" r="1.2" fill="#020408" />
+
+              {/* Râu cằm buông rủ êm ái */}
+              <path
+                d="M 73 42 C 77 48 76 57 71 59 C 69 54 70 47 71 42 Z"
+                fill="url(#goat-sil-main)"
+              />
 
               {/* Tai vểnh nghe ngóng khi ngồi */}
-              <g className="anim-sit-ear">
-                <path d="M 45 25 C 40 24 34 26 32 29 C 35 29 41 28 45 26 Z" fill="#1E293B" stroke="#475569" strokeWidth="0.7" />
-                <path d="M 43 26 C 39 25 35 27 34 28 C 36 28 40 27 43 26 Z" fill="#334155" />
-              </g>
-
-              {/* Mắt chớp mềm mại */}
-              <g className="anim-sit-eye">
-                <ellipse cx="51" cy="26" rx="1.6" ry="1.3" fill="#38BDF8" />
-                <rect x="50" y="25.5" width="2" height="0.8" rx="0.4" fill="#090D16" />
-                <circle cx="51.6" cy="25.4" r="0.35" fill="#FFFFFF" />
+              <g className="anim-ss-ear">
+                <path
+                  d="M 56 28 C 50 27 44 29 41 32 C 44 33 51 32 56 29 Z"
+                  fill="url(#goat-sil-main)"
+                />
               </g>
 
               {/* Sừng trước uy nghiêm */}
-              <path d="M 48 26 C 45 11, 28 9, 15 16 C 22 18, 36 20, 45 28 Z" fill="url(#goat-real-horn-grad)" stroke="#64748B" strokeWidth="0.8" />
-              <line x1="43" y1="21" x2="44" y2="23.5" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="36" y1="16" x2="37" y2="18.5" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="29" y1="13.5" x2="30" y2="16" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="22" y1="13.5" x2="23" y2="15.5" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="16" y1="15.5" x2="17" y2="17.5" stroke="#94A3B8" strokeWidth="0.8" />
+              <path
+                d="M 62 26 C 58 13 43 11 28 17 C 36 20 49 22 59 29 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <line x1="57" y1="21" x2="58" y2="24" stroke="#475569" strokeWidth="0.8" />
+              <line x1="49" y1="16" x2="50" y2="19" stroke="#475569" strokeWidth="0.8" />
+              <line x1="41" y1="13.5" x2="42" y2="16.5" stroke="#475569" strokeWidth="0.8" />
+              <line x1="33" y1="14" x2="34" y2="16.5" stroke="#475569" strokeWidth="0.8" />
             </g>
           </g>
         )}
 
         {/* ======================================================================
-            POSE 3: CHẠY PHI NƯỚC ĐẠI (RUN / GALLOP POSE)
+            TƯ THẾ 3: CHẠY PHI NƯỚC ĐẠI (RUNNING SILHOUETTE)
             ====================================================================== */}
         {(pose === 'run' || pose === 'auto') && (
-          <g className={`goat-pose-run ${pose === 'auto' ? 'anim-pose-run' : ''}`}>
+          <g className={`sil-pose-run ${pose === 'auto' ? 'anim-sil-run' : ''}`}>
             {/* Vệt bụi tốc độ bay về sau */}
-            <g opacity="0.7">
-              <line x1="20" y1="46" x2="6" y2="46" stroke="#64748B" strokeWidth="1.2" strokeLinecap="round" className="anim-run-dust" />
-              <line x1="26" y1="48" x2="10" y2="48" stroke="#0284C7" strokeWidth="1.4" strokeLinecap="round" className="anim-run-dust" />
-              <circle cx="14" cy="45" r="1" fill="#64748B" className="anim-run-dust" />
-              <circle cx="9" cy="47" r="1.2" fill="#0284C7" className="anim-run-dust" />
+            <g opacity="0.6">
+              <line x1="26" y1="58" x2="10" y2="58" stroke="#64748B" strokeWidth="1.4" strokeLinecap="round" className="anim-sr-dust" />
+              <line x1="34" y1="61" x2="14" y2="61" stroke="#0284C7" strokeWidth="1.6" strokeLinecap="round" className="anim-sr-dust" />
+              <circle cx="18" cy="57" r="1.2" fill="#64748B" className="anim-sr-dust" />
+              <circle cx="12" cy="60" r="1.4" fill="#0284C7" className="anim-sr-dust" />
             </g>
 
             {/* Chân xa chạy */}
-            <g className="anim-run-leg-ff">
-              <path d="M 45 28 L 48 37 L 44 43 L 46 44 L 49 37 L 47 28 Z" fill="url(#goat-real-leg-far-grad)" stroke="#1E293B" strokeWidth="0.5" />
-              <path d="M 43.5 42.5 L 46 44 L 44 44.5 Z" fill="#000000" />
+            <g className="anim-sr-ff">
+              <path
+                d="M 56 36 C 58 42 61 48 57 54 L 62 61 L 59 62 L 53 54 C 55 48 54 42 53 36 Z"
+                fill="url(#goat-sil-far)"
+              />
+              <path d="M 59 60 L 62.5 61.5 L 59 62.5 Z" fill="#020408" />
             </g>
-            <g className="anim-run-leg-bf">
-              <path d="M 26 27 L 22 34 L 28 41 L 26 43 L 20 34 L 24 27 Z" fill="url(#goat-real-leg-far-grad)" stroke="#1E293B" strokeWidth="0.5" />
-              <path d="M 26 41.5 L 28 42.5 L 25.5 43.5 Z" fill="#000000" />
+            <g className="anim-sr-bf">
+              <path
+                d="M 33 34 C 30 40 24 45 22 50 L 30 59 L 27 61 L 18 51 C 20 45 25 40 29 34 Z"
+                fill="url(#goat-sil-far)"
+              />
+              <path d="M 27 59 L 30.5 60.5 L 27 61.5 Z" fill="#020408" />
             </g>
 
             {/* Sừng sau chạy */}
-            <path d="M 45 14 C 41 6 32 3 24 6 C 29 8 36 10 42 16 Z" fill="url(#goat-real-horn-back-grad)" stroke="#1E293B" strokeWidth="0.6" />
+            <path
+              d="M 58 15 C 54 5 41 3 28 9 C 35 11 46 13 55 18 Z"
+              fill="url(#goat-sil-far)"
+            />
 
-            {/* Thân thể + Đầu chạy phi nước đại */}
-            <g className="anim-run-torso">
-              {/* Đuôi bay trong gió */}
-              <g className="anim-run-tail-r">
-                <path d="M 20 23 C 15 20 14 16 16 15 C 18 16 19 19 21 22 Z" fill="#0F172A" stroke="#334155" strokeWidth="0.7" />
+            {/* Thân mình chú dê phi nước đại */}
+            <g className="anim-sr-torso">
+              {/* Đuôi bay theo gió */}
+              <g className="anim-sr-tail">
+                <path
+                  d="M 23 27 C 18 23 16 18 19 16 C 21 17 23 21 25 26 Z"
+                  fill="url(#goat-sil-main)"
+                />
               </g>
 
-              {/* Thân mình chú dê căng tràn sức mạnh */}
-              <path d="M 21 23 C 24 21 34 21 42 24 L 44 29 C 38 33 26 33 21 29 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.8" />
-              <path d="M 38 23 L 44 16 L 49 18 L 45 28 Z" fill="url(#goat-real-body-grad)" />
+              {/* Thân mình thon gọn, dũng mãnh */}
+              <path
+                d="M 24 28 C 28 26 39 26 49 28 C 56 30 63 35 64 43 C 62 49 54 49 46 47 C 36 45 27 43 23 36 Z"
+                fill="url(#goat-sil-main)"
+              />
 
-              {/* Đầu chú dê vươn về phía trước */}
-              <path d="M 43 17 L 47 13 L 55 18 L 64 23 L 63 26 L 56 27 L 46 23 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.8" />
-              <path d="M 64 23 L 63 25 L 60 25.5" stroke="#000000" strokeWidth="0.9" strokeLinecap="round" />
+              {/* Cổ vươn chúc về trước đón gió */}
+              <path
+                d="M 46 28 L 56 17 L 64 19 L 61 36 Z"
+                fill="url(#goat-sil-main)"
+              />
 
-              {/* Râu cằm dê đen tung bay tít về sau */}
-              <g className="anim-run-beard-r">
-                <path d="M 57 27 C 60 31 59 38 54 40 C 53 36 54 31 55 27 Z" fill="#090D16" stroke="#475569" strokeWidth="0.7" />
+              {/* Đầu lao về phía trước */}
+              <path
+                d="M 54 18 L 60 13 L 69 19 L 81 26 L 80 30 L 73 32 L 60 26 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <circle cx="80.5" cy="27" r="1.2" fill="#020408" />
+
+              {/* Râu cằm bay tít ra sau */}
+              <g className="anim-sr-beard">
+                <path
+                  d="M 74 32 C 78 37 77 46 70 48 C 69 43 71 37 72 32 Z"
+                  fill="url(#goat-sil-main)"
+                />
               </g>
 
-              {/* Tai dê áp sát ra sau đón gió */}
-              <path d="M 44 16 C 39 15 33 17 31 20 C 34 20 40 19 44 17 Z" fill="#1E293B" stroke="#475569" strokeWidth="0.7" />
-              <path d="M 42 17 C 38 16 34 18 33 19 C 35 19 39 18 42 17 Z" fill="#334155" />
+              {/* Tai ép sát ra sau */}
+              <path
+                d="M 56 18 C 50 17 44 19 41 22 C 44 23 51 22 56 19 Z"
+                fill="url(#goat-sil-main)"
+              />
 
-              {/* Mắt công nghệ sáng thông minh */}
-              <ellipse cx="50" cy="17" rx="1.6" ry="1.3" fill="#38BDF8" />
-              <rect x="49" y="16.5" width="2" height="0.8" rx="0.4" fill="#090D16" />
-              <circle cx="50.6" cy="16.4" r="0.35" fill="#FFFFFF" />
-
-              {/* Sừng trước cong vuốt */}
-              <path d="M 46 14 C 43 5 33 2 25 5 C 31 7 38 9 44 16 Z" fill="url(#goat-real-horn-grad)" stroke="#64748B" strokeWidth="0.8" />
-              <line x1="38" y1="11" x2="39" y2="13" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="33" y1="8" x2="34" y2="10" stroke="#94A3B8" strokeWidth="0.8" />
-              <line x1="28" y1="6" x2="29" y2="8" stroke="#94A3B8" strokeWidth="0.8" />
+              {/* Sừng trước cong vút lướt gió */}
+              <path
+                d="M 61 16 C 57 3 42 1 27 7 C 35 10 48 12 58 19 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <line x1="56" y1="11" x2="57" y2="14" stroke="#475569" strokeWidth="0.8" />
+              <line x1="48" y1="6" x2="49" y2="9" stroke="#475569" strokeWidth="0.8" />
+              <line x1="40" y1="3.5" x2="41" y2="6.5" stroke="#475569" strokeWidth="0.8" />
+              <line x1="32" y1="4" x2="33" y2="6.5" stroke="#475569" strokeWidth="0.8" />
             </g>
 
             {/* Chân gần chạy */}
-            <g className="anim-run-leg-fn">
-              <path d="M 43 29 L 45 37 L 50 43 L 48 44.5 L 43 38 L 41 29 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.7" />
-              <path d="M 48 43 L 50.5 44.5 L 48 45 Z" fill="#000000" />
+            <g className="anim-sr-fn">
+              <path
+                d="M 58 37 C 62 44 67 51 63 56 L 68 61 L 65 62 L 59 55 C 59 49 57 43 55 37 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <path d="M 65 60 L 68.5 61.5 L 65 62.5 Z" fill="#020408" />
             </g>
-            <g className="anim-run-leg-bn">
-              <path d="M 25 28 C 22 30 19 33 20 37 L 14 43 L 16 44.5 L 22 38 L 24 33 L 27 28 Z" fill="url(#goat-real-body-grad)" stroke="#334155" strokeWidth="0.7" />
-              <path d="M 13.5 42.5 L 15.5 44.5 L 13 44.5 Z" fill="#000000" />
+            <g className="anim-sr-bn">
+              <path
+                d="M 31 35 C 28 41 22 47 20 52 L 27 60 L 24 62 L 15 52 C 18 46 23 41 28 35 Z"
+                fill="url(#goat-sil-main)"
+              />
+              <path d="M 24 60 L 27.5 61.5 L 24 62.5 Z" fill="#020408" />
             </g>
           </g>
         )}
@@ -405,113 +482,113 @@ export const SecurityGoat: React.FC<SecurityGoatProps> = ({
 };
 
 /**
- * 🏃‍♂️ CHÚ DÊ ĐEN DI CHUYỂN TRONG HỘP LỚN (ĐẦY ĐỦ CÁC PHA: ĐI -> NGỒI -> CHẠY)
+ * 🏃‍♂️ CHÚ DÊ ĐEN SILHOUETTE DI CHUYỂN TRONG HỘP LỚN BẢO MẬT (ĐI -> NGỒI -> CHẠY)
  */
 export const SecurityGoatRunner: React.FC = () => {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <style>{`
-        /* CHU TRÌNH TỔNG HỢP: 14 GIÂY ĐẦY ĐỦ (ĐI -> NGỒI -> CHẠY) */
-        @keyframes goat-grand-traverse {
+        /* CHU TRÌNH TỔNG HỢP: 14 GIÂY ĐẦY ĐỦ (ĐI BỘ -> NGỒI NGHỈ -> CHẠY PHI NƯỚC ĐẠI) */
+        @keyframes goat-grand-sil-traverse {
           /* PHA 1: ĐI BỘ (0s -> 4.3s = 0% -> 31%) */
           0% {
-            left: -68px;
+            left: -76px;
             opacity: 0;
           }
           3% {
-            opacity: 0.95;
+            opacity: 0.96;
           }
           31% {
-            left: calc(50% - 28px);
-            opacity: 0.95;
+            left: calc(50% - 32px);
+            opacity: 0.96;
           }
 
           /* PHA 2: DỪNG LẠI & NGỒI NGHỈ (4.3s -> 8.5s = 31% -> 61%) */
-          32% {
-            left: calc(50% - 28px);
-            opacity: 0.95;
+          31.5% {
+            left: calc(50% - 32px);
+            opacity: 0.96;
           }
           60.5% {
-            left: calc(50% - 28px);
-            opacity: 0.95;
+            left: calc(50% - 32px);
+            opacity: 0.96;
           }
 
-          /* PHA 3: ĐỨNG LÊN VÀ CHẠY PHI NƯỚC ĐẠI (8.5s -> 13.4s = 61% -> 96%) */
+          /* PHA 3: ĐỨNG LÊN VÀ CHẠY PHI NƯỚC ĐẠI (8.5s -> 13.5s = 61% -> 96%) */
           61% {
-            left: calc(50% - 28px);
-            opacity: 0.95;
+            left: calc(50% - 32px);
+            opacity: 0.96;
           }
           96% {
             left: 104%;
-            opacity: 0.95;
+            opacity: 0.96;
           }
           97.5% {
             left: 104%;
             opacity: 0;
           }
           99% {
-            left: -68px;
+            left: -76px;
             opacity: 0;
           }
           100% {
-            left: -68px;
+            left: -76px;
             opacity: 0;
           }
         }
 
-        /* ẨN HIỆN CHÍNH XÁC TỪNG TƯ THẾ */
-        @keyframes pose-walk-toggle {
+        /* ẨN HIỆN CHÍNH XÁC TỪNG TƯ THẾ SILHOUETTE */
+        @keyframes sil-walk-toggle {
           0%, 31% { opacity: 1; visibility: visible; }
           31.1%, 100% { opacity: 0; visibility: hidden; }
         }
 
-        @keyframes pose-sit-toggle {
+        @keyframes sil-sit-toggle {
           0%, 30.9% { opacity: 0; visibility: hidden; }
           31.1%, 60.9% { opacity: 1; visibility: visible; }
           61%, 100% { opacity: 0; visibility: hidden; }
         }
 
-        @keyframes pose-run-toggle {
+        @keyframes sil-run-toggle {
           0%, 60.9% { opacity: 0; visibility: hidden; }
           61%, 97% { opacity: 1; visibility: visible; }
           97.1%, 100% { opacity: 0; visibility: hidden; }
         }
 
-        .anim-goat-grand-track {
+        .anim-goat-sil-track {
           position: absolute;
-          bottom: 2px;
-          animation: goat-grand-traverse 14s linear infinite;
+          bottom: 1px;
+          animation: goat-grand-sil-traverse 14s linear infinite;
           will-change: left;
         }
 
-        .group:hover .anim-goat-grand-track {
-          /* Khi hover vào hộp: tăng tốc chu kỳ tuần tra */
-          animation-duration: 9s;
+        .group:hover .anim-goat-sil-track {
+          /* Khi hover vào hộp: chu kỳ tăng tốc nhẹ linh hoạt */
+          animation-duration: 9.5s;
         }
 
-        .anim-pose-walk {
-          animation: pose-walk-toggle 14s step-end infinite;
+        .anim-sil-walk {
+          animation: sil-walk-toggle 14s step-end infinite;
         }
-        .anim-pose-sit {
-          animation: pose-sit-toggle 14s step-end infinite;
+        .anim-sil-sit {
+          animation: sil-sit-toggle 14s step-end infinite;
         }
-        .anim-pose-run {
-          animation: pose-run-toggle 14s step-end infinite;
+        .anim-sil-run {
+          animation: sil-run-toggle 14s step-end infinite;
         }
 
-        .group:hover .anim-pose-walk,
-        .group:hover .anim-pose-sit,
-        .group:hover .anim-pose-run {
-          animation-duration: 9s;
+        .group:hover .anim-sil-walk,
+        .group:hover .anim-sil-sit,
+        .group:hover .anim-sil-run {
+          animation-duration: 9.5s;
         }
       `}</style>
 
-      {/* Đường chạy laser bảo mật tinh tế ở sàn hộp */}
-      <div className="absolute bottom-2.5 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-slate-300/40 dark:via-slate-700/40 to-transparent" />
+      {/* Đường chạy laser bảo mật tinh tế ở sàn hộp lớn */}
+      <div className="absolute bottom-2 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-slate-300/40 dark:via-slate-700/40 to-transparent" />
 
-      {/* Chú dê đen tuần tra di chuyển trong hộp lớn */}
-      <div className="anim-goat-grand-track flex items-center">
-        <SecurityGoat pose="auto" className="w-13 h-9.5 sm:w-14 sm:h-10 opacity-90 hover:opacity-100 transition-opacity" />
+      {/* Chú dê đen Silhouette tuần tra di chuyển trong hộp lớn */}
+      <div className="anim-goat-sil-track flex items-center">
+        <SecurityGoat pose="auto" className="w-14 h-10 sm:w-15 sm:h-10.5 opacity-95 hover:opacity-100 transition-opacity" />
       </div>
     </div>
   );
