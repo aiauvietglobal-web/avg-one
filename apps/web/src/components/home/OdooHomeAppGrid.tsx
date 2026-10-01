@@ -245,17 +245,17 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           
 
 
-          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ BÊN TRÁI: 1000R CURVED OLED DISPLAY QUANTUM CORE */}
-          <div className="hidden md:flex absolute left-2 lg:left-4 xl:left-8 2xl:left-14 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
-            <div className="animate-curved-screen-left">
-              <TechHologramDataCore className="w-[255px] md:w-[285px] lg:w-[320px] xl:w-[370px] 2xl:w-[415px] h-auto group-hover:scale-[1.03] transition-all duration-500" />
+          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ 2D BÊN TRÁI: 2D QUANTUM DATA CORE */}
+          <div className="hidden md:flex absolute left-4 lg:left-8 xl:left-14 2xl:left-20 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
+            <div className="animate-entrance-left transition-transform duration-500 group-hover:scale-105">
+              <TechHologramDataCore className="w-[170px] md:w-[200px] lg:w-[230px] xl:w-[260px] 2xl:w-[290px] aspect-square h-auto" />
             </div>
           </div>
 
-          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ BÊN PHẢI: 1000R CURVED OLED DISPLAY KINETIC GEARS */}
-          <div className="hidden md:flex absolute right-2 lg:right-4 xl:right-8 2xl:right-14 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
-            <div className="animate-curved-screen-right">
-              <TechHologramGearEcosystem className="w-[255px] md:w-[285px] lg:w-[320px] xl:w-[370px] 2xl:w-[415px] h-auto group-hover:scale-[1.03] transition-all duration-500" />
+          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ 2D BÊN PHẢI: 2D KINETIC GEAR ECOSYSTEM */}
+          <div className="hidden md:flex absolute right-4 lg:right-8 xl:right-14 2xl:right-20 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
+            <div className="animate-entrance-right transition-transform duration-500 group-hover:scale-105">
+              <TechHologramGearEcosystem className="w-[170px] md:w-[200px] lg:w-[230px] xl:w-[260px] 2xl:w-[290px] aspect-square h-auto" />
             </div>
           </div>
 
