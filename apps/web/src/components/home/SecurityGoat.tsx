@@ -1,363 +1,269 @@
 import React from 'react';
 
 /**
- * 🐐 CHÚ DÊ BẢO MẬT CHUYỂN ĐỘNG SỐNG ĐỘNG (CHUẨN 100% THEO HÌNH VẼ MẪU CỦA USER)
+ * 🐐 CHÚ DÊ CÔNG NGHỆ BẢO MẬT (CHUẨN 100% THEO HÌNH VẼ MẪU CỦA USER)
  * 
  * - Đúng chuẩn 100% hình minh họa của user:
- *   + Tách lớp xương chuyển động (Skeletal 2D Animation) từ chính bức vẽ gốc.
- *   + 4 chân bước đi thật sự: Khớp vai, khớp hông và khuỷu chân co duỗi sải bước.
- *   + Đầu và sừng gật gù quan sát, râu cằm đung đưa.
- *   + Đuôi cộc ve vẩy vui mắt.
- *   + Lồng ngực phập phồng nhịp thở sinh học.
- * - Hướng di chuyển: Quay đầu sang PHẢI (tiến về phía trước), KHÔNG ĐI LÙI!
- * - Đầy đủ 3 trạng thái chuyển động:
- *   1. ĐI BỘ (Walk): 4 chân sải bước thật sự bước vào giữa hộp.
- *   2. ĐỨNG (Stand): Dừng lại đứng thở phập phồng, vểnh tai, vẫy đuôi canh gác.
- *   3. NẰM (Lie down): Gập 4 chân nằm êm ái nghỉ ngơi trên sàn hộp.
+ *   + Sử dụng trọn vẹn hình ảnh nét vẽ gốc nguyên vẹn (không cắt ghép lỗi, không đứt đoạn).
+ *   + Luôn xuất hiện trong hộp 100% thời gian ("lúc nào cũng xuất hiện"), không biến mất ra ngoài lề.
+ *   + Hoạt động tuần tra linh hoạt bên trong hộp ("hoạt động trong hộp"):
+ *     1. ĐI BỘ (Walk): Đi tiến tự nhiên từ trái sang giữa hộp (quay đầu đúng hướng di chuyển).
+ *     2. ĐỨNG (Stand): Đứng uy nghiêm giữa hộp, lồng ngực phập phồng thở, quan sát canh gác.
+ *     3. NẰM (Lie down): Hạ mình nằm nghỉ êm ái sát sàn hộp thư thái.
+ *     4. BƯỚC TIẾP & QUAY ĐẦU: Đi tiếp sang phải, quay đầu bước lại tuần tra liên tục.
+ *   + Bố cục hoàn hảo: Nằm ở khoảng giữa hộp, KHÔNG ĐÈ LÊN CHỮ "Bảo Mật".
  */
 
 interface SecurityGoatProps {
   className?: string;
-  pose?: 'stand' | 'walk' | 'lie';
+  pose?: 'stand' | 'walk' | 'lie' | 'turn-walk';
 }
 
 export const SecurityGoat: React.FC<SecurityGoatProps> = ({ 
   className = '',
-  pose = 'walk'
+  pose = 'stand'
 }) => {
   return (
     <div className={`relative inline-flex items-center justify-center select-none pointer-events-none ${className}`}>
       <style>{`
         /* =========================================================
-           1. CHUYỂN ĐỘNG 4 CHÂN BƯỚC ĐI THẬT SỰ (WALK GAIT)
+           1. ĐI TIẾN SANG PHẢI (HEAD RIGHT, MOVE RIGHT)
            ========================================================= */
-        /* Chân trước xa (Front Far Leg) */
-        @keyframes limb-walk-ff {
-          0% { transform: rotate(18deg); }
-          25% { transform: rotate(-4deg); }
-          50% { transform: rotate(-18deg); }
-          75% { transform: rotate(4deg); }
-          100% { transform: rotate(18deg); }
-        }
-
-        /* Chân trước gần (Front Near Leg - ngược pha) */
-        @keyframes limb-walk-fn {
-          0% { transform: rotate(-18deg); }
-          25% { transform: rotate(4deg); }
-          50% { transform: rotate(18deg); }
-          75% { transform: rotate(-4deg); }
-          100% { transform: rotate(-18deg); }
-        }
-
-        /* Chân sau xa (Hind Far Leg) */
-        @keyframes limb-walk-bf {
-          0% { transform: rotate(-16deg); }
-          25% { transform: rotate(6deg); }
-          50% { transform: rotate(16deg); }
-          75% { transform: rotate(-4deg); }
-          100% { transform: rotate(-16deg); }
-        }
-
-        /* Chân sau gần (Hind Near Leg - ngược pha) */
-        @keyframes limb-walk-bn {
-          0% { transform: rotate(16deg); }
-          25% { transform: rotate(-4deg); }
-          50% { transform: rotate(-16deg); }
-          75% { transform: rotate(6deg); }
-          100% { transform: rotate(16deg); }
-        }
-
-        /* Đầu gật gù nhẹ khi bước đi */
-        @keyframes limb-walk-head {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(2.5deg); }
-        }
-
-        /* Đuôi ve vẩy khi đi */
-        @keyframes limb-walk-tail {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(16deg); }
-        }
-
-        /* Thân nhấp nhô nhẹ theo nhịp bước */
-        @keyframes limb-walk-torso {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          25% { transform: translateY(-1.2px) rotate(-0.5deg); }
-          50% { transform: translateY(0.6px) rotate(0.4deg); }
-          75% { transform: translateY(-0.8px) rotate(-0.2deg); }
+        @keyframes goat-step-right {
+          0%, 100% {
+            transform: scaleX(-1) translateY(0px) rotate(0deg);
+          }
+          25% {
+            transform: scaleX(-1) translateY(-2.5px) rotate(-1.5deg);
+          }
+          50% {
+            transform: scaleX(-1) translateY(0.8px) rotate(1deg);
+          }
+          75% {
+            transform: scaleX(-1) translateY(-1.5px) rotate(-0.8deg);
+          }
         }
 
         /* =========================================================
-           2. CHUYỂN ĐỘNG ĐỨNG (STAND - THỞ, VẪY ĐUÔI, QUAN SÁT)
+           2. ĐI TIẾN SANG TRÁI (HEAD LEFT, MOVE LEFT)
            ========================================================= */
-        @keyframes limb-stand-breathe {
-          0%, 100% { transform: scale(1) translateY(0px); }
-          50% { transform: scale(1.02, 1.015) translateY(-0.6px); }
-        }
-        @keyframes limb-stand-tail {
-          0%, 75%, 100% { transform: rotate(0deg); }
-          80% { transform: rotate(18deg); }
-          85% { transform: rotate(-10deg); }
-          90% { transform: rotate(12deg); }
-        }
-        @keyframes limb-stand-head {
-          0%, 70%, 100% { transform: rotate(0deg); }
-          75% { transform: rotate(-2deg); }
-          85% { transform: rotate(3deg); }
-          90% { transform: rotate(-1deg); }
+        @keyframes goat-step-left {
+          0%, 100% {
+            transform: scaleX(1) translateY(0px) rotate(0deg);
+          }
+          25% {
+            transform: scaleX(1) translateY(-2.5px) rotate(1.5deg);
+          }
+          50% {
+            transform: scaleX(1) translateY(0.8px) rotate(-1deg);
+          }
+          75% {
+            transform: scaleX(1) translateY(-1.5px) rotate(0.8deg);
+          }
         }
 
         /* =========================================================
-           3. CHUYỂN ĐỘNG NẰM NGHỈ (LIE DOWN)
+           3. ĐỨNG UY NGHIÊM THỞ & CANH GÁC (STAND)
            ========================================================= */
-        @keyframes limb-lie-torso {
-          0%, 100% { transform: translateY(12px) scaleY(0.82); }
-          50% { transform: translateY(11.2px) scaleY(0.835); }
-        }
-        @keyframes limb-lie-leg-front {
-          0%, 100% { transform: translateY(8px) rotate(42deg) scale(0.85); }
-        }
-        @keyframes limb-lie-leg-back {
-          0%, 100% { transform: translateY(8px) rotate(-42deg) scale(0.85); }
-        }
-        @keyframes limb-lie-head {
-          0%, 100% { transform: translateY(4px) rotate(-3deg); }
-        }
-        @keyframes limb-lie-tail {
-          0%, 75%, 100% { transform: rotate(0deg); }
-          85% { transform: rotate(18deg); }
+        @keyframes goat-stand-breathing {
+          0%, 100% {
+            transform: scaleX(-1) scale(1) translateY(0px);
+          }
+          50% {
+            transform: scaleX(-1) scale(1.025, 1.018) translateY(-0.8px);
+          }
         }
 
-        /* CSS Animation classes */
-        .anim-l-ff-walk { animation: limb-walk-ff 1.1s ease-in-out infinite; transform-origin: 36% 62%; }
-        .anim-l-fn-walk { animation: limb-walk-fn 1.1s ease-in-out infinite; transform-origin: 46% 62%; }
-        .anim-l-bf-walk { animation: limb-walk-bf 1.1s ease-in-out infinite; transform-origin: 72% 64%; }
-        .anim-l-bn-walk { animation: limb-walk-bn 1.1s ease-in-out infinite; transform-origin: 88% 64%; }
-        .anim-l-head-walk { animation: limb-walk-head 1.1s ease-in-out infinite; transform-origin: 38% 52%; }
-        .anim-l-tail-walk { animation: limb-walk-tail 0.9s ease-in-out infinite; transform-origin: 84% 42%; }
-        .anim-l-torso-walk { animation: limb-walk-torso 1.1s ease-in-out infinite; transform-origin: center bottom; }
+        /* =========================================================
+           4. NẰM NGHỈ THƯ THÁI (LIE DOWN)
+           ========================================================= */
+        @keyframes goat-lie-resting {
+          0%, 100% {
+            transform: scaleX(-1) translateY(7px) scale(1.03, 0.82);
+          }
+          50% {
+            transform: scaleX(-1) translateY(6.4px) scale(1.04, 0.835);
+          }
+        }
 
-        .anim-l-torso-stand { animation: limb-stand-breathe 2.5s ease-in-out infinite; transform-origin: center bottom; }
-        .anim-l-tail-stand { animation: limb-stand-tail 3.2s ease-in-out infinite; transform-origin: 84% 42%; }
-        .anim-l-head-stand { animation: limb-stand-head 3.6s ease-in-out infinite; transform-origin: 38% 52%; }
+        .anim-g-walk-right {
+          animation: goat-step-right 1.05s ease-in-out infinite;
+          transform-origin: bottom center;
+        }
 
-        .anim-l-torso-lie { animation: limb-lie-torso 2.8s ease-in-out infinite; transform-origin: center bottom; }
-        .anim-l-ff-lie, .anim-l-fn-lie { animation: limb-lie-leg-front 2.8s ease-in-out infinite; transform-origin: 42% 62%; }
-        .anim-l-bf-lie, .anim-l-bn-lie { animation: limb-lie-leg-back 2.8s ease-in-out infinite; transform-origin: 80% 64%; }
-        .anim-l-head-lie { animation: limb-lie-head 2.8s ease-in-out infinite; transform-origin: 38% 52%; }
-        .anim-l-tail-lie { animation: limb-lie-tail 2.8s ease-in-out infinite; transform-origin: 84% 42%; }
+        .anim-g-walk-left {
+          animation: goat-step-left 1.05s ease-in-out infinite;
+          transform-origin: bottom center;
+        }
+
+        .anim-g-stand {
+          animation: goat-stand-breathing 2.6s ease-in-out infinite;
+          transform-origin: bottom center;
+        }
+
+        .anim-g-lie {
+          animation: goat-lie-resting 2.8s ease-in-out infinite;
+          transform-origin: bottom center;
+        }
       `}</style>
 
-      {/* Wrapper quay đầu sang phải (scaleX(-1)) để luôn đi TIẾN VỀ PHÍA TRƯỚC */}
-      <div className="relative w-full h-full" style={{ transform: 'scaleX(-1)' }}>
-        
-        {/* LỚP 1: Chân xa phía sau (Front Far + Back Far) */}
-        <img
-          src="/assets/goat-leg-ff.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-ff-walk' :
-            pose === 'lie' ? 'anim-l-ff-lie' : ''
-          }`}
-        />
-        <img
-          src="/assets/goat-leg-bf.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-bf-walk' :
-            pose === 'lie' ? 'anim-l-bf-lie' : ''
-          }`}
-        />
-
-        {/* LỚP 2: Đuôi */}
-        <img
-          src="/assets/goat-tail.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-tail-walk' :
-            pose === 'stand' ? 'anim-l-tail-stand' :
-            pose === 'lie' ? 'anim-l-tail-lie' : ''
-          }`}
-        />
-
-        {/* LỚP 3: Thân mình chính (Torso) */}
-        <img
-          src="/assets/goat-torso.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-torso-walk' :
-            pose === 'stand' ? 'anim-l-torso-stand' :
-            pose === 'lie' ? 'anim-l-torso-lie' : ''
-          }`}
-        />
-
-        {/* LỚP 4: Đầu, Sừng, Râu cằm (Head & Horns & Beard) */}
-        <img
-          src="/assets/goat-head.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-head-walk' :
-            pose === 'stand' ? 'anim-l-head-stand' :
-            pose === 'lie' ? 'anim-l-head-lie' : ''
-          }`}
-        />
-
-        {/* LỚP 5: Chân gần phía trước (Front Near + Back Near) */}
-        <img
-          src="/assets/goat-leg-fn.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-fn-walk' :
-            pose === 'lie' ? 'anim-l-fn-lie' : ''
-          }`}
-        />
-        <img
-          src="/assets/goat-leg-bn.png"
-          alt=""
-          className={`absolute inset-0 w-full h-full object-contain ${
-            pose === 'walk' ? 'anim-l-bn-walk' :
-            pose === 'lie' ? 'anim-l-bn-lie' : ''
-          }`}
-        />
-      </div>
+      {/* Hình ảnh chú dê gốc nguyên vẹn chuẩn 100% hình vẽ mẫu */}
+      <img
+        src="/assets/goat-stand.png"
+        alt="Chú Dê Bảo Mật"
+        className={`w-full h-full object-contain filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)] ${
+          pose === 'walk' ? 'anim-g-walk-right' :
+          pose === 'turn-walk' ? 'anim-g-walk-left' :
+          pose === 'stand' ? 'anim-g-stand' :
+          pose === 'lie' ? 'anim-g-lie' : ''
+        }`}
+      />
     </div>
   );
 };
 
 /**
- * 🏃‍♂️ RUNNER: CHU TRÌNH TUẦN TRA ĐẦY ĐỦ TRONG HỘP BẢO MẬT
- * - Hướng mặt: Quay sang PHẢI (scaleX(-1)), di chuyển sang PHẢI -> ĐI TIẾN TỰ NHIÊN!
- * - Chu kỳ 16 giây: ĐI VÀO (4 chân sải bước thật) -> ĐỨNG BẢO VỆ -> NẰM NGHỈ -> ĐỨNG LÊN BƯỚC TIẾP
+ * 🏃‍♂️ RUNNER: HOẠT ĐỘNG LIÊN TỤC TRONG HỘP - LÚC NÀO CŨNG XUẤT HIỆN
+ * - Không bao giờ biến mất ra ngoài lề (Always visible inside box boundaries).
+ * - Chu kỳ 18 giây:
+ *   1. Đi tiến từ trái vào giữa hộp (0s - 4.5s)
+ *   2. Đứng uy nghiêm giữa hộp quan sát canh gác (4.5s - 8.5s)
+ *   3. Nằm nghỉ thư thái giữa sàn (8.5s - 12.5s)
+ *   4. Đứng dậy bước tiếp sang phải (12.5s - 15.5s)
+ *   5. Quay đầu bước đi tuần tra về lại bên trái (15.5s - 18s)
  */
 export const SecurityGoatRunner: React.FC = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <div className="absolute inset-x-0 bottom-[22px] sm:bottom-[24px] h-[36px] sm:h-[40px] pointer-events-none overflow-hidden z-0">
       <style>{`
-        /* CHU TRÌNH TỔNG HỢP: 16 GIÂY (ĐI TIẾN -> ĐỨNG -> NẰM -> ĐI TIẾP) */
-        @keyframes goat-flow-patrol {
-          /* PHA 1: ĐI TIẾN VÀO GIỮA HỘP (0s -> 5s = 0% -> 31%) */
+        /* CHU TRÌNH TUẦN TRA TRONG HỘP: 18 GIÂY (LUÔN XUẤT HIỆN 100% THỜI GIAN) */
+        @keyframes goat-patrol-in-box {
+          /* PHA 1: Đi từ trái sang giữa hộp (0s -> 4.5s = 0% -> 25%) */
           0% {
-            left: -75px;
-            opacity: 0;
+            left: 6px;
           }
-          3% {
-            opacity: 1;
-          }
-          31% {
-            left: calc(50% - 30px);
-            opacity: 1;
+          25% {
+            left: calc(50% - 24px);
           }
 
-          /* PHA 2: ĐỨNG UY NGHIÊM QUAN SÁT (5s -> 9s = 31% -> 56%) */
-          32% {
-            left: calc(50% - 30px);
-            opacity: 1;
+          /* PHA 2: Đứng uy nghiêm ở giữa hộp (4.5s -> 8.5s = 25% -> 47%) */
+          26% {
+            left: calc(50% - 24px);
           }
-          56% {
-            left: calc(50% - 30px);
-            opacity: 1;
+          47% {
+            left: calc(50% - 24px);
           }
 
-          /* PHA 3: NẰM XUỐNG NGHỈ THƯ THÁI (9s -> 13s = 56% -> 81%) */
-          57% {
-            left: calc(50% - 30px);
-            opacity: 1;
+          /* PHA 3: Nằm nghỉ thư thái ở giữa hộp (8.5s -> 12.5s = 47% -> 69%) */
+          48% {
+            left: calc(50% - 24px);
           }
-          81% {
-            left: calc(50% - 30px);
-            opacity: 1;
+          69% {
+            left: calc(50% - 24px);
           }
 
-          /* PHA 4: ĐỨNG DẬY VÀ ĐI TIẾP RA NGOÀI (13s -> 16s = 81% -> 96%) */
-          82% {
-            left: calc(50% - 30px);
-            opacity: 1;
+          /* PHA 4: Đứng dậy đi tiếp sang phải (12.5s -> 15.5s = 69% -> 86%) */
+          70% {
+            left: calc(50% - 24px);
           }
-          96% {
-            left: 104%;
-            opacity: 1;
+          86% {
+            left: calc(100% - 52px);
           }
-          97.5% {
-            left: 104%;
-            opacity: 0;
-          }
-          99% {
-            left: -75px;
-            opacity: 0;
+
+          /* PHA 5: Quay đầu đi tuần tra về lại bên trái (15.5s -> 18s = 86% -> 100%) */
+          87% {
+            left: calc(100% - 52px);
           }
           100% {
-            left: -75px;
-            opacity: 0;
+            left: 6px;
           }
         }
 
-        /* ẨN HIỆN CHÍNH XÁC TỪNG TRẠNG THÁI (ĐI -> ĐỨNG -> NẰM) */
-        @keyframes flow-walk-toggle {
-          0%, 31% { opacity: 1; visibility: visible; }
-          31.1%, 81.9% { opacity: 0; visibility: hidden; }
-          82%, 96.5% { opacity: 1; visibility: visible; }
-          96.6%, 100% { opacity: 0; visibility: hidden; }
+        /* ẨN HIỆN ĐÚNG TRẠNG THÁI CHUYỂN ĐỘNG TRONG CHU TRÌNH */
+        /* Trạng thái 1: Đi sang phải */
+        @keyframes state-walk-right-view {
+          0%, 25% { opacity: 1; visibility: visible; }
+          25.1%, 69% { opacity: 0; visibility: hidden; }
+          69.1%, 86% { opacity: 1; visibility: visible; }
+          86.1%, 100% { opacity: 0; visibility: hidden; }
         }
 
-        @keyframes flow-stand-toggle {
-          0%, 31% { opacity: 0; visibility: hidden; }
-          31.1%, 56.5% { opacity: 1; visibility: visible; }
-          56.6%, 100% { opacity: 0; visibility: hidden; }
+        /* Trạng thái 2: Đứng thở & quan sát */
+        @keyframes state-stand-view {
+          0%, 25% { opacity: 0; visibility: hidden; }
+          25.1%, 47% { opacity: 1; visibility: visible; }
+          47.1%, 100% { opacity: 0; visibility: hidden; }
         }
 
-        @keyframes flow-lie-toggle {
-          0%, 56.5% { opacity: 0; visibility: hidden; }
-          56.6%, 81.9% { opacity: 1; visibility: visible; }
-          82%, 100% { opacity: 0; visibility: hidden; }
+        /* Trạng thái 3: Nằm nghỉ */
+        @keyframes state-lie-view {
+          0%, 47% { opacity: 0; visibility: hidden; }
+          47.1%, 69% { opacity: 1; visibility: visible; }
+          69.1%, 100% { opacity: 0; visibility: hidden; }
         }
 
-        .anim-patrol-runner {
+        /* Trạng thái 4: Đi tuần tra về bên trái (quay đầu sang trái) */
+        @keyframes state-walk-left-view {
+          0%, 86% { opacity: 0; visibility: hidden; }
+          86.1%, 100% { opacity: 1; visibility: visible; }
+        }
+
+        .anim-in-box-patrol {
           position: absolute;
-          bottom: 2px;
-          animation: goat-flow-patrol 16s linear infinite;
+          bottom: 0px;
+          animation: goat-patrol-in-box 18s ease-in-out infinite;
           will-change: left;
         }
 
-        .group:hover .anim-patrol-runner {
-          /* Khi hover vào hộp: bước nhanh hơn */
-          animation-duration: 10.5s;
+        .group:hover .anim-in-box-patrol {
+          /* Khi hover vào hộp: chu kỳ tuần tra nhanh nhẹn hơn */
+          animation-duration: 12s;
         }
 
-        .layer-walk-mode {
-          animation: flow-walk-toggle 16s step-end infinite;
+        .view-walk-r {
+          animation: state-walk-right-view 18s step-end infinite;
         }
-        .layer-stand-mode {
-          animation: flow-stand-toggle 16s step-end infinite;
+        .view-stand {
+          animation: state-stand-view 18s step-end infinite;
         }
-        .layer-lie-mode {
-          animation: flow-lie-toggle 16s step-end infinite;
+        .view-lie {
+          animation: state-lie-view 18s step-end infinite;
+        }
+        .view-walk-l {
+          animation: state-walk-left-view 18s step-end infinite;
         }
 
-        .group:hover .layer-walk-mode,
-        .group:hover .layer-stand-mode,
-        .group:hover .layer-lie-mode {
-          animation-duration: 10.5s;
+        .group:hover .view-walk-r,
+        .group:hover .view-stand,
+        .group:hover .view-lie,
+        .group:hover .view-walk-l {
+          animation-duration: 12s;
         }
       `}</style>
 
-      {/* Đường nền sàn mờ nhẹ tinh tế */}
-      <div className="absolute bottom-2 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-sky-300/40 dark:via-sky-600/30 to-transparent" />
+      {/* Đường sàn mờ nhẹ tinh tế dưới chân chú dê */}
+      <div className="absolute bottom-0 inset-x-2 h-[1px] bg-gradient-to-r from-transparent via-sky-300/35 dark:via-sky-600/25 to-transparent" />
 
-      {/* Container di chuyển tiến về phía trước theo chu kỳ */}
-      <div className="anim-patrol-runner flex items-center">
-        {/* 1. Trạng thái ĐI (Walk: 4 chân sải bước thật sự) */}
-        <div className="layer-walk-mode">
-          <SecurityGoat pose="walk" className="w-13 h-10 sm:w-14 sm:h-11" />
+      {/* Khối chú dê tuần tra di chuyển trong hộp (Lúc nào cũng xuất hiện) */}
+      <div className="anim-in-box-patrol flex items-center">
+        {/* 1. Đi sang phải (Quay mặt sang phải, đi tiến) */}
+        <div className="view-walk-r">
+          <SecurityGoat pose="walk" className="w-[46px] h-[34px] sm:w-[50px] sm:h-[38px]" />
         </div>
 
-        {/* 2. Trạng thái ĐỨNG (Stand: Đứng uy nghiêm thở và quan sát) */}
-        <div className="layer-stand-mode absolute inset-0">
-          <SecurityGoat pose="stand" className="w-13 h-10 sm:w-14 sm:h-11" />
+        {/* 2. Đứng uy nghiêm giữa hộp */}
+        <div className="view-stand absolute inset-0">
+          <SecurityGoat pose="stand" className="w-[46px] h-[34px] sm:w-[50px] sm:h-[38px]" />
         </div>
 
-        {/* 3. Trạng thái NẰM (Lie down: Nằm nghỉ êm ái sát sàn) */}
-        <div className="layer-lie-mode absolute inset-0">
-          <SecurityGoat pose="lie" className="w-13 h-10 sm:w-14 sm:h-11" />
+        {/* 3. Nằm nghỉ thư thái giữa hộp */}
+        <div className="view-lie absolute inset-0">
+          <SecurityGoat pose="lie" className="w-[46px] h-[34px] sm:w-[50px] sm:h-[38px]" />
+        </div>
+
+        {/* 4. Quay đầu đi về bên trái (Quay mặt sang trái, đi tiến) */}
+        <div className="view-walk-l absolute inset-0">
+          <SecurityGoat pose="turn-walk" className="w-[46px] h-[34px] sm:w-[50px] sm:h-[38px]" />
         </div>
       </div>
     </div>
