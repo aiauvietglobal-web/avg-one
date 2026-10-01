@@ -1,15 +1,15 @@
 import React from 'react';
 
 /**
- * ⚙️ 2D KINETIC GEAR ECOSYSTEM (RIGHT HERO EMBLEM)
+ * ⚙️ 2D KINETIC GEAR ECOSYSTEM (RIGHT HERO EMBLEM - ZERO SHADOW)
  * 
- * Biểu tượng Cơ Khí Động Học 2D Thuần Khiết (Frameless 2D Kinetic Precision):
- * - Hoàn toàn không có khung hộp hay màn hình đen bao quanh.
+ * Biểu tượng Cơ Khí Động Học 2D Thuần Khiết (Pure Crisp 2D Vector):
+ * - Hoàn toàn KHÔNG bóng đổ (No Shadow / No Blur / No Halo).
  * - Cụm 3 Bánh răng Haute Horlogerie 2D kết nối ăn khớp cơ học mượt mà.
  * - Bánh răng Master Vàng Hổ Phách (Royal Amber) xoay thuận +360°.
  * - 2 Bánh răng Vệ Tinh Lam Ngọc Titan (Sapphire) xoay ngược -360°.
  * - Vòng đai quỹ đạo chất lỏng bạch kim với các hạt vi mạch quay quanh.
- * - Vầng hào quang ấm áp, nổi bật thanh lịch trên nền web sáng và tối.
+ * - Đường nét sắc bén, trong suốt, nổi thuần túy trực tiếp trên nền web.
  */
 
 interface TechHologramGearEcosystemProps {
@@ -42,14 +42,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
         className="w-full h-full overflow-visible"
       >
         <defs>
-          {/* Vầng hào quang năng lượng ấm áp phía sau bánh răng */}
-          <radialGradient id="gear-ambient-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FB923C" stopOpacity="0.25" />
-            <stop offset="40%" stopColor="#F59E0B" stopOpacity="0.12" />
-            <stop offset="70%" stopColor="#38BDF8" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
-          </radialGradient>
-
           {/* Bánh răng Vàng Hổ Phách & Vàng Hoàng Gia */}
           <linearGradient id="gear-royal-amber-2d" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFBEB" />
@@ -82,12 +74,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             <stop offset="80%" stopColor="#BE123C" />
             <stop offset="100%" stopColor="#4C0519" />
           </radialGradient>
-
-          {/* Bóng đổ nhẹ nhàng giúp bánh răng nổi bật trên nền sáng */}
-          <filter id="gear-floating-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#0F172A" floodOpacity="0.14" />
-            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#D97706" floodOpacity="0.2" />
-          </filter>
         </defs>
 
         <style>{`
@@ -95,19 +81,11 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-6px); }
           }
-          @keyframes gear-halo-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.85; }
-            50% { transform: scale(1.1); opacity: 1; }
-          }
           .anim-gear-mechanism { animation: gear-float-smooth 6s ease-in-out infinite; }
-          .anim-gear-halo { animation: gear-halo-pulse 5s ease-in-out infinite; transform-origin: 130px 130px; }
         `}</style>
 
-        {/* 🌟 VẦNG HÀO QUANG ÁNH SÁNG NỀN */}
-        <circle cx="130" cy="130" r="120" fill="url(#gear-ambient-glow)" className="anim-gear-halo" />
-
-        {/* ⚙️ CỤM BÁNH RĂNG KINETIC 2D NỔI TRÊN NỀN */}
-        <g className="anim-gear-mechanism" filter="url(#gear-floating-shadow)">
+        {/* ⚙️ CỤM BÁNH RĂNG KINETIC 2D THUẦN VECTOR - KHÔNG SHADOW */}
+        <g className="anim-gear-mechanism">
           
           {/* VÒNG ĐAI QUỸ ĐẠO BẠCH KIM BẢO VỆ CỖ MÁY */}
           <g transform="translate(130, 130) rotate(-16)">
@@ -120,7 +98,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
               strokeWidth="1.4"
               fill="none"
               strokeDasharray="40 15 20 15"
-              opacity="0.5"
+              opacity="0.6"
             />
             <ellipse
               cx="0"
@@ -130,7 +108,7 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
               stroke="#F59E0B"
               strokeWidth="0.8"
               fill="none"
-              opacity="0.6"
+              opacity="0.75"
             />
             <circle cx="105" cy="0" r="3" fill="#F59E0B" />
             <circle cx="-105" cy="0" r="3" fill="#38BDF8" />
@@ -142,11 +120,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           {/* ------------------------------------------------------------- */}
           <g transform="translate(130, 98)">
             <g>
-              {/* Bóng chân bánh răng */}
-              <g transform="translate(0, 3)">
-                <path d={masterGearPath} fill="#0F172A" fillRule="evenodd" opacity="0.12" />
-              </g>
-
               {/* Thân bánh răng */}
               <path
                 d={masterGearPath}
@@ -187,10 +160,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           {/* ------------------------------------------------------------- */}
           <g transform="translate(79, 150)">
             <g>
-              <g transform="translate(0, 3)">
-                <path d={masterGearPath} fill="#0F172A" fillRule="evenodd" opacity="0.12" />
-              </g>
-
               <path
                 d={masterGearPath}
                 fill="url(#gear-sapphire-2d)"
@@ -228,10 +197,6 @@ export const TechHologramGearEcosystem: React.FC<TechHologramGearEcosystemProps>
           {/* ------------------------------------------------------------- */}
           <g transform="translate(181, 150)">
             <g>
-              <g transform="translate(0, 3)">
-                <path d={masterGearPath} fill="#0F172A" fillRule="evenodd" opacity="0.12" />
-              </g>
-
               <path
                 d={masterGearPath}
                 fill="url(#gear-sapphire-2d)"

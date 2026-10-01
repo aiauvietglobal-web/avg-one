@@ -1,14 +1,14 @@
 import React from 'react';
 
 /**
- * 🌐 2D QUANTUM DATA CORE (LEFT HERO EMBLEM)
+ * 🌐 2D QUANTUM DATA CORE (LEFT HERO EMBLEM - ZERO SHADOW)
  * 
- * Biểu tượng Lõi Dữ Liệu & Công Nghệ AI 2D Thuần Khiết (Frameless 2D Quantum Precision):
- * - Hoàn toàn không có khung hộp hay màn hình đen bao quanh.
+ * Biểu tượng Lõi Dữ Liệu & Công Nghệ AI 2D Thuần Khiết (Pure Crisp 2D Vector):
+ * - Hoàn toàn KHÔNG bóng đổ (No Shadow / No Blur / No Halo).
  * - Lõi vi xử lý dữ liệu lượng tử 2D đa tầng (Concentric Precision Quantum Calibrator).
  * - Các vòng quỹ đạo kép quay ngược chiều nhau mang các hạt photon dữ liệu.
  * - Tâm điểm sao AI Singularity 4 cánh phát quang rực rỡ, tượng trưng cho "Một nền tảng Vững chắc".
- * - Tông màu Lam Ngọc Sapphire & Cyan đồng bộ với bánh răng bên phải.
+ * - Tông màu Lam Ngọc Sapphire & Cyan sắc nét, trong suốt, nổi thuần túy trực tiếp trên nền web.
  */
 
 interface TechHologramDataCoreProps {
@@ -25,14 +25,6 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
         className="w-full h-full overflow-visible"
       >
         <defs>
-          {/* Vầng hào quang năng lượng Cyan/Sky dịu nhẹ phía sau lõi */}
-          <radialGradient id="core-ambient-glow-2d" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.28" />
-            <stop offset="40%" stopColor="#0284C7" stopOpacity="0.14" />
-            <stop offset="70%" stopColor="#6366F1" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#0284C7" stopOpacity="0" />
-          </radialGradient>
-
           {/* Gradient Lam Ngọc Bạch Kim cho các vòng đai */}
           <linearGradient id="quantum-ring-grad-2d" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FFFFFF" />
@@ -48,22 +40,12 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             <stop offset="80%" stopColor="#0284C7" />
             <stop offset="100%" stopColor="#0C4A6E" />
           </radialGradient>
-
-          {/* Bóng đổ nhẹ nhàng giúp biểu tượng 2D nổi bật trên nền */}
-          <filter id="core-floating-shadow-2d" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#0F172A" floodOpacity="0.14" />
-            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#0284C7" floodOpacity="0.22" />
-          </filter>
         </defs>
 
         <style>{`
           @keyframes core-float-smooth {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-6px); }
-          }
-          @keyframes core-halo-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.85; }
-            50% { transform: scale(1.1); opacity: 1; }
           }
           @keyframes core-spin-cw {
             from { transform: rotate(0deg); }
@@ -78,17 +60,13 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
             50% { transform: scale(1.18); opacity: 1; }
           }
           .anim-core-mechanism { animation: core-float-smooth 6s ease-in-out infinite; }
-          .anim-core-halo { animation: core-halo-pulse 5s ease-in-out infinite; transform-origin: 130px 130px; }
           .anim-ring-cw { animation: core-spin-cw 20s linear infinite; transform-origin: 130px 130px; }
           .anim-ring-ccw { animation: core-spin-ccw 26s linear infinite; transform-origin: 130px 130px; }
           .anim-ai-star { animation: star-shimmer 3s ease-in-out infinite; transform-origin: 130px 130px; }
         `}</style>
 
-        {/* 🌟 VẦNG HÀO QUANG ÁNH SÁNG NỀN */}
-        <circle cx="130" cy="130" r="120" fill="url(#core-ambient-glow-2d)" className="anim-core-halo" />
-
-        {/* 🌐 CỤM LÕI LƯỢNG TỬ 2D NỔI TRÊN NỀN */}
-        <g className="anim-core-mechanism" filter="url(#core-floating-shadow-2d)">
+        {/* 🌐 CỤM LÕI LƯỢNG TỬ 2D THUẦN VECTOR - KHÔNG SHADOW */}
+        <g className="anim-core-mechanism">
           
           {/* VÒNG ĐAI QUỸ ĐẠO BÊN NGOÀI (XOAY THUẬN CHIỀU KIM ĐỒNG HỒ) */}
           <g className="anim-ring-cw">
@@ -101,7 +79,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               strokeWidth="1.4"
               fill="none"
               strokeDasharray="40 15 20 15"
-              opacity="0.55"
+              opacity="0.65"
             />
             <ellipse
               cx="130"
@@ -109,9 +87,9 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               rx="102"
               ry="40"
               stroke="url(#quantum-ring-grad-2d)"
-              strokeWidth="0.9"
+              strokeWidth="1"
               fill="none"
-              opacity="0.75"
+              opacity="0.85"
             />
             <circle cx="235" cy="130" r="3.2" fill="#38BDF8" stroke="#FFFFFF" strokeWidth="0.8" />
             <circle cx="25" cy="130" r="2.8" fill="#6366F1" stroke="#FFFFFF" strokeWidth="0.8" />
@@ -128,7 +106,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               strokeWidth="1.2"
               fill="none"
               strokeDasharray="30 15 15 15"
-              opacity="0.45"
+              opacity="0.55"
             />
             <circle cx="130" cy="32" r="3" fill="#0284C7" stroke="#FFFFFF" strokeWidth="0.8" />
             <circle cx="130" cy="228" r="2.8" fill="#38BDF8" stroke="#FFFFFF" strokeWidth="0.8" />
@@ -136,9 +114,9 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
 
           {/* VÒNG THƯỚC ĐO CHIA VẠCH KỸ THUẬT CHUẨN XÁC 2D (Precision Calibration Dial) */}
           <g transform="translate(130, 130)">
-            <circle cx="0" cy="0" r="62" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="3 4" fill="none" opacity="0.6" />
-            <circle cx="0" cy="0" r="54" stroke="url(#quantum-ring-grad-2d)" strokeWidth="1.6" fill="none" opacity="0.85" />
-            <circle cx="0" cy="0" r="48" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="2 3" fill="none" opacity="0.5" />
+            <circle cx="0" cy="0" r="62" stroke="#0284C7" strokeWidth="1.2" strokeDasharray="3 4" fill="none" opacity="0.65" />
+            <circle cx="0" cy="0" r="54" stroke="url(#quantum-ring-grad-2d)" strokeWidth="1.6" fill="none" opacity="0.9" />
+            <circle cx="0" cy="0" r="48" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="2 3" fill="none" opacity="0.6" />
 
             {/* 8 Điểm nút truyền dữ liệu (Data Bus Nodes) */}
             {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
@@ -149,7 +127,7 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               const y2 = Math.sin(rad) * 62;
               return (
                 <g key={i}>
-                  <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#38BDF8" strokeWidth="1.2" opacity="0.75" />
+                  <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#38BDF8" strokeWidth="1.2" opacity="0.8" />
                   <circle cx={x2} cy={y2} r="1.8" fill="#0284C7" />
                 </g>
               );
@@ -164,7 +142,6 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               fill="#F0F9FF"
               stroke="#0284C7"
               strokeWidth="2"
-              opacity="0.9"
             />
             {/* Lục giác vát viền */}
             <polygon
@@ -173,12 +150,12 @@ export const TechHologramDataCore: React.FC<TechHologramDataCoreProps> = ({ clas
               stroke="#38BDF8"
               strokeWidth="1.2"
               strokeDasharray="4 2"
-              opacity="0.75"
+              opacity="0.85"
             />
 
             {/* Đĩa tròn lõi lượng tử xanh lam */}
             <circle cx="0" cy="0" r="22" fill="url(#quantum-center-core-2d)" stroke="#FFFFFF" strokeWidth="1.5" />
-            <circle cx="0" cy="0" r="16" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="2 2" fill="none" opacity="0.8" />
+            <circle cx="0" cy="0" r="16" stroke="#BAE6FD" strokeWidth="0.8" strokeDasharray="2 2" fill="none" opacity="0.85" />
 
             {/* 🌟 ĐIỂM SAO AI SINGULARITY 4 CÁNH RỰC SÁNG */}
             <g className="anim-ai-star">
