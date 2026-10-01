@@ -3,7 +3,6 @@ import {
   BarChart3, Newspaper, Calendar, FolderKanban, Users, Scale, LayoutGrid,
   X, Home, Server, Workflow, ShieldCheck, Zap, Award, Layers, Cpu, Coins, Sparkles
 } from 'lucide-react';
-import { SecurityGoat } from '../home/SecurityGoat';
 
 export type AppModuleId =
   | 'home'
@@ -218,14 +217,8 @@ export const AppLauncherModal: React.FC<AppLauncherModalProps> = ({
                 <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                 {/* App Unified Blue Icon Badge */}
-                <div className={`rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0 ${
-                  mod.id === 'security' ? 'w-11 h-10 sm:w-12 sm:h-10.5 px-0.5 overflow-hidden' : 'w-10 h-10 sm:w-10.5 sm:h-10.5'
-                }`}>
-                  {mod.id === 'security' ? (
-                    <SecurityGoat className="w-10.5 h-8.5 sm:w-11 sm:h-9" />
-                  ) : (
-                    <Icon className="w-5 h-5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
-                  )}
+                <div className="w-10 h-10 sm:w-10.5 sm:h-10.5 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-1 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+                  <Icon className="w-5 h-5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                 </div>
 
                 {/* App Title */}
