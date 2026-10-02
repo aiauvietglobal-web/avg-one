@@ -8,6 +8,7 @@ import { AppModuleId } from '../layout/AppLauncherModal';
 import { TechHologramGearEcosystem } from './TechHologramGearEcosystem';
 import { TechHologramDataCore } from './TechHologramDataCore';
 import { SecurityGoat, SecurityGoatRunner } from './SecurityGoat';
+import { ProfileDog, ProfileDogRunner } from './ProfileDog';
 
 // 5 TRỤ CỘT CHIẾN LƯỢC: SỐ HÓA - CÔNG NGHỆ HÓA - TỐC ĐỘ - CHẤT LƯỢNG - GIÁ
 export const STRATEGIC_PILLARS = [
@@ -425,13 +426,16 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
                 {/* Hairline top glow on hover */}
                 <div className="absolute top-0 inset-x-3 h-[2px] bg-gradient-to-r from-transparent via-[#0284C7] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
+                {/* Chú chó trung thành animate trong hộp Hồ Sơ Năng Lực */}
+                {app.id === 'profile9' && <ProfileDogRunner />}
+
                 {/* App Unified Blue Icon Badge */}
-                <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-0.5 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0">
+                <div className="w-10.5 h-10.5 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-b from-sky-50/90 to-blue-50/50 dark:from-sky-950/80 dark:to-slate-900 border border-sky-200/80 dark:border-sky-800/70 flex items-center justify-center mb-0.5 group-hover:scale-110 group-hover:border-sky-400 dark:group-hover:border-sky-500 shadow-2xs group-hover:shadow-xs group-hover:shadow-sky-400/30 transition-all duration-300 shrink-0 relative z-10">
                   <Icon className="w-5.5 h-5.5 text-[#0284C7] dark:text-sky-400 stroke-[2.2] group-hover:scale-105 transition-transform" />
                 </div>
                 
                 {/* App Title */}
-                <div className="flex flex-col items-center w-full">
+                <div className="flex flex-col items-center w-full relative z-10">
                   <h3 className="text-xs sm:text-[13px] font-black text-slate-800 dark:text-slate-100 group-hover:text-[#0284C7] dark:group-hover:text-sky-300 transition-colors whitespace-nowrap leading-tight tracking-tight">
                     {app.name}
                   </h3>
