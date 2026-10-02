@@ -1,22 +1,20 @@
 import React from 'react';
 
 /**
- * 🐐 CHÚ DÊ BẢO MẬT (CHUYỂN ĐỘNG TRỰC TIẾP TỪ VIDEO GEMINI CỦA USER)
+ * 🐐 CHÚ DÊ BẢO MẬT (CHUYỂN ĐỘNG 24FPS SIÊU MƯỢT TỪ GIÂY ĐẦU TIÊN ĐẾN HẾT CHU KỲ)
  * 
- * - Nguồn: Trích xuất và biên tập từ gemini_generated_video_73426df0.mp4.
- * - Đã xử lý triệt để yêu cầu: "từ 8s trở đi cần chỉnh sửa lại":
- *   + Cắt bỏ hoàn toàn đoạn sau 8s bị lỗi đơ cứng chân và giật hình của AI.
- *   + Xây dựng chu kỳ tự nhiên mượt mà 100%:
- *     1. Đi tiến sang phải (4 chân bước đi thật sự) (0s -> 3.75s)
- *     2. Quỳ gối gập chân xuống sàn ở giữa hộp (3.75s -> 5.4s)
- *     3. Nằm ngủ thư thái, nhắm mắt nghỉ ngơi (5.4s -> 7.25s)
- *     4. Tỉnh giấc, nâng ngực duỗi chân đứng dậy mượt mà (7.25s -> 8.92s)
- *     5. Quay đầu, bước đi tiến về lại bên trái xuất phát (8.92s -> 12.4s)
- *     6. Quay đầu sẵn sàng cho chu kỳ mới (12.4s -> 12.67s)
- *   + Tuyệt đối không bị trượt khi đứng (không trượt băng), không đi lùi, không đơ chân.
- * - Tương thích hoàn hảo Dark & Light mode:
- *   + Light Mode: Nét đen slate thanh lịch.
- *   + Dark Mode: Tự động đổi màu thành nét trắng sáng viền ngọc xanh.
+ * - Chu kỳ 13.25 giây chuẩn điện ảnh 24fps (318 frames mượt mà):
+ *   1. [0s - 3.38s | 0% - 25.5%]: Đi 4 chân tự nhiên từ mép trái tới giữa hộp.
+ *   2. [3.38s - 5.25s | 25.5% - 39.6%]: Quỳ gối gập chân xuống sàn ở giữa hộp.
+ *   3. [5.25s - 7.33s | 39.6% - 55.3%]: Nằm ngủ thư thái, nhắm mắt yên bình.
+ *   4. [7.33s - 9.21s | 55.3% - 69.5%]: Tỉnh giấc, nâng lồng ngực duỗi chân đứng dậy mượt mà.
+ *   5. [9.21s - 9.54s | 69.5% - 72.0%]: Xoay người 3D tại chỗ chuyển hướng sang trái.
+ *   6. [9.54s - 12.92s | 72.0% - 97.5%]: 4 chân sải bước đi tiến về lại mép trái xuất phát.
+ *   7. [12.92s - 13.25s | 97.5% - 100%]: Xoay người tại chỗ chuẩn bị cho chu kỳ tiếp theo.
+ * - Khắc phục triệt để:
+ *   + Không trượt băng trên sàn (vị trí khóa chặt khi quỳ, nằm ngủ và đứng dậy).
+ *   + Không giật lật hướng (xoay người chuyển cảnh mượt mà).
+ *   + Tách nền trong suốt 100%, nét vẽ đen tinh tế ở Light Mode, phát sáng dịu ngọc ở Dark Mode.
  */
 
 interface SecurityGoatProps {
@@ -28,10 +26,10 @@ export const SecurityGoat: React.FC<SecurityGoatProps> = ({
 }) => {
   return (
     <div className={`relative flex flex-col items-center justify-end select-none pointer-events-none ${className}`}>
-      {/* 1. Bóng đổ dưới chân tương tác nhịp nhàng theo tư thế */}
+      {/* 1. Bóng đổ dưới chân tương tác nhịp nhàng theo chuyển động */}
       <div className="anim-patrol-shadow absolute bottom-0 w-[38px] h-[5px] rounded-full bg-slate-900/18 dark:bg-sky-400/20 blur-[1px] transition-all duration-300" />
 
-      {/* 2. Ảnh hoạt cảnh APNG trích xuất từ video (đã tách nền và cắt sửa đoạn 8s) */}
+      {/* 2. Ảnh hoạt cảnh APNG 24fps siêu mượt (đã tách nền sạch 100%) */}
       <div className="relative w-full flex items-end justify-center">
         <img
           src="/assets/goat_patrol.png"
@@ -45,53 +43,54 @@ export const SecurityGoat: React.FC<SecurityGoatProps> = ({
 };
 
 /**
- * 🏃‍♂️ RUNNER: CHÚ DÊ TUẦN TRA ĐỒNG BỘ 100% VỚI HOẠT CẢNH (12.67 GIÂY)
+ * 🏃‍♂️ RUNNER: CHÚ DÊ TUẦN TRA ĐỒNG BỘ 100% VỚI CHU KỲ 24FPS (13.25 GIÂY)
  */
 export const SecurityGoatRunner: React.FC = () => {
   return (
     <div className="absolute inset-x-0 bottom-[28px] sm:bottom-[32px] h-[38px] sm:h-[42px] pointer-events-none overflow-hidden z-0">
       <style>{`
-        /* CHU TRÌNH TUẦN TRA KHỚP CHÍNH XÁC VỚI VIDEO APNG (12.67s) */
-        @keyframes patrol-sync-timeline {
-          /* 1. Đi sang phải (0s -> 3.75s = 0% -> 29.6%) */
+        /* CHU TRÌNH TUẦN TRA 24FPS SIÊU MƯỢT (13.25s) */
+        @keyframes patrol-smooth-24fps {
+          /* 1. Đi sang phải (0s -> 3.38s) */
           0% {
             left: 8px;
+            animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
           }
-          29.6% {
+          25.5% {
             left: calc(50% - 24px);
+            animation-timing-function: step-end;
           }
 
-          /* 2, 3, 4. Quỳ gối, nằm ngủ và đứng dậy: Ở YÊN GIỮA HỘP (3.75s -> 8.92s = 29.6% -> 70.4%) */
-          29.7%, 70.3% {
+          /* 2, 3, 4, 5. Quỳ gối, nằm ngủ, đứng dậy và xoay người: Ở YÊN GIỮA HỘP KHÔNG TRƯỢT (3.38s -> 9.54s) */
+          72.0% {
             left: calc(50% - 24px);
+            animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
           }
 
-          /* 5. Quay đầu bước đi về lại bên trái (8.92s -> 12.4s = 70.4% -> 98%) */
-          70.4% {
-            left: calc(50% - 24px);
-          }
-          98% {
+          /* 6. Đi về lại mép trái (9.54s -> 12.92s) */
+          97.5% {
             left: 8px;
+            animation-timing-function: step-end;
           }
 
-          /* 6. Quay đầu tại mép trái và bắt đầu vòng lặp mới */
+          /* 7. Xoay người tại chỗ và bắt đầu vòng lặp mới */
           100% {
             left: 8px;
           }
         }
 
-        /* Bóng đổ co giãn theo nhịp đi và nằm */
-        @keyframes shadow-sync-timeline {
-          0%, 28% {
+        /* Bóng đổ mở rộng khi nằm ngủ và thu gọn khi bước đi */
+        @keyframes shadow-smooth-24fps {
+          0%, 25.5% {
             transform: scale(1, 1);
             opacity: 0.22;
           }
-          42%, 58% {
-            /* Lúc nằm ngủ: bóng trải rộng */
+          39.6%, 55.3% {
+            /* Lúc nằm ngủ: bóng trải rộng êm ái */
             transform: scale(1.3, 1.2);
             opacity: 0.32;
           }
-          70%, 100% {
+          69.5%, 100% {
             transform: scale(1, 1);
             opacity: 0.22;
           }
@@ -100,27 +99,27 @@ export const SecurityGoatRunner: React.FC = () => {
         .anim-patrol-video-runner {
           position: absolute;
           bottom: 0px;
-          animation: patrol-sync-timeline 12.67s linear infinite;
+          animation: patrol-smooth-24fps 13.25s infinite;
           will-change: left;
         }
 
         .anim-patrol-shadow {
-          animation: shadow-sync-timeline 12.67s ease-in-out infinite;
+          animation: shadow-smooth-24fps 13.25s ease-in-out infinite;
         }
 
-        /* Khi rê chuột vào hộp: Dê tăng tốc tuần tra hào hứng */
+        /* Khi rê chuột vào hộp: Tăng tốc nhẹ nhàng */
         .group:hover .anim-patrol-video-runner {
-          animation-duration: 8.5s;
+          animation-duration: 9.5s;
         }
         .group:hover .anim-patrol-shadow {
-          animation-duration: 8.5s;
+          animation-duration: 9.5s;
         }
       `}</style>
 
       {/* Đường chỉ sàn nhẹ tinh tế */}
       <div className="absolute bottom-0 inset-x-2 h-[1px] bg-gradient-to-r from-transparent via-sky-300/35 dark:via-sky-600/25 to-transparent" />
 
-      {/* Khung chú dê di chuyển đồng bộ nhịp nhàng */}
+      {/* Khung chú dê di chuyển mượt mà 24fps */}
       <div className="anim-patrol-video-runner flex items-end">
         <SecurityGoat className="w-[46px] sm:w-[50px]" />
       </div>
