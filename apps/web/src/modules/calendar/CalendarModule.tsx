@@ -554,12 +554,15 @@ export const CalendarModule: React.FC = () => {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleRefreshLiveEvents = async () => {
+  const handleRefreshLiveEvents = async (showNotification = false) => {
     setLoading(true);
     try {
       const fetched = await fetchDiscussionEventsFromGoogleSheet();
       if (fetched && fetched.length > 0) {
         setEvents(fetched);
+        if (showNotification) {
+          showToast(`🔄 Đã đồng bộ thành công ${fetched.length} lịch trao đổi từ tất cả các tháng (cả các tháng ẩn) trên Google Sheet!`);
+        }
       }
     } catch (e) {
       console.warn('Fallback to local event list');
@@ -1634,10 +1637,10 @@ export const CalendarModule: React.FC = () => {
 
               {/* Sync Live Button */}
               <button
-                onClick={handleRefreshLiveEvents}
+                onClick={() => handleRefreshLiveEvents(true)}
                 disabled={loading}
                 className="py-2 px-1 bg-white dark:bg-slate-900 border border-cyan-200 dark:border-cyan-900/60 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 rounded-md transition flex flex-col sm:flex-row items-center justify-center gap-1 font-bold text-[11px] shadow-2xs cursor-pointer disabled:opacity-50"
-                title="Đồng bộ dữ liệu thời gian thực"
+                title="Đồng bộ dữ liệu thời gian thực tất cả các tháng"
               >
                 <RefreshCw className={`w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 flex-shrink-0 ${loading ? 'animate-spin' : ''}`} />
                 <span className="truncate">Đồng bộ</span>

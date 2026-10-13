@@ -27,8 +27,9 @@ export interface DiscussionEvent {
   attachments?: EventAttachment[];
 }
 
-export const GOOGLE_SHEET_EDIT_URL = 'https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/edit?gid=1763358123#gid=1763358123';
-export const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M/gviz/tq?tqx=out:csv&gid=1763358123';
+export const GOOGLE_SHEET_SPREADSHEET_ID = '11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M';
+export const GOOGLE_SHEET_EDIT_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_SPREADSHEET_ID}/edit`;
+export const GOOGLE_SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
 
 const LOCAL_DISCUSSION_EVENTS_KEY = 'avg_local_discussion_events_v2';
 const WEBHOOK_URL_KEY = 'avg_google_sheet_webhook_url';
@@ -65,7 +66,11 @@ function getTargetSheet(ss, dateStr) {
       var m = parseInt(parts[1], 10);
       if (!isNaN(m)) {
         var mPad = m < 10 ? '0' + m : '' + m;
-        var names = ['Tháng ' + mPad, 'Tháng ' + m, 'T' + mPad, 'T' + m];
+        var names = [
+          'Tháng ' + mPad + ' ', 'Tháng ' + m + ' ',
+          'Tháng ' + mPad, 'Tháng ' + m,
+          'T' + mPad, 'T' + m
+        ];
         for (var i = 0; i < names.length; i++) {
           var s = ss.getSheetByName(names[i]);
           if (s) return s;
@@ -507,97 +512,209 @@ export function formatTimeWithoutSeconds(tStr?: string): string {
   return tStr.trim().replace(/(\b\d{1,2}:\d{2}):\d{2}\b/g, '$1');
 }
 
+// Specifications for all 12 monthly sheets in Google Sheets (including hidden sheets)
+export const MONTH_TAB_SPECS = [
+  { month: 1, candidates: ['Tháng 1', 'Tháng 1 ', 'Tháng 01', 'T1'] },
+  { month: 2, candidates: ['Tháng 2', 'Tháng 2 ', 'Tháng 02', 'T2'] },
+  { month: 3, candidates: ['Tháng 3', 'Tháng 3 ', 'Tháng 03', 'T3'] },
+  { month: 4, candidates: ['Tháng 4', 'Tháng 4 ', 'Tháng 04', 'T4'] },
+  { month: 5, candidates: ['Tháng 5', 'Tháng 5 ', 'Tháng 05', 'T5'] },
+  { month: 6, candidates: ['Tháng 6', 'Tháng 6 ', 'Tháng 06', 'T6'] },
+  { month: 7, candidates: ['Tháng 7 ', 'Tháng 7', 'Tháng 07 ', 'Tháng 07', 'T7'] },
+  { month: 8, candidates: ['Tháng 8 ', 'Tháng 8', 'Tháng 08 ', 'Tháng 08', 'T8'] },
+  { month: 9, candidates: ['Tháng 9 ', 'Tháng 9', 'Tháng 09 ', 'Tháng 09', 'T9'] },
+  { month: 10, candidates: ['Tháng 10 ', 'Tháng 10', 'T10'] },
+  { month: 11, candidates: ['Tháng 11 ', 'Tháng 11', 'T11'] },
+  { month: 12, candidates: ['Tháng 12 ', 'Tháng 12', 'T12'] }
+];
+
+export function parseMonthSheetUniversal(rows: string[][], tabName: string, monthNumber: number): DiscussionEvent[] {
+  if (rows.length <= 1) return [];
+
+  const maxHeaderScan = Math.min(rows.length, 3);
+  const numCols = Math.max(...rows.slice(0, maxHeaderScan).map(r => r.length));
+
+  let detectedDateCol = -1;
+  let detectedStartCol = -1;
+  let detectedEndCol = -1;
+
+  for (let r = 0; r < Math.min(rows.length, 10); r++) {
+    const row = rows[r];
+    for (let c = 0; c < row.length; c++) {
+      const val = (row[c] || '').trim();
+      if (detectedDateCol === -1 && /^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test(val)) {
+        detectedDateCol = c;
+      }
+      if (detectedStartCol === -1 && /^\d{1,2}:\d{2}(:\d{2})?$/.test(val)) {
+        detectedStartCol = c;
+        if (c + 1 < row.length && /^\d{1,2}:\d{2}(:\d{2})?$/.test((row[c + 1] || '').trim())) {
+          detectedEndCol = c + 1;
+        }
+      }
+    }
+  }
+
+  const compositeHeader: string[] = [];
+  for (let c = 0; c < numCols; c++) {
+    const colLabels: string[] = [];
+    for (let r = 0; r < maxHeaderScan; r++) {
+      if (rows[r] && rows[r][c]) {
+        colLabels.push(rows[r][c].trim().toLowerCase());
+      }
+    }
+    compositeHeader[c] = colLabels.join(' ');
+  }
+
+  const findIdx = (keywords: string[], defaultIdx: number) => {
+    const idx = compositeHeader.findIndex(cell => keywords.some(kw => cell.includes(kw.toLowerCase())));
+    return idx !== -1 ? idx : defaultIdx;
+  };
+
+  const dateIdx = detectedDateCol !== -1 ? detectedDateCol : findIdx(['ngày'], -1);
+  const pStartIdx = detectedStartCol !== -1 ? detectedStartCol : findIdx(['giờ bắt đầu', 'bắt đầu'], -1);
+  const pEndIdx = detectedEndCol !== -1 ? detectedEndCol : findIdx(['giờ kết thúc', 'kết thúc'], -1);
+  const aStartIdx = findIdx(['bắt đầu thực tế', 'thực bắt đầu'], -1);
+  const aEndIdx = findIdx(['kết thúc thực tế', 'thực kết thúc'], -1);
+
+  const titleIdx = findIdx(['nội dung', 'chủ đề'], -1);
+  const sttIdx = findIdx(['stt'], -1);
+  const scopeIdx = findIdx(['phạm vi'], -1);
+  const dayIdx = findIdx(['thứ'], -1);
+  const legalIdx = findIdx(['pháp nhân', 'nđh', 'điều hành'], -1);
+  const attendeesIdx = findIdx(['thành phần'], -1);
+  const secretaryIdx = findIdx(['thư ký'], -1);
+  const statusIdx = findIdx(['trạng thái'], -1);
+  const notesIdx = findIdx(['ghi chú'], -1);
+  const linkIdx = findIdx(['link vbkl', 'vbkl', 'tài liệu'], -1);
+
+  const events: DiscussionEvent[] = [];
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+
+    let rawDate = dateIdx !== -1 ? (row[dateIdx] || '').trim() : '';
+    if (!/^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test(rawDate)) {
+      const foundDate = row.find(c => /^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test((c || '').trim()));
+      if (foundDate) {
+        rawDate = foundDate.trim();
+      } else {
+        continue;
+      }
+    }
+
+    const rawTitle = titleIdx !== -1 ? (row[titleIdx] || '').trim() : '';
+    if (!rawTitle || rawTitle === 'STT' || /^\d+([.,]\d+)?$/.test(rawTitle)) continue;
+
+    let dateStr = rawDate;
+    const dParts = dateStr.split('/');
+    if (dParts.length === 2) {
+      dateStr = `${dParts[0].padStart(2, '0')}/${dParts[1].padStart(2, '0')}/2026`;
+    } else if (dParts.length === 3) {
+      const yr = dParts[2].length === 2 ? `20${dParts[2]}` : dParts[2];
+      dateStr = `${dParts[0].padStart(2, '0')}/${dParts[1].padStart(2, '0')}/${yr}`;
+    }
+
+    const pStart = pStartIdx !== -1 ? formatTimeWithoutSeconds(row[pStartIdx]) : '08:00';
+    const pEnd = pEndIdx !== -1 ? formatTimeWithoutSeconds(row[pEndIdx]) : '09:00';
+    const aStart = aStartIdx !== -1 && row[aStartIdx] ? formatTimeWithoutSeconds(row[aStartIdx]) : pStart;
+    const aEnd = aEndIdx !== -1 && row[aEndIdx] ? formatTimeWithoutSeconds(row[aEndIdx]) : pEnd;
+
+    const eventStt = (sttIdx !== -1 && row[sttIdx]) ? parseInt(row[sttIdx], 10) || i : i;
+    const eventScope = (scopeIdx !== -1 && row[scopeIdx]) ? row[scopeIdx] : 'P1';
+    const eventDay = (dayIdx !== -1 && row[dayIdx]) ? row[dayIdx] : '';
+    const legalEntity = (legalIdx !== -1 && row[legalIdx]) ? row[legalIdx] : 'DH';
+    const attendees = (attendeesIdx !== -1 && row[attendeesIdx]) ? row[attendeesIdx] : '';
+    const secretary = (secretaryIdx !== -1 && row[secretaryIdx]) ? row[secretaryIdx] : '';
+    let status = (statusIdx !== -1 && row[statusIdx]) ? row[statusIdx] : 'Sắp tới';
+    if (!status || status.trim() === '') status = 'Sắp tới';
+    const notes = (notesIdx !== -1 && row[notesIdx]) ? row[notesIdx] : '';
+    const conclusionDocUrl = (linkIdx !== -1 && row[linkIdx]) ? row[linkIdx] : '';
+
+    events.push({
+      id: `gsheet-t${monthNumber}-${i}`,
+      stt: eventStt,
+      scope: eventScope,
+      dayOfWeek: eventDay.toUpperCase(),
+      date: dateStr,
+      plannedStartTime: pStart,
+      plannedEndTime: pEnd,
+      actualStartTime: aStart,
+      actualEndTime: aEnd,
+      title: rawTitle,
+      legalEntity,
+      attendees,
+      secretary,
+      status,
+      notes,
+      conclusionDocUrl
+    });
+  }
+
+  return events;
+}
+
+async function fetchTabCSV(tabName: string): Promise<string | null> {
+  const url = `${GOOGLE_SHEET_CSV_URL}&sheet=${encodeURIComponent(tabName)}`;
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const text = await res.text();
+    // If the tab doesn't exist, Google Sheets falls back to first sheet (which contains 'STTiii8')
+    if (text.includes('STTiii8') || text.length < 50) return null;
+    return text;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function fetchMonthEvents(spec: { month: number; candidates: string[] }): Promise<DiscussionEvent[]> {
+  for (const cand of spec.candidates) {
+    const csv = await fetchTabCSV(cand);
+    if (csv) {
+      const rows = parseCSVRows(csv);
+      const events = parseMonthSheetUniversal(rows, cand, spec.month);
+      if (events.length > 0) {
+        return events;
+      }
+    }
+  }
+  return [];
+}
+
 export async function fetchDiscussionEventsFromGoogleSheet(): Promise<DiscussionEvent[]> {
   try {
     const localEvents = getLocalDiscussionEvents();
 
-    const response = await fetch(GOOGLE_SHEET_CSV_URL, {
-      cache: 'no-store' // Ensure fresh data on every 24/7 poll
-    });
-    
-    if (!response.ok) {
-      return localEvents;
-    }
+    // Fetch all 12 monthly sheets concurrently in parallel (including all hidden sheets: Tháng 1, Tháng 2, ...)
+    const monthlyResults = await Promise.all(MONTH_TAB_SPECS.map(fetchMonthEvents));
+    let fetchedEvents: DiscussionEvent[] = monthlyResults.flat();
 
-    const csvText = await response.text();
-    const rows = parseCSVRows(csvText);
-
-    if (rows.length <= 1) {
-      return localEvents;
-    }
-
-    // Dynamic column index detection from header row for gid=175899563
-    const headerRow = rows[0] ? rows[0].map(c => c.trim().toLowerCase()) : [];
-
-    const findIdx = (keywords: string[], defaultIdx: number) => {
-      const idx = headerRow.findIndex(cell => keywords.some(kw => cell.includes(kw.toLowerCase())));
-      return idx !== -1 ? idx : defaultIdx;
-    };
-
-    const sttIdx = findIdx(['stt'], 0);
-    const scopeIdx = findIdx(['phạm vi'], 1);
-    const dayIdx = findIdx(['thứ'], 2);
-    const dateIdx = findIdx(['ngày'], 3);
-    const pStartIdx = findIdx(['giờ bắt đầu'], 4);
-    const pEndIdx = findIdx(['giờ kết thúc'], 5);
-    const aStartIdx = findIdx(['bắt đầu thực tế', 'thực bắt đầu'], 7);
-    const aEndIdx = findIdx(['kết thúc thực tế', 'thực kết thúc'], 8);
-    const titleIdx = findIdx(['nội dung', 'chủ đề'], 12);
-    const legalIdx = findIdx(['pháp nhân'], 13);
-    const attendeesIdx = findIdx(['thành phần'], 14);
-    const secretaryIdx = findIdx(['thư ký'], 15);
-    const statusIdx = findIdx(['trạng thái'], 16);
-    const notesIdx = findIdx(['ghi chú'], 17);
-    const linkIdx = findIdx(['link vbkl', 'vbkl'], 18);
-
-    const events: DiscussionEvent[] = [];
-
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      const title = row[titleIdx] || '';
-      const eventDate = row[dateIdx] || '';
-      
-      if (!title || title.trim() === 'STT' || title.trim() === '77') continue;
-
-      const eventStt = parseInt(row[sttIdx] || '0', 10) || i;
-      const eventScope = row[scopeIdx] || 'P1';
-      const eventDay = row[dayIdx] || 'THỨ NĂM';
-      const pStart = formatTimeWithoutSeconds(row[pStartIdx]) || '17:00';
-      const pEnd = formatTimeWithoutSeconds(row[pEndIdx]) || '18:00';
-      const aStart = formatTimeWithoutSeconds(row[aStartIdx]) || pStart;
-      const aEnd = formatTimeWithoutSeconds(row[aEndIdx]) || pEnd;
-      
-      let status = row[statusIdx] || '';
-      if (!status) {
-        status = 'Sắp tới';
+    // Fallback: If no monthly events found, try single URL
+    if (fetchedEvents.length === 0) {
+      try {
+        const fallbackRes = await fetch(GOOGLE_SHEET_CSV_URL, { cache: 'no-store' });
+        if (fallbackRes.ok) {
+          const fallbackCsv = await fallbackRes.text();
+          const fallbackRows = parseCSVRows(fallbackCsv);
+          if (fallbackRows.length > 1) {
+            fetchedEvents = parseMonthSheetUniversal(fallbackRows, 'Sheet 24/7', 10);
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback single sheet fetch failed:', err);
       }
+    }
 
-      events.push({
-        id: `gsheet-${i}`,
-        stt: eventStt,
-        scope: eventScope,
-        dayOfWeek: eventDay.toUpperCase(),
-        date: eventDate || '18/08/2026',
-        plannedStartTime: pStart,
-        plannedEndTime: pEnd,
-        actualStartTime: aStart,
-        actualEndTime: aEnd,
-        title: title,
-        legalEntity: row[legalIdx] || 'DH',
-        attendees: row[attendeesIdx] || '',
-        secretary: row[secretaryIdx] || '',
-        status: status,
-        notes: row[notesIdx] || '',
-        conclusionDocUrl: row[linkIdx] || ''
-      });
+    if (fetchedEvents.length === 0) {
+      return localEvents;
     }
 
     // Merge local custom events at top (avoiding duplicate titles or IDs)
-    const fetchedTitles = new Set(events.map(e => e.title.trim().toLowerCase()));
+    const fetchedTitles = new Set(fetchedEvents.map(e => e.title.trim().toLowerCase()));
     const uniqueLocalEvents = localEvents.filter(le => !fetchedTitles.has(le.title.trim().toLowerCase()));
 
-    // Deduplicate all events by (Title + Date + StartTime) so identical rows in Google Sheet display CHỈ 1 LẦN on UI
-    const allCombined = [...uniqueLocalEvents, ...events];
+    // Deduplicate all events by (Title + Date + StartTime) so identical rows display CHỈ 1 LẦN on UI
+    const allCombined = [...uniqueLocalEvents, ...fetchedEvents];
     const seenEventKeys = new Set<string>();
     const deduplicatedEvents = allCombined.filter(e => {
       const key = `${e.title.trim().toLowerCase()}_${e.date.trim()}_${(e.plannedStartTime || '').trim()}`;
@@ -606,6 +723,16 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
       }
       seenEventKeys.add(key);
       return true;
+    });
+
+    // Chronological sort: date ascending, then plannedStartTime ascending
+    deduplicatedEvents.sort((a, b) => {
+      const partsA = a.date.split('/');
+      const partsB = b.date.split('/');
+      const dA = partsA.length === 3 ? `${partsA[2]}-${partsA[1].padStart(2, '0')}-${partsA[0].padStart(2, '0')}` : a.date;
+      const dB = partsB.length === 3 ? `${partsB[2]}-${partsB[1].padStart(2, '0')}-${partsB[0].padStart(2, '0')}` : b.date;
+      if (dA !== dB) return dA.localeCompare(dB);
+      return (a.plannedStartTime || '').localeCompare(b.plannedStartTime || '');
     });
 
     return deduplicatedEvents;

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Home, UploadCloud, FileText, Settings,
   Sparkles, CheckCircle2, ChevronRight, Waves, Activity,
-  SlidersHorizontal, CheckSquare, BarChart3, Download, Plus,
-  Mic, MessageSquare, ShieldCheck, Zap
+  SlidersHorizontal, CheckSquare, BarChart3, Download, Plus
 } from 'lucide-react';
 
 export type FileTranscribeNavTab = 'editor' | 'minutes' | 'analytics' | 'settings' | 'home' | 'library' | 'utilities' | 'upload';
@@ -72,20 +71,17 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
             {/* Tên phân hệ */}
             <button
               onClick={onBack}
-              className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none gap-2"
+              className="h-9 sm:h-10 flex items-center text-base sm:text-lg lg:text-xl font-black text-[#F15A24] dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 uppercase tracking-tight cursor-pointer transition-colors shrink-0 select-none leading-none"
               title="Quay lại Kho ứng dụng"
             >
               <span>CHUYỂN ĐỔI VĂN BẢN</span>
-              <span className="hidden xl:inline-flex items-center gap-1 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-950/70 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800 tracking-wider">
-                STUDIO PRO
-              </span>
             </button>
           </div>
 
-          {/* BỘ TAB ĐIỀU HƯỚNG STUDIO TIÊN TIẾN */}
+          {/* BỘ TAB ĐIỀU HƯỚNG STUDIO TIÊN TIẾN ĐỒNG BỘ 100% CÁC PHÂN HỆ KHÁC */}
           <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
             {[
-              { id: 'editor' as const, label: 'Studio Biên soạn', icon: Waves, badge: 'HD Audio' },
+              { id: 'editor' as const, label: 'Studio Biên soạn', icon: Waves },
               { id: 'minutes' as const, label: 'Biên bản & Nhiệm vụ', icon: CheckSquare },
               { id: 'analytics' as const, label: 'Phân tích Diễn giả', icon: BarChart3 },
               { id: 'settings' as const, label: 'Cài đặt AI', icon: SlidersHorizontal },
@@ -104,40 +100,25 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
                   onClick={() => handleTabClick(tab.id)}
                   className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                      : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                      ? 'bg-[#00A8E8] text-white shadow-xs font-black border border-[#00A8E8]'
+                      : 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 hover:text-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
                   }`}
                 >
                   <IconComponent className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white stroke-[2.5]' : 'text-slate-500 dark:text-slate-400 stroke-[2]'}`} />
                   <span>{tab.label}</span>
-                  {tab.badge && (
-                    <span className={`text-[9.5px] px-1.5 py-0.2 rounded-md font-extrabold ${isActive ? 'bg-white/20 text-white' : 'bg-[#0284C7]/15 text-[#0284C7] dark:text-sky-400'}`}>
-                      {tab.badge}
-                    </span>
-                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Cụm phải: Thao tác nhanh (Nạp tệp / Thu âm, AI Copilot, Xuất bản) */}
+        {/* Cụm phải: Thao tác nhanh (AI Copilot, Xuất bản) + Nút Đăng Nhập đồng bộ */}
         <div className="flex items-center gap-2 select-none shrink-0 whitespace-nowrap">
-          {/* Nút Nạp tệp / Thu âm mới */}
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('file_transcribe_open_import'))}
-            className="h-8 sm:h-8.5 px-3 rounded-xl text-xs font-bold bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-[#0284C7] dark:text-sky-400 border border-sky-200 dark:border-sky-800/80 shadow-2xs flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
-            title="Nạp tệp âm thanh hoặc thu âm mới"
-          >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span className="hidden md:inline">Nạp tệp / Thu âm</span>
-            <span className="md:hidden">Nạp tệp</span>
-          </button>
 
           {/* Nút Trợ lý AI Q&A */}
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('file_transcribe_toggle_ai_copilot'))}
-            className="h-8 sm:h-8.5 px-3 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-500/10 to-indigo-500/10 hover:from-purple-500/20 hover:to-indigo-500/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/80 shadow-2xs flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+            className="h-8 sm:h-8.5 px-3 rounded-xl text-xs font-bold bg-[#FAF5FF] hover:bg-purple-100/80 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 shadow-2xs flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
             title="Mở Trợ lý AI hỏi đáp trên nội dung ghi âm"
           >
             <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 stroke-[2.2]" />
@@ -147,12 +128,17 @@ export const FileTranscribeHeader: React.FC<FileTranscribeHeaderProps> = ({
           {/* Nút Xuất bản tài liệu */}
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('file_transcribe_open_export'))}
-            className="h-8 sm:h-8.5 px-3 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-2xs shadow-emerald-500/25 border border-emerald-500/40 flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+            className="h-8 sm:h-8.5 px-3.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xs shadow-emerald-500/25 border border-emerald-600 flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
             title="Xuất file Word, PDF, SRT hoặc Sao chép"
           >
             <Download className="w-3.5 h-3.5 stroke-[2.4]" />
             <span className="hidden sm:inline">Xuất bản</span>
           </button>
+
+          {/* Nút Đăng Nhập đồng bộ tiêu chuẩn AVG One */}
+          <div className="ml-1 shrink-0">
+            {renderUserAuthButton()}
+          </div>
         </div>
       </div>
     </header>

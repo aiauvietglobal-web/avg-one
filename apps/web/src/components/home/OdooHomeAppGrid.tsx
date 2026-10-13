@@ -5,8 +5,6 @@ import {
   Binary, Zap, Rocket, Award, Gem, Coins, CircleDollarSign, Gauge, Database, TrendingDown, Server
 } from 'lucide-react';
 import { AppModuleId } from '../layout/AppLauncherModal';
-import { TechHologramGearEcosystem } from './TechHologramGearEcosystem';
-import { TechHologramDataCore } from './TechHologramDataCore';
 import { SecurityGoat, SecurityGoatRunner } from './SecurityGoat';
 import { ProfileDog, ProfileDogRunner } from './ProfileDog';
 
@@ -246,20 +244,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
         <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-4 sm:py-7 px-2 overflow-visible min-h-[250px] sm:min-h-[290px] xl:min-h-[330px]">
           
 
-
-          {/* 🌐 BIỂU TƯỢNG CÔNG NGHỆ 2D BÊN TRÁI: 2D QUANTUM DATA CORE */}
-          <div className="hidden md:flex absolute left-4 lg:left-8 xl:left-14 2xl:left-20 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
-            <div className="animate-entrance-left transition-transform duration-500 group-hover:scale-105">
-              <TechHologramDataCore className="w-[170px] md:w-[200px] lg:w-[230px] xl:w-[260px] 2xl:w-[290px] aspect-square h-auto" />
-            </div>
-          </div>
-
-          {/* 🛸 BIỂU TƯỢNG CÔNG NGHỆ 2D BÊN PHẢI: 2D KINETIC GEAR ECOSYSTEM */}
-          <div className="hidden md:flex absolute right-4 lg:right-8 xl:right-14 2xl:right-20 top-1/2 -translate-y-1/2 z-20 items-center select-none cursor-default group pointer-events-auto">
-            <div className="animate-entrance-right transition-transform duration-500 group-hover:scale-105">
-              <TechHologramGearEcosystem className="w-[170px] md:w-[200px] lg:w-[230px] xl:w-[260px] 2xl:w-[290px] aspect-square h-auto" />
-            </div>
-          </div>
 
           {/* 🎯 TRUNG TÂM: MAIN HEADLINE & SLOGAN BADGE & DOWN NAVIGATION */}
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
