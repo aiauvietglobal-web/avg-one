@@ -10,8 +10,8 @@
     "dev": "npm run dev --workspace=apps/web",
     "dev:all": "npm run dev --workspaces --if-present",
     "dev:web": "npm run dev --workspace=apps/web",
-    "dev:api": "npm run dev --workspace=apps/api",
-    "build": "npm run build --workspaces --if-present"
+    "build": "npm run build --workspace=apps/web && node -e \"const fs = require('fs'); fs.cpSync('apps/web/dist', 'dist', { recursive: true });\"",
+    "build:all": "npm run build --workspaces --if-present"
   },
   "engines": {
     "node": "20.x"
