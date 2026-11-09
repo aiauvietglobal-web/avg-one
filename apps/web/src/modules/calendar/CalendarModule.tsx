@@ -2317,8 +2317,14 @@ export const CalendarModule: React.FC = () => {
                   <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 w-64">
                     Thành phần tham dự
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 px-3 py-3 text-center w-24">
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-24">
                     Thư ký
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-32">
+                    Tài liệu
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 px-3 py-3 text-center w-44">
+                    VBKL
                   </th>
                 </tr>
               </thead>
@@ -2326,7 +2332,7 @@ export const CalendarModule: React.FC = () => {
               <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800/80 text-[13px]">
                 {tableRowsWithDateGroup.length === 0 ? (
                   <tr>
-                    <td colSpan={11} className="py-16 text-center text-slate-400 font-semibold text-sm">
+                    <td colSpan={13} className="py-16 text-center text-slate-400 font-semibold text-sm">
                       Không có lịch trao đổi nào phù hợp với bộ lọc hiện tại.
                     </td>
                   </tr>
@@ -2362,6 +2368,10 @@ export const CalendarModule: React.FC = () => {
                     const cleanSecretary = (evt.secretary || '').trim();
                     const hasSecretary = cleanSecretary !== '' && cleanSecretary !== '-';
                     const cleanNotes = (evt.notes || '').trim();
+                    const cleanDoc = (evt.documentText || '').trim();
+                    const hasDoc = cleanDoc !== '' && cleanDoc !== '-';
+                    const cleanVbkl = (evt.conclusionDocUrl || '').trim();
+                    const hasVbkl = cleanVbkl !== '' && cleanVbkl !== '-';
 
                     return (
                       <tr
@@ -2478,19 +2488,6 @@ export const CalendarModule: React.FC = () => {
                               Ghi chú: {cleanNotes}
                             </div>
                           )}
-                          {evt.conclusionDocUrl && evt.conclusionDocUrl.startsWith('http') && (
-                            <div className="mt-1.5" onClick={(e) => e.stopPropagation()}>
-                              <a
-                                href={evt.conclusionDocUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-xs font-extrabold text-[#0284C7] hover:underline"
-                              >
-                                <FileText className="w-3.5 h-3.5" />
-                                <span>Xem Văn bản kết luận (VBKL) ↗</span>
-                              </a>
-                            </div>
-                          )}
                         </td>
 
                         {/* 9. Điều hành */}
@@ -2504,8 +2501,56 @@ export const CalendarModule: React.FC = () => {
                         </td>
 
                         {/* 11. Thư ký */}
-                        <td className="px-3 py-3 text-center font-bold text-slate-700 dark:text-slate-300">
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-700 dark:text-slate-300">
                           {hasSecretary ? cleanSecretary : null}
+                        </td>
+
+                        {/* 12. Tài liệu */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center">
+                          {hasDoc ? (
+                            cleanDoc.startsWith('http') ? (
+                              <a
+                                href={cleanDoc}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 font-bold text-xs hover:underline whitespace-nowrap"
+                              >
+                                <FileText className="w-3.5 h-3.5 shrink-0" />
+                                <span>Mở tài liệu ↗</span>
+                              </a>
+                            ) : (
+                              <span className="inline-block px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs whitespace-pre-line">
+                                {cleanDoc}
+                              </span>
+                            )
+                          ) : evt.attachments && evt.attachments.length > 0 ? (
+                            <span className="inline-block px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs">
+                              {evt.attachments.length} tệp
+                            </span>
+                          ) : null}
+                        </td>
+
+                        {/* 13. VBKL */}
+                        <td className="px-3 py-3 text-center">
+                          {hasVbkl ? (
+                            cleanVbkl.startsWith('http') ? (
+                              <a
+                                href={cleanVbkl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 font-extrabold text-xs hover:bg-sky-100 dark:hover:bg-sky-900/60 transition-colors whitespace-nowrap"
+                              >
+                                <FileText className="w-3.5 h-3.5 shrink-0" />
+                                <span>Xem VBKL ↗</span>
+                              </a>
+                            ) : (
+                              <div className="text-xs text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed text-left">
+                                {cleanVbkl}
+                              </div>
+                            )
+                          ) : null}
                         </td>
                       </tr>
                     );
