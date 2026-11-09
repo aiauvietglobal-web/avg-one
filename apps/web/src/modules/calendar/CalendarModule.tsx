@@ -1915,6 +1915,47 @@ export const CalendarModule: React.FC = () => {
     };
   }, [filteredEvents]);
 
+  // Gộp các cuộc trao đổi cùng ngày liền nhau cho Chế độ xem Lưới (hiển thị Ngày 1 lần bằng rowSpan)
+  const tableRowsWithDateGroup = useMemo(() => {
+    const dateGroupsMap = new Map<string, DiscussionEvent[]>();
+    filteredEvents.forEach((evt) => {
+      const dKey = (evt.date || '').trim();
+      if (!dateGroupsMap.has(dKey)) {
+        dateGroupsMap.set(dKey, []);
+      }
+      dateGroupsMap.get(dKey)!.push(evt);
+    });
+
+    const result: Array<{
+      evt: DiscussionEvent;
+      rowIndex: number;
+      dateGroupIndex: number;
+      isFirstInDateGroup: boolean;
+      isLastInDateGroup: boolean;
+      dateRowSpan: number;
+    }> = [];
+
+    let globalIdx = 0;
+    let groupIdx = 0;
+    dateGroupsMap.forEach((groupEvents) => {
+      const span = groupEvents.length;
+      groupEvents.forEach((evt, i) => {
+        result.push({
+          evt,
+          rowIndex: globalIdx + 1,
+          dateGroupIndex: groupIdx,
+          isFirstInDateGroup: i === 0,
+          isLastInDateGroup: i === span - 1,
+          dateRowSpan: span,
+        });
+        globalIdx++;
+      });
+      groupIdx++;
+    });
+
+    return result;
+  }, [filteredEvents]);
+
   // Helper for Status Priority Sorting: ONGOING (1) -> UPCOMING (2) -> COMPLETED (3) -> CANCELLED (4)
   const getStatusPriority = (evt: DiscussionEvent, now: Date = vnNow): number => {
     const info = getStatusInfo(evt, now);
@@ -2282,14 +2323,14 @@ export const CalendarModule: React.FC = () => {
               </thead>
 
               <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800/80 text-[13px]">
-                {filteredEvents.length === 0 ? (
+                {tableRowsWithDateGroup.length === 0 ? (
                   <tr>
                     <td colSpan={11} className="py-16 text-center text-slate-400 font-semibold text-sm">
                       Không có lịch trao đổi nào phù hợp với bộ lọc hiện tại.
                     </td>
                   </tr>
                 ) : (
-                  filteredEvents.map((evt, idx) => {
+                  tableRowsWithDateGroup.map(({ evt, rowIndex, isFirstInDateGroup, isLastInDateGroup, dateRowSpan }) => {
                     const plannedMins = evt.plannedDurationMinutes !== undefined
                       ? evt.plannedDurationMinutes
                       : (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0);
@@ -2323,30 +2364,37 @@ export const CalendarModule: React.FC = () => {
 
                     return (
                       <tr
-                        key={evt.id || idx}
+                        key={evt.id || rowIndex}
                         onClick={() => setSelectedEventDetail(evt)}
-                        className="even:bg-slate-50/60 dark:even:bg-slate-900/40 hover:bg-sky-50/70 dark:hover:bg-sky-950/30 transition-colors cursor-pointer align-middle"
+                        className={`even:bg-slate-50/60 dark:even:bg-slate-900/40 hover:bg-sky-50/70 dark:hover:bg-sky-950/30 transition-colors cursor-pointer align-middle ${
+                          isLastInDateGroup ? 'border-b-2 border-b-slate-200 dark:border-b-slate-700' : ''
+                        }`}
                       >
                         {/* 1. STT */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-400 tabular-nums text-xs">
-                          {idx + 1}
+                          {rowIndex}
                         </td>
 
-                        {/* 2. Ngày & Thứ */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap">
-                          <div className="font-extrabold text-slate-900 dark:text-white tabular-nums text-[13px]">
-                            {evt.date}
-                          </div>
-                          <div className={`text-[11px] font-bold mt-0.5 ${
-                            isSunday
-                              ? 'text-rose-600 dark:text-rose-400'
-                              : isSaturday
-                                ? 'text-[#0284C7] dark:text-sky-400'
-                                : 'text-slate-500 dark:text-slate-400'
-                          }`}>
-                            {evt.dayOfWeek}
-                          </div>
-                        </td>
+                        {/* 2. Ngày & Thứ (Gộp ô rowSpan cho các cuộc trao đổi cùng ngày, chỉ hiển thị 1 lần) */}
+                        {isFirstInDateGroup && (
+                          <td
+                            rowSpan={dateRowSpan}
+                            className="border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-3 text-center whitespace-nowrap align-middle"
+                          >
+                            <div className="font-extrabold text-slate-900 dark:text-white tabular-nums text-[13.5px]">
+                              {evt.date}
+                            </div>
+                            <div className={`text-[11px] font-bold mt-0.5 ${
+                              isSunday
+                                ? 'text-rose-600 dark:text-rose-400'
+                                : isSaturday
+                                  ? 'text-[#0284C7] dark:text-sky-400'
+                                  : 'text-slate-500 dark:text-slate-400'
+                            }`}>
+                              {evt.dayOfWeek}
+                            </div>
+                          </td>
+                        )}
 
                         {/* 3. Phạm vi */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center">
