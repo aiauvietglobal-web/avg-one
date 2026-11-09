@@ -11,3 +11,4 @@ export * from './SpeechToTextHeader';
 export * from './DashboardHeader';
 export * from './HubDetailHeader';
 export * from './FileTranscribeHeader';
+export * from './CalendarHeader';

@@ -18,31 +18,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
   const [isSystemDropdownOpen, setIsSystemDropdownOpen] = useState(false);
   const systemDropdownRef = useRef<HTMLDivElement>(null);
 
-  // 2. Lịch dropdown state & ref
-  const [calendarTabState, setCalendarTabState] = useState<'talk' | 'work'>(() => {
-    try {
-      const saved = localStorage.getItem('avg_calendar_active_subapp');
-      if (saved && ['talk', 'work'].includes(saved)) {
-        return saved as 'talk' | 'work';
-      }
-    } catch (e) {}
-    return 'talk';
-  });
-  const [isCalendarDropdownOpen, setIsCalendarDropdownOpen] = useState(false);
-  const calendarDropdownRef = useRef<HTMLDivElement>(null);
-
-  // Sync calendarTabState when calendar sub-app changes from inside CalendarModule
-  useEffect(() => {
-    const handleSubAppChange = (e: any) => {
-      if (e.detail && ['talk', 'work'].includes(e.detail)) {
-        setCalendarTabState(e.detail as 'talk' | 'work');
-      }
-    };
-    window.addEventListener('calendar_subapp_change', handleSubAppChange);
-    return () => window.removeEventListener('calendar_subapp_change', handleSubAppChange);
-  }, []);
-
-  // 3. Đơn hàng dropdown state & ref
+  // 2. Đơn hàng dropdown state & ref
   const [ordersTabState, setOrdersTabState] = useState<'design' | 'research' | 'sample-h1' | 'legal'>('design');
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
   const ordersDropdownRef = useRef<HTMLDivElement>(null);
@@ -51,9 +27,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
   useEffect(() => {
     if (activeModule !== 'system' && activeModule !== 'admin') {
       setIsSystemDropdownOpen(false);
-    }
-    if (activeModule !== 'calendar') {
-      setIsCalendarDropdownOpen(false);
     }
     if (activeModule !== 'orders' && activeModule !== 'wework') {
       setIsOrdersDropdownOpen(false);
@@ -67,9 +40,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
       if (systemDropdownRef.current && !systemDropdownRef.current.contains(target)) {
         setIsSystemDropdownOpen(false);
       }
-      if (calendarDropdownRef.current && !calendarDropdownRef.current.contains(target)) {
-        setIsCalendarDropdownOpen(false);
-      }
       if (ordersDropdownRef.current && !ordersDropdownRef.current.contains(target)) {
         setIsOrdersDropdownOpen(false);
       }
@@ -80,7 +50,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
 
   const handleToggleSystemModule = () => {
     setIsOrdersDropdownOpen(false);
-    setIsCalendarDropdownOpen(false);
     setIsSystemDropdownOpen(prev => !prev);
   };
 
@@ -93,32 +62,8 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
     if (btn) btn.click();
   };
 
-  const handleToggleCalendarModule = () => {
-    setIsSystemDropdownOpen(false);
-    setIsOrdersDropdownOpen(false);
-    setIsCalendarDropdownOpen(prev => !prev);
-    if (activeModule !== 'calendar') {
-      handleSelectCalendarSubTab(calendarTabState || 'talk');
-    }
-  };
-
-  const handleSelectCalendarSubTab = (tab: 'talk' | 'work') => {
-    setCalendarTabState(tab);
-    setIsCalendarDropdownOpen(false);
-    try {
-      localStorage.setItem('avg_calendar_active_subapp', tab);
-    } catch (e) {}
-    onSelectModule('calendar');
-    window.dispatchEvent(new CustomEvent('calendar_subapp_change', { detail: tab }));
-    setTimeout(() => {
-      const btn = document.getElementById(`btn-calendar-subtab-${tab}`);
-      if (btn) btn.click();
-    }, 50);
-  };
-
   const handleToggleOrdersModule = () => {
     setIsSystemDropdownOpen(false);
-    setIsCalendarDropdownOpen(false);
     setIsOrdersDropdownOpen(prev => !prev);
   };
 
@@ -139,7 +84,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
         { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
         { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
         { id: 'inside' as AppModuleId, aliases: ['inside'], label: 'Bảng tin' },
-        { id: 'calendar' as AppModuleId, aliases: ['calendar'], label: 'Lịch' },
         { id: 'orders' as AppModuleId, aliases: ['orders', 'wework', 'workflow', 'rd'], label: 'Đơn hàng' },
       ].map((item) => {
         const isActive = item.aliases.includes(activeModule);
@@ -218,79 +162,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
           );
         }
 
-        if (item.id === 'calendar') {
-          const isHighlighted = isActive || isCalendarDropdownOpen;
-          return (
-            <div
-              key={item.id}
-              ref={calendarDropdownRef}
-              className="relative"
-            >
-              <button
-                onClick={handleToggleCalendarModule}
-                style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative px-2.5 sm:px-3 py-1.5 text-base sm:text-[17px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
-                  isHighlighted
-                    ? 'font-bold text-[#F15A24] dark:text-[#F15A24]'
-                    : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
-                }`}
-              >
-                <span className="relative inline-block">
-                  <span
-                    style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                    className="relative z-10 transition-colors duration-150 inline-block"
-                  >
-                    {item.label}
-                  </span>
-                  {isHighlighted && (
-                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 sm:w-6 h-[2px] bg-[#F15A24] rounded-full" />
-                  )}
-                </span>
-                <ChevronDown
-                  style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isCalendarDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-[#F15A24]' : 'opacity-60 hover:opacity-100 hover:text-[#F15A24]'}`}
-                />
-              </button>
 
-              {isCalendarDropdownOpen && (
-                <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-56 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCalendarSubTab('talk');
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                      isActive && calendarTabState === 'talk'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <span className="text-slate-900 dark:text-white font-medium">Lịch trao đổi</span>
-                    {isActive && calendarTabState === 'talk' && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCalendarSubTab('work');
-                    }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
-                      isActive && calendarTabState === 'work'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <span className="text-slate-900 dark:text-white font-medium">Lịch công tác</span>
-                    {isActive && calendarTabState === 'work' && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F15A24]" />
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
-          );
-        }
 
         if (item.id === 'orders') {
           const isHighlighted = isActive || isOrdersDropdownOpen;
@@ -387,7 +259,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             key={item.id}
             onClick={() => {
               setIsSystemDropdownOpen(false);
-              setIsCalendarDropdownOpen(false);
               setIsOrdersDropdownOpen(false);
               onSelectModule(item.id);
             }}

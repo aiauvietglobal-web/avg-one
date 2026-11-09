@@ -8,11 +8,13 @@ import { LoginModal, UserProfile } from '../auth/LoginModal';
 import avgOfficialLogo from '../../assets/avg-one-official-logo.png';
 import { useIsMobile } from './useIsMobile';
 import { MobileHeader } from './MobileHeader';
+import { MobileBottomNav } from './MobileBottomNav';
 import {
   HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader,
   HRHeader, LegalHeader, FinanceHeader, RDHeader,
   SpeechToTextHeader, DashboardHeader, HubDetailHeader, FileTranscribeHeader,
-  HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab, AppsNavTab,
+  CalendarHeader, CalendarNavTab,
+  HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab,
   SpeechNavTab, DashboardNavTab, FileTranscribeNavTab
 } from './headers';
 
@@ -49,10 +51,19 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [legalNavTab, setLegalNavTab] = useState<LegalNavTab>('all');
   const [financeNavTab, setFinanceNavTab] = useState<FinanceNavTab>('all');
   const [rdNavTab, setRdNavTab] = useState<RDNavTab>('overview');
-  const [appsNavTab, setAppsNavTab] = useState<AppsNavTab>('overview');
+  const [appsNavTab, setAppsNavTab] = useState<string>('overview');
   const [speechNavTab, setSpeechNavTab] = useState<SpeechNavTab>('chat');
   const [dashboardNavTab, setDashboardNavTab] = useState<DashboardNavTab>('overview');
   const [fileTranscribeNavTab, setFileTranscribeNavTab] = useState<FileTranscribeNavTab>('library');
+  const [calendarNavTab, setCalendarNavTab] = useState<CalendarNavTab>(() => {
+    try {
+      const saved = localStorage.getItem('avg_calendar_active_subapp');
+      if (saved && ['talk', 'work'].includes(saved)) {
+        return saved as CalendarNavTab;
+      }
+    } catch (e) {}
+    return 'talk';
+  });
   const [speechIsRecording, setSpeechIsRecording] = useState<boolean>(false);
   const [hubDetailTab, setHubDetailTab] = useState<string>('home');
 
@@ -86,6 +97,17 @@ export const AppShell: React.FC<AppShellProps> = ({
     };
     window.addEventListener('speech_recording_status', handleSpeechRec);
     return () => window.removeEventListener('speech_recording_status', handleSpeechRec);
+  }, []);
+
+  // Lắng nghe sự kiện chuyển đổi tab từ phân hệ Lịch độc lập
+  useEffect(() => {
+    const handleCalendarTabSync = (e: any) => {
+      if (e.detail && ['talk', 'work'].includes(e.detail)) {
+        setCalendarNavTab(e.detail as CalendarNavTab);
+      }
+    };
+    window.addEventListener('calendar_subapp_change', handleCalendarTabSync);
+    return () => window.removeEventListener('calendar_subapp_change', handleCalendarTabSync);
   }, []);
 
   // Lắng nghe sự kiện chuyển sang Không gian làm việc (Hộp Thiết kế) từ màn hình theo dõi tiến độ đơn hàng
@@ -399,12 +421,28 @@ export const AppShell: React.FC<AppShellProps> = ({
         /* GIAO DIỆN DESKTOP TOÀN MÀN HÌNH */
         <div className="w-full h-full flex flex-col overflow-hidden bg-white dark:bg-slate-950">
           {/* HỆ THỐNG HEADER ĐỘC LẬP TÁCH BIỆT CHO TỪNG PHÂN HỆ */}
-          {activeModule === 'home' || activeModule === 'system' || activeModule === 'admin' || activeModule === 'inside' || activeModule === 'calendar' || activeModule === 'orders' ? (
-            /* 1. HEADER CÁC PHÂN HỆ QUẢN TRỊ VẬN HÀNH (TRANG CHỦ, HỆ THỐNG, BẢNG TIN, LỊCH, ĐƠN HÀNG): GIỮ NGUYÊN 100% BỐ CỤC */
+          {activeModule === 'home' || activeModule === 'system' || activeModule === 'admin' || activeModule === 'inside' || activeModule === 'orders' ? (
+            /* 1. HEADER CÁC PHÂN HỆ QUẢN TRỊ VẬN HÀNH (TRANG CHỦ, HỆ THỐNG, BẢNG TIN, ĐƠN HÀNG) */
             <StandardModuleHeader
               activeModule={activeModule}
               activeSubTitle={activeSubTitle}
               onSelectModule={onSelectModule}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'calendar' ? (
+            /* HEADER ĐỘC LẬP CHO PHÂN HỆ LỊCH: 1 HỘP RIÊNG BIỆT KHÔNG NẰM TRÊN THANH HEADER */
+            <CalendarHeader
+              calendarNavTab={calendarNavTab}
+              onSelectCalendarTab={(tab) => {
+                setCalendarNavTab(tab);
+                window.dispatchEvent(new CustomEvent('calendar_subapp_change', { detail: tab }));
+              }}
+              onGoHome={() => {
+                setActiveSubTitle('');
+                onSelectModule('home');
+              }}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : isDesignModule ? (

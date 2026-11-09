@@ -12,7 +12,7 @@ import {
   syncDiscussionEventToGoogleSheet, getGoogleSheetWebhookUrl, setGoogleSheetWebhookUrl,
   updateLocalDiscussionEvent, moveToTrashDiscussionEvent, getDeletedDiscussionEvents,
   restoreDiscussionEventFromTrash, purgeDiscussionEventPermanently, emptyTrashDiscussionEvents,
-  DeletedDiscussionEvent
+  DeletedDiscussionEvent, getCachedLichTraoDoiOverview, LICH_TRAO_DOI_TAB_NAME
 } from '../../services/googleSheetSync';
 import { LiveTranscribeModal } from '../../components/transcribe/LiveTranscribeModal';
 
@@ -37,94 +37,640 @@ const initialRealTimeDefaults = getRealTimeDateDefaults();
 
 const INITIAL_EVENTS: DiscussionEvent[] = [
   {
-    id: 'evt-1',
-    stt: 1,
-    scope: 'P1',
-    dayOfWeek: 'THỨ BA',
-    date: '18/08/2026',
-    plannedStartTime: '18:00',
-    plannedEndTime: '19:00',
-    actualStartTime: '18:05',
-    actualEndTime: '19:10',
-    title: 'Họp Giao Ban R&D Firmware Sensor AI & Tiến Độ Mạch Nhúng AVG-X',
-    legalEntity: 'DH',
-    attendees: '1. Các đầu mối AVG: 1.T; 1.C; 1; 6; #; #K2B; #K1\n2. AV: Bà Trang; Ông Trịnh',
-    secretary: '#K2B',
-    status: 'Sắp tới',
-    notes: 'Rà soát thông số linh kiện cảm biến và tiến độ nộp hồ sơ đăng ký bản quyền.',
-    conclusionDocUrl: 'https://docs.google.com/document/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M'
+    "id": "gsheet-ltd-4",
+    "stt": 1,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 2",
+    "date": "09/11/2026",
+    "plannedStartTime": "14:30",
+    "plannedEndTime": "15:00",
+    "actualStartTime": "",
+    "actualEndTime": "00:00",
+    "plannedDurationMinutes": 30,
+    "title": "Trao đổi cụm 5",
+    "legalEntity": "-",
+    "attendees": "5.1B; 5.2B; 5.1T",
+    "secretary": "",
+    "status": "Sắp tới",
+    "notes": "",
+    "conclusionDocUrl": ""
   },
   {
-    id: 'evt-2',
-    stt: 2,
-    scope: 'P2',
-    dayOfWeek: 'THỨ TƯ',
-    date: '19/08/2026',
-    plannedStartTime: '09:00',
-    plannedEndTime: '10:30',
-    actualStartTime: '09:00',
-    actualEndTime: '10:30',
-    title: 'Rà Soát Đăng Ký Bản Quyền Nhãn Hiệu & Hợp Đồng Pháp Lý 2026',
-    legalEntity: 'AV',
-    attendees: 'Ban Pháp lý (6); Cố vấn Vũ Quốc Huy; Giám đốc Sản xuất',
-    secretary: 'Pháp lý 6',
-    status: 'Đã hoàn thành',
-    notes: 'Đã hoàn thiện hồ sơ đăng ký Bảo hộ nhãn hiệu phần mềm AVG One.',
-    conclusionDocUrl: 'https://docs.google.com/document/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M'
+    "id": "gsheet-ltd-5",
+    "stt": 2,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 2",
+    "date": "09/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "17:30",
+    "actualStartTime": "",
+    "actualEndTime": "00:00",
+    "plannedDurationMinutes": 90,
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "1. AVG: Các đầu mối AVG; \n2. Các bà Trang; ông Huy",
+    "secretary": "Kiến",
+    "status": "Sắp tới",
+    "notes": "#K1; ông Huy tham gia online",
+    "conclusionDocUrl": ""
   },
   {
-    id: 'evt-3',
-    stt: 3,
-    scope: 'Toàn Hệ Thống',
-    dayOfWeek: 'THỨ TƯ',
-    date: '19/08/2026',
-    plannedStartTime: '14:30',
-    plannedEndTime: '16:00',
-    actualStartTime: '',
-    actualEndTime: '',
-    title: 'Họp Tháo Gỡ Vướng Mắc Hải Quan & Đóng Bo Mạch Lô 2',
-    legalEntity: 'DH',
-    attendees: 'Kế toán trưởng; Phòng Tài chính; Trưởng nhà máy Âu Việt',
-    secretary: 'Tài chính 5.1',
-    status: 'Hoãn',
-    notes: 'Hoãn sang tuần tới do chưa có đủ thông quan linh kiện.',
-    conclusionDocUrl: 'https://docs.google.com/document/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M'
+    "id": "gsheet-ltd-6",
+    "stt": 3,
+    "scope": "Phòng làm việc bà Trang",
+    "dayOfWeek": "THỨ 3",
+    "date": "10/11/2026",
+    "plannedStartTime": "10:00",
+    "plannedEndTime": "10:45",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 45,
+    "title": "1. Mẫu hương liệu, lưu ý sử dụng hạt lưu hương;\n2. Tiếp tục thúc đẩy KH enzyme.",
+    "legalEntity": "Bà Trang TM AVG",
+    "attendees": "Bà Trang TM AVG; Cụm 5B; chị Thoa",
+    "secretary": "",
+    "status": "Sắp tới",
+    "notes": "",
+    "conclusionDocUrl": "1. Mẫu hương liệu, lưu ý sử dụng hạt lưu hương;\n2. Tiếp tục thúc đẩy KH enzyme."
   },
   {
-    id: 'evt-4',
-    stt: 4,
-    scope: 'P1',
-    dayOfWeek: 'CHỦ NHẬT',
-    date: '30/08/2026',
-    plannedStartTime: '08:30',
-    plannedEndTime: '10:30',
-    actualStartTime: '08:30',
-    actualEndTime: '10:30',
-    title: 'Việc trọng điểm T9 AV: chưa phải chủ tài sản mà mang đi bán',
-    legalEntity: 'AVG',
-    attendees: '1. Các đầu mối AVG: 1.T; 1.C; 1; 6; #; #K2B; #K1\n2. AV: Bà Trang; Ông Trịnh',
-    secretary: '#K2B',
-    status: 'Sắp tới',
-    notes: 'Không có ghi chú thêm.',
-    conclusionDocUrl: 'https://docs.google.com/document/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M'
+    "id": "gsheet-ltd-7",
+    "stt": 4,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "10/11/2026",
+    "plannedStartTime": "12:00",
+    "plannedEndTime": "13:00",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 60,
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "-",
+    "attendees": "1. AVG: Các đầu mối AVG; \n2. Các bà Trang; ông Huy",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "Chiều nghỉ => con người HJ phụ trách đầu mối AVG đi dự tiệc của AV mời (đối ngoại)",
+    "conclusionDocUrl": "Tổng kết công việc thường ngày"
   },
   {
-    id: 'evt-5',
-    stt: 5,
-    scope: 'P1',
-    dayOfWeek: initialRealTimeDefaults.dayName,
-    date: initialRealTimeDefaults.dateStr,
-    plannedStartTime: '09:00',
-    plannedEndTime: '11:00',
-    actualStartTime: '09:00',
-    actualEndTime: '11:00',
-    title: 'Họp Đánh Giá Chỉ Số Vận Hành Nền Tảng AVG One & Đơn Hàng Mới',
-    legalEntity: 'DH',
-    attendees: 'Ban Điều Hành; C-Suite; IT Admin; Nhà máy Âu Việt',
-    secretary: '2.1',
-    status: 'Sắp tới',
-    notes: 'Chuẩn bị dữ liệu báo cáo 24/7 và tiến độ công việc trong ngày.',
-    conclusionDocUrl: 'https://docs.google.com/document/d/11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M'
+    "id": "gsheet-ltd-8",
+    "stt": 5,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "10/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "16:30",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 30,
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "2.2; Cụm 5; 3.1C ; #K2B; Kiến",
+    "secretary": "Kiến",
+    "status": "Sắp tới",
+    "notes": "",
+    "conclusionDocUrl": "Tổng kết công việc thường ngày"
+  },
+  {
+    "id": "gsheet-ltd-9",
+    "stt": 6,
+    "scope": "P1",
+    "dayOfWeek": "CHỦ NHẬT",
+    "date": "08/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "16:30",
+    "actualStartTime": "16:00",
+    "actualEndTime": "17:00",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 60,
+    "inflationMinutes": 30,
+    "inflationRate": "100,0%",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "2.2; Cụm 5; 3.1C ; #K2B; Kiến",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-10",
+    "stt": 7,
+    "scope": "Phòng làm việc bà Trang",
+    "dayOfWeek": "THỨ 7",
+    "date": "07/11/2026",
+    "plannedStartTime": "10:00",
+    "plannedEndTime": "10:45",
+    "actualStartTime": "10:00",
+    "actualEndTime": "10:30",
+    "plannedDurationMinutes": 45,
+    "actualDurationMinutes": 30,
+    "inflationMinutes": -15,
+    "inflationRate": "-33,3%",
+    "title": "1. Mẫu hương liệu, lưu ý sử dụng hạt lưu hương;\n2. Tiếp tục thúc đẩy KH enzyme.",
+    "legalEntity": "Bà Trang TM AVG",
+    "attendees": "Bà Trang TM AVG; Cụm 5B; chị Thoa",
+    "secretary": "",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-11",
+    "stt": 8,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 7",
+    "date": "07/11/2026",
+    "plannedStartTime": "08:00",
+    "plannedEndTime": "09:00",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "-",
+    "attendees": "1. AVG: Các đầu mối AVG; \n2. Các bà Trang; ông Huy",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "Chiều nghỉ => con người HJ phụ trách đầu mối AVG đi dự tiệc của AV mời (đối ngoại)",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-12",
+    "stt": 9,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 6",
+    "date": "06/11/2026",
+    "plannedStartTime": "20:30",
+    "plannedEndTime": "21:30",
+    "actualStartTime": "20:30",
+    "actualEndTime": "21:30",
+    "plannedDurationMinutes": 60,
+    "actualDurationMinutes": 60,
+    "inflationRate": "0,0%",
+    "title": "Đơn vị đo; thước đo",
+    "legalEntity": "-",
+    "attendees": "#; 0; 8; 9",
+    "secretary": "-",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-13",
+    "stt": 10,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 6",
+    "date": "06/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "17:30",
+    "actualStartTime": "16:00",
+    "actualEndTime": "17:50",
+    "plannedDurationMinutes": 90,
+    "actualDurationMinutes": 110,
+    "inflationMinutes": 20,
+    "inflationRate": "22,2%",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "1. AVG: Các đầu mối AVG; \n2. Các bà Trang; ông Huy",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "- #K1 online; \n-",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-14",
+    "stt": 11,
+    "scope": "Zalo",
+    "dayOfWeek": "THỨ 6",
+    "date": "06/11/2026",
+    "plannedStartTime": "15:00",
+    "plannedEndTime": "15:30",
+    "actualStartTime": "15:00",
+    "actualEndTime": "15:30",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
+    "legalEntity": "-",
+    "attendees": "5.1B; Ông Thủy",
+    "secretary": "",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-15",
+    "stt": 12,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 6",
+    "date": "06/11/2026",
+    "plannedStartTime": "14:00",
+    "plannedEndTime": "14:30",
+    "actualStartTime": "14:00",
+    "actualEndTime": "14:30",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "Trao đổi cụm 5",
+    "legalEntity": "-",
+    "attendees": "5.1B; 5.2B; 5.1T",
+    "secretary": "",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-16",
+    "stt": 13,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 5",
+    "date": "05/11/2026",
+    "plannedStartTime": "20:30",
+    "plannedEndTime": "21:30",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 60,
+    "title": "Đơn vị đo; thước đo",
+    "legalEntity": "-",
+    "attendees": "#; 0; 8; 9",
+    "secretary": "-",
+    "status": "Hoãn",
+    "notes": "0; 8 nghỉ => không trao đổi",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-17",
+    "stt": 14,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 5",
+    "date": "05/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "17:30",
+    "actualStartTime": "16:00",
+    "actualEndTime": "17:48",
+    "plannedDurationMinutes": 90,
+    "actualDurationMinutes": 108,
+    "inflationMinutes": 18,
+    "inflationRate": "20,0%",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "1. AVG: Các đầu mối AVG; \n2. Các bà Trang; ông Huy",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "- #K1 online; \n- Ông Huy không tham gia",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-18",
+    "stt": 15,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 5",
+    "date": "05/11/2026",
+    "plannedStartTime": "14:30",
+    "plannedEndTime": "15:00",
+    "actualStartTime": "",
+    "actualEndTime": "00:00",
+    "plannedDurationMinutes": 30,
+    "title": "Trao đổi cụm 5",
+    "legalEntity": "-",
+    "attendees": "5.1B; 5.2B; 5.1T",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-19",
+    "stt": 16,
+    "scope": "Phòng làm việc tầng 2",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "20:30",
+    "plannedEndTime": "21:30",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 60,
+    "title": "Đơn vị đo; thước đo",
+    "legalEntity": "-",
+    "attendees": "#; 0; 8; 9",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "Đã tích hợp vào thời gian lúc 17h30 trao đổi",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-20",
+    "stt": 17,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "17:30",
+    "plannedEndTime": "18:30",
+    "actualStartTime": "17:30",
+    "actualEndTime": "18:30",
+    "plannedDurationMinutes": 60,
+    "actualDurationMinutes": 60,
+    "inflationRate": "0,0%",
+    "title": "- Liệt kê các đơn vị đo lõi của nhà sản 3.1 \n- Các vấn đề #; 0; 8 đã, đang và chưa xử lý được trong các đơn vị đo trên các BM đặt hàng phẩm 3.1 hiện tại đang sử dụng.",
+    "legalEntity": "#",
+    "attendees": "- #; 0; 8; 9; cụm 3.1\n- Các đầu mối khác của AVG nếu sắp xếp được thời gian.",
+    "secretary": "9",
+    "status": "Đã hoàn thành",
+    "notes": "Cụm 5 tham gia",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-21",
+    "stt": 18,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "17:30",
+    "actualStartTime": "16:00",
+    "actualEndTime": "17:30",
+    "plannedDurationMinutes": 90,
+    "actualDurationMinutes": 90,
+    "inflationRate": "0,0%",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "1. AVG: Các đầu mối AVG; \n2. Các bà Trang; ông Huy",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "- #K1 online; \n- Ông Huy không tham gia",
+    "conclusionDocUrl": "Tổng kết công việc thường ngày"
+  },
+  {
+    "id": "gsheet-ltd-22",
+    "stt": 19,
+    "scope": "Zalo",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "15:00",
+    "plannedEndTime": "15:30",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 30,
+    "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
+    "legalEntity": "-",
+    "attendees": "5.1B; Ông Thủy",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-23",
+    "stt": 20,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "14:30",
+    "plannedEndTime": "15:00",
+    "actualStartTime": "",
+    "actualEndTime": "",
+    "plannedDurationMinutes": 30,
+    "title": "Trao đổi cụm 5",
+    "legalEntity": "-",
+    "attendees": "5.1B; 5.2B; 5.1T",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-24",
+    "stt": 21,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "10:00",
+    "plannedEndTime": "10:30",
+    "actualStartTime": "10:00",
+    "actualEndTime": "10:30",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "Hội đồng công việc",
+    "legalEntity": "#K2",
+    "attendees": "Các đầu mối AVG",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "Định hình, làm rõ trách nhiệm sau khi trao đổi với DH",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-25",
+    "stt": 22,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 4",
+    "date": "04/11/2026",
+    "plannedStartTime": "08:30",
+    "plannedEndTime": "09:00",
+    "actualStartTime": "08:40",
+    "actualEndTime": "09:40",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 60,
+    "inflationMinutes": 30,
+    "inflationRate": "100,0%",
+    "title": "Làm rõ trách nhiệm của từng đầu mối.",
+    "legalEntity": "DH",
+    "attendees": "Các đầu mối AVG \nKhách mời: Bà Trang",
+    "secretary": "#K2T",
+    "status": "Đã hoàn thành",
+    "notes": "DH online",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-26",
+    "stt": 23,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "03/11/2026",
+    "plannedStartTime": "20:30",
+    "plannedEndTime": "21:10",
+    "actualStartTime": "20:30",
+    "actualEndTime": "22:10",
+    "plannedDurationMinutes": 40,
+    "actualDurationMinutes": 100,
+    "inflationMinutes": 60,
+    "inflationRate": "150,0%",
+    "title": "Hội đồng công việc: Làm việc về “xử lý khủng hoảng...”",
+    "legalEntity": "#K2B",
+    "attendees": "Các đầu mối AVG",
+    "secretary": "5.1T",
+    "status": "Đã hoàn thành",
+    "notes": "1 online",
+    "conclusionDocUrl": "03/11/2026 - VBKL Hội đồng công việc: “xử lý khủng hoảng sai số công bố trong đơn hàng Thiết kế"
+  },
+  {
+    "id": "gsheet-ltd-27",
+    "stt": 24,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "03/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "17:30",
+    "actualStartTime": "16:00",
+    "actualEndTime": "17:30",
+    "plannedDurationMinutes": 90,
+    "actualDurationMinutes": 90,
+    "inflationRate": "0,0%",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "1. AVG: Các đầu mối AVG; \n3. 5.1 thí điểm\n4. Các bà Trang; ông Huy",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": "Tổng kết công việc thường ngày"
+  },
+  {
+    "id": "gsheet-ltd-28",
+    "stt": 25,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "03/11/2026",
+    "plannedStartTime": "15:00",
+    "plannedEndTime": "15:30",
+    "actualStartTime": "15:00",
+    "actualEndTime": "15:30",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
+    "legalEntity": "-",
+    "attendees": "5.1B; Ông Thủy",
+    "secretary": "-",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-29",
+    "stt": 26,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "03/11/2026",
+    "plannedStartTime": "14:30",
+    "plannedEndTime": "15:00",
+    "actualStartTime": "00:00",
+    "actualEndTime": "00:00",
+    "plannedDurationMinutes": 30,
+    "inflationMinutes": -30,
+    "inflationRate": "-100,0%",
+    "title": "Trao đổi cụm 5",
+    "legalEntity": "-",
+    "attendees": "5.1B; 5.2B; 5.1T",
+    "secretary": "-",
+    "status": "Sắp tới",
+    "notes": "Khong trao đổi để xử lý khủng khoảng Thảo Nguyên và xử lý việc thường xuyên",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-30",
+    "stt": 27,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 3",
+    "date": "03/11/2026",
+    "plannedStartTime": "11:30",
+    "plannedEndTime": "12:00",
+    "actualStartTime": "11:30",
+    "actualEndTime": "12:00",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "Đơn vị đo",
+    "legalEntity": "-",
+    "attendees": "0; 8; 9; #",
+    "secretary": "-",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-31",
+    "stt": 28,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 2",
+    "date": "02/11/2026",
+    "plannedStartTime": "16:00",
+    "plannedEndTime": "17:30",
+    "actualStartTime": "16:10",
+    "actualEndTime": "17:54",
+    "plannedDurationMinutes": 90,
+    "actualDurationMinutes": 104,
+    "inflationMinutes": 14,
+    "inflationRate": "15,6%",
+    "title": "Tổng kết công việc thường ngày",
+    "legalEntity": "Kiến",
+    "attendees": "1. AVG: Các đầu mối AVG; \n3. 5.1 thí điểm\n4. Các bà Trang; ông Huy",
+    "secretary": "Kiến",
+    "status": "Đã hoàn thành",
+    "notes": "- Ông Huy không tham gia \n- #K1 online",
+    "conclusionDocUrl": "Tổng kết công việc thường ngày"
+  },
+  {
+    "id": "gsheet-ltd-32",
+    "stt": 29,
+    "scope": "Zalo",
+    "dayOfWeek": "THỨ 2",
+    "date": "02/11/2026",
+    "plannedStartTime": "15:00",
+    "plannedEndTime": "15:30",
+    "actualStartTime": "15:00",
+    "actualEndTime": "15:30",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
+    "legalEntity": "-",
+    "attendees": "5.1B; Ông Thủy",
+    "secretary": "-",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-33",
+    "stt": 30,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 2",
+    "date": "02/11/2026",
+    "plannedStartTime": "14:30",
+    "plannedEndTime": "15:00",
+    "actualStartTime": "14:30",
+    "actualEndTime": "15:00",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 30,
+    "inflationRate": "0,0%",
+    "title": "Trao đổi cụm 5",
+    "legalEntity": "-",
+    "attendees": "5.1B; 5.2B; 5.1T",
+    "secretary": "-",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
+  },
+  {
+    "id": "gsheet-ltd-34",
+    "stt": 31,
+    "scope": "P1",
+    "dayOfWeek": "THỨ 2",
+    "date": "02/11/2026",
+    "plannedStartTime": "11:30",
+    "plannedEndTime": "12:00",
+    "actualStartTime": "11:30",
+    "actualEndTime": "12:10",
+    "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 40,
+    "inflationMinutes": 10,
+    "inflationRate": "33,3%",
+    "title": "Đơn vị đo",
+    "legalEntity": "-",
+    "attendees": "0; 8; 9; #",
+    "secretary": "-",
+    "status": "Đã hoàn thành",
+    "notes": "",
+    "conclusionDocUrl": ""
   }
 ];
 
@@ -547,6 +1093,12 @@ export const CalendarModule: React.FC = () => {
     handleRefreshLiveEvents();
     setDeletedEvents(getDeletedDiscussionEvents());
     setWebhookUrlInput(getGoogleSheetWebhookUrl());
+
+    const handleRemoteRefresh = () => {
+      handleRefreshLiveEvents(true);
+    };
+    window.addEventListener('calendar_refresh_events', handleRemoteRefresh);
+    return () => window.removeEventListener('calendar_refresh_events', handleRemoteRefresh);
   }, []);
 
   const showToast = (msg: string) => {
@@ -561,7 +1113,7 @@ export const CalendarModule: React.FC = () => {
       if (fetched && fetched.length > 0) {
         setEvents(fetched);
         if (showNotification) {
-          showToast(`🔄 Đã đồng bộ thành công ${fetched.length} lịch trao đổi từ tất cả các tháng (cả các tháng ẩn) trên Google Sheet!`);
+          showToast(`🚀 Đã đồng bộ thành công ${fetched.length} cuộc trao đổi từ sheet LỊCH TRAO ĐỔI!`);
         }
       }
     } catch (e) {
@@ -945,10 +1497,11 @@ export const CalendarModule: React.FC = () => {
   };
 
   const getEventDurations = (evt: DiscussionEvent) => {
+    // Ưu tiên đọc số liệu kế hoạch trực tiếp từ sheet LỊCH TRAO ĐỔI
+    let plannedMinutes = evt.plannedDurationMinutes && evt.plannedDurationMinutes > 0 ? evt.plannedDurationMinutes : 60;
     const pStart = getMinutesFromTimeStr(evt.plannedStartTime);
     const pEnd = getMinutesFromTimeStr(evt.plannedEndTime);
-    let plannedMinutes = 60;
-    if (pStart !== null && pEnd !== null) {
+    if (!evt.plannedDurationMinutes && pStart !== null && pEnd !== null) {
       let diff = pEnd - pStart;
       if (diff <= 0) diff += 24 * 60;
       plannedMinutes = diff;
@@ -959,7 +1512,10 @@ export const CalendarModule: React.FC = () => {
     let actualMinutes = plannedMinutes;
     let hasActual = false;
 
-    if (aStart !== null && aEnd !== null && (evt.actualStartTime !== evt.plannedStartTime || evt.actualEndTime !== evt.plannedEndTime)) {
+    if (evt.actualDurationMinutes !== undefined && evt.actualDurationMinutes > 0) {
+      actualMinutes = evt.actualDurationMinutes;
+      hasActual = true;
+    } else if (aStart !== null && aEnd !== null && aStart !== aEnd) {
       let diff = aEnd - aStart;
       if (diff <= 0) diff += 24 * 60;
       actualMinutes = diff;
@@ -979,7 +1535,7 @@ export const CalendarModule: React.FC = () => {
       }
     }
 
-    const inflationMinutes = actualMinutes - plannedMinutes;
+    const inflationMinutes = evt.inflationMinutes !== undefined ? evt.inflationMinutes : actualMinutes - plannedMinutes;
     return {
       plannedMinutes,
       actualMinutes,
@@ -1433,6 +1989,33 @@ export const CalendarModule: React.FC = () => {
         {/* ========================================================================= */}
         <aside className="order-2 lg:order-1 lg:col-span-1 w-full h-auto lg:h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl lg:rounded-[24px] p-3.5 sm:p-4 space-y-3.5 text-slate-800 dark:text-slate-200 scrollbar-thin overflow-y-auto shadow-sm hover:border-[#F15A24]/40 transition-all">
           
+          {/* 🎯 HỘP 0: TRẠNG THÁI NGUỒN DỮ LIỆU GOOGLE SHEET LỊCH TRAO ĐỔI */}
+          <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 dark:border-emerald-500/30 rounded-2xl p-3 flex items-center justify-between text-xs shadow-2xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <div className="min-w-0">
+                <div className="text-[12px] font-black text-emerald-700 dark:text-emerald-300 truncate flex items-center gap-1.5">
+                  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Sheet: LỊCH TRAO ĐỔI</span>
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                  {events.length} cuộc trao đổi • Tự động đồng bộ
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => handleRefreshLiveEvents(true)}
+              disabled={loading}
+              title="Đồng bộ lại từ sheet LỊCH TRAO ĐỔI"
+              className="p-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 cursor-pointer transition shrink-0"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+
           {/* 🎯 HỘP 1: NÚT THÊM MỚI & TÌM KIẾM NHANH */}
           <div className="space-y-2.5">
             {/* Primary Action Button - Primary Blue #0284C7 Gradient */}

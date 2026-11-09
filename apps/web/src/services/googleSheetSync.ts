@@ -19,17 +19,31 @@ export interface DiscussionEvent {
   title: string;
   attendees?: string;
   scope?: string;
+  chairperson?: string;
   secretary?: string;
   notes?: string;
   legalEntity?: string;
   status?: string;
   conclusionDocUrl?: string;
   attachments?: EventAttachment[];
+  plannedDurationMinutes?: number;
+  actualDurationMinutes?: number;
+  inflationMinutes?: number;
+  inflationRate?: string;
+}
+
+export interface LichTraoDoiSheetOverview {
+  totalDiscussions: number;
+  plannedDurationMinutes: number;
+  actualDurationMinutes: number;
+  inflationMinutes: number;
+  inflationRate: string;
 }
 
 export const GOOGLE_SHEET_SPREADSHEET_ID = '11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M';
 export const GOOGLE_SHEET_EDIT_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_SPREADSHEET_ID}/edit`;
 export const GOOGLE_SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+export const LICH_TRAO_DOI_TAB_NAME = 'LỊCH TRAO ĐỔI';
 
 const LOCAL_DISCUSSION_EVENTS_KEY = 'avg_local_discussion_events_v2';
 const WEBHOOK_URL_KEY = 'avg_google_sheet_webhook_url';
@@ -60,6 +74,10 @@ function doPost(e) {
 }
 
 function getTargetSheet(ss, dateStr) {
+  // 1. Ưu tiên số 1: Sheet LỊCH TRAO ĐỔI theo đúng chuẩn của phân hệ Lịch
+  var lichTraoDoiSheet = ss.getSheetByName("LỊCH TRAO ĐỔI") || ss.getSheetByName("Lịch trao đổi") || ss.getSheetByName("LICH TRAO DOI");
+  if (lichTraoDoiSheet) return lichTraoDoiSheet;
+
   if (dateStr && dateStr.indexOf('/') !== -1) {
     var parts = dateStr.split('/');
     if (parts.length >= 2) {
@@ -87,7 +105,7 @@ function getTargetSheet(ss, dateStr) {
   return ss.getSheetByName("LỊCH LÀM VIỆC 2026") || sheets[0];
 }
 
-// Bulletproof duplicate row cleaner for Google Sheet across monthly tabs
+// Bulletproof duplicate row cleaner for Google Sheet
 function removeDuplicateRows() {
   var ss;
   try {
@@ -100,7 +118,7 @@ function removeDuplicateRows() {
   for (var sIdx = 0; sIdx < sheets.length; sIdx++) {
     var sheet = sheets[sIdx];
     var lastRow = sheet.getLastRow();
-    if (lastRow < 3) continue;
+    if (lastRow < 5) continue;
     
     var displayValues = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getDisplayValues();
     var seenKeys = {};
@@ -108,9 +126,9 @@ function removeDuplicateRows() {
     
     for (var i = 0; i < displayValues.length; i++) {
       var row = displayValues[i];
-      var titleStr = (row[9] || row[10] || '').toString().trim().toLowerCase();
-      var dateStr = (row[2] || '').toString().trim();
-      var timeStr = (row[4] || '').toString().trim();
+      var titleStr = (row[12] || row[9] || row[10] || '').toString().trim().toLowerCase();
+      var dateStr = (row[3] || row[2] || '').toString().trim();
+      var timeStr = (row[5] || row[4] || '').toString().trim();
       
       var fullRowKey = row.join('||').trim().toLowerCase();
       var compactKey = titleStr + '_' + dateStr + '_' + timeStr;
@@ -127,27 +145,6 @@ function removeDuplicateRows() {
     
     for (var j = rowsToDelete.length - 1; j >= 0; j--) {
       sheet.deleteRow(rowsToDelete[j]);
-    }
-  }
-}
-
-function sortSheetChronologically() {
-  var ss;
-  try {
-    ss = SpreadsheetApp.openById("11p55tNRLRqVfgwEfrcTWJfxKA6dJQyDJq4CapgZ5o-M");
-  } catch(err) {
-    ss = SpreadsheetApp.getActiveSpreadsheet();
-  }
-  var sheets = ss.getSheets();
-  for (var i = 0; i < sheets.length; i++) {
-    var sheet = sheets[i];
-    var lastRow = sheet.getLastRow();
-    if (lastRow >= 3) {
-      var dataRange = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn());
-      dataRange.sort([
-        { column: 3, ascending: true },
-        { column: 5, ascending: true }
-      ]);
     }
   }
 }
@@ -177,6 +174,7 @@ function handleSync(e) {
     }
     
     var sheet = getTargetSheet(ss, dateStr);
+    var sheetName = sheet.getName().toUpperCase();
     
     var pStart = p.plannedStartTime || jsonEvt.plannedStartTime || '18:00';
     var pEnd = p.plannedEndTime || jsonEvt.plannedEndTime || '19:00';
@@ -188,38 +186,67 @@ function handleSync(e) {
       var diffMins = (eParts[0] * 60 + eParts[1]) - (sParts[0] * 60 + sParts[1]);
       if (diffMins > 0) durationMins = diffMins.toString();
     }
-    
-    var newRowValues = [
-      p.scope || jsonEvt.scope || 'P1',                             // Col A: Phạm vi
-      p.dayOfWeek || jsonEvt.dayOfWeek || 'THỨ BA',                 // Col B: Thứ
-      dateStr || '18/08/2026',                                      // Col C: Ngày
-      durationMins,                                                 // Col D: Thời lượng dự kiến (phút)
-      pStart,                                                       // Col E: Thời điểm bắt đầu dự kiến
-      pEnd,                                                         // Col F: Thời điểm kết thúc dự kiến
-      p.actualStartTime || jsonEvt.actualStartTime || '',          // Col G: Thời gian thực bắt đầu
-      p.actualEndTime || jsonEvt.actualEndTime || '',              // Col H: Thời gian thực kết thúc
-      '',                                                           // Col I: Lạm phát so với kế hoạch
-      title,                                                        // Col J: Nội dung/ Chủ đề
-      p.legalEntity || jsonEvt.legalEntity || 'DH',                 // Col K: Pháp nhân điều hành
-      p.attendees || jsonEvt.attendees || 'AV; AVG',                 // Col L: Thành phần tham dự
-      p.secretary || jsonEvt.secretary || '2.1',                    // Col M: Thư ký
-      p.status || jsonEvt.status || 'Sắp tới',                      // Col N: Trạng thái
-      p.notes || jsonEvt.notes || ''                                // Col O: Ghi chú
-    ];
+
+    var isLichTraoDoi = sheetName.indexOf('TRAO ĐỔI') !== -1 || sheetName.indexOf('TRAO DOI') !== -1;
+    var newRowValues;
+
+    if (isLichTraoDoi) {
+      // Đúng chuẩn 19 cột của sheet LỊCH TRAO ĐỔI
+      newRowValues = [
+        p.notes || jsonEvt.notes || '',                                // Col A: Ghi chú
+        p.scope || jsonEvt.scope || 'P1',                             // Col B: Phạm vi
+        p.dayOfWeek || jsonEvt.dayOfWeek || 'Thứ 2',                  // Col C: Thứ
+        dateStr,                                                      // Col D: Ngày
+        p.plannedDuration || durationMins || '60',                    // Col E: Thời lượng dự kiến (phút)
+        pStart,                                                       // Col F: Thời điểm bắt đầu dự kiến
+        pEnd,                                                         // Col G: Thời điểm kết thúc dự kiến
+        p.actualDuration || '',                                       // Col H: Thời lượng thực tế
+        p.actualStartTime || jsonEvt.actualStartTime || '',          // Col I: Thời gian thực bắt đầu
+        p.actualEndTime || jsonEvt.actualEndTime || '',              // Col J: Thời gian thực kết thúc
+        p.inflationMins || '',                                        // Col K: Lạm phát thời gian (phút)
+        p.inflationRate || '',                                        // Col L: Tỷ lệ lạm phát
+        title,                                                        // Col M: Nội dung/ Chủ đề
+        p.legalEntity || jsonEvt.legalEntity || '-',                  // Col N: Điều hành trao đổi
+        p.attendees || jsonEvt.attendees || '',                       // Col O: Thành phần tham dự
+        p.secretary || jsonEvt.secretary || '',                       // Col P: Thư ký
+        p.status || jsonEvt.status || 'Sắp tới',                      // Col Q: Trạng thái
+        p.document || '',                                             // Col R: Tài liệu
+        p.conclusionDocUrl || jsonEvt.conclusionDocUrl || ''          // Col S: Link VBKL
+      ];
+    } else {
+      newRowValues = [
+        p.scope || jsonEvt.scope || 'P1',
+        p.dayOfWeek || jsonEvt.dayOfWeek || 'THỨ BA',
+        dateStr || '18/08/2026',
+        durationMins,
+        pStart,
+        pEnd,
+        p.actualStartTime || jsonEvt.actualStartTime || '',
+        p.actualEndTime || jsonEvt.actualEndTime || '',
+        '',
+        title,
+        p.legalEntity || jsonEvt.legalEntity || 'DH',
+        p.attendees || jsonEvt.attendees || 'AV; AVG',
+        p.secretary || jsonEvt.secretary || '2.1',
+        p.status || jsonEvt.status || 'Sắp tới',
+        p.notes || jsonEvt.notes || ''
+      ];
+    }
     
     // Prevent duplicate row insertion using getDisplayValues()
     var lastRow = sheet.getLastRow();
     var isDuplicate = false;
-    if (lastRow >= 2) {
-      var displayData = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getDisplayValues();
+    var startScan = isLichTraoDoi ? 4 : 2;
+    if (lastRow >= startScan) {
+      var displayData = sheet.getRange(startScan, 1, lastRow - startScan + 1, sheet.getLastColumn()).getDisplayValues();
       for (var r = 0; r < displayData.length; r++) {
-        var exDate = (displayData[r][2] || '').trim();
-        var exStart = (displayData[r][4] || '').trim();
-        var exTitle = (displayData[r][9] || '').trim().toLowerCase();
+        var exDate = isLichTraoDoi ? (displayData[r][3] || '').trim() : (displayData[r][2] || '').trim();
+        var exStart = isLichTraoDoi ? (displayData[r][5] || '').trim() : (displayData[r][4] || '').trim();
+        var exTitle = isLichTraoDoi ? (displayData[r][12] || '').trim().toLowerCase() : (displayData[r][9] || '').trim().toLowerCase();
         
-        if (exTitle === title.trim().toLowerCase() && exDate === dateStr.trim() && exStart === pStart.trim()) {
+        if (exTitle === title.trim().toLowerCase() && exDate === dateStr.trim()) {
           isDuplicate = true;
-          sheet.getRange(r + 2, 1, 1, 15).setValues([newRowValues]);
+          sheet.getRange(startScan + r, 1, 1, newRowValues.length).setValues([newRowValues]);
           break;
         }
       }
@@ -229,17 +256,7 @@ function handleSync(e) {
       sheet.appendRow(newRowValues);
     }
     
-    // Native Google Sheets Range Sort by Col C (Ngày) and Col E (Giờ BD)
-    lastRow = sheet.getLastRow();
-    if (lastRow >= 3) {
-      var dataRange = sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn());
-      dataRange.sort([
-        { column: 3, ascending: true },
-        { column: 5, ascending: true }
-      ]);
-    }
-    
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "Đã xử lý & loại bỏ trùng lặp!" }))
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "Đã đồng bộ sheet LỊCH TRAO ĐỔI thành công!" }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
@@ -395,18 +412,23 @@ export function submitToGoogleSheetViaHiddenForm(webhookUrl: string, event: Disc
     const fields: Record<string, string> = {
       action: 'addDiscussionEvent',
       scope: event.scope || 'P1',
-      dayOfWeek: event.dayOfWeek || 'THỨ BA',
+      dayOfWeek: event.dayOfWeek || 'Thứ 2',
       date: event.date || '18/08/2026',
       plannedStartTime: event.plannedStartTime || '18:00',
       plannedEndTime: event.plannedEndTime || '19:00',
       actualStartTime: event.actualStartTime || '',
       actualEndTime: event.actualEndTime || '',
+      plannedDuration: String(event.plannedDurationMinutes || ''),
+      actualDuration: String(event.actualDurationMinutes || ''),
+      inflationMins: String(event.inflationMinutes || ''),
+      inflationRate: event.inflationRate || '',
       title: event.title || '',
-      legalEntity: event.legalEntity || 'DH',
-      attendees: event.attendees || 'AV; AVG',
-      secretary: event.secretary || '2.1',
+      legalEntity: event.legalEntity || '-',
+      attendees: event.attendees || '',
+      secretary: event.secretary || '',
       status: event.status || 'Sắp tới',
-      notes: event.notes || ''
+      notes: event.notes || '',
+      conclusionDocUrl: event.conclusionDocUrl || ''
     };
 
     for (const [key, val] of Object.entries(fields)) {
@@ -653,6 +675,164 @@ export function parseMonthSheetUniversal(rows: string[][], tabName: string, mont
   return events;
 }
 
+export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEvent[]; overview?: LichTraoDoiSheetOverview } {
+  if (rows.length < 4) return { events: [] };
+
+  let overview: LichTraoDoiSheetOverview | undefined;
+
+  // Trích xuất thống kê tổng quan ở dòng 1 (hàng chỉ số: 31 cuộc, 1.450 phút kế hoạch, 137 phút lạm phát, 9,4%)
+  if (rows.length >= 2 && rows[1]) {
+    const r1 = rows[1];
+    const total = parseInt(r1[0]?.replace(/[^\d]/g, '') || '0', 10);
+    const planned = parseInt(r1[4]?.replace(/[^\d]/g, '') || '0', 10);
+    const actual = parseInt(r1[8]?.replace(/[^\d]/g, '') || '0', 10);
+    const inflation = parseInt(r1[12]?.replace(/[^\d-]/g, '') || '0', 10);
+    const rate = (r1[16] || '').trim();
+
+    if (total > 0 || planned > 0) {
+      overview = {
+        totalDiscussions: total,
+        plannedDurationMinutes: planned,
+        actualDurationMinutes: actual,
+        inflationMinutes: inflation,
+        inflationRate: rate
+      };
+      try {
+        localStorage.setItem('avg_lich_trao_doi_overview', JSON.stringify(overview));
+      } catch (e) {}
+    }
+  }
+
+  const events: DiscussionEvent[] = [];
+
+  // Quét các dòng dữ liệu (bỏ qua 4 dòng đầu header / tổng kết)
+  for (let i = 4; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || row.length < 4) continue;
+
+    // Tìm cột ngày tháng (dd/mm/yyyy)
+    let dateIdx = 3;
+    let rawDate = (row[dateIdx] || '').trim();
+    if (!/^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test(rawDate)) {
+      const foundIdx = row.findIndex(c => /^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test((c || '').trim()));
+      if (foundIdx !== -1) {
+        dateIdx = foundIdx;
+        rawDate = (row[dateIdx] || '').trim();
+      } else {
+        continue;
+      }
+    }
+
+    // Chuẩn hoá ngày DD/MM/YYYY
+    let dateStr = rawDate;
+    const dParts = dateStr.split('/');
+    if (dParts.length === 2) {
+      dateStr = `${dParts[0].padStart(2, '0')}/${dParts[1].padStart(2, '0')}/2026`;
+    } else if (dParts.length === 3) {
+      const yr = dParts[2].length === 2 ? `20${dParts[2]}` : dParts[2];
+      dateStr = `${dParts[0].padStart(2, '0')}/${dParts[1].padStart(2, '0')}/${yr}`;
+    }
+
+    // Cột 12: Nội dung / Chủ đề
+    let rawTitle = (row[12] || '').trim();
+    if (!rawTitle || rawTitle === 'Nội dung/ Chủ đề' || rawTitle === 'STT') {
+      const candidateTitle = row.find((c, cIdx) => cIdx !== dateIdx && cIdx > 6 && (c || '').trim().length > 3 && !/^\d+([.,]\d+)?%?$/.test(c.trim()));
+      if (candidateTitle) {
+        rawTitle = candidateTitle.trim();
+      } else {
+        continue;
+      }
+    }
+
+    // Giờ bắt đầu / kết thúc dự kiến và thực tế
+    const pStart = formatTimeWithoutSeconds(row[5] || '08:00');
+    const pEnd = formatTimeWithoutSeconds(row[6] || '09:00');
+    const aStart = formatTimeWithoutSeconds(row[8] || '');
+    const aEnd = formatTimeWithoutSeconds(row[9] || '');
+
+    const pDuration = parseInt((row[4] || '').replace(/[^\d]/g, ''), 10) || undefined;
+    const aDuration = parseInt((row[7] || '').replace(/[^\d]/g, ''), 10) || undefined;
+    const inflMins = parseInt((row[10] || '').replace(/[^\d-]/g, ''), 10) || undefined;
+    const inflRate = (row[11] || '').trim() || undefined;
+
+    const notes = (row[0] || '').trim();
+    const scope = (row[1] || '').trim() || 'P1';
+    const dayOfWeek = (row[2] || '').trim();
+    const legalEntity = (row[13] || '').trim() || '-';
+    const attendees = (row[14] || '').trim();
+    const secretary = (row[15] || '').trim();
+    
+    let status = (row[16] || '').trim();
+    if (!status) {
+      if (aStart && aStart !== '00:00' && aEnd && aEnd !== '00:00') {
+        status = 'Đã hoàn thành';
+      } else if (notes.toLowerCase().includes('huỷ') || notes.toLowerCase().includes('dời') || notes.toLowerCase().includes('không trao đổi')) {
+        status = 'Hoãn';
+      } else {
+        status = 'Sắp tới';
+      }
+    }
+
+    const documentCol = (row[17] || '').trim();
+    const conclusionDocUrl = (row[18] || '').trim();
+
+    const attachments: EventAttachment[] = [];
+    if (documentCol) {
+      attachments.push({
+        id: `att-doc-${i}`,
+        name: documentCol,
+        type: documentCol.startsWith('http') ? 'url' : 'file',
+        url: documentCol.startsWith('http') ? documentCol : GOOGLE_SHEET_EDIT_URL,
+        uploadedAt: dateStr
+      });
+    }
+    if (conclusionDocUrl && conclusionDocUrl.startsWith('http')) {
+      attachments.push({
+        id: `att-vbkl-${i}`,
+        name: 'Văn bản kết luận',
+        type: 'url',
+        url: conclusionDocUrl,
+        uploadedAt: dateStr
+      });
+    }
+
+    events.push({
+      id: `gsheet-ltd-${i}`,
+      stt: events.length + 1,
+      scope,
+      dayOfWeek: dayOfWeek.toUpperCase(),
+      date: dateStr,
+      plannedStartTime: pStart || '08:00',
+      plannedEndTime: pEnd || '09:00',
+      actualStartTime: aStart,
+      actualEndTime: aEnd,
+      plannedDurationMinutes: pDuration,
+      actualDurationMinutes: aDuration,
+      inflationMinutes: inflMins,
+      inflationRate: inflRate,
+      title: rawTitle,
+      legalEntity,
+      attendees,
+      secretary,
+      status,
+      notes,
+      conclusionDocUrl,
+      attachments: attachments.length > 0 ? attachments : undefined
+    });
+  }
+
+  return { events, overview };
+}
+
+export function getCachedLichTraoDoiOverview(): LichTraoDoiSheetOverview | null {
+  try {
+    const raw = localStorage.getItem('avg_lich_trao_doi_overview');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function fetchTabCSV(tabName: string): Promise<string | null> {
   const url = `${GOOGLE_SHEET_CSV_URL}&sheet=${encodeURIComponent(tabName)}`;
   try {
@@ -684,10 +864,31 @@ async function fetchMonthEvents(spec: { month: number; candidates: string[] }): 
 export async function fetchDiscussionEventsFromGoogleSheet(): Promise<DiscussionEvent[]> {
   try {
     const localEvents = getLocalDiscussionEvents();
+    let fetchedEvents: DiscussionEvent[] = [];
 
-    // Fetch all 12 monthly sheets concurrently in parallel (including all hidden sheets: Tháng 1, Tháng 2, ...)
-    const monthlyResults = await Promise.all(MONTH_TAB_SPECS.map(fetchMonthEvents));
-    let fetchedEvents: DiscussionEvent[] = monthlyResults.flat();
+    // 🎯 ƯU TIÊN SỐ 1 TUYỆT ĐỐI: Lấy trực tiếp từ tab LỊCH TRAO ĐỔI
+    const ltdCandidates = ['LỊCH TRAO ĐỔI', 'Lịch trao đổi', 'LICH TRAO DOI', 'LỊCH LÀM VIỆC 2026'];
+    for (const cand of ltdCandidates) {
+      try {
+        const csv = await fetchTabCSV(cand);
+        if (csv && csv.length > 100) {
+          const rows = parseCSVRows(csv);
+          const { events: ltdEvents } = parseLichTraoDoiSheet(rows);
+          if (ltdEvents && ltdEvents.length > 0) {
+            fetchedEvents = ltdEvents;
+            break;
+          }
+        }
+      } catch (err) {
+        console.warn(`Error fetching tab ${cand}:`, err);
+      }
+    }
+
+    // Fallback: Nếu không tìm thấy sheet LỊCH TRAO ĐỔI, quét các tháng
+    if (fetchedEvents.length === 0) {
+      const monthlyResults = await Promise.all(MONTH_TAB_SPECS.map(fetchMonthEvents));
+      fetchedEvents = monthlyResults.flat();
+    }
 
     // Fallback: If no monthly events found, try single URL
     if (fetchedEvents.length === 0) {
@@ -697,7 +898,12 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
           const fallbackCsv = await fallbackRes.text();
           const fallbackRows = parseCSVRows(fallbackCsv);
           if (fallbackRows.length > 1) {
-            fetchedEvents = parseMonthSheetUniversal(fallbackRows, 'Sheet 24/7', 10);
+            const { events: parsedLtd } = parseLichTraoDoiSheet(fallbackRows);
+            if (parsedLtd.length > 0) {
+              fetchedEvents = parsedLtd;
+            } else {
+              fetchedEvents = parseMonthSheetUniversal(fallbackRows, 'Sheet 24/7', 10);
+            }
           }
         }
       } catch (err) {
