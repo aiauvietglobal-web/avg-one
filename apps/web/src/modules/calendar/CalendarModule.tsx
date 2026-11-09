@@ -1935,6 +1935,7 @@ export const CalendarModule: React.FC = () => {
       dateRowSpan: number;
     }> = [];
 
+    const totalRows = filteredEvents.length;
     let globalIdx = 0;
     let groupIdx = 0;
     dateGroupsMap.forEach((groupEvents) => {
@@ -1942,7 +1943,7 @@ export const CalendarModule: React.FC = () => {
       groupEvents.forEach((evt, i) => {
         result.push({
           evt,
-          rowIndex: globalIdx + 1,
+          rowIndex: totalRows - globalIdx,
           dateGroupIndex: groupIdx,
           isFirstInDateGroup: i === 0,
           isLastInDateGroup: i === span - 1,
