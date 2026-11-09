@@ -2101,15 +2101,21 @@ export const CalendarModule: React.FC = () => {
   // 🎯 CASE 3: LỊCH TRAO ĐỔI VIEW (ACTIVE SUB APP === 'talk' OR DEFAULT SUB-APP VIEW)
   // ==============================================================================================
   return (
-    <div className="calendar-module-container w-full h-full flex-1 min-h-0 overflow-y-auto lg:overflow-hidden bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans p-2.5 sm:p-4 relative flex flex-col justify-between">
+    <div className={`calendar-module-container w-full h-full flex-1 min-h-0 overflow-y-auto lg:overflow-hidden text-[#1F2937] dark:text-slate-100 font-sans relative flex flex-col justify-between ${
+      viewMode === 'table'
+        ? 'bg-white dark:bg-slate-950 p-0'
+        : 'bg-slate-50/60 dark:bg-slate-950 p-2.5 sm:p-4'
+    }`}>
       {hiddenTriggers}
       
-      {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
-
-      {/* 🎨 AMBIENT GLOW ORBS */}
-      <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-      <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
+      {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER (Chỉ hiện ở chế độ Thẻ) */}
+      {viewMode !== 'table' && (
+        <>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
+          <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
+          <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
+        </>
+      )}
 
       {/* Toast Notification Banner */}
       {toastMessage && (
@@ -2119,25 +2125,25 @@ export const CalendarModule: React.FC = () => {
       )}
 
       {/* ============================================================================================== */}
-      {/* 📊 CHẾ ĐỘ XEM LƯỚI (VIEW MODE: 'table'): MÔ PHỎNG HÀNG & CỘT CHUẨN GOOGLE SHEET LỊCH TRAO ĐỔI */}
+      {/* 📊 CHẾ ĐỘ XEM LƯỚI (VIEW MODE: 'table'): THIẾT KẾ FULL NỀN, TINH GỌN, DỄ NHÌN */}
       {/* ============================================================================================== */}
       {viewMode === 'table' ? (
-        <div className="w-full h-full flex-1 min-h-0 flex flex-col gap-2.5 sm:gap-3 relative z-10 overflow-hidden">
+        <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-950 relative z-10 overflow-hidden">
           
-          {/* THANH CÔNG CỤ LỌC DỮ LIỆU & THAO TÁC NHANH TRÊN SHEET */}
-          <div className="flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-3 py-2 shadow-2xs flex flex-wrap items-center justify-between gap-2">
+          {/* THANH CÔNG CỤ LỌC DỮ LIỆU FULL NỀN PHÍA TRÊN */}
+          <div className="flex-shrink-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
             
             {/* Cụm tìm kiếm & Bộ lọc (Trái) */}
             <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
               {/* Ô tìm kiếm nhanh */}
-              <div className="relative min-w-[200px] sm:min-w-[250px] flex-1 max-w-xs">
+              <div className="relative min-w-[220px] sm:min-w-[260px] flex-1 max-w-xs">
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm nội dung, điều hành, thành phần, thư ký..."
-                  className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] font-medium transition"
+                  className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] font-medium transition"
                 />
                 {searchQuery && (
                   <button
@@ -2153,7 +2159,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
               >
                 <option value="2026">Năm 2026</option>
                 <option value="2025">Năm 2025</option>
@@ -2164,7 +2170,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedMonthOnly}
                 onChange={(e) => setSelectedMonthOnly(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
               >
                 <option value="ALL">Tất cả tháng</option>
                 <option value="01">Tháng 01</option>
@@ -2185,7 +2191,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedScope}
                 onChange={(e) => setSelectedScope(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
               >
                 <option value="ALL">Mọi phạm vi</option>
                 <option value="P1">Phạm vi: P1</option>
@@ -2197,7 +2203,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
               >
                 <option value="ALL">Mọi trạng thái</option>
                 <option value="GREEN">Đã hoàn thành</option>
@@ -2214,42 +2220,18 @@ export const CalendarModule: React.FC = () => {
                     setSelectedScope('ALL');
                     setSelectedStatus('ALL');
                   }}
-                  className="px-2.5 py-1.5 text-[11px] font-extrabold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-xl transition cursor-pointer"
+                  className="px-2.5 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-lg transition cursor-pointer"
                 >
-                  Xóa bộ lọc
+                  Xóa lọc
                 </button>
               )}
             </div>
 
             {/* Cụm nút hành động (Phải) */}
             <div className="flex items-center gap-2 shrink-0">
-              <a
-                href={GOOGLE_SHEET_EDIT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-2.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 text-xs font-extrabold inline-flex items-center gap-1.5 transition"
-              >
-                <FileSpreadsheet className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Mở Sheet gốc</span>
-                <ExternalLink className="w-3 h-3 opacity-70" />
-              </a>
-
-              <button
-                onClick={() => setShowTrashModal(true)}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold inline-flex items-center gap-1 transition cursor-pointer relative"
-                title="Thùng rác"
-              >
-                <Trash2 className="w-3.5 h-3.5 text-rose-500" />
-                {deletedEvents.length > 0 && (
-                  <span className="px-1.5 py-0.2 bg-rose-600 text-white text-[9px] rounded-full font-black">
-                    {deletedEvents.length}
-                  </span>
-                )}
-              </button>
-
               <button
                 onClick={handleOpenAddModal}
-                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#0077B6] via-[#0284C7] to-[#00A8E8] hover:from-[#005f92] hover:to-[#0284C7] text-white text-xs font-black shadow-xs hover:shadow-md transition inline-flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg bg-[#0284C7] hover:bg-[#0369a1] text-white text-xs font-extrabold shadow-xs transition inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Thêm Lịch Họp Mới</span>
@@ -2258,499 +2240,230 @@ export const CalendarModule: React.FC = () => {
 
           </div>
 
-          {/* 3. BẢNG TÍNH LƯỚI (MÔ PHỎNG ĐẦY ĐỦ 19 CỘT A -> S CỦA SHEET LỊCH TRAO ĐỔI) */}
-          <div className="flex-1 min-h-0 bg-white dark:bg-slate-900 border border-slate-200/95 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-            <div className="flex-1 overflow-auto scrollbar-thin relative">
-              <table className="w-full border-collapse text-left text-xs min-w-[2020px]">
-                
-                {/* STICKY 2-TIER HEADER CHUẨN CẤU TRÚC SHEET */}
-                <thead className="sticky top-0 z-20 select-none shadow-xs">
-                  {/* TẦNG 1: NHÓM CỘT (MERGED GROUPS) */}
-                  <tr className="text-[10px] font-black uppercase tracking-wider text-center">
-                    <th className="sticky left-0 z-30 bg-slate-900 text-slate-300 border-r border-b border-slate-700 px-2 py-1.5 w-11">
-                      DÒNG
-                    </th>
-                    <th colSpan={2} className="bg-slate-800 text-slate-200 border-r border-b border-slate-700 px-2 py-1.5">
-                      PHẠM VI & GHI CHÚ (A–B)
-                    </th>
-                    <th colSpan={2} className="bg-slate-800 text-sky-200 border-r border-b border-slate-700 px-2 py-1.5">
-                      THỜI GIAN TỔ CHỨC (C–D)
-                    </th>
-                    <th colSpan={3} className="bg-[#004E75] text-sky-100 border-r border-b border-sky-800 px-2 py-1.5">
-                      THỜI LƯỢNG KẾ HOẠCH (E–G)
-                    </th>
-                    <th colSpan={3} className="bg-[#065F46] text-emerald-100 border-r border-b border-emerald-800 px-2 py-1.5">
-                      THỜI GIAN THỰC TẾ (H–J)
-                    </th>
-                    <th colSpan={2} className="bg-[#9A3412] text-amber-100 border-r border-b border-orange-800 px-2 py-1.5">
-                      THỜI GIAN LẠM PHÁT (K–L)
-                    </th>
-                    <th colSpan={4} className="bg-[#003854] text-white border-r border-b border-slate-700 px-2 py-1.5">
-                      NỘI DUNG & NHÂN SỰ TRAO ĐỔI (M–P)
-                    </th>
-                    <th colSpan={3} className="bg-slate-800 text-emerald-200 border-r border-b border-slate-700 px-2 py-1.5">
-                      TRẠNG THÁI & HỒ SƠ VBKL (Q–S)
-                    </th>
-                    <th className="sticky right-0 z-30 bg-slate-900 text-slate-200 border-b border-slate-700 px-2.5 py-1.5 w-24">
-                      TÁC VỤ
-                    </th>
+          {/* BẢNG DỮ LIỆU LƯỚI FULL MÀN HÌNH, GỌN GÀNG, RÕ NÉT */}
+          <div className="flex-1 min-h-0 w-full overflow-auto scrollbar-thin bg-white dark:bg-slate-950">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="border-b-2 border-slate-200 dark:border-slate-800 text-[11.5px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300 select-none">
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-12">
+                    STT
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-28">
+                    Ngày
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-28">
+                    Phạm vi
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-36">
+                    Giờ dự kiến
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-36">
+                    Giờ thực tế
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-24">
+                    Phát sinh
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 min-w-[280px]">
+                    Nội dung / Chủ đề trao đổi
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-32">
+                    Điều hành
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 w-64">
+                    Thành phần tham dự
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-24">
+                    Thư ký
+                  </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 px-3 py-3 text-center w-32">
+                    Trạng thái
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800/80 text-[13px]">
+                {filteredEvents.length === 0 ? (
+                  <tr>
+                    <td colSpan={11} className="py-16 text-center text-slate-400 font-semibold text-sm">
+                      Không có lịch trao đổi nào phù hợp với bộ lọc hiện tại.
+                    </td>
                   </tr>
+                ) : (
+                  filteredEvents.map((evt, idx) => {
+                    const plannedMins = evt.plannedDurationMinutes !== undefined
+                      ? evt.plannedDurationMinutes
+                      : (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0);
+                    const actualMins = evt.actualDurationMinutes !== undefined
+                      ? evt.actualDurationMinutes
+                      : 0;
 
-                  {/* TẦNG 2: TÊN TỪNG CỘT CỤ THỂ (A -> S) */}
-                  <tr className="bg-slate-100 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 text-[11px] font-extrabold border-b-2 border-slate-300 dark:border-slate-700">
-                    {/* # */}
-                    <th className="sticky left-0 z-30 bg-slate-200/95 dark:bg-slate-800 text-center border-r border-slate-300 dark:border-slate-700 px-2 py-2 w-11 text-[10px] font-black text-slate-500">
-                      #
-                    </th>
-                    {/* Col A: Ghi chú */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[95px] max-w-[140px]">
-                      <div className="flex items-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">A</span>
-                        <span>Ghi chú</span>
-                      </div>
-                    </th>
-                    {/* Col B: Phạm vi */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[110px]">
-                      <div className="flex items-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">B</span>
-                        <span>Phạm vi</span>
-                      </div>
-                    </th>
-                    {/* Col C: Thứ */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center w-[84px]">
-                      <div className="flex items-center justify-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">C</span>
-                        <span>Thứ</span>
-                      </div>
-                    </th>
-                    {/* Col D: Ngày */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center w-[98px]">
-                      <div className="flex items-center justify-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">D</span>
-                        <span>Ngày</span>
-                      </div>
-                    </th>
-                    {/* Col E: Thời lượng dự kiến (phút) */}
-                    <th className="bg-sky-50/90 dark:bg-sky-950/60 text-sky-900 dark:text-sky-200 border-r border-sky-200/80 dark:border-sky-800/60 px-2 py-2 text-center w-[88px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-sky-200/80 dark:bg-sky-800 text-[9px] font-black text-sky-800 dark:text-sky-200 mb-0.5">E</span>
-                        <span>TL dự kiến</span>
-                        <span className="text-[9px] font-semibold opacity-75">(phút)</span>
-                      </div>
-                    </th>
-                    {/* Col F: Bắt đầu dự kiến */}
-                    <th className="bg-sky-50/90 dark:bg-sky-950/60 text-sky-900 dark:text-sky-200 border-r border-sky-200/80 dark:border-sky-800/60 px-2 py-2 text-center w-[82px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-sky-200/80 dark:bg-sky-800 text-[9px] font-black text-sky-800 dark:text-sky-200 mb-0.5">F</span>
-                        <span>Bắt đầu</span>
-                        <span className="text-[9px] font-semibold opacity-75">dự kiến</span>
-                      </div>
-                    </th>
-                    {/* Col G: Kết thúc dự kiến */}
-                    <th className="bg-sky-50/90 dark:bg-sky-950/60 text-sky-900 dark:text-sky-200 border-r border-sky-200/80 dark:border-sky-800/60 px-2 py-2 text-center w-[82px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-sky-200/80 dark:bg-sky-800 text-[9px] font-black text-sky-800 dark:text-sky-200 mb-0.5">G</span>
-                        <span>Kết thúc</span>
-                        <span className="text-[9px] font-semibold opacity-75">dự kiến</span>
-                      </div>
-                    </th>
-                    {/* Col H: Thời lượng thực tế (phút) */}
-                    <th className="bg-emerald-50/90 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-r border-emerald-200/80 dark:border-emerald-800/60 px-2 py-2 text-center w-[88px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-emerald-200/80 dark:bg-emerald-800 text-[9px] font-black text-emerald-800 dark:text-emerald-200 mb-0.5">H</span>
-                        <span>TL thực tế</span>
-                        <span className="text-[9px] font-semibold opacity-75">(phút)</span>
-                      </div>
-                    </th>
-                    {/* Col I: Bắt đầu thực tế */}
-                    <th className="bg-emerald-50/90 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-r border-emerald-200/80 dark:border-emerald-800/60 px-2 py-2 text-center w-[82px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-emerald-200/80 dark:bg-emerald-800 text-[9px] font-black text-emerald-800 dark:text-emerald-200 mb-0.5">I</span>
-                        <span>Bắt đầu</span>
-                        <span className="text-[9px] font-semibold opacity-75">thực tế</span>
-                      </div>
-                    </th>
-                    {/* Col J: Kết thúc thực tế */}
-                    <th className="bg-emerald-50/90 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-r border-emerald-200/80 dark:border-emerald-800/60 px-2 py-2 text-center w-[82px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-emerald-200/80 dark:bg-emerald-800 text-[9px] font-black text-emerald-800 dark:text-emerald-200 mb-0.5">J</span>
-                        <span>Kết thúc</span>
-                        <span className="text-[9px] font-semibold opacity-75">thực tế</span>
-                      </div>
-                    </th>
-                    {/* Col K: Phút phát sinh */}
-                    <th className="bg-orange-50/90 dark:bg-orange-950/60 text-orange-900 dark:text-orange-200 border-r border-orange-200/80 dark:border-orange-800/60 px-2 py-2 text-center w-[84px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-orange-200/80 dark:bg-orange-800 text-[9px] font-black text-orange-900 dark:text-orange-200 mb-0.5">K</span>
-                        <span>Phút</span>
-                        <span className="text-[9px] font-semibold opacity-75">phát sinh</span>
-                      </div>
-                    </th>
-                    {/* Col L: Tỷ lệ vượt KH */}
-                    <th className="bg-orange-50/90 dark:bg-orange-950/60 text-orange-900 dark:text-orange-200 border-r border-orange-200/80 dark:border-orange-800/60 px-2 py-2 text-center w-[88px]">
-                      <div className="flex flex-col items-center leading-tight">
-                        <span className="px-1 py-0.2 rounded bg-orange-200/80 dark:bg-orange-800 text-[9px] font-black text-orange-900 dark:text-orange-200 mb-0.5">L</span>
-                        <span>Tỷ lệ</span>
-                        <span className="text-[9px] font-semibold opacity-75">vượt KH</span>
-                      </div>
-                    </th>
-                    {/* Col M: Nội dung / Chủ đề */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-3 py-2 min-w-[300px] max-w-[400px]">
-                      <div className="flex items-center gap-1.5">
-                        <span className="px-1 py-0.2 rounded bg-[#003854] text-white text-[9px] font-black">M</span>
-                        <span>Nội dung / Chủ đề trao đổi</span>
-                      </div>
-                    </th>
-                    {/* Col N: Điều hành trao đổi */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[125px]">
-                      <div className="flex items-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">N</span>
-                        <span>Điều hành</span>
-                      </div>
-                    </th>
-                    {/* Col O: Thành phần tham dự */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-3 py-2 min-w-[230px] max-w-[320px]">
-                      <div className="flex items-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">O</span>
-                        <span>Thành phần tham dự</span>
-                      </div>
-                    </th>
-                    {/* Col P: Thư ký */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[105px]">
-                      <div className="flex items-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">P</span>
-                        <span>Thư ký</span>
-                      </div>
-                    </th>
-                    {/* Col Q: Trạng thái */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center min-w-[125px]">
-                      <div className="flex items-center justify-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">Q</span>
-                        <span>Trạng thái</span>
-                      </div>
-                    </th>
-                    {/* Col R: Tài liệu */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center min-w-[105px]">
-                      <div className="flex items-center justify-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">R</span>
-                        <span>Tài liệu</span>
-                      </div>
-                    </th>
-                    {/* Col S: Link VBKL */}
-                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center min-w-[125px]">
-                      <div className="flex items-center justify-center gap-1">
-                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">S</span>
-                        <span>Link VBKL</span>
-                      </div>
-                    </th>
-                    {/* Tác vụ */}
-                    <th className="sticky right-0 z-30 bg-slate-200/95 dark:bg-slate-800 text-center px-2 py-2 w-24 text-[10px] font-black text-slate-600 dark:text-slate-300">
-                      Thao tác
-                    </th>
-                  </tr>
-                </thead>
+                    const hasRealActualTime = Boolean(
+                      (evt.actualStartTime && evt.actualStartTime !== '00:00') ||
+                      (evt.actualEndTime && evt.actualEndTime !== '00:00') ||
+                      actualMins > 0
+                    );
 
-                {/* BODY: CÁC DÒNG DỮ LIỆU MÔ PHỎNG HỆT GOOGLE SHEET */}
-                <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800">
-                  {filteredEvents.length === 0 ? (
-                    <tr>
-                      <td colSpan={21} className="py-12 text-center text-slate-400 font-semibold text-sm">
-                        Không tìm thấy dòng dữ liệu nào phù hợp với bộ lọc hiện tại.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredEvents.map((evt, idx) => {
-                      const plannedMins = evt.plannedDurationMinutes !== undefined
-                        ? evt.plannedDurationMinutes
-                        : (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0);
-                      const actualMins = evt.actualDurationMinutes !== undefined
-                        ? evt.actualDurationMinutes
-                        : 0;
-                      const inflMins = evt.inflationMinutes !== undefined
-                        ? evt.inflationMinutes
-                        : (actualMins > 0 ? actualMins - plannedMins : 0);
-                      const inflRateDisplay = evt.inflationRate || (plannedMins > 0 ? `${((inflMins / plannedMins) * 100).toFixed(1).replace('.', ',')}%` : '0,0%');
+                    const inflMins = hasRealActualTime
+                      ? (evt.inflationMinutes !== undefined ? evt.inflationMinutes : actualMins - plannedMins)
+                      : 0;
 
-                      const rawStatus = (evt.status || '').trim();
-                      const isDone = rawStatus.toLowerCase().includes('hoàn thành') || rawStatus.toLowerCase().includes('đã');
-                      const isUpcoming = rawStatus.toLowerCase().includes('sắp') || (!isDone && !rawStatus.toLowerCase().includes('hủy'));
+                    const rawStatus = (evt.status || '').trim();
+                    const isDone = rawStatus.toLowerCase().includes('hoàn thành') || rawStatus.toLowerCase().includes('đã') || hasRealActualTime;
 
-                      const dayLower = (evt.dayOfWeek || '').toLowerCase();
-                      const isSunday = dayLower.includes('chủ nhật') || dayLower === 'cn';
-                      const isSaturday = dayLower.includes('thứ 7') || dayLower.includes('thứ bảy');
+                    const dayLower = (evt.dayOfWeek || '').toLowerCase();
+                    const isSunday = dayLower.includes('chủ nhật') || dayLower === 'cn';
+                    const isSaturday = dayLower.includes('thứ 7') || dayLower.includes('thứ bảy');
 
-                      const scopeStr = (evt.scope || '').trim();
-                      const scopeBadgeClass = scopeStr === 'P1'
-                        ? 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800'
-                        : scopeStr.toLowerCase().includes('zalo')
-                          ? 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800'
-                          : 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800';
+                    const scopeStr = (evt.scope || '').trim();
+                    const cleanHost = (evt.legalEntity || '').trim();
+                    const hasHost = cleanHost !== '' && cleanHost !== '-';
+                    const cleanSecretary = (evt.secretary || '').trim();
+                    const hasSecretary = cleanSecretary !== '' && cleanSecretary !== '-';
+                    const cleanNotes = (evt.notes || '').trim();
 
-                      return (
-                        <tr
-                          key={evt.id || idx}
-                          className="even:bg-slate-50/55 dark:even:bg-slate-800/25 hover:bg-sky-50/70 dark:hover:bg-sky-950/30 transition-colors group align-top"
-                        >
-                          {/* Cột chỉ số dòng (#) */}
-                          <td
-                            className="sticky left-0 z-10 bg-slate-100/95 dark:bg-slate-900/95 group-hover:bg-sky-100/90 dark:group-hover:bg-slate-800 border-r border-slate-200 dark:border-slate-800 px-2 py-2.5 text-center font-black text-[11px] text-slate-400 tabular-nums"
-                            title={`Dòng ${evt.sheetRowIndex || idx + 5} trên sheet LỊCH TRAO ĐỔI`}
-                          >
-                            {idx + 1}
-                          </td>
+                    return (
+                      <tr
+                        key={evt.id || idx}
+                        onClick={() => setSelectedEventDetail(evt)}
+                        className="even:bg-slate-50/60 dark:even:bg-slate-900/40 hover:bg-sky-50/70 dark:hover:bg-sky-950/30 transition-colors cursor-pointer align-middle"
+                      >
+                        {/* 1. STT */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-400 tabular-nums text-xs">
+                          {idx + 1}
+                        </td>
 
-                          {/* Col A: Ghi chú */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-[11px] text-slate-500 dark:text-slate-400 max-w-[140px] whitespace-pre-line">
-                            {evt.notes ? (
-                              <span className="line-clamp-3" title={evt.notes}>{evt.notes}</span>
-                            ) : (
-                              <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
-                            )}
-                          </td>
-
-                          {/* Col B: Phạm vi */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5">
-                            {scopeStr ? (
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-extrabold border ${scopeBadgeClass}`}>
-                                {scopeStr}
-                              </span>
-                            ) : (
-                              <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
-                            )}
-                          </td>
-
-                          {/* Col C: Thứ */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2 py-2.5 text-center whitespace-nowrap">
-                            <span className={`text-[11px] font-extrabold ${
-                              isSunday
-                                ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-1.5 py-0.5 rounded-md'
-                                : isSaturday
-                                  ? 'text-[#0284C7] dark:text-sky-400'
-                                  : 'text-slate-700 dark:text-slate-300'
-                            }`}>
-                              {evt.dayOfWeek}
-                            </span>
-                          </td>
-
-                          {/* Col D: Ngày */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center whitespace-nowrap font-bold text-slate-900 dark:text-slate-100 tabular-nums">
+                        {/* 2. Ngày & Thứ */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap">
+                          <div className="font-extrabold text-slate-900 dark:text-white tabular-nums text-[13px]">
                             {evt.date}
-                          </td>
+                          </div>
+                          <div className={`text-[11px] font-bold mt-0.5 ${
+                            isSunday
+                              ? 'text-rose-600 dark:text-rose-400'
+                              : isSaturday
+                                ? 'text-[#0284C7] dark:text-sky-400'
+                                : 'text-slate-500 dark:text-slate-400'
+                          }`}>
+                            {evt.dayOfWeek}
+                          </div>
+                        </td>
 
-                          {/* Col E: Thời lượng dự kiến (phút) */}
-                          <td className="border-r border-sky-100 dark:border-sky-900/40 bg-sky-50/25 dark:bg-sky-950/15 px-2 py-2.5 text-center font-black text-sky-700 dark:text-sky-300 tabular-nums">
-                            {plannedMins}
-                          </td>
+                        {/* 3. Phạm vi */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center">
+                          {scopeStr ? (
+                            <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                              {scopeStr}
+                            </span>
+                          ) : null}
+                        </td>
 
-                          {/* Col F: Bắt đầu dự kiến */}
-                          <td className="border-r border-sky-100 dark:border-sky-900/40 bg-sky-50/15 dark:bg-sky-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
-                            {evt.plannedStartTime || '—'}
-                          </td>
-
-                          {/* Col G: Kết thúc dự kiến */}
-                          <td className="border-r border-sky-100 dark:border-sky-900/40 bg-sky-50/15 dark:bg-sky-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
-                            {evt.plannedEndTime || '—'}
-                          </td>
-
-                          {/* Col H: Thời lượng thực tế (phút) */}
-                          <td className="border-r border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/25 dark:bg-emerald-950/15 px-2 py-2.5 text-center font-black text-teal-700 dark:text-teal-300 tabular-nums">
-                            {actualMins}
-                          </td>
-
-                          {/* Col I: Bắt đầu thực tế */}
-                          <td className="border-r border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/15 dark:bg-emerald-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
-                            {evt.actualStartTime || <span className="text-slate-300 dark:text-slate-600">—</span>}
-                          </td>
-
-                          {/* Col J: Kết thúc thực tế */}
-                          <td className="border-r border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/15 dark:bg-emerald-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
-                            {evt.actualEndTime || <span className="text-slate-300 dark:text-slate-600">—</span>}
-                          </td>
-
-                          {/* Col K: Phút phát sinh */}
-                          <td className="border-r border-orange-100 dark:border-orange-900/40 bg-orange-50/20 dark:bg-orange-950/10 px-2 py-2.5 text-center tabular-nums">
-                            {inflMins > 0 ? (
-                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-orange-100 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-400 font-black text-[11px] border border-orange-200 dark:border-orange-800/70">
-                                +{inflMins}
-                              </span>
-                            ) : inflMins < 0 ? (
-                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-black text-[11px] border border-emerald-200 dark:border-emerald-800/70">
-                                {inflMins}
-                              </span>
-                            ) : (
-                              <span className="text-slate-500 dark:text-slate-400 font-bold">0</span>
-                            )}
-                          </td>
-
-                          {/* Col L: Tỷ lệ vượt KH */}
-                          <td className="border-r border-orange-100 dark:border-orange-900/40 bg-orange-50/20 dark:bg-orange-950/10 px-2 py-2.5 text-center tabular-nums">
-                            {inflMins > 0 ? (
-                              <span className="font-black text-[#F15A24] dark:text-orange-400 text-[11px]">
-                                {inflRateDisplay}
-                              </span>
-                            ) : inflMins < 0 ? (
-                              <span className="font-black text-emerald-600 dark:text-emerald-400 text-[11px]">
-                                {inflRateDisplay}
-                              </span>
-                            ) : (
-                              <span className="text-slate-500 dark:text-slate-400 font-semibold text-[11px]">
-                                {inflRateDisplay}
-                              </span>
-                            )}
-                          </td>
-
-                          {/* Col M: Nội dung / Chủ đề */}
-                          <td
-                            onClick={() => setSelectedEventDetail(evt)}
-                            className="border-r border-slate-200/80 dark:border-slate-800 px-3 py-2.5 min-w-[300px] max-w-[400px] whitespace-pre-line font-bold text-slate-900 dark:text-white leading-relaxed cursor-pointer hover:text-[#0284C7] dark:hover:text-sky-400 transition-colors"
-                          >
-                            {evt.title}
-                          </td>
-
-                          {/* Col N: Điều hành trao đổi */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 whitespace-nowrap">
-                            {evt.legalEntity ? (
-                              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-extrabold text-[11px]">
-                                <User className="w-3 h-3 text-[#0284C7] shrink-0" />
-                                <span>{evt.legalEntity}</span>
+                        {/* 4. Giờ dự kiến */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
+                          {evt.plannedStartTime || evt.plannedEndTime ? (
+                            <div>
+                              <div className="font-bold text-slate-800 dark:text-slate-200 text-[13px]">
+                                {evt.plannedStartTime} – {evt.plannedEndTime}
                               </div>
-                            ) : (
-                              <span className="text-slate-300 dark:text-slate-700">—</span>
-                            )}
-                          </td>
-
-                          {/* Col O: Thành phần tham dự */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-3 py-2.5 min-w-[230px] max-w-[320px] whitespace-pre-line text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
-                            {evt.attendees || <span className="text-slate-300 dark:text-slate-700">—</span>}
-                          </td>
-
-                          {/* Col P: Thư ký */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 whitespace-nowrap">
-                            {evt.secretary ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-50/80 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/70 dark:border-amber-800/60 font-bold text-[11px]">
-                                <PenTool className="w-2.5 h-2.5 shrink-0" />
-                                <span>{evt.secretary}</span>
-                              </span>
-                            ) : (
-                              <span className="text-slate-300 dark:text-slate-700">—</span>
-                            )}
-                          </td>
-
-                          {/* Col Q: Trạng thái */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center whitespace-nowrap">
-                            {isDone ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 text-[10.5px] font-extrabold">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
-                                <span>{rawStatus || 'Đã hoàn thành'}</span>
-                              </span>
-                            ) : isUpcoming ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/80 text-[10.5px] font-extrabold">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
-                                <span>{rawStatus || 'Sắp diễn ra'}</span>
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 text-[10.5px] font-extrabold">
-                                <span>{rawStatus}</span>
-                              </span>
-                            )}
-                          </td>
-
-                          {/* Col R: Tài liệu */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center">
-                            {evt.documentText ? (
-                              <button
-                                onClick={() => setActiveAttachmentEvent(evt)}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[10.5px] font-bold hover:bg-sky-100 transition cursor-pointer max-w-[120px] truncate"
-                                title={evt.documentText}
-                              >
-                                <Paperclip className="w-3 h-3 shrink-0" />
-                                <span className="truncate">{evt.documentText}</span>
-                              </button>
-                            ) : (evt.attachments && evt.attachments.length > 0) ? (
-                              <button
-                                onClick={() => setActiveAttachmentEvent(evt)}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[10.5px] font-bold hover:bg-sky-100 transition cursor-pointer"
-                              >
-                                <Paperclip className="w-3 h-3 shrink-0" />
-                                <span>{evt.attachments.length} tệp</span>
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => setActiveAttachmentEvent(evt)}
-                                className="text-[10.5px] font-semibold text-slate-400 hover:text-[#0284C7] dark:hover:text-sky-400 transition cursor-pointer"
-                                title="Đính kèm tài liệu"
-                              >
-                                + Đính kèm
-                              </button>
-                            )}
-                          </td>
-
-                          {/* Col S: Link VBKL */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center max-w-[180px]">
-                            {evt.conclusionDocUrl ? (
-                              evt.conclusionDocUrl.startsWith('http') ? (
-                                <a
-                                  href={evt.conclusionDocUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#0077B6] to-[#0284C7] hover:from-[#005f92] hover:to-[#0077B6] text-white text-[10.5px] font-extrabold shadow-2xs transition whitespace-nowrap"
-                                  title={evt.conclusionDocUrl}
-                                >
-                                  <FileText className="w-3 h-3 shrink-0" />
-                                  <span>Mở VBKL</span>
-                                  <ExternalLink className="w-2.5 h-2.5 opacity-80 shrink-0" />
-                                </a>
-                              ) : (
-                                <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 line-clamp-2 text-left block" title={evt.conclusionDocUrl}>
-                                  {evt.conclusionDocUrl}
-                                </span>
-                              )
-                            ) : (
-                              <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
-                            )}
-                          </td>
-
-                          {/* Cột Thao tác (Sticky Right) */}
-                          <td className="sticky right-0 z-10 bg-white/95 dark:bg-slate-900/95 group-hover:bg-sky-50/95 dark:group-hover:bg-slate-800 px-2 py-2.5 text-center">
-                            <div className="flex items-center justify-center gap-1">
-                              <button
-                                onClick={() => setSelectedEventDetail(evt)}
-                                title="Xem chi tiết"
-                                className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-[#0284C7] hover:text-white text-slate-600 dark:text-slate-300 transition cursor-pointer"
-                              >
-                                <Eye className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => setEditingEvent({ ...evt })}
-                                title="Chỉnh sửa dòng"
-                                className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500 hover:text-white text-slate-600 dark:text-slate-300 transition cursor-pointer"
-                              >
-                                <PenTool className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleOpenTranscribe(evt)}
-                                title="Thư ký AI gỡ băng & trích xuất VBKL"
-                                className="p-1.5 rounded-lg bg-orange-50 dark:bg-orange-950/60 hover:bg-[#F15A24] hover:text-white text-[#F15A24] transition cursor-pointer"
-                              >
-                                <Mic className="w-3.5 h-3.5" />
-                              </button>
-                              <button
-                                onClick={() => handleMoveToTrash(evt)}
-                                title="Chuyển vào thùng rác"
-                                className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 transition cursor-pointer"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+                              {plannedMins > 0 && (
+                                <div className="text-[11px] font-semibold text-slate-400">
+                                  {plannedMins} phút
+                                </div>
+                              )}
                             </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
+                          ) : null}
+                        </td>
 
-              </table>
-            </div>
+                        {/* 5. Giờ thực tế */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
+                          {hasRealActualTime ? (
+                            <div>
+                              {evt.actualStartTime && evt.actualStartTime !== '00:00' && (
+                                <div className="font-bold text-teal-700 dark:text-teal-300 text-[13px]">
+                                  {evt.actualStartTime} – {evt.actualEndTime}
+                                </div>
+                              )}
+                              {actualMins > 0 && (
+                                <div className="text-[11px] font-semibold text-teal-600/80 dark:text-teal-400">
+                                  {actualMins} phút
+                                </div>
+                              )}
+                            </div>
+                          ) : null}
+                        </td>
+
+                        {/* 6. Phát sinh */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
+                          {hasRealActualTime && inflMins > 0 ? (
+                            <span className="inline-block px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/70 text-[#F15A24] dark:text-orange-400 font-extrabold text-xs border border-orange-200/80 dark:border-orange-800/60">
+                              +{inflMins}p
+                            </span>
+                          ) : hasRealActualTime && inflMins < 0 ? (
+                            <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 font-extrabold text-xs border border-emerald-200/80 dark:border-emerald-800/60">
+                              {inflMins}p
+                            </span>
+                          ) : null}
+                        </td>
+
+                        {/* 7. Nội dung / Chủ đề trao đổi */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-4 py-3">
+                          <div className="font-bold text-slate-900 dark:text-white whitespace-pre-line leading-snug text-[13.5px]">
+                            {evt.title}
+                          </div>
+                          {cleanNotes && (
+                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 italic whitespace-pre-line">
+                              Ghi chú: {cleanNotes}
+                            </div>
+                          )}
+                          {evt.conclusionDocUrl && evt.conclusionDocUrl.startsWith('http') && (
+                            <div className="mt-1.5" onClick={(e) => e.stopPropagation()}>
+                              <a
+                                href={evt.conclusionDocUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 text-xs font-extrabold text-[#0284C7] hover:underline"
+                              >
+                                <FileText className="w-3.5 h-3.5" />
+                                <span>Xem Văn bản kết luận (VBKL) ↗</span>
+                              </a>
+                            </div>
+                          )}
+                        </td>
+
+                        {/* 8. Điều hành */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-800 dark:text-slate-200">
+                          {hasHost ? cleanHost : null}
+                        </td>
+
+                        {/* 9. Thành phần tham dự */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-4 py-3 whitespace-pre-line text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                          {evt.attendees || null}
+                        </td>
+
+                        {/* 10. Thư ký */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-700 dark:text-slate-300">
+                          {hasSecretary ? cleanSecretary : null}
+                        </td>
+
+                        {/* 11. Trạng thái */}
+                        <td className="px-3 py-3 text-center whitespace-nowrap">
+                          {isDone ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span>Đã hoàn thành</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              <span>{rawStatus || 'Sắp tới'}</span>
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
 
         </div>
