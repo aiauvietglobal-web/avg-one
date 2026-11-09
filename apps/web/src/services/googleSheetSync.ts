@@ -24,12 +24,14 @@ export interface DiscussionEvent {
   notes?: string;
   legalEntity?: string;
   status?: string;
+  documentText?: string;
   conclusionDocUrl?: string;
   attachments?: EventAttachment[];
   plannedDurationMinutes?: number;
   actualDurationMinutes?: number;
   inflationMinutes?: number;
   inflationRate?: string;
+  sheetRowIndex?: number;
 }
 
 export interface LichTraoDoiSheetOverview {
@@ -750,13 +752,16 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     const aStart = formatTimeWithoutSeconds(row[8] || '');
     const aEnd = formatTimeWithoutSeconds(row[9] || '');
 
-    const pDuration = parseInt((row[4] || '').replace(/[^\d]/g, ''), 10) || undefined;
-    const aDuration = parseInt((row[7] || '').replace(/[^\d]/g, ''), 10) || undefined;
-    const inflMins = parseInt((row[10] || '').replace(/[^\d-]/g, ''), 10) || undefined;
+    const rawPDuration = (row[4] || '').replace(/[^\d]/g, '');
+    const pDuration = rawPDuration !== '' ? parseInt(rawPDuration, 10) : undefined;
+    const rawADuration = (row[7] || '').replace(/[^\d]/g, '');
+    const aDuration = rawADuration !== '' ? parseInt(rawADuration, 10) : undefined;
+    const rawInflMins = (row[10] || '').replace(/[^\d-]/g, '');
+    const inflMins = rawInflMins !== '' && rawInflMins !== '-' ? parseInt(rawInflMins, 10) : undefined;
     const inflRate = (row[11] || '').trim() || undefined;
 
     const notes = (row[0] || '').trim();
-    const scope = (row[1] || '').trim() || 'P1';
+    const scope = (row[1] || '').trim();
     const dayOfWeek = (row[2] || '').trim();
     const legalEntity = (row[13] || '').trim() || '-';
     const attendees = (row[14] || '').trim();
@@ -799,11 +804,12 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     events.push({
       id: `gsheet-ltd-${i}`,
       stt: events.length + 1,
+      sheetRowIndex: i + 1,
       scope,
       dayOfWeek: dayOfWeek.toUpperCase(),
       date: dateStr,
-      plannedStartTime: pStart || '08:00',
-      plannedEndTime: pEnd || '09:00',
+      plannedStartTime: pStart || '',
+      plannedEndTime: pEnd || '',
       actualStartTime: aStart,
       actualEndTime: aEnd,
       plannedDurationMinutes: pDuration,
@@ -816,6 +822,7 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
       secretary,
       status,
       notes,
+      documentText: documentCol,
       conclusionDocUrl,
       attachments: attachments.length > 0 ? attachments : undefined
     });

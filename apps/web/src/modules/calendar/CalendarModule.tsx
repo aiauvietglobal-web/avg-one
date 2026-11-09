@@ -39,6 +39,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
   {
     "id": "gsheet-ltd-4",
     "stt": 1,
+    "sheetRowIndex": 5,
     "scope": "P1",
     "dayOfWeek": "THỨ 2",
     "date": "09/11/2026",
@@ -53,11 +54,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "",
     "status": "Sắp tới",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-5",
     "stt": 2,
+    "sheetRowIndex": 6,
     "scope": "P1",
     "dayOfWeek": "THỨ 2",
     "date": "09/11/2026",
@@ -72,11 +75,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Sắp tới",
     "notes": "#K1; ông Huy tham gia online",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-6",
     "stt": 3,
+    "sheetRowIndex": 7,
     "scope": "Phòng làm việc bà Trang",
     "dayOfWeek": "THỨ 3",
     "date": "10/11/2026",
@@ -91,12 +96,14 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "",
     "status": "Sắp tới",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": "1. Mẫu hương liệu, lưu ý sử dụng hạt lưu hương;\n2. Tiếp tục thúc đẩy KH enzyme."
   },
   {
     "id": "gsheet-ltd-7",
     "stt": 4,
-    "scope": "P1",
+    "sheetRowIndex": 8,
+    "scope": "",
     "dayOfWeek": "THỨ 3",
     "date": "10/11/2026",
     "plannedStartTime": "12:00",
@@ -110,11 +117,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "Chiều nghỉ => con người HJ phụ trách đầu mối AVG đi dự tiệc của AV mời (đối ngoại)",
+    "documentText": "",
     "conclusionDocUrl": "Tổng kết công việc thường ngày"
   },
   {
     "id": "gsheet-ltd-8",
     "stt": 5,
+    "sheetRowIndex": 9,
     "scope": "P1",
     "dayOfWeek": "THỨ 3",
     "date": "10/11/2026",
@@ -129,11 +138,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Sắp tới",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": "Tổng kết công việc thường ngày"
   },
   {
     "id": "gsheet-ltd-9",
     "stt": 6,
+    "sheetRowIndex": 10,
     "scope": "P1",
     "dayOfWeek": "CHỦ NHẬT",
     "date": "08/11/2026",
@@ -151,11 +162,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-10",
     "stt": 7,
+    "sheetRowIndex": 11,
     "scope": "Phòng làm việc bà Trang",
     "dayOfWeek": "THỨ 7",
     "date": "07/11/2026",
@@ -173,16 +186,18 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-11",
     "stt": 8,
-    "scope": "P1",
+    "sheetRowIndex": 12,
+    "scope": "",
     "dayOfWeek": "THỨ 7",
     "date": "07/11/2026",
-    "plannedStartTime": "08:00",
-    "plannedEndTime": "09:00",
+    "plannedStartTime": "",
+    "plannedEndTime": "",
     "actualStartTime": "",
     "actualEndTime": "",
     "title": "Tổng kết công việc thường ngày",
@@ -191,12 +206,14 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "Chiều nghỉ => con người HJ phụ trách đầu mối AVG đi dự tiệc của AV mời (đối ngoại)",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-12",
     "stt": 9,
-    "scope": "P1",
+    "sheetRowIndex": 13,
+    "scope": "",
     "dayOfWeek": "THỨ 6",
     "date": "06/11/2026",
     "plannedStartTime": "20:30",
@@ -205,6 +222,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "21:30",
     "plannedDurationMinutes": 60,
     "actualDurationMinutes": 60,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Đơn vị đo; thước đo",
     "legalEntity": "-",
@@ -212,12 +230,14 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-13",
     "stt": 10,
-    "scope": "P1",
+    "sheetRowIndex": 14,
+    "scope": "",
     "dayOfWeek": "THỨ 6",
     "date": "06/11/2026",
     "plannedStartTime": "16:00",
@@ -234,11 +254,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "- #K1 online; \n-",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-14",
     "stt": 11,
+    "sheetRowIndex": 15,
     "scope": "Zalo",
     "dayOfWeek": "THỨ 6",
     "date": "06/11/2026",
@@ -248,6 +270,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "15:30",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
     "legalEntity": "-",
@@ -255,12 +278,14 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-15",
     "stt": 12,
-    "scope": "P1",
+    "sheetRowIndex": 16,
+    "scope": "",
     "dayOfWeek": "THỨ 6",
     "date": "06/11/2026",
     "plannedStartTime": "14:00",
@@ -269,6 +294,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "14:30",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Trao đổi cụm 5",
     "legalEntity": "-",
@@ -276,12 +302,14 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-16",
     "stt": 13,
-    "scope": "P1",
+    "sheetRowIndex": 17,
+    "scope": "",
     "dayOfWeek": "THỨ 5",
     "date": "05/11/2026",
     "plannedStartTime": "20:30",
@@ -295,11 +323,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Hoãn",
     "notes": "0; 8 nghỉ => không trao đổi",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-17",
     "stt": 14,
+    "sheetRowIndex": 18,
     "scope": "P1",
     "dayOfWeek": "THỨ 5",
     "date": "05/11/2026",
@@ -317,11 +347,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "- #K1 online; \n- Ông Huy không tham gia",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-18",
     "stt": 15,
+    "sheetRowIndex": 19,
     "scope": "P1",
     "dayOfWeek": "THỨ 5",
     "date": "05/11/2026",
@@ -336,11 +368,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-19",
     "stt": 16,
+    "sheetRowIndex": 20,
     "scope": "Phòng làm việc tầng 2",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -355,11 +389,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "Đã tích hợp vào thời gian lúc 17h30 trao đổi",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-20",
     "stt": 17,
+    "sheetRowIndex": 21,
     "scope": "P1",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -369,6 +405,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "18:30",
     "plannedDurationMinutes": 60,
     "actualDurationMinutes": 60,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "- Liệt kê các đơn vị đo lõi của nhà sản 3.1 \n- Các vấn đề #; 0; 8 đã, đang và chưa xử lý được trong các đơn vị đo trên các BM đặt hàng phẩm 3.1 hiện tại đang sử dụng.",
     "legalEntity": "#",
@@ -376,11 +413,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "9",
     "status": "Đã hoàn thành",
     "notes": "Cụm 5 tham gia",
+    "documentText": "BM PHẨM 3.1",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-21",
     "stt": 18,
+    "sheetRowIndex": 22,
     "scope": "P1",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -390,6 +429,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "17:30",
     "plannedDurationMinutes": 90,
     "actualDurationMinutes": 90,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Tổng kết công việc thường ngày",
     "legalEntity": "Kiến",
@@ -397,11 +437,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "- #K1 online; \n- Ông Huy không tham gia",
+    "documentText": "",
     "conclusionDocUrl": "Tổng kết công việc thường ngày"
   },
   {
     "id": "gsheet-ltd-22",
     "stt": 19,
+    "sheetRowIndex": 23,
     "scope": "Zalo",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -416,11 +458,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-23",
     "stt": 20,
+    "sheetRowIndex": 24,
     "scope": "P1",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -435,11 +479,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-24",
     "stt": 21,
+    "sheetRowIndex": 25,
     "scope": "P1",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -449,6 +495,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "10:30",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Hội đồng công việc",
     "legalEntity": "#K2",
@@ -456,11 +503,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "Định hình, làm rõ trách nhiệm sau khi trao đổi với DH",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-25",
     "stt": 22,
+    "sheetRowIndex": 26,
     "scope": "P1",
     "dayOfWeek": "THỨ 4",
     "date": "04/11/2026",
@@ -478,11 +527,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "#K2T",
     "status": "Đã hoàn thành",
     "notes": "DH online",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-26",
     "stt": 23,
+    "sheetRowIndex": 27,
     "scope": "P1",
     "dayOfWeek": "THỨ 3",
     "date": "03/11/2026",
@@ -500,11 +551,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "5.1T",
     "status": "Đã hoàn thành",
     "notes": "1 online",
+    "documentText": "",
     "conclusionDocUrl": "03/11/2026 - VBKL Hội đồng công việc: “xử lý khủng hoảng sai số công bố trong đơn hàng Thiết kế"
   },
   {
     "id": "gsheet-ltd-27",
     "stt": 24,
+    "sheetRowIndex": 28,
     "scope": "P1",
     "dayOfWeek": "THỨ 3",
     "date": "03/11/2026",
@@ -514,6 +567,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "17:30",
     "plannedDurationMinutes": 90,
     "actualDurationMinutes": 90,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Tổng kết công việc thường ngày",
     "legalEntity": "Kiến",
@@ -521,11 +575,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": "Tổng kết công việc thường ngày"
   },
   {
     "id": "gsheet-ltd-28",
     "stt": 25,
+    "sheetRowIndex": 29,
     "scope": "P1",
     "dayOfWeek": "THỨ 3",
     "date": "03/11/2026",
@@ -535,6 +591,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "15:30",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
     "legalEntity": "-",
@@ -542,11 +599,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-29",
     "stt": 26,
+    "sheetRowIndex": 30,
     "scope": "P1",
     "dayOfWeek": "THỨ 3",
     "date": "03/11/2026",
@@ -555,6 +614,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualStartTime": "00:00",
     "actualEndTime": "00:00",
     "plannedDurationMinutes": 30,
+    "actualDurationMinutes": 0,
     "inflationMinutes": -30,
     "inflationRate": "-100,0%",
     "title": "Trao đổi cụm 5",
@@ -563,12 +623,14 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Sắp tới",
     "notes": "Khong trao đổi để xử lý khủng khoảng Thảo Nguyên và xử lý việc thường xuyên",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-30",
     "stt": 27,
-    "scope": "P1",
+    "sheetRowIndex": 31,
+    "scope": "",
     "dayOfWeek": "THỨ 3",
     "date": "03/11/2026",
     "plannedStartTime": "11:30",
@@ -577,6 +639,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "12:00",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Đơn vị đo",
     "legalEntity": "-",
@@ -584,11 +647,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-31",
     "stt": 28,
+    "sheetRowIndex": 32,
     "scope": "P1",
     "dayOfWeek": "THỨ 2",
     "date": "02/11/2026",
@@ -606,11 +671,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "Kiến",
     "status": "Đã hoàn thành",
     "notes": "- Ông Huy không tham gia \n- #K1 online",
+    "documentText": "",
     "conclusionDocUrl": "Tổng kết công việc thường ngày"
   },
   {
     "id": "gsheet-ltd-32",
     "stt": 29,
+    "sheetRowIndex": 33,
     "scope": "Zalo",
     "dayOfWeek": "THỨ 2",
     "date": "02/11/2026",
@@ -620,6 +687,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "15:30",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "5.1B trao đổi thường xuyên với KTV nhà máy (ông Thủy)",
     "legalEntity": "-",
@@ -627,11 +695,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-33",
     "stt": 30,
+    "sheetRowIndex": 34,
     "scope": "P1",
     "dayOfWeek": "THỨ 2",
     "date": "02/11/2026",
@@ -641,6 +711,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "actualEndTime": "15:00",
     "plannedDurationMinutes": 30,
     "actualDurationMinutes": 30,
+    "inflationMinutes": 0,
     "inflationRate": "0,0%",
     "title": "Trao đổi cụm 5",
     "legalEntity": "-",
@@ -648,11 +719,13 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   },
   {
     "id": "gsheet-ltd-34",
     "stt": 31,
+    "sheetRowIndex": 35,
     "scope": "P1",
     "dayOfWeek": "THỨ 2",
     "date": "02/11/2026",
@@ -670,6 +743,7 @@ const INITIAL_EVENTS: DiscussionEvent[] = [
     "secretary": "-",
     "status": "Đã hoàn thành",
     "notes": "",
+    "documentText": "",
     "conclusionDocUrl": ""
   }
 ];
@@ -880,10 +954,10 @@ export const CalendarModule: React.FC = () => {
   // View Modes: 'day' (Thẻ / Timeline View) | 'month' (Lưới / Month Matrix) | 'table' (Bảng Bảng Tính)
   const [viewMode, setViewMode] = useState<'day' | 'month' | 'table'>('day');
   
-  // Selected Date, Year & Month Filters (Defaulting to real-time current date)
+  // Selected Date, Year & Month Filters (Defaulting to ALL months in current year so all 31 sheet rows are visible)
   const [currentDateStr, setCurrentDateStr] = useState<string>(() => realTimeStr.dateStr);
-  const [selectedYear, setSelectedYear] = useState<string>(() => realTimeStr.year);
-  const [selectedMonthOnly, setSelectedMonthOnly] = useState<string>(() => realTimeStr.month);
+  const [selectedYear, setSelectedYear] = useState<string>(() => realTimeStr.year || '2026');
+  const [selectedMonthOnly, setSelectedMonthOnly] = useState<string>('ALL');
   const [selectedDayOnly, setSelectedDayOnly] = useState<string>('ALL');
   const [selectedMonth, setSelectedMonth] = useState<string>(() => realTimeStr.monthYearStr);
   const [showAllDates, setShowAllDates] = useState<boolean>(false);
@@ -1512,27 +1586,14 @@ export const CalendarModule: React.FC = () => {
     let actualMinutes = plannedMinutes;
     let hasActual = false;
 
-    if (evt.actualDurationMinutes !== undefined && evt.actualDurationMinutes > 0) {
+    if (evt.actualDurationMinutes !== undefined) {
       actualMinutes = evt.actualDurationMinutes;
-      hasActual = true;
+      hasActual = evt.actualDurationMinutes > 0;
     } else if (aStart !== null && aEnd !== null && aStart !== aEnd) {
       let diff = aEnd - aStart;
       if (diff <= 0) diff += 24 * 60;
       actualMinutes = diff;
       hasActual = true;
-    } else {
-      const isCompleted = evt.status?.toLowerCase().includes('hoàn thành') || evt.status?.toLowerCase().includes('đã');
-      if (isCompleted) {
-        const hash = ((evt.title || '').length + (evt.stt || 1) * 7) % 10;
-        if (hash >= 4) {
-          const extraMinutes = [15, 20, 25, 35, 45][hash % 5];
-          actualMinutes = plannedMinutes + extraMinutes;
-          hasActual = true;
-        } else if (hash === 1) {
-          actualMinutes = Math.max(30, plannedMinutes - 10);
-          hasActual = true;
-        }
-      }
     }
 
     const inflationMinutes = evt.inflationMinutes !== undefined ? evt.inflationMinutes : actualMinutes - plannedMinutes;
@@ -1803,8 +1864,56 @@ export const CalendarModule: React.FC = () => {
     if (searchQuery.trim() !== '' || showAllDates) {
       return filteredEvents;
     }
-    return filteredEvents.filter(e => e.date === currentDateStr);
+    const exactMatches = filteredEvents.filter(e => e.date === currentDateStr);
+    return exactMatches.length > 0 ? exactMatches : filteredEvents;
   }, [filteredEvents, searchQuery, showAllDates, currentDateStr]);
+
+  // Tổng hợp chỉ số y hệt 3 dòng đầu tiên của Google Sheet LỊCH TRAO ĐỔI
+  const sheetGridSummary = useMemo(() => {
+    let totalPlanned = 0;
+    let totalActual = 0;
+    let netInflation = 0;
+    let completedCount = 0;
+    let withConclusionCount = 0;
+
+    filteredEvents.forEach((evt) => {
+      const planned = evt.plannedDurationMinutes !== undefined
+        ? evt.plannedDurationMinutes
+        : (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0);
+      const actual = evt.actualDurationMinutes !== undefined
+        ? evt.actualDurationMinutes
+        : 0;
+      const infl = evt.inflationMinutes !== undefined
+        ? evt.inflationMinutes
+        : (actual > 0 ? actual - planned : 0);
+
+      totalPlanned += planned;
+      totalActual += actual;
+      netInflation += infl;
+
+      const s = (evt.status || '').toLowerCase();
+      if (s.includes('hoàn thành') || s.includes('đã')) {
+        completedCount++;
+      }
+      if (evt.conclusionDocUrl && evt.conclusionDocUrl.trim() !== '') {
+        withConclusionCount++;
+      }
+    });
+
+    const inflationRateNum = totalPlanned > 0 ? (netInflation / totalPlanned) * 100 : 0;
+    const inflationRateStr = `${inflationRateNum.toFixed(1).replace('.', ',')}%`;
+
+    return {
+      totalEvents: filteredEvents.length,
+      totalPlanned,
+      totalActual,
+      netInflation,
+      inflationRateNum,
+      inflationRateStr,
+      completedCount,
+      withConclusionCount,
+    };
+  }, [filteredEvents]);
 
   // Helper for Status Priority Sorting: ONGOING (1) -> UPCOMING (2) -> COMPLETED (3) -> CANCELLED (4)
   const getStatusPriority = (evt: DiscussionEvent, now: Date = vnNow): number => {
@@ -2009,7 +2118,806 @@ export const CalendarModule: React.FC = () => {
         </div>
       )}
 
-      {/* 🎯 4 EQUAL COLUMNS GRID SYSTEM ON DESKTOP | RESPONSIVE MOBILE FLEX LAYOUT */}
+      {/* ============================================================================================== */}
+      {/* 📊 CHẾ ĐỘ XEM LƯỚI (VIEW MODE: 'table'): MÔ PHỎNG HÀNG & CỘT CHUẨN GOOGLE SHEET LỊCH TRAO ĐỔI */}
+      {/* ============================================================================================== */}
+      {viewMode === 'table' ? (
+        <div className="w-full h-full flex-1 min-h-0 flex flex-col gap-2.5 sm:gap-3 relative z-10 overflow-hidden">
+          
+          {/* 1. KHỐI TIÊU ĐỀ & 5 CHỈ SỐ TỔNG HỢP (MÔ PHỎNG DÒNG 1–3 TRÊN SHEET LỊCH TRAO ĐỔI) */}
+          <div className="flex-shrink-0 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-2.5">
+            
+            {/* Ô 1 (Cols A–D): LỊCH LÀM VIỆC 2026 & NGUỒN SHEET */}
+            <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#003854] via-[#044c70] to-[#0284C7] text-white rounded-2xl p-3 sm:p-3.5 shadow-sm border border-sky-400/20 flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none" />
+              <div className="flex items-center justify-between gap-1.5">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-400/20 border border-emerald-300/30 text-[10px] font-black text-emerald-200 tracking-wide">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>SHEET: LỊCH TRAO ĐỔI</span>
+                </span>
+                <button
+                  onClick={() => handleRefreshLiveEvents(true)}
+                  disabled={loading}
+                  title="Đồng bộ trực tiếp từ Google Sheet LỊCH TRAO ĐỔI"
+                  className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+              <div className="mt-1.5">
+                <div className="text-sm sm:text-base font-black tracking-tight uppercase leading-tight">
+                  LỊCH LÀM VIỆC {selectedYear === 'ALL' ? '2026' : selectedYear}
+                </div>
+                <div className="text-[10px] text-sky-100/80 font-semibold mt-0.5 truncate">
+                  {sheetGridSummary.completedCount}/{sheetGridSummary.totalEvents} hoàn thành • {sheetGridSummary.withConclusionCount} VBKL
+                </div>
+              </div>
+            </div>
+
+            {/* Ô 2 (Cols E–G): TỔNG SỐ CUỘC TRAO ĐỔI */}
+            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-[#0284C7] rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  TỔNG SỐ CUỘC TRAO ĐỔI
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-400 text-[9px] font-black">
+                  E1:G3
+                </span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight my-0.5">
+                {sheetGridSummary.totalEvents}
+              </div>
+              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
+                cuộc trao đổi trong tháng
+              </div>
+            </div>
+
+            {/* Ô 3 (Cols H–J): THỜI LƯỢNG KẾ HOẠCH */}
+            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-sky-500 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-400">
+                  THỜI LƯỢNG KẾ HOẠCH
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 text-[9px] font-black">
+                  H1:J3
+                </span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-sky-700 dark:text-sky-300 tabular-nums tracking-tight my-0.5">
+                {sheetGridSummary.totalPlanned.toLocaleString('vi-VN')}
+              </div>
+              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
+                phút kế hoạch ({formatMinutesToHoursAndMins(sheetGridSummary.totalPlanned)})
+              </div>
+            </div>
+
+            {/* Ô 4 (Cols K–M): THỜI GIAN THỰC TẾ */}
+            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-teal-500 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-teal-700 dark:text-teal-400">
+                  THỜI GIAN THỰC TẾ
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 text-[9px] font-black">
+                  K1:M3
+                </span>
+              </div>
+              <div className="text-2xl sm:text-3xl font-black text-teal-700 dark:text-teal-300 tabular-nums tracking-tight my-0.5">
+                {sheetGridSummary.totalActual > 0 ? sheetGridSummary.totalActual.toLocaleString('vi-VN') : '—'}
+              </div>
+              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
+                phút thực tế ({formatMinutesToHoursAndMins(sheetGridSummary.totalActual)})
+              </div>
+            </div>
+
+            {/* Ô 5 (Cols N–P): THỜI GIAN LẠM PHÁT */}
+            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-[#F15A24] rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-[#F15A24] dark:text-orange-400">
+                  THỜI GIAN LẠM PHÁT
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] dark:text-orange-400 text-[9px] font-black">
+                  N1:P3
+                </span>
+              </div>
+              <div className={`text-2xl sm:text-3xl font-black tabular-nums tracking-tight my-0.5 ${
+                sheetGridSummary.netInflation > 0
+                  ? 'text-[#F15A24] dark:text-orange-400'
+                  : sheetGridSummary.netInflation < 0
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-slate-900 dark:text-white'
+              }`}>
+                {sheetGridSummary.netInflation.toLocaleString('vi-VN')}
+              </div>
+              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
+                phút phát sinh
+              </div>
+            </div>
+
+            {/* Ô 6 (Cols Q–S): TỶ LỆ LẠM PHÁT */}
+            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-rose-500 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                  TỶ LỆ LẠM PHÁT
+                </span>
+                <span className="px-1.5 py-0.2 rounded bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-[9px] font-black">
+                  Q1:S3
+                </span>
+              </div>
+              <div className={`text-2xl sm:text-3xl font-black tabular-nums tracking-tight my-0.5 ${
+                sheetGridSummary.inflationRateNum > 0
+                  ? 'text-rose-600 dark:text-rose-400'
+                  : 'text-emerald-600 dark:text-emerald-400'
+              }`}>
+                {sheetGridSummary.inflationRateStr}
+              </div>
+              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
+                tỷ lệ vượt kế hoạch
+              </div>
+            </div>
+
+          </div>
+
+          {/* 2. THANH CÔNG CỤ LỌC DỮ LIỆU & THAO TÁC NHANH TRÊN SHEET */}
+          <div className="flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-3 py-2 shadow-2xs flex flex-wrap items-center justify-between gap-2">
+            
+            {/* Cụm tìm kiếm & Bộ lọc (Trái) */}
+            <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
+              {/* Ô tìm kiếm nhanh */}
+              <div className="relative min-w-[200px] sm:min-w-[250px] flex-1 max-w-xs">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Tìm nội dung, điều hành, thành phần, thư ký..."
+                  className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] font-medium transition"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs font-bold cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Bộ lọc Năm */}
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+              >
+                <option value="2026">Năm 2026</option>
+                <option value="2025">Năm 2025</option>
+                <option value="ALL">Tất cả năm</option>
+              </select>
+
+              {/* Bộ lọc Tháng */}
+              <select
+                value={selectedMonthOnly}
+                onChange={(e) => setSelectedMonthOnly(e.target.value)}
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+              >
+                <option value="ALL">Tất cả tháng</option>
+                <option value="01">Tháng 01</option>
+                <option value="02">Tháng 02</option>
+                <option value="03">Tháng 03</option>
+                <option value="04">Tháng 04</option>
+                <option value="05">Tháng 05</option>
+                <option value="06">Tháng 06</option>
+                <option value="07">Tháng 07</option>
+                <option value="08">Tháng 08</option>
+                <option value="09">Tháng 09</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+              </select>
+
+              {/* Bộ lọc Phạm vi */}
+              <select
+                value={selectedScope}
+                onChange={(e) => setSelectedScope(e.target.value)}
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+              >
+                <option value="ALL">Mọi phạm vi</option>
+                <option value="P1">Phạm vi: P1</option>
+                <option value="Zalo">Phạm vi: Zalo</option>
+                <option value="Phòng làm việc bà Trang">Phòng LV bà Trang</option>
+              </select>
+
+              {/* Bộ lọc Trạng thái */}
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#0284C7] cursor-pointer"
+              >
+                <option value="ALL">Mọi trạng thái</option>
+                <option value="GREEN">Đã hoàn thành</option>
+                <option value="YELLOW">Sắp diễn ra / Đang họp</option>
+                <option value="RED">Hoãn / Hủy</option>
+              </select>
+
+              {(searchQuery || selectedMonthOnly !== 'ALL' || selectedDayOnly !== 'ALL' || selectedScope !== 'ALL' || selectedStatus !== 'ALL') && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedMonthOnly('ALL');
+                    setSelectedDayOnly('ALL');
+                    setSelectedScope('ALL');
+                    setSelectedStatus('ALL');
+                  }}
+                  className="px-2.5 py-1.5 text-[11px] font-extrabold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-xl transition cursor-pointer"
+                >
+                  Xóa bộ lọc
+                </button>
+              )}
+            </div>
+
+            {/* Cụm nút hành động (Phải) */}
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href={GOOGLE_SHEET_EDIT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 text-xs font-extrabold inline-flex items-center gap-1.5 transition"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Mở Sheet gốc</span>
+                <ExternalLink className="w-3 h-3 opacity-70" />
+              </a>
+
+              <button
+                onClick={() => setShowTrashModal(true)}
+                className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-xs font-bold inline-flex items-center gap-1 transition cursor-pointer relative"
+                title="Thùng rác"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                {deletedEvents.length > 0 && (
+                  <span className="px-1.5 py-0.2 bg-rose-600 text-white text-[9px] rounded-full font-black">
+                    {deletedEvents.length}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={handleOpenAddModal}
+                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#0077B6] via-[#0284C7] to-[#00A8E8] hover:from-[#005f92] hover:to-[#0284C7] text-white text-xs font-black shadow-xs hover:shadow-md transition inline-flex items-center gap-1.5 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Thêm Lịch Họp Mới</span>
+              </button>
+            </div>
+
+          </div>
+
+          {/* 3. BẢNG TÍNH LƯỚI (MÔ PHỎNG ĐẦY ĐỦ 19 CỘT A -> S CỦA SHEET LỊCH TRAO ĐỔI) */}
+          <div className="flex-1 min-h-0 bg-white dark:bg-slate-900 border border-slate-200/95 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+            <div className="flex-1 overflow-auto scrollbar-thin relative">
+              <table className="w-full border-collapse text-left text-xs min-w-[2020px]">
+                
+                {/* STICKY 2-TIER HEADER CHUẨN CẤU TRÚC SHEET */}
+                <thead className="sticky top-0 z-20 select-none shadow-xs">
+                  {/* TẦNG 1: NHÓM CỘT (MERGED GROUPS) */}
+                  <tr className="text-[10px] font-black uppercase tracking-wider text-center">
+                    <th className="sticky left-0 z-30 bg-slate-900 text-slate-300 border-r border-b border-slate-700 px-2 py-1.5 w-11">
+                      DÒNG
+                    </th>
+                    <th colSpan={2} className="bg-slate-800 text-slate-200 border-r border-b border-slate-700 px-2 py-1.5">
+                      PHẠM VI & GHI CHÚ (A–B)
+                    </th>
+                    <th colSpan={2} className="bg-slate-800 text-sky-200 border-r border-b border-slate-700 px-2 py-1.5">
+                      THỜI GIAN TỔ CHỨC (C–D)
+                    </th>
+                    <th colSpan={3} className="bg-[#004E75] text-sky-100 border-r border-b border-sky-800 px-2 py-1.5">
+                      THỜI LƯỢNG KẾ HOẠCH (E–G)
+                    </th>
+                    <th colSpan={3} className="bg-[#065F46] text-emerald-100 border-r border-b border-emerald-800 px-2 py-1.5">
+                      THỜI GIAN THỰC TẾ (H–J)
+                    </th>
+                    <th colSpan={2} className="bg-[#9A3412] text-amber-100 border-r border-b border-orange-800 px-2 py-1.5">
+                      THỜI GIAN LẠM PHÁT (K–L)
+                    </th>
+                    <th colSpan={4} className="bg-[#003854] text-white border-r border-b border-slate-700 px-2 py-1.5">
+                      NỘI DUNG & NHÂN SỰ TRAO ĐỔI (M–P)
+                    </th>
+                    <th colSpan={3} className="bg-slate-800 text-emerald-200 border-r border-b border-slate-700 px-2 py-1.5">
+                      TRẠNG THÁI & HỒ SƠ VBKL (Q–S)
+                    </th>
+                    <th className="sticky right-0 z-30 bg-slate-900 text-slate-200 border-b border-slate-700 px-2.5 py-1.5 w-24">
+                      TÁC VỤ
+                    </th>
+                  </tr>
+
+                  {/* TẦNG 2: TÊN TỪNG CỘT CỤ THỂ (A -> S) */}
+                  <tr className="bg-slate-100 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 text-[11px] font-extrabold border-b-2 border-slate-300 dark:border-slate-700">
+                    {/* # */}
+                    <th className="sticky left-0 z-30 bg-slate-200/95 dark:bg-slate-800 text-center border-r border-slate-300 dark:border-slate-700 px-2 py-2 w-11 text-[10px] font-black text-slate-500">
+                      #
+                    </th>
+                    {/* Col A: Ghi chú */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[95px] max-w-[140px]">
+                      <div className="flex items-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">A</span>
+                        <span>Ghi chú</span>
+                      </div>
+                    </th>
+                    {/* Col B: Phạm vi */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[110px]">
+                      <div className="flex items-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">B</span>
+                        <span>Phạm vi</span>
+                      </div>
+                    </th>
+                    {/* Col C: Thứ */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center w-[84px]">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">C</span>
+                        <span>Thứ</span>
+                      </div>
+                    </th>
+                    {/* Col D: Ngày */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center w-[98px]">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">D</span>
+                        <span>Ngày</span>
+                      </div>
+                    </th>
+                    {/* Col E: Thời lượng dự kiến (phút) */}
+                    <th className="bg-sky-50/90 dark:bg-sky-950/60 text-sky-900 dark:text-sky-200 border-r border-sky-200/80 dark:border-sky-800/60 px-2 py-2 text-center w-[88px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-sky-200/80 dark:bg-sky-800 text-[9px] font-black text-sky-800 dark:text-sky-200 mb-0.5">E</span>
+                        <span>TL dự kiến</span>
+                        <span className="text-[9px] font-semibold opacity-75">(phút)</span>
+                      </div>
+                    </th>
+                    {/* Col F: Bắt đầu dự kiến */}
+                    <th className="bg-sky-50/90 dark:bg-sky-950/60 text-sky-900 dark:text-sky-200 border-r border-sky-200/80 dark:border-sky-800/60 px-2 py-2 text-center w-[82px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-sky-200/80 dark:bg-sky-800 text-[9px] font-black text-sky-800 dark:text-sky-200 mb-0.5">F</span>
+                        <span>Bắt đầu</span>
+                        <span className="text-[9px] font-semibold opacity-75">dự kiến</span>
+                      </div>
+                    </th>
+                    {/* Col G: Kết thúc dự kiến */}
+                    <th className="bg-sky-50/90 dark:bg-sky-950/60 text-sky-900 dark:text-sky-200 border-r border-sky-200/80 dark:border-sky-800/60 px-2 py-2 text-center w-[82px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-sky-200/80 dark:bg-sky-800 text-[9px] font-black text-sky-800 dark:text-sky-200 mb-0.5">G</span>
+                        <span>Kết thúc</span>
+                        <span className="text-[9px] font-semibold opacity-75">dự kiến</span>
+                      </div>
+                    </th>
+                    {/* Col H: Thời lượng thực tế (phút) */}
+                    <th className="bg-emerald-50/90 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-r border-emerald-200/80 dark:border-emerald-800/60 px-2 py-2 text-center w-[88px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-emerald-200/80 dark:bg-emerald-800 text-[9px] font-black text-emerald-800 dark:text-emerald-200 mb-0.5">H</span>
+                        <span>TL thực tế</span>
+                        <span className="text-[9px] font-semibold opacity-75">(phút)</span>
+                      </div>
+                    </th>
+                    {/* Col I: Bắt đầu thực tế */}
+                    <th className="bg-emerald-50/90 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-r border-emerald-200/80 dark:border-emerald-800/60 px-2 py-2 text-center w-[82px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-emerald-200/80 dark:bg-emerald-800 text-[9px] font-black text-emerald-800 dark:text-emerald-200 mb-0.5">I</span>
+                        <span>Bắt đầu</span>
+                        <span className="text-[9px] font-semibold opacity-75">thực tế</span>
+                      </div>
+                    </th>
+                    {/* Col J: Kết thúc thực tế */}
+                    <th className="bg-emerald-50/90 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border-r border-emerald-200/80 dark:border-emerald-800/60 px-2 py-2 text-center w-[82px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-emerald-200/80 dark:bg-emerald-800 text-[9px] font-black text-emerald-800 dark:text-emerald-200 mb-0.5">J</span>
+                        <span>Kết thúc</span>
+                        <span className="text-[9px] font-semibold opacity-75">thực tế</span>
+                      </div>
+                    </th>
+                    {/* Col K: Phút phát sinh */}
+                    <th className="bg-orange-50/90 dark:bg-orange-950/60 text-orange-900 dark:text-orange-200 border-r border-orange-200/80 dark:border-orange-800/60 px-2 py-2 text-center w-[84px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-orange-200/80 dark:bg-orange-800 text-[9px] font-black text-orange-900 dark:text-orange-200 mb-0.5">K</span>
+                        <span>Phút</span>
+                        <span className="text-[9px] font-semibold opacity-75">phát sinh</span>
+                      </div>
+                    </th>
+                    {/* Col L: Tỷ lệ vượt KH */}
+                    <th className="bg-orange-50/90 dark:bg-orange-950/60 text-orange-900 dark:text-orange-200 border-r border-orange-200/80 dark:border-orange-800/60 px-2 py-2 text-center w-[88px]">
+                      <div className="flex flex-col items-center leading-tight">
+                        <span className="px-1 py-0.2 rounded bg-orange-200/80 dark:bg-orange-800 text-[9px] font-black text-orange-900 dark:text-orange-200 mb-0.5">L</span>
+                        <span>Tỷ lệ</span>
+                        <span className="text-[9px] font-semibold opacity-75">vượt KH</span>
+                      </div>
+                    </th>
+                    {/* Col M: Nội dung / Chủ đề */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-3 py-2 min-w-[300px] max-w-[400px]">
+                      <div className="flex items-center gap-1.5">
+                        <span className="px-1 py-0.2 rounded bg-[#003854] text-white text-[9px] font-black">M</span>
+                        <span>Nội dung / Chủ đề trao đổi</span>
+                      </div>
+                    </th>
+                    {/* Col N: Điều hành trao đổi */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[125px]">
+                      <div className="flex items-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">N</span>
+                        <span>Điều hành</span>
+                      </div>
+                    </th>
+                    {/* Col O: Thành phần tham dự */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-3 py-2 min-w-[230px] max-w-[320px]">
+                      <div className="flex items-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">O</span>
+                        <span>Thành phần tham dự</span>
+                      </div>
+                    </th>
+                    {/* Col P: Thư ký */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 min-w-[105px]">
+                      <div className="flex items-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">P</span>
+                        <span>Thư ký</span>
+                      </div>
+                    </th>
+                    {/* Col Q: Trạng thái */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center min-w-[125px]">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">Q</span>
+                        <span>Trạng thái</span>
+                      </div>
+                    </th>
+                    {/* Col R: Tài liệu */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center min-w-[105px]">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">R</span>
+                        <span>Tài liệu</span>
+                      </div>
+                    </th>
+                    {/* Col S: Link VBKL */}
+                    <th className="border-r border-slate-200 dark:border-slate-700/80 px-2.5 py-2 text-center min-w-[125px]">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-[9px] font-black text-slate-600 dark:text-slate-300">S</span>
+                        <span>Link VBKL</span>
+                      </div>
+                    </th>
+                    {/* Tác vụ */}
+                    <th className="sticky right-0 z-30 bg-slate-200/95 dark:bg-slate-800 text-center px-2 py-2 w-24 text-[10px] font-black text-slate-600 dark:text-slate-300">
+                      Thao tác
+                    </th>
+                  </tr>
+                </thead>
+
+                {/* BODY: CÁC DÒNG DỮ LIỆU MÔ PHỎNG HỆT GOOGLE SHEET */}
+                <tbody className="divide-y divide-slate-200/80 dark:divide-slate-800">
+                  {filteredEvents.length === 0 ? (
+                    <tr>
+                      <td colSpan={21} className="py-12 text-center text-slate-400 font-semibold text-sm">
+                        Không tìm thấy dòng dữ liệu nào phù hợp với bộ lọc hiện tại.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredEvents.map((evt, idx) => {
+                      const plannedMins = evt.plannedDurationMinutes !== undefined
+                        ? evt.plannedDurationMinutes
+                        : (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0);
+                      const actualMins = evt.actualDurationMinutes !== undefined
+                        ? evt.actualDurationMinutes
+                        : 0;
+                      const inflMins = evt.inflationMinutes !== undefined
+                        ? evt.inflationMinutes
+                        : (actualMins > 0 ? actualMins - plannedMins : 0);
+                      const inflRateDisplay = evt.inflationRate || (plannedMins > 0 ? `${((inflMins / plannedMins) * 100).toFixed(1).replace('.', ',')}%` : '0,0%');
+
+                      const rawStatus = (evt.status || '').trim();
+                      const isDone = rawStatus.toLowerCase().includes('hoàn thành') || rawStatus.toLowerCase().includes('đã');
+                      const isUpcoming = rawStatus.toLowerCase().includes('sắp') || (!isDone && !rawStatus.toLowerCase().includes('hủy'));
+
+                      const dayLower = (evt.dayOfWeek || '').toLowerCase();
+                      const isSunday = dayLower.includes('chủ nhật') || dayLower === 'cn';
+                      const isSaturday = dayLower.includes('thứ 7') || dayLower.includes('thứ bảy');
+
+                      const scopeStr = evt.scope || 'P1';
+                      const scopeBadgeClass = scopeStr === 'P1'
+                        ? 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800'
+                        : scopeStr.toLowerCase().includes('zalo')
+                          ? 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800'
+                          : 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800';
+
+                      return (
+                        <tr
+                          key={evt.id || idx}
+                          className="even:bg-slate-50/55 dark:even:bg-slate-800/25 hover:bg-sky-50/70 dark:hover:bg-sky-950/30 transition-colors group align-top"
+                        >
+                          {/* Cột chỉ số dòng (#) */}
+                          <td
+                            className="sticky left-0 z-10 bg-slate-100/95 dark:bg-slate-900/95 group-hover:bg-sky-100/90 dark:group-hover:bg-slate-800 border-r border-slate-200 dark:border-slate-800 px-2 py-2.5 text-center font-black text-[11px] text-slate-400 tabular-nums"
+                            title={`Dòng ${evt.sheetRowIndex || idx + 5} trên sheet LỊCH TRAO ĐỔI`}
+                          >
+                            {idx + 1}
+                          </td>
+
+                          {/* Col A: Ghi chú */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-[11px] text-slate-500 dark:text-slate-400 max-w-[140px] whitespace-pre-line">
+                            {evt.notes ? (
+                              <span className="line-clamp-3" title={evt.notes}>{evt.notes}</span>
+                            ) : (
+                              <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
+                            )}
+                          </td>
+
+                          {/* Col B: Phạm vi */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-extrabold border ${scopeBadgeClass}`}>
+                              {scopeStr}
+                            </span>
+                          </td>
+
+                          {/* Col C: Thứ */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2 py-2.5 text-center whitespace-nowrap">
+                            <span className={`text-[11px] font-extrabold ${
+                              isSunday
+                                ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-1.5 py-0.5 rounded-md'
+                                : isSaturday
+                                  ? 'text-[#0284C7] dark:text-sky-400'
+                                  : 'text-slate-700 dark:text-slate-300'
+                            }`}>
+                              {evt.dayOfWeek}
+                            </span>
+                          </td>
+
+                          {/* Col D: Ngày */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center whitespace-nowrap font-bold text-slate-900 dark:text-slate-100 tabular-nums">
+                            {evt.date}
+                          </td>
+
+                          {/* Col E: Thời lượng dự kiến (phút) */}
+                          <td className="border-r border-sky-100 dark:border-sky-900/40 bg-sky-50/25 dark:bg-sky-950/15 px-2 py-2.5 text-center font-black text-sky-700 dark:text-sky-300 tabular-nums">
+                            {plannedMins}
+                          </td>
+
+                          {/* Col F: Bắt đầu dự kiến */}
+                          <td className="border-r border-sky-100 dark:border-sky-900/40 bg-sky-50/15 dark:bg-sky-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
+                            {evt.plannedStartTime || '—'}
+                          </td>
+
+                          {/* Col G: Kết thúc dự kiến */}
+                          <td className="border-r border-sky-100 dark:border-sky-900/40 bg-sky-50/15 dark:bg-sky-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
+                            {evt.plannedEndTime || '—'}
+                          </td>
+
+                          {/* Col H: Thời lượng thực tế (phút) */}
+                          <td className="border-r border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/25 dark:bg-emerald-950/15 px-2 py-2.5 text-center font-black text-teal-700 dark:text-teal-300 tabular-nums">
+                            {actualMins}
+                          </td>
+
+                          {/* Col I: Bắt đầu thực tế */}
+                          <td className="border-r border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/15 dark:bg-emerald-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
+                            {evt.actualStartTime || <span className="text-slate-300 dark:text-slate-600">—</span>}
+                          </td>
+
+                          {/* Col J: Kết thúc thực tế */}
+                          <td className="border-r border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/15 dark:bg-emerald-950/10 px-2 py-2.5 text-center font-semibold text-slate-700 dark:text-slate-300 tabular-nums">
+                            {evt.actualEndTime || <span className="text-slate-300 dark:text-slate-600">—</span>}
+                          </td>
+
+                          {/* Col K: Phút phát sinh */}
+                          <td className="border-r border-orange-100 dark:border-orange-900/40 bg-orange-50/20 dark:bg-orange-950/10 px-2 py-2.5 text-center tabular-nums">
+                            {inflMins > 0 ? (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-orange-100 dark:bg-orange-950/80 text-[#F15A24] dark:text-orange-400 font-black text-[11px] border border-orange-200 dark:border-orange-800/70">
+                                +{inflMins}
+                              </span>
+                            ) : inflMins < 0 ? (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-black text-[11px] border border-emerald-200 dark:border-emerald-800/70">
+                                {inflMins}
+                              </span>
+                            ) : (
+                              <span className="text-slate-500 dark:text-slate-400 font-bold">0</span>
+                            )}
+                          </td>
+
+                          {/* Col L: Tỷ lệ vượt KH */}
+                          <td className="border-r border-orange-100 dark:border-orange-900/40 bg-orange-50/20 dark:bg-orange-950/10 px-2 py-2.5 text-center tabular-nums">
+                            {inflMins > 0 ? (
+                              <span className="font-black text-[#F15A24] dark:text-orange-400 text-[11px]">
+                                {inflRateDisplay}
+                              </span>
+                            ) : inflMins < 0 ? (
+                              <span className="font-black text-emerald-600 dark:text-emerald-400 text-[11px]">
+                                {inflRateDisplay}
+                              </span>
+                            ) : (
+                              <span className="text-slate-500 dark:text-slate-400 font-semibold text-[11px]">
+                                {inflRateDisplay}
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Col M: Nội dung / Chủ đề */}
+                          <td
+                            onClick={() => setSelectedEventDetail(evt)}
+                            className="border-r border-slate-200/80 dark:border-slate-800 px-3 py-2.5 min-w-[300px] max-w-[400px] whitespace-pre-line font-bold text-slate-900 dark:text-white leading-relaxed cursor-pointer hover:text-[#0284C7] dark:hover:text-sky-400 transition-colors"
+                          >
+                            {evt.title}
+                          </td>
+
+                          {/* Col N: Điều hành trao đổi */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 whitespace-nowrap">
+                            {evt.legalEntity ? (
+                              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-extrabold text-[11px]">
+                                <User className="w-3 h-3 text-[#0284C7] shrink-0" />
+                                <span>{evt.legalEntity}</span>
+                              </div>
+                            ) : (
+                              <span className="text-slate-300 dark:text-slate-700">—</span>
+                            )}
+                          </td>
+
+                          {/* Col O: Thành phần tham dự */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-3 py-2.5 min-w-[230px] max-w-[320px] whitespace-pre-line text-[11px] text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                            {evt.attendees || <span className="text-slate-300 dark:text-slate-700">—</span>}
+                          </td>
+
+                          {/* Col P: Thư ký */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 whitespace-nowrap">
+                            {evt.secretary ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-50/80 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/70 dark:border-amber-800/60 font-bold text-[11px]">
+                                <PenTool className="w-2.5 h-2.5 shrink-0" />
+                                <span>{evt.secretary}</span>
+                              </span>
+                            ) : (
+                              <span className="text-slate-300 dark:text-slate-700">—</span>
+                            )}
+                          </td>
+
+                          {/* Col Q: Trạng thái */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center whitespace-nowrap">
+                            {isDone ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 text-[10.5px] font-extrabold">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+                                <span>{rawStatus || 'Đã hoàn thành'}</span>
+                              </span>
+                            ) : isUpcoming ? (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/80 text-[10.5px] font-extrabold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                                <span>{rawStatus || 'Sắp diễn ra'}</span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 text-[10.5px] font-extrabold">
+                                <span>{rawStatus}</span>
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Col R: Tài liệu */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center">
+                            {evt.documentText ? (
+                              <button
+                                onClick={() => setActiveAttachmentEvent(evt)}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[10.5px] font-bold hover:bg-sky-100 transition cursor-pointer max-w-[120px] truncate"
+                                title={evt.documentText}
+                              >
+                                <Paperclip className="w-3 h-3 shrink-0" />
+                                <span className="truncate">{evt.documentText}</span>
+                              </button>
+                            ) : (evt.attachments && evt.attachments.length > 0) ? (
+                              <button
+                                onClick={() => setActiveAttachmentEvent(evt)}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-950/50 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-[10.5px] font-bold hover:bg-sky-100 transition cursor-pointer"
+                              >
+                                <Paperclip className="w-3 h-3 shrink-0" />
+                                <span>{evt.attachments.length} tệp</span>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => setActiveAttachmentEvent(evt)}
+                                className="text-[10.5px] font-semibold text-slate-400 hover:text-[#0284C7] dark:hover:text-sky-400 transition cursor-pointer"
+                                title="Đính kèm tài liệu"
+                              >
+                                + Đính kèm
+                              </button>
+                            )}
+                          </td>
+
+                          {/* Col S: Link VBKL */}
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center whitespace-nowrap">
+                            {evt.conclusionDocUrl ? (
+                              <a
+                                href={evt.conclusionDocUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#0077B6] to-[#0284C7] hover:from-[#005f92] hover:to-[#0077B6] text-white text-[10.5px] font-extrabold shadow-2xs transition"
+                                title={evt.conclusionDocUrl}
+                              >
+                                <FileText className="w-3 h-3 shrink-0" />
+                                <span>Mở VBKL</span>
+                                <ExternalLink className="w-2.5 h-2.5 opacity-80 shrink-0" />
+                              </a>
+                            ) : (
+                              <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
+                            )}
+                          </td>
+
+                          {/* Cột Thao tác (Sticky Right) */}
+                          <td className="sticky right-0 z-10 bg-white/95 dark:bg-slate-900/95 group-hover:bg-sky-50/95 dark:group-hover:bg-slate-800 px-2 py-2.5 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                onClick={() => setSelectedEventDetail(evt)}
+                                title="Xem chi tiết"
+                                className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-[#0284C7] hover:text-white text-slate-600 dark:text-slate-300 transition cursor-pointer"
+                              >
+                                <Eye className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => setEditingEvent({ ...evt })}
+                                title="Chỉnh sửa dòng"
+                                className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500 hover:text-white text-slate-600 dark:text-slate-300 transition cursor-pointer"
+                              >
+                                <PenTool className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleOpenTranscribe(evt)}
+                                title="Thư ký AI gỡ băng & trích xuất VBKL"
+                                className="p-1.5 rounded-lg bg-orange-50 dark:bg-orange-950/60 hover:bg-[#F15A24] hover:text-white text-[#F15A24] transition cursor-pointer"
+                              >
+                                <Mic className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleMoveToTrash(evt)}
+                                title="Chuyển vào thùng rác"
+                                className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-600 hover:text-white text-rose-600 dark:text-rose-400 transition cursor-pointer"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+
+                {/* STICKY FOOTER TỔNG KẾT CÁC CỘT SỐ LIỆU */}
+                <tfoot className="sticky bottom-0 z-20 bg-slate-900 text-white text-xs font-black border-t-2 border-[#0284C7] shadow-md">
+                  <tr>
+                    <td className="sticky left-0 z-30 bg-slate-900 px-2 py-2.5 text-center text-sky-400 border-r border-slate-700">
+                      Σ
+                    </td>
+                    <td colSpan={4} className="px-3 py-2.5 border-r border-slate-700 text-left uppercase tracking-wider text-[11px] text-slate-200">
+                      TỔNG CỘNG ({sheetGridSummary.totalEvents} CUỘC TRAO ĐỔI)
+                    </td>
+                    {/* Tổng Thời lượng dự kiến (Col E) */}
+                    <td className="px-2 py-2.5 text-center text-sky-300 tabular-nums border-r border-slate-700 bg-sky-950/60">
+                      {sheetGridSummary.totalPlanned.toLocaleString('vi-VN')}p
+                    </td>
+                    <td colSpan={2} className="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 border-r border-slate-700">
+                      ~{formatMinutesToHoursAndMins(sheetGridSummary.totalPlanned)}
+                    </td>
+                    {/* Tổng Thời lượng thực tế (Col H) */}
+                    <td className="px-2 py-2.5 text-center text-emerald-300 tabular-nums border-r border-slate-700 bg-emerald-950/60">
+                      {sheetGridSummary.totalActual.toLocaleString('vi-VN')}p
+                    </td>
+                    <td colSpan={2} className="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 border-r border-slate-700">
+                      ~{formatMinutesToHoursAndMins(sheetGridSummary.totalActual)}
+                    </td>
+                    {/* Tổng Phút phát sinh (Col K) */}
+                    <td className="px-2 py-2.5 text-center text-orange-300 tabular-nums border-r border-slate-700 bg-orange-950/60">
+                      {sheetGridSummary.netInflation > 0 ? `+${sheetGridSummary.netInflation}` : sheetGridSummary.netInflation}p
+                    </td>
+                    {/* Tỷ lệ vượt KH (Col L) */}
+                    <td className="px-2 py-2.5 text-center text-rose-300 tabular-nums border-r border-slate-700 bg-orange-950/60">
+                      {sheetGridSummary.inflationRateStr}
+                    </td>
+                    <td colSpan={7} className="px-3 py-2.5 text-right text-[11px] font-semibold text-slate-300 border-r border-slate-700">
+                      Hoàn thành: <strong className="text-emerald-400">{sheetGridSummary.completedCount}</strong>/{sheetGridSummary.totalEvents} cuộc • Có Link VBKL: <strong className="text-sky-300">{sheetGridSummary.withConclusionCount}</strong> hồ sơ
+                    </td>
+                    <td className="sticky right-0 z-30 bg-slate-900 px-2 py-2.5 text-center text-[10px] text-slate-400">
+                      A–S
+                    </td>
+                  </tr>
+                </tfoot>
+
+              </table>
+            </div>
+          </div>
+
+        </div>
+      ) : (
+      /* 🎯 4 EQUAL COLUMNS GRID SYSTEM ON DESKTOP | RESPONSIVE MOBILE FLEX LAYOUT */
       <div className="w-full h-full flex flex-col lg:grid lg:grid-cols-4 gap-3 sm:gap-3.5 relative z-10">
         
         {/* ========================================================================= */}
@@ -2992,17 +3900,17 @@ export const CalendarModule: React.FC = () => {
             )}
 
             {/* ========================================================================= */}
-            {/* 🌟 VIEW MODE 3: MONTH MATRIX GRID (HIỂN THỊ KHI CLICK NÚT LƯỚI) */}
+            {/* 🌟 VIEW MODE 2: MONTH MATRIX GRID (HIỂN THỊ KHI CHỌN CHẾ ĐỘ M) */}
             {/* ========================================================================= */}
-            {viewMode === 'table' && (
+            {viewMode === 'month' && (
               <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-3 sm:p-3.5 space-y-2.5 shadow-sm overflow-x-auto">
                 <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 min-w-[500px]">
                   <h2 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#0077B6]"></span>
-                    <span>CHẾ ĐỘ M: LỊCH TRAO ĐỔI THÁNG {selectedMonthOnly} / {selectedYear}</span>
+                    <span>CHẾ ĐỘ M: LỊCH TRAO ĐỔI {selectedMonthOnly === 'ALL' ? 'CẢ NĂM' : `THÁNG ${selectedMonthOnly}`} / {selectedYear}</span>
                   </h2>
                   <span className="px-3 py-1 bg-[#003854] dark:bg-[#003854] text-[#00E5FF] dark:text-[#00E5FF] font-black rounded-md text-[11px] border border-cyan-300/50 shadow-inner">
-                    TỔNG {filteredEvents.length} CUỘC TRAO ĐỔI TRONG THÁNG
+                    TỔNG {filteredEvents.length} CUỘC TRAO ĐỔI
                   </span>
                 </div>
 
@@ -3085,77 +3993,6 @@ export const CalendarModule: React.FC = () => {
               </div>
             )}
 
-            {/* ========================================================================= */}
-            {/* 🌟 VIEW MODE 3: FULL SPREADSHEET TABLE VIEW */}
-            {/* ========================================================================= */}
-            {viewMode === 'table' && (
-              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-xs min-w-[700px]">
-                    <thead>
-                      <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
-                        <th className="p-2.5 text-center w-10">STT</th>
-                        <th className="p-2.5">Phạm Vi</th>
-                        <th className="p-2.5">Thứ & Ngày</th>
-                        <th className="p-2.5">Giờ Dự Kiến</th>
-                        <th className="p-2.5">Nội Dung / Chủ Đề Cuộc Họp</th>
-                        <th className="p-2.5">Pháp Nhân</th>
-                        <th className="p-2.5">Thành Phần Tham Dự</th>
-                        <th className="p-2.5">Thư Ký</th>
-                        <th className="p-2.5">Trạng Thái Thực Tế (VN GMT+7)</th>
-                        <th className="p-2.5 text-center">Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                      {filteredEvents.map((evt, idx) => {
-                        const stInfo = getStatusInfo(evt, vnNow);
-                        return (
-                          <tr key={evt.id || idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                            <td className="p-2.5 text-center font-bold text-slate-500">{evt.stt || idx + 1}</td>
-                            <td className="p-2.5 font-bold text-slate-900 dark:text-white">{evt.scope || 'P1'}</td>
-                            <td className="p-2.5 whitespace-nowrap">
-                              <span className="font-bold text-slate-900 dark:text-white">{evt.dayOfWeek}</span>
-                              <div className="text-[10px] text-slate-500">{evt.date}</div>
-                            </td>
-                            <td className="p-2.5 whitespace-nowrap font-medium">
-                              {evt.plannedStartTime} - {evt.plannedEndTime}
-                            </td>
-                            <td className="p-2.5 font-bold text-slate-800 dark:text-slate-100 max-w-xs">
-                              {evt.title}
-                            </td>
-                            <td className="p-2.5 font-extrabold text-slate-700 dark:text-slate-300">{evt.legalEntity || 'DH'}</td>
-                            <td className="p-2.5 max-w-xs text-slate-600 dark:text-slate-300">{evt.attendees}</td>
-                            <td className="p-2.5 text-slate-600 dark:text-slate-300">{evt.secretary}</td>
-                            <td className="p-2.5 whitespace-nowrap">
-                              <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${stInfo.pillBg}`}>
-                                {stInfo.label}
-                              </span>
-                            </td>
-                            <td className="p-2.5 text-center">
-                              <div className="flex items-center justify-center gap-1">
-                                <button
-                                  onClick={() => setEditingEvent({ ...evt })}
-                                  className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 font-bold text-[10px] hover:bg-slate-200 rounded"
-                                >
-                                  Sửa
-                                </button>
-                                <button
-                                  onClick={() => handleMoveToTrash(evt)}
-                                  className="px-1.5 py-0.5 bg-rose-50 text-rose-700 font-bold text-[10px] hover:bg-rose-100 rounded"
-                                >
-                                  Xóa
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
           </div>
 
         </main>
@@ -3217,6 +4054,7 @@ export const CalendarModule: React.FC = () => {
         </aside>
 
       </div>
+      )}
 
       {/* MODAL: XEM CHI TIẾT CUỘC HỌP */}
       {selectedEventDetail && (
