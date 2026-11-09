@@ -1858,6 +1858,35 @@ export const CalendarModule: React.FC = () => {
     }));
   }, [viewMode, displayDayEvents, filteredEvents, vnNow]);
 
+  // Đồng bộ chế độ xem từ CalendarHeader (Thẻ / Lưới + D/M)
+  useEffect(() => {
+    const handleViewChange = (e: any) => {
+      if (e.detail && ['day', 'month', 'table'].includes(e.detail)) {
+        setViewMode(e.detail);
+      }
+    };
+    const handleToggleDM = (e: any) => {
+      const nextMode = e.detail || (viewMode === 'day' ? 'month' : 'day');
+      setViewMode(nextMode);
+      if (nextMode === 'month') {
+        showToast(`🗓️ Chế độ M: Hiển thị tổng số ${filteredEvents.length} cuộc trao đổi trong Tháng ${selectedMonthOnly}/${selectedYear}`);
+      } else {
+        showToast(`🗓️ Chế độ D: Hiển thị ${displayDayEvents.length} cuộc trao đổi trong Ngày ${currentDateStr}`);
+      }
+    };
+    window.addEventListener('calendar_viewmode_change', handleViewChange);
+    window.addEventListener('calendar_viewmode_toggle_dm', handleToggleDM);
+    return () => {
+      window.removeEventListener('calendar_viewmode_change', handleViewChange);
+      window.removeEventListener('calendar_viewmode_toggle_dm', handleToggleDM);
+    };
+  }, [viewMode, filteredEvents.length, displayDayEvents.length, selectedMonthOnly, selectedYear, currentDateStr]);
+
+  // Đồng bộ ngược viewMode lên CalendarHeader khi viewMode thay đổi từ bên trong CalendarModule
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('calendar_viewmode_sync', { detail: viewMode }));
+  }, [viewMode]);
+
   // Render Hidden DOM trigger buttons for AppShell header tabs integration
   const hiddenTriggers = (
     <>
@@ -2149,53 +2178,6 @@ export const CalendarModule: React.FC = () => {
                   })}
                 </select>
               </div>
-            </div>
-
-            {/* Segmented View Mode Switcher + D/M Badge */}
-            <div className="flex items-center gap-2">
-              <div className="flex-1 flex items-center bg-slate-200/60 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-md p-1">
-                <button
-                  onClick={() => setViewMode('day')}
-                  className={`flex-1 py-1 rounded-md text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                    viewMode === 'day' || viewMode === 'month'
-                      ? 'bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white shadow-xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-[#00A8E8]'
-                  }`}
-                >
-                  <LayoutGrid className="w-3.5 h-3.5" /> Thẻ
-                </button>
-
-                <button
-                  onClick={() => setViewMode('table')}
-                  className={`flex-1 py-1 rounded-md text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                    viewMode === 'table'
-                      ? 'bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white shadow-xs'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-[#00A8E8]'
-                  }`}
-                >
-                  <Table className="w-3.5 h-3.5" /> Lưới
-                </button>
-              </div>
-
-              {/* Nút D/M Toggle Badge */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (viewMode === 'day') {
-                    setViewMode('month');
-                    showToast(`🗓️ Chế độ M: Hiển thị tổng số ${filteredEvents.length} cuộc trao đổi trong Tháng ${selectedMonthOnly}/${selectedYear}`);
-                  } else {
-                    setViewMode('day');
-                    showToast(`🗓️ Chế độ D: Hiển thị ${displayDayEvents.length} cuộc trao đổi trong Ngày ${currentDateStr}`);
-                  }
-                }}
-                title={viewMode === 'day' ? `Chế độ D: Đang xem theo ngày - Click để chuyển sang Chế độ M (Tháng)` : `Chế độ M: Đang xem theo tháng - Click để chuyển sang Chế độ D (Ngày)`}
-                className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#00A8E8] rounded-md flex items-center justify-center cursor-pointer transition shadow-2xs group"
-              >
-                <span className="text-xs font-black bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white px-2 py-0.5 rounded-md transition-transform group-hover:scale-105 select-none">
-                  {viewMode === 'day' ? 'D' : 'M'}
-                </span>
-              </button>
             </div>
           </div>
 
