@@ -2124,139 +2124,7 @@ export const CalendarModule: React.FC = () => {
       {viewMode === 'table' ? (
         <div className="w-full h-full flex-1 min-h-0 flex flex-col gap-2.5 sm:gap-3 relative z-10 overflow-hidden">
           
-          {/* 1. KHỐI TIÊU ĐỀ & 5 CHỈ SỐ TỔNG HỢP (MÔ PHỎNG DÒNG 1–3 TRÊN SHEET LỊCH TRAO ĐỔI) */}
-          <div className="flex-shrink-0 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-2.5">
-            
-            {/* Ô 1 (Cols A–D): LỊCH LÀM VIỆC 2026 & NGUỒN SHEET */}
-            <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#003854] via-[#044c70] to-[#0284C7] text-white rounded-2xl p-3 sm:p-3.5 shadow-sm border border-sky-400/20 flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none" />
-              <div className="flex items-center justify-between gap-1.5">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-400/20 border border-emerald-300/30 text-[10px] font-black text-emerald-200 tracking-wide">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>SHEET: LỊCH TRAO ĐỔI</span>
-                </span>
-                <button
-                  onClick={() => handleRefreshLiveEvents(true)}
-                  disabled={loading}
-                  title="Đồng bộ trực tiếp từ Google Sheet LỊCH TRAO ĐỔI"
-                  className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-                </button>
-              </div>
-              <div className="mt-1.5">
-                <div className="text-sm sm:text-base font-black tracking-tight uppercase leading-tight">
-                  LỊCH LÀM VIỆC {selectedYear === 'ALL' ? '2026' : selectedYear}
-                </div>
-                <div className="text-[10px] text-sky-100/80 font-semibold mt-0.5 truncate">
-                  {sheetGridSummary.completedCount}/{sheetGridSummary.totalEvents} hoàn thành • {sheetGridSummary.withConclusionCount} VBKL
-                </div>
-              </div>
-            </div>
-
-            {/* Ô 2 (Cols E–G): TỔNG SỐ CUỘC TRAO ĐỔI */}
-            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-[#0284C7] rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  TỔNG SỐ CUỘC TRAO ĐỔI
-                </span>
-                <span className="px-1.5 py-0.2 rounded bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-400 text-[9px] font-black">
-                  E1:G3
-                </span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight my-0.5">
-                {sheetGridSummary.totalEvents}
-              </div>
-              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
-                cuộc trao đổi trong tháng
-              </div>
-            </div>
-
-            {/* Ô 3 (Cols H–J): THỜI LƯỢNG KẾ HOẠCH */}
-            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-sky-500 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-400">
-                  THỜI LƯỢNG KẾ HOẠCH
-                </span>
-                <span className="px-1.5 py-0.2 rounded bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 text-[9px] font-black">
-                  H1:J3
-                </span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-sky-700 dark:text-sky-300 tabular-nums tracking-tight my-0.5">
-                {sheetGridSummary.totalPlanned.toLocaleString('vi-VN')}
-              </div>
-              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
-                phút kế hoạch ({formatMinutesToHoursAndMins(sheetGridSummary.totalPlanned)})
-              </div>
-            </div>
-
-            {/* Ô 4 (Cols K–M): THỜI GIAN THỰC TẾ */}
-            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-teal-500 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-teal-700 dark:text-teal-400">
-                  THỜI GIAN THỰC TẾ
-                </span>
-                <span className="px-1.5 py-0.2 rounded bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 text-[9px] font-black">
-                  K1:M3
-                </span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-black text-teal-700 dark:text-teal-300 tabular-nums tracking-tight my-0.5">
-                {sheetGridSummary.totalActual > 0 ? sheetGridSummary.totalActual.toLocaleString('vi-VN') : '—'}
-              </div>
-              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
-                phút thực tế ({formatMinutesToHoursAndMins(sheetGridSummary.totalActual)})
-              </div>
-            </div>
-
-            {/* Ô 5 (Cols N–P): THỜI GIAN LẠM PHÁT */}
-            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-[#F15A24] rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-[#F15A24] dark:text-orange-400">
-                  THỜI GIAN LẠM PHÁT
-                </span>
-                <span className="px-1.5 py-0.2 rounded bg-orange-50 dark:bg-orange-950/60 text-[#F15A24] dark:text-orange-400 text-[9px] font-black">
-                  N1:P3
-                </span>
-              </div>
-              <div className={`text-2xl sm:text-3xl font-black tabular-nums tracking-tight my-0.5 ${
-                sheetGridSummary.netInflation > 0
-                  ? 'text-[#F15A24] dark:text-orange-400'
-                  : sheetGridSummary.netInflation < 0
-                    ? 'text-emerald-600 dark:text-emerald-400'
-                    : 'text-slate-900 dark:text-white'
-              }`}>
-                {sheetGridSummary.netInflation.toLocaleString('vi-VN')}
-              </div>
-              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
-                phút phát sinh
-              </div>
-            </div>
-
-            {/* Ô 6 (Cols Q–S): TỶ LỆ LẠM PHÁT */}
-            <div className="bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 border-t-[3px] border-t-rose-500 rounded-2xl p-3 sm:p-3.5 shadow-xs flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-rose-600 dark:text-rose-400">
-                  TỶ LỆ LẠM PHÁT
-                </span>
-                <span className="px-1.5 py-0.2 rounded bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-[9px] font-black">
-                  Q1:S3
-                </span>
-              </div>
-              <div className={`text-2xl sm:text-3xl font-black tabular-nums tracking-tight my-0.5 ${
-                sheetGridSummary.inflationRateNum > 0
-                  ? 'text-rose-600 dark:text-rose-400'
-                  : 'text-emerald-600 dark:text-emerald-400'
-              }`}>
-                {sheetGridSummary.inflationRateStr}
-              </div>
-              <div className="text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 italic truncate">
-                tỷ lệ vượt kế hoạch
-              </div>
-            </div>
-
-          </div>
-
-          {/* 2. THANH CÔNG CỤ LỌC DỮ LIỆU & THAO TÁC NHANH TRÊN SHEET */}
+          {/* THANH CÔNG CỤ LỌC DỮ LIỆU & THAO TÁC NHANH TRÊN SHEET */}
           <div className="flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-3 py-2 shadow-2xs flex flex-wrap items-center justify-between gap-2">
             
             {/* Cụm tìm kiếm & Bộ lọc (Trái) */}
@@ -2611,7 +2479,7 @@ export const CalendarModule: React.FC = () => {
                       const isSunday = dayLower.includes('chủ nhật') || dayLower === 'cn';
                       const isSaturday = dayLower.includes('thứ 7') || dayLower.includes('thứ bảy');
 
-                      const scopeStr = evt.scope || 'P1';
+                      const scopeStr = (evt.scope || '').trim();
                       const scopeBadgeClass = scopeStr === 'P1'
                         ? 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800'
                         : scopeStr.toLowerCase().includes('zalo')
@@ -2642,9 +2510,13 @@ export const CalendarModule: React.FC = () => {
 
                           {/* Col B: Phạm vi */}
                           <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5">
-                            <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-extrabold border ${scopeBadgeClass}`}>
-                              {scopeStr}
-                            </span>
+                            {scopeStr ? (
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-extrabold border ${scopeBadgeClass}`}>
+                                {scopeStr}
+                              </span>
+                            ) : (
+                              <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
+                            )}
                           </td>
 
                           {/* Col C: Thứ */}
@@ -2814,19 +2686,25 @@ export const CalendarModule: React.FC = () => {
                           </td>
 
                           {/* Col S: Link VBKL */}
-                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center whitespace-nowrap">
+                          <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-2.5 text-center max-w-[180px]">
                             {evt.conclusionDocUrl ? (
-                              <a
-                                href={evt.conclusionDocUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#0077B6] to-[#0284C7] hover:from-[#005f92] hover:to-[#0077B6] text-white text-[10.5px] font-extrabold shadow-2xs transition"
-                                title={evt.conclusionDocUrl}
-                              >
-                                <FileText className="w-3 h-3 shrink-0" />
-                                <span>Mở VBKL</span>
-                                <ExternalLink className="w-2.5 h-2.5 opacity-80 shrink-0" />
-                              </a>
+                              evt.conclusionDocUrl.startsWith('http') ? (
+                                <a
+                                  href={evt.conclusionDocUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#0077B6] to-[#0284C7] hover:from-[#005f92] hover:to-[#0077B6] text-white text-[10.5px] font-extrabold shadow-2xs transition whitespace-nowrap"
+                                  title={evt.conclusionDocUrl}
+                                >
+                                  <FileText className="w-3 h-3 shrink-0" />
+                                  <span>Mở VBKL</span>
+                                  <ExternalLink className="w-2.5 h-2.5 opacity-80 shrink-0" />
+                                </a>
+                              ) : (
+                                <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 line-clamp-2 text-left block" title={evt.conclusionDocUrl}>
+                                  {evt.conclusionDocUrl}
+                                </span>
+                              )
                             ) : (
                               <span className="text-slate-300 dark:text-slate-700 select-none">—</span>
                             )}
@@ -2870,46 +2748,6 @@ export const CalendarModule: React.FC = () => {
                     })
                   )}
                 </tbody>
-
-                {/* STICKY FOOTER TỔNG KẾT CÁC CỘT SỐ LIỆU */}
-                <tfoot className="sticky bottom-0 z-20 bg-slate-900 text-white text-xs font-black border-t-2 border-[#0284C7] shadow-md">
-                  <tr>
-                    <td className="sticky left-0 z-30 bg-slate-900 px-2 py-2.5 text-center text-sky-400 border-r border-slate-700">
-                      Σ
-                    </td>
-                    <td colSpan={4} className="px-3 py-2.5 border-r border-slate-700 text-left uppercase tracking-wider text-[11px] text-slate-200">
-                      TỔNG CỘNG ({sheetGridSummary.totalEvents} CUỘC TRAO ĐỔI)
-                    </td>
-                    {/* Tổng Thời lượng dự kiến (Col E) */}
-                    <td className="px-2 py-2.5 text-center text-sky-300 tabular-nums border-r border-slate-700 bg-sky-950/60">
-                      {sheetGridSummary.totalPlanned.toLocaleString('vi-VN')}p
-                    </td>
-                    <td colSpan={2} className="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 border-r border-slate-700">
-                      ~{formatMinutesToHoursAndMins(sheetGridSummary.totalPlanned)}
-                    </td>
-                    {/* Tổng Thời lượng thực tế (Col H) */}
-                    <td className="px-2 py-2.5 text-center text-emerald-300 tabular-nums border-r border-slate-700 bg-emerald-950/60">
-                      {sheetGridSummary.totalActual.toLocaleString('vi-VN')}p
-                    </td>
-                    <td colSpan={2} className="px-2 py-2.5 text-center text-[10px] font-semibold text-slate-400 border-r border-slate-700">
-                      ~{formatMinutesToHoursAndMins(sheetGridSummary.totalActual)}
-                    </td>
-                    {/* Tổng Phút phát sinh (Col K) */}
-                    <td className="px-2 py-2.5 text-center text-orange-300 tabular-nums border-r border-slate-700 bg-orange-950/60">
-                      {sheetGridSummary.netInflation > 0 ? `+${sheetGridSummary.netInflation}` : sheetGridSummary.netInflation}p
-                    </td>
-                    {/* Tỷ lệ vượt KH (Col L) */}
-                    <td className="px-2 py-2.5 text-center text-rose-300 tabular-nums border-r border-slate-700 bg-orange-950/60">
-                      {sheetGridSummary.inflationRateStr}
-                    </td>
-                    <td colSpan={7} className="px-3 py-2.5 text-right text-[11px] font-semibold text-slate-300 border-r border-slate-700">
-                      Hoàn thành: <strong className="text-emerald-400">{sheetGridSummary.completedCount}</strong>/{sheetGridSummary.totalEvents} cuộc • Có Link VBKL: <strong className="text-sky-300">{sheetGridSummary.withConclusionCount}</strong> hồ sơ
-                    </td>
-                    <td className="sticky right-0 z-30 bg-slate-900 px-2 py-2.5 text-center text-[10px] text-slate-400">
-                      A–S
-                    </td>
-                  </tr>
-                </tfoot>
 
               </table>
             </div>

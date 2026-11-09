@@ -747,8 +747,8 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     }
 
     // Giờ bắt đầu / kết thúc dự kiến và thực tế
-    const pStart = formatTimeWithoutSeconds(row[5] || '08:00');
-    const pEnd = formatTimeWithoutSeconds(row[6] || '09:00');
+    const pStart = formatTimeWithoutSeconds(row[5] || '');
+    const pEnd = formatTimeWithoutSeconds(row[6] || '');
     const aStart = formatTimeWithoutSeconds(row[8] || '');
     const aEnd = formatTimeWithoutSeconds(row[9] || '');
 
@@ -922,33 +922,16 @@ export async function fetchDiscussionEventsFromGoogleSheet(): Promise<Discussion
       return localEvents;
     }
 
-    // Merge local custom events at top (avoiding duplicate titles or IDs)
-    const fetchedTitles = new Set(fetchedEvents.map(e => e.title.trim().toLowerCase()));
-    const uniqueLocalEvents = localEvents.filter(le => !fetchedTitles.has(le.title.trim().toLowerCase()));
-
-    // Deduplicate all events by (Title + Date + StartTime) so identical rows display CHỈ 1 LẦN on UI
-    const allCombined = [...uniqueLocalEvents, ...fetchedEvents];
-    const seenEventKeys = new Set<string>();
-    const deduplicatedEvents = allCombined.filter(e => {
-      const key = `${e.title.trim().toLowerCase()}_${e.date.trim()}_${(e.plannedStartTime || '').trim()}`;
-      if (seenEventKeys.has(key)) {
-        return false;
-      }
-      seenEventKeys.add(key);
-      return true;
+    // Merge local custom events at top (avoiding duplicate titles + dates) while preserving exact row order of LỊCH TRAO ĐỔI
+    const fetchedKeys = new Set(
+      fetchedEvents.map(e => `${e.title.trim().toLowerCase()}_${e.date.trim()}_${(e.plannedStartTime || '').trim()}`)
+    );
+    const uniqueLocalEvents = localEvents.filter(le => {
+      const k = `${le.title.trim().toLowerCase()}_${le.date.trim()}_${(le.plannedStartTime || '').trim()}`;
+      return !fetchedKeys.has(k);
     });
 
-    // Chronological sort: date ascending, then plannedStartTime ascending
-    deduplicatedEvents.sort((a, b) => {
-      const partsA = a.date.split('/');
-      const partsB = b.date.split('/');
-      const dA = partsA.length === 3 ? `${partsA[2]}-${partsA[1].padStart(2, '0')}-${partsA[0].padStart(2, '0')}` : a.date;
-      const dB = partsB.length === 3 ? `${partsB[2]}-${partsB[1].padStart(2, '0')}-${partsB[0].padStart(2, '0')}` : b.date;
-      if (dA !== dB) return dA.localeCompare(dB);
-      return (a.plannedStartTime || '').localeCompare(b.plannedStartTime || '');
-    });
-
-    return deduplicatedEvents;
+    return [...uniqueLocalEvents, ...fetchedEvents];
   } catch (error) {
     console.error('Error fetching Google Sheet discussion events:', error);
     return getLocalDiscussionEvents();
