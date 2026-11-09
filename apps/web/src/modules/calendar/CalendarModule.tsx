@@ -2299,6 +2299,9 @@ export const CalendarModule: React.FC = () => {
                   <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-36">
                     Giờ dự kiến
                   </th>
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-32">
+                    Trạng thái
+                  </th>
                   <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-36">
                     Giờ thực tế
                   </th>
@@ -2314,11 +2317,8 @@ export const CalendarModule: React.FC = () => {
                   <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 w-64">
                     Thành phần tham dự
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-24">
+                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 px-3 py-3 text-center w-24">
                     Thư ký
-                  </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 px-3 py-3 text-center w-32">
-                    Trạng thái
                   </th>
                 </tr>
               </thead>
@@ -2422,7 +2422,22 @@ export const CalendarModule: React.FC = () => {
                           ) : null}
                         </td>
 
-                        {/* 5. Giờ thực tế */}
+                        {/* 5. Trạng thái (Di chuyển lên trước cột Giờ thực tế) */}
+                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap">
+                          {isDone ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              <span>Đã hoàn thành</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              <span>{rawStatus || 'Sắp tới'}</span>
+                            </span>
+                          )}
+                        </td>
+
+                        {/* 6. Giờ thực tế */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
                           {hasRealActualTime ? (
                             <div>
@@ -2440,7 +2455,7 @@ export const CalendarModule: React.FC = () => {
                           ) : null}
                         </td>
 
-                        {/* 6. Phát sinh */}
+                        {/* 7. Phát sinh */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
                           {hasRealActualTime && inflMins > 0 ? (
                             <span className="inline-block px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/70 text-[#F15A24] dark:text-orange-400 font-extrabold text-xs border border-orange-200/80 dark:border-orange-800/60">
@@ -2453,7 +2468,7 @@ export const CalendarModule: React.FC = () => {
                           ) : null}
                         </td>
 
-                        {/* 7. Nội dung / Chủ đề trao đổi */}
+                        {/* 8. Nội dung / Chủ đề trao đổi */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-4 py-3">
                           <div className="font-bold text-slate-900 dark:text-white whitespace-pre-line leading-snug text-[13.5px]">
                             {evt.title}
@@ -2478,34 +2493,19 @@ export const CalendarModule: React.FC = () => {
                           )}
                         </td>
 
-                        {/* 8. Điều hành */}
+                        {/* 9. Điều hành */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-800 dark:text-slate-200">
                           {hasHost ? cleanHost : null}
                         </td>
 
-                        {/* 9. Thành phần tham dự */}
+                        {/* 10. Thành phần tham dự */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-4 py-3 whitespace-pre-line text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
                           {evt.attendees || null}
                         </td>
 
-                        {/* 10. Thư ký */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-700 dark:text-slate-300">
+                        {/* 11. Thư ký */}
+                        <td className="px-3 py-3 text-center font-bold text-slate-700 dark:text-slate-300">
                           {hasSecretary ? cleanSecretary : null}
-                        </td>
-
-                        {/* 11. Trạng thái */}
-                        <td className="px-3 py-3 text-center whitespace-nowrap">
-                          {isDone ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                              <span>Đã hoàn thành</span>
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                              <span>{rawStatus || 'Sắp tới'}</span>
-                            </span>
-                          )}
                         </td>
                       </tr>
                     );
