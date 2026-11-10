@@ -747,10 +747,15 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     }
 
     // Giờ bắt đầu / kết thúc dự kiến và thực tế
-    const pStart = formatTimeWithoutSeconds(row[5] || '');
-    const pEnd = formatTimeWithoutSeconds(row[6] || '');
-    const aStart = formatTimeWithoutSeconds(row[8] || '');
-    const aEnd = formatTimeWithoutSeconds(row[9] || '');
+    const rawPStart = formatTimeWithoutSeconds(row[5] || '');
+    const rawPEnd = formatTimeWithoutSeconds(row[6] || '');
+    const rawAStart = formatTimeWithoutSeconds(row[8] || '');
+    const rawAEnd = formatTimeWithoutSeconds(row[9] || '');
+
+    const pStart = rawPStart === '-' ? '' : rawPStart;
+    const pEnd = rawPEnd === '-' ? '' : rawPEnd;
+    const aStart = rawAStart === '-' ? '' : rawAStart;
+    const aEnd = rawAEnd === '-' ? '' : rawAEnd;
 
     const rawPDuration = (row[4] || '').replace(/[^\d]/g, '');
     const pDuration = rawPDuration !== '' ? parseInt(rawPDuration, 10) : undefined;
@@ -761,6 +766,7 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     const inflRate = (row[11] || '').trim() || undefined;
 
     const notes = (row[0] || '').trim();
+    const notesLower = notes.toLowerCase();
     const scope = (row[1] || '').trim();
     const dayOfWeek = (row[2] || '').trim();
     const legalEntity = (row[13] || '').trim() || '-';
@@ -770,11 +776,20 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     let status = (row[16] || '').trim();
     if (!status) {
       if (aStart && aStart !== '00:00' && aEnd && aEnd !== '00:00') {
-        status = 'Đã hoàn thành';
-      } else if (notes.toLowerCase().includes('huỷ') || notes.toLowerCase().includes('dời') || notes.toLowerCase().includes('không trao đổi')) {
-        status = 'Hoãn';
+        status = 'Đã diễn ra';
+      } else if (notesLower.includes('dời') || notesLower.includes('đã tích hợp vào')) {
+        status = 'Dời lịch';
+      } else if (
+        notesLower.includes('huỷ') ||
+        notesLower.includes('hủy') ||
+        notesLower.includes('không trao đổi') ||
+        notesLower.includes('khong trao đổi') ||
+        notesLower.includes('nghỉ =>') ||
+        notesLower.includes('chiều nghỉ')
+      ) {
+        status = 'Hoãn / Hủy';
       } else {
-        status = 'Sắp tới';
+        status = '';
       }
     }
 

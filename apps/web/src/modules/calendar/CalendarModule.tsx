@@ -1371,7 +1371,6 @@ export const CalendarModule: React.FC = () => {
   };
 
   // Dynamic Real-time Vietnam Time Status Engine
-  // Dynamic Real-time Vietnam Time Status Engine
   const getStatusInfo = (evt: DiscussionEvent | string, now: Date = vnNow) => {
     if (typeof evt === 'string') {
       const s = evt.toLowerCase().trim();
@@ -1384,7 +1383,7 @@ export const CalendarModule: React.FC = () => {
           borderLeft: 'border-l-4 border-l-slate-600'
         };
       }
-      if (s.includes('hoãn') || s.includes('hủy')) {
+      if (s.includes('hoãn') || s.includes('hủy') || s.includes('huỷ') || s.includes('dời')) {
         return {
           code: 'CANCELLED',
           label: evt || 'Hoãn / Hủy',
@@ -1412,18 +1411,44 @@ export const CalendarModule: React.FC = () => {
     }
 
     const rawStatus = (evt.status || '').toLowerCase().trim();
+    const notesLower = (evt.notes || '').toLowerCase().trim();
+    const hasActualTime = Boolean(
+      (evt.actualStartTime && evt.actualStartTime !== '00:00' && evt.actualStartTime !== '-') ||
+      (evt.actualEndTime && evt.actualEndTime !== '00:00' && evt.actualEndTime !== '-') ||
+      (evt.actualDurationMinutes !== undefined && evt.actualDurationMinutes > 0)
+    );
 
-    if (rawStatus.includes('hoãn') || rawStatus.includes('hủy') || rawStatus === 'cancelled') {
+    if (
+      rawStatus.includes('hoãn') ||
+      rawStatus.includes('hủy') ||
+      rawStatus.includes('huỷ') ||
+      rawStatus.includes('dời') ||
+      rawStatus === 'cancelled' ||
+      (!hasActualTime && (
+        notesLower.includes('không trao đổi') ||
+        notesLower.includes('khong trao đổi') ||
+        notesLower.includes('hủy') ||
+        notesLower.includes('huỷ') ||
+        notesLower.includes('nghỉ =>') ||
+        notesLower.includes('chiều nghỉ') ||
+        notesLower.includes('dời') ||
+        notesLower.includes('đã tích hợp vào')
+      ))
+    ) {
+      const cancelLabel =
+        (rawStatus.includes('dời') || notesLower.includes('dời') || notesLower.includes('đã tích hợp vào'))
+          ? 'Dời lịch'
+          : (evt.status && evt.status !== 'Sắp tới' ? evt.status : 'Hoãn / Hủy');
       return {
         code: 'CANCELLED',
-        label: evt.status || 'Hoãn / Hủy',
+        label: cancelLabel,
         dotColor: 'bg-slate-500',
         pillBg: 'bg-slate-800 text-slate-300 border border-slate-600',
         borderLeft: 'border-l-4 border-l-slate-500'
       };
     }
 
-    if (rawStatus.includes('đã hoàn thành') || rawStatus.includes('đã diễn ra')) {
+    if (rawStatus.includes('đã hoàn thành') || rawStatus.includes('đã diễn ra') || hasActualTime) {
       return {
         code: 'COMPLETED',
         label: 'Đã diễn ra',
@@ -1443,7 +1468,7 @@ export const CalendarModule: React.FC = () => {
       };
     }
 
-    if (!evt.date || !evt.plannedStartTime || !evt.plannedEndTime) {
+    if (!evt.date) {
       return {
         code: 'UPCOMING',
         label: 'Sắp tới',
@@ -1455,6 +1480,26 @@ export const CalendarModule: React.FC = () => {
 
     try {
       const [d, m, y] = evt.date.split('/').map(Number);
+      if (!evt.plannedStartTime || !evt.plannedEndTime || evt.plannedStartTime === '-' || evt.plannedEndTime === '-') {
+        const evtDayEnd = new Date(y, m - 1, d, 23, 59, 59);
+        if (now > evtDayEnd) {
+          return {
+            code: 'COMPLETED',
+            label: 'Đã diễn ra',
+            dotColor: 'bg-slate-400',
+            pillBg: 'bg-slate-700 dark:bg-slate-800 text-slate-100 dark:text-slate-200 border border-slate-600',
+            borderLeft: 'border-l-4 border-l-slate-600'
+          };
+        }
+        return {
+          code: 'UPCOMING',
+          label: 'Sắp tới',
+          dotColor: 'bg-amber-400',
+          pillBg: 'bg-gradient-to-r from-[#0077B6] to-[#F59E0B] text-white border border-amber-400/60 shadow-[0_0_10px_rgba(245,158,11,0.35)]',
+          borderLeft: 'border-l-4 border-l-amber-500'
+        };
+      }
+
       const [startH, startM] = evt.plannedStartTime.split(':').map(Number);
       const [endH, endM] = evt.plannedEndTime.split(':').map(Number);
 
@@ -2346,8 +2391,8 @@ export const CalendarModule: React.FC = () => {
                       : 0;
 
                     const hasRealActualTime = Boolean(
-                      (evt.actualStartTime && evt.actualStartTime !== '00:00') ||
-                      (evt.actualEndTime && evt.actualEndTime !== '00:00') ||
+                      (evt.actualStartTime && evt.actualStartTime !== '00:00' && evt.actualStartTime !== '-') ||
+                      (evt.actualEndTime && evt.actualEndTime !== '00:00' && evt.actualEndTime !== '-') ||
                       actualMins > 0
                     );
 
@@ -2355,8 +2400,7 @@ export const CalendarModule: React.FC = () => {
                       ? (evt.inflationMinutes !== undefined ? evt.inflationMinutes : actualMins - plannedMins)
                       : 0;
 
-                    const rawStatus = (evt.status || '').trim();
-                    const isDone = rawStatus.toLowerCase().includes('hoàn thành') || rawStatus.toLowerCase().includes('đã') || hasRealActualTime;
+                    const stInfo = getStatusInfo(evt, vnNow);
 
                     const dayLower = (evt.dayOfWeek || '').toLowerCase();
                     const isSunday = dayLower.includes('chủ nhật') || dayLower === 'cn';
@@ -2434,15 +2478,25 @@ export const CalendarModule: React.FC = () => {
 
                         {/* 5. Trạng thái (Di chuyển lên trước cột Giờ thực tế) */}
                         <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap">
-                          {isDone ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                              <span>Đã hoàn thành</span>
+                          {stInfo.code === 'ONGOING' ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                              <span>Đang diễn ra</span>
+                            </span>
+                          ) : stInfo.code === 'COMPLETED' ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                              <span>Đã diễn ra</span>
+                            </span>
+                          ) : stInfo.code === 'CANCELLED' ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200/80 dark:border-rose-800/60 text-xs font-bold">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                              <span>{stInfo.label}</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs font-bold">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 text-xs font-bold">
                               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                              <span>{rawStatus || 'Sắp tới'}</span>
+                              <span>Sắp tới</span>
                             </span>
                           )}
                         </td>
