@@ -2571,33 +2571,6 @@ export const CalendarModule: React.FC = () => {
         {/* ========================================================================= */}
         <aside className="order-2 lg:order-1 lg:col-span-1 w-full h-auto lg:h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl lg:rounded-[24px] p-3.5 sm:p-4 space-y-3.5 text-slate-800 dark:text-slate-200 scrollbar-thin overflow-y-auto shadow-sm hover:border-[#F15A24]/40 transition-all">
           
-          {/* 🎯 HỘP 0: TRẠNG THÁI NGUỒN DỮ LIỆU GOOGLE SHEET LỊCH TRAO ĐỔI */}
-          <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 dark:border-emerald-500/30 rounded-2xl p-3 flex items-center justify-between text-xs shadow-2xs">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className="relative flex h-2.5 w-2.5 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-              </span>
-              <div className="min-w-0">
-                <div className="text-[12px] font-black text-emerald-700 dark:text-emerald-300 truncate flex items-center gap-1.5">
-                  <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>Sheet: LỊCH TRAO ĐỔI</span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                  {events.length} cuộc trao đổi • Tự động đồng bộ
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => handleRefreshLiveEvents(true)}
-              disabled={loading}
-              title="Đồng bộ lại từ sheet LỊCH TRAO ĐỔI"
-              className="p-1.5 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 cursor-pointer transition shrink-0"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-
           {/* 🎯 HỘP 1: NÚT THÊM MỚI & TÌM KIẾM NHANH */}
           <div className="space-y-2.5">
             {/* Primary Action Button - Primary Blue #0284C7 Gradient */}
@@ -2734,13 +2707,13 @@ export const CalendarModule: React.FC = () => {
             </div>
           </div>
 
-          {/* ⚡ HỘP 3: TIỆN ÍCH DỮ LIỆU & ĐỒNG BỘ */}
+          {/* ⚡ HỘP 3: TIỆN ÍCH DỮ LIỆU */}
           <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 rounded-xl p-3 space-y-2">
             <span className="text-[10px] font-black tracking-wider text-slate-400 uppercase px-0.5">
-              Tiện Ích & Đồng Bộ
+              Tiện Ích Dữ Liệu
             </span>
 
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
               {/* Google Sheet 24/7 */}
               <a
                 href={GOOGLE_SHEET_EDIT_URL}
@@ -2752,17 +2725,6 @@ export const CalendarModule: React.FC = () => {
                 <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span className="truncate">Sheet 24/7</span>
               </a>
-
-              {/* Sync Live Button */}
-              <button
-                onClick={() => handleRefreshLiveEvents(true)}
-                disabled={loading}
-                className="py-2 px-1 bg-white dark:bg-slate-900 border border-cyan-200 dark:border-cyan-900/60 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-950/40 rounded-md transition flex flex-col sm:flex-row items-center justify-center gap-1 font-bold text-[11px] shadow-2xs cursor-pointer disabled:opacity-50"
-                title="Đồng bộ dữ liệu thời gian thực tất cả các tháng"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400 flex-shrink-0 ${loading ? 'animate-spin' : ''}`} />
-                <span className="truncate">Đồng bộ</span>
-              </button>
 
               {/* Trash Modal Button */}
               <button
@@ -3540,100 +3502,6 @@ export const CalendarModule: React.FC = () => {
                     );
                   })
                 )}
-
-              </div>
-            )}
-
-            {/* ========================================================================= */}
-            {/* 🌟 VIEW MODE 2: MONTH MATRIX GRID (HIỂN THỊ KHI CHỌN CHẾ ĐỘ M) */}
-            {/* ========================================================================= */}
-            {viewMode === 'month' && (
-              <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-3 sm:p-3.5 space-y-2.5 shadow-sm overflow-x-auto">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 min-w-[500px]">
-                  <h2 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#0077B6]"></span>
-                    <span>CHẾ ĐỘ M: LỊCH TRAO ĐỔI {selectedMonthOnly === 'ALL' ? 'CẢ NĂM' : `THÁNG ${selectedMonthOnly}`} / {selectedYear}</span>
-                  </h2>
-                  <span className="px-3 py-1 bg-[#003854] dark:bg-[#003854] text-[#00E5FF] dark:text-[#00E5FF] font-black rounded-md text-[11px] border border-cyan-300/50 shadow-inner">
-                    TỔNG {filteredEvents.length} CUỘC TRAO ĐỔI
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-7 gap-1 text-center text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800 pb-1 min-w-[500px]">
-                  <div>THỨ 2</div>
-                  <div>THỨ 3</div>
-                  <div>THỨ 4</div>
-                  <div>THỨ 5</div>
-                  <div>THỨ 6</div>
-                  <div className="text-[#0077B6]">THỨ 7</div>
-                  <div className="text-rose-500">CHỦ NHẬT</div>
-                </div>
-
-                <div className="grid grid-cols-7 gap-1 min-h-[350px] min-w-[500px]">
-                  {monthDaysGrid.map((cell, idx) => {
-                    if (!cell.isCurrentMonth) {
-                      return (
-                        <div key={idx} className="bg-slate-50/40 dark:bg-slate-900/20 rounded-md p-1 min-h-[70px] opacity-20 border border-transparent" />
-                      );
-                    }
-
-                    const dayEvts = eventsByDateMap[cell.dateStr!] || [];
-                    const isToday = cell.dateStr === '30/08/2026';
-                    const isSelected = cell.dateStr === currentDateStr;
-
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => {
-                          setCurrentDateStr(cell.dateStr!);
-                          setViewMode('day');
-                        }}
-                        className={`rounded-md p-1 sm:p-1.5 min-h-[75px] border transition-all cursor-pointer flex flex-col justify-between ${
-                          isToday
-                            ? 'bg-sky-50/60 dark:bg-sky-950/40 border-[#0077B6]'
-                            : isSelected
-                              ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-400'
-                              : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-400 hover:bg-slate-50/80'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between text-xs">
-                          <span className={`w-4.5 sm:w-5 h-4.5 sm:h-5 rounded-md font-black text-[9px] sm:text-[10px] flex items-center justify-center ${
-                            isToday
-                              ? 'bg-rose-500 text-white'
-                              : 'text-slate-800 dark:text-slate-200'
-                          }`}>
-                            {cell.dayNum}
-                          </span>
-
-                          {dayEvts.length > 0 && (
-                            <span className="text-[8px] font-bold text-slate-400">
-                              {dayEvts.length} lịch
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="space-y-0.5 mt-1 flex-1 flex flex-col justify-start">
-                          {dayEvts.slice(0, 3).map(evt => {
-                            return (
-                              <div
-                                key={evt.id}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedEventDetail(evt);
-                                }}
-                                className="px-1 py-0.5 rounded bg-slate-100/90 dark:bg-slate-800 text-[8px] sm:text-[9px] text-slate-800 dark:text-slate-200 truncate border border-slate-200/60 dark:border-slate-700/60 font-medium"
-                                title={evt.title}
-                              >
-                                {evt.title}
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                      </div>
-                    );
-                  })}
-                </div>
 
               </div>
             )}
