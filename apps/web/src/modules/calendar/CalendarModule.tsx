@@ -2346,50 +2346,62 @@ export const CalendarModule: React.FC = () => {
 
           {/* BẢNG DỮ LIỆU LƯỚI KHOA HỌC, PHẲNG, RÕ NÉT (KHÔNG ĐÓNG HỘP CHỒNG CHÉO) */}
           <div className="flex-1 min-h-0 w-full overflow-auto scrollbar-thin bg-white dark:bg-slate-950">
-            <table className="calendar-grid-table w-full border-collapse text-left">
+            <table className="calendar-grid-table w-full table-fixed border-collapse text-left">
               <thead>
                 <tr className="border-b-2 border-slate-300 dark:border-slate-700 text-[11px] font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-200 select-none">
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-11">
+                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-[48px]">
                     STT
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-24">
+                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[104px]">
                     Ngày
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
+                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-3 py-2.5 text-center ${
+                    showGridDetails ? 'w-[130px]' : 'w-[160px]'
+                  }`}>
                     Phạm vi
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E0F2FE] dark:bg-slate-900 text-[#0369A1] dark:text-sky-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
+                  <th className="sticky top-0 z-20 bg-[#E0F2FE] dark:bg-slate-900 text-[#0369A1] dark:text-sky-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[124px]">
                     Giờ dự kiến
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
+                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[124px]">
                     Trạng thái
                   </th>
                   {showGridDetails && (
                     <>
-                      <th className="sticky top-0 z-20 bg-[#CCFBF1] dark:bg-slate-900 text-[#0F766E] dark:text-teal-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
+                      <th className="sticky top-0 z-20 bg-[#CCFBF1] dark:bg-slate-900 text-[#0F766E] dark:text-teal-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[120px]">
                         Giờ thực tế
                       </th>
-                      <th className="sticky top-0 z-20 bg-[#FFEDD5] dark:bg-slate-900 text-[#C2410C] dark:text-orange-300 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-20">
+                      <th className="sticky top-0 z-20 bg-[#FFEDD5] dark:bg-slate-900 text-[#C2410C] dark:text-orange-300 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-[84px]">
                         Phát sinh
                       </th>
                     </>
                   )}
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-3.5 py-2.5 min-w-[320px]">
+                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-4 py-2.5 text-center">
                     Nội dung / Chủ đề trao đổi
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
+                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center ${
+                    showGridDetails ? 'w-[116px]' : 'w-[136px]'
+                  }`}>
                     Điều hành
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-3.5 py-2.5 min-w-[220px] w-64">
+                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-4 py-2.5 text-center ${
+                    showGridDetails ? 'w-[22%]' : 'w-[24%]'
+                  }`}>
                     Thành phần tham dự
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-20">
+                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center ${
+                    showGridDetails ? 'w-[84px]' : 'w-[96px]'
+                  }`}>
                     Thư ký
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-24">
+                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center ${
+                    showGridDetails ? 'w-[96px]' : 'w-[108px]'
+                  }`}>
                     Tài liệu
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 px-2.5 py-2.5 text-center w-28">
+                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 px-2.5 py-2.5 text-center ${
+                    showGridDetails ? 'w-[112px]' : 'w-[120px]'
+                  }`}>
                     VBKL
                   </th>
                 </tr>
@@ -2454,11 +2466,7 @@ export const CalendarModule: React.FC = () => {
                       <tr
                         key={evt.id || rowIndex}
                         onClick={() => setSelectedEventDetail(evt)}
-                        className={`${
-                          isTodayRow
-                            ? 'bg-emerald-50/40 dark:bg-emerald-950/15 hover:bg-emerald-100/50 dark:hover:bg-emerald-950/30'
-                            : 'bg-white dark:bg-slate-950 hover:bg-sky-50/50 dark:hover:bg-slate-900/60'
-                        } transition-colors cursor-pointer align-middle ${
+                        className={`bg-white dark:bg-slate-950 hover:bg-sky-50/40 dark:hover:bg-slate-900/60 transition-colors cursor-pointer align-middle ${
                           isLastInDateGroup ? 'border-b-2 border-b-slate-300 dark:border-b-slate-700' : ''
                         }`}
                       >
@@ -2583,7 +2591,7 @@ export const CalendarModule: React.FC = () => {
                         )}
 
                         {/* 8. Nội dung / Chủ đề trao đổi */}
-                        <td className="border-r border-slate-200 dark:border-slate-800 px-3.5 py-2.5">
+                        <td className="border-r border-slate-200 dark:border-slate-800 px-4 py-2.5">
                           <div className="font-bold text-slate-900 dark:text-white whitespace-pre-line leading-snug text-[13px]">
                             {evt.title}
                           </div>
@@ -2600,7 +2608,7 @@ export const CalendarModule: React.FC = () => {
                         </td>
 
                         {/* 10. Thành phần tham dự */}
-                        <td className="border-r border-slate-200 dark:border-slate-800 px-3.5 py-2.5 whitespace-pre-line text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                        <td className="border-r border-slate-200 dark:border-slate-800 px-4 py-2.5 whitespace-pre-line text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
                           {evt.attendees || null}
                         </td>
 
