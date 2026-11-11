@@ -2218,19 +2218,19 @@ export const CalendarModule: React.FC = () => {
         <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-950 relative z-10 overflow-hidden">
           
           {/* THANH CÔNG CỤ LỌC DỮ LIỆU FULL NỀN PHÍA TRÊN */}
-          <div className="flex-shrink-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+          <div className="flex-shrink-0 bg-gradient-to-r from-sky-50/80 via-white to-orange-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
             
             {/* Cụm tìm kiếm & Bộ lọc (Trái) */}
             <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
               {/* Ô tìm kiếm nhanh */}
-              <div className="relative min-w-[220px] sm:min-w-[260px] flex-1 max-w-xs">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <div className="relative min-w-[230px] sm:min-w-[280px] flex-1 max-w-sm">
+                <Search className="w-3.5 h-3.5 text-[#0284C7] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm nội dung, điều hành, thành phần, thư ký..."
-                  className="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/30 focus:border-[#0284C7] font-medium transition"
+                  className="calendar-toolbar-control w-full h-9 pl-8.5 pr-7 text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-xl border border-slate-200/90 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/25 focus:border-[#0284C7] font-semibold shadow-2xs transition"
                 />
                 {searchQuery && (
                   <button
@@ -2246,7 +2246,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="calendar-toolbar-control h-9 px-3 text-xs font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/90 dark:border-slate-700 rounded-xl hover:border-[#0284C7]/60 focus:outline-none focus:border-[#0284C7] shadow-2xs cursor-pointer transition"
               >
                 <option value="2026">Năm 2026</option>
                 <option value="2025">Năm 2025</option>
@@ -2257,7 +2257,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedMonthOnly}
                 onChange={(e) => setSelectedMonthOnly(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="calendar-toolbar-control h-9 px-3 text-xs font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/90 dark:border-slate-700 rounded-xl hover:border-[#0284C7]/60 focus:outline-none focus:border-[#0284C7] shadow-2xs cursor-pointer transition"
               >
                 <option value="ALL">Tất cả tháng</option>
                 <option value="01">Tháng 01</option>
@@ -2278,7 +2278,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedScope}
                 onChange={(e) => setSelectedScope(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="calendar-toolbar-control h-9 px-3 text-xs font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/90 dark:border-slate-700 rounded-xl hover:border-[#0284C7]/60 focus:outline-none focus:border-[#0284C7] shadow-2xs cursor-pointer transition"
               >
                 <option value="ALL">Mọi phạm vi</option>
                 <option value="P1">Phạm vi: P1</option>
@@ -2290,12 +2290,12 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-2.5 py-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:border-[#0284C7] cursor-pointer"
+                className="calendar-toolbar-control h-9 px-3 text-xs font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/90 dark:border-slate-700 rounded-xl hover:border-[#0284C7]/60 focus:outline-none focus:border-[#0284C7] shadow-2xs cursor-pointer transition"
               >
                 <option value="ALL">Mọi trạng thái</option>
-                <option value="GREEN">Đã hoàn thành</option>
-                <option value="YELLOW">Sắp diễn ra / Đang họp</option>
-                <option value="RED">Hoãn / Hủy</option>
+                <option value="GREEN">Đã diễn ra</option>
+                <option value="YELLOW">Sắp tới / Đang diễn ra</option>
+                <option value="RED">Hoãn / Hủy / Dời</option>
               </select>
 
               {(searchQuery || selectedMonthOnly !== 'ALL' || selectedDayOnly !== 'ALL' || selectedScope !== 'ALL' || selectedStatus !== 'ALL') && (
@@ -2307,18 +2307,34 @@ export const CalendarModule: React.FC = () => {
                     setSelectedScope('ALL');
                     setSelectedStatus('ALL');
                   }}
-                  className="px-2.5 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-lg transition cursor-pointer"
+                  className="h-9 px-3 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-xl transition cursor-pointer"
                 >
                   Xóa lọc
                 </button>
               )}
             </div>
 
-            {/* Cụm nút hành động (Phải) */}
+            {/* Cụm chỉ số nhanh & nút hành động (Phải) */}
             <div className="flex items-center gap-2 shrink-0">
+              <div className="hidden xl:flex items-center gap-1.5 mr-1">
+                <span className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-lg bg-sky-50 dark:bg-sky-950/50 border border-sky-200/80 dark:border-sky-800 text-[#0284C7] dark:text-sky-300 text-xs font-extrabold">
+                  <span>Tổng: {tableRowsWithDateGroup.length}</span>
+                </span>
+                {kpiStats.upcoming > 0 && (
+                  <span className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200/80 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    <span>Sắp tới: {kpiStats.upcoming}</span>
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-1.5 h-8 px-2.5 rounded-lg bg-teal-50 dark:bg-teal-950/50 border border-teal-200/80 dark:border-teal-800 text-teal-700 dark:text-teal-300 text-xs font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                  <span>Đã diễn ra: {kpiStats.completed}</span>
+                </span>
+              </div>
+
               <button
                 onClick={handleOpenAddModal}
-                className="px-3.5 py-1.5 rounded-lg bg-[#0284C7] hover:bg-[#0369a1] text-white text-xs font-extrabold shadow-xs transition inline-flex items-center gap-1.5 cursor-pointer"
+                className="h-9 px-4 rounded-xl bg-gradient-to-r from-[#0284C7] to-[#00A8E8] hover:from-[#0369a1] hover:to-[#0284C7] text-white text-xs font-extrabold shadow-xs hover:shadow-md transition inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Thêm Lịch Họp Mới</span>
@@ -2327,48 +2343,48 @@ export const CalendarModule: React.FC = () => {
 
           </div>
 
-          {/* BẢNG DỮ LIỆU LƯỚI FULL MÀN HÌNH, GỌN GÀNG, RÕ NÉT */}
+          {/* BẢNG DỮ LIỆU LƯỚI FULL MÀN HÌNH, ĐẦY MÀU SẮC, CĂN CHỈNH HỘP CÂN ĐỐI */}
           <div className="flex-1 min-h-0 w-full overflow-auto scrollbar-thin bg-white dark:bg-slate-950">
-            <table className="w-full border-collapse text-left">
+            <table className="calendar-grid-table w-full border-collapse text-left">
               <thead>
-                <tr className="border-b-2 border-slate-200 dark:border-slate-800 text-[11.5px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300 select-none">
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-12">
+                <tr className="border-b-2 border-[#0369a1] dark:border-slate-700 text-[11px] font-extrabold uppercase tracking-wider text-white select-none">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-2.5 py-3 text-center w-14">
                     STT
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-28">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-28">
                     Ngày
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-28">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-36">
                     Phạm vi
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-36">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-36">
                     Giờ dự kiến
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-32">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-32">
                     Trạng thái
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-36">
+                  <th className="sticky top-0 z-20 bg-[#0F5257] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-36">
                     Giờ thực tế
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-24">
+                  <th className="sticky top-0 z-20 bg-[#0F5257] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-24">
                     Phát sinh
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 min-w-[280px]">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-4 py-3 min-w-[290px]">
                     Nội dung / Chủ đề trao đổi
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-32">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-32">
                     Điều hành
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 w-64">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-4 py-3 w-64">
                     Thành phần tham dự
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-24">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-24">
                     Thư ký
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3 py-3 text-center w-32">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 border-r border-white/15 dark:border-slate-800 px-3 py-3 text-center w-32">
                     Tài liệu
                   </th>
-                  <th className="sticky top-0 z-20 bg-slate-100 dark:bg-slate-900 px-3 py-3 text-center w-44">
+                  <th className="sticky top-0 z-20 bg-[#0C4A6E] dark:bg-slate-900 px-3 py-3 text-center w-40">
                     VBKL
                   </th>
                 </tr>
@@ -2383,18 +2399,26 @@ export const CalendarModule: React.FC = () => {
                   </tr>
                 ) : (
                   tableRowsWithDateGroup.map(({ evt, rowIndex, isFirstInDateGroup, isLastInDateGroup, dateRowSpan }) => {
-                    const plannedMins = evt.plannedDurationMinutes !== undefined
+                    const plannedMins = evt.plannedDurationMinutes !== undefined && evt.plannedDurationMinutes > 0
                       ? evt.plannedDurationMinutes
-                      : (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0);
-                    const actualMins = evt.actualDurationMinutes !== undefined
-                      ? evt.actualDurationMinutes
+                      : (evt.plannedStartTime && evt.plannedEndTime
+                          ? (parseInt(calculateDurationMinutesStr(evt.plannedStartTime, evt.plannedEndTime), 10) || 0)
+                          : 0);
+
+                    const hasValidActualClock = Boolean(
+                      evt.actualStartTime && evt.actualStartTime !== '00:00' && evt.actualStartTime !== '-' &&
+                      evt.actualEndTime && evt.actualEndTime !== '00:00' && evt.actualEndTime !== '-'
+                    );
+
+                    const computedActualMins = hasValidActualClock
+                      ? (parseInt(calculateDurationMinutesStr(evt.actualStartTime, evt.actualEndTime), 10) || 0)
                       : 0;
 
-                    const hasRealActualTime = Boolean(
-                      (evt.actualStartTime && evt.actualStartTime !== '00:00' && evt.actualStartTime !== '-') ||
-                      (evt.actualEndTime && evt.actualEndTime !== '00:00' && evt.actualEndTime !== '-') ||
-                      actualMins > 0
-                    );
+                    const actualMins = evt.actualDurationMinutes !== undefined && evt.actualDurationMinutes > 0
+                      ? evt.actualDurationMinutes
+                      : computedActualMins;
+
+                    const hasRealActualTime = Boolean(hasValidActualClock || actualMins > 0);
 
                     const inflMins = hasRealActualTime
                       ? (evt.inflationMinutes !== undefined ? evt.inflationMinutes : actualMins - plannedMins)
@@ -2405,8 +2429,13 @@ export const CalendarModule: React.FC = () => {
                     const dayLower = (evt.dayOfWeek || '').toLowerCase();
                     const isSunday = dayLower.includes('chủ nhật') || dayLower === 'cn';
                     const isSaturday = dayLower.includes('thứ 7') || dayLower.includes('thứ bảy');
+                    const isTodayRow = evt.date === realTimeStr.dateStr;
 
                     const scopeStr = (evt.scope || '').trim();
+                    const scopeLower = scopeStr.toLowerCase();
+                    const isScopeP1 = scopeLower === 'p1';
+                    const isScopeZalo = scopeLower.includes('zalo') || scopeLower.includes('online');
+
                     const cleanHost = (evt.legalEntity || '').trim();
                     const hasHost = cleanHost !== '' && cleanHost !== '-';
                     const cleanSecretary = (evt.secretary || '').trim();
@@ -2416,59 +2445,101 @@ export const CalendarModule: React.FC = () => {
                     const hasDoc = cleanDoc !== '' && cleanDoc !== '-';
                     const cleanVbkl = (evt.conclusionDocUrl || '').trim();
                     const hasVbkl = cleanVbkl !== '' && cleanVbkl !== '-';
+                    const docOnlyAttachments = (evt.attachments || []).filter(
+                      a => !a.id.startsWith('att-vbkl-') && a.url !== cleanVbkl
+                    );
 
                     return (
                       <tr
                         key={evt.id || rowIndex}
                         onClick={() => setSelectedEventDetail(evt)}
-                        className={`even:bg-slate-50/60 dark:even:bg-slate-900/40 hover:bg-sky-50/70 dark:hover:bg-sky-950/30 transition-colors cursor-pointer align-middle ${
-                          isLastInDateGroup ? 'border-b-2 border-b-slate-200 dark:border-b-slate-700' : ''
+                        className={`${
+                          isTodayRow
+                            ? 'bg-sky-50/35 dark:bg-sky-950/20 hover:bg-sky-100/60 dark:hover:bg-sky-950/40'
+                            : 'even:bg-slate-50/70 dark:even:bg-slate-900/40 hover:bg-sky-50/60 dark:hover:bg-sky-950/30'
+                        } transition-colors cursor-pointer align-middle ${
+                          isLastInDateGroup ? 'border-b-2 border-b-slate-300 dark:border-b-slate-700' : ''
                         }`}
                       >
                         {/* 1. STT */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-400 tabular-nums text-xs">
-                          {rowIndex}
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center align-middle">
+                          <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg font-extrabold text-xs tabular-nums border ${
+                            isTodayRow
+                              ? 'bg-[#0284C7] text-white border-[#0284C7] shadow-2xs'
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-700'
+                          }`}>
+                            {rowIndex}
+                          </span>
                         </td>
 
                         {/* 2. Ngày & Thứ (Gộp ô rowSpan cho các cuộc trao đổi cùng ngày, chỉ hiển thị 1 lần) */}
                         {isFirstInDateGroup && (
                           <td
                             rowSpan={dateRowSpan}
-                            className="border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 py-3 text-center whitespace-nowrap align-middle"
+                            className={`border-r border-slate-200 dark:border-slate-800 px-2.5 py-3 text-center whitespace-nowrap align-middle ${
+                              isTodayRow
+                                ? 'bg-sky-50/70 dark:bg-sky-950/30'
+                                : 'bg-white dark:bg-slate-950'
+                            }`}
                           >
-                            <div className="font-extrabold text-slate-900 dark:text-white tabular-nums text-[13.5px]">
-                              {evt.date}
-                            </div>
-                            <div className={`text-[11px] font-bold mt-0.5 ${
-                              isSunday
-                                ? 'text-rose-600 dark:text-rose-400'
-                                : isSaturday
-                                  ? 'text-[#0284C7] dark:text-sky-400'
-                                  : 'text-slate-500 dark:text-slate-400'
+                            <div className={`inline-flex flex-col items-center justify-center px-2.5 py-2 rounded-xl border min-w-[96px] shadow-2xs ${
+                              isTodayRow
+                                ? 'bg-white dark:bg-slate-900 border-[#0284C7] ring-2 ring-[#0284C7]/15'
+                                : isSunday
+                                  ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-200/90 dark:border-rose-800/70'
+                                  : isSaturday
+                                    ? 'bg-sky-50/60 dark:bg-sky-950/30 border-sky-200/90 dark:border-sky-800/70'
+                                    : 'bg-slate-50/90 dark:bg-slate-900 border-slate-200/90 dark:border-slate-800'
                             }`}>
-                              {evt.dayOfWeek}
+                              {isTodayRow && (
+                                <span className="px-1.5 py-0.2 mb-1 rounded bg-[#F15A24] text-white text-[9px] font-black uppercase tracking-wider">
+                                  Hôm nay
+                                </span>
+                              )}
+                              <div className={`font-extrabold tabular-nums text-[13px] ${
+                                isTodayRow
+                                  ? 'text-[#0284C7] dark:text-sky-300'
+                                  : 'text-slate-900 dark:text-white'
+                              }`}>
+                                {evt.date}
+                              </div>
+                              <div className={`text-[10.5px] font-extrabold mt-0.5 uppercase tracking-wide ${
+                                isSunday
+                                  ? 'text-rose-600 dark:text-rose-400'
+                                  : isSaturday || isTodayRow
+                                    ? 'text-[#0284C7] dark:text-sky-400'
+                                    : 'text-slate-500 dark:text-slate-400'
+                              }`}>
+                                {evt.dayOfWeek}
+                              </div>
                             </div>
                           </td>
                         )}
 
                         {/* 3. Phạm vi */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center align-middle">
                           {scopeStr ? (
-                            <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                            <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-lg font-extrabold text-xs leading-snug max-w-[140px] text-center border shadow-2xs ${
+                              isScopeP1
+                                ? 'bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 border-sky-200/90 dark:border-sky-800/70 min-w-[48px]'
+                                : isScopeZalo
+                                  ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200/90 dark:border-indigo-800/70 min-w-[54px]'
+                                  : 'bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border-violet-200/90 dark:border-violet-800/70'
+                            }`}>
                               {scopeStr}
                             </span>
                           ) : null}
                         </td>
 
                         {/* 4. Giờ dự kiến */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center whitespace-nowrap tabular-nums align-middle">
                           {evt.plannedStartTime || evt.plannedEndTime ? (
-                            <div>
-                              <div className="font-bold text-slate-800 dark:text-slate-200 text-[13px]">
+                            <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200/90 dark:border-slate-700 min-w-[108px] shadow-2xs">
+                              <div className="font-extrabold text-slate-800 dark:text-slate-100 text-[12.5px]">
                                 {evt.plannedStartTime} – {evt.plannedEndTime}
                               </div>
                               {plannedMins > 0 && (
-                                <div className="text-[11px] font-semibold text-slate-400">
+                                <div className="text-[10.5px] font-bold text-[#0284C7] dark:text-sky-400">
                                   {plannedMins} phút
                                 </div>
                               )}
@@ -2477,24 +2548,24 @@ export const CalendarModule: React.FC = () => {
                         </td>
 
                         {/* 5. Trạng thái (Di chuyển lên trước cột Giờ thực tế) */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center whitespace-nowrap align-middle">
                           {stInfo.code === 'ONGOING' ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 text-xs font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="inline-flex items-center justify-center gap-1.5 min-w-[110px] px-3 py-1 rounded-full bg-emerald-500 text-white border border-emerald-600 text-xs font-extrabold shadow-xs">
+                              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                               <span>Đang diễn ra</span>
                             </span>
                           ) : stInfo.code === 'COMPLETED' ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 text-xs font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                            <span className="inline-flex items-center justify-center gap-1.5 min-w-[110px] px-3 py-1 rounded-full bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 text-xs font-extrabold shadow-2xs">
+                              <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                               <span>Đã diễn ra</span>
                             </span>
                           ) : stInfo.code === 'CANCELLED' ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200/80 dark:border-rose-800/60 text-xs font-bold">
+                            <span className="inline-flex items-center justify-center gap-1.5 min-w-[110px] px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-extrabold shadow-2xs">
                               <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
                               <span>{stInfo.label}</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 text-xs font-bold">
+                            <span className="inline-flex items-center justify-center gap-1.5 min-w-[110px] px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800 text-xs font-extrabold shadow-2xs">
                               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                               <span>Sắp tới</span>
                             </span>
@@ -2502,16 +2573,16 @@ export const CalendarModule: React.FC = () => {
                         </td>
 
                         {/* 6. Giờ thực tế */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center whitespace-nowrap tabular-nums align-middle">
                           {hasRealActualTime ? (
-                            <div>
-                              {evt.actualStartTime && evt.actualStartTime !== '00:00' && (
-                                <div className="font-bold text-teal-700 dark:text-teal-300 text-[13px]">
+                            <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-teal-50/70 dark:bg-teal-950/40 border border-teal-200/90 dark:border-teal-800/70 min-w-[108px] shadow-2xs">
+                              {hasValidActualClock && (
+                                <div className="font-extrabold text-teal-800 dark:text-teal-200 text-[12.5px]">
                                   {evt.actualStartTime} – {evt.actualEndTime}
                                 </div>
                               )}
                               {actualMins > 0 && (
-                                <div className="text-[11px] font-semibold text-teal-600/80 dark:text-teal-400">
+                                <div className="text-[10.5px] font-bold text-teal-600 dark:text-teal-400">
                                   {actualMins} phút
                                 </div>
                               )}
@@ -2520,47 +2591,59 @@ export const CalendarModule: React.FC = () => {
                         </td>
 
                         {/* 7. Phát sinh */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center whitespace-nowrap tabular-nums">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center whitespace-nowrap tabular-nums align-middle">
                           {hasRealActualTime && inflMins > 0 ? (
-                            <span className="inline-block px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/70 text-[#F15A24] dark:text-orange-400 font-extrabold text-xs border border-orange-200/80 dark:border-orange-800/60">
+                            <span className="inline-flex items-center justify-center min-w-[54px] px-2.5 py-1 rounded-lg bg-orange-50 dark:bg-orange-950/70 text-[#F15A24] dark:text-orange-400 font-extrabold text-xs border border-orange-200/90 dark:border-orange-800/60 shadow-2xs">
                               +{inflMins}p
                             </span>
                           ) : hasRealActualTime && inflMins < 0 ? (
-                            <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 font-extrabold text-xs border border-emerald-200/80 dark:border-emerald-800/60">
+                            <span className="inline-flex items-center justify-center min-w-[54px] px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-400 font-extrabold text-xs border border-emerald-200/90 dark:border-emerald-800/60 shadow-2xs">
                               {inflMins}p
+                            </span>
+                          ) : hasRealActualTime && inflMins === 0 ? (
+                            <span className="inline-flex items-center justify-center min-w-[54px] px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 font-extrabold text-xs border border-sky-200/90 dark:border-sky-800/60 shadow-2xs">
+                              0p
                             </span>
                           ) : null}
                         </td>
 
                         {/* 8. Nội dung / Chủ đề trao đổi */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-4 py-3">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-4 py-3 align-middle">
                           <div className="font-bold text-slate-900 dark:text-white whitespace-pre-line leading-snug text-[13.5px]">
                             {evt.title}
                           </div>
                           {cleanNotes && (
-                            <div className="mt-1 text-xs text-slate-500 dark:text-slate-400 italic whitespace-pre-line">
-                              Ghi chú: {cleanNotes}
+                            <div className="mt-1.5 px-2.5 py-1 rounded-md bg-amber-50/80 dark:bg-amber-950/30 border-l-2 border-[#F15A24] text-slate-700 dark:text-slate-300 text-xs font-medium whitespace-pre-line">
+                              <span className="font-bold text-[#F15A24]">Ghi chú:</span> {cleanNotes}
                             </div>
                           )}
                         </td>
 
                         {/* 9. Điều hành */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-800 dark:text-slate-200">
-                          {hasHost ? cleanHost : null}
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center align-middle">
+                          {hasHost ? (
+                            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-blue-50/90 dark:bg-blue-950/50 text-blue-800 dark:text-blue-200 border border-blue-200/80 dark:border-blue-800/60 font-bold text-xs leading-snug shadow-2xs">
+                              {cleanHost}
+                            </span>
+                          ) : null}
                         </td>
 
                         {/* 10. Thành phần tham dự */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-4 py-3 whitespace-pre-line text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-3.5 py-3 whitespace-pre-line text-xs text-slate-700 dark:text-slate-200 font-medium leading-relaxed align-middle">
                           {evt.attendees || null}
                         </td>
 
                         {/* 11. Thư ký */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center font-bold text-slate-700 dark:text-slate-300">
-                          {hasSecretary ? cleanSecretary : null}
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center align-middle">
+                          {hasSecretary ? (
+                            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-orange-50/90 dark:bg-orange-950/50 text-[#ea580c] dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/60 font-extrabold text-xs shadow-2xs">
+                              {cleanSecretary}
+                            </span>
+                          ) : null}
                         </td>
 
                         {/* 12. Tài liệu */}
-                        <td className="border-r border-slate-200/70 dark:border-slate-800/80 px-3 py-3 text-center">
+                        <td className="border-r border-slate-200/80 dark:border-slate-800 px-2.5 py-3 text-center align-middle">
                           {hasDoc ? (
                             cleanDoc.startsWith('http') ? (
                               <a
@@ -2568,25 +2651,25 @@ export const CalendarModule: React.FC = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 font-bold text-xs hover:underline whitespace-nowrap"
+                                className="inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 border border-sky-200 dark:border-sky-800 font-bold text-xs hover:bg-sky-100 transition whitespace-nowrap shadow-2xs"
                               >
                                 <FileText className="w-3.5 h-3.5 shrink-0" />
                                 <span>Mở tài liệu ↗</span>
                               </a>
                             ) : (
-                              <span className="inline-block px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs whitespace-pre-line">
+                              <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 font-bold text-xs whitespace-pre-line shadow-2xs">
                                 {cleanDoc}
                               </span>
                             )
-                          ) : evt.attachments && evt.attachments.length > 0 ? (
-                            <span className="inline-block px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs">
-                              {evt.attachments.length} tệp
+                          ) : docOnlyAttachments.length > 0 ? (
+                            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 font-bold text-xs shadow-2xs">
+                              {docOnlyAttachments.length} tệp
                             </span>
                           ) : null}
                         </td>
 
                         {/* 13. VBKL */}
-                        <td className="px-3 py-3 text-center">
+                        <td className="px-2.5 py-3 text-center align-middle">
                           {hasVbkl ? (
                             cleanVbkl.startsWith('http') ? (
                               <a
@@ -2594,13 +2677,13 @@ export const CalendarModule: React.FC = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-sky-50 dark:bg-sky-950/60 text-[#0284C7] dark:text-sky-300 font-extrabold text-xs hover:bg-sky-100 dark:hover:bg-sky-900/60 transition-colors whitespace-nowrap"
+                                className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-[#0284C7] to-[#00A8E8] hover:from-[#0369a1] hover:to-[#0284C7] text-white font-extrabold text-xs shadow-xs transition-all whitespace-nowrap"
                               >
                                 <FileText className="w-3.5 h-3.5 shrink-0" />
                                 <span>Xem VBKL ↗</span>
                               </a>
                             ) : (
-                              <div className="text-xs text-slate-700 dark:text-slate-300 font-medium whitespace-pre-line leading-relaxed text-left">
+                              <div className="px-2.5 py-1.5 rounded-lg bg-sky-50/70 dark:bg-sky-950/40 border border-sky-200/80 dark:border-sky-800/60 text-xs text-slate-800 dark:text-slate-200 font-semibold whitespace-pre-line leading-relaxed text-left">
                                 {cleanVbkl}
                               </div>
                             )

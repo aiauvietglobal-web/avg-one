@@ -287,9 +287,9 @@
 }
 
 /* Input & Select */
-[data-theme="light"] input:not(.seamless-input),
-[data-theme="light"] select:not(.seamless-input),
-[data-theme="light"] textarea:not(.seamless-input) {
+[data-theme="light"] input:not(.seamless-input):not(.calendar-toolbar-control),
+[data-theme="light"] select:not(.seamless-input):not(.calendar-toolbar-control),
+[data-theme="light"] textarea:not(.seamless-input):not(.calendar-toolbar-control) {
   background-color: #f1f5f9 !important;
   color: #0f172a !important;
   border: 1px solid #cbd5e1 !important;
@@ -314,22 +314,22 @@ textarea.seamless-input,
 }
 
 /* Tables */
-[data-theme="light"] table {
+[data-theme="light"] table:not(.calendar-grid-table) {
   color: #0f172a !important;
 }
 
-[data-theme="light"] th {
+[data-theme="light"] table:not(.calendar-grid-table) th {
   background-color: #f1f5f9 !important;
   color: #0f172a !important;
   border-bottom: 2px solid #e2e8f0 !important;
 }
 
-[data-theme="light"] td {
+[data-theme="light"] table:not(.calendar-grid-table) td {
   color: #374151 !important;
   border-bottom: 1px solid #e2e8f0 !important;
 }
 
-[data-theme="light"] tr:nth-child(even) {
+[data-theme="light"] table:not(.calendar-grid-table) tr:nth-child(even) {
   background-color: #f8fafc !important;
 }
 
