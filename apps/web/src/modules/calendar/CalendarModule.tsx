@@ -953,6 +953,8 @@ export const CalendarModule: React.FC = () => {
 
   // View Modes: 'day' (Thẻ / Timeline View) | 'month' (Lưới / Month Matrix) | 'table' (Bảng Bảng Tính)
   const [viewMode, setViewMode] = useState<'day' | 'month' | 'table'>('day');
+  // Chế độ hiển thị chi tiết trên bảng Lưới (Mặc định false: ẩn cột Giờ thực tế & Phát sinh)
+  const [showGridDetails, setShowGridDetails] = useState<boolean>(false);
   
   // Selected Date, Year & Month Filters (Defaulting to ALL months in current year so all 31 sheet rows are visible)
   const [currentDateStr, setCurrentDateStr] = useState<string>(() => realTimeStr.dateStr);
@@ -2298,6 +2300,21 @@ export const CalendarModule: React.FC = () => {
                 <option value="RED">Hoãn / Hủy / Dời</option>
               </select>
 
+              {/* Nút bật/tắt Hiển thị Chi tiết (Giờ thực tế & Phát sinh) */}
+              <button
+                type="button"
+                onClick={() => setShowGridDetails((prev) => !prev)}
+                title={showGridDetails ? 'Ẩn cột Giờ thực tế và Phát sinh' : 'Hiển thị cột Giờ thực tế và Phát sinh'}
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition inline-flex items-center gap-1.5 cursor-pointer select-none ${
+                  showGridDetails
+                    ? 'bg-teal-600 text-white border-teal-600 shadow-2xs hover:bg-teal-700'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-[#0284C7] hover:text-[#0284C7]'
+                }`}
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>{showGridDetails ? 'Ẩn chi tiết' : 'Hiển thị chi tiết'}</span>
+              </button>
+
               {(searchQuery || selectedMonthOnly !== 'ALL' || selectedDayOnly !== 'ALL' || selectedScope !== 'ALL' || selectedStatus !== 'ALL') && (
                 <button
                   onClick={() => {
@@ -2347,12 +2364,16 @@ export const CalendarModule: React.FC = () => {
                   <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
                     Trạng thái
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#CCFBF1] dark:bg-slate-900 text-[#0F766E] dark:text-teal-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
-                    Giờ thực tế
-                  </th>
-                  <th className="sticky top-0 z-20 bg-[#FFEDD5] dark:bg-slate-900 text-[#C2410C] dark:text-orange-300 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-20">
-                    Phát sinh
-                  </th>
+                  {showGridDetails && (
+                    <>
+                      <th className="sticky top-0 z-20 bg-[#CCFBF1] dark:bg-slate-900 text-[#0F766E] dark:text-teal-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-28">
+                        Giờ thực tế
+                      </th>
+                      <th className="sticky top-0 z-20 bg-[#FFEDD5] dark:bg-slate-900 text-[#C2410C] dark:text-orange-300 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-20">
+                        Phát sinh
+                      </th>
+                    </>
+                  )}
                   <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-3.5 py-2.5 min-w-[320px]">
                     Nội dung / Chủ đề trao đổi
                   </th>
@@ -2377,7 +2398,7 @@ export const CalendarModule: React.FC = () => {
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-[13px]">
                 {tableRowsWithDateGroup.length === 0 ? (
                   <tr>
-                    <td colSpan={13} className="py-16 text-center text-slate-400 font-semibold text-sm">
+                    <td colSpan={showGridDetails ? 13 : 11} className="py-16 text-center text-slate-400 font-semibold text-sm">
                       Không có lịch trao đổi nào phù hợp với bộ lọc hiện tại.
                     </td>
                   </tr>
@@ -2523,40 +2544,43 @@ export const CalendarModule: React.FC = () => {
                           )}
                         </td>
 
-                        {/* 6. Giờ thực tế */}
-                        <td className="border-r border-slate-200 dark:border-slate-800 bg-teal-50/25 dark:bg-teal-950/10 px-2.5 py-2.5 text-center whitespace-nowrap tabular-nums">
-                          {hasRealActualTime ? (
-                            <div>
-                              {hasValidActualClock && (
-                                <div className="font-bold text-teal-800 dark:text-teal-300 text-[12.5px]">
-                                  {evt.actualStartTime} – {evt.actualEndTime}
+                        {/* 6. Giờ thực tế & 7. Phát sinh (Chỉ hiển thị khi bật chế độ Chi tiết) */}
+                        {showGridDetails && (
+                          <>
+                            <td className="border-r border-slate-200 dark:border-slate-800 bg-teal-50/25 dark:bg-teal-950/10 px-2.5 py-2.5 text-center whitespace-nowrap tabular-nums">
+                              {hasRealActualTime ? (
+                                <div>
+                                  {hasValidActualClock && (
+                                    <div className="font-bold text-teal-800 dark:text-teal-300 text-[12.5px]">
+                                      {evt.actualStartTime} – {evt.actualEndTime}
+                                    </div>
+                                  )}
+                                  {actualMins > 0 && (
+                                    <div className="text-[11px] font-medium text-teal-600/80 dark:text-teal-400">
+                                      {actualMins} phút
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                              {actualMins > 0 && (
-                                <div className="text-[11px] font-medium text-teal-600/80 dark:text-teal-400">
-                                  {actualMins} phút
-                                </div>
-                              )}
-                            </div>
-                          ) : null}
-                        </td>
+                              ) : null}
+                            </td>
 
-                        {/* 7. Phát sinh */}
-                        <td className="border-r border-slate-200 dark:border-slate-800 bg-orange-50/20 dark:bg-orange-950/10 px-2 py-2.5 text-center whitespace-nowrap tabular-nums font-bold text-xs">
-                          {hasRealActualTime && inflMins > 0 ? (
-                            <span className="text-[#F15A24] dark:text-orange-400 font-extrabold">
-                              +{inflMins}p
-                            </span>
-                          ) : hasRealActualTime && inflMins < 0 ? (
-                            <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">
-                              {inflMins}p
-                            </span>
-                          ) : hasRealActualTime && inflMins === 0 ? (
-                            <span className="text-slate-400 font-semibold">
-                              0p
-                            </span>
-                          ) : null}
-                        </td>
+                            <td className="border-r border-slate-200 dark:border-slate-800 bg-orange-50/20 dark:bg-orange-950/10 px-2 py-2.5 text-center whitespace-nowrap tabular-nums font-bold text-xs">
+                              {hasRealActualTime && inflMins > 0 ? (
+                                <span className="text-[#F15A24] dark:text-orange-400 font-extrabold">
+                                  +{inflMins}p
+                                </span>
+                              ) : hasRealActualTime && inflMins < 0 ? (
+                                <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">
+                                  {inflMins}p
+                                </span>
+                              ) : hasRealActualTime && inflMins === 0 ? (
+                                <span className="text-slate-400 font-semibold">
+                                  0p
+                                </span>
+                              ) : null}
+                            </td>
+                          </>
+                        )}
 
                         {/* 8. Nội dung / Chủ đề trao đổi */}
                         <td className="border-r border-slate-200 dark:border-slate-800 px-3.5 py-2.5">
