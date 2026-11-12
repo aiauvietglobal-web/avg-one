@@ -2465,8 +2465,7 @@ export const CalendarModule: React.FC = () => {
                     return (
                       <tr
                         key={evt.id || rowIndex}
-                        onClick={() => setSelectedEventDetail(evt)}
-                        className={`bg-white dark:bg-slate-950 hover:bg-sky-50/40 dark:hover:bg-slate-900/60 transition-colors cursor-pointer align-middle ${
+                        className={`bg-white dark:bg-slate-950 hover:bg-sky-50/40 dark:hover:bg-slate-900/60 transition-colors align-middle ${
                           isLastInDateGroup ? 'border-b-2 border-b-slate-300 dark:border-b-slate-700' : ''
                         }`}
                       >
@@ -2592,7 +2591,11 @@ export const CalendarModule: React.FC = () => {
 
                         {/* 8. Nội dung / Chủ đề trao đổi */}
                         <td className="border-r border-slate-200 dark:border-slate-800 px-4 py-2.5">
-                          <div className="font-bold text-slate-900 dark:text-white whitespace-pre-line leading-snug text-[13px]">
+                          <div
+                            onClick={() => setSelectedEventDetail(evt)}
+                            className="font-bold text-slate-900 dark:text-white hover:text-[#0284C7] dark:hover:text-sky-400 whitespace-pre-line leading-snug text-[13px] cursor-pointer transition-colors"
+                            title="Nhấn vào nội dung để xem chi tiết"
+                          >
                             {evt.title}
                           </div>
                           {cleanNotes && (
