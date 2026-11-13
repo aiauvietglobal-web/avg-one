@@ -2219,25 +2219,25 @@ export const CalendarModule: React.FC = () => {
       {viewMode === 'table' ? (
         <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-950 relative z-10 overflow-hidden">
           
-          {/* THANH CÔNG CỤ LỌC DỮ LIỆU GỌN GÀNG, ĐỒNG NHẤT CHIỀU CAO */}
-          <div className="flex-shrink-0 bg-slate-50/90 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between gap-2.5">
+          {/* THANH CÔNG CỤ LỌC DỮ LIỆU GỌN GÀNG, ĐỒNG NHẤT CHIỀU CAO (TÔNG CAM AVG ONE) */}
+          <div className="flex-shrink-0 bg-orange-50/70 dark:bg-slate-900 border-b border-orange-200 dark:border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between gap-2.5">
             
             {/* Cụm tìm kiếm & Bộ lọc (Trái) */}
             <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
               {/* Ô tìm kiếm nhanh */}
               <div className="relative min-w-[240px] sm:min-w-[280px] flex-1 max-w-sm">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-4 h-4 text-[#F15A24] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm nội dung, điều hành, thành phần, thư ký..."
-                  className="calendar-toolbar-control w-full h-8.5 pl-9 pr-7 py-1.5 text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0284C7]/20 focus:border-[#0284C7] font-medium transition"
+                  className="calendar-toolbar-control w-full h-8.5 pl-9 pr-7 py-1.5 text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg border border-orange-200 dark:border-slate-700 hover:border-[#F15A24] focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] font-medium transition"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs font-bold cursor-pointer"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F15A24] dark:hover:text-white text-xs font-bold cursor-pointer"
                   >
                     ✕
                   </button>
@@ -2248,7 +2248,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-400 focus:outline-none focus:border-[#0284C7] cursor-pointer transition"
+                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
               >
                 <option value="2026">Năm 2026</option>
                 <option value="2025">Năm 2025</option>
@@ -2259,7 +2259,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedMonthOnly}
                 onChange={(e) => setSelectedMonthOnly(e.target.value)}
-                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-400 focus:outline-none focus:border-[#0284C7] cursor-pointer transition"
+                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
               >
                 <option value="ALL">Tất cả tháng</option>
                 <option value="01">Tháng 01</option>
@@ -2280,7 +2280,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedScope}
                 onChange={(e) => setSelectedScope(e.target.value)}
-                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-400 focus:outline-none focus:border-[#0284C7] cursor-pointer transition"
+                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
               >
                 <option value="ALL">Mọi phạm vi</option>
                 <option value="P1">Phạm vi: P1</option>
@@ -2292,7 +2292,7 @@ export const CalendarModule: React.FC = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:border-slate-400 focus:outline-none focus:border-[#0284C7] cursor-pointer transition"
+                className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
               >
                 <option value="ALL">Mọi trạng thái</option>
                 <option value="GREEN">Đã diễn ra</option>
@@ -2307,8 +2307,8 @@ export const CalendarModule: React.FC = () => {
                 title={showGridDetails ? 'Ẩn cột Giờ thực tế và Phát sinh' : 'Hiển thị cột Giờ thực tế và Phát sinh'}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition inline-flex items-center gap-1.5 cursor-pointer select-none ${
                   showGridDetails
-                    ? 'bg-teal-600 text-white border-teal-600 shadow-2xs hover:bg-teal-700'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-[#0284C7] hover:text-[#0284C7]'
+                    ? 'bg-[#F15A24] text-white border-[#F15A24] shadow-2xs hover:bg-[#D9460F]'
+                    : 'bg-white dark:bg-slate-800 text-[#C2410C] dark:text-orange-300 border-orange-300 dark:border-slate-700 hover:bg-orange-50 hover:border-[#F15A24]'
                 }`}
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -2335,7 +2335,7 @@ export const CalendarModule: React.FC = () => {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={handleOpenAddModal}
-                className="px-3.5 py-1.5 rounded-lg bg-[#0284C7] hover:bg-[#0369a1] text-white text-xs font-bold shadow-2xs transition inline-flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-1.5 rounded-lg bg-[#F15A24] hover:bg-[#D9460F] text-white text-xs font-bold shadow-2xs transition inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>Thêm Lịch Họp Mới</span>
@@ -2348,58 +2348,58 @@ export const CalendarModule: React.FC = () => {
           <div className="flex-1 min-h-0 w-full overflow-auto scrollbar-thin bg-white dark:bg-slate-950">
             <table className="calendar-grid-table w-full table-fixed border-collapse text-left">
               <thead>
-                <tr className="border-b-2 border-slate-300 dark:border-slate-700 text-[11px] font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-200 select-none">
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-[48px]">
+                <tr className="border-b-2 border-[#D9460F] dark:border-orange-800 text-[11px] font-extrabold uppercase tracking-wider text-white select-none">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2 py-2.5 text-center w-[48px]">
                     STT
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[104px]">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[104px]">
                     Ngày
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-3 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-3 py-2.5 text-center ${
                     showGridDetails ? 'w-[130px]' : 'w-[160px]'
                   }`}>
                     Phạm vi
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E0F2FE] dark:bg-slate-900 text-[#0369A1] dark:text-sky-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[124px]">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[124px]">
                     Giờ dự kiến
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[124px]">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[124px]">
                     Trạng thái
                   </th>
                   {showGridDetails && (
                     <>
-                      <th className="sticky top-0 z-20 bg-[#CCFBF1] dark:bg-slate-900 text-[#0F766E] dark:text-teal-300 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center w-[120px]">
+                      <th className="sticky top-0 z-20 bg-[#D9460F] dark:bg-orange-900 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[120px]">
                         Giờ thực tế
                       </th>
-                      <th className="sticky top-0 z-20 bg-[#FFEDD5] dark:bg-slate-900 text-[#C2410C] dark:text-orange-300 border-r border-slate-300/80 dark:border-slate-800 px-2 py-2.5 text-center w-[84px]">
+                      <th className="sticky top-0 z-20 bg-[#D9460F] dark:bg-orange-900 border-r border-orange-400/50 dark:border-orange-800 px-2 py-2.5 text-center w-[84px]">
                         Phát sinh
                       </th>
                     </>
                   )}
-                  <th className="sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-4 py-2.5 text-center">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-4 py-2.5 text-center">
                     Nội dung / Chủ đề trao đổi
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center ${
                     showGridDetails ? 'w-[116px]' : 'w-[136px]'
                   }`}>
                     Điều hành
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-4 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-4 py-2.5 text-center ${
                     showGridDetails ? 'w-[22%]' : 'w-[24%]'
                   }`}>
                     Thành phần tham dự
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center ${
                     showGridDetails ? 'w-[84px]' : 'w-[96px]'
                   }`}>
                     Thư ký
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 border-r border-slate-300/80 dark:border-slate-800 px-2.5 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center ${
                     showGridDetails ? 'w-[96px]' : 'w-[108px]'
                   }`}>
                     Tài liệu
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#E2E8F0] dark:bg-slate-900 px-2.5 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 px-2.5 py-2.5 text-center ${
                     showGridDetails ? 'w-[112px]' : 'w-[120px]'
                   }`}>
                     VBKL
@@ -2465,7 +2465,7 @@ export const CalendarModule: React.FC = () => {
                     return (
                       <tr
                         key={evt.id || rowIndex}
-                        className={`bg-white dark:bg-slate-950 hover:bg-sky-50/40 dark:hover:bg-slate-900/60 transition-colors align-middle ${
+                        className={`bg-white dark:bg-slate-950 hover:bg-orange-50/40 dark:hover:bg-slate-900/60 transition-colors align-middle ${
                           isLastInDateGroup ? 'border-b-2 border-b-slate-300 dark:border-b-slate-700' : ''
                         }`}
                       >
@@ -2511,7 +2511,7 @@ export const CalendarModule: React.FC = () => {
                         </td>
 
                         {/* 4. Giờ dự kiến */}
-                        <td className="border-r border-slate-200 dark:border-slate-800 bg-sky-50/25 dark:bg-sky-950/10 px-2.5 py-2.5 text-center whitespace-nowrap tabular-nums">
+                        <td className="border-r border-slate-200 dark:border-slate-800 bg-orange-50/20 dark:bg-orange-950/10 px-2.5 py-2.5 text-center whitespace-nowrap tabular-nums">
                           {evt.plannedStartTime || evt.plannedEndTime ? (
                             <div>
                               <div className="font-bold text-slate-800 dark:text-slate-100 text-[12.5px]">
@@ -2593,7 +2593,7 @@ export const CalendarModule: React.FC = () => {
                         <td className="border-r border-slate-200 dark:border-slate-800 px-4 py-2.5">
                           <div
                             onClick={() => setSelectedEventDetail(evt)}
-                            className="font-bold text-slate-900 dark:text-white hover:text-[#0284C7] dark:hover:text-sky-400 whitespace-pre-line leading-snug text-[13px] cursor-pointer transition-colors"
+                            className="font-bold text-slate-900 dark:text-white hover:text-[#F15A24] dark:hover:text-orange-400 whitespace-pre-line leading-snug text-[13px] cursor-pointer transition-colors"
                             title="Nhấn vào nội dung để xem chi tiết"
                           >
                             {evt.title}
