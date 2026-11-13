@@ -2348,58 +2348,58 @@ export const CalendarModule: React.FC = () => {
           <div className="flex-1 min-h-0 w-full overflow-auto scrollbar-thin bg-white dark:bg-slate-950">
             <table className="calendar-grid-table w-full table-fixed border-collapse text-left">
               <thead>
-                <tr className="border-b-2 border-[#D9460F] dark:border-orange-800 text-[11px] font-extrabold uppercase tracking-wider text-white select-none">
-                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2 py-2.5 text-center w-[48px]">
+                <tr className="border-b-2 border-[#D9460F] dark:border-orange-800 text-[13px] sm:text-[13.5px] font-black uppercase tracking-wide text-white select-none">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2 py-3 text-center w-[52px] whitespace-nowrap">
                     STT
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[104px]">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center w-[106px] whitespace-nowrap">
                     Ngày
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-3 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-3 py-3 text-center whitespace-nowrap ${
                     showGridDetails ? 'w-[130px]' : 'w-[160px]'
                   }`}>
                     Phạm vi
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[124px]">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center w-[128px] whitespace-nowrap">
                     Giờ dự kiến
                   </th>
-                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[124px]">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center w-[128px] whitespace-nowrap">
                     Trạng thái
                   </th>
                   {showGridDetails && (
                     <>
-                      <th className="sticky top-0 z-20 bg-[#D9460F] dark:bg-orange-900 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center w-[120px]">
+                      <th className="sticky top-0 z-20 bg-[#D9460F] dark:bg-orange-900 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center w-[124px] whitespace-nowrap">
                         Giờ thực tế
                       </th>
-                      <th className="sticky top-0 z-20 bg-[#D9460F] dark:bg-orange-900 border-r border-orange-400/50 dark:border-orange-800 px-2 py-2.5 text-center w-[84px]">
+                      <th className="sticky top-0 z-20 bg-[#D9460F] dark:bg-orange-900 border-r border-orange-400/50 dark:border-orange-800 px-2 py-3 text-center w-[98px] whitespace-nowrap">
                         Phát sinh
                       </th>
                     </>
                   )}
-                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-4 py-2.5 text-center">
+                  <th className="sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-4 py-3 text-center whitespace-nowrap">
                     Nội dung / Chủ đề trao đổi
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center ${
-                    showGridDetails ? 'w-[116px]' : 'w-[136px]'
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center whitespace-nowrap ${
+                    showGridDetails ? 'w-[120px]' : 'w-[136px]'
                   }`}>
                     Điều hành
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-4 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-4 py-3 text-center whitespace-nowrap ${
                     showGridDetails ? 'w-[22%]' : 'w-[24%]'
                   }`}>
                     Thành phần tham dự
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center ${
-                    showGridDetails ? 'w-[84px]' : 'w-[96px]'
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center whitespace-nowrap ${
+                    showGridDetails ? 'w-[90px]' : 'w-[98px]'
                   }`}>
                     Thư ký
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-2.5 text-center ${
-                    showGridDetails ? 'w-[96px]' : 'w-[108px]'
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 border-r border-orange-400/50 dark:border-orange-800 px-2.5 py-3 text-center whitespace-nowrap ${
+                    showGridDetails ? 'w-[98px]' : 'w-[108px]'
                   }`}>
                     Tài liệu
                   </th>
-                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 px-2.5 py-2.5 text-center ${
+                  <th className={`sticky top-0 z-20 bg-[#F15A24] dark:bg-orange-950 px-2.5 py-3 text-center whitespace-nowrap ${
                     showGridDetails ? 'w-[112px]' : 'w-[120px]'
                   }`}>
                     VBKL
