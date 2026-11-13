@@ -80,16 +80,16 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             </button>
           </div>
 
-          {/* CHẾ ĐỘ XEM (THẺ / LƯỚI + D/M) TRÊN THANH HEADER PHÂN HỆ LỊCH */}
+          {/* CHẾ ĐỘ XEM (THẺ / LƯỚI + D/M) TRÊN THANH HEADER PHÂN HỆ LỊCH (ĐỒNG BỘ TÔNG CAM AVG ONE) */}
           <div className="flex items-center gap-2 pl-3 sm:pl-5 border-l border-slate-200 dark:border-slate-700/80 shrink-0">
-            <div className="flex items-center bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-1 h-8.5 sm:h-9 min-w-[168px] sm:min-w-[188px]">
+            <div className="flex items-center bg-orange-50/80 dark:bg-slate-800/90 border border-orange-200/90 dark:border-slate-700/80 rounded-xl p-1 h-8.5 sm:h-9 min-w-[168px] sm:min-w-[188px]">
               <button
                 type="button"
                 onClick={() => handleChangeViewMode('day')}
                 className={`flex-1 h-full px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                   viewMode === 'day' || viewMode === 'month'
-                    ? 'bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-[#00A8E8]'
+                    ? 'bg-[#F15A24] text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24]'
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
@@ -101,8 +101,8 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
                 onClick={() => handleChangeViewMode('table')}
                 className={`flex-1 h-full px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer ${
                   viewMode === 'table'
-                    ? 'bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-[#00A8E8]'
+                    ? 'bg-[#F15A24] text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-[#F15A24]'
                 }`}
               >
                 <Table className="w-3.5 h-3.5" />
@@ -115,9 +115,9 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
               type="button"
               onClick={handleToggleDM}
               title={viewMode === 'day' ? 'Chế độ D: Đang xem theo ngày - Click để chuyển sang Chế độ M (Tháng)' : 'Chế độ M: Đang xem theo tháng - Click để chuyển sang Chế độ D (Ngày)'}
-              className="h-8.5 sm:h-9 px-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#00A8E8] rounded-xl flex items-center justify-center cursor-pointer transition shadow-2xs group"
+              className="h-8.5 sm:h-9 px-2.5 bg-orange-50/80 dark:bg-slate-800 border border-orange-200/90 dark:border-slate-700 hover:border-[#F15A24] rounded-xl flex items-center justify-center cursor-pointer transition shadow-2xs group"
             >
-              <span className="text-xs font-black bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white px-2 py-0.5 rounded-md transition-transform group-hover:scale-105 select-none">
+              <span className="text-xs font-black bg-[#F15A24] text-white px-2 py-0.5 rounded-md transition-transform group-hover:scale-105 select-none">
                 {viewMode === 'day' ? 'D' : 'M'}
               </span>
             </button>
