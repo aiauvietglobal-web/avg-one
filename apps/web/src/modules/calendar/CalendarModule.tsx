@@ -5,7 +5,7 @@ import {
   Search, RefreshCw, BarChart3, CheckCircle2, AlertCircle, XCircle, LayoutGrid, Table, FileSpreadsheet, Home,
   Upload, Paperclip, Image as ImageIcon, File, Download, Eye, ExternalLink,
   Flame, Compass, ArrowRight, ArrowLeft, ShieldCheck, CheckSquare, Building2, Car, Plane, AlertTriangle,
-  Mic, TrendingUp, TrendingDown, Layers, Filter, Target, Award, Zap, Activity
+  Mic, TrendingUp, TrendingDown, Layers, Filter, Target, Award, Zap, Activity, Bell
 } from 'lucide-react';
 import {
   DiscussionEvent, EventAttachment, GOOGLE_SHEET_EDIT_URL, fetchDiscussionEventsFromGoogleSheet,
@@ -2211,10 +2211,11 @@ export const CalendarModule: React.FC = () => {
         </>
       )}
 
-      {/* Toast Notification Banner */}
+      {/* Toast Notification Banner (Góc dưới cùng bên phải kèm icon chuông) */}
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl border border-slate-700 text-xs font-bold animate-bounce flex items-center gap-2">
-          <span>{toastMessage}</span>
+        <div className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl border border-slate-700 text-xs font-bold flex items-center gap-2.5">
+          <Bell className="w-4 h-4 text-[#F15A24] shrink-0" />
+          <span>{toastMessage.replace(/^[\p{Emoji}\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\s]+/u, '')}</span>
         </div>
       )}
 
