@@ -2072,11 +2072,16 @@ export const CalendarModule: React.FC = () => {
         showToast(`🗓️ Chế độ D: Hiển thị ${displayDayEvents.length} cuộc trao đổi trong Ngày ${currentDateStr}`);
       }
     };
+    const handleOpenAddFromHeader = () => {
+      handleOpenAddModal();
+    };
     window.addEventListener('calendar_viewmode_change', handleViewChange);
     window.addEventListener('calendar_viewmode_toggle_dm', handleToggleDM);
+    window.addEventListener('calendar_open_add_modal', handleOpenAddFromHeader);
     return () => {
       window.removeEventListener('calendar_viewmode_change', handleViewChange);
       window.removeEventListener('calendar_viewmode_toggle_dm', handleToggleDM);
+      window.removeEventListener('calendar_open_add_modal', handleOpenAddFromHeader);
     };
   }, [viewMode, filteredEvents.length, displayDayEvents.length, selectedMonthOnly, selectedYear, currentDateStr]);
 
@@ -2329,17 +2334,6 @@ export const CalendarModule: React.FC = () => {
                   Xóa lọc
                 </button>
               )}
-            </div>
-
-            {/* Nút thêm lịch (Phải) */}
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={handleOpenAddModal}
-                className="px-3.5 py-1.5 rounded-lg bg-[#F15A24] hover:bg-[#D9460F] text-white text-xs font-bold shadow-2xs transition inline-flex items-center gap-1.5 cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Thêm Lịch Họp Mới</span>
-              </button>
             </div>
 
           </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Home, LayoutGrid, Table
+  Home, LayoutGrid, Table, Plus
 } from 'lucide-react';
 
 export type CalendarNavTab = 'talk' | 'work';
@@ -120,6 +120,17 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
               <span className="text-xs font-black bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white px-2 py-0.5 rounded-md transition-transform group-hover:scale-105 select-none">
                 {viewMode === 'day' ? 'D' : 'M'}
               </span>
+            </button>
+
+            {/* Nút Cập nhật lịch ngay trên thanh Header */}
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('calendar_open_add_modal'))}
+              title="Cập nhật lịch trao đổi mới"
+              className="h-8.5 sm:h-9 px-3.5 rounded-xl bg-[#F15A24] hover:bg-[#D9460F] text-white text-xs font-extrabold shadow-2xs transition inline-flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Cập nhật lịch</span>
             </button>
           </div>
         </div>
