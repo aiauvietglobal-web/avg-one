@@ -2658,165 +2658,182 @@ export const CalendarModule: React.FC = () => {
 
         </div>
       ) : (
-      /* 🎯 CHẾ ĐỘ XEM THẺ (D / M): MỞ RỘNG TỐI ĐA 100% GIAO DIỆN, TINH GIẢN CHI TIẾT THỪA */
-      <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-950 relative z-10 overflow-hidden">
+      /* 🎯 BỐ CỤC CHIA 3 CỘT MỞ RỘNG TỐI ĐA (COL 1: 2/12 | COL 2: 8/12 | COL 3: 2/12) */
+      <div className="w-full h-full flex-1 min-h-0 flex flex-col lg:grid lg:grid-cols-12 gap-2 p-1.5 sm:p-2 bg-slate-50/70 dark:bg-slate-950 relative z-10 overflow-hidden">
         
-        {/* THANH CÔNG CỤ LỌC & CHỈ SỐ NHANH TOÀN MÀN HÌNH (ĐỒNG BỘ TÔNG CAM AVG ONE) */}
-        <div className="flex-shrink-0 bg-orange-50/70 dark:bg-slate-900 border-b border-orange-200 dark:border-slate-800 px-4 py-2 flex flex-wrap items-center justify-between gap-2.5">
+        {/* ========================================================================= */}
+        {/* ⚙️ CỘT 1 (TRÁI - 2/12): TÌM KIẾM, BỘ LỌC & TIỆN ÍCH DỮ LIỆU (ĐÃ BỎ NÚT THÊM LỊCH) */}
+        {/* ========================================================================= */}
+        <aside className="order-2 lg:order-1 lg:col-span-2 w-full h-auto lg:h-full bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-2.5 sm:p-3 space-y-3 text-slate-800 dark:text-slate-200 scrollbar-thin overflow-y-auto shadow-2xs">
           
-          {/* Cụm trái: Tìm kiếm + Bộ lọc Năm / Tháng / Ngày + Nút về ngày hiện tại */}
-          <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
-            {/* Ô tìm kiếm nhanh */}
-            <div className="relative min-w-[220px] sm:min-w-[260px] flex-1 max-w-sm">
-              <Search className="w-4 h-4 text-[#F15A24] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm nội dung, điều hành, thành phần, thư ký..."
-                className="calendar-toolbar-control w-full h-8.5 pl-9 pr-7 py-1.5 text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-lg border border-orange-200 dark:border-slate-700 hover:border-[#F15A24] focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] font-medium transition"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F15A24] dark:hover:text-white text-xs font-bold cursor-pointer"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-
-            {/* Bộ lọc Năm */}
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-            >
-              <option value="2026">Năm 2026</option>
-              <option value="2025">Năm 2025</option>
-              <option value="2024">Năm 2024</option>
-              <option value="ALL">Tất cả năm</option>
-            </select>
-
-            {/* Bộ lọc Tháng */}
-            <select
-              value={selectedMonthOnly}
-              onChange={(e) => setSelectedMonthOnly(e.target.value)}
-              className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-            >
-              <option value="ALL">Tất cả tháng</option>
-              <option value="01">Tháng 01</option>
-              <option value="02">Tháng 02</option>
-              <option value="03">Tháng 03</option>
-              <option value="04">Tháng 04</option>
-              <option value="05">Tháng 05</option>
-              <option value="06">Tháng 06</option>
-              <option value="07">Tháng 07</option>
-              <option value="08">Tháng 08</option>
-              <option value="09">Tháng 09</option>
-              <option value="10">Tháng 10</option>
-              <option value="11">Tháng 11</option>
-              <option value="12">Tháng 12</option>
-            </select>
-
-            {/* Bộ lọc Ngày */}
-            <select
-              value={selectedDayOnly}
-              onChange={(e) => {
-                const newDay = e.target.value;
-                setSelectedDayOnly(newDay);
-                if (newDay !== 'ALL') {
-                  const curParts = currentDateStr.split('/');
-                  const m = curParts[1] || selectedMonthOnly || realTimeStr.month;
-                  const y = curParts[2] || selectedYear || realTimeStr.year;
-                  setCurrentDateStr(`${newDay}/${m === 'ALL' ? realTimeStr.month : m}/${y === 'ALL' ? realTimeStr.year : y}`);
-                  setViewMode('day');
-                }
-              }}
-              className="calendar-toolbar-control px-2.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-            >
-              <option value="ALL">Tất cả ngày</option>
-              {Array.from({ length: 31 }, (_, i) => {
-                const dStr = String(i + 1).padStart(2, '0');
-                return (
-                  <option key={dStr} value={dStr}>
-                    Ngày {dStr}
-                  </option>
-                );
-              })}
-            </select>
-
-            {/* Nút về ngày hiện tại */}
-            <button
-              type="button"
-              onClick={handleJumpToCurrentDay}
-              title="Trở về ngày hiện tại"
-              className="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-orange-200 dark:border-slate-700 hover:border-[#F15A24] text-[#F15A24] rounded-lg flex items-center gap-1 text-xs font-bold cursor-pointer transition"
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Hôm nay</span>
-            </button>
-
-            {(searchQuery || selectedMonthOnly !== 'ALL' || selectedDayOnly !== 'ALL') && (
+          {/* Ô tìm kiếm nhanh */}
+          <div className="relative">
+            <Search className="w-4 h-4 text-[#F15A24] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Nội dung, thư ký, tham dự..."
+              className="calendar-toolbar-control w-full pl-9 pr-7 py-2 text-xs bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-xl border border-orange-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] font-medium transition"
+            />
+            {searchQuery && (
               <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedMonthOnly('ALL');
-                  setSelectedDayOnly('ALL');
-                }}
-                className="px-2.5 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-lg transition cursor-pointer"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F15A24] dark:hover:text-white text-xs font-bold cursor-pointer"
               >
-                Xóa lọc
+                ✕
               </button>
             )}
           </div>
 
-          {/* Cụm phải: Chỉ số trạng thái + Sheet 24/7 + Thùng Rác */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Đang diễn ra: {kpiStats.ongoing}</span>
+          {/* 📅 BỘ LỌC THỜI GIAN & HIỂN THỊ */}
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 rounded-xl p-2.5 space-y-2.5">
+            <div className="flex items-center justify-between px-0.5">
+              <span className="text-[10px] font-black tracking-wider text-slate-500 uppercase">
+                Bộ Lọc & Hiển Thị
+              </span>
+              <button
+                type="button"
+                onClick={handleJumpToCurrentDay}
+                title="Trở về Ngày Hiện Tại"
+                className="p-1 bg-white dark:bg-slate-900 border border-orange-200 dark:border-slate-700 hover:border-[#F15A24] text-[#F15A24] rounded-md flex items-center justify-center cursor-pointer transition shadow-2xs"
+              >
+                <Home className="w-3.5 h-3.5" />
+              </button>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              <span>Sắp tới: {kpiStats.upcoming}</span>
+            <div className="space-y-1.5">
+              {/* Năm */}
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+                className="calendar-toolbar-control w-full px-2.5 py-1.5 text-xs font-bold bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
+              >
+                <option value="2026">Năm 2026</option>
+                <option value="2025">Năm 2025</option>
+                <option value="2024">Năm 2024</option>
+                <option value="ALL">Tất cả năm</option>
+              </select>
+
+              {/* Tháng */}
+              <select
+                value={selectedMonthOnly}
+                onChange={(e) => setSelectedMonthOnly(e.target.value)}
+                className="calendar-toolbar-control w-full px-2.5 py-1.5 text-xs font-bold bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
+              >
+                <option value="ALL">Tất cả tháng</option>
+                <option value="01">Tháng 01</option>
+                <option value="02">Tháng 02</option>
+                <option value="03">Tháng 03</option>
+                <option value="04">Tháng 04</option>
+                <option value="05">Tháng 05</option>
+                <option value="06">Tháng 06</option>
+                <option value="07">Tháng 07</option>
+                <option value="08">Tháng 08</option>
+                <option value="09">Tháng 09</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+              </select>
+
+              {/* Ngày */}
+              <select
+                value={selectedDayOnly}
+                onChange={(e) => {
+                  const newDay = e.target.value;
+                  setSelectedDayOnly(newDay);
+                  if (newDay !== 'ALL') {
+                    const curParts = currentDateStr.split('/');
+                    const m = curParts[1] || selectedMonthOnly || realTimeStr.month;
+                    const y = curParts[2] || selectedYear || realTimeStr.year;
+                    setCurrentDateStr(`${newDay}/${m === 'ALL' ? realTimeStr.month : m}/${y === 'ALL' ? realTimeStr.year : y}`);
+                    setViewMode('day');
+                  }
+                }}
+                className="calendar-toolbar-control w-full px-2.5 py-1.5 text-xs font-bold bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-lg hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
+              >
+                <option value="ALL">Tất cả ngày</option>
+                {Array.from({ length: 31 }, (_, i) => {
+                  const dStr = String(i + 1).padStart(2, '0');
+                  return (
+                    <option key={dStr} value={dStr}>
+                      Ngày {dStr}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
-
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-              <span>Đã diễn ra: {kpiStats.completed}</span>
-            </div>
-
-            <a
-              href={GOOGLE_SHEET_EDIT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 rounded-lg transition inline-flex items-center gap-1.5 font-bold text-xs cursor-pointer"
-              title="Mở Google Sheet Trực Tiếp 24/7"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Sheet 24/7</span>
-            </a>
-
-            <button
-              onClick={() => setShowTrashModal(true)}
-              className="px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-50 rounded-lg transition inline-flex items-center gap-1.5 font-bold text-xs relative cursor-pointer"
-              title="Xem Thùng Rác Đã Xóa"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Thùng Rác</span>
-              {deletedEvents.length > 0 && (
-                <span className="px-1.5 py-0.2 bg-rose-600 text-white text-[10px] rounded-md font-black">
-                  {deletedEvents.length}
-                </span>
-              )}
-            </button>
           </div>
-        </div>
 
-        {/* VÙNG NỘI DUNG CHÍNH MỞ RỘNG TỐI ĐA 100% CHIỀU NGANG */}
-        <main className="flex-1 min-h-0 w-full overflow-y-auto px-4 sm:px-6 py-3 space-y-3 scrollbar-thin">
+          {/* ⚡ TIỆN ÍCH DỮ LIỆU */}
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 rounded-xl p-2.5 space-y-2">
+            <span className="text-[10px] font-black tracking-wider text-slate-500 uppercase px-0.5 block">
+              Tiện Ích Dữ Liệu
+            </span>
+
+            <div className="grid grid-cols-2 gap-1.5">
+              <a
+                href={GOOGLE_SHEET_EDIT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-2 px-1.5 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/60 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 rounded-lg transition flex items-center justify-center gap-1 font-bold text-[11px] shadow-2xs cursor-pointer"
+                title="Mở Google Sheet Trực Tiếp 24/7"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Sheet 24/7</span>
+              </a>
+
+              <button
+                onClick={() => setShowTrashModal(true)}
+                className="py-2 px-1.5 bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 hover:bg-rose-50 rounded-lg transition flex items-center justify-center gap-1 font-bold text-[11px] shadow-2xs relative cursor-pointer"
+                title="Xem Thùng Rác Đã Xóa"
+              >
+                <Trash2 className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Thùng Rác</span>
+                {deletedEvents.length > 0 && (
+                  <span className="absolute -top-1 -right-1 px-1.5 py-0.2 bg-rose-600 text-white text-[9px] rounded-md font-black">
+                    {deletedEvents.length}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+        </aside>
+
+        {/* ========================================================================= */}
+        {/* 🏢 CỘT 2 (GIỮA - 8/12): NỘI DUNG TRAO ĐỔI (MỞ RỘNG TỐI ĐA) */}
+        {/* ========================================================================= */}
+        <main className="order-1 lg:order-2 lg:col-span-8 w-full h-auto lg:h-full bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-2.5 sm:p-3.5 space-y-2.5 flex flex-col overflow-hidden shadow-2xs relative">
+          
+          {/* THANH TIÊU ĐỀ & 3 HỘP CHỈ SỐ KPI TINH GỌN */}
+          <div className="flex-shrink-0 flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-slate-200/80 dark:border-slate-800">
+            <h1 className="text-base sm:text-xl font-black text-[#231F20] dark:text-white tracking-tight flex items-baseline gap-1.5">
+              <span>Lịch</span>
+              <span className="text-[#F15A24]">Trao Đổi</span>
+              <span>Công Việc</span>
+            </h1>
+
+            <div className="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center">
+              <div className="bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 rounded-xl py-1.5 px-3 text-center flex items-center justify-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="text-[11px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400">Đang diễn ra:</span>
+                <span className="text-sm sm:text-base font-black text-emerald-700 dark:text-emerald-400">{kpiStats.ongoing}</span>
+              </div>
+
+              <div className="bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/80 rounded-xl py-1.5 px-3 text-center flex items-center justify-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                <span className="text-[11px] font-extrabold uppercase text-amber-700 dark:text-amber-400">Sắp tới:</span>
+                <span className="text-sm sm:text-base font-black text-amber-700 dark:text-amber-400">{kpiStats.upcoming}</span>
+              </div>
+
+              <div className="bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl py-1.5 px-3 text-center flex items-center justify-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-slate-400 shrink-0" />
+                <span className="text-[11px] font-extrabold uppercase text-slate-600 dark:text-slate-400">Đã diễn ra:</span>
+                <span className="text-sm sm:text-base font-black text-slate-700 dark:text-slate-300">{kpiStats.completed}</span>
+              </div>
+            </div>
+          </div>
 
           {/* 📊 COLLAPSIBLE STATS ACCORDION BAR ("THỐNG KÊ DỮ LIỆU TRAO ĐỔI") */}
           <div className="flex-shrink-0 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-2 border-t-[#F15A24] rounded-xl overflow-hidden shadow-2xs transition-all duration-200">
@@ -3202,7 +3219,7 @@ export const CalendarModule: React.FC = () => {
           </div>
 
           {/* 📜 DANH SÁCH THẺ NỘI DUNG TRAO ĐỔI (TINH GỌN, MỞ RỘNG TỐI ĐA) */}
-          <div className="space-y-3 pb-4">
+          <div className="flex-1 overflow-y-auto space-y-3 pr-1 pb-2 scrollbar-thin">
             {(viewMode === 'day' || viewMode === 'month') && (
               <div className="space-y-3">
 
@@ -3473,6 +3490,59 @@ export const CalendarModule: React.FC = () => {
           </div>
 
         </main>
+
+        {/* ========================================================================= */}
+        {/* 📢 CỘT 3 (PHẢI - 2/12): GHI CHÚ & BẢNG TIN 24/7 (TINH GỌN) */}
+        {/* ========================================================================= */}
+        <aside className="order-3 lg:order-3 lg:col-span-2 w-full h-auto lg:h-full bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-2.5 sm:p-3 text-slate-800 dark:text-slate-200 scrollbar-thin flex flex-col justify-between overflow-y-auto shadow-2xs space-y-2.5">
+          
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-2 flex-shrink-0">
+            <div className="text-[#F15A24] font-black text-xs uppercase tracking-wider">
+              GHI CHÚ & BẢNG TIN 24/7
+            </div>
+          </div>
+
+          {/* Ghi chú nhanh */}
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 p-2.5 rounded-xl space-y-2 flex-1 flex flex-col">
+            <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <span>Ghi Chú Nhanh</span>
+              <span className="text-slate-400 text-[9px] font-bold">Tự động lưu</span>
+            </div>
+
+            <textarea
+              rows={3}
+              value={promoNote}
+              onChange={(e) => setPromoNote(e.target.value)}
+              placeholder="Nhập ghi chú điều hành, việc cần xử lý gấp..."
+              className="w-full flex-1 min-h-[100px] p-2.5 text-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 border border-slate-200 dark:border-slate-700 rounded-lg font-medium resize-none focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] transition"
+            />
+          </div>
+
+          {/* Đầu mối hỗ trợ họp */}
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 p-2.5 rounded-xl space-y-1.5 flex-shrink-0">
+            <div className="text-[10px] font-black uppercase tracking-wider text-[#F15A24]">
+              Đầu Mối Hỗ Trợ Họp
+            </div>
+
+            <div className="space-y-1 text-[11px]">
+              <div className="flex justify-between border-b border-slate-200/60 dark:border-slate-700/60 pb-1">
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Thư ký tổng:</span>
+                <strong className="font-extrabold text-slate-900 dark:text-white">#K2B (Bà Trang)</strong>
+              </div>
+              <div className="flex justify-between border-b border-slate-200/60 dark:border-slate-700/60 pb-1">
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Điều hành:</span>
+                <strong className="font-extrabold text-slate-900 dark:text-white">Ông Trịnh / Kiên</strong>
+              </div>
+              <div className="flex justify-between pt-0.5">
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Hotline IT 24/7:</span>
+                <strong className="font-black text-[#F15A24]">1900-AVG-ONE</strong>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+
       </div>
       )}
 
