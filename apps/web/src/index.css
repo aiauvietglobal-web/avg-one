@@ -99,12 +99,20 @@
   color: #0f172a !important;
 }
 
-[data-theme="light"] header,
+[data-theme="light"] header:not(.short-centered-header),
 [data-theme="light"] .mobile-header-bar {
   background-color: #ffffff !important;
   border-bottom: none !important;
   box-shadow: none !important;
   color: #0f172a !important;
+}
+
+header.short-centered-header,
+[data-theme="light"] header.short-centered-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 [data-theme="light"] aside,

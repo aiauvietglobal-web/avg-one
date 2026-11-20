@@ -246,7 +246,7 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
       <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[900px] h-[340px] bg-gradient-to-t from-sky-200/25 via-sky-100/10 to-transparent dark:from-sky-950/30 dark:via-transparent rounded-full blur-[100px] pointer-events-none -z-0" />
 
       {/* Synchronized widescreen container (Giữ nguyên vị trí rộng cho 4 hộp Hero & vòng quỹ đạo) */}
-      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10 py-1 sm:py-2">
+      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 pt-14 sm:pt-16 pb-1 sm:pb-2 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10">
         
         {/* 🛸 VIETTEL AI-STYLE VECTOR LINE-ART & GEOMETRIC ANIMATED HERO */}
         <div className="w-full relative flex items-center justify-center shrink-0 mb-1 sm:mb-2 py-4 sm:py-7 px-2 overflow-visible min-h-[250px] sm:min-h-[290px] xl:min-h-[330px]">

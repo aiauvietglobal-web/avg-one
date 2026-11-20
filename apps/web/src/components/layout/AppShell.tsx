@@ -622,7 +622,9 @@ export const AppShell: React.FC<AppShellProps> = ({
           )}
 
           {/* Main Content Viewport for Desktop */}
-          <main className="flex-1 w-full min-h-0 h-full overflow-hidden flex flex-col relative">
+          <main className={`flex-1 w-full min-h-0 h-full overflow-hidden flex flex-col relative ${
+            ['system', 'admin', 'inside', 'orders'].includes(activeModule) ? 'pt-14 sm:pt-16' : ''
+          }`}>
             {children}
           </main>
 

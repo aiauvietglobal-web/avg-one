@@ -13,8 +13,8 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({
   renderUserAuthButton
 }) => {
   return (
-    <header className="flex-shrink-0 sticky top-0 z-40 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
-      <div className="max-w-[820px] w-full mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-4 sm:gap-6">
+    <header className="short-centered-header fixed top-0 left-0 right-0 z-40 bg-transparent pointer-events-none select-none">
+      <div className="max-w-5xl w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl shadow-xs flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto">
         {/* Left: AVG One Official Logo */}
         <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           <img
