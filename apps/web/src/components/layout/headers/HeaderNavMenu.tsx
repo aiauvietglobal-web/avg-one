@@ -79,7 +79,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
   };
 
   return (
-    <nav className="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3.5 shrink-0 whitespace-nowrap">
+    <nav className="relative hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3.5 shrink-0 whitespace-nowrap">
       {[
         { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
         { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
@@ -94,7 +94,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={systemDropdownRef}
-              className="relative shrink-0 whitespace-nowrap"
+              className="shrink-0 whitespace-nowrap"
             >
               <button
                 onClick={handleToggleSystemModule}
@@ -113,7 +113,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               </button>
 
               {isSystemDropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-2 z-50 space-y-1 animate-dropdown-slide">
+                <div className="absolute top-full left-0 right-0 mt-5 w-full bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-2 z-50 space-y-1 animate-dropdown-slide">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -160,7 +160,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             <div
               key={item.id}
               ref={ordersDropdownRef}
-              className="relative"
+              className="shrink-0 whitespace-nowrap"
             >
               <button
                 onClick={handleToggleOrdersModule}
@@ -179,7 +179,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               </button>
 
               {isOrdersDropdownOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-2 z-50 space-y-1 animate-dropdown-slide">
+                <div className="absolute top-full left-0 right-0 mt-5 w-full bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-2 z-50 space-y-1 animate-dropdown-slide">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
