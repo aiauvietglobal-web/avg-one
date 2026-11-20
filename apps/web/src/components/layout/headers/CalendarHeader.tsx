@@ -80,42 +80,46 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             </button>
           </div>
 
-          {/* CHẾ ĐỘ XEM (THẺ / LƯỚI + D/M) TRÊN THANH HEADER PHÂN HỆ LỊCH (PHONG CÁCH PILL XÁM NHẠT TỐI GIẢN) */}
-          <div className="flex items-center gap-1.5 sm:gap-2 pl-3 sm:pl-5 border-l border-slate-200 dark:border-slate-700/80 shrink-0">
-            <button
-              type="button"
-              onClick={() => handleChangeViewMode('day')}
-              className={`h-8.5 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                viewMode === 'day' || viewMode === 'month'
-                  ? 'bg-[#EBECEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                  : 'bg-transparent hover:bg-[#F3F4F6] dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-medium'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Thẻ</span>
-            </button>
+          {/* CHẾ ĐỘ XEM (THẺ / LƯỚI + D/M) TRÊN THANH HEADER PHÂN HỆ LỊCH */}
+          <div className="flex items-center gap-2 pl-3 sm:pl-5 border-l border-slate-200 dark:border-slate-700/80 shrink-0">
+            <div className="flex items-center bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-1 h-8.5 sm:h-9 min-w-[168px] sm:min-w-[188px]">
+              <button
+                type="button"
+                onClick={() => handleChangeViewMode('day')}
+                className={`flex-1 h-full px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  viewMode === 'day' || viewMode === 'month'
+                    ? 'bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-[#00A8E8]'
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Thẻ</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => handleChangeViewMode('table')}
-              className={`h-8.5 sm:h-9 px-4 rounded-full text-xs sm:text-[13px] transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                viewMode === 'table'
-                  ? 'bg-[#EBECEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
-                  : 'bg-transparent hover:bg-[#F3F4F6] dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 font-medium'
-              }`}
-            >
-              <Table className="w-3.5 h-3.5" />
-              <span>Lưới</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => handleChangeViewMode('table')}
+                className={`flex-1 h-full px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  viewMode === 'table'
+                    ? 'bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-[#00A8E8]'
+                }`}
+              >
+                <Table className="w-3.5 h-3.5" />
+                <span>Lưới</span>
+              </button>
+            </div>
 
-            {/* Nút D/M Toggle Pill */}
+            {/* Nút D/M Toggle Badge */}
             <button
               type="button"
               onClick={handleToggleDM}
               title={viewMode === 'day' ? 'Chế độ D: Đang xem theo ngày - Click để chuyển sang Chế độ M (Tháng)' : 'Chế độ M: Đang xem theo tháng - Click để chuyển sang Chế độ D (Ngày)'}
-              className="h-8.5 sm:h-9 px-3.5 rounded-full bg-[#EBECEE] hover:bg-slate-200/90 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs sm:text-[13px] font-semibold flex items-center justify-center cursor-pointer transition select-none"
+              className="h-8.5 sm:h-9 px-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-[#00A8E8] rounded-xl flex items-center justify-center cursor-pointer transition shadow-2xs group"
             >
-              <span>{viewMode === 'day' ? 'Chế độ D' : 'Chế độ M'}</span>
+              <span className="text-xs font-black bg-gradient-to-r from-[#00A8E8] to-[#0088CC] text-white px-2 py-0.5 rounded-md transition-transform group-hover:scale-105 select-none">
+                {viewMode === 'day' ? 'D' : 'M'}
+              </span>
             </button>
 
             {/* Nút Cập nhật lịch ngay trên thanh Header */}
@@ -123,9 +127,9 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
               type="button"
               onClick={() => window.dispatchEvent(new CustomEvent('calendar_open_add_modal'))}
               title="Cập nhật lịch trao đổi mới"
-              className="h-8.5 sm:h-9 px-4 rounded-full bg-[#EBECEE] hover:bg-slate-200/90 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs sm:text-[13px] font-semibold transition inline-flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+              className="h-8.5 sm:h-9 px-3.5 rounded-xl bg-[#F15A24] hover:bg-[#D9460F] text-white text-xs font-extrabold shadow-2xs transition inline-flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
             >
-              <Plus className="w-3.5 h-3.5 stroke-[2.2]" />
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Cập nhật lịch</span>
             </button>
           </div>

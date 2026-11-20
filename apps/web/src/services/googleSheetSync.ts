@@ -735,14 +735,10 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
       dateStr = `${dParts[0].padStart(2, '0')}/${dParts[1].padStart(2, '0')}/${yr}`;
     }
 
-    // Độ lệch cột tự động (mặc định Ngày ở cột index 3; nếu sheet chèn thêm cột STT ở đầu thì dateIdx = 4 => off = +1)
-    const off = dateIdx - 3;
-    const getCol = (baseIdx: number) => (baseIdx + off >= 0 ? (row[baseIdx + off] || '').trim() : '');
-
-    // Cột 12 (+off): Nội dung / Chủ đề
-    let rawTitle = getCol(12);
+    // Cột 12: Nội dung / Chủ đề
+    let rawTitle = (row[12] || '').trim();
     if (!rawTitle || rawTitle === 'Nội dung/ Chủ đề' || rawTitle === 'STT') {
-      const candidateTitle = row.find((c, cIdx) => cIdx !== dateIdx && cIdx > 6 + off && (c || '').trim().length > 3 && !/^\d+([.,]\d+)?%?$/.test(c.trim()));
+      const candidateTitle = row.find((c, cIdx) => cIdx !== dateIdx && cIdx > 6 && (c || '').trim().length > 3 && !/^\d+([.,]\d+)?%?$/.test(c.trim()));
       if (candidateTitle) {
         rawTitle = candidateTitle.trim();
       } else {
@@ -751,36 +747,33 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     }
 
     // Giờ bắt đầu / kết thúc dự kiến và thực tế
-    const rawPStart = formatTimeWithoutSeconds(getCol(5));
-    const rawPEnd = formatTimeWithoutSeconds(getCol(6));
-    const rawAStart = formatTimeWithoutSeconds(getCol(8));
-    const rawAEnd = formatTimeWithoutSeconds(getCol(9));
+    const rawPStart = formatTimeWithoutSeconds(row[5] || '');
+    const rawPEnd = formatTimeWithoutSeconds(row[6] || '');
+    const rawAStart = formatTimeWithoutSeconds(row[8] || '');
+    const rawAEnd = formatTimeWithoutSeconds(row[9] || '');
 
     const pStart = rawPStart === '-' ? '' : rawPStart;
     const pEnd = rawPEnd === '-' ? '' : rawPEnd;
     const aStart = rawAStart === '-' ? '' : rawAStart;
     const aEnd = rawAEnd === '-' ? '' : rawAEnd;
 
-    const rawPDuration = getCol(4).replace(/[^\d]/g, '');
+    const rawPDuration = (row[4] || '').replace(/[^\d]/g, '');
     const pDuration = rawPDuration !== '' ? parseInt(rawPDuration, 10) : undefined;
-    // Chỉ lấy thời lượng thực tế nếu không phải chuỗi giờ kiểu HH:MM
-    const rawADurationCell = getCol(7);
-    const rawADuration = rawADurationCell.includes(':') ? '' : rawADurationCell.replace(/[^\d]/g, '');
+    const rawADuration = (row[7] || '').replace(/[^\d]/g, '');
     const aDuration = rawADuration !== '' ? parseInt(rawADuration, 10) : undefined;
-    const rawInflMinsCell = getCol(10);
-    const rawInflMins = rawInflMinsCell.includes(':') ? '' : rawInflMinsCell.replace(/[^\d-]/g, '');
+    const rawInflMins = (row[10] || '').replace(/[^\d-]/g, '');
     const inflMins = rawInflMins !== '' && rawInflMins !== '-' ? parseInt(rawInflMins, 10) : undefined;
-    const inflRate = getCol(11) || undefined;
+    const inflRate = (row[11] || '').trim() || undefined;
 
-    const notes = getCol(0);
+    const notes = (row[0] || '').trim();
     const notesLower = notes.toLowerCase();
-    const scope = getCol(1);
-    const dayOfWeek = getCol(2);
-    const legalEntity = getCol(13) || '-';
-    const attendees = getCol(14);
-    const secretary = getCol(15);
+    const scope = (row[1] || '').trim();
+    const dayOfWeek = (row[2] || '').trim();
+    const legalEntity = (row[13] || '').trim() || '-';
+    const attendees = (row[14] || '').trim();
+    const secretary = (row[15] || '').trim();
     
-    let status = getCol(16);
+    let status = (row[16] || '').trim();
     if (!status) {
       if (aStart && aStart !== '00:00' && aEnd && aEnd !== '00:00') {
         status = 'Đã diễn ra';
@@ -800,8 +793,8 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
       }
     }
 
-    const documentCol = getCol(17);
-    const conclusionDocUrl = getCol(18);
+    const documentCol = (row[17] || '').trim();
+    const conclusionDocUrl = (row[18] || '').trim();
 
     const attachments: EventAttachment[] = [];
     if (documentCol) {
