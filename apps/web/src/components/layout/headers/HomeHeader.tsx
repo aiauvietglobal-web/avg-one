@@ -14,7 +14,7 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({
 }) => {
   return (
     <header className="short-centered-header fixed top-0 left-0 right-0 z-40 bg-transparent pointer-events-none select-none">
-      <div className="max-w-[1200px] w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl shadow-xs flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto">
+      <div className="max-w-[1200px] w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl shadow-xs flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto relative">
         {/* Left: AVG One Official Logo */}
         <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           <img
@@ -26,12 +26,16 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({
           />
         </div>
 
-        {/* Right: Phân hệ quản lý vận hành + Nút Đăng Nhập */}
-        <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 shrink-0 whitespace-nowrap">
+        {/* Center: Menu phân hệ căn giữa tuyệt đối */}
+        <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 shrink-0 whitespace-nowrap">
           <HeaderNavMenu
             activeModule="home"
             onSelectModule={onSelectModule}
           />
+        </div>
+
+        {/* Right: Nút Đăng Nhập */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 whitespace-nowrap">
           {renderUserAuthButton()}
         </div>
       </div>
