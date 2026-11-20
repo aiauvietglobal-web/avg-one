@@ -2195,21 +2195,8 @@ export const CalendarModule: React.FC = () => {
   // 🎯 CASE 3: LỊCH TRAO ĐỔI VIEW (ACTIVE SUB APP === 'talk' OR DEFAULT SUB-APP VIEW)
   // ==============================================================================================
   return (
-    <div className={`calendar-module-container w-full h-full flex-1 min-h-0 overflow-y-auto lg:overflow-hidden text-[#1F2937] dark:text-slate-100 font-sans relative flex flex-col justify-between ${
-      viewMode === 'table'
-        ? 'bg-white dark:bg-slate-950 p-0'
-        : 'bg-slate-50/60 dark:bg-slate-950 p-2.5 sm:p-4'
-    }`}>
+    <div className="calendar-module-container w-full h-full flex-1 min-h-0 overflow-y-auto lg:overflow-hidden bg-white dark:bg-slate-950 p-0 text-[#1F2937] dark:text-slate-100 font-sans relative flex flex-col justify-between">
       {hiddenTriggers}
-      
-      {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER (Chỉ hiện ở chế độ Thẻ) */}
-      {viewMode !== 'table' && (
-        <>
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
-          <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-          <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-        </>
-      )}
 
       {/* Toast Notification Banner (Góc dưới cùng bên phải, nền cam kèm icon chuông) */}
       {toastMessage && (
@@ -2671,14 +2658,14 @@ export const CalendarModule: React.FC = () => {
 
         </div>
       ) : (
-      /* 🎯 4 EQUAL COLUMNS GRID SYSTEM ON DESKTOP | RESPONSIVE MOBILE FLEX LAYOUT */
-      <div className="w-full h-full flex flex-col lg:grid lg:grid-cols-4 gap-3 sm:gap-3.5 relative z-10">
+      /* 🎯 BỐ CỤC 3 CỘT MỞ RỘNG TỐI ĐA FULL MÀN HÌNH, ĐÃ BỎ LỚP NỀN BAO NGOÀI */
+      <div className="w-full h-full flex-1 min-h-0 flex flex-col lg:grid lg:grid-cols-[265px_minmax(0,1fr)_275px] bg-white dark:bg-slate-950 relative z-10 overflow-hidden">
         
         {/* ========================================================================= */}
         {/* ⚙️ SIDEBAR 1 (COL 1): BỘ LỌC, TÌM KIẾM & TIỆN ÍCH DỮ LIỆU */}
         {/* (Mobile: order-2, Desktop: order-1) */}
         {/* ========================================================================= */}
-        <aside className="order-2 lg:order-1 lg:col-span-1 w-full h-auto lg:h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl lg:rounded-[24px] p-3.5 sm:p-4 space-y-3.5 text-slate-800 dark:text-slate-200 scrollbar-thin overflow-y-auto shadow-sm hover:border-[#F15A24]/40 transition-all">
+        <aside className="order-2 lg:order-1 w-full h-auto lg:h-full bg-white dark:bg-slate-950 lg:border-r border-slate-200 dark:border-slate-800 p-3 sm:p-3.5 space-y-3.5 text-slate-800 dark:text-slate-200 scrollbar-thin overflow-y-auto">
           
           {/* 🎯 HỘP 1: NÚT THÊM MỚI & TÌM KIẾM NHANH */}
           <div className="space-y-2.5">
@@ -2858,7 +2845,7 @@ export const CalendarModule: React.FC = () => {
         {/* 🏢 PHẦN 2 + 3 (COL 2 & 3 - MAIN CONTENT): NỘI DUNG TRAO ĐỔI & HỌP CÔNG VIỆC */}
         {/* (Mobile: order-1, Desktop: order-2) */}
         {/* ========================================================================= */}
-        <main className="order-1 lg:order-2 lg:col-span-2 w-full h-auto lg:h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl lg:rounded-[28px] p-3 sm:p-4 space-y-3 sm:space-y-3.5 flex flex-col overflow-hidden shadow-sm relative hover:border-[#F15A24]/30 transition-all">
+        <main className="order-1 lg:order-2 w-full h-auto lg:h-full bg-white dark:bg-slate-950 px-3 sm:px-5 py-3 space-y-3 flex flex-col overflow-hidden relative">
           
           {/* 🔮 TOP BANNER EXECUTIVE DASHBOARD WITH SLOGAN PILL BADGE & BRUSH STROKE */}
           <div className="flex-shrink-0 bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-2xl sm:rounded-[22px] p-3.5 sm:p-5 shadow-xs relative overflow-hidden">
@@ -3339,7 +3326,7 @@ export const CalendarModule: React.FC = () => {
           </div>
 
           {/* 📜 MEETING CONTENT CARDS FEED (KHU VỰC TRUỘT CÁC HỘP NỘI DUNG TRAO ĐỔI) */}
-          <div className="flex-1 overflow-y-auto space-y-3 lg:-mr-3 lg:pr-3 pb-3 scrollbar-thin relative z-10">
+          <div className="flex-1 overflow-y-auto space-y-3 pb-3 scrollbar-thin relative z-10">
 
             {/* ========================================================================= */}
             {/* 🌟 VIEW MODE 1 & 2: CARD FEED FOR DAY (D) OR MONTH (M) */}
@@ -3623,7 +3610,7 @@ export const CalendarModule: React.FC = () => {
         {/* 📢 SIDEBAR 2 (COL 4): GHI CHÚ & BẢNG TIN 24/7 */}
         {/* (Mobile: order-3, Desktop: order-3) */}
         {/* ========================================================================= */}
-        <aside className="order-3 lg:order-3 lg:col-span-1 w-full h-auto lg:h-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl lg:rounded-[24px] p-3.5 sm:p-4 text-slate-800 dark:text-slate-200 scrollbar-thin flex flex-col justify-between overflow-y-auto shadow-sm hover:border-[#F15A24]/40 transition-all space-y-3">
+        <aside className="order-3 lg:order-3 w-full h-auto lg:h-full bg-white dark:bg-slate-950 lg:border-l border-slate-200 dark:border-slate-800 p-3 sm:p-3.5 text-slate-800 dark:text-slate-200 scrollbar-thin flex flex-col justify-between overflow-y-auto space-y-3">
           
           {/* Header Section */}
           <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800 pb-2 flex-shrink-0">
