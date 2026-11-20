@@ -18,7 +18,7 @@ export const StandardModuleHeader: React.FC<StandardModuleHeaderProps> = ({
 }) => {
   return (
     <header className="short-centered-header fixed top-0 left-0 right-0 z-40 bg-transparent pointer-events-none select-none">
-      <div className="max-w-[1200px] w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl shadow-xs flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto relative">
+      <div className="max-w-[1200px] w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl shadow-xs flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto">
         {/* Left: Logo AVG One chính thức */}
         <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           <img
@@ -30,8 +30,8 @@ export const StandardModuleHeader: React.FC<StandardModuleHeaderProps> = ({
           />
         </div>
 
-        {/* Center: Menu phân hệ căn giữa tuyệt đối trên thanh Header */}
-        <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 shrink-0 whitespace-nowrap">
+        {/* Center: Menu phân hệ căn chính giữa khoảng trống giữa Logo và Đăng nhập */}
+        <div className="hidden md:flex flex-1 items-center justify-center shrink-0 whitespace-nowrap">
           <HeaderNavMenu
             activeModule={activeModule}
             onSelectModule={onSelectModule}

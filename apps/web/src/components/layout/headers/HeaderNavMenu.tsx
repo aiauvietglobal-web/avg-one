@@ -99,10 +99,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               <button
                 onClick={handleToggleSystemModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal flex items-center gap-1 whitespace-nowrap shrink-0 ${
+                className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-1 whitespace-nowrap shrink-0 ${
                   isHighlighted
-                    ? 'font-medium text-[#F15A24] dark:text-[#F15A24]'
-                    : 'font-normal text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                    ? 'font-semibold text-[#F15A24] dark:text-[#F15A24]'
+                    : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
                 <span className="relative inline-block whitespace-nowrap">
@@ -175,10 +175,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               <button
                 onClick={handleToggleOrdersModule}
                 style={{ color: isHighlighted ? '#F15A24' : undefined }}
-                className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
+                className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-1 ${
                   isHighlighted
-                    ? 'font-medium text-[#F15A24] dark:text-[#F15A24]'
-                    : 'font-normal text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                    ? 'font-semibold text-[#F15A24] dark:text-[#F15A24]'
+                    : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
                 }`}
               >
                 <span className="relative inline-block">
@@ -263,10 +263,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               onSelectModule(item.id);
             }}
             style={{ color: isActive ? '#F15A24' : undefined }}
-            className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[14.5px] cursor-pointer select-none tracking-normal ${
+            className={`relative px-2.5 sm:px-3 py-1.5 text-sm sm:text-[15px] cursor-pointer select-none tracking-normal ${
               isActive
-                ? 'font-medium text-[#F15A24] dark:text-[#F15A24]'
-                : 'font-normal text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
+                ? 'font-semibold text-[#F15A24] dark:text-[#F15A24]'
+                : 'font-medium text-slate-700 dark:text-slate-200 hover:text-[#F15A24] dark:hover:text-[#F15A24]'
             }`}
           >
             <span className="relative inline-block">
