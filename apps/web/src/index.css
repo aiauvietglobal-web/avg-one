@@ -1605,9 +1605,12 @@ span[style*="borderRadius"] {
   border-radius: 6px !important;
 }
 
-/* Preserve Circular Avatars, Buttons & Indicators */
+/* Preserve Circular Avatars, Pill Buttons & Indicators */
 .rounded-full,
-button.rounded-full,
+button.rounded-full {
+  border-radius: 9999px !important;
+}
+
 button[style*="borderRadius: 50%"],
 button[style*="borderRadius: '50%'"],
 button[style*="50%"],
