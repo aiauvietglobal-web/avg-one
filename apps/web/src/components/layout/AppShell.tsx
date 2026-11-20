@@ -332,13 +332,13 @@ export const AppShell: React.FC<AppShellProps> = ({
           {currentUser.name.charAt(0)}
         </button>
       ) : (
-        /* Chưa đăng nhập: Hộp viên thuốc bo tròn 4 góc, chỉ có viền stroke, bỏ nền */
+        /* Chưa đăng nhập: Hộp viên thuốc bo tròn, viền xám mảnh 1px, chữ xám đậm, không nền */
         <button
           onClick={() => setIsLoginModalOpen(true)}
-          className="h-9 px-4 rounded-full bg-transparent hover:bg-orange-50 dark:hover:bg-orange-950/40 active:scale-95 text-[#F15A24] dark:text-[#F15A24] border-2 border-[#F15A24] font-bold text-[13px] transition-all duration-150 cursor-pointer select-none flex items-center justify-center"
+          className="h-9 px-4 rounded-full bg-transparent hover:bg-slate-100/80 dark:hover:bg-slate-800/70 active:scale-95 text-[#334155] dark:text-slate-200 border border-[#94A3B8] dark:border-slate-600 font-semibold text-[13px] transition-all duration-150 cursor-pointer select-none flex items-center justify-center"
           title="Đăng nhập tài khoản AVG One"
         >
-          <span>Đăng Nhập</span>
+          <span>Đăng nhập</span>
         </button>
       )}
 
