@@ -113,16 +113,16 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               </button>
 
               {isSystemDropdownOpen && (
-                <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-52 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-2 z-50 space-y-1 animate-dropdown-slide">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleSelectSystemSubTab('annual-plan');
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm flex items-center justify-between transition-colors cursor-pointer ${
                       isActive && systemTabState === 'annual-plan'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                        ? 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
+                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-[#F3F4F6] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     <span className="text-slate-900 dark:text-white font-medium">Kế hoạch năm</span>
@@ -135,10 +135,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
                       e.stopPropagation();
                       handleSelectSystemSubTab('executive-directive');
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm flex items-center justify-between transition-colors cursor-pointer ${
                       isActive && systemTabState === 'executive-directive'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                        ? 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
+                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-[#F3F4F6] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     <span className="text-slate-900 dark:text-white font-medium">Thông điệp điều hành</span>
@@ -179,16 +179,16 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               </button>
 
               {isOrdersDropdownOpen && (
-                <div className="absolute top-full left-2.5 sm:left-3 mt-1.5 w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800/90 rounded-xl shadow-xl p-1 z-50 animate-dropdown-slide">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-6 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl shadow-lg p-2 z-50 space-y-1 animate-dropdown-slide">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleSelectOrdersSubTab('design');
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm flex items-center justify-between transition-colors cursor-pointer ${
                       (isActive && ordersTabState === 'design') || activeSubTitle.includes('THIẾT KẾ')
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                        ? 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
+                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-[#F3F4F6] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     <span className="text-slate-900 dark:text-white font-medium">Thiết kế</span>
@@ -201,10 +201,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
                       e.stopPropagation();
                       handleSelectOrdersSubTab('research');
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm flex items-center justify-between transition-colors cursor-pointer ${
                       (isActive && ordersTabState === 'research') || activeSubTitle.includes('NGHIÊN CỨU')
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                        ? 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
+                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-[#F3F4F6] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     <span className="text-slate-900 dark:text-white font-medium">Nghiên cứu</span>
@@ -217,10 +217,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
                       e.stopPropagation();
                       handleSelectOrdersSubTab('legal');
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                    className={`w-full text-left px-4 py-2.5 rounded-xl text-sm flex items-center justify-between transition-colors cursor-pointer ${
                       isActive && ordersTabState === 'legal'
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold'
-                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                        ? 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-900 dark:text-white font-semibold'
+                        : 'text-slate-800 dark:text-slate-200 font-medium hover:bg-[#F3F4F6] dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     <span className="text-slate-900 dark:text-white font-medium">Pháp lý</span>
