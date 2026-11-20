@@ -23,6 +23,10 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
   const [isOrdersDropdownOpen, setIsOrdersDropdownOpen] = useState(false);
   const ordersDropdownRef = useRef<HTMLDivElement>(null);
 
+  // 3. Mục đang được ấn trực tiếp (chỉ khi ấn vào mới hiện dạng hộp)
+  const [clickedItem, setClickedItem] = useState<AppModuleId | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+
   // Đóng hộp khi chuyển phân hệ
   useEffect(() => {
     if (activeModule !== 'system' && activeModule !== 'admin') {
@@ -33,7 +37,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
     }
   }, [activeModule]);
 
-  // Click outside listener for all dropdowns
+  // Click outside listener for all dropdowns & active pill
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -43,6 +47,9 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
       if (ordersDropdownRef.current && !ordersDropdownRef.current.contains(target)) {
         setIsOrdersDropdownOpen(false);
       }
+      if (navRef.current && !navRef.current.contains(target)) {
+        setClickedItem(null);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -50,12 +57,17 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
 
   const handleToggleSystemModule = () => {
     setIsOrdersDropdownOpen(false);
-    setIsSystemDropdownOpen(prev => !prev);
+    setIsSystemDropdownOpen(prev => {
+      const next = !prev;
+      setClickedItem(next ? 'system' : null);
+      return next;
+    });
   };
 
   const handleSelectSystemSubTab = (tab: 'annual-plan' | 'executive-directive') => {
     setSystemTabState(tab);
     setIsSystemDropdownOpen(false);
+    setClickedItem('system');
     onSelectModule('system');
     window.dispatchEvent(new CustomEvent('system_tab_change', { detail: tab }));
     const btn = document.getElementById(`btn-system-subtab-${tab}`);
@@ -64,12 +76,17 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
 
   const handleToggleOrdersModule = () => {
     setIsSystemDropdownOpen(false);
-    setIsOrdersDropdownOpen(prev => !prev);
+    setIsOrdersDropdownOpen(prev => {
+      const next = !prev;
+      setClickedItem(next ? 'orders' : null);
+      return next;
+    });
   };
 
   const handleSelectOrdersSubTab = (tab: 'design' | 'research' | 'sample-h1' | 'legal') => {
     setOrdersTabState(tab);
     setIsOrdersDropdownOpen(false);
+    setClickedItem('orders');
     onSelectModule('orders');
     window.dispatchEvent(new CustomEvent('orders_tab_change', { detail: tab }));
     setTimeout(() => {
@@ -79,7 +96,7 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
   };
 
   return (
-    <nav className="relative hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3.5 shrink-0 whitespace-nowrap">
+    <nav ref={navRef} className="relative hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3.5 shrink-0 whitespace-nowrap">
       {[
         { id: 'home' as AppModuleId, aliases: ['home'], label: 'Trang chủ' },
         { id: 'system' as AppModuleId, aliases: ['system', 'admin'], label: 'Hệ thống' },
@@ -87,9 +104,14 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
         { id: 'orders' as AppModuleId, aliases: ['orders', 'wework', 'workflow', 'rd'], label: 'Đơn hàng' },
       ].map((item) => {
         const isActive = item.aliases.includes(activeModule);
+        const isBoxShown =
+          item.id === 'system'
+            ? isSystemDropdownOpen || clickedItem === 'system'
+            : item.id === 'orders'
+              ? isOrdersDropdownOpen || clickedItem === 'orders'
+              : clickedItem === item.id;
 
         if (item.id === 'system') {
-          const isHighlighted = isActive || isSystemDropdownOpen;
           return (
             <div
               key={item.id}
@@ -99,16 +121,16 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               <button
                 onClick={handleToggleSystemModule}
                 className={`relative h-9 px-4 rounded-full text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors ${
-                  isHighlighted
+                  isBoxShown
                     ? 'bg-[#EEEEEE] dark:bg-slate-800 font-semibold text-[#1F1F1F] dark:text-white'
-                    : 'bg-transparent hover:bg-[#F3F4F6] dark:hover:bg-slate-800/60 font-medium text-slate-700 dark:text-slate-200'
+                    : 'bg-transparent font-medium text-slate-700 dark:text-slate-200'
                 }`}
               >
                 <span className="inline-block whitespace-nowrap">
                   {item.label}
                 </span>
                 <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-slate-600 dark:text-slate-300' : 'opacity-60'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isSystemDropdownOpen ? 'rotate-180' : ''} ${isBoxShown ? 'text-slate-600 dark:text-slate-300' : 'opacity-60'}`}
                 />
               </button>
 
@@ -155,7 +177,6 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
 
 
         if (item.id === 'orders') {
-          const isHighlighted = isActive || isOrdersDropdownOpen;
           return (
             <div
               key={item.id}
@@ -165,16 +186,16 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
               <button
                 onClick={handleToggleOrdersModule}
                 className={`relative h-9 px-4 rounded-full text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center gap-1 transition-colors ${
-                  isHighlighted
+                  isBoxShown
                     ? 'bg-[#EEEEEE] dark:bg-slate-800 font-semibold text-[#1F1F1F] dark:text-white'
-                    : 'bg-transparent hover:bg-[#F3F4F6] dark:hover:bg-slate-800/60 font-medium text-slate-700 dark:text-slate-200'
+                    : 'bg-transparent font-medium text-slate-700 dark:text-slate-200'
                 }`}
               >
                 <span className="inline-block">
                   {item.label}
                 </span>
                 <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isHighlighted ? 'text-slate-600 dark:text-slate-300' : 'opacity-60'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isOrdersDropdownOpen ? 'rotate-180' : ''} ${isBoxShown ? 'text-slate-600 dark:text-slate-300' : 'opacity-60'}`}
                 />
               </button>
 
@@ -240,12 +261,13 @@ export const HeaderNavMenu: React.FC<HeaderNavMenuProps> = ({
             onClick={() => {
               setIsSystemDropdownOpen(false);
               setIsOrdersDropdownOpen(false);
+              setClickedItem(item.id);
               onSelectModule(item.id);
             }}
             className={`relative h-9 px-4 rounded-full text-sm sm:text-[15px] cursor-pointer select-none tracking-normal flex items-center justify-center transition-colors ${
-              isActive
+              isBoxShown
                 ? 'bg-[#EEEEEE] dark:bg-slate-800 font-semibold text-[#1F1F1F] dark:text-white'
-                : 'bg-transparent hover:bg-[#F3F4F6] dark:hover:bg-slate-800/60 font-medium text-slate-700 dark:text-slate-200'
+                : 'bg-transparent font-medium text-slate-700 dark:text-slate-200'
             }`}
           >
             <span className="inline-block">
