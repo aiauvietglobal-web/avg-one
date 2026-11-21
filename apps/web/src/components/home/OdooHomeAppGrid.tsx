@@ -177,74 +177,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
       {/* 🌐 ULTRA-CLEAN GRID LINES */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-55 dark:opacity-25 pointer-events-none -z-0" />
 
-      {/* 🌊 DẢI NỀN MÀU AURORA SÓNG LƯỢN HỮU CƠ (ORGANIC FLUID AURORA WAVES & RIBBON - TONE PASTEL TINH TẾ) */}
-      
-      {/* 1. Dải sóng Aurora Xanh Dương Pastel (Bên trái: Nâng đỡ Nền tảng số & Số hóa) */}
-      <div className="absolute -top-24 -left-20 w-[620px] h-[580px] xl:w-[780px] xl:h-[700px] pointer-events-none -z-0 animate-aurora-left">
-        <div 
-          className="w-full h-full rounded-full blur-[90px] xl:blur-[110px] opacity-75 dark:opacity-40"
-          style={{
-            background: 'radial-gradient(ellipse 80% 70% at 30% 35%, rgba(56, 189, 248, 0.30) 0%, rgba(2, 132, 199, 0.16) 45%, rgba(14, 165, 233, 0.06) 70%, transparent 100%)'
-          }}
-        />
-      </div>
-
-      {/* 2. Dải sóng Aurora Cam Hổ Phách Pastel (Bên phải: Tôn vinh Tự động hóa & Tương tác) */}
-      <div className="absolute -top-24 -right-20 w-[640px] h-[600px] xl:w-[800px] xl:h-[720px] pointer-events-none -z-0 animate-aurora-right">
-        <div 
-          className="w-full h-full rounded-full blur-[95px] xl:blur-[115px] opacity-75 dark:opacity-40"
-          style={{
-            background: 'radial-gradient(ellipse 80% 70% at 70% 35%, rgba(251, 146, 60, 0.28) 0%, rgba(241, 90, 36, 0.15) 45%, rgba(245, 158, 11, 0.06) 70%, transparent 100%)'
-          }}
-        />
-      </div>
-
-      {/* 3. Dải lụa sóng uốn lượn liên tục xuyên suốt (Continuous Flowing Aurora Ribbon) */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none -z-0 overflow-hidden opacity-65 dark:opacity-35 animate-aurora-ribbon">
-        <svg 
-          viewBox="0 0 1440 680" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg" 
-          className="w-full h-full object-cover"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient id="aurora-ribbon-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.22" />
-              <stop offset="35%" stopColor="#0284C7" stopOpacity="0.12" />
-              <stop offset="65%" stopColor="#FB923C" stopOpacity="0.12" />
-              <stop offset="100%" stopColor="#F15A24" stopOpacity="0.22" />
-            </linearGradient>
-            <linearGradient id="aurora-ribbon-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0EA5E9" stopOpacity="0.15" />
-              <stop offset="45%" stopColor="#38BDF8" stopOpacity="0.06" />
-              <stop offset="60%" stopColor="#FDBA74" stopOpacity="0.06" />
-              <stop offset="100%" stopColor="#EA580C" stopOpacity="0.15" />
-            </linearGradient>
-            <filter id="aurora-blur" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="40" />
-            </filter>
-          </defs>
-
-          {/* Dải sóng 1: Uốn lượn mềm mại từ góc trái sang góc phải */}
-          <path
-            d="M -100 240 C 260 100, 520 380, 880 200 C 1140 80, 1380 280, 1560 180 L 1560 0 L -100 0 Z"
-            fill="url(#aurora-ribbon-grad-1)"
-            filter="url(#aurora-blur)"
-          />
-
-          {/* Dải sóng 2: Đối xứng giao thoa êm dịu */}
-          <path
-            d="M -100 360 C 300 480, 680 220, 1020 380 C 1240 480, 1420 320, 1560 400 L 1560 680 L -100 680 Z"
-            fill="url(#aurora-ribbon-grad-2)"
-            filter="url(#aurora-blur)"
-          />
-        </svg>
-      </div>
-
-      {/* 4. Vùng ánh sáng Pastel nâng đỡ chân trang (Bottom Ambient Glass Glow) */}
-      <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[900px] h-[340px] bg-gradient-to-t from-sky-200/25 via-sky-100/10 to-transparent dark:from-sky-950/30 dark:via-transparent rounded-full blur-[100px] pointer-events-none -z-0" />
-
       {/* Synchronized widescreen container (Giữ nguyên vị trí rộng cho 4 hộp Hero & vòng quỹ đạo) */}
       <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 pt-14 sm:pt-16 pb-1 sm:pb-2 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10">
         
@@ -257,21 +189,6 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           <div className="flex flex-col items-center shrink-0 w-full sm:w-auto z-10 animate-entrance-up" style={{ animationDelay: '100ms' }}>
             <div className="w-fit max-w-[95vw] sm:max-w-none mx-auto px-4 xs:px-6 sm:px-8 py-2 sm:py-3 flex flex-col items-center text-center relative space-y-2 sm:space-y-2.5 transition-all duration-300">
               
-              {/* 🎨 ÁNH SÁNG TỰ NHIÊN DỊU NHẸ CHO SLOGAN (Pastel Ambient Halo - Thoát ly hoàn toàn khối đục) */}
-              <div className="absolute -inset-x-16 -inset-y-10 sm:-inset-x-24 sm:-inset-y-12 pointer-events-none -z-10 blur-3xl animate-halo-breathe">
-                <div 
-                  className="w-full h-full opacity-60 dark:opacity-40"
-                  style={{
-                    background: 'linear-gradient(90deg, rgba(56, 189, 248, 0.22) 0%, rgba(125, 211, 252, 0.15) 35%, rgba(253, 186, 116, 0.15) 65%, rgba(251, 146, 60, 0.22) 100%)',
-                    maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)'
-                  }}
-                />
-              </div>
-
-              {/* Lớp làm sáng nhẹ sau chữ - giúp chữ nổi bật tuyệt đối trên nền lưới */}
-              <div className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-8 rounded-full pointer-events-none -z-10 blur-2xl bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.92)_0%,transparent_80%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(15,23,42,0.88)_0%,transparent_80%)]" />
-
               {/* Main Headline (Gióng lề phẳng 3 dòng với khoảng cách tự nhiên giữa các từ) */}
               <div className="space-y-1 sm:space-y-1.5 w-fit flex flex-col items-start justify-start text-left">
                 
