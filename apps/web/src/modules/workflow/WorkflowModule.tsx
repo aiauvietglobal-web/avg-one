@@ -838,29 +838,6 @@ const ResearchSubModuleView: React.FC<{ onBack: () => void }> = ({ onBack }) => 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Left: Animated Slogan Box Badge & Dynamic Title with Brush Stroke */}
           <div className="space-y-2 text-left">
-            {/* Top Navigation Row: Back to Landing & Switch to 3.2 */}
-            <div className="flex items-center gap-2 pb-1">
-              <button
-                onClick={onBack}
-                className="h-7.5 px-3 rounded-xl bg-slate-100/90 dark:bg-slate-800/90 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
-                title="Quay lại Trung tâm Nghiên cứu & Sáng tạo"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Quay lại Trang chủ Phân hệ</span>
-              </button>
-              <button
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: 'design' }));
-                }}
-                className="h-7.5 px-3 rounded-xl bg-sky-50 dark:bg-sky-950/60 hover:bg-[#0284C7] hover:text-white text-[#0284C7] dark:text-sky-300 text-xs font-extrabold border border-sky-200/80 dark:border-sky-800/80 shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer"
-                title="Chuyển sang 3.2 – THIẾT KẾ"
-              >
-                <Compass className="w-3.5 h-3.5" />
-                <span>Sang 3.2 – Thiết Kế</span>
-                <ArrowRight className="w-3 h-3 ml-0.5" />
-              </button>
-            </div>
-
             <div className="relative inline-block p-0.5 rounded-xl transition-all duration-300">
               <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible rounded-xl" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
                 <defs>
