@@ -419,6 +419,8 @@ export const AppShell: React.FC<AppShellProps> = ({
               activeModule={activeModule}
               activeSubTitle={activeSubTitle}
               onSelectModule={onSelectModule}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'calendar' ? (
