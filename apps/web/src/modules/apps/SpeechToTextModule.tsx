@@ -2570,33 +2570,30 @@ export const SpeechToTextModule: React.FC = () => {
               
               {/* Speaker Filter Badges Bar & Top Actions */}
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
-                {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa (Refined Sky Glassmorphism Header) */}
-                <div className="px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-sky-50/90 via-white/80 to-blue-50/70 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-850 border border-slate-200/90 dark:border-slate-700/80 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  {/* Góc Trái: Hộp Tiêu Đề Hội Thoại Trực Tiếp - Nền Xanh Đơn Sắc 1 Màu, Không Icon Trái, Giữ Icon Sóng Âm Bên Phải, Không Shadow */}
-                  <div className="flex items-center gap-2 px-3.5 py-1 rounded-xl bg-[#0284C7] dark:bg-[#0284C7] border border-[#0284C7] dark:border-sky-500 shrink-0 h-8.5">
-                    {/* Dòng chữ Tiêu Đề Trắng Sắc Nét, Nổi Bật & Phẳng (Không Shadow) */}
-                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider !text-white text-white shrink-0 leading-none select-none">
-                      <span style={{ color: '#ffffff' }} className="!text-white text-white font-black">
-                        Hội Thoại Trực Tiếp
-                      </span>
+                {/* Khung Header Thanh Lịch, Cân Đối & Hài Hòa */}
+                <div className="px-3 py-1.5 rounded-xl bg-slate-50/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                  {/* Góc Trái: Tiêu Đề Hội Thoại Trực Tiếp - Phẳng, không hộp màu nền, giữ icon sóng âm thanh */}
+                  <div className="flex items-center gap-2 px-2 py-1 shrink-0 h-8.5">
+                    <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-[#0284C7] dark:text-sky-400 shrink-0 leading-none select-none flex items-center gap-2">
+                      <span>Hội Thoại Trực Tiếp</span>
                     </h2>
 
                     {/* Giữ lại icon/cụm sóng âm thanh mini bên phải, phẳng hoàn toàn không shadow */}
-                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-white/20 border border-white/30 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-1" />
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-2" />
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-3" />
-                      <span className="w-1 rounded-full bg-white animate-wave-bar-4" />
+                    <div className="flex items-center gap-1 h-5 px-1.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 shrink-0 ml-0.5" title="Sóng âm thoại trực tiếp">
+                      <span className="w-1 rounded-full bg-[#0284C7] dark:bg-sky-400 animate-wave-bar-1" />
+                      <span className="w-1 rounded-full bg-[#0284C7] dark:bg-sky-400 animate-wave-bar-2" />
+                      <span className="w-1 rounded-full bg-[#0284C7] dark:bg-sky-400 animate-wave-bar-3" />
+                      <span className="w-1 rounded-full bg-[#0284C7] dark:bg-sky-400 animate-wave-bar-4" />
                     </div>
                   </div>
 
-                  {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ chiều cao h-8.5 để thẳng hàng tuyệt đối */}
-                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto h-8.5">
+                  {/* Góc Phải: Nút BẮT ĐẦU NÓI, MỚI & MỞ RỘNG - Đồng bộ hộp nền xám giống Trang chủ, chỉ hiện khi tương tác */}
+                  <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-auto h-8.5">
                     {/* Microphone Permission Action Button if Error/Denied */}
                     {(micPermissionStatus === 'denied' || recognitionError) && (
                       <button
                         onClick={requestMicPermission}
-                        className="h-8 px-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-extrabold text-[11px] flex items-center gap-1 shadow-xs animate-pulse cursor-pointer shrink-0 leading-none"
+                        className="h-8 px-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-full font-extrabold text-[11px] flex items-center gap-1 shadow-xs animate-pulse cursor-pointer shrink-0 leading-none"
                         title="Bấm để kiểm tra và cấp quyền kết nối Micro"
                       >
                         <AlertCircle className="w-3.5 h-3.5" />
@@ -2608,10 +2605,10 @@ export const SpeechToTextModule: React.FC = () => {
                     {micState === 'idle' && (
                       <button
                         onClick={toggleListening}
-                        className="relative group overflow-hidden h-8 px-3.5 sm:px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0 leading-none"
+                        className="group h-8.5 px-3.5 sm:px-4 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shrink-0 leading-none border-none bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300"
                         title="Bắt đầu thu âm và nhận diện giọng nói trực tiếp"
                       >
-                        <Mic className="w-4 h-4 stroke-[2.5] shrink-0" />
+                        <Mic className="w-4 h-4 stroke-[2.5] shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
                         <span className="font-extrabold">BẮT ĐẦU</span>
                       </button>
                     )}
@@ -2679,20 +2676,20 @@ export const SpeechToTextModule: React.FC = () => {
                       <span>TÙY CHỈNH</span>
                     </button>
 
-                    {/* Nút MỚI - Tone Xanh Công Nghệ Hài Hòa */}
+                    {/* Nút MỚI - Chỉ hiện hộp xám khi tương tác (giống Trang chủ) */}
                     <button
                       onClick={handleCreateNewConversation}
-                      className="h-8 text-xs font-extrabold text-white bg-[#0284C7] hover:bg-[#00A8E8] px-3 rounded-xl flex items-center gap-1.5 shadow-xs hover:shadow-sm cursor-pointer transition-all hover:scale-105 active:scale-95 uppercase tracking-wide shrink-0 leading-none"
+                      className="group h-8.5 px-3 sm:px-3.5 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors duration-150 cursor-pointer shrink-0 leading-none border-none bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white"
                       title="Tạo cuộc hội thoại mới"
                     >
-                      <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <PlusCircle className="w-3.5 h-3.5 stroke-[2.5] text-slate-500 dark:text-slate-400 group-hover:text-[#1F1F1F] dark:group-hover:text-white transition-colors" />
                       <span>MỚI</span>
                     </button>
 
-                    {/* Nút Phóng to toàn màn hình */}
+                    {/* Nút Phóng to toàn màn hình - Chỉ hiện hộp xám khi tương tác (giống Trang chủ) */}
                     <button
                       onClick={() => setIsChatMaximized(true)}
-                      className="hidden sm:flex h-8 w-8 rounded-xl items-center justify-center border border-slate-200 dark:border-slate-700 shadow-2xs cursor-pointer transition-all hover:scale-105 active:scale-95 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-slate-700 hover:text-[#00A8E8] shrink-0"
+                      className="hidden sm:flex h-8.5 w-8.5 rounded-full items-center justify-center transition-colors duration-150 cursor-pointer text-slate-500 dark:text-slate-400 hover:text-[#1F1F1F] dark:hover:text-white bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 border-none shrink-0"
                       title="Mở rộng hộp thoại toàn màn hình"
                     >
                       <Maximize2 className="w-4 h-4 stroke-[2.5]" />
@@ -2979,7 +2976,7 @@ export const SpeechToTextModule: React.FC = () => {
                             setDeafTextInput(resText);
                             showToast(`✨ Đã chọn: "${resText}"`);
                           }}
-                          className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-[#00A8E8]/15 hover:text-[#00A8E8] hover:border-[#00A8E8]/40 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 transition-all cursor-pointer text-left"
+                          className="px-3 py-1.5 rounded-full text-xs font-medium hover:font-semibold bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white transition-all cursor-pointer text-left"
                         >
                           {resText}
                         </button>
@@ -3045,16 +3042,16 @@ export const SpeechToTextModule: React.FC = () => {
                 </span>
               </h3>
 
-              {/* Quick Responses Vertical Stack */}
-              <div className="space-y-2 flex-1 overflow-y-auto pr-1">
+              {/* Quick Responses Vertical Stack - Hộp nền xám giống Trang chủ, chỉ hiện khi tương tác */}
+              <div className="space-y-1 flex-1 overflow-y-auto pr-1 custom-scrollbar">
                 {QUICK_RESPONSES.map((chipText, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSendDeafMessage(chipText)}
-                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-sky-50 dark:hover:bg-sky-950/80 border border-slate-200 dark:border-slate-700 hover:border-sky-300 dark:hover:border-sky-700 text-xs font-bold text-slate-800 dark:text-slate-200 transition-all text-left flex items-start justify-between gap-2 group cursor-pointer shadow-2xs"
+                    className="w-full p-2.5 rounded-xl bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 border-none text-xs font-medium hover:font-semibold text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white transition-colors duration-150 text-left flex items-start justify-between gap-2 group cursor-pointer"
                   >
                     <span className="leading-snug">{chipText}</span>
-                    <Volume2 className="w-4 h-4 text-sky-600 dark:text-sky-400 group-hover:scale-110 transition-transform shrink-0 mt-0.5" />
+                    <Volume2 className="w-4 h-4 text-slate-400 group-hover:text-[#0284C7] dark:group-hover:text-sky-400 group-hover:scale-110 transition-transform shrink-0 mt-0.5" />
                   </button>
                 ))}
               </div>
