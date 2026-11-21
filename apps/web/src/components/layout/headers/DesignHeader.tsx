@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Home, ClipboardCheck, Layers, Box, Search, Cpu, ArrowRight
+  Home, ClipboardCheck, Layers, Box, Search
 } from 'lucide-react';
 
 export interface DesignHeaderProps {
@@ -62,15 +62,6 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
             >
               {activeSubTitle || '3.2 – THIẾT KẾ'}
             </button>
-
-            {/* Nút quay lại kiểu viên thuốc */}
-            <button
-              onClick={onBack}
-              className="h-8 sm:h-8.5 px-2.5 sm:px-3 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
-              title="Quay lại Trung tâm Nghiên cứu & Sáng tạo"
-            >
-              <span>Quay lại</span>
-            </button>
           </div>
 
           {/* BỘ ĐẦU MỤC QUẢN LÝ THIẾT KẾ: ĐỒNG BỘ HỘP VIÊN THUỐC, RIÊNG 3 KHO CHỈ HIỆN HỘP KHI TƯƠNG TÁC */}
@@ -108,19 +99,6 @@ export const DesignHeader: React.FC<DesignHeaderProps> = ({
                 </button>
               );
             })}
-
-            {/* Nút chuyển nhanh sang 3.1 – NGHIÊN CỨU: Đồng bộ hộp viên thuốc (rounded-full) */}
-            <button
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('workflow_submodule_select', { detail: 'research' }));
-              }}
-              className="h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full text-xs sm:text-[13px] bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 text-emerald-700 dark:text-emerald-300 font-extrabold border border-emerald-200/80 dark:border-emerald-800/80 shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer hover:scale-[1.02] active:scale-95 shrink-0"
-              title="Chuyển sang phân hệ 3.1 – NGHIÊN CỨU"
-            >
-              <Cpu className="w-3.5 h-3.5 shrink-0 stroke-[2.2]" />
-              <span>Sang 3.1 – Nghiên Cứu</span>
-              <ArrowRight className="w-3 h-3 ml-0.5" />
-            </button>
           </div>
 
           {/* Thanh tìm kiếm nhanh: Đồng bộ dạng hộp viên thuốc (rounded-full) */}
