@@ -91,35 +91,8 @@ export const AppsModule: React.FC = () => {
       {/* ========================================================================= */}
       {activeApp === null ? (
         <>
-          {/* 🌐 ULTRA-CLEAN GRID LINES & FACETED ANGLED POLYGON PLANES (PHONG CÁCH TRANG CHỦ) */}
+          {/* 🌐 ULTRA-CLEAN GRID LINES (PHONG CÁCH TRANG CHỦ) */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-50 dark:opacity-25 pointer-events-none -z-0" />
-
-          {/* 🎨 ANGLED FACETED GEOMETRIC PLANES (MẢNG VÁT ĐA GIÁC CHUYỂN ĐỘNG NGHỆ THUẬT) */}
-          <div className="absolute -top-16 -left-20 w-[540px] h-[540px] xl:w-[680px] xl:h-[680px] bg-gradient-to-br from-sky-400/20 via-[#0284C7]/12 to-transparent [clip-path:polygon(0_0,100%_0,65%_100%,0_80%)] pointer-events-none -z-0 animate-facet-left transition-all" />
-          <div className="absolute -top-8 -left-12 w-[380px] h-[380px] xl:w-[480px] xl:h-[480px] bg-gradient-to-br from-sky-300/15 via-transparent to-transparent [clip-path:polygon(0_0,85%_0,50%_100%,0_70%)] pointer-events-none -z-0 animate-pulse" style={{ animationDuration: '6s' }} />
-
-          <div className="absolute -top-16 -right-20 w-[580px] h-[580px] xl:w-[720px] xl:h-[720px] bg-gradient-to-bl from-orange-400/20 via-[#F15A24]/12 to-transparent [clip-path:polygon(35%_0,100%_0,100%_80%,0_100%)] pointer-events-none -z-0 animate-facet-right transition-all" />
-          <div className="absolute -top-8 -right-12 w-[400px] h-[400px] xl:w-[500px] xl:h-[500px] bg-gradient-to-bl from-orange-300/15 via-transparent to-transparent [clip-path:polygon(45%_0,100%_0,100%_65%,0_90%)] pointer-events-none -z-0 animate-pulse" style={{ animationDuration: '7s' }} />
-
-          <div className="absolute bottom-0 left-1/4 w-[600px] h-[300px] bg-gradient-to-t from-sky-300/10 via-emerald-300/8 to-transparent rounded-full blur-[100px] pointer-events-none -z-0 animate-pulse" style={{ animationDuration: '8s' }} />
-
-          {/* 🪐 VÒNG QUỸ ĐẠO VỆ TINH CHUYỂN ĐỘNG (TOP-RIGHT CORNER) */}
-          <div className="hidden md:block absolute -top-10 -right-8 xl:-right-14 w-64 h-64 xl:w-84 xl:h-84 pointer-events-none overflow-visible z-0 animate-entrance-right" style={{ animationDelay: '200ms' }}>
-            <svg className="w-full h-full" viewBox="0 0 320 320" fill="none">
-              <circle cx="300" cy="20" r="140" stroke="#F15A24" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="6 6" />
-              <circle cx="300" cy="20" r="210" stroke="#F15A24" strokeOpacity="0.35" strokeWidth="2" />
-              <circle cx="300" cy="20" r="280" stroke="#0284C7" strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="8 4" />
-              <g className="animate-orbit-satellite-2">
-                <circle cx="160" cy="20" r="7" fill="#F15A24" />
-                <circle cx="160" cy="20" r="3" fill="#FFFFFF" />
-                <circle cx="160" cy="20" r="12" stroke="#F15A24" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.6" />
-              </g>
-              <g className="animate-orbit-satellite-1">
-                <circle cx="90" cy="20" r="6" fill="#0284C7" />
-                <circle cx="90" cy="20" r="2.5" fill="#FFFFFF" />
-              </g>
-            </svg>
-          </div>
 
           {/* Synchronized container matching Header alignment */}
           <div className="w-full max-w-[1232px] mx-auto px-3 sm:px-6 flex flex-col items-center justify-center gap-6 sm:gap-8 lg:gap-10 relative z-10 py-6 sm:py-10">
