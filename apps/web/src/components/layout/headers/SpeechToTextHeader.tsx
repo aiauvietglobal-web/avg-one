@@ -264,25 +264,25 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
             </button>
           </div>
 
-          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT: THIẾT KẾ DẠNG CÁC HỘP HIỆN ĐẠI CÙNG DROPDOWN MŨI TÊN */}
-          <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap">
+          {/* BỘ ĐẦU MỤC QUẢN LÝ RIÊNG BIỆT: THIẾT KẾ DẠNG HỘP NỀN XÁM ĐỒNG BỘ TRANG CHỦ, CHỈ HIỆN KHI TƯƠNG TÁC */}
+          <div className="flex items-center gap-1 sm:gap-1.5 select-none shrink-0 whitespace-nowrap">
             
             {/* 1. LƯU TRỮ (STORAGE) DROPDOWN */}
             <div ref={storageDropdownRef} className="relative shrink-0 whitespace-nowrap">
               <button
                 onClick={() => handleTabClick('storage')}
-                className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
-                  isStorageOpen || currentTab === 'storage' || currentTab === 'history'
-                    ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                    : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                className={`group h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 border-none ${
+                  isStorageOpen
+                    ? 'bg-[#EEEEEE] dark:bg-slate-800 font-semibold text-[#1F1F1F] dark:text-white'
+                    : 'bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white'
                 }`}
               >
-                <FolderOpen className={`w-3.5 h-3.5 shrink-0 ${isStorageOpen || currentTab === 'storage' || currentTab === 'history' ? 'text-white stroke-[2.5]' : 'text-slate-500 dark:text-slate-400 stroke-[2]'}`} />
+                <FolderOpen className={`w-3.5 h-3.5 shrink-0 transition-colors ${isStorageOpen ? 'text-[#1F1F1F] dark:text-white stroke-[2.2]' : 'text-slate-500 dark:text-slate-400 group-hover:text-[#1F1F1F] dark:group-hover:text-white stroke-[1.8]'}`} />
                 <span>Lưu trữ</span>
                 <ChevronDown
-                  className={`w-3 h-3 transition-transform duration-200 ${
-                    isStorageOpen ? 'rotate-180' : ''
-                  } ${isStorageOpen || currentTab === 'storage' || currentTab === 'history' ? 'text-white' : 'text-slate-400'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    isStorageOpen ? 'rotate-180 text-[#1F1F1F] dark:text-white' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300'
+                  }`}
                 />
               </button>
 
@@ -399,23 +399,23 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
             <div ref={utilitiesDropdownRef} className="relative shrink-0 whitespace-nowrap">
               <button
                 onClick={() => handleTabClick('utilities')}
-                className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
-                  isUtilitiesOpen || currentTab === 'utilities' || currentTab === 'templates'
-                    ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                    : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                className={`group h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 border-none ${
+                  isUtilitiesOpen
+                    ? 'bg-[#EEEEEE] dark:bg-slate-800 font-semibold text-[#1F1F1F] dark:text-white'
+                    : 'bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white'
                 }`}
               >
-                <SlidersHorizontal className={`w-3.5 h-3.5 shrink-0 ${isUtilitiesOpen || currentTab === 'utilities' || currentTab === 'templates' ? 'text-white stroke-[2.5]' : 'text-slate-500 dark:text-slate-400 stroke-[2]'}`} />
+                <SlidersHorizontal className={`w-3.5 h-3.5 shrink-0 transition-colors ${isUtilitiesOpen ? 'text-[#1F1F1F] dark:text-white stroke-[2.2]' : 'text-slate-500 dark:text-slate-400 group-hover:text-[#1F1F1F] dark:group-hover:text-white stroke-[1.8]'}`} />
                 <span className="flex items-center gap-1">
                   Tiện ích
                   {filterSpeakerId !== 'all' && (
-                    <span className={`w-2 h-2 rounded-full ${isUtilitiesOpen || currentTab === 'utilities' || currentTab === 'templates' ? 'bg-white' : 'bg-[#00A8E8]'} inline-block animate-pulse ml-0.5`} title="Đang kích hoạt bộ lọc hội thoại" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0284C7] dark:bg-sky-400 inline-block animate-pulse ml-0.5" title="Đang kích hoạt bộ lọc hội thoại" />
                   )}
                 </span>
                 <ChevronDown
-                  className={`w-3 h-3 transition-transform duration-200 ${
-                    isUtilitiesOpen ? 'rotate-180' : ''
-                  } ${isUtilitiesOpen || currentTab === 'utilities' || currentTab === 'templates' ? 'text-white' : 'text-slate-400'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    isUtilitiesOpen ? 'rotate-180 text-[#1F1F1F] dark:text-white' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300'
+                  }`}
                 />
               </button>
 
@@ -605,18 +605,18 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
             <div ref={settingsDropdownRef} className="relative shrink-0 whitespace-nowrap">
               <button
                 onClick={() => handleTabClick('settings')}
-                className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
-                  isSettingsOpen || currentTab === 'settings'
-                    ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                    : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                className={`group h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 border-none ${
+                  isSettingsOpen
+                    ? 'bg-[#EEEEEE] dark:bg-slate-800 font-semibold text-[#1F1F1F] dark:text-white'
+                    : 'bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white'
                 }`}
               >
-                <Settings className={`w-3.5 h-3.5 shrink-0 ${isSettingsOpen || currentTab === 'settings' ? 'text-white stroke-[2.5]' : 'text-slate-500 dark:text-slate-400 stroke-[2]'}`} />
+                <Settings className={`w-3.5 h-3.5 shrink-0 transition-colors ${isSettingsOpen ? 'text-[#1F1F1F] dark:text-white stroke-[2.2]' : 'text-slate-500 dark:text-slate-400 group-hover:text-[#1F1F1F] dark:group-hover:text-white stroke-[1.8]'}`} />
                 <span>Cài đặt</span>
                 <ChevronDown
-                  className={`w-3 h-3 transition-transform duration-200 ${
-                    isSettingsOpen ? 'rotate-180' : ''
-                  } ${isSettingsOpen || currentTab === 'settings' ? 'text-white' : 'text-slate-400'}`}
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                    isSettingsOpen ? 'rotate-180 text-[#1F1F1F] dark:text-white' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300'
+                  }`}
                 />
               </button>
 
