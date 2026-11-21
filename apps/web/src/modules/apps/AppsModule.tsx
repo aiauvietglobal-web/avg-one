@@ -206,7 +206,7 @@ export const AppsModule: React.FC = () => {
         /* ========================================================================= */
         /* CASE 2: GIAO DIỆN PHÂN HỆ CON TRỰC TIẾP (TỐI GIẢN - GỌN GÀNG - TRỌN VẸN) */
         /* ========================================================================= */
-        <div className="w-full h-full max-w-full">
+        <div className="w-full h-full max-w-full flex-1 min-h-0 flex flex-col">
           {activeApp === 'speech-to-text' && <SpeechToTextModule />}
           {activeApp === 'dashboard' && <FileTranscribeModule />}
         </div>

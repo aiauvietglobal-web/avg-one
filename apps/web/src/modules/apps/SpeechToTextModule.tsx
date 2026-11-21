@@ -2471,33 +2471,21 @@ export const SpeechToTextModule: React.FC = () => {
   const vietnameseVoices = availableVoices.filter(v => v.lang.toLowerCase().includes('vi') || v.name.toLowerCase().includes('viet'));
 
   return (
-    <div className="speech-module-container w-full h-full flex-1 min-h-0 overflow-hidden bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans py-2 sm:py-3 relative flex flex-col justify-between">
+    <div className="speech-module-container w-full h-full flex-1 min-h-0 overflow-hidden bg-slate-50 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans p-1 sm:p-2 lg:p-2.5 relative flex flex-col justify-between">
       
-      {/* 🌐 GRID LINES PATTERN BACKGROUND LAYER */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-45 pointer-events-none -z-0" />
-
-      {/* 🎨 AMBIENT GLOW ORBS */}
-      <div className="absolute -top-20 -left-20 w-[450px] h-[450px] bg-[#0284C7]/15 dark:bg-[#0284C7]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-      <div className="absolute -top-20 -right-20 w-[450px] h-[450px] bg-[#F15A24]/15 dark:bg-[#F15A24]/20 rounded-full blur-[130px] pointer-events-none -z-0 animate-pulse duration-1000" />
-
-      {/* MAIN CONTAINER CONTENT - FULL WIDTH EXPANDED PX-3 SM:PX-6 LG:PX-8 */}
-      <div className="w-full h-full px-3 sm:px-6 lg:px-8 flex flex-col space-y-3 relative z-10 overflow-hidden">
-
-
+      {/* MAIN CONTAINER CONTENT - FULL WIDTH EXPANDED */}
+      <div className="w-full h-full flex flex-col relative z-10 overflow-hidden">
 
         {/* WORKSPACE CONTENT AREA (PURE DIRECT SPEECH-TO-TEXT FOCUS) */}
         <div className="flex-1 min-h-0 overflow-hidden">
-          <div className="h-full grid grid-cols-1 lg:grid-cols-12 gap-3 overflow-hidden">
+          <div className="h-full grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-2.5 overflow-hidden">
           {/* ========================================================================= */}
           {/* 📌 CỘT BÊN TRÁI (LEFT PANEL): THANH PANEL UI CONTROLS & QUẢN LÝ NGƯỜI NÓI */}
           {/* ========================================================================= */}
-          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col h-full overflow-hidden pr-0.5 text-xs flex-shrink-0">
+          <div className="hidden lg:flex lg:col-span-3 xl:col-span-2 flex-col h-full overflow-hidden text-xs flex-shrink-0">
             
             {/* CARD: BRAND NEW HIGH-TECH LIVE AUDIO WAVE VISUALIZER & AI TELEMETRY */}
-            <div className="bg-white/95 dark:bg-slate-900/95 rounded-xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-3 relative overflow-hidden backdrop-blur-md transition-all flex-1 h-full flex flex-col justify-between">
-              {/* Ambient Glow */}
-              <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#00A8E8]/15 dark:bg-[#00A8E8]/25 rounded-full blur-2xl pointer-events-none" />
-
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-2.5 sm:p-3 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-2.5 relative overflow-hidden transition-all flex-1 h-full flex flex-col justify-between">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
                 <div className="flex items-center gap-1.5 text-xs font-black text-[#00A8E8] dark:text-[#38BDF8] uppercase tracking-wider">
@@ -2575,10 +2563,10 @@ export const SpeechToTextModule: React.FC = () => {
           {/* ========================================================================= */}
           {/* 📌 CỘT Ở GIỮA (CENTER MAIN HERO PANEL): HỘP HỘI THOẠI CHÍNH & HỘP NHẬP PHẢN HỒI */}
           {/* ========================================================================= */}
-          <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-3 h-full overflow-hidden">
+          <div className="lg:col-span-7 xl:col-span-8 flex flex-col justify-between space-y-2 sm:space-y-2.5 h-full overflow-hidden">
             
             {/* MAIN CONVERSATION DISPLAY CARD (HERO FOCUS GLASS CONTAINER WITH BRAND GLOW & REFINED STYLING) */}
-            <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-3 sm:p-4 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
+            <div className="rounded-xl sm:rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs p-2.5 sm:p-3 flex-1 min-h-0 flex flex-col justify-between overflow-hidden relative transition-all">
               
               {/* Speaker Filter Badges Bar & Top Actions */}
               <div className="flex flex-col gap-2 mb-2 flex-shrink-0 relative z-10">
@@ -2841,7 +2829,7 @@ export const SpeechToTextModule: React.FC = () => {
             </div>
 
             {/* DEAF TEXT INPUT RESPONSE BOX (WITH UNIFIED 1PX BORDER) */}
-            <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 space-y-2.5 flex-shrink-0 transition-all shadow-md">
+            <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200/90 dark:border-slate-800 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 space-y-2 flex-shrink-0 transition-all shadow-xs">
               <div className="flex items-center justify-between text-xs">
                 <h2 className="font-extrabold text-[#00A8E8] dark:text-[#38BDF8] flex items-center gap-1.5">
                   <MessageSquare className="w-4 h-4 text-[#00A8E8] dark:text-[#38BDF8]" />
@@ -3049,7 +3037,7 @@ export const SpeechToTextModule: React.FC = () => {
           {/* 📌 CỘT BÊN PHẢI (RIGHT PANEL): PHẢN HỒI NHANH BẰNG VĂN BẢN                */}
           {/* ========================================================================= */}
           <div className="hidden lg:flex lg:col-span-2 xl:col-span-2 flex-col h-full overflow-hidden text-xs flex-shrink-0">
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-3 border border-slate-200 dark:border-slate-800 shadow-xs flex-1 flex flex-col space-y-3 overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-2.5 sm:p-3 border border-slate-200/90 dark:border-slate-800 shadow-xs flex-1 flex flex-col space-y-2.5 overflow-hidden">
               <h3 className="font-extrabold text-slate-800 dark:text-slate-100 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 flex-shrink-0">
                 <span className="flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-amber-500" />

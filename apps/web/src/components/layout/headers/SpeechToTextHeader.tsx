@@ -240,7 +240,7 @@ export const SpeechToTextHeader: React.FC<SpeechToTextHeaderProps> = ({
 
   return (
     <header className="flex-shrink-0 sticky top-0 z-40 bg-white/95 dark:bg-[#2C1D29]/95 backdrop-blur-md text-slate-800 dark:text-white transition-all shadow-xs dark:shadow-none border-none select-none">
-      <div className="w-full px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4 overflow-visible">
+      <div className="w-full px-2 sm:px-3 lg:px-4 h-13 sm:h-14 flex items-center justify-between gap-3 sm:gap-4 overflow-visible">
         {/* Cụm trái: [ Icon Trang chủ + Tên phân hệ ] + [ Các đầu mục nghiệp vụ ] */}
         <div className="flex items-center select-none shrink-0 whitespace-nowrap">
           {/* Khối định danh phân hệ: [ 🏠 Trang chủ ] + [ CHUYỂN ĐỔI TRỰC TIẾP ] - Đồng bộ chuẩn khoảng cách 10px (gap-2.5) */}
