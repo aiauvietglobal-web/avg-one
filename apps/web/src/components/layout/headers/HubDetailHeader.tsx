@@ -237,8 +237,8 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
           {activeTab !== 'home' && (
             isWarehouseCluster ? (
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                {/* BỘ 3 KHO: Kho đầu vào, Kho thành phẩm, Kho lưu chuyển */}
-                <div className="flex items-center gap-1.5 sm:gap-2 select-none shrink-0 whitespace-nowrap mr-2 sm:mr-4">
+                {/* BỘ 3 KHO: Đồng bộ hộp viên thuốc, riêng 3 kho chỉ hiện hộp khi tương tác */}
+                <div className="flex items-center gap-1 sm:gap-1.5 select-none shrink-0 whitespace-nowrap mr-2 sm:mr-4">
                   {[
                     { id: 'orders' as const, label: 'Kho đầu vào', count: currentCounts.orders, icon: ClipboardCheck },
                     { id: 'products' as const, label: 'Kho thành phẩm', count: currentCounts.products, icon: Layers },
@@ -251,16 +251,22 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
                         key={tab.id}
                         type="button"
                         onClick={() => handleSelectWarehouseTab(tab.id)}
-                        className={`h-8 sm:h-8.5 px-3 sm:px-3.5 rounded-xl text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-all duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+                        className={`group h-8.5 sm:h-9 px-3.5 sm:px-4 rounded-full text-xs sm:text-[13px] cursor-pointer select-none tracking-normal transition-colors duration-150 whitespace-nowrap shrink-0 flex items-center gap-1.5 border-none ${
                           isActive
-                            ? 'bg-gradient-to-r from-[#0284C7] to-[#00A8E8] text-white shadow-xs shadow-sky-500/25 border border-sky-400/40 font-black'
-                            : 'bg-slate-100/90 dark:bg-slate-800/80 hover:bg-slate-200/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-700/80 shadow-2xs font-bold hover:scale-[1.02] active:scale-95'
+                            ? 'bg-[#EEEEEE] dark:bg-slate-800 font-bold text-[#1F1F1F] dark:text-white shadow-none'
+                            : 'bg-transparent hover:bg-[#EEEEEE] dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200 hover:text-[#1F1F1F] dark:hover:text-white'
                         }`}
                       >
-                        <IconComponent className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 stroke-[2.2]" />
+                        <IconComponent className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-colors ${
+                          isActive
+                            ? 'text-[#0284C7] dark:text-sky-400 stroke-[2.2]'
+                            : 'text-slate-500 dark:text-slate-400 group-hover:text-[#1F1F1F] dark:group-hover:text-white stroke-[1.8]'
+                        }`} />
                         <span>{tab.label}</span>
-                        <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                          isActive ? 'bg-white/25 text-white' : 'bg-slate-200/90 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black transition-colors ${
+                          isActive
+                            ? 'bg-[#0284C7] text-white'
+                            : 'bg-slate-200/80 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover:bg-white dark:group-hover:bg-slate-600 group-hover:text-slate-900 dark:group-hover:text-white'
                         }`}>
                           {tab.count}
                         </span>
@@ -269,7 +275,7 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
                   })}
                 </div>
 
-                {/* Thanh tìm kiếm nhanh: Dạng hộp chữ nhật bo tròn 2 đầu (rounded-2xl) & dài hơn */}
+                {/* Thanh tìm kiếm nhanh: Dạng hộp viên thuốc (rounded-full) */}
                 <div className="relative flex items-center flex-1 max-w-[580px] min-w-[200px] mr-2">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
                   <input
@@ -278,7 +284,7 @@ export const HubDetailHeader: React.FC<HubDetailHeaderProps> = ({
                     value={quickSearch}
                     onChange={(e) => handleQuickSearchChange(e.target.value)}
                     placeholder="Tìm kiếm..."
-                    className="w-full pl-10 pr-4 h-8 sm:h-8.5 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-2xl text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
+                    className="w-full pl-10 pr-4 h-8.5 sm:h-9 bg-slate-100/90 dark:bg-slate-800/90 hover:bg-white focus:bg-white dark:focus:bg-slate-900 border border-slate-200/90 dark:border-slate-700/80 rounded-full text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/30 focus:border-[#F15A24] shadow-2xs transition-all duration-200"
                   />
                 </div>
               </div>
