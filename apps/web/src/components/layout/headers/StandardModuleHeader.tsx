@@ -18,7 +18,7 @@ export const StandardModuleHeader: React.FC<StandardModuleHeaderProps> = ({
 }) => {
   return (
     <header className="short-centered-header fixed top-0 left-0 right-0 z-40 bg-transparent pointer-events-none select-none">
-      <div className="max-w-[1200px] w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl shadow-xs flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto">
+      <div className="max-w-[1200px] w-full mx-auto px-5 sm:px-7 h-14 sm:h-16 bg-white dark:bg-[#2C1D29] text-slate-800 dark:text-white rounded-b-2xl border-x border-b border-slate-200/90 dark:border-slate-800 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.08)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] flex items-center justify-between gap-4 sm:gap-6 pointer-events-auto">
         {/* Left: Logo AVG One chính thức */}
         <div className="flex items-center gap-2.5 sm:gap-3 select-none shrink-0 whitespace-nowrap">
           <img
