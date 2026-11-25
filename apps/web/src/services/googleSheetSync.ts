@@ -47,7 +47,7 @@ export const GOOGLE_SHEET_EDIT_URL = `https://docs.google.com/spreadsheets/d/${G
 export const GOOGLE_SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
 export const LICH_TRAO_DOI_TAB_NAME = 'LỊCH TRAO ĐỔI';
 
-const LOCAL_DISCUSSION_EVENTS_KEY = 'avg_local_discussion_events_v2';
+const LOCAL_DISCUSSION_EVENTS_KEY = 'avg_local_discussion_events_v3';
 const WEBHOOK_URL_KEY = 'avg_google_sheet_webhook_url';
 
 export function getGoogleSheetWebhookUrl(): string {
@@ -193,27 +193,27 @@ function handleSync(e) {
     var newRowValues;
 
     if (isLichTraoDoi) {
-      // Đúng chuẩn 19 cột của sheet LỊCH TRAO ĐỔI
+      // Đúng chuẩn 19 cột của sheet LỊCH TRAO ĐỔI (Trạng thái ở Cột B)
       newRowValues = [
-        p.notes || jsonEvt.notes || '',                                // Col A: Ghi chú
-        p.scope || jsonEvt.scope || 'P1',                             // Col B: Phạm vi
-        p.dayOfWeek || jsonEvt.dayOfWeek || 'Thứ 2',                  // Col C: Thứ
-        dateStr,                                                      // Col D: Ngày
-        p.plannedDuration || durationMins || '60',                    // Col E: Thời lượng dự kiến (phút)
-        pStart,                                                       // Col F: Thời điểm bắt đầu dự kiến
-        pEnd,                                                         // Col G: Thời điểm kết thúc dự kiến
-        p.actualDuration || '',                                       // Col H: Thời lượng thực tế
-        p.actualStartTime || jsonEvt.actualStartTime || '',          // Col I: Thời gian thực bắt đầu
-        p.actualEndTime || jsonEvt.actualEndTime || '',              // Col J: Thời gian thực kết thúc
-        p.inflationMins || '',                                        // Col K: Lạm phát thời gian (phút)
-        p.inflationRate || '',                                        // Col L: Tỷ lệ lạm phát
-        title,                                                        // Col M: Nội dung/ Chủ đề
-        p.legalEntity || jsonEvt.legalEntity || '-',                  // Col N: Điều hành trao đổi
-        p.attendees || jsonEvt.attendees || '',                       // Col O: Thành phần tham dự
-        p.secretary || jsonEvt.secretary || '',                       // Col P: Thư ký
-        p.status || jsonEvt.status || 'Sắp tới',                      // Col Q: Trạng thái
-        p.document || '',                                             // Col R: Tài liệu
-        p.conclusionDocUrl || jsonEvt.conclusionDocUrl || ''          // Col S: Link VBKL
+        p.notes || jsonEvt.notes || '',                                // Col A (0): Ghi chú
+        p.status || jsonEvt.status || 'SẮP TỚI',                      // Col B (1): Trạng thái
+        p.scope || jsonEvt.scope || 'P1',                             // Col C (2): Phạm vi
+        p.dayOfWeek || jsonEvt.dayOfWeek || 'Thứ 2',                  // Col D (3): Thứ
+        dateStr,                                                      // Col E (4): Ngày
+        p.plannedDuration || durationMins || '60',                    // Col F (5): Thời lượng dự kiến (phút)
+        pStart,                                                       // Col G (6): Thời điểm bắt đầu dự kiến
+        pEnd,                                                         // Col H (7): Thời điểm kết thúc dự kiến
+        p.actualDuration || '',                                       // Col I (8): Thời lượng thực tế
+        p.actualStartTime || jsonEvt.actualStartTime || '',          // Col J (9): Thời gian thực bắt đầu
+        p.actualEndTime || jsonEvt.actualEndTime || '',              // Col K (10): Thời gian thực kết thúc
+        p.inflationMins || '',                                        // Col L (11): Lạm phát thời gian (phút)
+        p.inflationRate || '',                                        // Col M (12): Tỷ lệ lạm phát
+        title,                                                        // Col N (13): Nội dung/ Chủ đề
+        p.legalEntity || jsonEvt.legalEntity || '-',                  // Col O (14): Điều hành trao đổi
+        p.attendees || jsonEvt.attendees || '',                       // Col P (15): Thành phần tham dự
+        p.secretary || jsonEvt.secretary || '',                       // Col Q (16): Thư ký
+        p.document || '',                                             // Col R (17): Tài liệu
+        p.conclusionDocUrl || jsonEvt.conclusionDocUrl || ''          // Col S (18): Link VBKL
       ];
     } else {
       newRowValues = [
@@ -238,13 +238,13 @@ function handleSync(e) {
     // Prevent duplicate row insertion using getDisplayValues()
     var lastRow = sheet.getLastRow();
     var isDuplicate = false;
-    var startScan = isLichTraoDoi ? 4 : 2;
+    var startScan = isLichTraoDoi ? 5 : 2;
     if (lastRow >= startScan) {
       var displayData = sheet.getRange(startScan, 1, lastRow - startScan + 1, sheet.getLastColumn()).getDisplayValues();
       for (var r = 0; r < displayData.length; r++) {
-        var exDate = isLichTraoDoi ? (displayData[r][3] || '').trim() : (displayData[r][2] || '').trim();
-        var exStart = isLichTraoDoi ? (displayData[r][5] || '').trim() : (displayData[r][4] || '').trim();
-        var exTitle = isLichTraoDoi ? (displayData[r][12] || '').trim().toLowerCase() : (displayData[r][9] || '').trim().toLowerCase();
+        var exDate = isLichTraoDoi ? (displayData[r][4] || '').trim() : (displayData[r][2] || '').trim();
+        var exStart = isLichTraoDoi ? (displayData[r][6] || '').trim() : (displayData[r][4] || '').trim();
+        var exTitle = isLichTraoDoi ? (displayData[r][13] || '').trim().toLowerCase() : (displayData[r][9] || '').trim().toLowerCase();
         
         if (exTitle === title.trim().toLowerCase() && exDate === dateStr.trim()) {
           isDuplicate = true;
@@ -682,8 +682,28 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
 
   let overview: LichTraoDoiSheetOverview | undefined;
 
-  // Trích xuất thống kê tổng quan ở dòng 1 (hàng chỉ số: 31 cuộc, 1.450 phút kế hoạch, 137 phút lạm phát, 9,4%)
-  if (rows.length >= 2 && rows[1]) {
+  // Trích xuất thống kê tổng quan ở dòng 2 (cấu trúc mới: r2[2]=65, r2[5]=3.330, r2[8]=3.462, r2[13]=132, r2[14]=4,0%) hoặc dòng 1 (cấu trúc cũ)
+  if (rows.length >= 3 && rows[2] && /^\d+$/.test((rows[2][2] || '').replace(/[^\d]/g, '')) && (rows[2][5] || '').replace(/[^\d]/g, '') !== '') {
+    const r2 = rows[2];
+    const total = parseInt(r2[2]?.replace(/[^\d]/g, '') || '0', 10);
+    const planned = parseInt(r2[5]?.replace(/[^\d]/g, '') || '0', 10);
+    const actual = parseInt(r2[8]?.replace(/[^\d]/g, '') || '0', 10);
+    const inflation = parseInt(r2[13]?.replace(/[^\d-]/g, '') || '0', 10);
+    const rate = (r2[14] || '').trim();
+
+    if (total > 0 || planned > 0) {
+      overview = {
+        totalDiscussions: total,
+        plannedDurationMinutes: planned,
+        actualDurationMinutes: actual,
+        inflationMinutes: inflation,
+        inflationRate: rate
+      };
+      try {
+        localStorage.setItem('avg_lich_trao_doi_overview', JSON.stringify(overview));
+      } catch (e) {}
+    }
+  } else if (rows.length >= 2 && rows[1]) {
     const r1 = rows[1];
     const total = parseInt(r1[0]?.replace(/[^\d]/g, '') || '0', 10);
     const planned = parseInt(r1[4]?.replace(/[^\d]/g, '') || '0', 10);
@@ -712,8 +732,8 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     const row = rows[i];
     if (!row || row.length < 4) continue;
 
-    // Tìm cột ngày tháng (dd/mm/yyyy)
-    let dateIdx = 3;
+    // Tìm cột ngày tháng (dd/mm/yyyy): cấu trúc mới ở cột E (index 4), cấu trúc cũ ở cột D (index 3)
+    let dateIdx = 4;
     let rawDate = (row[dateIdx] || '').trim();
     if (!/^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test(rawDate)) {
       const foundIdx = row.findIndex(c => /^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/.test((c || '').trim()));
@@ -735,10 +755,16 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
       dateStr = `${dParts[0].padStart(2, '0')}/${dParts[1].padStart(2, '0')}/${yr}`;
     }
 
-    // Cột 12: Nội dung / Chủ đề
-    let rawTitle = (row[12] || '').trim();
+    // Kiểm tra xem sheet đang theo cấu trúc mới (Cột B = Trạng thái, Cột E = Ngày => dateIdx >= 4) hay cấu trúc cũ (dateIdx === 3)
+    const isStatusInColB = dateIdx >= 4;
+    const off = isStatusInColB ? dateIdx - 4 : dateIdx - 3;
+
+    // Nội dung / Chủ đề: Cột N (index 13) ở cấu trúc mới, Cột M (index 12) ở cấu trúc cũ
+    const titleColIdx = (isStatusInColB ? 13 : 12) + off;
+    let rawTitle = (row[titleColIdx] || '').trim();
     if (!rawTitle || rawTitle === 'Nội dung/ Chủ đề' || rawTitle === 'STT') {
-      const candidateTitle = row.find((c, cIdx) => cIdx !== dateIdx && cIdx > 6 && (c || '').trim().length > 3 && !/^\d+([.,]\d+)?%?$/.test(c.trim()));
+      const minTitleCol = (isStatusInColB ? 12 : 11) + off;
+      const candidateTitle = row.find((c, cIdx) => cIdx > minTitleCol && (c || '').trim().length > 3 && !/^\d+([.,]\d+)?%?$/.test(c.trim()));
       if (candidateTitle) {
         rawTitle = candidateTitle.trim();
       } else {
@@ -747,33 +773,47 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
     }
 
     // Giờ bắt đầu / kết thúc dự kiến và thực tế
-    const rawPStart = formatTimeWithoutSeconds(row[5] || '');
-    const rawPEnd = formatTimeWithoutSeconds(row[6] || '');
-    const rawAStart = formatTimeWithoutSeconds(row[8] || '');
-    const rawAEnd = formatTimeWithoutSeconds(row[9] || '');
+    const pDurationIdx = (isStatusInColB ? 5 : 4) + off;
+    const pStartIdx = (isStatusInColB ? 6 : 5) + off;
+    const pEndIdx = (isStatusInColB ? 7 : 6) + off;
+    const aDurationIdx = (isStatusInColB ? 8 : 7) + off;
+    const aStartIdx = (isStatusInColB ? 9 : 8) + off;
+    const aEndIdx = (isStatusInColB ? 10 : 9) + off;
+    const inflMinsIdx = (isStatusInColB ? 11 : 10) + off;
+    const inflRateIdx = (isStatusInColB ? 12 : 11) + off;
+
+    const rawPStart = formatTimeWithoutSeconds(row[pStartIdx] || '');
+    const rawPEnd = formatTimeWithoutSeconds(row[pEndIdx] || '');
+    const rawAStart = formatTimeWithoutSeconds(row[aStartIdx] || '');
+    const rawAEnd = formatTimeWithoutSeconds(row[aEndIdx] || '');
 
     const pStart = rawPStart === '-' ? '' : rawPStart;
     const pEnd = rawPEnd === '-' ? '' : rawPEnd;
     const aStart = rawAStart === '-' ? '' : rawAStart;
     const aEnd = rawAEnd === '-' ? '' : rawAEnd;
 
-    const rawPDuration = (row[4] || '').replace(/[^\d]/g, '');
+    const rawPDurationCell = (row[pDurationIdx] || '').trim();
+    const rawPDuration = rawPDurationCell.includes(':') || rawPDurationCell.includes('/') ? '' : rawPDurationCell.replace(/[^\d]/g, '');
     const pDuration = rawPDuration !== '' ? parseInt(rawPDuration, 10) : undefined;
-    const rawADuration = (row[7] || '').replace(/[^\d]/g, '');
+
+    const rawADurationCell = (row[aDurationIdx] || '').trim();
+    const rawADuration = rawADurationCell.includes(':') || rawADurationCell.includes('/') ? '' : rawADurationCell.replace(/[^\d]/g, '');
     const aDuration = rawADuration !== '' ? parseInt(rawADuration, 10) : undefined;
-    const rawInflMins = (row[10] || '').replace(/[^\d-]/g, '');
+
+    const rawInflMinsCell = (row[inflMinsIdx] || '').trim();
+    const rawInflMins = rawInflMinsCell.includes(':') || rawInflMinsCell.includes('/') ? '' : rawInflMinsCell.replace(/[^\d-]/g, '');
     const inflMins = rawInflMins !== '' && rawInflMins !== '-' ? parseInt(rawInflMins, 10) : undefined;
-    const inflRate = (row[11] || '').trim() || undefined;
+    const inflRate = (row[inflRateIdx] || '').trim() || undefined;
 
     const notes = (row[0] || '').trim();
     const notesLower = notes.toLowerCase();
-    const scope = (row[1] || '').trim();
-    const dayOfWeek = (row[2] || '').trim();
-    const legalEntity = (row[13] || '').trim() || '-';
-    const attendees = (row[14] || '').trim();
-    const secretary = (row[15] || '').trim();
+    const scope = (row[isStatusInColB ? 2 + off : 1 + off] || '').trim();
+    const dayOfWeek = (row[isStatusInColB ? 3 + off : 2 + off] || '').trim();
+    const legalEntity = (row[(isStatusInColB ? 14 : 13) + off] || '').trim() || '-';
+    const attendees = (row[(isStatusInColB ? 15 : 14) + off] || '').trim();
+    const secretary = (row[(isStatusInColB ? 16 : 15) + off] || '').trim();
     
-    let status = (row[16] || '').trim();
+    let status = (row[isStatusInColB ? 1 : 16 + off] || '').trim();
     if (!status) {
       if (aStart && aStart !== '00:00' && aEnd && aEnd !== '00:00') {
         status = 'Đã diễn ra';
@@ -793,8 +833,8 @@ export function parseLichTraoDoiSheet(rows: string[][]): { events: DiscussionEve
       }
     }
 
-    const documentCol = (row[17] || '').trim();
-    const conclusionDocUrl = (row[18] || '').trim();
+    const documentCol = (row[17 + off] || '').trim();
+    const conclusionDocUrl = (row[18 + off] || '').trim();
 
     const attachments: EventAttachment[] = [];
     if (documentCol) {
