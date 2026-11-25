@@ -4484,13 +4484,13 @@ export const CalendarModule: React.FC = () => {
                                        <button
                                          type="button"
                                          onClick={() => setActiveAttachmentEvent(evt)}
-                                         className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-[#0284C7] hover:text-[#0284C7] font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
+                                         className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#1F1F1F] dark:text-slate-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
                                          title="Tải lên và Quản lý Tài liệu trao đổi (Ảnh & File)"
                                        >
-                                         <Paperclip className="w-3.5 h-3.5 text-slate-400" />
+                                         <Paperclip className="w-3.5 h-3.5 text-slate-500" />
                                          <span>Tài liệu trao đổi</span>
                                          {evt.attachments && evt.attachments.length > 0 && (
-                                           <span className="px-1.5 py-0.2 bg-[#0284C7] text-white text-[9px] rounded-md font-bold ml-0.5">
+                                           <span className="px-1.5 py-0.2 bg-[#0284C7] text-white text-[9px] rounded-full font-bold ml-0.5">
                                              {evt.attachments.length}
                                            </span>
                                          )}
@@ -4499,17 +4499,17 @@ export const CalendarModule: React.FC = () => {
                                        <button
                                          type="button"
                                          onClick={() => handleOpenTranscribe(evt)}
-                                         className="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-[#0284C7] hover:text-[#0284C7] font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs group/mic"
+                                         className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#1F1F1F] dark:text-slate-200 font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer group/mic"
                                          title="Bật Thư ký Trực tiếp chuyển giọng nói thành văn bản & trích xuất VBKL"
                                        >
-                                         <Mic className="w-3.5 h-3.5 text-slate-400 group-hover/mic:text-[#0284C7]" />
+                                         <Mic className="w-3.5 h-3.5 text-slate-500 group-hover/mic:text-[#0284C7]" />
                                          <span>Thư ký Trực tiếp</span>
                                        </button>
 
                                        <button
                                          type="button"
                                          onClick={() => handleMoveToTrash(evt)}
-                                         className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-400 hover:text-rose-600 hover:border-rose-300 transition cursor-pointer shadow-2xs"
+                                         className="p-2 rounded-full bg-[#EEEEEE] hover:bg-rose-100 dark:bg-slate-800 text-slate-500 hover:text-rose-600 transition cursor-pointer"
                                          title="Xóa cuộc họp"
                                        >
                                          <Trash2 className="w-3.5 h-3.5" />
