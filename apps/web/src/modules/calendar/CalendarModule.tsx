@@ -3157,18 +3157,18 @@ export const CalendarModule: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[260px]">
               {/* Ô tìm kiếm nhanh */}
               <div className="relative min-w-[240px] sm:min-w-[280px] flex-1 max-w-sm">
-                <Search className="w-4 h-4 text-[#F15A24] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-3.5 h-3.5 text-[#F15A24] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm nội dung, điều hành, thành phần, thư ký..."
-                  className="calendar-toolbar-control w-full h-8.5 pl-9 pr-7 py-1.5 text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-full border border-orange-200 dark:border-slate-700 hover:border-[#F15A24] focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] font-medium transition"
+                  className="calendar-toolbar-control w-full h-8 pl-9 pr-8 text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-full border border-orange-200 dark:border-slate-700 hover:border-[#F15A24] focus:outline-none focus:ring-2 focus:ring-[#F15A24]/20 focus:border-[#F15A24] font-medium transition"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F15A24] dark:hover:text-white text-xs font-bold cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#F15A24] dark:hover:text-white text-xs font-bold cursor-pointer"
                   >
                     ✕
                   </button>
@@ -3176,74 +3176,108 @@ export const CalendarModule: React.FC = () => {
               </div>
 
               {/* Bộ lọc Năm */}
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="calendar-toolbar-control px-3.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-              >
-                <option value="2026">Năm 2026</option>
-                <option value="2025">Năm 2025</option>
-                <option value="ALL">Tất cả năm</option>
-              </select>
+              <div className="relative inline-flex items-center justify-between gap-2 h-8 px-3.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] transition cursor-pointer select-none">
+                <span className="whitespace-nowrap">
+                  {selectedYear === 'ALL' ? 'Tất cả năm' : `Năm ${selectedYear}`}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                >
+                  <option value="2026">Năm 2026</option>
+                  <option value="2025">Năm 2025</option>
+                  <option value="ALL">Tất cả năm</option>
+                </select>
+              </div>
 
               {/* Bộ lọc Tháng */}
-              <select
-                value={selectedMonthOnly}
-                onChange={(e) => setSelectedMonthOnly(e.target.value)}
-                className="calendar-toolbar-control px-3.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-              >
-                <option value="ALL">Tất cả tháng</option>
-                <option value="01">Tháng 01</option>
-                <option value="02">Tháng 02</option>
-                <option value="03">Tháng 03</option>
-                <option value="04">Tháng 04</option>
-                <option value="05">Tháng 05</option>
-                <option value="06">Tháng 06</option>
-                <option value="07">Tháng 07</option>
-                <option value="08">Tháng 08</option>
-                <option value="09">Tháng 09</option>
-                <option value="10">Tháng 10</option>
-                <option value="11">Tháng 11</option>
-                <option value="12">Tháng 12</option>
-              </select>
+              <div className="relative inline-flex items-center justify-between gap-2 h-8 px-3.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] transition cursor-pointer select-none">
+                <span className="whitespace-nowrap">
+                  {selectedMonthOnly === 'ALL' ? 'Tất cả tháng' : `Tháng ${selectedMonthOnly}`}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <select
+                  value={selectedMonthOnly}
+                  onChange={(e) => setSelectedMonthOnly(e.target.value)}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                >
+                  <option value="ALL">Tất cả tháng</option>
+                  <option value="01">Tháng 01</option>
+                  <option value="02">Tháng 02</option>
+                  <option value="03">Tháng 03</option>
+                  <option value="04">Tháng 04</option>
+                  <option value="05">Tháng 05</option>
+                  <option value="06">Tháng 06</option>
+                  <option value="07">Tháng 07</option>
+                  <option value="08">Tháng 08</option>
+                  <option value="09">Tháng 09</option>
+                  <option value="10">Tháng 10</option>
+                  <option value="11">Tháng 11</option>
+                  <option value="12">Tháng 12</option>
+                </select>
+              </div>
 
               {/* Bộ lọc Phạm vi */}
-              <select
-                value={selectedScope}
-                onChange={(e) => setSelectedScope(e.target.value)}
-                className="calendar-toolbar-control px-3.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-              >
-                <option value="ALL">Mọi phạm vi</option>
-                <option value="P1">Phạm vi: P1</option>
-                <option value="Zalo">Phạm vi: Zalo</option>
-                <option value="Phòng làm việc bà Trang">Phòng LV bà Trang</option>
-              </select>
+              <div className="relative inline-flex items-center justify-between gap-2 h-8 px-3.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] transition cursor-pointer select-none">
+                <span className="whitespace-nowrap">
+                  {selectedScope === 'ALL'
+                    ? 'Mọi phạm vi'
+                    : selectedScope === 'Phòng làm việc bà Trang'
+                      ? 'Phòng LV bà Trang'
+                      : `Phạm vi: ${selectedScope}`}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <select
+                  value={selectedScope}
+                  onChange={(e) => setSelectedScope(e.target.value)}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                >
+                  <option value="ALL">Mọi phạm vi</option>
+                  <option value="P1">Phạm vi: P1</option>
+                  <option value="Zalo">Phạm vi: Zalo</option>
+                  <option value="Phòng làm việc bà Trang">Phòng LV bà Trang</option>
+                </select>
+              </div>
 
               {/* Bộ lọc Trạng thái */}
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="calendar-toolbar-control px-3.5 py-1.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] focus:outline-none focus:border-[#F15A24] cursor-pointer transition"
-              >
-                <option value="ALL">Mọi trạng thái</option>
-                <option value="GREEN">Đã diễn ra</option>
-                <option value="YELLOW">Sắp tới / Đang diễn ra</option>
-                <option value="RED">Hoãn / Hủy / Dời</option>
-              </select>
+              <div className="relative inline-flex items-center justify-between gap-2 h-8 px-3.5 text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-orange-200 dark:border-slate-700 rounded-full hover:border-[#F15A24] transition cursor-pointer select-none">
+                <span className="whitespace-nowrap">
+                  {selectedStatus === 'ALL'
+                    ? 'Mọi trạng thái'
+                    : selectedStatus === 'GREEN'
+                      ? 'Đã diễn ra'
+                      : selectedStatus === 'YELLOW'
+                        ? 'Sắp tới / Đang diễn ra'
+                        : 'Hoãn / Hủy / Dời'}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                >
+                  <option value="ALL">Mọi trạng thái</option>
+                  <option value="GREEN">Đã diễn ra</option>
+                  <option value="YELLOW">Sắp tới / Đang diễn ra</option>
+                  <option value="RED">Hoãn / Hủy / Dời</option>
+                </select>
+              </div>
 
               {/* Nút bật/tắt Hiển thị Chi tiết (Giờ thực tế & Phát sinh) */}
               <button
                 type="button"
                 onClick={() => setShowGridDetails((prev) => !prev)}
                 title={showGridDetails ? 'Ẩn cột Giờ thực tế và Phát sinh' : 'Hiển thị cột Giờ thực tế và Phát sinh'}
-                className={`px-3.5 py-1.5 text-xs font-bold rounded-full border transition inline-flex items-center gap-1.5 cursor-pointer select-none ${
+                className={`h-8 px-3.5 text-xs font-bold rounded-full border transition inline-flex items-center gap-1.5 cursor-pointer select-none ${
                   showGridDetails
                     ? 'bg-[#F15A24] text-white border-[#F15A24] shadow-2xs hover:bg-[#D9460F]'
                     : 'bg-white dark:bg-slate-800 text-[#C2410C] dark:text-orange-300 border-orange-300 dark:border-slate-700 hover:bg-orange-50 hover:border-[#F15A24]'
                 }`}
               >
-                <Eye className="w-3.5 h-3.5" />
-                <span>{showGridDetails ? 'Ẩn chi tiết' : 'Hiển thị chi tiết'}</span>
+                <Eye className="w-3.5 h-3.5 shrink-0" />
+                <span className="whitespace-nowrap">{showGridDetails ? 'Ẩn chi tiết' : 'Hiển thị chi tiết'}</span>
               </button>
 
               {(searchQuery || selectedMonthOnly !== 'ALL' || selectedDayOnly !== 'ALL' || selectedScope !== 'ALL' || selectedStatus !== 'ALL') && (
@@ -3255,7 +3289,7 @@ export const CalendarModule: React.FC = () => {
                     setSelectedScope('ALL');
                     setSelectedStatus('ALL');
                   }}
-                  className="px-2.5 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-lg transition cursor-pointer"
+                  className="h-8 px-3.5 text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 rounded-full border border-rose-200 dark:border-rose-800/60 inline-flex items-center justify-center transition cursor-pointer whitespace-nowrap"
                 >
                   Xóa lọc
                 </button>
