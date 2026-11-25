@@ -4546,18 +4546,10 @@ export const CalendarModule: React.FC = () => {
             <div className="text-[#F15A24] font-black text-xs uppercase tracking-wider flex items-center gap-2">
               <span>GHI CHÚ & BẢNG TIN 24/7</span>
             </div>
-            <span className="px-2.5 py-0.5 bg-[#F15A24]/10 text-[#F15A24] text-[10px] font-extrabold rounded-full border border-[#F15A24]/30">
-              PHẦN 4
-            </span>
           </div>
 
           {/* CARD 1: GHI CHÚ NHANH ĐIỀU HÀNH */}
-          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 p-3 rounded-2xl space-y-2 shadow-xs my-1 flex-1 flex flex-col justify-center">
-            <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              <span>Ghi Chú Nhanh Công Việc</span>
-              <span className="text-slate-400 text-[9px] font-bold">Tự động lưu</span>
-            </div>
-
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 p-3 rounded-2xl shadow-xs my-1 flex-1 flex flex-col justify-center">
             <textarea
               rows={3}
               value={promoNote}

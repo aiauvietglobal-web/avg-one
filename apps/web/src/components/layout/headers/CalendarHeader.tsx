@@ -42,12 +42,6 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
     window.dispatchEvent(new CustomEvent('calendar_viewmode_change', { detail: mode }));
   };
 
-  const handleToggleDM = () => {
-    const nextMode: CalendarViewMode = viewMode === 'day' ? 'month' : 'day';
-    setViewMode(nextMode);
-    window.dispatchEvent(new CustomEvent('calendar_viewmode_toggle_dm', { detail: nextMode }));
-  };
-
   const handleGoHome = () => {
     if (onGoHome) {
       onGoHome();
@@ -106,16 +100,6 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({
             >
               <Table className="w-3.5 h-3.5" />
               <span>Lưới</span>
-            </button>
-
-            {/* Nút D/M Toggle Pill */}
-            <button
-              type="button"
-              onClick={handleToggleDM}
-              title={viewMode === 'day' ? 'Chế độ D: Đang xem theo ngày - Click để chuyển sang Chế độ M (Tháng)' : 'Chế độ M: Đang xem theo tháng - Click để chuyển sang Chế độ D (Ngày)'}
-              className="h-9 px-4 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 dark:hover:bg-slate-700 text-[#1F1F1F] dark:text-white text-[13px] font-bold flex items-center justify-center cursor-pointer transition select-none"
-            >
-              <span>{viewMode === 'day' ? 'D' : 'M'}</span>
             </button>
 
             {/* Nút Cập nhật lịch Pill */}
