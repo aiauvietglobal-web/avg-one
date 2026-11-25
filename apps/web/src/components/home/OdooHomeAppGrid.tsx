@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Boxes, Users, Calendar, FolderKanban, ShieldCheck, Newspaper, BarChart3, Clock, Scale, Sparkles, CheckCircle2, Wallet, Lightbulb, LayoutGrid,
   Compass, Eye, Layers, Shield, Box, Activity, Workflow, Target, Lock, ArrowUpRight, Cpu,
-  Binary, Zap, Rocket, Award, Gem, Coins, CircleDollarSign, Gauge, Database, TrendingDown, Server
+  Binary, Zap, Rocket, Award, Gem, Coins, CircleDollarSign, Gauge, Database, TrendingDown, Server, MessageSquare
 } from 'lucide-react';
 import { AppModuleId } from '../layout/AppLauncherModal';
 
@@ -157,6 +157,14 @@ export const EXPANDED_APP_MODULES = [
     name: 'Lịch',
     tag: 'Lịch Trao Đổi 24/7',
     icon: Calendar,
+    iconColor: 'text-[#0284C7] dark:text-sky-300',
+    bgColor: 'bg-white/95 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
+  },
+  {
+    id: 'chat' as AppModuleId,
+    name: 'Chat Nội Bộ',
+    tag: 'Trao Đổi Trực Tuyến 24/7',
+    icon: MessageSquare,
     iconColor: 'text-[#0284C7] dark:text-sky-300',
     bgColor: 'bg-white/95 dark:bg-sky-950/80 border-sky-200/90 dark:border-sky-800/80 shadow-2xs'
   }
@@ -349,8 +357,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
           })}
         </div>
 
-        {/* Centered Odoo App Grid (Hàng 2: 5 Hộp Phân Hệ Hạ Tầng & Cụm Tác Nghiệp - Căn Giữa Cùng Kích Thước) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 w-full max-w-[1232px] mx-auto shrink-0 mt-1 sm:mt-1.5">
+        {/* Centered Odoo App Grid (Hàng 2: 7 Hộp Phân Hệ Hạ Tầng & Cụm Tác Nghiệp - Căn Giữa Cùng Kích Thước) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4 w-full max-w-[1440px] mx-auto shrink-0 mt-1 sm:mt-1.5">
           {EXPANDED_APP_MODULES.map((app, idx) => {
             const Icon = app.icon;
             return (

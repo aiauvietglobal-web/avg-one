@@ -35,6 +35,7 @@ import { HRModule } from './modules/hr/HRModule';
 import { LegalModule } from './modules/legal/LegalModule';
 import { FinanceModule } from './modules/finance/FinanceModule';
 import { CalendarModule } from './modules/calendar/CalendarModule';
+import { ChatModule } from './modules/chat/ChatModule';
 import { AppsModule } from './modules/apps/AppsModule';
 import { HubDetailModule } from './modules/hub/HubDetailModule';
 
@@ -2239,6 +2240,8 @@ export default function App() {
         <InsideModule />
       ) : activeModule === 'calendar' ? (
         <CalendarModule />
+      ) : activeModule === 'chat' ? (
+        <ChatModule />
       ) : activeModule === 'orders' || activeModule === 'wework' ? (
         <WeworkModule />
       ) : activeModule === 'hr' || activeModule === 'goal' ? (

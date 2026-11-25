@@ -13,7 +13,7 @@ import {
   HomeHeader, AppsHeader, DesignHeader, StandardModuleHeader,
   HRHeader, LegalHeader, FinanceHeader, RDHeader,
   SpeechToTextHeader, DashboardHeader, HubDetailHeader, FileTranscribeHeader,
-  CalendarHeader, CalendarNavTab,
+  CalendarHeader, CalendarNavTab, ChatHeader,
   HRNavTab, LegalNavTab, FinanceNavTab, RDNavTab,
   SpeechNavTab, DashboardNavTab, FileTranscribeNavTab
 } from './headers';
@@ -435,6 +435,15 @@ export const AppShell: React.FC<AppShellProps> = ({
               }}
               darkMode={darkMode}
               onToggleDarkMode={onToggleDarkMode}
+              renderUserAuthButton={renderUserAuthButton}
+            />
+          ) : activeModule === 'chat' ? (
+            /* HEADER ĐỘC LẬP CHO PHÂN HỆ CHAT NỘI BỘ */
+            <ChatHeader
+              onGoHome={() => {
+                setActiveSubTitle('');
+                onSelectModule('home');
+              }}
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : isDesignModule ? (

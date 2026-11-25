@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   BarChart3, Newspaper, Calendar, FolderKanban, Users, Scale, LayoutGrid,
-  X, Home, Server, Workflow, ShieldCheck, Zap, Award, Layers, Cpu, Coins, Sparkles
+  X, Home, Server, Workflow, ShieldCheck, Zap, Award, Layers, Cpu, Coins, Sparkles, MessageSquare
 } from 'lucide-react';
 
 export type AppModuleId =
@@ -9,6 +9,7 @@ export type AppModuleId =
   | 'system'
   | 'inside'
   | 'calendar'
+  | 'chat'
   | 'orders'
   | 'hr'
   | 'legal'
@@ -127,6 +128,12 @@ export const APP_MODULES: AppModuleItem[] = [
     name: 'Lịch',
     tag: 'Lịch Họp & Tác Nghiệp',
     icon: Calendar,
+  },
+  {
+    id: 'chat',
+    name: 'Chat Nội Bộ',
+    tag: 'Trao Đổi Trực Tuyến 24/7',
+    icon: MessageSquare,
   },
   {
     id: 'orders',
