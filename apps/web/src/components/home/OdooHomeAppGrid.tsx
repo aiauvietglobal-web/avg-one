@@ -174,8 +174,8 @@ export const OdooHomeAppGrid: React.FC<OdooHomeAppGridProps> = ({ onSelectModule
   return (
     <div className="w-full h-full flex-1 min-h-0 bg-white dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 relative overflow-y-auto md:overflow-hidden flex flex-col items-center justify-start md:justify-center p-2 sm:p-3 select-none">
       
-      {/* 🌐 ULTRA-CLEAN GRID LINES (Chỉ bắt đầu từ bên dưới vùng thanh Header) */}
-      <div className="absolute top-14 sm:top-16 inset-x-0 bottom-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-55 dark:opacity-25 pointer-events-none -z-0" />
+      {/* 🌐 ULTRA-CLEAN GRID LINES (Cách thanh Header một khoảng thoáng phía trên) */}
+      <div className="absolute top-20 sm:top-24 inset-x-0 bottom-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:2.75rem_2.75rem] opacity-55 dark:opacity-25 pointer-events-none -z-0" />
 
       {/* Synchronized widescreen container (Giữ nguyên vị trí rộng cho 4 hộp Hero & vòng quỹ đạo) */}
       <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 xl:px-10 pt-14 sm:pt-16 pb-1 sm:pb-2 flex flex-col items-center justify-start md:justify-evenly h-full max-h-full gap-2 sm:gap-3.5 relative z-10">
