@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
-  MessageSquare, Search, Send, Paperclip, Pin, Users, User, Plus, X,
-  CheckCheck, FileText, Image as ImageIcon, Hash, Reply, Trash2,
-  PanelRightClose, PanelRightOpen, Sparkles, Bell, ShieldCheck, Layers,
-  Workflow, Scale, Cpu, Server, Zap
+  MessageSquare, Search, Send, Paperclip, Pin, Users, User, Plus,
+  FileText, Image as ImageIcon, Hash, Reply, Trash2,
+  PanelRightClose, PanelRightOpen, Bell, Phone, Video, Smile,
+  UserPlus, CheckCheck, Cloud, Contact, Calendar, CheckSquare,
+  ChevronDown, ChevronRight, Link2, BellOff, Star, MoreHorizontal, ThumbsUp
 } from 'lucide-react';
 
 export interface ChatMember {
@@ -27,10 +28,11 @@ export interface ChatReaction {
 export interface ChatAttachment {
   id: string;
   name: string;
-  type: 'file' | 'image' | 'order' | 'schedule';
+  type: 'file' | 'image' | 'order' | 'schedule' | 'contact';
   size?: string;
   url?: string;
   code?: string;
+  subText?: string;
 }
 
 export interface ChatMessage {
@@ -59,12 +61,14 @@ export interface ChatMessage {
 export interface ChatRoom {
   id: string;
   name: string;
-  type: 'group' | 'direct';
+  type: 'group' | 'direct' | 'cloud';
   hubCode: string;
+  tagColor: string;
   description: string;
   avatarBg: string;
   initials: string;
   isPinned?: boolean;
+  isMuted?: boolean;
   unreadCount: number;
   memberIds: string[];
   directPartnerId?: string;
@@ -88,7 +92,7 @@ export const AVG_CHAT_STAFF: ChatMember[] = [
     initials: 'OT',
     role: 'Ban Điều Hành Tập Đoàn',
     hub: 'ĐIỀU HÀNH',
-    avatarBg: 'linear-gradient(135deg, #0284C7, #0369a1)',
+    avatarBg: 'linear-gradient(135deg, #0068FF, #0052CC)',
     isOnline: true,
     email: 'trinh.dh@auvietglobal.com',
     phone: '0901 666 888'
@@ -196,10 +200,24 @@ export const AVG_CHAT_STAFF: ChatMember[] = [
 
 const INITIAL_ROOMS: ChatRoom[] = [
   {
+    id: 'room-cloud',
+    name: 'Cloud của tôi (Lưu trữ cá nhân)',
+    type: 'cloud',
+    hubCode: 'CLOUD 24/7',
+    tagColor: '#0068FF',
+    description: 'Lưu trữ và đồng bộ nhanh tài liệu, biên bản VBKL, hình ảnh và ghi chú cá nhân giữa các thiết bị.',
+    avatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
+    initials: '☁️',
+    isPinned: true,
+    unreadCount: 0,
+    memberIds: ['staff-trang']
+  },
+  {
     id: 'room-executive',
     name: 'Ban Điều Hành & Các Đầu Mối AVG',
     type: 'group',
     hubCode: 'ĐIỀU HÀNH 24/7',
+    tagColor: '#F15A24',
     description: 'Kênh điều hành chung, tổng kết công việc thường ngày lúc 16:00 và ban hành VBKL toàn hệ thống.',
     avatarBg: 'linear-gradient(135deg, #F15A24, #d9460f)',
     initials: 'ĐH',
@@ -212,8 +230,9 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Cụm 5.1 – Đầu Vào 5.1B & Đầu Ra 5.1T',
     type: 'group',
     hubCode: 'CỤM 5.1',
+    tagColor: '#0068FF',
     description: 'Phối hợp tiếp nhận yêu cầu đầu vào (5.1B), kiểm soát bàn giao đầu ra (5.1T) và tiến độ 13 bước.',
-    avatarBg: 'linear-gradient(135deg, #0284C7, #00A8E8)',
+    avatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
     initials: '5.1',
     isPinned: true,
     unreadCount: 1,
@@ -224,6 +243,7 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Cụm #K – 5 Đầu Mối Thực Thi (#K2B)',
     type: 'group',
     hubCode: 'CỤM #K',
+    tagColor: '#0284C7',
     description: 'Nhóm tác nghiệp trực tiếp của 5 đầu mối Cụm #K, văn phòng làm việc Bà Trang và thư ký tổng.',
     avatarBg: 'linear-gradient(135deg, #0369a1, #0284C7)',
     initials: '#K',
@@ -236,6 +256,7 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: '3.1 & 3.2 – Nghiên Cứu R&D & Thiết Kế',
     type: 'group',
     hubCode: 'R&D • 3.1/3.2',
+    tagColor: '#7C3AED',
     description: 'Trao đổi hồ sơ kỹ thuật, bản vẽ CAD 3D, mẫu H1 và thử nghiệm bo mạch cảm biến.',
     avatarBg: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
     initials: 'RD',
@@ -248,6 +269,7 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: '6 – Pháp Lý, Hợp Đồng & SHTT',
     type: 'group',
     hubCode: '6 - PHÁP LÝ',
+    tagColor: '#059669',
     description: 'Rà soát hồ sơ pháp lý dự án, đăng ký nhãn hiệu/SHTT và hợp đồng gia công đối tác.',
     avatarBg: 'linear-gradient(135deg, #059669, #10b981)',
     initials: 'PL',
@@ -260,6 +282,7 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: '2.2 & 8 – Hạ Tầng Máy Móc & Gỡ Nghẽn',
     type: 'group',
     hubCode: 'HẠ TẦNG 2.2',
+    tagColor: '#EA580C',
     description: 'Giám sát thiết bị nhà máy, bảo mật hệ thống ISO 27001 và xử lý điểm nghẽn vận hành.',
     avatarBg: 'linear-gradient(135deg, #ea580c, #f97316)',
     initials: '2.2',
@@ -273,7 +296,8 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Bà Trang (#K2B)',
     type: 'direct',
     hubCode: 'CỤM #K',
-    description: 'Trao đổi trực tiếp 1-1 với Bà Trang – Thư Ký Tổng & Điều Phối #K2B',
+    tagColor: '#F15A24',
+    description: 'Thư Ký Tổng & Điều Phối #K2B',
     avatarBg: 'linear-gradient(135deg, #F15A24, #d9460f)',
     initials: 'BT',
     unreadCount: 1,
@@ -285,7 +309,8 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Kiên (Điều Hành)',
     type: 'direct',
     hubCode: 'ĐIỀU HÀNH',
-    description: 'Trao đổi trực tiếp 1-1 với Kiên – Điều Hành & Thư Ký Tổng Kết',
+    tagColor: '#0068FF',
+    description: 'Điều Hành & Thư Ký Tổng Kết',
     avatarBg: 'linear-gradient(135deg, #00A8E8, #0284C7)',
     initials: 'K',
     unreadCount: 0,
@@ -297,7 +322,8 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Ông Vũ Quốc Huy',
     type: 'direct',
     hubCode: '6 - PHÁP LÝ',
-    description: 'Trao đổi trực tiếp 1-1 với Ông Vũ Quốc Huy – Cố Vấn Pháp Lý & Sản Xuất',
+    tagColor: '#059669',
+    description: 'Cố Vấn Pháp Lý & Sản Xuất',
     avatarBg: 'linear-gradient(135deg, #f97316, #ea580c)',
     initials: 'QH',
     unreadCount: 0,
@@ -309,7 +335,8 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Đinh Hoàng Ngọc Hân',
     type: 'direct',
     hubCode: '5.1B',
-    description: 'Trao đổi trực tiếp 1-1 với Đinh Hoàng Ngọc Hân – Thư Ký & Đầu Mối 5.1B',
+    tagColor: '#EC4899',
+    description: 'Thư Ký & Đầu Mối 5.1B / 2.2',
     avatarBg: 'linear-gradient(135deg, #ec4899, #f43f5e)',
     initials: 'NH',
     unreadCount: 0,
@@ -321,7 +348,8 @@ const INITIAL_ROOMS: ChatRoom[] = [
     name: 'Lê Trần Thiện Tâm',
     type: 'direct',
     hubCode: '5.1T',
-    description: 'Trao đổi trực tiếp 1-1 với Lê Trần Thiện Tâm – Chuyên Viên Đầu Mối 5.1T',
+    tagColor: '#D97706',
+    description: 'Chuyên Viên Đầu Mối 5.1T',
     avatarBg: 'linear-gradient(135deg, #f59e0b, #d97706)',
     initials: 'TT',
     unreadCount: 0,
@@ -331,6 +359,31 @@ const INITIAL_ROOMS: ChatRoom[] = [
 ];
 
 const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
+  'room-cloud': [
+    {
+      id: 'msg-cloud-1',
+      roomId: 'room-cloud',
+      senderId: 'me',
+      senderName: 'Cloud của tôi',
+      senderInitials: '☁️',
+      senderRole: 'Lưu trữ cá nhân',
+      senderHub: 'CLOUD',
+      senderAvatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
+      content: 'Ghi chú cá nhân: Rà soát tiến độ 66 cuộc trao đổi trên Sheet LỊCH TRAO ĐỔI 24/7 và tổng hợp báo cáo tuần.',
+      timestamp: '08:30',
+      dateStr: '25/11/2026',
+      isMe: true,
+      isPinned: true,
+      attachments: [
+        {
+          id: 'att-cloud-doc',
+          name: 'Bao_Cao_Tien_Do_Cum5_T11_2026.xlsx',
+          type: 'file',
+          size: '845 KB'
+        }
+      ]
+    }
+  ],
   'room-executive': [
     {
       id: 'msg-1',
@@ -350,7 +403,8 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
           id: 'att-sch-66',
           name: 'Lịch #66: Tổng kết công việc thường ngày (16:00 – 17:00)',
           type: 'schedule',
-          code: 'CAL-66'
+          code: 'CAL-66',
+          subText: 'Thứ 4, 25/11/2026 • Phạm vi: P1 • Điều hành: Kiên'
         }
       ],
       reactions: [
@@ -392,7 +446,22 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
           size: '1.4 MB'
         }
       ],
-      reactions: [{ emoji: '🔥', count: 5, reactedByMe: true }]
+      reactions: [{ emoji: '❤️', count: 5, reactedByMe: true }]
+    },
+    {
+      id: 'msg-4',
+      roomId: 'room-executive',
+      senderId: 'me',
+      senderName: 'Ban Điều Hành AVG',
+      senderInitials: 'AVG',
+      senderRole: 'Điều Hành Hệ Thống',
+      senderHub: 'AVG ONE',
+      senderAvatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
+      content: 'Đã đồng bộ toàn bộ 66 lịch trao đổi và hồ sơ VBKL lên hệ thống AVG ONE. Hẹn các đầu mối đúng 16:00 tại P1.',
+      timestamp: '15:05',
+      dateStr: '25/11/2026',
+      isMe: true,
+      reactions: [{ emoji: '👍', count: 4, reactedByMe: false }]
     }
   ],
   'room-cluster-51': [
@@ -413,7 +482,8 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
           id: 'att-ord-1',
           name: 'Đơn hàng #DH-2026-108: Thiết kế & Chế tạo Mẫu H1',
           type: 'order',
-          code: 'DH-2026-108'
+          code: 'DH-2026-108',
+          subText: 'Đầu mối: 5.1B ➔ 3.1 RDI • Trạng thái: Đang thực hiện'
         }
       ],
       reactions: [{ emoji: '✅', count: 3, reactedByMe: true }]
@@ -467,19 +537,43 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
 };
 
 const QUICK_ORDER_TAGS = [
-  { code: 'DH-2026-108', name: 'Đơn hàng #DH-2026-108: Thiết kế & Chế tạo Mẫu H1' },
-  { code: 'DH-2026-112', name: 'Đơn hàng #DH-2026-112: Gia công Lô Cảm Biến AVG-X' },
-  { code: 'DH-2026-115', name: 'Đơn hàng #DH-2026-115: Hồ sơ SHTT & Hợp chuẩn' }
+  {
+    code: 'DH-2026-108',
+    name: 'Đơn hàng #DH-2026-108: Thiết kế & Chế tạo Mẫu H1',
+    subText: 'Đầu mối: 5.1B ➔ 3.1 RDI • Trạng thái: Trọng điểm'
+  },
+  {
+    code: 'DH-2026-112',
+    name: 'Đơn hàng #DH-2026-112: Gia công Lô Cảm Biến AVG-X',
+    subText: 'Đầu mối: Cụm #K ➔ 2.1 Sản xuất • Trạng thái: Đang chạy'
+  },
+  {
+    code: 'DH-2026-115',
+    name: 'Đơn hàng #DH-2026-115: Hồ sơ SHTT & Hợp chuẩn',
+    subText: 'Đầu mối: 6 - Pháp lý • Trạng thái: Chờ duyệt'
+  }
 ];
 
 const QUICK_SCHEDULE_TAGS = [
-  { code: 'CAL-66', name: 'Lịch #66 (25/11 - 16:00): Tổng kết công việc thường ngày' },
-  { code: 'CAL-63', name: 'Lịch #63 (21/11 - 14:30): Trao đổi cụm 5' },
-  { code: 'CAL-61', name: 'Lịch #61 (20/11 - 11:00): Trao đổi hợp tác về hoạt động gia công' }
+  {
+    code: 'CAL-66',
+    name: 'Lịch #66 (25/11 - 16:00): Tổng kết công việc thường ngày',
+    subText: 'Phạm vi: P1 • Điều hành: Kiên • Thư ký: Kiên'
+  },
+  {
+    code: 'CAL-63',
+    name: 'Lịch #63 (21/11 - 14:30): Trao đổi cụm 5',
+    subText: 'Phạm vi: P1 • Thành phần: Cụm 5 • Thư ký: 5.2B'
+  },
+  {
+    code: 'CAL-61',
+    name: 'Lịch #61 (20/11 - 11:00): Trao đổi hợp tác về hoạt động gia công',
+    subText: 'Phạm vi: P1 • Điều hành: Bà Trang TM AVG'
+  }
 ];
 
-const STORAGE_ROOMS_KEY = 'avg_internal_chat_rooms_v1';
-const STORAGE_MSGS_KEY = 'avg_internal_chat_messages_v1';
+const STORAGE_ROOMS_KEY = 'avg_internal_chat_rooms_v2';
+const STORAGE_MSGS_KEY = 'avg_internal_chat_messages_v2';
 
 export const ChatModule: React.FC = () => {
   const [rooms, setRooms] = useState<ChatRoom[]>(() => {
@@ -498,18 +592,36 @@ export const ChatModule: React.FC = () => {
     return INITIAL_MESSAGES;
   });
 
+  // Zalo Left Rail Main View: 'messages' | 'contacts'
+  const [railNav, setRailNav] = useState<'messages' | 'contacts'>('messages');
   const [activeRoomId, setActiveRoomId] = useState<string>('room-executive');
+
+  // Zalo Sidebar Filter Tabs: 'all' | 'unread' + Category dropdown ('all' | 'groups' | 'direct')
+  const [unreadOnly, setUnreadOnly] = useState<boolean>(false);
   const [filterTab, setFilterTab] = useState<'all' | 'groups' | 'direct'>('all');
   const [sidebarSearch, setSidebarSearch] = useState<string>('');
   const [msgSearch, setMsgSearch] = useState<string>('');
   const [showMsgSearch, setShowMsgSearch] = useState<boolean>(false);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
 
+  // Collapsible sections in Zalo Right Sidebar
+  const [openRightSections, setOpenRightSections] = useState<{
+    members: boolean;
+    board: boolean;
+    files: boolean;
+    links: boolean;
+  }>({
+    members: true,
+    board: true,
+    files: true,
+    links: true
+  });
+
   // Compose state
   const [inputText, setInputText] = useState<string>('');
   const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
   const [pendingAttachments, setPendingAttachments] = useState<ChatAttachment[]>([]);
-  const [showTagPicker, setShowTagPicker] = useState<'none' | 'order' | 'schedule'>('none');
+  const [showTagPicker, setShowTagPicker] = useState<'none' | 'order' | 'schedule' | 'contact' | 'emoji'>('none');
 
   // Create group modal state
   const [showCreateGroupModal, setShowCreateGroupModal] = useState<boolean>(false);
@@ -527,7 +639,6 @@ export const ChatModule: React.FC = () => {
     setTimeout(() => setToastMessage(null), 3200);
   };
 
-  // Persist rooms & messages
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_ROOMS_KEY, JSON.stringify(rooms));
@@ -545,6 +656,7 @@ export const ChatModule: React.FC = () => {
     const handleTabChange = (e: any) => {
       if (e.detail && ['all', 'groups', 'direct'].includes(e.detail)) {
         setFilterTab(e.detail);
+        setRailNav('messages');
       }
     };
     const handleOpenCreateGroup = () => {
@@ -558,12 +670,10 @@ export const ChatModule: React.FC = () => {
     };
   }, []);
 
-  // Sync active filterTab back to ChatHeader
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('chat_filter_tab_sync', { detail: filterTab }));
   }, [filterTab]);
 
-  // Scroll to bottom when active room or messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [activeRoomId, messagesByRoom[activeRoomId]?.length]);
@@ -603,9 +713,15 @@ export const ChatModule: React.FC = () => {
     return AVG_CHAT_STAFF.filter((s) => activeRoom.memberIds.includes(s.id));
   }, [activeRoom]);
 
+  const totalUnreadCount = useMemo(
+    () => rooms.reduce((sum, r) => sum + (r.unreadCount || 0), 0),
+    [rooms]
+  );
+
   const filteredRooms = useMemo(() => {
     return rooms
       .filter((r) => {
+        if (unreadOnly && r.unreadCount === 0) return false;
         if (filterTab === 'groups' && r.type !== 'group') return false;
         if (filterTab === 'direct' && r.type !== 'direct') return false;
         if (sidebarSearch.trim()) {
@@ -623,15 +739,23 @@ export const ChatModule: React.FC = () => {
         if (!a.isPinned && b.isPinned) return 1;
         return 0;
       });
-  }, [rooms, filterTab, sidebarSearch]);
+  }, [rooms, unreadOnly, filterTab, sidebarSearch]);
 
   const handleSelectRoom = (roomId: string) => {
     setActiveRoomId(roomId);
+    setRailNav('messages');
     setReplyingTo(null);
     setShowTagPicker('none');
     setRooms((prev) =>
       prev.map((r) => (r.id === roomId ? { ...r, unreadCount: 0 } : r))
     );
+  };
+
+  const handleTogglePinRoom = (roomId: string) => {
+    setRooms((prev) =>
+      prev.map((r) => (r.id === roomId ? { ...r, isPinned: !r.isPinned } : r))
+    );
+    showToast('Đã cập nhật ghim hội thoại');
   };
 
   const handleStartDirectChat = (member: ChatMember) => {
@@ -647,7 +771,8 @@ export const ChatModule: React.FC = () => {
       name: member.name,
       type: 'direct',
       hubCode: member.hub,
-      description: `Trao đổi trực tiếp 1-1 với ${member.name} – ${member.role}`,
+      tagColor: '#0068FF',
+      description: member.role,
       avatarBg: member.avatarBg,
       initials: member.initials,
       unreadCount: 0,
@@ -656,7 +781,36 @@ export const ChatModule: React.FC = () => {
     };
     setRooms((prev) => [newDm, ...prev]);
     setActiveRoomId(newDm.id);
-    showToast(`Đã mở hội thoại trực tiếp với ${member.name}`);
+    setRailNav('messages');
+    showToast(`Đã mở trò chuyện với ${member.name}`);
+  };
+
+  const handleSendQuickLike = () => {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+    const likeMsg: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      roomId: activeRoom.id,
+      senderId: 'me',
+      senderName: 'Ban Điều Hành AVG',
+      senderInitials: 'AVG',
+      senderRole: 'Điều Hành Hệ Thống',
+      senderHub: 'AVG ONE',
+      senderAvatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
+      content: '👍',
+      timestamp: timeStr,
+      dateStr: '25/11/2026',
+      isMe: true,
+      reactions: []
+    };
+    setMessagesByRoom((prev) => ({
+      ...prev,
+      [activeRoom.id]: [...(prev[activeRoom.id] || []), likeMsg]
+    }));
   };
 
   const handleSendMessage = (e?: React.FormEvent) => {
@@ -678,7 +832,7 @@ export const ChatModule: React.FC = () => {
       senderInitials: 'AVG',
       senderRole: 'Điều Hành Hệ Thống',
       senderHub: 'AVG ONE',
-      senderAvatarBg: 'linear-gradient(135deg, #F15A24, #ff7043)',
+      senderAvatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
       content: inputText.trim(),
       timestamp: timeStr,
       dateStr: '25/11/2026',
@@ -715,7 +869,7 @@ export const ChatModule: React.FC = () => {
         )
       };
     });
-    showToast('Đã cập nhật trạng thái ghim tin nhắn');
+    showToast('Đã cập nhật tin nhắn ghim trên đầu phòng');
   };
 
   const handleToggleReaction = (msgId: string, emoji: string) => {
@@ -791,10 +945,11 @@ export const ChatModule: React.FC = () => {
       name: newGroupName.trim(),
       type: 'group',
       hubCode: newGroupHubCode,
+      tagColor: '#0068FF',
       description:
         newGroupDesc.trim() ||
         `Nhóm phối hợp tác nghiệp ${newGroupHubCode} (${selectedMemberIds.length} thành viên)`,
-      avatarBg: 'linear-gradient(135deg, #0284C7, #F15A24)',
+      avatarBg: 'linear-gradient(135deg, #0068FF, #F15A24)',
       initials,
       isPinned: true,
       unreadCount: 0,
@@ -813,7 +968,7 @@ export const ChatModule: React.FC = () => {
           senderInitials: 'AVG',
           senderRole: 'Điều Hành Hệ Thống',
           senderHub: newGroupHubCode,
-          senderAvatarBg: 'linear-gradient(135deg, #F15A24, #ff7043)',
+          senderAvatarBg: 'linear-gradient(135deg, #0068FF, #00A8E8)',
           content: `Đã khởi tạo nhóm trao đổi "${newRoom.name}" thuộc đầu mối ${newGroupHubCode}.`,
           timestamp: new Date().toLocaleTimeString('vi-VN', {
             hour: '2-digit',
@@ -830,14 +985,11 @@ export const ChatModule: React.FC = () => {
     setShowCreateGroupModal(false);
     setNewGroupName('');
     setNewGroupDesc('');
-    showToast(`Đã tạo nhóm chat "${newRoom.name}" thành công!`);
+    showToast(`Đã tạo nhóm "${newRoom.name}" thành công!`);
   };
 
   return (
-    <div className="w-full h-full flex-1 min-h-0 overflow-hidden bg-slate-50/60 dark:bg-slate-950 text-[#1F2937] dark:text-slate-100 font-sans p-2.5 sm:p-3.5 relative flex flex-col">
-      {/* 🌐 GRID LINES PATTERN BACKGROUND */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:2.5rem_2.5rem] opacity-40 pointer-events-none -z-0" />
-
+    <div className="w-full h-full flex-1 min-h-0 overflow-hidden bg-white dark:bg-slate-950 text-[#081C36] dark:text-slate-100 font-sans flex relative select-none">
       {/* Toast Notification Banner */}
       {toastMessage && (
         <div className="fixed bottom-4 right-4 z-50 bg-[#F15A24] text-white px-4 py-2.5 rounded-full shadow-xl border border-[#D9460F] text-xs font-bold flex items-center gap-2">
@@ -846,790 +998,1221 @@ export const ChatModule: React.FC = () => {
         </div>
       )}
 
-      {/* BỐ CỤC 3 CỘT CHUẨN ENTERPRISE CHAT */}
-      <div className="w-full h-full flex-1 min-h-0 flex gap-3 relative z-10 overflow-hidden">
-        {/* ========================================================================= */}
-        {/* CỘT 1 (TRÁI): DANH SÁCH KÊNH CỤM / ĐẦU MỐI & CHAT CÁ NHÂN 1-1 */}
-        {/* ========================================================================= */}
-        <aside className="w-72 sm:w-80 lg:w-[330px] shrink-0 h-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs">
-          {/* Ô tìm kiếm & Bộ lọc nhanh dạng hộp viên thuốc */}
-          <div className="p-3 border-b border-slate-200/80 dark:border-slate-800 space-y-2.5 shrink-0">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="text"
-                value={sidebarSearch}
-                onChange={(e) => setSidebarSearch(e.target.value)}
-                placeholder="Tìm cụm đầu mối, nhân sự..."
-                className="w-full h-8.5 pl-9 pr-8 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-full border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#F15A24] font-medium transition"
-              />
-              {sidebarSearch && (
-                <button
-                  onClick={() => setSidebarSearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
-                >
-                  ✕
-                </button>
-              )}
+      {/* ========================================================================= */}
+      {/* 1. THANH ĐIỀU HƯỚNG DỌC BÊN TRÁI CHUẨN ZALO PC (ZALO BLUE #0068FF RAIL) */}
+      {/* ========================================================================= */}
+      <nav className="w-16 shrink-0 h-full bg-[#0068FF] dark:bg-slate-900 border-r border-[#0052CC] dark:border-slate-800 flex flex-col items-center justify-between py-3 text-white z-20">
+        {/* Cụm trên: Avatar người dùng + Các tab chính (Tin nhắn, Danh bạ, Cloud của tôi) */}
+        <div className="flex flex-col items-center gap-2 w-full">
+          {/* Avatar đại diện có chấm xanh Online */}
+          <button
+            type="button"
+            onClick={() => handleSelectRoom('room-executive')}
+            title="Ban Điều Hành AVG One (Đang trực tuyến)"
+            className="relative mb-2 cursor-pointer group"
+          >
+            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#F15A24] to-amber-500 border-2 border-white/90 flex items-center justify-center text-white font-black text-xs shadow-sm group-hover:scale-105 transition-transform">
+              AVG
             </div>
+            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0068FF]" />
+          </button>
 
-            {/* Cụm nút lọc viên thuốc */}
-            <div className="flex items-center gap-1.5">
-              {[
-                { id: 'all', label: `Tất cả (${rooms.length})` },
-                { id: 'groups', label: `Nhóm Cụm (${rooms.filter((r) => r.type === 'group').length})` },
-                { id: 'direct', label: `Cá nhân (${rooms.filter((r) => r.type === 'direct').length})` }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setFilterTab(tab.id as any)}
-                  className={`flex-1 py-1 px-2.5 rounded-full text-[11px] transition cursor-pointer select-none whitespace-nowrap ${
-                    filterTab === tab.id
-                      ? 'bg-[#F15A24] text-white font-bold shadow-2xs'
-                      : 'bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Danh sách Phòng Chat / Hội thoại */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60 scrollbar-thin">
-            {filteredRooms.map((room) => {
-              const isSelected = room.id === activeRoom.id;
-              const roomMsgs = messagesByRoom[room.id] || [];
-              const lastMsg = roomMsgs[roomMsgs.length - 1];
-              const partner =
-                room.type === 'direct'
-                  ? AVG_CHAT_STAFF.find((s) => s.id === room.directPartnerId)
-                  : null;
-
-              return (
-                <div
-                  key={room.id}
-                  onClick={() => handleSelectRoom(room.id)}
-                  className={`p-3 flex items-start gap-2.5 cursor-pointer transition select-none ${
-                    isSelected
-                      ? 'bg-orange-50/90 dark:bg-orange-950/30 border-l-4 border-l-[#F15A24]'
-                      : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                  }`}
-                >
-                  {/* Avatar */}
-                  <div className="relative shrink-0">
-                    <div
-                      style={{ background: room.avatarBg }}
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-xs shadow-2xs"
-                    >
-                      {room.initials}
-                    </div>
-                    {room.type === 'direct' && partner && (
-                      <span
-                        className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${
-                          partner.isOnline ? 'bg-emerald-500' : 'bg-slate-400'
-                        }`}
-                      />
-                    )}
-                  </div>
-
-                  {/* Nội dung tóm tắt */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-1">
-                      <span
-                        className={`text-xs truncate ${
-                          isSelected || room.unreadCount > 0
-                            ? 'font-black text-slate-900 dark:text-white'
-                            : 'font-bold text-slate-800 dark:text-slate-200'
-                        }`}
-                      >
-                        {room.name}
-                      </span>
-                      <span className="text-[10px] font-semibold text-slate-400 shrink-0">
-                        {lastMsg ? lastMsg.timestamp : '24/7'}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="px-2 py-0.2 rounded-full bg-[#EEEEEE] dark:bg-slate-800 text-[9.5px] font-extrabold text-slate-600 dark:text-slate-300">
-                        {room.hubCode}
-                      </span>
-                      {room.isPinned && (
-                        <Pin className="w-3 h-3 text-[#F15A24] rotate-45 shrink-0" />
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between gap-2 mt-1">
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                        {lastMsg
-                          ? `${lastMsg.isMe ? 'Bạn: ' : `${lastMsg.senderName.split(' ')[0]}: `}${lastMsg.content || '[Đính kèm tài liệu]'}`
-                          : room.description}
-                      </p>
-                      {room.unreadCount > 0 && (
-                        <span className="px-1.5 py-0.2 rounded-full bg-[#F15A24] text-white text-[10px] font-black shrink-0">
-                          {room.unreadCount}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Danh bạ nhanh Nhân sự trực tuyến dưới chân cột trái */}
-          <div className="p-2.5 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/90 shrink-0">
-            <div className="flex items-center justify-between px-1 mb-1.5">
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                Nhân sự trực tuyến ({AVG_CHAT_STAFF.filter((s) => s.isOnline).length}/{AVG_CHAT_STAFF.length})
+          {/* Nút 1: Tin nhắn (Messages) */}
+          <button
+            type="button"
+            onClick={() => setRailNav('messages')}
+            title="Tin nhắn"
+            className={`relative w-12 h-12 rounded-xl flex items-center justify-center transition cursor-pointer ${
+              railNav === 'messages'
+                ? 'bg-[#0052CC] dark:bg-slate-800 text-white shadow-inner'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            <MessageSquare className="w-6 h-6 stroke-[2]" />
+            {totalUnreadCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#E53935] text-white text-[10px] font-black flex items-center justify-center border border-[#0068FF]">
+                {totalUnreadCount}
               </span>
+            )}
+          </button>
+
+          {/* Nút 2: Danh bạ Nhân sự & Cụm đầu mối (Contacts Directory) */}
+          <button
+            type="button"
+            onClick={() => setRailNav('contacts')}
+            title="Danh bạ Nhân sự & Cụm Đầu Mối"
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition cursor-pointer ${
+              railNav === 'contacts'
+                ? 'bg-[#0052CC] dark:bg-slate-800 text-white shadow-inner'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            <Contact className="w-6 h-6 stroke-[2]" />
+          </button>
+
+          {/* Nút 3: Cloud của tôi (Zalo My Cloud) */}
+          <button
+            type="button"
+            onClick={() => handleSelectRoom('room-cloud')}
+            title="Cloud của tôi (Lưu trữ tài liệu cá nhân)"
+            className={`w-12 h-12 rounded-xl flex items-center justify-center transition cursor-pointer ${
+              activeRoom.id === 'room-cloud' && railNav === 'messages'
+                ? 'bg-[#0052CC] dark:bg-slate-800 text-white shadow-inner'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            <Cloud className="w-6 h-6 stroke-[2]" />
+          </button>
+        </div>
+
+        {/* Cụm dưới: Tạo nhóm nhanh */}
+        <div className="flex flex-col items-center gap-2 w-full">
+          <button
+            type="button"
+            onClick={() => setShowCreateGroupModal(true)}
+            title="Tạo nhóm chat Cụm / Đầu mối mới"
+            className="w-11 h-11 rounded-xl text-white/85 hover:bg-white/15 hover:text-white flex items-center justify-center transition cursor-pointer"
+          >
+            <UserPlus className="w-5.5 h-5.5" />
+          </button>
+        </div>
+      </nav>
+
+      {/* ========================================================================= */}
+      {/* 2. CỘT DANH SÁCH HỘI THOẠI / DANH BẠ CHUẨN ZALO (PHẲNG, SẮC NÉT, FULL-HEIGHT) */}
+      {/* ========================================================================= */}
+      <aside className="w-80 sm:w-[340px] shrink-0 h-full bg-white dark:bg-slate-900 border-r border-[#E5E7EB] dark:border-slate-800 flex flex-col overflow-hidden">
+        {/* Thanh tìm kiếm & 2 nút Tạo Nhóm / Danh bạ chuẩn Zalo */}
+        <div className="h-16 px-3.5 flex items-center gap-2 border-b border-[#E5E7EB] dark:border-slate-800 shrink-0">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-[#7589A3] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={sidebarSearch}
+              onChange={(e) => setSidebarSearch(e.target.value)}
+              placeholder="Tìm kiếm nhóm cụm, nhân sự..."
+              className="w-full h-8.5 pl-9 pr-7 text-xs bg-[#EBEDF0] dark:bg-slate-800 text-[#081C36] dark:text-white placeholder-[#7589A3] rounded-full border border-transparent focus:bg-white focus:border-[#0068FF] focus:outline-none font-medium transition"
+            />
+            {sidebarSearch && (
               <button
-                type="button"
-                onClick={() => setShowCreateGroupModal(true)}
-                className="text-[10px] font-extrabold text-[#F15A24] hover:underline cursor-pointer"
+                onClick={() => setSidebarSearch('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
               >
-                + Nhóm mới
+                ✕
               </button>
-            </div>
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-              {AVG_CHAT_STAFF.map((member) => (
-                <button
-                  key={member.id}
-                  type="button"
-                  onClick={() => handleStartDirectChat(member)}
-                  title={`${member.name} (${member.hub}) - Click để chat 1-1`}
-                  className="relative shrink-0 group cursor-pointer"
-                >
-                  <div
-                    style={{ background: member.avatarBg }}
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-[10px] shadow-2xs group-hover:scale-105 transition-transform"
-                  >
-                    {member.initials}
-                  </div>
-                  <span
-                    className={`absolute bottom-0 right-0 w-2 h-2 rounded-full border border-white dark:border-slate-900 ${
-                      member.isOnline ? 'bg-emerald-500' : 'bg-slate-400'
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
+            )}
           </div>
-        </aside>
 
-        {/* ========================================================================= */}
-        {/* CỘT 2 (GIỮA): KHUNG HỘI THOẠI TRỰC TUYẾN THỜI GIAN THỰC */}
-        {/* ========================================================================= */}
-        <main className="flex-1 min-w-0 h-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-xs">
-          {/* Header Phòng Chat */}
-          <div className="px-4 py-2.5 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3 shrink-0 bg-white dark:bg-slate-900">
-            <div className="flex items-center gap-3 min-w-0">
-              <div
-                style={{ background: activeRoom.avatarBg }}
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-xs shadow-2xs shrink-0"
-              >
-                {activeRoom.initials}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
-                    {activeRoom.name}
-                  </h2>
-                  <span className="px-2.5 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/50 text-[#F15A24] border border-orange-200/70 dark:border-orange-800 text-[10px] font-extrabold">
-                    {activeRoom.hubCode}
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                  {activeRoom.type === 'group'
-                    ? `${activeRoom.memberIds.length} thành viên đầu mối • Đồng bộ trực tuyến 24/7`
-                    : activeRoom.description}
-                </p>
-              </div>
-            </div>
+          <button
+            type="button"
+            onClick={() => setRailNav(railNav === 'contacts' ? 'messages' : 'contacts')}
+            title="Danh bạ nhân sự AVG"
+            className="w-8 h-8 rounded-full hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-200 flex items-center justify-center transition cursor-pointer shrink-0"
+          >
+            <User className="w-4 h-4" />
+          </button>
 
-            {/* Cụm nút tiện ích góc phải Header phòng chat */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              {showMsgSearch && (
-                <div className="relative w-44 sm:w-56">
-                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={msgSearch}
-                    onChange={(e) => setMsgSearch(e.target.value)}
-                    placeholder="Tìm trong hội thoại..."
-                    autoFocus
-                    className="w-full h-8 pl-8 pr-7 text-xs bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#F15A24]"
-                  />
-                  {msgSearch && (
-                    <button
-                      onClick={() => setMsgSearch('')}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold cursor-pointer"
-                    >
-                      ✕
-                    </button>
+          <button
+            type="button"
+            onClick={() => setShowCreateGroupModal(true)}
+            title="Tạo nhóm chat mới"
+            className="w-8 h-8 rounded-full hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-200 flex items-center justify-center transition cursor-pointer shrink-0"
+          >
+            <Users className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Thanh Tab Lọc chuẩn Zalo: [ Tất cả | Chưa đọc ] + [ Phân loại ] */}
+        {railNav === 'messages' ? (
+          <>
+            <div className="px-3.5 pt-1.5 border-b border-[#E5E7EB] dark:border-slate-800 flex items-center justify-between text-xs shrink-0">
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setUnreadOnly(false)}
+                  className={`pb-2 font-bold border-b-2 transition cursor-pointer ${
+                    !unreadOnly
+                      ? 'text-[#0068FF] border-[#0068FF]'
+                      : 'text-[#7589A3] border-transparent hover:text-[#081C36] dark:hover:text-white'
+                  }`}
+                >
+                  Tất cả
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUnreadOnly(true)}
+                  className={`pb-2 font-bold border-b-2 transition cursor-pointer flex items-center gap-1 ${
+                    unreadOnly
+                      ? 'text-[#0068FF] border-[#0068FF]'
+                      : 'text-[#7589A3] border-transparent hover:text-[#081C36] dark:hover:text-white'
+                  }`}
+                >
+                  <span>Chưa đọc</span>
+                  {totalUnreadCount > 0 && (
+                    <span className="px-1.5 py-0.2 rounded-full bg-rose-100 text-rose-600 text-[10px] font-black">
+                      {totalUnreadCount}
+                    </span>
                   )}
-                </div>
-              )}
-
-              <button
-                type="button"
-                onClick={() => {
-                  setShowMsgSearch((prev) => !prev);
-                  if (showMsgSearch) setMsgSearch('');
-                }}
-                title="Tìm kiếm tin nhắn trong hội thoại"
-                className={`h-8 px-3 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
-                  showMsgSearch
-                    ? 'bg-[#F15A24] text-white'
-                    : 'bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-slate-700 dark:text-slate-200'
-                }`}
-              >
-                <Search className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Tìm tin</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowRightPanel((prev) => !prev)}
-                title={showRightPanel ? 'Ẩn cột thông tin đầu mối' : 'Hiện cột thông tin đầu mối'}
-                className="h-8 px-3 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-              >
-                {showRightPanel ? (
-                  <PanelRightClose className="w-3.5 h-3.5" />
-                ) : (
-                  <PanelRightOpen className="w-3.5 h-3.5" />
-                )}
-                <span className="hidden md:inline">Thông tin</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Thanh Ghim Tin Nhắn Quan Trọng (Nếu có) */}
-          {pinnedMessages.length > 0 && (
-            <div className="px-4 py-2 bg-orange-50/80 dark:bg-orange-950/30 border-b border-orange-200/70 dark:border-orange-900/50 flex items-center justify-between gap-2 shrink-0">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="px-2.5 py-0.5 rounded-full bg-[#F15A24] text-white text-[10px] font-extrabold inline-flex items-center gap-1 shrink-0">
-                  <Pin className="w-3 h-3" />
-                  <span>TIN GHIM ({pinnedMessages.length})</span>
-                </span>
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                  <strong>{pinnedMessages[pinnedMessages.length - 1].senderName}:</strong>{' '}
-                  {pinnedMessages[pinnedMessages.length - 1].content}
-                </span>
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() =>
-                  handleTogglePinMessage(pinnedMessages[pinnedMessages.length - 1].id)
-                }
-                className="text-[11px] font-bold text-slate-400 hover:text-rose-600 shrink-0 cursor-pointer"
-              >
-                Bỏ ghim
-              </button>
-            </div>
-          )}
 
-          {/* Danh sách Tin nhắn trong phòng */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 scrollbar-thin bg-slate-50/40 dark:bg-slate-950/40">
-            <div className="flex justify-center">
-              <span className="px-3.5 py-1 rounded-full bg-[#EEEEEE] dark:bg-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-300">
-                Hôm nay, 25/11/2026
-              </span>
-            </div>
-
-            {currentRoomMessages.length === 0 ? (
-              <div className="py-16 text-center text-slate-400 text-xs font-semibold">
-                Chưa có tin nhắn nào trong hội thoại này. Hãy gửi tin nhắn đầu tiên!
-              </div>
-            ) : (
-              currentRoomMessages.map((msg) => {
-                const isMe = Boolean(msg.isMe);
-                return (
-                  <div
-                    key={msg.id}
-                    className={`flex items-start gap-2.5 group ${
-                      isMe ? 'flex-row-reverse' : 'flex-row'
+              {/* Bộ lọc Phân loại viên thuốc góc phải */}
+              <div className="pb-1.5 flex items-center gap-1">
+                {[
+                  { id: 'all', label: 'Tất cả' },
+                  { id: 'groups', label: 'Nhóm Cụm' },
+                  { id: 'direct', label: 'Cá nhân' }
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setFilterTab(cat.id as any)}
+                    className={`px-2 py-0.5 rounded-full text-[11px] font-semibold transition cursor-pointer ${
+                      filterTab === cat.id
+                        ? 'bg-[#E5EFFF] text-[#0068FF] font-bold'
+                        : 'text-[#7589A3] hover:bg-[#EBEDF0]'
                     }`}
                   >
-                    {/* Avatar người gửi */}
-                    <div
-                      style={{ background: msg.senderAvatarBg }}
-                      className="w-8.5 h-8.5 rounded-full flex items-center justify-center text-white font-black text-[11px] shrink-0 shadow-2xs mt-0.5"
-                    >
-                      {msg.senderInitials}
-                    </div>
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-                    {/* Khối nội dung tin nhắn */}
+            {/* Danh sách Hội thoại Zalo */}
+            <div className="flex-1 overflow-y-auto divide-y divide-[#F1F2F4] dark:divide-slate-800/60 scrollbar-thin">
+              {filteredRooms.length === 0 ? (
+                <div className="py-14 text-center text-xs text-[#7589A3] font-medium px-4">
+                  Không tìm thấy cuộc trò chuyện nào phù hợp.
+                </div>
+              ) : (
+                filteredRooms.map((room) => {
+                  const isSelected = room.id === activeRoom.id;
+                  const roomMsgs = messagesByRoom[room.id] || [];
+                  const lastMsg = roomMsgs[roomMsgs.length - 1];
+                  const partner =
+                    room.type === 'direct'
+                      ? AVG_CHAT_STAFF.find((s) => s.id === room.directPartnerId)
+                      : null;
+
+                  return (
                     <div
-                      className={`max-w-[78%] sm:max-w-[70%] flex flex-col ${
-                        isMe ? 'items-end' : 'items-start'
+                      key={room.id}
+                      onClick={() => handleSelectRoom(room.id)}
+                      className={`px-3.5 py-3 flex items-center gap-3 cursor-pointer transition ${
+                        isSelected
+                          ? 'bg-[#E5EFFF] dark:bg-sky-950/50'
+                          : 'hover:bg-[#F3F5F6] dark:hover:bg-slate-800/50'
                       }`}
                     >
-                      {/* Tên người gửi + Đầu mối + Giờ */}
-                      <div
-                        className={`flex items-center gap-1.5 mb-1 px-1 ${
-                          isMe ? 'flex-row-reverse' : 'flex-row'
-                        }`}
-                      >
-                        <span className="text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                          {msg.senderName}
-                        </span>
-                        <span className="px-2 py-0.2 rounded-full bg-[#EEEEEE] dark:bg-slate-800 text-[9.5px] font-bold text-slate-600 dark:text-slate-300">
-                          {msg.senderHub}
-                        </span>
-                        <span className="text-[10px] font-semibold text-slate-400">
-                          {msg.timestamp}
-                        </span>
-                        {msg.isPinned && (
-                          <Pin className="w-3 h-3 text-[#F15A24] rotate-45" />
-                        )}
-                      </div>
-
-                      {/* Hộp bóng thoại */}
-                      <div
-                        className={`relative px-3.5 py-2.5 rounded-2xl text-xs sm:text-[13px] leading-relaxed shadow-2xs ${
-                          isMe
-                            ? 'bg-[#F15A24] text-white rounded-tr-xs'
-                            : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 rounded-tl-xs'
-                        }`}
-                      >
-                        {/* Trích dẫn tin nhắn trả lời */}
-                        {msg.replyTo && (
-                          <div
-                            className={`mb-2 px-2.5 py-1.5 rounded-xl text-[11px] border-l-2 ${
-                              isMe
-                                ? 'bg-white/15 border-l-white text-white/95'
-                                : 'bg-slate-100 dark:bg-slate-900/70 border-l-[#F15A24] text-slate-600 dark:text-slate-300'
+                      {/* Avatar tròn lớn 48px chuẩn Zalo */}
+                      <div className="relative shrink-0">
+                        <div
+                          style={{ background: room.avatarBg }}
+                          className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-sm shadow-2xs"
+                        >
+                          {room.initials}
+                        </div>
+                        {room.type === 'direct' && partner && (
+                          <span
+                            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${
+                              partner.isOnline ? 'bg-emerald-500' : 'bg-slate-400'
                             }`}
-                          >
-                            <div className="font-extrabold">{msg.replyTo.senderName}</div>
-                            <div className="truncate opacity-90">{msg.replyTo.content}</div>
-                          </div>
+                          />
                         )}
-
-                        {/* Văn bản tin nhắn */}
-                        {msg.content && (
-                          <div className="whitespace-pre-line font-medium">{msg.content}</div>
-                        )}
-
-                        {/* Danh sách tệp / thẻ Đơn hàng / Lịch trao đổi đính kèm */}
-                        {msg.attachments && msg.attachments.length > 0 && (
-                          <div className="mt-2 space-y-1.5">
-                            {msg.attachments.map((att) => (
-                              <div
-                                key={att.id}
-                                className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 ${
-                                  isMe
-                                    ? 'bg-white/20 text-white'
-                                    : att.type === 'order'
-                                      ? 'bg-sky-50 dark:bg-sky-950/50 text-[#0284C7] border border-sky-200/70'
-                                      : att.type === 'schedule'
-                                        ? 'bg-orange-50 dark:bg-orange-950/50 text-[#F15A24] border border-orange-200/70'
-                                        : 'bg-[#EEEEEE] dark:bg-slate-700 text-slate-800 dark:text-slate-100'
-                                }`}
-                              >
-                                <FileText className="w-3.5 h-3.5 shrink-0" />
-                                <span className="truncate">{att.name}</span>
-                                {att.size && (
-                                  <span className="text-[10px] opacity-75 shrink-0">
-                                    ({att.size})
-                                  </span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
+                        {room.type === 'group' && (
+                          <span className="absolute -bottom-0.5 -right-0.5 px-1.5 py-0.2 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-[9px] font-black text-[#0068FF] shadow-2xs">
+                            {room.memberIds.length}
+                          </span>
                         )}
                       </div>
 
-                      {/* Hàng biểu cảm (Reactions) & Thanh công cụ nhanh khi hover */}
-                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                        {msg.reactions &&
-                          msg.reactions.map((r) => (
-                            <button
-                              key={r.emoji}
-                              type="button"
-                              onClick={() => handleToggleReaction(msg.id, r.emoji)}
-                              className={`px-2 py-0.5 rounded-full text-[11px] font-bold inline-flex items-center gap-1 transition cursor-pointer ${
-                                r.reactedByMe
-                                  ? 'bg-orange-100 dark:bg-orange-950/70 text-[#F15A24] border border-orange-300'
-                                  : 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                      {/* Nội dung dòng Hội thoại */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1.5">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            {room.type === 'group' && (
+                              <Users className="w-3.5 h-3.5 text-[#7589A3] shrink-0" />
+                            )}
+                            <span
+                              className={`text-[13.5px] truncate ${
+                                room.unreadCount > 0 || isSelected
+                                  ? 'font-bold text-[#081C36] dark:text-white'
+                                  : 'font-semibold text-[#081C36] dark:text-slate-200'
                               }`}
                             >
-                              <span>{r.emoji}</span>
-                              <span>{r.count}</span>
-                            </button>
-                          ))}
+                              {room.name}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {room.isPinned && (
+                              <Pin className="w-3 h-3 text-[#7589A3] rotate-45" />
+                            )}
+                            <span className="text-[11px] text-[#7589A3]">
+                              {lastMsg ? lastMsg.timestamp : 'Hôm nay'}
+                            </span>
+                          </div>
+                        </div>
 
-                        {/* Cụm thao tác nhanh hiện khi di chuột */}
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                          {['👍', '❤️', '🔥', '✅'].map((emo) => (
-                            <button
-                              key={emo}
-                              type="button"
-                              onClick={() => handleToggleReaction(msg.id, emo)}
-                              className="w-6 h-6 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-xs flex items-center justify-center cursor-pointer"
-                              title={`Thả biểu cảm ${emo}`}
+                        <div className="flex items-center justify-between gap-2 mt-1">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span
+                              style={{ color: room.tagColor }}
+                              className="text-[10px] font-extrabold shrink-0"
                             >
-                              {emo}
-                            </button>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={() => setReplyingTo(msg)}
-                            className="px-2 py-0.5 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 inline-flex items-center gap-1 cursor-pointer"
-                            title="Trả lời tin nhắn"
-                          >
-                            <Reply className="w-3 h-3" />
-                            <span>Trả lời</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleTogglePinMessage(msg.id)}
-                            className="px-2 py-0.5 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-[10px] font-bold text-slate-600 dark:text-slate-300 inline-flex items-center gap-1 cursor-pointer"
-                            title={msg.isPinned ? 'Bỏ ghim' : 'Ghim tin nhắn'}
-                          >
-                            <Pin className="w-3 h-3" />
-                            <span>{msg.isPinned ? 'Bỏ ghim' : 'Ghim'}</span>
-                          </button>
-                          {isMe && (
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteMessage(msg.id)}
-                              className="p-1 rounded-full bg-[#EEEEEE] hover:bg-rose-100 text-slate-500 hover:text-rose-600 cursor-pointer"
-                              title="Thu hồi tin nhắn"
+                              [{room.hubCode}]
+                            </span>
+                            <p
+                              className={`text-xs truncate ${
+                                room.unreadCount > 0
+                                  ? 'font-bold text-[#081C36] dark:text-white'
+                                  : 'text-[#7589A3] dark:text-slate-400'
+                              }`}
                             >
-                              <Trash2 className="w-3 h-3" />
-                            </button>
+                              {lastMsg
+                                ? `${lastMsg.isMe ? 'Bạn: ' : `${lastMsg.senderName.split(' ')[0]}: `}${
+                                    lastMsg.content || '[Đính kèm tài liệu]'
+                                  }`
+                                : room.description}
+                            </p>
+                          </div>
+
+                          {room.unreadCount > 0 && (
+                            <span className="min-w-[18px] h-[18px] px-1.5 rounded-full bg-[#C81D25] text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                              {room.unreadCount}
+                            </span>
                           )}
                         </div>
                       </div>
                     </div>
+                  );
+                })
+              )}
+            </div>
+          </>
+        ) : (
+          /* CHẾ ĐỘ DANH BẠ NHÂN SỰ & NHÓM ĐẦU MỐI */
+          <div className="flex-1 overflow-y-auto divide-y divide-[#F1F2F4] dark:divide-slate-800 scrollbar-thin">
+            <div className="px-3.5 py-2 bg-[#F3F5F6] dark:bg-slate-800/70 text-[11px] font-extrabold text-[#7589A3] uppercase tracking-wider">
+              Danh bạ Nhân sự & Đầu mối ({AVG_CHAT_STAFF.length})
+            </div>
+            {AVG_CHAT_STAFF.filter((m) =>
+              sidebarSearch.trim()
+                ? m.name.toLowerCase().includes(sidebarSearch.toLowerCase()) ||
+                  m.hub.toLowerCase().includes(sidebarSearch.toLowerCase())
+                : true
+            ).map((member) => (
+              <div
+                key={member.id}
+                onClick={() => handleStartDirectChat(member)}
+                className="px-3.5 py-2.5 flex items-center justify-between gap-2.5 hover:bg-[#E5EFFF] dark:hover:bg-slate-800 cursor-pointer transition"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative shrink-0">
+                    <div
+                      style={{ background: member.avatarBg }}
+                      className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                    >
+                      {member.initials}
+                    </div>
+                    <span
+                      className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-slate-900 ${
+                        member.isOnline ? 'bg-emerald-500' : 'bg-slate-400'
+                      }`}
+                    />
                   </div>
-                );
-              })
-            )}
-            <div ref={messagesEndRef} />
+                  <div className="min-w-0">
+                    <div className="text-[13px] font-bold text-[#081C36] dark:text-white truncate">
+                      {member.name}
+                    </div>
+                    <div className="text-[11px] text-[#7589A3] truncate">
+                      {member.role}
+                    </div>
+                  </div>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full bg-[#EBEDF0] dark:bg-slate-700 text-[10px] font-extrabold text-[#081C36] dark:text-slate-200 shrink-0">
+                  {member.hub}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </aside>
+
+      {/* ========================================================================= */}
+      {/* 3. KHUNG CHAT TRUNG TÂM CHUẨN ZALO (NỀN XÁM XANH #EEF0F5 + BONG BÓNG ZALO) */}
+      {/* ========================================================================= */}
+      <main className="flex-1 min-w-0 h-full flex flex-col overflow-hidden bg-[#EEF0F5] dark:bg-slate-950">
+        {/* Header Phòng Chat chuẩn Zalo (Cao 64px, nền trắng) */}
+        <div className="h-16 px-4 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-800 flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative shrink-0">
+              <div
+                style={{ background: activeRoom.avatarBg }}
+                className="w-11 h-11 rounded-full flex items-center justify-center text-white font-black text-sm shadow-2xs"
+              >
+                {activeRoom.initials}
+              </div>
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h2 className="text-[15px] sm:text-base font-bold text-[#081C36] dark:text-white truncate">
+                  {activeRoom.name}
+                </h2>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-[#7589A3] mt-0.5">
+                {activeRoom.type === 'group' ? (
+                  <span className="inline-flex items-center gap-1 hover:text-[#0068FF] cursor-pointer">
+                    <User className="w-3.5 h-3.5" />
+                    <span>{activeRoom.memberIds.length} thành viên</span>
+                  </span>
+                ) : (
+                  <span className="text-emerald-600 font-semibold">● Đang hoạt động</span>
+                )}
+                <span>|</span>
+                <span
+                  style={{ color: activeRoom.tagColor }}
+                  className="font-bold text-[11px]"
+                >
+                  {activeRoom.hubCode}
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Khu vực Soạn thảo & Đính kèm (Hộp viên thuốc đồng bộ) */}
-          <div className="p-3 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2 shrink-0">
-            {/* Hộp chọn gắn thẻ Đơn hàng hoặc Lịch trao đổi */}
-            {showTagPicker !== 'none' && (
-              <div className="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1.5">
-                <div className="flex items-center justify-between text-[11px] font-extrabold text-slate-500">
-                  <span>
-                    {showTagPicker === 'order'
-                      ? 'CHỌN ĐƠN HÀNG ĐỂ GẮN THẺ VÀO HỘI THOẠI'
-                      : 'CHỌN LỊCH TRAO ĐỔI ĐỂ GẮN THẺ VÀO HỘI THOẠI'}
-                  </span>
+          {/* Cụm icon góc phải Header chuẩn Zalo */}
+          <div className="flex items-center gap-1 shrink-0">
+            {showMsgSearch && (
+              <div className="relative w-48 sm:w-60 mr-1">
+                <Search className="w-3.5 h-3.5 text-[#7589A3] absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={msgSearch}
+                  onChange={(e) => setMsgSearch(e.target.value)}
+                  placeholder="Tìm tin nhắn trong phòng..."
+                  autoFocus
+                  className="w-full h-8 pl-8 pr-7 text-xs bg-[#EBEDF0] dark:bg-slate-800 rounded-full focus:outline-none focus:ring-1 focus:ring-[#0068FF]"
+                />
+                {msgSearch && (
                   <button
-                    type="button"
-                    onClick={() => setShowTagPicker('none')}
-                    className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                    onClick={() => setMsgSearch('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold cursor-pointer"
                   >
                     ✕
                   </button>
+                )}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setShowCreateGroupModal(true)}
+              title="Thêm thành viên / Tạo nhóm"
+              className="w-9 h-9 rounded-lg hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-200 flex items-center justify-center transition cursor-pointer"
+            >
+              <UserPlus className="w-4.5 h-4.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setShowMsgSearch((prev) => !prev);
+                if (showMsgSearch) setMsgSearch('');
+              }}
+              title="Tìm kiếm tin nhắn"
+              className={`w-9 h-9 rounded-lg flex items-center justify-center transition cursor-pointer ${
+                showMsgSearch
+                  ? 'bg-[#E5EFFF] text-[#0068FF]'
+                  : 'hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-200'
+              }`}
+            >
+              <Search className="w-4.5 h-4.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => showToast(`Đang kết nối cuộc gọi Video với ${activeRoom.name}...`)}
+              title="Cuộc gọi video"
+              className="w-9 h-9 rounded-lg hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-200 flex items-center justify-center transition cursor-pointer"
+            >
+              <Video className="w-4.5 h-4.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowRightPanel((prev) => !prev)}
+              title="Thông tin hội thoại"
+              className={`w-9 h-9 rounded-lg flex items-center justify-center transition cursor-pointer ${
+                showRightPanel
+                  ? 'bg-[#E5EFFF] text-[#0068FF]'
+                  : 'hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-200'
+              }`}
+            >
+              {showRightPanel ? (
+                <PanelRightClose className="w-4.5 h-4.5" />
+              ) : (
+                <PanelRightOpen className="w-4.5 h-4.5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Thanh Tin Nhắn Đã Ghim Chuẩn Zalo (Nền trắng nằm sát dưới Header) */}
+        {pinnedMessages.length > 0 && (
+          <div className="px-4 py-2 bg-white dark:bg-slate-900 border-b border-[#E5E7EB] dark:border-slate-800 flex items-center justify-between gap-3 shrink-0 shadow-2xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-7 h-7 rounded-full bg-[#E5EFFF] text-[#0068FF] flex items-center justify-center shrink-0">
+                <MessageSquare className="w-3.5 h-3.5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[11px] font-bold text-[#0068FF]">
+                  Tin nhắn đã ghim ({pinnedMessages.length})
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {(showTagPicker === 'order' ? QUICK_ORDER_TAGS : QUICK_SCHEDULE_TAGS).map(
-                    (item) => (
+                <div className="text-xs text-[#081C36] dark:text-slate-200 truncate">
+                  <strong>{pinnedMessages[pinnedMessages.length - 1].senderName}:</strong>{' '}
+                  {pinnedMessages[pinnedMessages.length - 1].content}
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() =>
+                handleTogglePinMessage(pinnedMessages[pinnedMessages.length - 1].id)
+              }
+              className="px-2.5 py-1 rounded-full bg-[#EBEDF0] hover:bg-slate-200 dark:bg-slate-800 text-[11px] font-semibold text-[#081C36] dark:text-slate-300 shrink-0 cursor-pointer"
+            >
+              Bỏ ghim
+            </button>
+          </div>
+        )}
+
+        {/* Vùng hiển thị tin nhắn Zalo (Canvas #EEF0F5) */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-thin">
+          {/* Nhãn ngày tháng kiểu Zalo */}
+          <div className="flex justify-center my-1">
+            <span className="px-3.5 py-0.5 rounded-full bg-[#B6BEC9]/80 dark:bg-slate-800 text-white text-[11px] font-semibold">
+              Hôm nay, 25/11/2026
+            </span>
+          </div>
+
+          {currentRoomMessages.length === 0 ? (
+            <div className="py-16 text-center text-[#7589A3] text-xs font-semibold">
+              Chưa có tin nhắn nào. Hãy gửi lời chào hoặc tài liệu trao đổi!
+            </div>
+          ) : (
+            currentRoomMessages.map((msg, idx) => {
+              const isMe = Boolean(msg.isMe);
+              const isLastMe = isMe && idx === currentRoomMessages.length - 1;
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex items-start gap-2.5 group ${
+                    isMe ? 'flex-row-reverse' : 'flex-row'
+                  }`}
+                >
+                  {/* Avatar người gửi (Chỉ hiển thị bên trái cho người khác như Zalo) */}
+                  {!isMe && (
+                    <div
+                      style={{ background: msg.senderAvatarBg }}
+                      className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-2xs mt-0.5"
+                    >
+                      {msg.senderInitials}
+                    </div>
+                  )}
+
+                  {/* Hộp bong bóng tin nhắn chuẩn Zalo */}
+                  <div
+                    className={`max-w-[75%] sm:max-w-[65%] flex flex-col ${
+                      isMe ? 'items-end' : 'items-start'
+                    }`}
+                  >
+                    <div
+                      className={`relative px-3.5 py-2.5 rounded-xl text-[13.5px] leading-relaxed shadow-[0_1px_2px_rgba(0,0,0,0.08)] ${
+                        isMe
+                          ? 'bg-[#E5EFFF] dark:bg-sky-900/80 text-[#081C36] dark:text-white border border-[#C7E0FF] dark:border-sky-700'
+                          : 'bg-white dark:bg-slate-800 text-[#081C36] dark:text-slate-100 border border-black/5 dark:border-slate-700'
+                      }`}
+                    >
+                      {/* Tên người gửi + Đầu mối nằm bên trong đầu bong bóng (chuẩn nhóm Zalo) */}
+                      {!isMe && (
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-xs font-bold text-[#7589A3] dark:text-slate-300">
+                            {msg.senderName}
+                          </span>
+                          <span className="px-1.5 py-0.1 rounded bg-[#F3F5F6] dark:bg-slate-700 text-[9.5px] font-extrabold text-[#0068FF] dark:text-sky-300">
+                            {msg.senderHub}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Khối trích dẫn tin nhắn trả lời (Thanh dọc xanh #0068FF chuẩn Zalo) */}
+                      {msg.replyTo && (
+                        <div className="mb-2 pl-2.5 pr-2 py-1 rounded bg-black/5 dark:bg-slate-900/60 border-l-[3px] border-l-[#0068FF] text-xs">
+                          <div className="font-bold text-[#081C36] dark:text-white">
+                            {msg.replyTo.senderName}
+                          </div>
+                          <div className="truncate text-[#7589A3] dark:text-slate-300">
+                            {msg.replyTo.content}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Nội dung chữ */}
+                      {msg.content && (
+                        <div className="whitespace-pre-line break-words">{msg.content}</div>
+                      )}
+
+                      {/* Thẻ Đính kèm Tệp / Đơn hàng / Lịch họp */}
+                      {msg.attachments && msg.attachments.length > 0 && (
+                        <div className="mt-2 space-y-1.5">
+                          {msg.attachments.map((att) => (
+                            <div
+                              key={att.id}
+                              className="p-2.5 rounded-xl bg-[#F3F5F6] dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-700 flex items-center gap-2.5"
+                            >
+                              <div
+                                className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-white font-black text-xs ${
+                                  att.type === 'order'
+                                    ? 'bg-[#0068FF]'
+                                    : att.type === 'schedule'
+                                      ? 'bg-[#F15A24]'
+                                      : 'bg-emerald-600'
+                                }`}
+                              >
+                                <FileText className="w-4.5 h-4.5" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="text-xs font-bold text-[#081C36] dark:text-white truncate">
+                                  {att.name}
+                                </div>
+                                <div className="text-[11px] text-[#7589A3] truncate">
+                                  {att.subText || att.size || 'Tài liệu nội bộ AVG ONE'}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Thời gian gửi nằm gọn góc dưới bên trong bong bóng chuẩn Zalo */}
+                      <div className="mt-1 flex items-center justify-end gap-1.5 text-[10.5px] text-[#7589A3]">
+                        {msg.isPinned && (
+                          <Pin className="w-3 h-3 text-[#F15A24] rotate-45" />
+                        )}
+                        <span>{msg.timestamp}</span>
+                      </div>
+                    </div>
+
+                    {/* Huy hiệu Biểu cảm (Reactions) & Thanh thao tác nhanh Zalo */}
+                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                      {msg.reactions &&
+                        msg.reactions.map((r) => (
+                          <button
+                            key={r.emoji}
+                            type="button"
+                            onClick={() => handleToggleReaction(msg.id, r.emoji)}
+                            className={`px-2 py-0.5 rounded-full text-[11px] font-bold inline-flex items-center gap-1 shadow-2xs transition cursor-pointer ${
+                              r.reactedByMe
+                                ? 'bg-white text-[#0068FF] border border-[#0068FF]/40'
+                                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200'
+                            }`}
+                          >
+                            <span>{r.emoji}</span>
+                            <span>{r.count}</span>
+                          </button>
+                        ))}
+
+                      {/* Thanh công cụ hiện khi hover vào tin nhắn */}
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 bg-white dark:bg-slate-800 px-2 py-0.5 rounded-full shadow-xs border border-slate-200 dark:border-slate-700">
+                        {['👍', '❤️', '🔥', '✅'].map((emo) => (
+                          <button
+                            key={emo}
+                            type="button"
+                            onClick={() => handleToggleReaction(msg.id, emo)}
+                            className="w-5.5 h-5.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-xs flex items-center justify-center cursor-pointer"
+                            title={`Thả biểu cảm ${emo}`}
+                          >
+                            {emo}
+                          </button>
+                        ))}
+                        <span className="text-slate-300">|</span>
+                        <button
+                          type="button"
+                          onClick={() => setReplyingTo(msg)}
+                          className="p-1 text-[#7589A3] hover:text-[#0068FF] cursor-pointer"
+                          title="Trả lời"
+                        >
+                          <Reply className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePinMessage(msg.id)}
+                          className="p-1 text-[#7589A3] hover:text-[#F15A24] cursor-pointer"
+                          title={msg.isPinned ? 'Bỏ ghim' : 'Ghim tin nhắn'}
+                        >
+                          <Pin className="w-3.5 h-3.5" />
+                        </button>
+                        {isMe && (
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMessage(msg.id)}
+                            className="p-1 text-[#7589A3] hover:text-rose-600 cursor-pointer"
+                            title="Thu hồi"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Nhãn "Đã nhận / Đã xem" dưới tin nhắn cuối cùng giống Zalo */}
+                    {isLastMe && (
+                      <div className="mt-0.5 px-2 py-0.2 rounded-full bg-[#B6BEC9]/70 text-white text-[10px] font-semibold inline-flex items-center gap-1">
+                        <CheckCheck className="w-3 h-3" />
+                        <span>Đã xem</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* ========================================================================= */}
+        {/* KHUNG SOẠN THẢO 2 TẦNG CHUẨN ZALO PC (THANH ICON TRÊN + Ô NHẬP DƯỚI) */}
+        {/* ========================================================================= */}
+        <div className="bg-white dark:bg-slate-900 border-t border-[#E5E7EB] dark:border-slate-800 shrink-0">
+          {/* Hộp chọn nhanh Đơn hàng / Lịch trao đổi / Danh thiếp */}
+          {showTagPicker !== 'none' && (
+            <div className="px-4 py-2.5 bg-[#F3F5F6] dark:bg-slate-800 border-b border-[#E5E7EB] dark:border-slate-700 space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] font-extrabold text-[#7589A3]">
+                <span>
+                  {showTagPicker === 'order'
+                    ? 'CHỌN ĐƠN HÀNG (#DH) ĐỂ GỬI VÀO PHÒNG CHAT'
+                    : showTagPicker === 'schedule'
+                      ? 'CHỌN LỊCH TRAO ĐỔI ĐỂ NHẮC HẸN VÀO PHÒNG CHAT'
+                      : 'CHỌN DANH THIẾP NHÂN SỰ ĐỂ CHIA SẺ'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowTagPicker('none')}
+                  className="text-slate-400 hover:text-slate-600 font-bold cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {showTagPicker === 'contact'
+                  ? AVG_CHAT_STAFF.slice(0, 6).map((st) => (
                       <button
-                        key={item.code}
+                        key={st.id}
                         type="button"
                         onClick={() => {
                           setPendingAttachments((prev) => [
                             ...prev,
                             {
-                              id: `tag-${Date.now()}-${item.code}`,
-                              name: item.name,
-                              type: showTagPicker === 'order' ? 'order' : 'schedule',
-                              code: item.code
+                              id: `card-${Date.now()}-${st.id}`,
+                              name: `Danh thiếp: ${st.name} (${st.hub})`,
+                              type: 'contact',
+                              subText: `${st.role} • SĐT: ${st.phone || '0901 888 222'}`
                             }
                           ]);
                           setShowTagPicker('none');
                         }}
-                        className="px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#F15A24] text-xs font-semibold text-slate-700 dark:text-slate-200 transition cursor-pointer"
+                        className="px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#0068FF] text-xs font-semibold text-[#081C36] dark:text-slate-200 transition cursor-pointer"
                       >
-                        {item.name}
+                        {st.name} ({st.hub})
                       </button>
-                    )
-                  )}
-                </div>
+                    ))
+                  : (showTagPicker === 'order' ? QUICK_ORDER_TAGS : QUICK_SCHEDULE_TAGS).map(
+                      (item) => (
+                        <button
+                          key={item.code}
+                          type="button"
+                          onClick={() => {
+                            setPendingAttachments((prev) => [
+                              ...prev,
+                              {
+                                id: `tag-${Date.now()}-${item.code}`,
+                                name: item.name,
+                                type: showTagPicker === 'order' ? 'order' : 'schedule',
+                                code: item.code,
+                                subText: item.subText
+                              }
+                            ]);
+                            setShowTagPicker('none');
+                          }}
+                          className="px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-[#0068FF] text-xs font-semibold text-[#081C36] dark:text-slate-200 transition cursor-pointer"
+                        >
+                          {item.name}
+                        </button>
+                      )
+                    )}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Thanh hiển thị tin đang trả lời hoặc tệp đính kèm chờ gửi */}
-            {(replyingTo || pendingAttachments.length > 0) && (
-              <div className="flex flex-wrap items-center gap-2 px-2">
-                {replyingTo && (
-                  <div className="px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/50 border border-orange-200 text-xs flex items-center gap-2">
-                    <Reply className="w-3.5 h-3.5 text-[#F15A24]" />
-                    <span className="truncate max-w-[260px]">
-                      Trả lời <strong>{replyingTo.senderName}</strong>: {replyingTo.content}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setReplyingTo(null)}
-                      className="text-slate-400 hover:text-rose-600 font-bold cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )}
+          {/* Tầng 1: Thanh công cụ Icon chuẩn Zalo (Hình ảnh, Đính kèm File, Danh thiếp, Nhắc hẹn Lịch, Giao việc Đơn hàng) */}
+          <div className="h-10 px-3 border-b border-[#F1F2F4] dark:border-slate-800 flex items-center gap-1 overflow-x-auto no-scrollbar">
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              className="hidden"
+              onChange={handleFileUpload}
+            />
 
-                {pendingAttachments.map((att) => (
-                  <div
-                    key={att.id}
-                    className="px-3 py-1 rounded-full bg-[#EEEEEE] dark:bg-slate-800 text-xs font-bold flex items-center gap-1.5"
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              title="Gửi Hình ảnh"
+              className="p-2 rounded-lg hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-300 transition cursor-pointer"
+            >
+              <ImageIcon className="w-4.5 h-4.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              title="Đính kèm File tài liệu"
+              className="p-2 rounded-lg hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-300 transition cursor-pointer"
+            >
+              <Paperclip className="w-4.5 h-4.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setShowTagPicker((prev) => (prev === 'contact' ? 'none' : 'contact'))
+              }
+              title="Gửi Danh thiếp nhân sự"
+              className={`p-2 rounded-lg transition cursor-pointer ${
+                showTagPicker === 'contact'
+                  ? 'bg-[#E5EFFF] text-[#0068FF]'
+                  : 'hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-300'
+              }`}
+            >
+              <Contact className="w-4.5 h-4.5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setShowTagPicker((prev) => (prev === 'schedule' ? 'none' : 'schedule'))
+              }
+              title="Đính kèm Lịch trao đổi / Nhắc hẹn"
+              className={`p-2 rounded-lg transition cursor-pointer flex items-center gap-1 text-xs font-semibold ${
+                showTagPicker === 'schedule'
+                  ? 'bg-[#E5EFFF] text-[#0068FF]'
+                  : 'hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-300'
+              }`}
+            >
+              <Calendar className="w-4.5 h-4.5" />
+              <span className="hidden sm:inline text-[11px]">Lịch họp</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setShowTagPicker((prev) => (prev === 'order' ? 'none' : 'order'))
+              }
+              title="Giao việc / Gắn thẻ Đơn hàng (#DH)"
+              className={`p-2 rounded-lg transition cursor-pointer flex items-center gap-1 text-xs font-semibold ${
+                showTagPicker === 'order'
+                  ? 'bg-[#E5EFFF] text-[#0068FF]'
+                  : 'hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#081C36] dark:text-slate-300'
+              }`}
+            >
+              <CheckSquare className="w-4.5 h-4.5" />
+              <span className="hidden sm:inline text-[11px]">Giao việc / #DH</span>
+            </button>
+          </div>
+
+          {/* Hiển thị tin nhắn đang trả lời hoặc tệp chờ gửi */}
+          {(replyingTo || pendingAttachments.length > 0) && (
+            <div className="px-3.5 pt-2 flex flex-wrap items-center gap-2">
+              {replyingTo && (
+                <div className="px-3 py-1 rounded-lg bg-[#F3F5F6] dark:bg-slate-800 border-l-[3px] border-l-[#0068FF] text-xs flex items-center gap-2">
+                  <Reply className="w-3.5 h-3.5 text-[#0068FF]" />
+                  <span className="truncate max-w-[280px]">
+                    Trả lời <strong>{replyingTo.senderName}</strong>: {replyingTo.content}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setReplyingTo(null)}
+                    className="text-slate-400 hover:text-rose-600 font-bold cursor-pointer"
                   >
-                    <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
-                    <span className="truncate max-w-[220px]">{att.name}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setPendingAttachments((prev) => prev.filter((a) => a.id !== att.id))
-                      }
-                      className="text-slate-400 hover:text-rose-600 font-bold cursor-pointer ml-1"
-                    >
-                      ✕
-                    </button>
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {pendingAttachments.map((att) => (
+                <div
+                  key={att.id}
+                  className="px-3 py-1 rounded-full bg-[#E5EFFF] text-[#0068FF] text-xs font-bold flex items-center gap-1.5"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span className="truncate max-w-[220px]">{att.name}</span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPendingAttachments((prev) => prev.filter((a) => a.id !== att.id))
+                    }
+                    className="hover:text-rose-600 font-bold cursor-pointer ml-1"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tầng 2: Ô nhập tin nhắn & Nút GỬI / 👍 chuẩn Zalo */}
+          <form
+            onSubmit={handleSendMessage}
+            className="px-3.5 py-2.5 flex items-center gap-2"
+          >
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder={`Nhập @, tin nhắn tới ${activeRoom.name}...`}
+              className="flex-1 h-9 px-2 text-[13.5px] bg-transparent text-[#081C36] dark:text-white placeholder-[#7589A3] focus:outline-none"
+            />
+
+            {inputText.trim() || pendingAttachments.length > 0 ? (
+              <button
+                type="submit"
+                className="h-8.5 px-4 rounded-full bg-[#0068FF] hover:bg-[#0052CC] text-white font-bold text-xs uppercase tracking-wide transition cursor-pointer shrink-0"
+              >
+                GỬI
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSendQuickLike}
+                title="Gửi nhanh 👍"
+                className="w-9 h-9 rounded-full hover:bg-[#EBEDF0] dark:hover:bg-slate-800 text-[#0068FF] flex items-center justify-center transition cursor-pointer shrink-0"
+              >
+                <ThumbsUp className="w-5 h-5" />
+              </button>
+            )}
+          </form>
+        </div>
+      </main>
+
+      {/* ========================================================================= */}
+      {/* 4. CỘT THÔNG TIN HỘI THOẠI BÊN PHẢI CHUẨN ZALO PC (CÁC KHỐI THU GỌN) */}
+      {/* ========================================================================= */}
+      {showRightPanel && (
+        <aside className="hidden xl:flex w-[320px] shrink-0 h-full bg-white dark:bg-slate-900 border-l border-[#E5E7EB] dark:border-slate-800 flex-col overflow-y-auto scrollbar-thin">
+          {/* Header cột phải */}
+          <div className="h-16 px-4 border-b border-[#E5E7EB] dark:border-slate-800 flex items-center justify-center shrink-0">
+            <h3 className="text-[15px] font-bold text-[#081C36] dark:text-white">
+              Thông tin hội thoại
+            </h3>
+          </div>
+
+          {/* Khối Avatar + Tên + 4 nút tròn nhanh chuẩn Zalo */}
+          <div className="p-4 border-b-[6px] border-[#EEF0F5] dark:border-slate-950 flex flex-col items-center text-center">
+            <div
+              style={{ background: activeRoom.avatarBg }}
+              className="w-14 h-14 rounded-full flex items-center justify-center text-white font-black text-base shadow-xs mb-2"
+            >
+              {activeRoom.initials}
+            </div>
+            <h4 className="text-sm font-bold text-[#081C36] dark:text-white leading-snug px-2">
+              {activeRoom.name}
+            </h4>
+            <span
+              style={{ color: activeRoom.tagColor }}
+              className="text-[11px] font-extrabold mt-0.5"
+            >
+              {activeRoom.hubCode}
+            </span>
+
+            {/* 4 Nút tròn thao tác nhanh bên dưới tên phòng giống hệt Zalo */}
+            <div className="grid grid-cols-4 gap-2 w-full mt-4">
+              <button
+                type="button"
+                onClick={() => showToast('Đã cập nhật cài đặt thông báo')}
+                className="flex flex-col items-center gap-1 group cursor-pointer"
+              >
+                <div className="w-8.5 h-8.5 rounded-full bg-[#EBEDF0] dark:bg-slate-800 group-hover:bg-[#E5EFFF] group-hover:text-[#0068FF] flex items-center justify-center transition">
+                  <Bell className="w-4 h-4" />
+                </div>
+                <span className="text-[10.5px] text-[#7589A3] leading-tight">
+                  Tắt thông báo
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleTogglePinRoom(activeRoom.id)}
+                className="flex flex-col items-center gap-1 group cursor-pointer"
+              >
+                <div
+                  className={`w-8.5 h-8.5 rounded-full flex items-center justify-center transition ${
+                    activeRoom.isPinned
+                      ? 'bg-[#E5EFFF] text-[#0068FF]'
+                      : 'bg-[#EBEDF0] dark:bg-slate-800 group-hover:bg-[#E5EFFF] group-hover:text-[#0068FF]'
+                  }`}
+                >
+                  <Pin className="w-4 h-4" />
+                </div>
+                <span className="text-[10.5px] text-[#7589A3] leading-tight">
+                  {activeRoom.isPinned ? 'Đã ghim' : 'Ghim hội thoại'}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowCreateGroupModal(true)}
+                className="flex flex-col items-center gap-1 group cursor-pointer"
+              >
+                <div className="w-8.5 h-8.5 rounded-full bg-[#EBEDF0] dark:bg-slate-800 group-hover:bg-[#E5EFFF] group-hover:text-[#0068FF] flex items-center justify-center transition">
+                  <UserPlus className="w-4 h-4" />
+                </div>
+                <span className="text-[10.5px] text-[#7589A3] leading-tight">
+                  Thêm thành viên
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowMsgSearch(true)}
+                className="flex flex-col items-center gap-1 group cursor-pointer"
+              >
+                <div className="w-8.5 h-8.5 rounded-full bg-[#EBEDF0] dark:bg-slate-800 group-hover:bg-[#E5EFFF] group-hover:text-[#0068FF] flex items-center justify-center transition">
+                  <Search className="w-4 h-4" />
+                </div>
+                <span className="text-[10.5px] text-[#7589A3] leading-tight">
+                  Tìm tin nhắn
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* KHỐI 1: Thành viên nhóm */}
+          <div className="border-b-[6px] border-[#EEF0F5] dark:border-slate-950">
+            <button
+              type="button"
+              onClick={() =>
+                setOpenRightSections((p) => ({ ...p, members: !p.members }))
+              }
+              className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-[#081C36] dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+            >
+              <span>Thành viên ({roomMembers.length})</span>
+              {openRightSections.members ? (
+                <ChevronDown className="w-4 h-4 text-[#7589A3]" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-[#7589A3]" />
+              )}
+            </button>
+            {openRightSections.members && (
+              <div className="px-3 pb-3 space-y-1 max-h-52 overflow-y-auto scrollbar-thin">
+                {roomMembers.map((m) => (
+                  <div
+                    key={m.id}
+                    onClick={() => handleStartDirectChat(m)}
+                    title="Click để nhắn tin riêng 1-1"
+                    className="p-1.5 rounded-lg hover:bg-[#F3F5F6] dark:hover:bg-slate-800 flex items-center justify-between gap-2 cursor-pointer transition"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="relative shrink-0">
+                        <div
+                          style={{ background: m.avatarBg }}
+                          className="w-7.5 h-7.5 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
+                        >
+                          {m.initials}
+                        </div>
+                        <span
+                          className={`absolute bottom-0 right-0 w-2 h-2 rounded-full border border-white dark:border-slate-900 ${
+                            m.isOnline ? 'bg-emerald-500' : 'bg-slate-400'
+                          }`}
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-semibold text-[#081C36] dark:text-slate-100 truncate">
+                          {m.name}
+                        </div>
+                        <div className="text-[10px] text-[#7589A3] truncate">
+                          {m.role}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full bg-[#EBEDF0] dark:bg-slate-800 text-[9px] font-bold text-[#081C36] dark:text-slate-300 shrink-0">
+                      {m.hub}
+                    </span>
                   </div>
                 ))}
               </div>
             )}
-
-            {/* Cụm nút công cụ đính kèm nhanh dạng hộp viên thuốc */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={handleFileUpload}
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-1 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5 transition cursor-pointer"
-              >
-                <Paperclip className="w-3.5 h-3.5 text-slate-500" />
-                <span>Đính kèm tệp / Ảnh</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowTagPicker((prev) => (prev === 'order' ? 'none' : 'order'))
-                }
-                className={`px-3 py-1 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer ${
-                  showTagPicker === 'order'
-                    ? 'bg-[#0284C7] text-white'
-                    : 'bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-slate-700 dark:text-slate-200'
-                }`}
-              >
-                <Hash className="w-3.5 h-3.5" />
-                <span>Gắn thẻ Đơn hàng (#DH)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowTagPicker((prev) => (prev === 'schedule' ? 'none' : 'schedule'))
-                }
-                className={`px-3 py-1 rounded-full text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer ${
-                  showTagPicker === 'schedule'
-                    ? 'bg-[#F15A24] text-white'
-                    : 'bg-[#EEEEEE] hover:bg-[#E4E6EB] dark:bg-slate-800 text-slate-700 dark:text-slate-200'
-                }`}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Gắn thẻ Lịch trao đổi</span>
-              </button>
-            </div>
-
-            {/* Ô nhập tin nhắn viên thuốc & Nút Gửi */}
-            <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder={`Nhập nội dung trao đổi tới ${activeRoom.name}...`}
-                className="flex-1 h-10 px-4 text-xs sm:text-[13px] bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 rounded-full border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#F15A24] font-medium transition"
-              />
-              <button
-                type="submit"
-                className="h-10 px-5 rounded-full bg-[#F15A24] hover:bg-[#D9460F] text-white font-bold text-xs sm:text-[13px] inline-flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer shrink-0 active:scale-95"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>Gửi</span>
-              </button>
-            </form>
           </div>
-        </main>
 
-        {/* ========================================================================= */}
-        {/* CỘT 3 (PHẢI): THÔNG TIN ĐẦU MỐI, THÀNH VIÊN & TÀI LIỆU ĐÃ CHIA SẺ */}
-        {/* ========================================================================= */}
-        {showRightPanel && (
-          <aside className="hidden xl:flex w-76 shrink-0 h-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 flex-col justify-between overflow-y-auto scrollbar-thin shadow-xs space-y-3">
-            <div className="space-y-3.5">
-              {/* Tóm tắt Đầu mối / Phòng họp */}
-              <div className="text-center pb-3 border-b border-slate-200/80 dark:border-slate-800 space-y-1.5">
+          {/* KHỐI 2: Bảng tin nhóm (Ghi chú, ghim, nhắc hẹn) */}
+          <div className="border-b-[6px] border-[#EEF0F5] dark:border-slate-950">
+            <button
+              type="button"
+              onClick={() =>
+                setOpenRightSections((p) => ({ ...p, board: !p.board }))
+              }
+              className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-[#081C36] dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+            >
+              <span>Bảng tin nhóm</span>
+              {openRightSections.board ? (
+                <ChevronDown className="w-4 h-4 text-[#7589A3]" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-[#7589A3]" />
+              )}
+            </button>
+            {openRightSections.board && (
+              <div className="px-4 pb-3 space-y-2 text-xs text-[#081C36] dark:text-slate-200">
                 <div
-                  style={{ background: activeRoom.avatarBg }}
-                  className="w-14 h-14 rounded-full mx-auto flex items-center justify-center text-white font-black text-base shadow-sm"
+                  onClick={() => setShowTagPicker('schedule')}
+                  className="flex items-center gap-2.5 py-1.5 hover:text-[#0068FF] cursor-pointer"
                 >
-                  {activeRoom.initials}
+                  <Calendar className="w-4 h-4 text-[#F15A24]" />
+                  <span>Danh sách nhắc hẹn & Lịch họp</span>
                 </div>
-                <h3 className="text-sm font-black text-slate-900 dark:text-white leading-snug">
-                  {activeRoom.name}
-                </h3>
-                <span className="inline-block px-3 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/50 text-[#F15A24] text-[10px] font-extrabold border border-orange-200/60">
-                  {activeRoom.hubCode}
-                </span>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
-                  {activeRoom.description}
-                </p>
-              </div>
-
-              {/* Thành viên tham gia */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                    Thành viên ({roomMembers.length})
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-600">
-                    {roomMembers.filter((m) => m.isOnline).length} trực tuyến
-                  </span>
-                </div>
-
-                <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5 scrollbar-thin">
-                  {roomMembers.map((m) => (
-                    <div
-                      key={m.id}
-                      onClick={() => handleStartDirectChat(m)}
-                      title="Click để nhắn tin riêng 1-1"
-                      className="p-2 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 hover:bg-orange-50/60 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2 cursor-pointer transition"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="relative shrink-0">
-                          <div
-                            style={{ background: m.avatarBg }}
-                            className="w-7.5 h-7.5 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
-                          >
-                            {m.initials}
-                          </div>
-                          <span
-                            className={`absolute bottom-0 right-0 w-2 h-2 rounded-full border border-white dark:border-slate-900 ${
-                              m.isOnline ? 'bg-emerald-500' : 'bg-slate-400'
-                            }`}
-                          />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-xs font-extrabold text-slate-800 dark:text-slate-100 truncate">
-                            {m.name}
-                          </div>
-                          <div className="text-[10px] text-slate-400 truncate">
-                            {m.role}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-[#EEEEEE] dark:bg-slate-700 text-[9px] font-extrabold text-slate-600 dark:text-slate-300 shrink-0">
-                        {m.hub}
-                      </span>
-                    </div>
-                  ))}
+                <div
+                  onClick={() => setShowTagPicker('order')}
+                  className="flex items-center gap-2.5 py-1.5 hover:text-[#0068FF] cursor-pointer"
+                >
+                  <CheckSquare className="w-4 h-4 text-[#0068FF]" />
+                  <span>Ghi chú, ghim, giao việc (#DH)</span>
                 </div>
               </div>
+            )}
+          </div>
 
-              {/* Tài liệu, Đơn hàng & Lịch đã chia sẻ */}
-              <div className="space-y-2 pt-2 border-t border-slate-200/80 dark:border-slate-800">
-                <div className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                  Tài liệu & Thẻ đính kèm ({sharedAttachments.length})
-                </div>
+          {/* KHỐI 3: File, Đơn hàng & Lịch đã chia sẻ */}
+          <div className="border-b-[6px] border-[#EEF0F5] dark:border-slate-950">
+            <button
+              type="button"
+              onClick={() =>
+                setOpenRightSections((p) => ({ ...p, files: !p.files }))
+              }
+              className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-[#081C36] dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+            >
+              <span>File & Thẻ công việc ({sharedAttachments.length})</span>
+              {openRightSections.files ? (
+                <ChevronDown className="w-4 h-4 text-[#7589A3]" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-[#7589A3]" />
+              )}
+            </button>
+            {openRightSections.files && (
+              <div className="px-4 pb-3 space-y-2">
                 {sharedAttachments.length === 0 ? (
-                  <div className="text-[11px] text-slate-400 italic">
-                    Chưa có tệp hoặc thẻ đính kèm nào.
+                  <div className="text-xs text-[#7589A3] py-2 text-center">
+                    Chưa có File nào được chia sẻ
                   </div>
                 ) : (
-                  <div className="space-y-1.5">
-                    {sharedAttachments.map((att) => (
-                      <div
-                        key={att.id}
-                        className="px-3 py-1.5 rounded-full bg-[#EEEEEE] dark:bg-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2"
-                      >
-                        <FileText className="w-3.5 h-3.5 text-[#F15A24] shrink-0" />
-                        <span className="truncate">{att.name}</span>
+                  sharedAttachments.map((att) => (
+                    <div
+                      key={att.id}
+                      className="p-2 rounded-lg bg-[#F3F5F6] dark:bg-slate-800 flex items-center gap-2.5"
+                    >
+                      <div className="w-8 h-8 rounded bg-[#0068FF]/10 text-[#0068FF] flex items-center justify-center shrink-0">
+                        <FileText className="w-4 h-4" />
                       </div>
-                    ))}
-                  </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-semibold text-[#081C36] dark:text-white truncate">
+                          {att.name}
+                        </div>
+                        <div className="text-[10px] text-[#7589A3] truncate">
+                          {att.subText || att.size || 'Đã đồng bộ 24/7'}
+                        </div>
+                      </div>
+                    </div>
+                  ))
                 )}
               </div>
-            </div>
+            )}
+          </div>
 
-            {/* Hộp Đầu mối Hỗ trợ Trực tuyến */}
-            <div className="bg-slate-50/90 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 p-3 rounded-2xl space-y-1.5 text-[11px] shrink-0">
-              <div className="text-[10px] font-black uppercase tracking-wider text-[#F15A24]">
-                Đầu Mối Điều Phối Chat 24/7
+          {/* KHỐI 4: Link nội bộ */}
+          <div>
+            <button
+              type="button"
+              onClick={() =>
+                setOpenRightSections((p) => ({ ...p, links: !p.links }))
+              }
+              className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-[#081C36] dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
+            >
+              <span>Link hệ thống</span>
+              {openRightSections.links ? (
+                <ChevronDown className="w-4 h-4 text-[#7589A3]" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-[#7589A3]" />
+              )}
+            </button>
+            {openRightSections.links && (
+              <div className="px-4 pb-4 space-y-2 text-xs">
+                <a
+                  href="https://docs.google.com/spreadsheets/d/1Convert/edit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-[#F3F5F6] dark:bg-slate-800 flex items-center gap-2.5 hover:text-[#0068FF]"
+                >
+                  <Link2 className="w-4 h-4 text-[#0068FF] shrink-0" />
+                  <div className="truncate">
+                    <div className="font-semibold truncate">Google Sheet Lịch Trao Đổi 24/7</div>
+                    <div className="text-[10px] text-[#7589A3]">docs.google.com</div>
+                  </div>
+                </a>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Thư ký tổng:</span>
-                <strong className="font-extrabold text-slate-900 dark:text-white">
-                  #K2B (Bà Trang)
-                </strong>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Điều hành:</span>
-                <strong className="font-extrabold text-slate-900 dark:text-white">
-                  Ông Trịnh / Kiên
-                </strong>
-              </div>
-            </div>
-          </aside>
-        )}
-      </div>
+            )}
+          </div>
+        </aside>
+      )}
 
-      {/* MODAL: TẠO NHÓM CHAT CỤM / ĐẦU MỐI MỚI */}
+      {/* MODAL: TẠO NHÓM CHAT MỚI CHUẨN ZALO */}
       {showCreateGroupModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 w-full max-w-md space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
-              <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white uppercase">
-                Tạo Nhóm Chat Nội Bộ Mới
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 w-full max-w-md space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+              <h3 className="text-base font-bold text-[#081C36] dark:text-white">
+                Tạo nhóm mới
               </h3>
               <button
                 type="button"
                 onClick={() => setShowCreateGroupModal(false)}
-                className="w-7 h-7 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] flex items-center justify-center text-slate-600 text-xs font-bold cursor-pointer"
+                className="w-7 h-7 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500 text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateGroup} className="space-y-3 text-xs">
+            <form onSubmit={handleCreateGroup} className="space-y-3.5 text-xs">
               <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300 block">
-                  Tên nhóm trao đổi *
+                <label className="font-bold text-[#081C36] dark:text-slate-300 block">
+                  Tên nhóm *
                 </label>
                 <input
                   type="text"
                   required
                   value={newGroupName}
                   onChange={(e) => setNewGroupName(e.target.value)}
-                  placeholder="VD: Tổ Công Tác Dự Án Trà – Cụm 5"
-                  className="w-full h-9 px-3.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#F15A24]"
+                  placeholder="Nhập tên nhóm..."
+                  className="w-full h-9 px-3.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-[#0068FF]"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300 block">
-                  Cụm / Đầu mối phụ trách
+                <label className="font-bold text-[#081C36] dark:text-slate-300 block">
+                  Phân loại Cụm / Đầu mối
                 </label>
                 <select
                   value={newGroupHubCode}
                   onChange={(e) => setNewGroupHubCode(e.target.value)}
-                  className="w-full h-9 px-3.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#F15A24]"
+                  className="w-full h-9 px-3.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-[#0068FF]"
                 >
                   <option value="ĐIỀU HÀNH 24/7">ĐIỀU HÀNH 24/7</option>
                   <option value="CỤM 5.1">CỤM 5.1 (5.1B & 5.1T)</option>
@@ -1640,24 +2223,11 @@ export const ChatModule: React.FC = () => {
                 </select>
               </div>
 
-              <div className="space-y-1">
-                <label className="font-bold text-slate-700 dark:text-slate-300 block">
-                  Mô tả mục tiêu nhóm
-                </label>
-                <input
-                  type="text"
-                  value={newGroupDesc}
-                  onChange={(e) => setNewGroupDesc(e.target.value)}
-                  placeholder="Nhập mô tả ngắn gọn..."
-                  className="w-full h-9 px-3.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#F15A24]"
-                />
-              </div>
-
               <div className="space-y-1.5">
-                <label className="font-bold text-slate-700 dark:text-slate-300 block">
-                  Chọn thành viên tham gia ({selectedMemberIds.length})
+                <label className="font-bold text-[#081C36] dark:text-slate-300 block">
+                  Chọn thành viên vào nhóm ({selectedMemberIds.length})
                 </label>
-                <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1">
+                <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-1">
                   {AVG_CHAT_STAFF.map((member) => {
                     const checked = selectedMemberIds.includes(member.id);
                     return (
@@ -1673,8 +2243,8 @@ export const ChatModule: React.FC = () => {
                         }
                         className={`px-3 py-1 rounded-full text-[11px] font-bold transition cursor-pointer ${
                           checked
-                            ? 'bg-[#F15A24] text-white'
-                            : 'bg-[#EEEEEE] dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                            ? 'bg-[#0068FF] text-white'
+                            : 'bg-[#EBEDF0] dark:bg-slate-800 text-[#081C36] dark:text-slate-300'
                         }`}
                       >
                         {member.name}
@@ -1684,19 +2254,19 @@ export const ChatModule: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowCreateGroupModal(false)}
-                  className="h-9 px-4 rounded-full bg-[#EEEEEE] hover:bg-[#E4E6EB] text-slate-700 font-bold cursor-pointer"
+                  className="h-9 px-4 rounded-full bg-[#EBEDF0] hover:bg-slate-200 text-[#081C36] font-bold cursor-pointer"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="h-9 px-5 rounded-full bg-[#F15A24] hover:bg-[#D9460F] text-white font-bold cursor-pointer"
+                  className="h-9 px-5 rounded-full bg-[#0068FF] hover:bg-[#0052CC] text-white font-bold cursor-pointer"
                 >
-                  Tạo nhóm ngay
+                  Tạo nhóm
                 </button>
               </div>
             </form>
