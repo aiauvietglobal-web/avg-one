@@ -1613,9 +1613,14 @@ span[style*="borderRadius"] {
   border-radius: 6px !important;
 }
 
-/* Preserve Circular Avatars, Pill Buttons & Indicators */
+/* Preserve Circular Avatars, Pill Buttons, Inputs, Selects & Indicators */
 .rounded-full,
-button.rounded-full {
+button.rounded-full,
+input.rounded-full,
+select.rounded-full,
+a.rounded-full,
+div.rounded-full,
+span.rounded-full {
   border-radius: 9999px !important;
 }
 
