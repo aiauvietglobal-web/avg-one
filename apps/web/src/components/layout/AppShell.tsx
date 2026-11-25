@@ -438,14 +438,8 @@ export const AppShell: React.FC<AppShellProps> = ({
               renderUserAuthButton={renderUserAuthButton}
             />
           ) : activeModule === 'chat' ? (
-            /* HEADER ĐỘC LẬP CHO PHÂN HỆ CHAT NỘI BỘ */
-            <ChatHeader
-              onGoHome={() => {
-                setActiveSubTitle('');
-                onSelectModule('home');
-              }}
-              renderUserAuthButton={renderUserAuthButton}
-            />
+            /* PHÂN HỆ CHAT NỘI BỘ: GIAO DIỆN TOÀN MÀN HÌNH CHUẨN ZALO WEB (KHÔNG DÙNG HEADER NGANG) */
+            null
           ) : isDesignModule ? (
             /* 2. HEADER PHÂN HỆ THIẾT KẾ: TABS ĐƠN HÀNG/PHẨM/TỒN, QUICK SEARCH, PILL BACK */
             <DesignHeader
